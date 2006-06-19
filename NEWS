@@ -1,0 +1,6 @@
+We have following features working at the moment
+
+1. Complete build system (based on GNU automake).
+2. Defined folder structure.
+3. OM RM interface code is in place (not tested yet).
+

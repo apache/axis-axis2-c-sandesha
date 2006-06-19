@@ -1,0 +1,35 @@
+                        Apache Sandesha2C
+
+  What is it?
+  -----------
+  Sandesha2C is a C implementation of WS-ReliableMessaging specification 
+  published by IBM, Microsoft, BEA and TIBCO. Sandesha2C is built on top 
+  of Axis2C. Therefore by using Sandesha2C you can add reliable messaging 
+  capability to the web services hosted using Axis2C. Sandesha2C can also 
+  be used with Axis2C client to interact with already hosted web services 
+  in a reliable manner. Read Sandesha2 Architecture guide to see how 
+  Sandesha2 work internally. 
+  
+  The Latest Version
+  ------------------
+  Sandesha2C is its ealy ages and not release yet.
+
+  Documentation
+  -------------
+  The documentation not available yet. For the architecture guide please
+  visit Sandesha2 Architecture guide at 
+  http://ws.apache.org/sandesha/sandesha2/architectureGuide.html
+
+  Acknowledgments
+  ----------------
+  Apache Sandesha2C relies heavily on the use of autoconf and libtool to i
+  provide a build environment.
+
+  Installation
+  ------------
+  Please see the file called INSTALL. 
+
+  Licensing
+  ---------
+  Please see the file called LICENSE.
+

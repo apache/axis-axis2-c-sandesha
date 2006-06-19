@@ -1,0 +1,12 @@
+SANDESHA2 INSTALL
+=================
+
+1. Getting Sandesha2C working with the source release on Linux
+    - This version of Sandesha2C depends on Axis2C 0.92
+        - Download Axis2C from http://ws.apache.org/axis2/c/download.cgi and
+          install.
+    - Go to Sandesha2C source directory
+    - Run configure with AXIS2_UTILS include path and AXIOM include path.
+        ./configure --prefix=<install_dir> --enable-static=no --with-axis2_util=<axis2_util_path> --with-axiom=<axiom_path>
+    - Run make and make install
+    
