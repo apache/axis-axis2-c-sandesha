@@ -38,57 +38,32 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_MSG_CHECKING(To Use Axis2 C AXIOM. This is a compulsory module to build Sandesha2C)
-AC_ARG_WITH(axiom,
-[  --with-axiom[=PATH]      use axiom.],
+AC_MSG_CHECKING(To Use Axis2C . This is a compulsory to build Sandesha2C)
+AC_ARG_WITH(axis2,
+[  --with-axis2[=PATH]      use axis2c.],
 [ case "$withval" in
   no)
     AC_MSG_RESULT(no)
     ;;
   *)
     AC_MSG_RESULT(yes)
-    dnl Find axiom include dir in the path
+    dnl Find axis2 include dir in the path
     if test -d $withval; then
-        axiominc="-I$withval"
-    dnl else find the axiom include dir in $(AXIS2C_HOME)/include
+        axis2inc="-I$withval"
+    dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
     elif test -d '$(AXIS2C_HOME)/include'; then
-        axiominc="-I$(AXIS2C_HOME)/include"
+        axis2inc="-I$(AXIS2C_HOME)/include"
     else
-        AC_MSG_ERROR(could not find axiom. stop)
+        AC_MSG_ERROR(could not find axis2inc. stop)
     fi
     ;;
   esac ],
   AC_MSG_RESULT(no)
 )
 
-AC_MSG_CHECKING(To Use Axis2 C Util. This is a compulsory module to build Sandesha2C)
-AC_ARG_WITH(axis2_util,
-[  --with-axis2_util[=PATH]      use axis2_util.],
-[ case "$withval" in
-  no)
-    AC_MSG_RESULT(no)
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    dnl Find axis2_util include dir in the path
-    if test -d $withval; then
-        axis2_utilinc="-I$withval"
-    dnl else find the axis2_util include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include'; then
-        axis2_utilinc="-I$(AXIS2C_HOME)/include"
-    else
-        AC_MSG_ERROR(could not find axis2_util. stop)
-    fi
-    ;;
-  esac ],
-  AC_MSG_RESULT(no)
-)
+AXIS2INC=$axis2inc
 
-UTILINC=$axis2_utilinc
-AXIOMINC=$axiominc
-
-AC_SUBST(UTILINC)
-AC_SUBST(AXIOMINC)
+AC_SUBST(AXIS2INC)
 
 AC_CONFIG_FILES([Makefile
     src/Makefile \
