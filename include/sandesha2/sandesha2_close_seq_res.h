@@ -22,7 +22,7 @@
   * @brief 
   */
 
-#include <axis2_defines.h>
+#include <axis2_utils_defines.h>
 #include <axis2_env.h>
 #include <axiom_soap_envelope.h>
 #include <sandesha2/sandesha2_iom_rm_part.h>
