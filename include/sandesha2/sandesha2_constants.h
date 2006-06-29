@@ -460,6 +460,14 @@ extern "C"
 	#define SANDESHA2_REINJECTED_MESSAGE  "ReinjectedMessage"
 	
 	#define SANDESHA2_MODULE_CLASS_LOADER  "Sandesha2ModuleClassLoader"
+    
+    /**
+     * Message context values
+     */
+    #define SANDESHA2_MSG_CTX_IN_FLOW 1
+    #define SANDESHA2_MSG_CTX_IN_FAULT_FLOW 2
+    #define SANDESHA2_MSG_CTX_OUT_FLOW 3
+    #define SANDESHA2_MSG_CTX_OUT_FAULT_FLOW 4
 	 
 /** @} */
 #ifdef __cplusplus
