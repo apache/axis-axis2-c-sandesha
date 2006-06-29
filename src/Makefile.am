@@ -1,1 +1,1 @@
-SUBDIRS = wsrm
+SUBDIRS = wsrm storage

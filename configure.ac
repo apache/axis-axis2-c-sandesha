@@ -68,6 +68,8 @@ AC_SUBST(AXIS2INC)
 AC_CONFIG_FILES([Makefile
     src/Makefile \
     src/wsrm/Makefile\
+    src/storage/Makefile\
+    src/storage/beans/Makefile\
     ])
     
 AC_OUTPUT

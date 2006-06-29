@@ -24,7 +24,6 @@
 
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
-#include <axiom_soap_envelope.h>
 #include <sandesha2/sandesha2_msg_processor.h>
 
 
@@ -38,7 +37,8 @@ extern "C"
  * @{
  */
     
-AXIS2_DECLARE(sandesha2_msg_processor_t*) sandesha2_app_msg_processor_create(
+AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
+sandesha2_app_msg_processor_create(
 						axis2_env_t **env, 
 					    sandesha2_msg_ctx_t *rm_msg_ctx);
 /** @} */
