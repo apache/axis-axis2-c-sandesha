@@ -198,10 +198,7 @@ AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
 	 
 #define SANDESHA2_SENDER_BEAN_GET_MSG_TYPE(sender_bean, env) \
 	((sender_bean)->ops->get_msg_type(sender_bean, env)
-	 
-#define SANDESHA2_SENDER_BEAN_GET_MSG_TYPE(sender_bean, env) \
-	((sender_bean)->ops->get_msg_type(sender_bean, env)
-	 
+	 	 
 #define SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(sender_bean, env, msg_type) \
 	((sender_bean)->ops->set_msg_type(sender_bean, env, msg_type)
 	 

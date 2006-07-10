@@ -22,7 +22,13 @@
   * @brief 
   */
 
-
+#include <sandesha2/sandesha2_storage_manager.h>
+#include <axis2_conf_ctx.h>
+#include <axis2_conf.h>
+#include <axiom_soap_envelope.h>
+#include <axis2_qname.h>
+#include <axis2_array_list.h>
+#include <sandesha2/sandesha2_property_bean.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -35,7 +41,61 @@ extern "C"
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
-                        axiom_soap_envelope_t *envelope, axis2_qname_t *qname);    
+                        axiom_soap_envelope_t *envelope, axis2_qname_t *qname);
+                        
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_get_rm_version(const axis2_env_t *env,
+                        axis2_char_t *key,
+                        sandesha2_storage_manager_t *storage_man);
+                        
+AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
+sandesha2_utils_get_storage_manager(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx,
+                        axis2_conf_t *conf);
+                        
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_get_seq_property(const axis2_env_t *env,
+                        axis2_char_t *id,
+                        axis2_char_t *name,
+                        sandesha2_storage_manager_t *storage_man);
+
+AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
+sandesha2_utils_get_property_bean(const axis2_env_t *env,
+                        axis2_conf_t *conf);
+
+AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
+sandesha2_utils_get_array_list_from_string(const axis2_env_t *env,
+                        axis2_char_t *string);
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_utils_array_list_contains(const axis2_env_t *env,
+                        axis2_array_list_t *list,
+                        axis2_char_t *string);
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_array_list_to_string(const axis2_env_t *env,
+                        axis2_array_list_t *list);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
+sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx,
+                        axis2_char_t *seq_id);
+                        
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,
+                        axis2_char_t *seq_id);
+
+AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
+sandesha2_utils_get_transport_out(const axis2_env_t *env);
+
+AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
+sandesha2_utils_get_inmemory_storage_manager(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx);
+                        
+AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
+sandesha2_utils_get_permanent_storage_manager(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx);
+
 /** @} */
 #ifdef __cplusplus
 }

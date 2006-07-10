@@ -58,7 +58,29 @@ extern "C"
         /* Ack Final now allowed in the spec */
         SANDESHA2_ERROR_ACK_FINAL_NOT_ALLOWED,
         /* Ack None now allowed in the spec */
-        SANDESHA2_ERROR_ACK_NONE_NOT_ALLOWED
+        SANDESHA2_ERROR_ACK_NONE_NOT_ALLOWED,
+        /* unknown storage manager */
+        SANDESHA2_ERROR_UNKNOWN_STORAGE_MANAGER,
+        /* Sandesha configuration is not set in axis2 conf*/
+        SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
+        /* NULL msg context */
+        SANDESHA2_ERROR_NULL_MSG_CTX,
+        /* Error occured while sending fault */
+        SANDESHA2_ERROR_SENDING_FAULT,
+        /* Invalid message number specified */
+        SANDESHA2_ERROR_INVALID_MSG_NUM,
+        /* Specified sequence does not exist */
+        SANDESHA2_ERROR_SEQ_NOT_EXIST,
+        /* RM Spec version is invalid */
+        SANDESHA2_ERROR_INVALID_SPEC_VERSION,
+        /* NULL axis2 configuration context */
+        SANDESHA2_ERROR_NULL_CONF_CTX,
+        /* Error occured while sending ack */
+        SANDESHA2_ERROR_SENDING_ACK,
+        /* NULL to epr is specified */
+        SANDESHA2_ERROR_NULL_TO,
+        /* NULL sequnce given for processing */
+        SANDESHA2_ERROR_NULL_SEQUENCE
     };
         
 /** @} */

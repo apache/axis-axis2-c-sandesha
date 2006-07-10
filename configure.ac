@@ -68,6 +68,10 @@ AC_SUBST(AXIS2INC)
 AC_CONFIG_FILES([Makefile
     src/Makefile \
     src/wsrm/Makefile\
+    src/transport/Makefile\
+    src/workers/Makefile\
+    src/msgprocessors/Makefile\
+    src/util/Makefile\
     src/storage/Makefile\
     src/storage/beans/Makefile\
     ])

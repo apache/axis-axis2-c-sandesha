@@ -26,6 +26,7 @@
 #include <axis2_env.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_element.h>
+#include <sandesha2/sandesha2_msg_ctx.h>
 
 
 #ifdef __cplusplus
@@ -48,18 +49,18 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_processor_ops
 {
     axis2_status_t (AXIS2_CALL *
                 process_in_msg)(
-                    sandesha2__msg_processor_t *proc,
-                    axis2_env_t *env,
+                    sandesha2_msg_processor_t *proc,
+                    const axis2_env_t *env,
                     sandesha2_msg_ctx_t *rm_msg_ctx);
                     
     axis2_status_t (AXIS2_CALL *
                 process_out_msg)(
-                    sandesha2__msg_processor_t *proc,
-                    axis2_env_t *env,
+                    sandesha2_msg_processor_t *proc,
+                    const axis2_env_t *env,
                     sandesha2_msg_ctx_t *rm_msg_ctx);
 
     axis2_status_t (AXIS2_CALL *free) (sandesha2_msg_processor_t *proc,
-                    axis2_env_t **env);
+                    const axis2_env_t *env);
 };
 
 /**

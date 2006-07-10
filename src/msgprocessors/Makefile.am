@@ -1,8 +1,7 @@
 TESTS =
 noinst_LTLIBRARIES = libsandesha2_msgprocessors.la
 
-libsandesha2_msgprocessors_la_SOURCES = 
+libsandesha2_msgprocessors_la_SOURCES = app_msg_processor.c
 
 INCLUDES = -I$(top_builddir)/include \
-            @AXIOMINC@ \
-            @UTILINC@
+           @AXIS2INC@

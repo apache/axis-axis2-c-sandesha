@@ -41,6 +41,23 @@ sandesha2_spec_specific_consts_get_spec_ver_str(const axis2_env_t *env,
     return NULL
 }
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_spec_specific_consts_get_rm_ns_val(const axis2_env_t *env,
+                        axis2_char_t *spec_ver)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, spec_ver, NULL);
+    if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_ver))
+    {
+        return SANDESHA2_SPEC_2005_02_NS_URI;
+    }
+    if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_ver))
+    {
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    }
+    return NULL;
+}
+
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_spec_specific_consts_is_ack_final_allowed(const axis2_env_t *env, 
                         axis2_char_t *rm_spec_ver)
@@ -87,5 +104,6 @@ sandesha2_spec_specific_consts_is_ack_none_allowed(const axis2_env_t *env,
     }
     return AXIS2_FALSE;   
 }
+
 
 

@@ -14,37 +14,37 @@
  * limitations under the License.
  */
  
-#ifndef SANDESHA2_APP_MSG_PROCESSOR_H
-#define SANDESHA2_APP_MSG_PROCESSOR_H
+#ifndef SANDESHA2_TRANSPORT_SENDER_H
+#define SANDESHA2_TRANSPORT_SENDER_H
 
 /**
-  * @file sandesha2_app_msg_processor.h
+  * @file sandesha2_transport_sender.h
   * @brief 
   */
 
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
-#include <sandesha2/sandesha2_msg_processor.h>
-
+#include <axis2_transport_out_desc.h>
+#include <axis2_transport_sender.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-/** @defgroup sandesha2_app_msg_processor
- * @ingroup sandesha2_msgprocessors
+/** @defgroup sandesha2_transport_sender
+ * @ingroup sandesha2_transport
  * @{
  */
-    
-AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_app_msg_processor_create(
-						const axis2_env_t *env, 
-					    sandesha2_msg_ctx_t *rm_msg_ctx);
+
+AXIS2_EXTERN axis2_transport_sender_t* AXIS2_CALL
+sandesha2_transport_sender_create(
+						const axis2_env_t *env);
+                        
 /** @} */
 #ifdef __cplusplus
 }
 #endif
 
-#endif                          /* SANDESHA2_APP_MSG_PROCESSOR_H */
+#endif                          /* SANDESHA2_TRANSPORT_SENDER_H */
 

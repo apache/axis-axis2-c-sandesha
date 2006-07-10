@@ -65,7 +65,7 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_part
 
 /************************** Start of function macros **************************/
 #define SANDESHA2_IOM_RM_PART_TO_SOAP_ENVELOPE(part, env, envelope) \
-    ((part)->ops-> (part, env, envelope))
+    ((part)->ops->to_soap_env(part, env, envelope))
 #define SANDESHA2_IOM_RM_PART_FREE(part, env) \
     ((part)->element.ops->free (part, env))
 /************************** End of function macros ****************************/

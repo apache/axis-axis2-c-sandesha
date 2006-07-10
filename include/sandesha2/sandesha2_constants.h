@@ -426,8 +426,9 @@ extern "C"
 	#define SANDESHA2_SET_SEND_TO_TRUE  "Sandesha2SetSendToTrue"
 	
 	#define SANDESHA2_MESSAGE_TYPE  "Sandesha2MessageType"
-	
-	#define SANDESHA2_QUALIFIED_FOR_SENDING  "Sandesha2QualifiedForSending"  //Sender will send messages only if this property is null (not set) or true.
+
+	/*Sender will send messages only if this property is null (not set) or true.*/
+	#define SANDESHA2_QUALIFIED_FOR_SENDING  "Sandesha2QualifiedForSending"  
 
 	#define SANDESHA2_QNAME_SEPERATOR  ","
 	
@@ -445,7 +446,7 @@ extern "C"
 	
 	#define SANDESHA2_PERMANENT_STORAGE_MANAGER  "persistent"
 	
-	#define SANDESHA2_DEFAULT_STORAGE_MANAGER  INMEMORY_STORAGE_MANAGER
+	#define SANDESHA2_DEFAULT_STORAGE_MANAGER "inmemory"
 	
 	#define SANDESHA2_SENDER  "Sender"
 	
