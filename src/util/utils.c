@@ -15,6 +15,7 @@
  */
  
 #include <sandesha2/sandesha2_utils.h>
+#include <sys/timeb.h>
 #include <axis2_param.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_in_order_invoker.h>
@@ -62,6 +63,20 @@ sandesha2_utils_remove_soap_body_part(const axis2_env_t *env,
         AXIOM_NODE_DETACH(body_rm_node, env);
     }
     return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN long AXIS2_CALL
+sandesha2_util_get_current_time_in_millis(
+        const axis2_env_t *env)
+{
+    struct timeb *tp = AXIS2_MALLOC(env->allocator, sizeof(struct timeb));
+    ftime(tp);
+    long seconds = tp->time;
+    seconds = seconds * 1000;
+    long millis = tp->millitm;
+    millis = millis + seconds;
+
+    return millis;
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
@@ -328,3 +343,4 @@ sandesha2_utils_get_permanent_storage_manager(const axis2_env_t *env,
     /*TODO implement when the persistent storage is avalable */
     return NULL;
 }
+>>>>>>> .r420768

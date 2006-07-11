@@ -146,67 +146,70 @@ AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
 
 
 #define SANDESHA2_SENDER_BEAN_FREE(sender_bean, env) \
-	((sender_bean)->ops->free(sender_bean, env)
+	((sender_bean)->ops->free(sender_bean, env))
 	 
-#define SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(sender_bean, env) \
-	((sender_bean)->ops->get_msg_context_ref_key(sender_bean, env)
+#define SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(sender, env) \
+      (((sandesha2_sender_bean_t *) sender)->ops->\
+       get_msg_context_ref_key (sender, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(sender_bean, env, ref_key) \
-	((sender_bean)->ops->set_msg_context_ref_key(sender_bean, env, ref_key)
+	((sender_bean)->ops->set_msg_context_ref_key(sender_bean, env, ref_key))
 	 
-#define SANDESHA2_SENDER_BEAN_GET_MSG_ID(sender_bean, env) \
-	((sender_bean)->ops->get_msg_id(sender_bean, env)
+#define SANDESHA2_SENDER_BEAN_GET_MSG_ID(sender, env) \
+	(((sandesha2_sender_bean_t *)sender)->ops->\
+     get_msg_id(sender, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_MSG_ID(sender_bean, env, msg_id) \
-	((sender_bean)->ops->set_msg_id(sender_bean, env, msg_id)
+	((sender_bean)->ops->set_msg_id(sender_bean, env, msg_id))
 	 
 #define SANDESHA2_SENDER_BEAN_IS_SEND(sender_bean, env) \
-	((sender_bean)->ops->is_send(sender_bean, env)
+	((sender_bean)->ops->is_send(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_SEND(sender_bean, env, send) \
-	((sender_bean)->ops->set_send(sender_bean, env, send)
+	((sender_bean)->ops->set_send(sender_bean, env, send))
 	 
-#define SANDESHA2_SENDER_BEAN_GET_INTERNAL_SEQ_ID(sender_bean, env) \
-	((sender_bean)->ops->get_internal_seq_id(sender_bean, env)
+#define SANDESHA2_SENDER_BEAN_GET_INTERNAL_SEQ_ID(sender, env) \
+      (((sandesha2_sender_bean_t *) sender)->ops->\
+       get_internal_seq_id (sender, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_INTERNAL_SEQ_ID(sender_bean, env, int_seq_id) \
-	((sender_bean)->ops->set_internal_seq_id(sender_bean, env, int_seq_id)
+	((sender_bean)->ops->set_internal_seq_id(sender_bean, env, int_seq_id))
 	 
 #define SANDESHA2_SENDER_BEAN_GET_SENT_COUNT(sender_bean, env) \
-	((sender_bean)->ops->get_sent_count(sender_bean, env)
+	((sender_bean)->ops->get_sent_count(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_SENT_COUNT(sender_bean, env, sent_count) \
-	((sender_bean)->ops->set_sent_count(sender_bean, env, sent_count)
+	((sender_bean)->ops->set_sent_count(sender_bean, env, sent_count))
 	 
 #define SANDESHA2_SENDER_BEAN_GET_MSG_NO(sender_bean, env) \
-	((sender_bean)->ops->get_msg_no(sender_bean, env)
+	((sender_bean)->ops->get_msg_no(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_MSG_NO(sender_bean, env, msg_no) \
-	((sender_bean)->ops->set_msg_no(sender_bean, env, msg_no)
+	((sender_bean)->ops->set_msg_no(sender_bean, env, msg_no))
 	 
 #define SANDESHA2_SENDER_BEAN_IS_RESEND(sender_bean, env) \
-	((sender_bean)->ops->is_resend(sender_bean, env)
+	((sender_bean)->ops->is_resend(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_RESEND(sender_bean, env, resend) \
-	((sender_bean)->ops->set_resend(sender_bean, env, resend)
+	((sender_bean)->ops->set_resend(sender_bean, env, resend))
 	 
 #define SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(sender_bean, env) \
-	((sender_bean)->ops->get_time_to_send(sender_bean, env)
+	((sender_bean)->ops->get_time_to_send(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(sender_bean, env, time_to_send) \
-	((sender_bean)->ops->set_time_to_send(sender_bean, env, time_to_send)
+	((sender_bean)->ops->set_time_to_send(sender_bean, env, time_to_send))
 	 
 #define SANDESHA2_SENDER_BEAN_GET_MSG_TYPE(sender_bean, env) \
-	((sender_bean)->ops->get_msg_type(sender_bean, env)
-	 	 
+	((sender_bean)->ops->get_msg_type(sender_bean, env))
+	 
 #define SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(sender_bean, env, msg_type) \
-	((sender_bean)->ops->set_msg_type(sender_bean, env, msg_type)
+	((sender_bean)->ops->set_msg_type(sender_bean, env, msg_type))
 	 
 #define SANDESHA2_SENDER_BEAN_GET_SEQUENCE_ID(sender_bean, env) \
-	((sender_bean)->ops->get_sequence_id(sender_bean, env)
+	((sender_bean)->ops->get_sequence_id(sender_bean, env))
 	 
 #define SANDESHA2_SENDER_BEAN_SET_SEQUENCE_ID(sender_bean, env, seq_id) \
-	((sender_bean)->ops->set_sequence_id(sender_bean, env, seq_id)
+	((sender_bean)->ops->set_sequence_id(sender_bean, env, seq_id))
 	 
 
 #ifdef __cplusplus

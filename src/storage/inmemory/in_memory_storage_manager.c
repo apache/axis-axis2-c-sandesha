@@ -311,13 +311,61 @@ sandesha2_in_memory_storage_mgr_get_instance(
     return storage_impl->instance;
 }
 	
-	public MessageContext retrieveMessageContext(String key,ConfigurationContext context) {
-		HashMap storageMap = (HashMap) getContext().getProperty(MESSAGE_MAP_KEY);
-		if (storageMap==null)
-			return null;
+axis2_msg_ctx_t *AXIS2_CALL
+sandesha2_in_memory_storage_mgr_retrieve_msg_ctx(
+        sandesha2_in_memory_storage_mgr_t *storage,
+        const axis2_env_t *env,
+        axis2_char_t *key,
+        axis2_conf_ctx_t *conf_ctx)
+{
+    sandesha2_in_memory_storage_mgr_impl_t *storage_impl = NULL;
+    axis2_hash_t *storage_map = NULL;
+    axis2_property_t *property = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;
+
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    storage_impl = SANDESHA2_INTF_TO_IMPL(storage);
+   
+    conf_ctx = sandesha2_in_memory_storage_mgr_get_ctx(storage, env);
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_MSG_MAP_KEY);
+    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(!storage_map)
+        return NULL;
+
+    return (axis2_msg_ctx_t *) axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+}
 		
-		return (MessageContext) storageMap.get(key);
-	}
+axis2_status_t AXIS2_CALL
+sandesha2_in_memory_storage_mgr_store_msg_ctx(
+        sandesha2_in_memory_storage_mgr_t *storage,
+        const axis2_env_t *env,
+        axis2_char_t *key,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    sandesha2_in_memory_storage_mgr_impl_t *storage_impl = NULL;
+    axis2_hash_t *storage_map = NULL;
+    axis2_property_t *property = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;
+
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    storage_impl = SANDESHA2_INTF_TO_IMPL(storage);
+   
+    conf_ctx = sandesha2_in_memory_storage_mgr_get_ctx(storage, env);
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_MSG_MAP_KEY);
+    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(!storage_map)
+    {
+        storage_map = axis2_hash_make(env);
+
+    }
+
+    return (axis2_msg_ctx_t *) axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+}
+	
 
 	public void storeMessageContext(String key,MessageContext msgContext) {
 		HashMap storageMap = (HashMap) getContext().getProperty(MESSAGE_MAP_KEY);

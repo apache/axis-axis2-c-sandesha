@@ -17,6 +17,8 @@
 #ifndef SANDESHA2_UTILS_H
 #define SANDESHA2_UTILS_H
 
+#include <axiom_soap_envelope.h>
+
 /**
   * @file sandesha2_utils.h
   * @brief 
@@ -40,6 +42,13 @@ extern "C"
  * @{
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+
+AXIS2_EXTERN long AXIS2_CALL
+sandesha2_util_get_current_time_in_millis(
+        const axis2_env_t *env);
+
+#define sandesha2_util_get_current_time_in_millis SANDESHA2_UTIL_GET_CURRENT_TIME_IN_MILLIS
+
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
                         axiom_soap_envelope_t *envelope, axis2_qname_t *qname);
                         

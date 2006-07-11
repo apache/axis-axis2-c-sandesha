@@ -300,7 +300,7 @@ extern "C"
 
 	#define SANDESHA2_BEAN_MAP_STORAGE_MAP  "StorageMapBeanMap"
 
-	#define SANDESHA2_BEAN_MAP_ NEXT_MESSAGE  "NextMsgBeanMap"
+	#define SANDESHA2_BEAN_MAP_NEXT_MESSAGE  "NextMsgBeanMap"
 	
 	/**
 	 * SOAP Faults

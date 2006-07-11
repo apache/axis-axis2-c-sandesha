@@ -17,6 +17,8 @@
 #ifndef SANDESHA2_ERROR_H
 #define SANDESHA2_ERROR_H
 
+#include <axis2_error.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -57,6 +59,14 @@ extern "C"
         SANDESHA2_ERROR_TO_OM_INVALID_NUMBER,
         /* Ack Final now allowed in the spec */
         SANDESHA2_ERROR_ACK_FINAL_NOT_ALLOWED,
+        /* 'To' address is not set */
+        SANDESHA2_ERROR_TO_ADDRESS_IS_NOT_SET,
+        /* Service Context is NULL */
+        SANDESHA2_ERROR_SVC_CTX_IS_NULL,
+        /* Result is not unique */
+        SANDESHA2_ERROR_NON_UNIQUE_RESULT,
+        /* Key is NULL. Cannot insert */
+        SANDESHA2_ERROR_KEY_IS_NULL,
         /* Ack None now allowed in the spec */
         SANDESHA2_ERROR_ACK_NONE_NOT_ALLOWED,
         /* unknown storage manager */
@@ -81,6 +91,12 @@ extern "C"
         SANDESHA2_ERROR_NULL_TO,
         /* NULL sequnce given for processing */
         SANDESHA2_ERROR_NULL_SEQUENCE
+        /** The following has to be the last error value all the time.
+            All other error codes should appear above this.
+            SANDESHA_ERROR_LAST is used to track the number of error codes present
+            for the purpose of sizing the error message array.
+          */
+        SANDESHA2_ERROR_LAST
     };
         
 /** @} */

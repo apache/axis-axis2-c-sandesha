@@ -95,10 +95,10 @@ AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
 #define SANDESHA2_INVOKER_BEAN_FREE(invoker_bean, env) \
        ((invoker_bean)->ops->free(invoker_bean, env))
 
-#define SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_ID(invoker_bean, env) \
+#define SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(invoker_bean, env) \
 	((invoker_bean)->ops->get_msg_context_ref_key(invoker_bean, env))
 
-#define SANDESHA2_INVOKER_BEAN_SET_MSG_CONTEXT_REF_ID(invoker_bean, env, ref_id) \
+#define SANDESHA2_INVOKER_BEAN_SET_MSG_CONTEXT_REF_KEY(invoker_bean, env, ref_id) \
 	((invoker_bean)->ops->set_msg_context_ref_key(invoker_bean, env, ref_id))
 
 #define SANDESHA2_INVOKER_BEAN_GET_MSG_NO(invoker_bean, env) \
