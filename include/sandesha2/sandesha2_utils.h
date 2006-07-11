@@ -24,7 +24,7 @@
   * @brief 
   */
 
-#include <sandesha2/sandesha2_storage_manager.h>
+#include <sandesha2_storage_mgr.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_conf.h>
 #include <axiom_soap_envelope.h>

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_IN_MEMORY_SEQ_PROPERTY_MGR_H
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_MGR_H
+#ifndef SANDESHA2_SEQ_PROPERTY_MGR_H
+#define SANDESHA2_SEQ_PROPERTY_MGR_H
 
 /**
- * @file sandesha2_in_memory_seq_property_mgr.h
+ * @file sandesha2_seq_property_mgr.h
  * @brief Sandesha In Memory Sequence Property Manager Interface
  */
 
@@ -36,15 +36,15 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_in_memory_seq_property_mgr sandesha2_in_memory_seq_property_mgr_t;
-typedef struct sandesha2_in_memory_seq_property_mgr_ops sandesha2_in_memory_seq_property_mgr_ops_t;
+typedef struct sandesha2_seq_property_mgr sandesha2_seq_property_mgr_t;
+typedef struct sandesha2_seq_property_mgr_ops sandesha2_seq_property_mgr_ops_t;
 
-/** @defgroup sandesha2_in_memory_seq_property_mgr In Memory Sequence Property Manager
+/** @defgroup sandesha2_seq_property_mgr In Memory Sequence Property Manager
   * @ingroup sandesha2
   * @{
   */
 
-struct sandesha2_in_memory_seq_property_mgr_ops
+struct sandesha2_seq_property_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -57,97 +57,97 @@ struct sandesha2_in_memory_seq_property_mgr_ops
      
     axis2_bool_t (AXIS2_CALL *
     insert) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             sandesha2_sequence_property_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
     remove) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             axis2_char_t *seq_id,
             axis2_char_t *name);
 
     sandesha2_sequence_property_bean_t *(AXIS2_CALL *
     retrieve) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             axis2_char_t *seq_id,
             axis2_char_t *name);
 
     axis2_bool_t (AXIS2_CALL *
     update) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             sandesha2_sequence_property_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     find) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             sandesha2_sequence_property_bean_t *bean);
 
     sandesha2_sequence_property_bean_t *(AXIS2_CALL *
     find_unique) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             sandesha2_sequence_property_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     retrieve_all) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env);
 
     axis2_bool_t (AXIS2_CALL *
     update_or_insert) (
-            sandesha2_in_memory_seq_property_mgr_t *seq_property,
+            sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
             sandesha2_sequence_property_bean_t *bean);
 };
 
-struct sandesha2_in_memory_seq_property_mgr
+struct sandesha2_seq_property_mgr
 {
-    sandesha2_in_memory_seq_property_mgr_ops_t *ops;
+    sandesha2_seq_property_mgr_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_in_memory_seq_property_mgr_t * AXIS2_CALL
-sandesha2_in_memory_seq_property_mgr_create(
+AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
+sandesha2_seq_property_mgr_create(
         const axis2_env_t *env,
         axis2_ctx_t *ctx);
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_MGR_FREE(seq_property, env) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->free (seq_property, env))
+#define SANDESHA2_SEQ_PROPERTY_MGR_FREE(seq_property, env) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->free (seq_property, env))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_INSERT(seq_property, env, bean) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_INSERT(seq_property, env, bean) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        insert (seq_property, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_REMOVE(seq_property, env, seq_id, name) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_REMOVE(seq_property, env, seq_id, name) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        remove (seq_property, env, seq_id, name))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_RETRIEVE(seq_property, env, seq_id, name) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_RETRIEVE(seq_property, env, seq_id, name) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        retrieve (seq_property, env, seq_id, name))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_UPDATE(seq_property, env, bean) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_UPDATE(seq_property, env, bean) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        update (seq_property, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_FIND(seq_property, env, bean) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_FIND(seq_property, env, bean) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        find (seq_property, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_FIND_UNIQUE(seq_property, env, bean) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_FIND_UNIQUE(seq_property, env, bean) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        find_unique (seq_property, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_UPDATE_OR_INSERT(seq_property, env, bean) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_UPDATE_OR_INSERT(seq_property, env, bean) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        update_or_insert (seq_property, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SEQ_PROPERTY_RETRIEVE_ALL(seq_property, env) \
-      (((sandesha2_in_memory_seq_property_mgr_t *) seq_property)->ops->\
+#define SANDESHA2_SEQ_PROPERTY_RETRIEVE_ALL(seq_property, env) \
+      (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        retrieve_all (seq_property, env))
 
 
@@ -156,4 +156,4 @@ sandesha2_in_memory_seq_property_mgr_create(
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_IN_MEMORY_SEQ_PROPERTY_MGR_H */
+#endif /* SANDESHA2_SEQ_PROPERTY_MGR_H */

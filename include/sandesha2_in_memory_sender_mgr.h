@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_IN_MEMORY_SENDER_MGR_H
-#define SANDESHA2_IN_MEMORY_SENDER_MGR_H
+#ifndef SANDESHA2_SENDER_MGR_H
+#define SANDESHA2_SENDER_MGR_H
 
 /**
- * @file sandesha2_in_memory_sender_mgr.h
+ * @file sandesha2_sender_mgr.h
  * @brief Sandesha In Memory Sender Manager Interface
  */
 
@@ -36,15 +36,15 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_in_memory_sender_mgr sandesha2_in_memory_sender_mgr_t;
-typedef struct sandesha2_in_memory_sender_mgr_ops sandesha2_in_memory_sender_mgr_ops_t;
+typedef struct sandesha2_sender_mgr sandesha2_sender_mgr_t;
+typedef struct sandesha2_sender_mgr_ops sandesha2_sender_mgr_ops_t;
 
-/** @defgroup sandesha2_in_memory_sender_mgr In Memory Sender Manager
+/** @defgroup sandesha2_sender_mgr In Memory Sender Manager
   * @ingroup sandesha2
   * @{
   */
 
-struct sandesha2_in_memory_sender_mgr_ops
+struct sandesha2_sender_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -57,105 +57,105 @@ struct sandesha2_in_memory_sender_mgr_ops
      
     axis2_bool_t (AXIS2_CALL *
     insert) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             sandesha2_sender_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
     remove) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             axis2_char_t *msg_id);
 
     sandesha2_sender_bean_t *(AXIS2_CALL *
     retrieve) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             axis2_char_t *msg_id);
 
     axis2_bool_t (AXIS2_CALL *
     update) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             sandesha2_sender_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     find_by_internal_seq_id) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             axis2_char_t *internal_seq_id);
 
     axis2_array_list_t *(AXIS2_CALL *
     find_by_sender_bean) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             sandesha2_sender_bean_t *bean);
 
     sandesha2_sender_bean_t *(AXIS2_CALL *
     find_unique) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             sandesha2_sender_bean_t *bean);
 
     sandesha2_sender_bean_t *(AXIS2_CALL *
     get_next_msg_to_send) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env);
 
     sandesha2_sender_bean_t *(AXIS2_CALL *
     retrieve_from_msg_ref_key) (
-            sandesha2_in_memory_sender_mgr_t *sender,
+            sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
             axis2_char_t *msg_ctx_ref_key);
 };
 
-struct sandesha2_in_memory_sender_mgr
+struct sandesha2_sender_mgr
 {
-    sandesha2_in_memory_sender_mgr_ops_t *ops;
+    sandesha2_sender_mgr_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_in_memory_sender_mgr_t * AXIS2_CALL
-sandesha2_in_memory_sender_mgr_create(
+AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
+sandesha2_sender_mgr_create(
         const axis2_env_t *env,
         axis2_ctx_t *ctx);
 
-#define SANDESHA2_IN_MEMORY_SENDER_MGR_FREE(sender, env) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->free (sender, env))
+#define SANDESHA2_SENDER_MGR_FREE(sender, env) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->free (sender, env))
 
-#define SANDESHA2_IN_MEMORY_SENDER_INSERT(sender, env, bean) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_INSERT(sender, env, bean) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        insert (sender, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SENDER_REMOVE(sender, env, msg_id) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_REMOVE(sender, env, msg_id) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        remove (sender, env, msg_id))
 
-#define SANDESHA2_IN_MEMORY_SENDER_RETRIEVE(sender, env, msg_id) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_RETRIEVE(sender, env, msg_id) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        retrieve (sender, env, msg_id))
 
-#define SANDESHA2_IN_MEMORY_SENDER_UPDATE(sender, env, bean) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_UPDATE(sender, env, bean) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        update (sender, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SENDER_FIND_BY_INTERNAL_SEQ_ID(sender, env, internal_seq_id) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_FIND_BY_INTERNAL_SEQ_ID(sender, env, internal_seq_id) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_by_internal_seq_id (sender, env, internal_seq_id))
 
-#define SANDESHA2_IN_MEMORY_SENDER_FIND_BY_SENDER_BEAN(sender, env, bean) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_FIND_BY_SENDER_BEAN(sender, env, bean) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_by_sender_bean (sender, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SENDER_FIND_UNIQUE(sender, env, bean) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_FIND_UNIQUE(sender, env, bean) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_unique (sender, env, bean))
 
-#define SANDESHA2_IN_MEMORY_SENDER_GET_NEXT_MSG_TO_SEND(sender, env) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_GET_NEXT_MSG_TO_SEND(sender, env) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        get_next_msg_to_send (sender, env))
 
-#define SANDESHA2_IN_MEMORY_SENDER_RETRIEVE_FROM_MSG_REF_KEY(sender, env, ref_key) \
-      (((sandesha2_in_memory_sender_mgr_t *) sender)->ops->\
+#define SANDESHA2_SENDER_RETRIEVE_FROM_MSG_REF_KEY(sender, env, ref_key) \
+      (((sandesha2_sender_mgr_t *) sender)->ops->\
        retrieve_from_msg_ref_key (sender, env, ref_key))
 
 
@@ -164,4 +164,4 @@ sandesha2_in_memory_sender_mgr_create(
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_IN_MEMORY_SENDER_MGR_H */
+#endif /* SANDESHA2_SENDER_MGR_H */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include <sandesha2_in_memory_transaction.h>
+#include <sandesha2_transaction.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <axis2_log.h>
@@ -22,63 +22,63 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 
-typedef struct sandesha2_in_memory_transaction_impl sandesha2_in_memory_transaction_impl_t;
+typedef struct sandesha2_transaction_impl sandesha2_transaction_impl_t;
 
 /** 
  * @brief Sandesha Sequence Report Struct Impl
  *   Sandesha Sequence Report 
  */ 
-struct sandesha2_in_memory_transaction_impl
+struct sandesha2_transaction_impl
 {
-    sandesha2_in_memory_transaction_t transaction;
+    sandesha2_transaction_t transaction;
 
 };
 
-#define SANDESHA2_INTF_TO_IMPL(transaction) ((sandesha2_in_memory_transaction_impl_t *) transaction)
+#define SANDESHA2_INTF_TO_IMPL(transaction) ((sandesha2_transaction_impl_t *) transaction)
 
 axis2_status_t AXIS2_CALL 
-sandesha2_in_memory_transaction_free(
+sandesha2_transaction_free(
         void *transaction,
         const axis2_env_t *envv);
 
 axis2_status_t AXIS2_CALL
-sandesha2_in_memory_transaction_commit(
-        sandesha2_in_memory_transaction_t *transaction,
+sandesha2_transaction_commit(
+        sandesha2_transaction_t *transaction,
         const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_in_memory_transaction_rollback(
-        sandesha2_in_memory_transaction_t *transaction,
+sandesha2_transaction_rollback(
+        sandesha2_transaction_t *transaction,
         const axis2_env_t *env);
 
-sandesha2_in_memory_transaction_t *
-sandesha2_in_memory_transaction_create(
+sandesha2_transaction_t *
+sandesha2_transaction_create(
         const axis2_env_t *env)
 {
-    sandesha2_in_memory_transaction_impl_t *transaction_impl = NULL;
+    sandesha2_transaction_impl_t *transaction_impl = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     transaction_impl = AXIS2_MALLOC(env->allocator, 
-                    sizeof(sandesha2_in_memory_transaction_impl_t));
+                    sizeof(sandesha2_transaction_impl_t));
 
     transaction_impl->transaction.ops = AXIS2_MALLOC(env->allocator, 
-                    sizeof(sandesha2_in_memory_transaction_ops_t)); 
+                    sizeof(sandesha2_transaction_ops_t)); 
     
-    transaction_impl->transaction.ops->free = sandesha2_in_memory_transaction_free;
+    transaction_impl->transaction.ops->free = sandesha2_transaction_free;
     transaction_impl->transaction.ops->commit = 
-        sandesha2_in_memory_transaction_commit;
+        sandesha2_transaction_commit;
     transaction_impl->transaction.ops->rollback = 
-        sandesha2_in_memory_transaction_rollback;
+        sandesha2_transaction_rollback;
 
     return &(transaction_impl->transaction);
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_in_memory_transaction_free(
+sandesha2_transaction_free(
         void *transaction,
         const axis2_env_t *env)
 {
-    sandesha2_in_memory_transaction_impl_t *transaction_impl = NULL;
+    sandesha2_transaction_impl_t *transaction_impl = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     transaction_impl = SANDESHA2_INTF_TO_IMPL(transaction);
@@ -98,16 +98,16 @@ sandesha2_in_memory_transaction_free(
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_in_memory_transaction_commit(
-        sandesha2_in_memory_transaction_t *transaction,
+sandesha2_transaction_commit(
+        sandesha2_transaction_t *transaction,
         const axis2_env_t *env)
 {
     return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_in_memory_transaction_rollback(
-        sandesha2_in_memory_transaction_t *transaction,
+sandesha2_transaction_rollback(
+        sandesha2_transaction_t *transaction,
         const axis2_env_t *env)
 {
     return AXIS2_SUCCESS;

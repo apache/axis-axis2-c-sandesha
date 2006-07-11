@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_IN_MEMORY_NEXT_MSG_MGR_H
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_MGR_H
+#ifndef SANDESHA2_NEXT_MSG_MGR_H
+#define SANDESHA2_NEXT_MSG_MGR_H
 
 /**
- * @file sandesha2_in_memory_next_msg_mgr.h
+ * @file sandesha2_next_msg_mgr.h
  * @brief Sandesha In Memory Next Message Manager Interface
  */
 
@@ -36,15 +36,15 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_in_memory_next_msg_mgr sandesha2_in_memory_next_msg_mgr_t;
-typedef struct sandesha2_in_memory_next_msg_mgr_ops sandesha2_in_memory_next_msg_mgr_ops_t;
+typedef struct sandesha2_next_msg_mgr sandesha2_next_msg_mgr_t;
+typedef struct sandesha2_next_msg_mgr_ops sandesha2_next_msg_mgr_ops_t;
 
-/** @defgroup sandesha2_in_memory_next_msg_mgr In Memory Next Message Manager
+/** @defgroup sandesha2_next_msg_mgr In Memory Next Message Manager
   * @ingroup sandesha2
   * @{
   */
 
-struct sandesha2_in_memory_next_msg_mgr_ops
+struct sandesha2_next_msg_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -57,85 +57,85 @@ struct sandesha2_in_memory_next_msg_mgr_ops
      
     axis2_bool_t (AXIS2_CALL *
     insert) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
     remove) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             axis2_char_t *msg_id);
 
     sandesha2_next_msg_bean_t *(AXIS2_CALL *
     retrieve) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             axis2_char_t *msg_id);
 
     axis2_bool_t (AXIS2_CALL *
     update) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     find) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     sandesha2_next_msg_bean_t *(AXIS2_CALL *
     find_unique) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     retrieve_all) (
-            sandesha2_in_memory_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env);
 };
 
-struct sandesha2_in_memory_next_msg_mgr
+struct sandesha2_next_msg_mgr
 {
-    sandesha2_in_memory_next_msg_mgr_ops_t *ops;
+    sandesha2_next_msg_mgr_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_in_memory_next_msg_mgr_t * AXIS2_CALL
-sandesha2_in_memory_next_msg_mgr_create(
+AXIS2_EXTERN sandesha2_next_msg_mgr_t * AXIS2_CALL
+sandesha2_next_msg_mgr_create(
         const axis2_env_t *env,
         axis2_ctx_t *ctx);
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_MGR_FREE(next_msg, env) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->free (next_msg, env))
+#define SANDESHA2_NEXT_MSG_MGR_FREE(next_msg, env) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->free (next_msg, env))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_INSERT(next_msg, env, bean) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_INSERT(next_msg, env, bean) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        insert (next_msg, env, bean))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_REMOVE(next_msg, env, msg_id) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_REMOVE(next_msg, env, msg_id) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        remove (next_msg, env, msg_id))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_RETRIEVE(next_msg, env, msg_id) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_RETRIEVE(next_msg, env, msg_id) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        retrieve (next_msg, env, msg_id))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_UPDATE(next_msg, env, bean) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_UPDATE(next_msg, env, bean) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        update (next_msg, env, bean))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_FIND(next_msg, env, bean) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_FIND(next_msg, env, bean) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        find_by_next_msg_bean (next_msg, env, bean))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_FIND_UNIQUE(next_msg, env, bean) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_FIND_UNIQUE(next_msg, env, bean) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        find_unique (next_msg, env, bean))
 
-#define SANDESHA2_IN_MEMORY_NEXT_MSG_RETRIEVE_ALL(next_msg, env) \
-      (((sandesha2_in_memory_next_msg_mgr_t *) next_msg)->ops->\
+#define SANDESHA2_NEXT_MSG_RETRIEVE_ALL(next_msg, env) \
+      (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        retrieve_all (next_msg, env))
 
 
@@ -144,4 +144,4 @@ sandesha2_in_memory_next_msg_mgr_create(
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_IN_MEMORY_NEXT_MSG_MGR_H */
+#endif /* SANDESHA2_NEXT_MSG_MGR_H */
