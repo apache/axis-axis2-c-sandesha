@@ -28,11 +28,11 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_module_desc.h>
 #include <sandesha2_transaction.h>
-#include <sandesha2_create_seq_bean_mgr.h>
-#include <sandesha2_next_msg_bean_mgr.h>
-#include <sandesha2_sender_bean_mgr.h>
-#include <sandesha2_seq_property_bean_mgr.h>
-#include <sandesha2_invoker_bean_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_invoker_mgr.h>
 
 
 #ifdef __cplusplus
@@ -76,28 +76,28 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
             
-    sandesha2_create_seq_bean_mgr_t* (AXIS2_CALL *
-        get_create_seq_bean_mgr) 
+    sandesha2_create_seq_mgr_t* (AXIS2_CALL *
+        get_create_seq_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
     
-    sandesha2_next_msg_bean_mgr_t* (AXIS2_CALL *
-        get_next_msg_bean_mgr) 
+    sandesha2_next_msg_mgr_t* (AXIS2_CALL *
+        get_next_msg_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
 
-    sandesha2_sender_bean_mgr_t* (AXIS2_CALL *
-        get_retrans_bean_mgr) 
+    sandesha2_sender_mgr_t* (AXIS2_CALL *
+        get_retrans_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
     
-    sandesha2_seq_property_bean_mgr_t* (AXIS2_CALL *
-        get_seq_property_bean_mgr) 
+    sandesha2_seq_property_mgr_t* (AXIS2_CALL *
+        get_seq_property_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
 
-    sandesha2_invoker_bean_mgr_t* (AXIS2_CALL *
-        get_storage_map_bean_mgr) 
+    sandesha2_invoker_mgr_t* (AXIS2_CALL *
+        get_storage_map_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
             
@@ -165,19 +165,19 @@ sandesha2_storage_mgr_create(
     ((storage_man)->ops->get_transaction(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_create_seq_bean_mgr(storage_man, env))
+    ((storage_man)->ops->get_create_seq_mgr(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_next_msg_bean_mgr(storage_man, env))
+    ((storage_man)->ops->get_next_msg_mgr(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_GET_RETRANS_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_retrans_bean_mgr(storage_man, env))
+    ((storage_man)->ops->get_retrans_mgr(storage_man, env))
 
 #define SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_seq_property_bean_mgr(storage_man, env))
+    ((storage_man)->ops->get_seq_property_mgr(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_storage_map_bean_mgr(storage_man, env))
+    ((storage_man)->ops->get_storage_map_mgr(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, storage_key, \
     msg_ctx) \

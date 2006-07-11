@@ -253,7 +253,7 @@ sandesha2_create_seq_from_om_node(sandesha2_iom_rm_element_t *create_seq,
                         AXIS2_FAILURE);
         return NULL;
     }
-    seq_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQUENCE,
+    seq_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ,
                         create_seq_impl->rm_ns_val, NULL);
     if(NULL == seq_qname)
     {
@@ -281,7 +281,7 @@ sandesha2_create_seq_from_om_node(sandesha2_iom_rm_element_t *create_seq,
     {
         return NULL;
     }
-    offer_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQUENCE_OFFER, 
+    offer_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_OFFER, 
                         create_seq_impl->rm_ns_val, NULL);
     if(NULL == offer_qname)
     {
@@ -356,7 +356,7 @@ sandesha2_create_seq_to_om_node(sandesha2_iom_rm_element_t *create_seq,
         return NULL;
     }
     cs_element = axiom_element_create(env, NULL, 
-                        SANDESHA2_WSRM_COMMON_CREATE_SEQUENCE, rm_ns, 
+                        SANDESHA2_WSRM_COMMON_CREATE_SEQ, rm_ns, 
                         &cs_node);
     if(NULL == cs_element)
     {
@@ -475,7 +475,7 @@ sandesha2_create_seq_to_soap_env(sandesha2_iom_rm_part_t *create_seq,
      * Remove if old exists
      */
     create_seq_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_CREATE_SEQUENCE, 
+                        SANDESHA2_WSRM_COMMON_CREATE_SEQ, 
                         create_seq_impl->rm_ns_val, NULL);
     if(NULL == create_seq_qname)
     {

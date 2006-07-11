@@ -208,7 +208,7 @@ sandesha2_next_msg_mgr_insert(
 
     axis2_thread_mutex_lock(next_msg_impl->mutex);
 
-    seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(bean, env);
+    seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(bean, env);
     if(!seq_id)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_KEY_IS_NULL, AXIS2_FAILURE);
@@ -277,7 +277,7 @@ sandesha2_next_msg_mgr_update(
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
     axis2_thread_mutex_lock(next_msg_impl->mutex);
-    seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(bean, env);
+    seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(bean, env);
     if(!seq_id)
     {
         axis2_thread_mutex_unlock(next_msg_impl->mutex);
@@ -330,8 +330,8 @@ sandesha2_next_msg_mgr_find(
         {
             equal = AXIS2_FALSE;
         }
-        seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(bean, env);
-        temp_seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(temp, env);
+        seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(bean, env);
+        temp_seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(temp, env);
         if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
         {
             equal = AXIS2_FALSE;

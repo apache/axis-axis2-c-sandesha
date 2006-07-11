@@ -97,26 +97,26 @@ AXIS2_DECLARE_DATA struct sandesha2_property_bean_ops
             axis2_bool_t exp_backoff);
             
     axis2_char_t* (AXIS2_CALL *
-        get_in_mem_storage_manager) 
+        get_in_mem_storage_mgr) 
             (sandesha2_property_bean_t *bean,
             const axis2_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
-        set_in_mem_storage_manager) 
+        set_in_mem_storage_mgr) 
             (sandesha2_property_bean_t *bean,
             const axis2_env_t *env,
-            axis2_char_t *manager);
+            axis2_char_t *mgr);
             
     axis2_char_t* (AXIS2_CALL *
-        get_permanent_storage_manager) 
+        get_permanent_storage_mgr) 
             (sandesha2_property_bean_t *bean,
             const axis2_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
-        set_permanent_storage_manager) 
+        set_permanent_storage_mgr) 
             (sandesha2_property_bean_t *bean,
             const axis2_env_t *env,
-            axis2_char_t *manager);
+            axis2_char_t *mgr);
             
     axis2_bool_t (AXIS2_CALL *
         is_in_order) 
@@ -209,17 +209,17 @@ sandesha2_property_bean_create(
 #define SANDESHA2_PROPERTY_BEAN_SET_EXP_BACKOFF(bean, env, backoff)\
     ((bean)->ops->set_exp_backoff(bean, env, backoff))
     
-#define SANDESHA2_PROPERTY_BEAN_GET_IN_MEM_STORAGE_MANAGER(bean, env)\
-    ((bean)->ops->get_in_mem_storage_manager(bean, env))
+#define SANDESHA2_PROPERTY_BEAN_GET_IN_MEM_STORAGE_MGR(bean, env)\
+    ((bean)->ops->get_in_mem_storage_mgr(bean, env))
     
-#define SANDESHA2_PROPERTY_BEAN_SET_IN_MEM_STORAGE_MANAGER(bean, env, manager)\
-    ((bean)->ops->set_in_mem_storage_manager(bean, env, manager))
+#define SANDESHA2_PROPERTY_BEAN_SET_IN_MEM_STORAGE_MGR(bean, env, mgr)\
+    ((bean)->ops->set_in_mem_storage_mgr(bean, env, mgr))
     
-#define SANDESHA2_PROPERTY_BEAN_GET_PERMENENT_STORAGE_MANAGER(bean, env)\
-    ((bean)->ops->get_permanent_storage_manager(bean, env))
+#define SANDESHA2_PROPERTY_BEAN_GET_PERMENENT_STORAGE_MGR(bean, env)\
+    ((bean)->ops->get_permanent_storage_mgr(bean, env))
     
-#define SANDESHA2_PROPERTY_BEAN_SET_PERMENENT_STORAGE_MANAGER(bean, env, manager)\
-    ((bean)->ops->get_permanent_storage_manager(bean, env, manager))
+#define SANDESHA2_PROPERTY_BEAN_SET_PERMENENT_STORAGE_MGR(bean, env, mgr)\
+    ((bean)->ops->get_permanent_storage_mgr(bean, env, mgr))
     
 #define SANDESHA2_PROPERTY_BEAN_IS_IN_ORDER(bean, env)\
     ((bean)->ops->is_in_order(bean, env))

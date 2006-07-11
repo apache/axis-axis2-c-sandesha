@@ -35,10 +35,10 @@ AXIS2_DECLARE_DATA struct sandesha2_next_msg_bean_ops
 				const axis2_env_t *env);
 
 	axis2_char_t* (AXIS2_CALL *
-		get_sequence_id) (struct sandesha2_next_msg_bean *next_msg_bean,
+		get_seq_id) (struct sandesha2_next_msg_bean *next_msg_bean,
 				const axis2_env_t *env);
 	void (AXIS2_CALL *
-		set_sequence_id) (struct sandesha2_next_msg_bean *next_msg_bean,
+		set_seq_id) (struct sandesha2_next_msg_bean *next_msg_bean,
 				const axis2_env_t *env, axis2_char_t *seq_id);
 
 	long (AXIS2_CALL *
@@ -68,11 +68,11 @@ AXIS2_EXTERN sandesha2_next_msg_bean_t* AXIS2_CALL
 #define SANDESHA2_NEXT_MSG_BEAN_FREE(next_msg_bean, env) \
 	(next_msg_bean)->ops->free(next_msg_bean, env)
 
-#define SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(next_msg_bean, env) \
-	(next_msg_bean)->ops->get_sequence_id(next_msg_bean, env)
+#define SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(next_msg_bean, env) \
+	(next_msg_bean)->ops->get_seq_id(next_msg_bean, env)
 
-#define SANDESHA2_NEXT_MSG_BEAN_SET_SEQUENCE_ID(next_msg_bean, env, seq_id) \
-	(next_msg_bean)->ops->set_sequence_id(next_msg_bean, env, seq_id)
+#define SANDESHA2_NEXT_MSG_BEAN_SET_SEQ_ID(next_msg_bean, env, seq_id) \
+	(next_msg_bean)->ops->set_seq_id(next_msg_bean, env, seq_id)
 
 #define SANDESHA2_NEXT_MSG_BEAN_GET_NEXT_MSG_NO_TO_PROCESS(next_msg_bean, env) \
 	(next_msg_bean)->ops->get_next_msg_no_to_process(next_msg_bean, env)

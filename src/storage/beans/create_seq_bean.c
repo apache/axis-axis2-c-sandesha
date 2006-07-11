@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <sandesha2/sandesha2_create_seq_bean.h>
+#include <sandesha2_create_seq_bean.h>
 #include <axis2_env.h>
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
@@ -28,13 +28,13 @@ struct sandesha2_create_seq_bean_impl
 {
 	sandesha2_create_seq_bean_t o_bean;
 
-	/*  a unique identifier that can be used to identify the messages of a certain sequence */
+	/*  a unique identifier that can be used to identify the messages of a certain seq */
 	axis2_char_t *internal_seq_id;
 
-	/* This is the message ID of the create sequence message. */
+	/* This is the message ID of the create seq message. */
 	axis2_char_t *create_seq_msg_id;
 
-	/*  This is the actual Sequence ID of the sequence.*/
+	/*  This is the actual Sequence ID of the seq.*/
 	axis2_char_t *seq_id;
 
 };

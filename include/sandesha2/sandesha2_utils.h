@@ -41,24 +41,24 @@ extern "C"
  * @ingroup sandesha2_util
  * @{
  */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
 
 AXIS2_EXTERN long AXIS2_CALL
-sandesha2_util_get_current_time_in_millis(
+sandesha2_utils_get_current_time_in_millis(
         const axis2_env_t *env);
 
-#define sandesha2_util_get_current_time_in_millis SANDESHA2_UTIL_GET_CURRENT_TIME_IN_MILLIS
+#define sandesha2_utils_get_current_time_in_millis SANDESHA2_UTILS_GET_CURRENT_TIME_IN_MILLIS
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
                         axiom_soap_envelope_t *envelope, axis2_qname_t *qname);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(const axis2_env_t *env,
                         axis2_char_t *key,
-                        sandesha2_storage_manager_t *storage_man);
+                        sandesha2_storage_mgr_t *storage_man);
                         
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx,
                         axis2_conf_t *conf);
                         
@@ -66,7 +66,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(const axis2_env_t *env,
                         axis2_char_t *id,
                         axis2_char_t *name,
-                        sandesha2_storage_manager_t *storage_man);
+                        sandesha2_storage_mgr_t *storage_man);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(const axis2_env_t *env,
@@ -97,12 +97,12 @@ sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
 sandesha2_utils_get_transport_out(const axis2_env_t *env);
 
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_inmemory_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx);
                         
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_permanent_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx);
 
 /** @} */

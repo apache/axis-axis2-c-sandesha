@@ -38,21 +38,21 @@ extern "C"
 	 */
 	#define SANDESHA2_SPEC_2005_02_NS_URI "http://schemas.xmlsoap.org/ws/2005/02/rm"
 		
-	#define SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQUENCE "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence"
+	#define SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQUENCE_RESPONSE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ_RESPONSE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_02_ACTION_SEQUENCE_ACKNOWLEDGEMENT  "http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT  "http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQUENCE  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
+	#define SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
 
-	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQUENCE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence"
+	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQUENCE_RESPONSE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_SEQUENCE_ACKNOWLEDGEMENT  "http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_TERMINATE_SEQUENCE  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
+	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_TERMINATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
 	
 	/**
 	 * Spec 2005-10
@@ -60,35 +60,35 @@ extern "C"
 			
 	#define SANDESHA2_SPEC_2005_10_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200602"
 		
-	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
+	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQUENCE_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_SEQUENCE_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
+	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQUENCE_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
 			
 	#define SANDESHA2_SPEC_2005_10_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
+	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQUENCE_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse"
+	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQUENCE_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_SEQUENCE_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQUENCE_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
 			
 	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CLOSE_SEQUENCE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
+	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
 
 	/**
 	 * WSRM Common constants
@@ -100,29 +100,29 @@ extern "C"
 
 	#define SANDESHA2_WSRM_COMMON_LAST_MSG  "LastMessage"
 
-	#define SANDESHA2_WSRM_COMMON_SEQUENCE  "Sequence"
+	#define SANDESHA2_WSRM_COMMON_SEQ  "Sequence"
 
-	#define SANDESHA2_WSRM_COMMON_SEQUENCE_OFFER  "Offer"
+	#define SANDESHA2_WSRM_COMMON_SEQ_OFFER  "Offer"
 
-	#define SANDESHA2_WSRM_COMMON_TERMINATE_SEQUENCE  "TerminateSequence"
+	#define SANDESHA2_WSRM_COMMON_TERMINATE_SEQ  "TerminateSequence"
 
-	#define SANDESHA2_WSRM_COMMON_CLOSE_SEQUENCE  "CloseSequence"
+	#define SANDESHA2_WSRM_COMMON_CLOSE_SEQ  "CloseSequence"
 		
-	#define SANDESHA2_WSRM_COMMON_CLOSE_SEQUENCE_RESPONSE  "CloseSequenceResponse"
+	#define SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE  "CloseSequenceResponse"
 		
-	#define SANDESHA2_WSRM_COMMON_TERMINATE_SEQUENCE_RESPONSE  "TerminateSequenceResponse"
+	#define SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE  "TerminateSequenceResponse"
 		
 	#define SANDESHA2_WSRM_COMMON_FAULT_CODE  "FaultCode"
 
-	#define SANDESHA2_WSRM_COMMON_SEQUENCE_FAULT  "SequenceFault"
+	#define SANDESHA2_WSRM_COMMON_SEQ_FAULT  "SequenceFault"
 
 	#define SANDESHA2_WSRM_COMMON_ACKS_TO  "AcksTo"
 
 	#define SANDESHA2_WSRM_COMMON_EXPIRES  "Expires"
 
-	#define SANDESHA2_WSRM_COMMON_CREATE_SEQUENCE  "CreateSequence"
+	#define SANDESHA2_WSRM_COMMON_CREATE_SEQ  "CreateSequence"
 
-	#define SANDESHA2_WSRM_COMMON_CREATE_SEQUENCE_RESPONSE  "CreateSequenceResponse"
+	#define SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE  "CreateSequenceResponse"
 
 	#define SANDESHA2_WSRM_COMMON_ACK_REQUESTED  "AckRequested"
 
@@ -134,7 +134,7 @@ extern "C"
 
 	#define SANDESHA2_WSRM_COMMON_NACK  "Nack"
 
-	#define SANDESHA2_WSRM_COMMON_SEQUENCE_ACK  "SequenceAcknowledgement"
+	#define SANDESHA2_WSRM_COMMON_SEQ_ACK  "SequenceAcknowledgement"
 
 	#define SANDESHA2_WSRM_COMMON_IDENTIFIER  "Identifier"
 
@@ -160,8 +160,8 @@ extern "C"
 		SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE,
 		SANDESHA2_MSG_TYPE_APPLICATION,
 		SANDESHA2_MSG_TYPE_ACK,
-		SANDESHA2_MSG_TYPE_CLOSE_SEQUENCE,
-		SANDESHA2_MSG_TYPE_CLOSE_SEQUENCE_RESPONSE,
+		SANDESHA2_MSG_TYPE_CLOSE_SEQ,
+		SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE,
 		SANDESHA2_MSG_TYPE_TERMINATE_SEQ,
 		SANDESHA2_MSG_TYPE_ACK_REQUEST,
 		SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE,
@@ -172,14 +172,14 @@ extern "C"
 	enum sandesha2_message_parts 
 	{
 		SANDESHA2_MSG_PART_UNKNOWN = 0,
-		SANDESHA2_MSG_PART_SEQUENCE,
+		SANDESHA2_MSG_PART_SEQ,
 		SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT,
 		SANDESHA2_MSG_PART_ADDR_HEADERS,
 		SANDESHA2_MSG_PART_CREATE_SEQ,
 		SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE,
 		SANDESHA2_MSG_PART_TERMINATE_SEQ,
-		SANDESHA2_MSG_PART_CLOSE_SEQUENCE,
-		SANDESHA2_MSG_PART_CLOSE_SEQUENCE_RESPONSE,
+		SANDESHA2_MSG_PART_CLOSE_SEQ,
+		SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE,
 		SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE,
 		SANDESHA2_MSG_PART_ACK_REQUEST,
 		SANDESHA2_MSG_PART_MAX_MSG_PART_ID
@@ -190,19 +190,19 @@ extern "C"
 	 */		
 	#define SANDESHA2_SEQ_PROP_RM_SPEC_VERSION  "WSRMSpecVersion"
 
-	/* This is not a sequence property. This is used as the
-	 * sequenceId to share data b/w sequences
+	/* This is not a seq property. This is used as the
+	 * seqId to share data b/w seqs
 	 */
-	#define SANDESHA2_SEQ_PROP_ALL_SEQUENCES  "AllSequences"
+	#define SANDESHA2_SEQ_PROP_ALL_SEQS  "AllSequences"
 		
-	/* Addressing version of a sequence. All messages of a sequence should 
+	/* Addressing version of a seq. All messages of a seq should 
 	 * have this addressing version
 	 */
 	#define SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE  "AddressingNamespaceValue"
 
-	/* For incoming sequences this gives the msg no's of the messages that were
+	/* For incoming seqs this gives the msg no's of the messages that were
 	 * received (may be an ack was sent - depending on the policy)
-	 * For out going sequences this gives the messages that were sent and that 
+	 * For out going seqs this gives the messages that were sent and that 
 	 * were successfully acked by the other end point.
 	 */
 	#define SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES  "ClientCompletedMessages"
@@ -213,23 +213,23 @@ extern "C"
 
 	#define SANDESHA2_SEQ_PROP_ACKS_TO_EPR  "acksToEPR"
 
-	#define SANDESHA2_SEQ_PROP_OUT_SEQUENCE_ID  "OutSequenceId"
+	#define SANDESHA2_SEQ_PROP_OUT_SEQ_ID  "OutSequenceId"
 
-	#define SANDESHA2_SEQ_PROP_INTERNAL_SEQUENCE_ID  "TempSequenceId"
+	#define SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID  "TempSequenceId"
 
 	#define SANDESHA2_SEQ_PROP_REPLY_TO_EPR  "ReplyToEPR"
 
 	#define SANDESHA2_SEQ_PROP_APP_MSG_PROCESSOR_LIST  "AppMsgProcessorList"
 
-	#define SANDESHA2_SEQ_PROP_OUT_CREATE_SEQUENCE_SENT  "OutCreateSeqSent"
+	#define SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT  "OutCreateSeqSent"
 
 	#define SANDESHA2_SEQ_PROP_NEXT_MESSAGE_NUMBER  "NextMsgNo"
 
-	#define SANDESHA2_SEQ_PROP_INCOMING_SEQUENCE_LIST  "IncomingSequenceList"
+	#define SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST  "IncomingSequenceList"
 
 	#define SANDESHA2_SEQ_PROP_CHECK_RESPONSE  "CheckResponse"
 
-	#define SANDESHA2_SEQ_PROP_OFFERED_SEQUENCE  "OfferedSequence"
+	#define SANDESHA2_SEQ_PROP_OFFERED_SEQ  "OfferedSequence"
 
 	#define SANDESHA2_SEQ_PROP_TERMINATE_ADDED  "TerminateAdded"
 		
@@ -243,15 +243,15 @@ extern "C"
 		
 	#define SANDESHA2_SEQ_PROP_OUT_SEQ_ACKSTO  "OutSequenceAcksTo"
 		
-	#define SANDESHA2_SEQ_PROP_SEQUENCE_CLOSED  "SequenceClosed"
+	#define SANDESHA2_SEQ_PROP_SEQ_CLOSED  "SequenceClosed"
 		
-	#define SANDESHA2_SEQ_PROP_SEQUENCE_TERMINATED  "SequenceTerminated"
+	#define SANDESHA2_SEQ_PROP_SEQ_TERMINATED  "SequenceTerminated"
 		
-	#define SANDESHA2_SEQ_PROP_SEQUENCE_TIMED_OUT  "SequenceTimedOut"
+	#define SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT  "SequenceTimedOut"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_MESSAGE  "LastMessage"
 
-	#define SANDESHA2_SEQ_PROP_REQUEST_SIDE_SEQUENCE_ID  "RequestSideSequenceID" 		//used only at the server side
+	#define SANDESHA2_SEQ_PROP_REQUEST_SIDE_SEQ_ID  "RequestSideSequenceID" 		//used only at the server side
 		
 	#define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER  "HighestInMsgNumber"
 		
@@ -296,7 +296,7 @@ extern "C"
 
 	#define SANDESHA2_BEAN_MAP_RETRANSMITTER  "RetransmitterBeanMap"
 
-	#define SANDESHA2_BEAN_MAP_SEQUENCE_PROPERTY  "SequencePropertyBeanMap"
+	#define SANDESHA2_BEAN_MAP_SEQ_PROPERTY  "SequencePropertyBeanMap"
 
 	#define SANDESHA2_BEAN_MAP_STORAGE_MAP  "StorageMapBeanMap"
 
@@ -306,11 +306,11 @@ extern "C"
 	 * SOAP Faults
 	 */
 	/* Fault subcodes */
-	#define SANDESHA2_SOAP_FAULT_SUBCODE_SEQUENCE_TERMINATED  "wsrm:SequenceTerminated"
+	#define SANDESHA2_SOAP_FAULT_SUBCODE_SEQ_TERMINATED  "wsrm:SequenceTerminated"
 			
-	#define SANDESHA2_SOAP_FAULT_SUBCODE_SEQUENCE_CLOSED  "wsrm:SequenceClosed"
+	#define SANDESHA2_SOAP_FAULT_SUBCODE_SEQ_CLOSED  "wsrm:SequenceClosed"
 
-	#define SANDESHA2_SOAP_FAULT_SUBCODE_UNKNOWN_SEQUENCE  "wsrm:UnknownSequence"
+	#define SANDESHA2_SOAP_FAULT_SUBCODE_UNKNOWN_SEQ  "wsrm:UnknownSequence"
 
 	#define SANDESHA2_SOAP_FAULT_SUBCODE_INVALID_ACKNOWLEDGEMENT  "wsrm:InvalidAcknowledgement"
 
@@ -318,16 +318,16 @@ extern "C"
 
 	#define SANDESHA2_SOAP_FAULT_SUBCODE_LAST_MESSAGE_NO_EXCEEDED  "wsrm:LastMessageNumberExceeded"
 
-	#define SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQUENCE_REFUSED  "wsrm:CreateSequenceRefused"
+	#define SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQ_REFUSED  "wsrm:CreateSequenceRefused"
 	
 	/* Fault Types */
-	#define SANDESHA2_SOAP_FAULT_TYPE_UNKNOWN_SEQUENCE  1
+	#define SANDESHA2_SOAP_FAULT_TYPE_UNKNOWN_SEQ  1
 
 	#define SANDESHA2_SOAP_FAULT_TYPE_MESSAGE_NUMBER_ROLLOVER  2
 
 	#define SANDESHA2_SOAP_FAULT_TYPE_INVALID_ACKNOWLEDGEMENT  3
 
-	#define SANDESHA2_SOAP_FAULT_TYPE_CREATE_SEQUENCE_REFUSED  4
+	#define SANDESHA2_SOAP_FAULT_TYPE_CREATE_SEQ_REFUSED  4
 			
 	#define SANDESHA2_SOAP_FAULT_TYPE_LAST_MESSAGE_NO_EXCEEDED  5
 
@@ -343,11 +343,11 @@ extern "C"
 		
 	#define SANDESHA2_PROPERTIES_INACTIVETIMEOUT_MEASURE  "InactivityTimeoutMeasure"
 		
-	#define SANDESHA2_PROPERTIES_STORAGE_MANAGER  "StorageManager"
+	#define SANDESHA2_PROPERTIES_STORAGE_MGR  "StorageManager"
 		
-	#define SANDESHA2_PROPERTIES_IN_MEMORY_STORAGE_MANAGER  "InMemoryStorageManager"
+	#define SANDESHA2_PROPERTIES_IN_MEMORY_STORAGE_MGR  "InMemoryStorageManager"
 		
-	#define SANDESHA2_PROPERTIES_PERM_STORAGE_MANAGER  "PermanentStorageManager"
+	#define SANDESHA2_PROPERTIES_PERM_STORAGE_MGR  "PermanentStorageManager"
 		
 	#define SANDESHA2_PROPERTIES_INORDER_INVOCATION  "InvokeInOrder"
 		
@@ -369,11 +369,11 @@ extern "C"
 			
 	#define SANDESHA2_DEF_VAL_INACTIVETIMEOUT_MEASURE  "seconds"   //this can be - seconds,minutes,hours,days
 			
-	#define SANDESHA2_DEF_VAL_STORAGE_MANAGER  "InMemoryStorageManager"
+	#define SANDESHA2_DEF_VAL_STORAGE_MGR  "InMemoryStorageManager"
 		
-	#define SANDESHA2_DEF_VAL_IN_MEMORY_STORAGE_MANAGER  "InMemoryStorageManager"
+	#define SANDESHA2_DEF_VAL_IN_MEMORY_STORAGE_MGR  "InMemoryStorageManager"
 			
-	#define SANDESHA2_DEF_VAL_PERM_STORAGE_MANAGER  "InMemoryStorageManager"
+	#define SANDESHA2_DEF_VAL_PERM_STORAGE_MGR  "InMemoryStorageManager"
 			
 	#define SANDESHA2_DEF_VAL_INORDER_INVOCATION  true
 			
@@ -401,7 +401,7 @@ extern "C"
 
 	#define SANDESHA2_TERMINATE_DELAY  100
 
-	#define SANDESHA2_TEMP_SEQUENCE_ID  "uuid:tempID"
+	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
 	#define SANDESHA2_ACK_PROCSSED  "AckProcessed"
 
@@ -434,7 +434,7 @@ extern "C"
 	
 	#define SANDESHA2_EXECUTIN_CHAIN_SEPERATOR  "."
 	
-	#define SANDESHA2_INTERNAL_SEQUENCE_PREFIX  "Sandesha2InternalSequence"
+	#define SANDESHA2_INTERNAL_SEQ_PREFIX  "Sandesha2InternalSequence"
 	
 	#define SANDESHA2_SANDESHA_PROPERTY_BEAN  "Sandesha2PropertyBean"
 	
@@ -442,11 +442,11 @@ extern "C"
 	
 	#define SANDESHA2_LIST_PART_SEPERATOR "-"
 	
-	#define SANDESHA2_INMEMORY_STORAGE_MANAGER  "inmemory"
+	#define SANDESHA2_INMEMORY_STORAGE_MGR  "inmemory"
 	
-	#define SANDESHA2_PERMANENT_STORAGE_MANAGER  "persistent"
+	#define SANDESHA2_PERMANENT_STORAGE_MGR  "persistent"
 	
-	#define SANDESHA2_DEFAULT_STORAGE_MANAGER "inmemory"
+	#define SANDESHA2_DEFAULT_STORAGE_MGR "inmemory"
 	
 	#define SANDESHA2_SENDER  "Sender"
 	
@@ -454,7 +454,7 @@ extern "C"
 	
 	#define SANDESHA2_WITHIN_TRANSACTION  "WithinTransaction"
 	
-	#define SANDESHA2_STORAGE_MANAGER_PARAMETER   "Sandesha2StorageManager"
+	#define SANDESHA2_STORAGE_MGR_PARAMETER   "Sandesha2StorageManager"
 	
 	#define SANDESHA2_POST_FAILURE_MESSAGE  "PostFailureMessage"
 	

@@ -15,7 +15,7 @@
  */
 #include <sandesha2/sandesha2_transport_sender.h>
 #include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_storage_manager.h>
+#include <sandesha2/sandesha2_storage_mgr.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <axis2_conf.h>
 #include <axis2_string.h>
@@ -155,7 +155,7 @@ sandesha2_transport_sender_invoke
     axis2_char_t *key = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
-    sandesha2_storage_manager_t *storage_man = NULL;
+    sandesha2_storage_mgr_t *storage_man = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -177,7 +177,7 @@ sandesha2_transport_sender_invoke
     key = AXIS2_PROPERTY_GET_VALUE(property, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
-    storage_man = sandesha2_utils_get_storage_manager(env, conf_ctx, conf);
+    storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
@@ -185,6 +185,6 @@ sandesha2_transport_sender_invoke
                         env));
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
                         property, AXIS2_FALSE);
-    SANDESHA2_STORAGE_MANAGER_UPDATE_MSG_CTX(storage_man, env, key, msg_ctx);
+    SANDESHA2_STORAGE_MGR_UPDATE_MSG_CTX(storage_man, env, key, msg_ctx);
     return AXIS2_SUCCESS;
 }

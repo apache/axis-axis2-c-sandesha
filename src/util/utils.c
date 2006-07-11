@@ -20,7 +20,7 @@
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_in_order_invoker.h>
 #include <sandesha2/sandesha2_transport_sender.h>
-#include <sandesha2/sandesha2_seq_property_bean_manager.h>
+#include <sandesha2/sandesha2_seq_property_bean_mgr.h>
 #include <sandesha2/sandesha2_error.h>
 #include <axis2_string.h>
 #include <axis2_conf.h>
@@ -66,7 +66,7 @@ sandesha2_utils_remove_soap_body_part(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN long AXIS2_CALL
-sandesha2_util_get_current_time_in_millis(
+sandesha2_utils_get_current_time_in_millis(
         const axis2_env_t *env)
 {
     struct timeb *tp = AXIS2_MALLOC(env->allocator, sizeof(struct timeb));
@@ -82,26 +82,26 @@ sandesha2_util_get_current_time_in_millis(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(const axis2_env_t *env,
                         axis2_char_t *key,
-                        sandesha2_storage_manager_t *storage_man)
+                        sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_seq_property_bean_manager_t *seq_prop_man = NULL;
+    sandesha2_seq_property_bean_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *rm_version_bean = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     
-    seq_prop_man = SANDESHA2_STORAGE_MANAGER_GET_SEQ_PROPERTY_BEAN_MANAGER(
+    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
                         storage_man, env);
-    rm_version_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_RETRIEVE(seq_prop_man, 
+    rm_version_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MGR_RETRIEVE(seq_prop_man, 
                         env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
     if(NULL == rm_version_bean)
         return NULL;
     return SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(rm_version_bean, env);
 }
 
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx,
                         axis2_conf_t *conf)
 {
@@ -113,18 +113,18 @@ sandesha2_utils_get_storage_manager(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
     parameter = AXIS2_CONF_GET_PARAM(conf, env, 
-                        SANDESHA2_STORAGE_MANAGER_PARAMETER);
+                        SANDESHA2_STORAGE_MGR_PARAMETER);
     if(NULL == parameter)
-        parameter = axis2_param_create(env, SANDESHA2_STORAGE_MANAGER_PARAMETER,
-                        SANDESHA2_DEFAULT_STORAGE_MANAGER);
+        parameter = axis2_param_create(env, SANDESHA2_STORAGE_MGR_PARAMETER,
+                        SANDESHA2_DEFAULT_STORAGE_MGR);
     value = AXIS2_PARAM_GET_VALUE(parameter, env);
-    if(0 == AXIS2_STRCMP(value, SANDESHA2_INMEMORY_STORAGE_MANAGER))
-        return sandesha2_utils_get_inmemory_storage_manager(env, conf_ctx);
-    else if (0 == AXIS2_STRCMP(value, SANDESHA2_PERMANENT_STORAGE_MANAGER))
-        return sandesha2_utils_get_permanent_storage_manager(env, conf_ctx);
+    if(0 == AXIS2_STRCMP(value, SANDESHA2_INMEMORY_STORAGE_MGR))
+        return sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
+    else if (0 == AXIS2_STRCMP(value, SANDESHA2_PERMANENT_STORAGE_MGR))
+        return sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
     else
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_STORAGE_MANAGER,
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_STORAGE_MGR,
                         AXIS2_FAILURE);
         return NULL;
     }
@@ -135,9 +135,9 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(const axis2_env_t *env,
                         axis2_char_t *id,
                         axis2_char_t *name,
-                        sandesha2_storage_manager_t *storage_man)
+                        sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_seq_property_bean_manager_t *seq_prop_man = NULL;
+    sandesha2_seq_property_bean_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -145,9 +145,9 @@ sandesha2_utils_get_seq_property(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, name, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     
-    seq_prop_man = SANDESHA2_STORAGE_MANAGER_GET_SEQ_PROPERTY_BEAN_MANAGER(
+    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
                         storage_man, env);
-    seq_prop_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_RETRIEVE(seq_prop_man,
+    seq_prop_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MGR_RETRIEVE(seq_prop_man,
                         env, id, name);
     if(NULL == seq_prop_bean)
         return NULL;
@@ -282,7 +282,7 @@ sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
-    return axis2_strcat(env, SANDESHA2_INTERNAL_SEQUENCE_PREFIX, ":",
+    return axis2_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":",
                         seq_id, NULL);
 }
 
@@ -302,8 +302,8 @@ sandesha2_utils_get_transport_out(const axis2_env_t *env)
     return out_desc;
 }
 
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_inmemory_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx)
 {
     axis2_property_t *property = NULL;
@@ -312,29 +312,29 @@ sandesha2_utils_get_inmemory_storage_manager(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     
     property = AXIS2_CTX_GET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
-                        env, SANDESHA2_INMEMORY_STORAGE_MANAGER, AXIS2_FALSE);
+                        env, SANDESHA2_INMEMORY_STORAGE_MGR, AXIS2_FALSE);
 
     if(NULL != property && NULL != AXIS2_PROPERTY_GET_VALUE(property, env))
-        return (sandesha2_storage_manager_t*)AXIS2_PROPERTY_GET_VALUE(property, 
+        return (sandesha2_storage_mgr_t*)AXIS2_PROPERTY_GET_VALUE(property, 
                         env);
     else
     {
-        /* TODO we need to class load the proper storage manager */
-        sandesha2_storage_manager_t *storage_man = 
-                        sandesha2_storage_manager_create(env, conf_ctx);
+        /* TODO we need to class load the proper storage mgr */
+        sandesha2_storage_mgr_t *storage_man = 
+                        sandesha2_storage_mgr_create(env, conf_ctx);
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_man);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
-                        env, SANDESHA2_INMEMORY_STORAGE_MANAGER, property, 
+                        env, SANDESHA2_INMEMORY_STORAGE_MGR, property, 
                         AXIS2_FALSE);
         return storage_man;
     }
     return NULL;    
 }
 
-AXIS2_EXTERN sandesha2_storage_manager_t* AXIS2_CALL
-sandesha2_utils_get_permanent_storage_manager(const axis2_env_t *env,
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx)
 {
     AXIS2_ENV_CHECK(env, NULL);

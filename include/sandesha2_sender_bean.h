@@ -116,13 +116,13 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_bean_ops
 			int msg_type);
 
 	axis2_char_t *(AXIS2_CALL *
-		get_sequence_id)(sandesha2_sender_bean_t *sender,
+		get_seq_id)(sandesha2_sender_bean_t *sender,
 			const axis2_env_t *env);
 
 	void (AXIS2_CALL *
-		set_sequence_id) (sandesha2_sender_bean_t *sender,
+		set_seq_id) (sandesha2_sender_bean_t *sender,
 			const axis2_env_t *env,
-			axis2_char_t *sequence_id);
+			axis2_char_t *seq_id);
 
 };
 
@@ -205,11 +205,11 @@ AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
 #define SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(sender_bean, env, msg_type) \
 	((sender_bean)->ops->set_msg_type(sender_bean, env, msg_type))
 	 
-#define SANDESHA2_SENDER_BEAN_GET_SEQUENCE_ID(sender_bean, env) \
-	((sender_bean)->ops->get_sequence_id(sender_bean, env))
+#define SANDESHA2_SENDER_BEAN_GET_SEQ_ID(sender_bean, env) \
+	((sender_bean)->ops->get_seq_id(sender_bean, env))
 	 
-#define SANDESHA2_SENDER_BEAN_SET_SEQUENCE_ID(sender_bean, env, seq_id) \
-	((sender_bean)->ops->set_sequence_id(sender_bean, env, seq_id))
+#define SANDESHA2_SENDER_BEAN_SET_SEQ_ID(sender_bean, env, seq_id) \
+	((sender_bean)->ops->set_seq_id(sender_bean, env, seq_id))
 	 
 
 #ifdef __cplusplus

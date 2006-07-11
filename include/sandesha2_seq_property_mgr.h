@@ -29,7 +29,7 @@
 #include <axis2_utils.h>
 #include <axis2_ctx.h>
 #include <axis2_array_list.h>
-#include <sandesha2_sequence_property_bean.h>
+#include <sandesha2_seq_property_bean.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -59,7 +59,7 @@ struct sandesha2_seq_property_mgr_ops
     insert) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
-            sandesha2_sequence_property_bean_t *bean);
+            sandesha2_seq_property_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
     remove) (
@@ -68,7 +68,7 @@ struct sandesha2_seq_property_mgr_ops
             axis2_char_t *seq_id,
             axis2_char_t *name);
 
-    sandesha2_sequence_property_bean_t *(AXIS2_CALL *
+    sandesha2_seq_property_bean_t *(AXIS2_CALL *
     retrieve) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
@@ -79,19 +79,19 @@ struct sandesha2_seq_property_mgr_ops
     update) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
-            sandesha2_sequence_property_bean_t *bean);
+            sandesha2_seq_property_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     find) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
-            sandesha2_sequence_property_bean_t *bean);
+            sandesha2_seq_property_bean_t *bean);
 
-    sandesha2_sequence_property_bean_t *(AXIS2_CALL *
+    sandesha2_seq_property_bean_t *(AXIS2_CALL *
     find_unique) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
-            sandesha2_sequence_property_bean_t *bean);
+            sandesha2_seq_property_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
     retrieve_all) (
@@ -102,7 +102,7 @@ struct sandesha2_seq_property_mgr_ops
     update_or_insert) (
             sandesha2_seq_property_mgr_t *seq_property,
             const axis2_env_t *env,
-            sandesha2_sequence_property_bean_t *bean);
+            sandesha2_seq_property_bean_t *bean);
 };
 
 struct sandesha2_seq_property_mgr

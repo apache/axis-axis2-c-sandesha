@@ -44,11 +44,11 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_property_bean_ops
 			axis2_char_t *name);
 
 	axis2_char_t *(AXIS2_CALL *
-		get_sequence_id) (struct sandesha2_seq_property_bean *seq_property,
+		get_seq_id) (struct sandesha2_seq_property_bean *seq_property,
 			const axis2_env_t *env);
 
 	void (AXIS2_CALL *
-		set_sequence_id) (struct sandesha2_seq_property_bean *seq_property,
+		set_seq_id) (struct sandesha2_seq_property_bean *seq_property,
 			const axis2_env_t *env,
 			axis2_char_t *seq_id);
 	
@@ -89,11 +89,11 @@ AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 #define SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(seq_prop_bean, env, name) \
 	((seq_prop_bean)->ops->set_name(seq_prop_bean, env, name))
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQUENCE_ID(seq_prop_bean, env) \
-	((seq_prop_bean)->ops->get_sequence_id(seq_prop_bean, env))
+#define SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(seq_prop_bean, env) \
+	((seq_prop_bean)->ops->get_seq_id(seq_prop_bean, env))
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQUENCE_ID(seq_prop_bean, env, seq_id) \
-	((seq_prop_bean)->ops->set_sequence_id(seq_prop_bean, env, seq_id))
+#define SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(seq_prop_bean, env, seq_id) \
+	((seq_prop_bean)->ops->set_seq_id(seq_prop_bean, env, seq_id))
 
 #define SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_prop_bean, env) \
 	((seq_prop_bean)->ops->get_value(seq_prop_bean, env))

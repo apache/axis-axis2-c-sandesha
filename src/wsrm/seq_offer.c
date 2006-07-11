@@ -211,7 +211,7 @@ sandesha2_seq_offer_from_om_node(sandesha2_iom_rm_element_t *seq_offer,
                         AXIS2_FAILURE);
         return NULL;
     }
-    so_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQUENCE_OFFER,
+    so_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_OFFER,
                         seq_offer_impl->ns_val, NULL);
     if(NULL == so_qname)
     {
@@ -282,7 +282,7 @@ sandesha2_seq_offer_to_om_node(sandesha2_iom_rm_element_t *seq_offer,
         return NULL;
     }
     so_element = axiom_element_create(env, NULL, 
-                        SANDESHA2_WSRM_COMMON_SEQUENCE_OFFER, rm_ns, &so_node);
+                        SANDESHA2_WSRM_COMMON_SEQ_OFFER, rm_ns, &so_node);
     if(NULL == so_element)
     {
         return NULL;

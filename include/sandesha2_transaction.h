@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_IN_MEMORY_TRANSACTION_H
-#define SANDESHA2_IN_MEMORY_TRANSACTION_H
+#ifndef SANDESHA2_TRANSACTION_H
+#define SANDESHA2_TRANSACTION_H
 
 /**
- * @file sandesha2_in_memory_transaction.h
+ * @file sandesha2_transaction.h
  * @brief Sandesha In Memory Transaction  Interface
  */
 
@@ -33,15 +33,15 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_in_memory_transaction sandesha2_in_memory_transaction_t;
-typedef struct sandesha2_in_memory_transaction_ops sandesha2_in_memory_transaction_ops_t;
+typedef struct sandesha2_transaction sandesha2_transaction_t;
+typedef struct sandesha2_transaction_ops sandesha2_transaction_ops_t;
 
-/** @defgroup sandesha2_in_memory_transaction In Memory Transaction 
+/** @defgroup sandesha2_transaction In Memory Transaction 
   * @ingroup sandesha2
   * @{
   */
 
-struct sandesha2_in_memory_transaction_ops
+struct sandesha2_transaction_ops
 {
    /** 
      * Deallocate memory
@@ -54,37 +54,37 @@ struct sandesha2_in_memory_transaction_ops
      
     axis2_status_t (AXIS2_CALL *
     commit) (
-            sandesha2_in_memory_transaction_t *seq_mgr,
+            sandesha2_transaction_t *seq_mgr,
             const axis2_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
     rollback) (
-            sandesha2_in_memory_transaction_t *seq_mgr,
+            sandesha2_transaction_t *seq_mgr,
             const axis2_env_t *env);
 };
 
-struct sandesha2_in_memory_transaction
+struct sandesha2_transaction
 {
-    sandesha2_in_memory_transaction_ops_t *ops;
+    sandesha2_transaction_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_in_memory_transaction_t * AXIS2_CALL
-sandesha2_in_memory_transaction_create(
+AXIS2_EXTERN sandesha2_transaction_t * AXIS2_CALL
+sandesha2_transaction_create(
         const axis2_env_t *env);
 
-#define SANDESHA2_IN_MEMORY_TRANSACTION_FREE(seq_mgr, env) \
-      (((sandesha2_in_memory_transaction_t *) seq_mgr)->ops->free (seq_mgr, env))
+#define SANDESHA2_TRANSACTION_FREE(seq_mgr, env) \
+      (((sandesha2_transaction_t *) seq_mgr)->ops->free (seq_mgr, env))
 
-#define SANDESHA2_IN_MEMORY_TRANSACTION_COMMIT(seq_mgr, env) \
-      (((sandesha2_in_memory_transaction_t *) seq_mgr)->ops->\
+#define SANDESHA2_TRANSACTION_COMMIT(seq_mgr, env) \
+      (((sandesha2_transaction_t *) seq_mgr)->ops->\
        commit (seq_mgr, env))
 
-#define SANDESHA2_IN_MEMORY_TRANSACTION_ROLLBACK(seq_mgr, env) \
-      (((sandesha2_in_memory_transaction_t *) seq_mgr)->ops->\
+#define SANDESHA2_TRANSACTION_ROLLBACK(seq_mgr, env) \
+      (((sandesha2_transaction_t *) seq_mgr)->ops->\
        rollback (seq_mgr, env))
 
 /** @} */
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_IN_MEMORY_TRANSACTION_H */
+#endif /* SANDESHA2_TRANSACTION_H */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <sandesha2/sandesha2_invoker_bean.h>
+#include <sandesha2_invoker_bean.h>
 #include <string.h>
 
 /* create_seq_bean struct */
@@ -30,7 +30,7 @@ struct sandesha2_invoker_bean_impl
 	/* The message number of the message. */
 	long msg_no;
 
-	/*  The sequence ID of the sequence the message belong to. */
+	/*  The seq ID of the seq the message belong to. */
 	axis2_char_t *seq_id;
 
 	/* Weather the message has been invoked by the invoker.*/

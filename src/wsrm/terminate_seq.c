@@ -220,7 +220,7 @@ sandesha2_terminate_seq_from_om_node(sandesha2_iom_rm_element_t *terminate_seq,
                         AXIS2_FAILURE);
         return NULL;
     }
-    ts_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQUENCE,
+    ts_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ,
                         terminate_seq_impl->ns_val, NULL);
     if(NULL == ts_qname)
     {
@@ -272,7 +272,7 @@ sandesha2_terminate_seq_to_om_node(sandesha2_iom_rm_element_t *terminate_seq,
         return NULL;
     }
     ts_element = axiom_element_create(env, NULL, 
-                        SANDESHA2_WSRM_COMMON_TERMINATE_SEQUENCE, rm_ns, 
+                        SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, rm_ns, 
                         &ts_node);
     if(NULL == ts_element)
     {
@@ -350,7 +350,7 @@ sandesha2_terminate_seq_to_soap_env(sandesha2_iom_rm_part_t *terminate_seq,
      * Remove if old exists
      */
     ts_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_TERMINATE_SEQUENCE, 
+                        SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
                         terminate_seq_impl->ns_val, NULL);
     if(NULL == ts_qname)
     {

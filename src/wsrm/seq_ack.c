@@ -286,7 +286,7 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
                         AXIS2_FAILURE);
         return NULL;
     }
-    sa_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQUENCE_ACK,
+    sa_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK,
                         seq_ack_impl->ns_val, NULL);
     if(NULL == sa_qname)
     {
@@ -463,7 +463,7 @@ sandesha2_seq_ack_to_om_node(sandesha2_iom_rm_element_t *seq_ack,
         return NULL;
     }
     sa_block = AXIOM_SOAP_HEADER_ADD_HEADER_BLOCK(soap_header, env, 
-                        SANDESHA2_WSRM_COMMON_SEQUENCE_ACK, rm_ns);
+                        SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns);
     if(NULL == sa_block)
     {
         return NULL;
@@ -678,7 +678,7 @@ sandesha2_seq_ack_to_soap_env(sandesha2_iom_rm_part_t *seq_ack,
      * Remove if old exists
      */
     seq_ack_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_SEQUENCE_ACK,
+                        SANDESHA2_WSRM_COMMON_SEQ_ACK,
                         seq_ack_impl->ns_val, NULL);
     if(NULL == seq_ack_qname)
     {

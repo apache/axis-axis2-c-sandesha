@@ -50,7 +50,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_insert(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_remove(
@@ -59,7 +59,7 @@ sandesha2_seq_property_mgr_remove(
         axis2_char_t *seq_id,
         axis2_char_t *name);
 
-sandesha2_sequence_property_bean_t *AXIS2_CALL
+sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
@@ -70,19 +70,19 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
-sandesha2_sequence_property_bean_t *AXIS2_CALL
+sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find_unique(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve_all(
@@ -93,13 +93,13 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update_or_insert(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
 static axis2_char_t *
 sandesha2_seq_property_mgr_get_id(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean);
+        sandesha2_seq_property_bean_t *bean);
 
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
 sandesha2_seq_property_mgr_create(
@@ -129,7 +129,7 @@ sandesha2_seq_property_mgr_create(
     }
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
-            SANDESHA2_BEAN_MAP_SEQUENCE_PROPERTY, AXIS2_FALSE);
+            SANDESHA2_BEAN_MAP_SEQ_PROPERTY, AXIS2_FALSE);
     seq_property_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!seq_property_impl->table)
     {
@@ -144,7 +144,7 @@ sandesha2_seq_property_mgr_create(
         }
         AXIS2_PROPERTY_SET_VALUE(property, env, seq_property_impl->table);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, seq_property_impl->seq_property.ops->free);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_SEQUENCE_PROPERTY, 
+        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_SEQ_PROPERTY, 
                 property, AXIS2_FALSE);
     }
     seq_property_impl->seq_property.ops->free = sandesha2_seq_property_mgr_free;
@@ -213,7 +213,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_insert(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_char_t *seq_id = NULL;
@@ -226,13 +226,13 @@ sandesha2_seq_property_mgr_insert(
 
     axis2_thread_mutex_lock(seq_property_impl->mutex);
 
-    seq_id = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_SEQUENCE_ID(bean, env);
+    seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(bean, env);
     if(!seq_id)
     {
         axis2_thread_mutex_unlock(seq_property_impl->mutex);
         return AXIS2_FALSE;
     }
-    name = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_NAME(bean, env);
+    name = SANDESHA2_SEQ_PROPERTY_BEAN_GET_NAME(bean, env);
     if(!name)
     {
         axis2_thread_mutex_unlock(seq_property_impl->mutex);
@@ -254,7 +254,7 @@ sandesha2_seq_property_mgr_remove(
         axis2_char_t *name)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
-    sandesha2_sequence_property_bean_t *bean = NULL;
+    sandesha2_seq_property_bean_t *bean = NULL;
     axis2_char_t *key = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -275,7 +275,7 @@ sandesha2_seq_property_mgr_remove(
 
 }
 
-sandesha2_sequence_property_bean_t *AXIS2_CALL
+sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
@@ -283,7 +283,7 @@ sandesha2_seq_property_mgr_retrieve(
         axis2_char_t *name)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
-    sandesha2_sequence_property_bean_t *bean = NULL;
+    sandesha2_seq_property_bean_t *bean = NULL;
     axis2_char_t *key = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -294,7 +294,7 @@ sandesha2_seq_property_mgr_retrieve(
     axis2_thread_mutex_lock(seq_property_impl->mutex);
     
     key = axis2_strcat(env, seq_id, ":", name, NULL); 
-    bean = (sandesha2_sequence_property_bean_t *) axis2_hash_get(seq_property_impl->table, 
+    bean = (sandesha2_seq_property_bean_t *) axis2_hash_get(seq_property_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
     axis2_thread_mutex_unlock(seq_property_impl->mutex);
 
@@ -305,11 +305,11 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_char_t *id = NULL;
-    sandesha2_sequence_property_bean_t *bean_l = NULL;
+    sandesha2_seq_property_bean_t *bean_l = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -340,7 +340,7 @@ axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_array_list_t *beans = NULL;
@@ -365,7 +365,7 @@ sandesha2_seq_property_mgr_find(
     for (i = axis2_hash_first (seq_property_impl->table, env); i; 
             i = axis2_hash_next (env, i))
     {
-        sandesha2_sequence_property_bean_t *temp = NULL;
+        sandesha2_seq_property_bean_t *temp = NULL;
         void *v = NULL;
         axis2_bool_t equal = AXIS2_TRUE;
         axis2_char_t *seq_id = NULL;
@@ -376,21 +376,21 @@ sandesha2_seq_property_mgr_find(
         axis2_char_t *temp_value = NULL;
         
         axis2_hash_this (i, NULL, NULL, &v);
-        temp = (sandesha2_sequence_property_bean_t *) v;
-        seq_id = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_SEQUENCE_ID(bean, env);
-        temp_seq_id = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_SEQUENCE_ID(temp, env);
+        temp = (sandesha2_seq_property_bean_t *) v;
+        seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(bean, env);
+        temp_seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(temp, env);
         if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
         {
             equal = AXIS2_FALSE;
         }
-        name = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_NAME(bean, env);
-        temp_name = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_NAME(temp, env);
+        name = SANDESHA2_SEQ_PROPERTY_BEAN_GET_NAME(bean, env);
+        temp_name = SANDESHA2_SEQ_PROPERTY_BEAN_GET_NAME(temp, env);
         if(name && temp_name && 0 != AXIS2_STRCMP(name, temp_name))
         {
             equal = AXIS2_FALSE;
         }
-        value = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_VALUE(bean, env);
-        temp_value = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_VALUE(temp, 
+        value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(bean, env);
+        temp_value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(temp, 
                 env);
         if(value && temp_value && 0 != AXIS2_STRCMP(value, temp_value))
         {
@@ -407,16 +407,16 @@ sandesha2_seq_property_mgr_find(
     return beans;
 }
 
-sandesha2_sequence_property_bean_t *AXIS2_CALL
+sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find_unique(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_array_list_t *beans = NULL;
     int i = 0, size = 0;
-    sandesha2_sequence_property_bean_t *ret = NULL;
+    sandesha2_seq_property_bean_t *ret = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -462,11 +462,11 @@ sandesha2_seq_property_mgr_retrieve_all(
     for (i = axis2_hash_first (seq_property_impl->table, env); i; 
             i = axis2_hash_next (env, i))
     {
-        sandesha2_sequence_property_bean_t *bean = NULL;
+        sandesha2_seq_property_bean_t *bean = NULL;
         void *v = NULL;
         
         axis2_hash_this (i, NULL, NULL, &v);
-        bean = (sandesha2_sequence_property_bean_t *) v;
+        bean = (sandesha2_seq_property_bean_t *) v;
         AXIS2_ARRAY_LIST_ADD(seq_property_impl->values, env, bean);
     }
 
@@ -479,11 +479,11 @@ axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update_or_insert(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_char_t *id = NULL;
-    sandesha2_sequence_property_bean_t *bean_l = NULL;
+    sandesha2_seq_property_bean_t *bean_l = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     seq_property_impl = SANDESHA2_INTF_TO_IMPL(seq_property);
@@ -513,7 +513,7 @@ static axis2_char_t *
 sandesha2_seq_property_mgr_get_id(
         sandesha2_seq_property_mgr_t *seq_property,
         const axis2_env_t *env,
-        sandesha2_sequence_property_bean_t *bean)
+        sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_char_t *seq_id = NULL;
@@ -524,8 +524,8 @@ sandesha2_seq_property_mgr_get_id(
     seq_property_impl = SANDESHA2_INTF_TO_IMPL(seq_property);
 
     axis2_thread_mutex_lock(seq_property_impl->mutex);
-    seq_id = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_SEQUENCE_ID(bean, env);
-    name = SANDESHA2_SEQUENCE_PROPERTY_BEAN_GET_NAME(bean, env);
+    seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(bean, env);
+    name = SANDESHA2_SEQ_PROPERTY_BEAN_GET_NAME(bean, env);
     id = axis2_strcat(env, seq_id, ":", name, NULL);
     axis2_thread_mutex_unlock(seq_property_impl->mutex);
 

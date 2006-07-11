@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <sandesha2/sandesha2_sender_bean.h>
+#include <sandesha2_sender_bean.h>
 #include <string.h>
 
 /*sender_bean struct */
@@ -33,7 +33,7 @@ struct sandesha2_sender_bean_impl
 	axis2_bool_t resend;
 	long time_to_send;
 	int msg_type;
-	axis2_char_t *sequence_id;
+	axis2_char_t *seq_id;
 
 };
 	
@@ -125,13 +125,13 @@ void AXIS2_CALL
 				int msg_type);
 
 axis2_char_t* AXIS2_CALL
-	sandesha2_sender_bean_get_sequence_id(sandesha2_sender_bean_t *sender,
+	sandesha2_sender_bean_get_seq_id(sandesha2_sender_bean_t *sender,
 				const axis2_env_t *env);
 
 void AXIS2_CALL
-	sandesha2_sender_bean_set_sequence_id (sandesha2_sender_bean_t *sender,
+	sandesha2_sender_bean_set_seq_id (sandesha2_sender_bean_t *sender,
 				const axis2_env_t *env,
-				axis2_char_t *sequence_id);
+				axis2_char_t *seq_id);
 
 
 AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
@@ -159,7 +159,7 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 	bean_impl->resend = AXIS2_FALSE;
 	bean_impl->time_to_send = -1;
 	bean_impl->msg_type = -1;
-	bean_impl->sequence_id = NULL;
+	bean_impl->seq_id = NULL;
 
 	bean_impl->o_bean.ops = NULL;
 	bean_impl->o_bean.ops = (sandesha2_sender_bean_ops_t*) AXIS2_MALLOC(env->allocator,
@@ -192,8 +192,8 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 	bean_impl->o_bean.ops->set_time_to_send = sandesha2_sender_bean_set_time_to_send;
 	bean_impl->o_bean.ops->get_msg_type = sandesha2_sender_bean_get_msg_type;
 	bean_impl->o_bean.ops->set_msg_type = sandesha2_sender_bean_set_msg_type;
-	bean_impl->o_bean.ops->get_sequence_id = sandesha2_sender_bean_get_sequence_id;
-	bean_impl->o_bean.ops->set_sequence_id = sandesha2_sender_bean_set_sequence_id;
+	bean_impl->o_bean.ops->get_seq_id = sandesha2_sender_bean_get_seq_id;
+	bean_impl->o_bean.ops->set_seq_id = sandesha2_sender_bean_set_seq_id;
 
 	return &(bean_impl->o_bean);
 }
@@ -231,7 +231,7 @@ sandesha2_sender_bean_create_with_data(const axis2_env_t *env,
 	bean_impl->resend = AXIS2_FALSE;
 	bean_impl->time_to_send = time_to_send;
 	bean_impl->msg_type = -1;
-	bean_impl->sequence_id = NULL;
+	bean_impl->seq_id = NULL;
 
 	bean_impl->o_bean.ops = NULL;
 	bean_impl->o_bean.ops = (sandesha2_sender_bean_ops_t*) AXIS2_MALLOC(env->allocator,
@@ -264,8 +264,8 @@ sandesha2_sender_bean_create_with_data(const axis2_env_t *env,
 	bean_impl->o_bean.ops->set_time_to_send = sandesha2_sender_bean_set_time_to_send;
 	bean_impl->o_bean.ops->get_msg_type = sandesha2_sender_bean_get_msg_type;
 	bean_impl->o_bean.ops->set_msg_type = sandesha2_sender_bean_set_msg_type;
-	bean_impl->o_bean.ops->get_sequence_id = sandesha2_sender_bean_get_sequence_id;
-	bean_impl->o_bean.ops->set_sequence_id = sandesha2_sender_bean_set_sequence_id;
+	bean_impl->o_bean.ops->get_seq_id = sandesha2_sender_bean_get_seq_id;
+	bean_impl->o_bean.ops->set_seq_id = sandesha2_sender_bean_set_seq_id;
 
 	return &(bean_impl->o_bean);
 }
@@ -296,10 +296,10 @@ sandesha2_sender_bean_free (sandesha2_sender_bean_t *sender,
 		bean_impl->internal_seq_id = NULL;
 	}
 
-	if(bean_impl->sequence_id)
+	if(bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, bean_impl->sequence_id);
-		bean_impl->sequence_id = NULL;
+		AXIS2_FREE(env->allocator, bean_impl->seq_id);
+		bean_impl->seq_id = NULL;
 	}
     return AXIS2_SUCCESS;
 
@@ -523,31 +523,31 @@ void AXIS2_CALL
 }
 
 axis2_char_t* AXIS2_CALL
-	sandesha2_sender_bean_get_sequence_id(sandesha2_sender_bean_t *sender,
+	sandesha2_sender_bean_get_seq_id(sandesha2_sender_bean_t *sender,
 				const axis2_env_t *env)
 {
 	sandesha2_sender_bean_impl_t *bean_impl = NULL;
 	bean_impl = AXIS2_INTF_TO_IMPL(sender);
 
-	return bean_impl->sequence_id;
+	return bean_impl->seq_id;
 }
 
 
 
 void AXIS2_CALL
-	sandesha2_sender_bean_set_sequence_id (sandesha2_sender_bean_t *sender,
+	sandesha2_sender_bean_set_seq_id (sandesha2_sender_bean_t *sender,
 				const axis2_env_t *env,
-				axis2_char_t *sequence_id)
+				axis2_char_t *seq_id)
 {
 	sandesha2_sender_bean_impl_t *bean_impl = NULL;
 	bean_impl = AXIS2_INTF_TO_IMPL(sender);
 
-	if(bean_impl->sequence_id)
+	if(bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, bean_impl->sequence_id);
-		bean_impl->sequence_id = NULL;
+		AXIS2_FREE(env->allocator, bean_impl->seq_id);
+		bean_impl->seq_id = NULL;
 	}
 
-	bean_impl->sequence_id = (axis2_char_t *)AXIS2_STRDUP(env, sequence_id);
+	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(env, seq_id);
 }
 

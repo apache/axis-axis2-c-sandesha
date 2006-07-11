@@ -224,7 +224,7 @@ sandesha2_close_seq_res_from_om_node(sandesha2_iom_rm_element_t *close_seq_res,
         return NULL;
     }  
     csr_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_CLOSE_SEQUENCE_RESPONSE, 
+                        SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
                         close_seq_res_impl->ns_val, NULL);
     if(NULL == csr_qname)
     {
@@ -280,7 +280,7 @@ sandesha2_close_seq_res_to_om_node(sandesha2_iom_rm_element_t *close_seq_res,
         return NULL;
     }
     csr_element = axiom_element_create(env, NULL, 
-                        SANDESHA2_WSRM_COMMON_CLOSE_SEQUENCE_RESPONSE, rm_ns, 
+                        SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, rm_ns, 
                         &csr_node);
     if(NULL == csr_element)
     {
@@ -359,7 +359,7 @@ sandesha2_close_seq_res_to_soap_env(sandesha2_iom_rm_part_t *close_seq_res,
      * Remove if old exists
      */
     close_seq_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_CLOSE_SEQUENCE_RESPONSE, 
+                        SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
                         close_seq_res_impl->ns_val, NULL);
     if(NULL == close_seq_qname)
     {
