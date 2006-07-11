@@ -23,7 +23,9 @@
 #include <sandesha2/sandesha2_invoker_bean_manager.h>
 #include <sandesha2/sandesha2_next_msg_bean_manager.h>
 #include <sandesha2/sandesha2_seq_property_bean_manager.h>
+#include <sandesha2/sandesha2_seq_property_bean.h>
 #include <sandesha2/sandesha2_storage_manager.h>
+#include <sandesha2/sandesha2_fault_manager.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <axis2_string.h>
@@ -194,13 +196,15 @@ sandesha2_app_msg_processor_process_in_msg (
     sandesha2_next_msg_bean_t *next_msg_bean = NULL;
     axis2_bool_t in_order_invoke = AXIS2_FALSE;
     sandesha2_invoker_bean_t *invoker_bean = NULL;
-    sandesha2_seq_property_manager_t *next_bean_mgr = NULL;
-    
+    sandesha2_seq_property_bean_manager_t *seq_prop_mgr = NULL;
+    axis2_char_t *highest_in_msg_no_str = NULL;
+    axis2_char_t *highest_in_msg_key_str = NULL;
+     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    seq_ack = SANDESHA2_MSG_CTX_GET_MSG_PART(msg_ctx, env, 
-                        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(msg_ctx, 
+                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     if(NULL != seq_ack)
     {
         sandesha2_ack_processor_t *ack_proc = NULL;
@@ -296,7 +300,7 @@ sandesha2_app_msg_processor_process_in_msg (
     SANDESHA2_SEQUENCE_SET_MUST_UNDERSTAND(sequence, env, AXIS2_FALSE);
     SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(msg_ctx, env);
     fault_ctx = SANDESHA2_FAULT_MANAGER_CHECK_FOR_SEQ_CLOSED(fault_man, env, 
-                        str_seq_id, storage_man);
+                        msg_ctx, str_seq_id, storage_man);
     if(NULL != fault_ctx)
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
@@ -344,9 +348,10 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_t *highest_msg_key_bean = NULL;
         
         highest_in_msg_no = msg_no;
-        highest_msg_no_bean = sandesha2_seq_property_bean_create(env, str_seq_id,
-                        SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, msg_num_str);
-        highest_msg_key_bean = sandesha2_seq_property_bean_create(env, 
+        highest_msg_no_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                        str_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, 
+                        msg_num_str);
+        highest_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
                         str_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, 
                         highest_in_msg_key_str);
         SANDESHA2_STORAGE_MANAGER_REMOVE_MSG_CTX(storage_man, env, 
