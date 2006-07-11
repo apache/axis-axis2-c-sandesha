@@ -356,31 +356,68 @@ sandesha2_in_memory_storage_mgr_store_msg_ctx(
     conf_ctx = sandesha2_in_memory_storage_mgr_get_ctx(storage, env);
     ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_MSG_MAP_KEY);
+    if(!property)
+    {
+        property = axis2_property_create(env);
+    }
     storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!storage_map)
     {
         storage_map = axis2_hash_make(env);
-
+        AXIS2_PROPERTY_SET_VALUE(property, env, storage_map);
+        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_MSG_MAP_KEY, property);
     }
+    if(!key)
+    {
+        key = axis2_uuid_gen(env);
+    }
+    axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, msg_ctx);
+    return AXIS2_SUCCESS;
+}
+			
+axis2_status_t AXIS2_CALL
+sandesha2_in_memory_storage_mgr_update_msg_ctx(
+        sandesha2_in_memory_storage_mgr_t *storage,
+        const axis2_env_t *env,
+        axis2_char_t *key,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    sandesha2_in_memory_storage_mgr_impl_t *storage_impl = NULL;
+    axis2_hash_t *storage_map = NULL;
+    axis2_property_t *property = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;
 
-    return (axis2_msg_ctx_t *) axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    storage_impl = SANDESHA2_INTF_TO_IMPL(storage);
+   
+    conf_ctx = sandesha2_in_memory_storage_mgr_get_ctx(storage, env);
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_MSG_MAP_KEY);
+    if(!property)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(!storage_map)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    old_entry = axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+    if(!old_entry)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    return sandesha2_in_memory_storage_mgr
+    return AXIS2_SUCCESS;
 }
 	
-
-	public void storeMessageContext(String key,MessageContext msgContext) {
-		HashMap storageMap = (HashMap) getContext().getProperty(MESSAGE_MAP_KEY);
-		
-		if (storageMap==null) {
-			storageMap = new HashMap ();
-			getContext().setProperty(MESSAGE_MAP_KEY,storageMap);
-		}
-		
-		if (key==null)
-		    key = SandeshaUtil.getUUID();
-		
-		storageMap.put(key,msgContext);
-		
-	}
 
 	public void updateMessageContext(String key,MessageContext msgContext) throws SandeshaStorageException { 
 		HashMap storageMap = (HashMap) getContext().getProperty(MESSAGE_MAP_KEY);

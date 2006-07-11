@@ -90,7 +90,11 @@ extern "C"
         /* NULL to epr is specified */
         SANDESHA2_ERROR_NULL_TO,
         /* NULL sequnce given for processing */
-        SANDESHA2_ERROR_NULL_SEQUENCE
+        SANDESHA2_ERROR_NULL_SEQUENCE,
+        /* Storage Map not present */
+        SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT,
+        /* Entry is not present for updating */
+        SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present
