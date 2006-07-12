@@ -114,8 +114,8 @@ sandesha2_seq_report_create(
                     sizeof(sandesha2_seq_report_impl_t));
 
     report_impl->completed_msgs = NULL;
-    report_impl->seq_status = SEQ_STATUS_UNKNOWN;
-    report_impl->seq_direction = SEQ_DIRECTION_UNKNOWN;
+    report_impl->seq_status = SANDESHA2_SEQ_STATUS_UNKNOWN;
+    report_impl->seq_direction = SANDESHA2_SEQ_DIRECTION_UNKNOWN;
 
     report_impl->report.ops = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_seq_report_ops_t)); 
@@ -200,8 +200,8 @@ sandesha2_seq_report_set_seq_status(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    if (seq_status >= SEQ_STATUS_UNKNOWN && 
-            seq_status <= MAX_SEQ_STATUS) 
+    if (seq_status >= SANDESHA2_SEQ_STATUS_UNKNOWN && 
+            seq_status <= SANDESHA2_MAX_SEQ_STATUS) 
     {
         report_impl->seq_status = seq_status;
     }
@@ -219,8 +219,8 @@ sandesha2_seq_report_set_seq_direction(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    if (seq_direction >= SEQ_DIRECTION_UNKNOWN && 
-            seq_direction <= MAX_SEQ_DIRECTION) 
+    if (seq_direction >= SANDESHA2_SEQ_DIRECTION_UNKNOWN && 
+            seq_direction <= SANDESHA2_MAX_SEQ_DIRECTION) 
     {
         report_impl->seq_direction = seq_direction;
     }
