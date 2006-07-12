@@ -118,35 +118,35 @@ sandesha2_seq_property_mgr_create(
 #define SANDESHA2_SEQ_PROPERTY_MGR_FREE(seq_property, env) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->free (seq_property, env))
 
-#define SANDESHA2_SEQ_PROPERTY_INSERT(seq_property, env, bean) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_property, env, bean) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        insert (seq_property, env, bean))
 
-#define SANDESHA2_SEQ_PROPERTY_REMOVE(seq_property, env, seq_id, name) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_REMOVE(seq_property, env, seq_id, name) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        remove (seq_property, env, seq_id, name))
 
-#define SANDESHA2_SEQ_PROPERTY_RETRIEVE(seq_property, env, seq_id, name) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_property, env, seq_id, name) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        retrieve (seq_property, env, seq_id, name))
 
-#define SANDESHA2_SEQ_PROPERTY_UPDATE(seq_property, env, bean) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_property, env, bean) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        update (seq_property, env, bean))
 
-#define SANDESHA2_SEQ_PROPERTY_FIND(seq_property, env, bean) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_FIND(seq_property, env, bean) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        find (seq_property, env, bean))
 
-#define SANDESHA2_SEQ_PROPERTY_FIND_UNIQUE(seq_property, env, bean) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_FIND_UNIQUE(seq_property, env, bean) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        find_unique (seq_property, env, bean))
 
-#define SANDESHA2_SEQ_PROPERTY_UPDATE_OR_INSERT(seq_property, env, bean) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_UPDATE_OR_INSERT(seq_property, env, bean) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        update_or_insert (seq_property, env, bean))
 
-#define SANDESHA2_SEQ_PROPERTY_RETRIEVE_ALL(seq_property, env) \
+#define SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE_ALL(seq_property, env) \
       (((sandesha2_seq_property_mgr_t *) seq_property)->ops->\
        retrieve_all (seq_property, env))
 

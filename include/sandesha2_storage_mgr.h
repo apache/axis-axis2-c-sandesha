@@ -55,12 +55,12 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
 {
     
     axis2_conf_ctx_t* (AXIS2_CALL *
-        get_context) 
+        get_ctx) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
-        set_context) 
+        set_ctx) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env,
             axis2_conf_ctx_t *conf_ctx);
@@ -87,7 +87,7 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
             const axis2_env_t *env);
 
     sandesha2_sender_mgr_t* (AXIS2_CALL *
-        get_retrans_mgr) 
+        get_retransmitter_mgr) 
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env);
     
@@ -127,10 +127,30 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
             (sandesha2_storage_mgr_t *storage_man,
             const axis2_env_t *env,
             axis2_char_t *storage_key);
-            
+
+    axis2_status_t (AXIS2_CALL *
+    init) (
+            sandesha2_storage_mgr_t *storage,
+            const axis2_env_t *env,
+            axis2_conf_ctx_t *conf_ctx);
+         
+    axiom_soap_envelope_t *(AXIS2_CALL *
+    retrieve_soap_envelope) (
+            sandesha2_storage_mgr_t *storage,
+            const axis2_env_t *env,
+            axis2_char_t *key);
+
+    axis2_status_t (AXIS2_CALL *
+    store_soap_envelope) (
+            sandesha2_storage_mgr_t *storage,
+            const axis2_env_t *env,
+            axiom_soap_envelope_t *soap_env,
+            axis2_char_t *key);
+
+           
     axis2_status_t (AXIS2_CALL *
         free) 
-            (sandesha2_storage_mgr_t *storage_man,
+            (void *storage_man,
             const axis2_env_t *env);
 };
 
@@ -147,16 +167,25 @@ AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_storage_mgr_create(
 						const axis2_env_t *env, 
 					    axis2_conf_ctx_t *conf_ctx);
+
+sandesha2_storage_mgr_t *AXIS2_CALL
+sandesha2_storage_mgr_get_instance(
+        sandesha2_storage_mgr_t *storage,
+        const axis2_env_t *env,
+        axis2_conf_ctx_t *conf_ctx);
                         
 /************************** Start of function macros **************************/
 #define SANDESHA2_STORAGE_MGR_FREE(storage_man, env) \
-    ((storage_man)->ops->free (storage_man, env))
+    (((sandesha2_storage_mgr_t *) storage_man)->ops->free (storage_man, env))
+
+#define SANDESHA2_STORAGE_MGR_INIT(storage_man, env, conf_ctx) \
+    ((storage_man)->ops->init (storage_man, env, conf_ctx))
     
-#define SANDESHA2_STORAGE_MGR_SET_CONEXT(storage_man, env, conf_ctx) \
-    ((storage_man)->ops->set_context(storage_man, env, conf_ctx))
+#define SANDESHA2_STORAGE_MGR_SET_CONTEXT(storage_man, env, conf_ctx) \
+    ((storage_man)->ops->set_ctx(storage_man, env, conf_ctx))
     
 #define SANDESHA2_STORAGE_MGR_GET_CONEXT(storage_man, env) \
-    ((storage_man)->ops->get_context(storage_man, env))
+    ((storage_man)->ops->get_ctx(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_INIT_STORAGE(storage_man, env, module_desc) \
     ((storage_man)->ops->init_storage(storage_man, env, module_desc))
@@ -164,19 +193,19 @@ sandesha2_storage_mgr_create(
 #define SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_man, env) \
     ((storage_man)->ops->get_transaction(storage_man, env))
     
-#define SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_BEAN_MGR(storage_man, env)\
+#define SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_MGR(storage_man, env)\
     ((storage_man)->ops->get_create_seq_mgr(storage_man, env))
     
-#define SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_BEAN_MGR(storage_man, env)\
+#define SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(storage_man, env)\
     ((storage_man)->ops->get_next_msg_mgr(storage_man, env))
     
-#define SANDESHA2_STORAGE_MGR_GET_RETRANS_BEAN_MGR(storage_man, env)\
-    ((storage_man)->ops->get_retrans_mgr(storage_man, env))
+#define SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_man, env)\
+    ((storage_man)->ops->get_retransmitter_mgr(storage_man, env))
 
-#define SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(storage_man, env)\
+#define SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env)\
     ((storage_man)->ops->get_seq_property_mgr(storage_man, env))
     
-#define SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_BEAN_MGR(storage_man, env)\
+#define SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_MGR(storage_man, env)\
     ((storage_man)->ops->get_storage_map_mgr(storage_man, env))
     
 #define SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, storage_key, \
@@ -194,6 +223,12 @@ sandesha2_storage_mgr_create(
 
 #define SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_man, env, storage_key)\
     ((storage_man)->ops->remove_msg_ctx(storage_man, env, storage_key))
+
+#define SANDESHA2_STORAGE_MGR_RETRIEVE_SOAP_ENVELOPE(storage_man, env, key) \
+    ((storage_man)->ops->retrieve_soap_envelope (storage_man, env, key))
+
+#define SANDESHA2_STORAGE_MGR_STORE_SOAP_ENVELOPE(storage_man, env, envelope) \
+    ((storage_man)->ops->store_soap_envelope (storage_man, env, envelope))
 /************************** End of function macros ****************************/
 
 /** @} */

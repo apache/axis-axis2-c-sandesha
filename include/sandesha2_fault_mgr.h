@@ -26,7 +26,7 @@
 #include <axis2_env.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2/sandesha2_msg_ctx.h>
-#include <sandesha2/sandesha2_storage_mgr.h>
+#include <sandesha2_storage_mgr.h>
 #include <sandesha2/sandesha2_fault_data.h>
 #include <axis2_msg_ctx.h>
 

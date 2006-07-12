@@ -6,8 +6,10 @@ libsandesha2_inmemory_la_SOURCES = \
 								sender_mgr.c \
 								next_msg_mgr.c \
 								seq_property_mgr.c \
-								transaction.c
+								transaction.c \
+								storage_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
+			@AXIOMINC@ \
 			@UTILINC@

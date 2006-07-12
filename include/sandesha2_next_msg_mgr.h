@@ -110,31 +110,31 @@ sandesha2_next_msg_mgr_create(
 #define SANDESHA2_NEXT_MSG_MGR_FREE(next_msg, env) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->free (next_msg, env))
 
-#define SANDESHA2_NEXT_MSG_INSERT(next_msg, env, bean) \
+#define SANDESHA2_NEXT_MSG_MGR_INSERT(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        insert (next_msg, env, bean))
 
-#define SANDESHA2_NEXT_MSG_REMOVE(next_msg, env, msg_id) \
+#define SANDESHA2_NEXT_MSG_MGR_REMOVE(next_msg, env, msg_id) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        remove (next_msg, env, msg_id))
 
-#define SANDESHA2_NEXT_MSG_RETRIEVE(next_msg, env, msg_id) \
+#define SANDESHA2_NEXT_MSG_MGR_RETRIEVE(next_msg, env, msg_id) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        retrieve (next_msg, env, msg_id))
 
-#define SANDESHA2_NEXT_MSG_UPDATE(next_msg, env, bean) \
+#define SANDESHA2_NEXT_MSG_MGR_UPDATE(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        update (next_msg, env, bean))
 
-#define SANDESHA2_NEXT_MSG_FIND(next_msg, env, bean) \
+#define SANDESHA2_NEXT_MSG_MGR_FIND(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        find_by_next_msg_bean (next_msg, env, bean))
 
-#define SANDESHA2_NEXT_MSG_FIND_UNIQUE(next_msg, env, bean) \
+#define SANDESHA2_NEXT_MSG_MGR_FIND_UNIQUE(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        find_unique (next_msg, env, bean))
 
-#define SANDESHA2_NEXT_MSG_RETRIEVE_ALL(next_msg, env) \
+#define SANDESHA2_NEXT_MSG_MGR_RETRIEVE_ALL(next_msg, env) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
        retrieve_all (next_msg, env))
 

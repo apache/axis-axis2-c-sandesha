@@ -15,7 +15,7 @@
  */
 #include <sandesha2/sandesha2_transport_sender.h>
 #include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_storage_mgr.h>
+#include <sandesha2_storage_mgr.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <axis2_conf.h>
 #include <axis2_string.h>

@@ -49,17 +49,17 @@ struct sandesha2_transaction_ops
      */
     axis2_status_t (AXIS2_CALL *
     free) (
-            void *seq_mgr,
+            void *transaction,
             const axis2_env_t *env);
      
     axis2_status_t (AXIS2_CALL *
     commit) (
-            sandesha2_transaction_t *seq_mgr,
+            sandesha2_transaction_t *transaction,
             const axis2_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
     rollback) (
-            sandesha2_transaction_t *seq_mgr,
+            sandesha2_transaction_t *transaction,
             const axis2_env_t *env);
 };
 
@@ -72,16 +72,16 @@ AXIS2_EXTERN sandesha2_transaction_t * AXIS2_CALL
 sandesha2_transaction_create(
         const axis2_env_t *env);
 
-#define SANDESHA2_TRANSACTION_FREE(seq_mgr, env) \
-      (((sandesha2_transaction_t *) seq_mgr)->ops->free (seq_mgr, env))
+#define SANDESHA2_TRANSACTION_FREE(transaction, env) \
+      (((sandesha2_transaction_t *) transaction)->ops->free (transaction, env))
 
-#define SANDESHA2_TRANSACTION_COMMIT(seq_mgr, env) \
-      (((sandesha2_transaction_t *) seq_mgr)->ops->\
-       commit (seq_mgr, env))
+#define SANDESHA2_TRANSACTION_COMMIT(transaction, env) \
+      (((sandesha2_transaction_t *) transaction)->ops->\
+       commit (transaction, env))
 
-#define SANDESHA2_TRANSACTION_ROLLBACK(seq_mgr, env) \
-      (((sandesha2_transaction_t *) seq_mgr)->ops->\
-       rollback (seq_mgr, env))
+#define SANDESHA2_TRANSACTION_ROLLBACK(transaction, env) \
+      (((sandesha2_transaction_t *) transaction)->ops->\
+       rollback (transaction, env))
 
 /** @} */
 #ifdef __cplusplus
