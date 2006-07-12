@@ -273,8 +273,7 @@ sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
         return NULL;
     }
     if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)
-                        ack_requested_impl->identifier), env, requested_node))
+                        ack_requested_impl->identifier, env, requested_node))
     {
         return NULL;
     }
@@ -295,8 +294,7 @@ sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
             return NULL;
         }
         if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)
-                        ack_requested_impl->msg_num), env, requested_node))
+                        ack_requested_impl->msg_num, env, requested_node))
         {
             return NULL;
         }
@@ -337,12 +335,12 @@ sandesha2_ack_requested_to_om_node(sandesha2_iom_rm_element_t *ack_requested,
     AXIOM_SOAP_HEADER_BLOCK_SET_MUST_UNDERSTAND_WITH_BOOL(ar_header_blk, env,
                         ack_requested_impl->must_understand);
     ar_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(ar_header_blk, env);
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        ack_requested_impl->identifier), env, ar_node);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(ack_requested_impl->identifier, env, 
+                        ar_node);
     if(NULL != ack_requested_impl->msg_num)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        ack_requested_impl->msg_num), env, ar_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(ack_requested_impl->msg_num, env, 
+                        ar_node);
     }
     return ar_node;
 }

@@ -306,8 +306,7 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)seq_ack_impl->identifier), 
+    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_ack_impl->identifier, 
                         env, sa_node))
     {
         return NULL;
@@ -337,8 +336,7 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
             {
                 return NULL;
             } 
-            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE((sandesha2_iom_rm_element_t*)
-                        ack_range, env, ack_node);
+            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(ack_range, env, ack_node);
             AXIS2_ARRAY_LIST_ADD(seq_ack_impl->ack_range_list, env, ack_range);
         }
     }
@@ -367,8 +365,7 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
             {
                 return NULL;
             }
-            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE((sandesha2_iom_rm_element_t*)
-                        nack, env, nack_node);
+            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(nack, env, nack_node);
             AXIS2_ARRAY_LIST_ADD(seq_ack_impl->nack_list, env, nack);
         }
     }
@@ -397,8 +394,7 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
             {
                 return NULL;
             }
-            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_ack_impl->ack_final), env,
+            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_ack_impl->ack_final, env,
                         sa_node);
         }
     }
@@ -425,8 +421,8 @@ sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
             {
                 return NULL;
             }
-            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_ack_impl->ack_none), env, sa_node);
+            SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_ack_impl->ack_none, env, 
+                        sa_node);
         }
     }
     return seq_ack;
@@ -476,16 +472,14 @@ sandesha2_seq_ack_to_om_node(sandesha2_iom_rm_element_t *seq_ack,
         sandesha2_ack_range_t *ack_range = NULL;
         ack_range = (sandesha2_ack_range_t*)AXIS2_ARRAY_LIST_GET(
                         seq_ack_impl->ack_range_list, env, i);
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t*)
-                        ack_range, env, sa_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(ack_range, env, sa_node);
     }
     for(i = 0; i < AXIS2_ARRY_LIST_SIZE(seq_ack_impl->nack_list, env); i++)
     {
         sandesha2_nack_t *nack = NULL;
         nack = (sandesha2_nack_t*)AXIS2_ARRAY_LIST_GET(
                         seq_ack_impl->nack_list, env, i);
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t*)nack, 
-                        env, sa_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(nack, env, sa_node);
     }
     rm_spec_ver = sandesha2_spec_specific_consts_get_spec_ver_str(env,
                         seq_ack_impl->ns_val);
@@ -516,8 +510,8 @@ sandesha2_seq_ack_to_om_node(sandesha2_iom_rm_element_t *seq_ack,
         }
         else
         {
-            SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_ack_impl->ack_none), env, sa_node);   
+            SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_ack_impl->ack_none, env, 
+                        sa_node);   
         }                            
     }
     if(NULL != seq_ack_impl->ack_final)
@@ -532,8 +526,8 @@ sandesha2_seq_ack_to_om_node(sandesha2_iom_rm_element_t *seq_ack,
         }
         else
         {
-            SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_ack_impl->ack_final), env, sa_node);  
+            SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_ack_impl->ack_final, env, 
+                        sa_node);  
         }
     }
     /**

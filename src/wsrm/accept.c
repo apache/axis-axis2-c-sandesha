@@ -215,9 +215,8 @@ sandesha2_accept_from_om_node(sandesha2_iom_rm_element_t *accept,
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)accept_impl->acks_to),
-                        env, child_om_node))
+    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(accept_impl->acks_to, env, 
+                        child_om_node))
     {
         return NULL;
     }
@@ -256,8 +255,7 @@ sandesha2_accept_to_om_node(sandesha2_iom_rm_element_t *accept,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)accept_impl->acks_to),
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(accept_impl->acks_to,
                         env, accept_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, accept_node);
 

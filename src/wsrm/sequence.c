@@ -269,16 +269,15 @@ sandesha2_seq_from_om_node(sandesha2_iom_rm_element_t *seq,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->identifier), env, seq_node);
-    seq_impl->msg_num= sandesha2_msg_number_create(env, 
-                        seq_impl->ns_val);
-    if(NULL == seq_impl->msg_num)
+    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(sequence_impl->identifier, env, 
+                        seq_node);
+    sequence_impl->msg_num= sandesha2_msg_number_create(env, 
+                        sequence_impl->ns_val);
+    if(NULL == sequence_impl->msg_num)
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->msg_num), env, seq_node);
+    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(sequence_impl->msg_num, env, seq_node);
     lm_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG,
                         seq_impl->ns_val, NULL);
     if(NULL == lm_qname)
@@ -295,8 +294,8 @@ sandesha2_seq_from_om_node(sandesha2_iom_rm_element_t *seq,
         {
             return NULL;
         }
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->last_msg), env, lm_node);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(sequence_impl->last_msg, env, 
+                        lm_node);
     }
     return seq;
 }
@@ -338,14 +337,11 @@ sandesha2_seq_to_om_node(sandesha2_iom_rm_element_t *seq,
     AXIOM_SOAP_HEADER_BLOCK_SET_MUST_UNDERSTAND_WITH_BOOL(seq_block, env, 
                         seq_impl->must_understand);
     seq_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(seq_block, env);
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->identifier), env, seq_node);
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->msg_num), env, seq_node);
-    if(NULL != seq_impl->last_msg)
-    {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_impl->last_msg), env, seq_node);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(sequence_impl->identifier, env, seq_node);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(sequence_impl->msg_num, env, seq_node);
+    if(NULL != sequence_impl->last_msg)
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(sequence_impl->last_msg, env, 
+                        seq_node);
     }
     return seq_node;
 }

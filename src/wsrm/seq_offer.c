@@ -231,8 +231,7 @@ sandesha2_seq_offer_from_om_node(sandesha2_iom_rm_element_t *seq_offer,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_offer_impl->identifier), env, so_node);
+    SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(seq_offer_impl->identifier, env, so_node);
     exp_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_EXPIRES,
                         seq_offer_impl->ns_val, NULL);
     if(NULL == exp_qname)
@@ -249,8 +248,8 @@ sandesha2_seq_offer_from_om_node(sandesha2_iom_rm_element_t *seq_offer,
         {
             return NULL;
         }
-        SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_offer_impl->expires), env, exp_node);
+        SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(seq_offer_impl->expires, env, 
+                        exp_node);
     }
     return seq_offer;
 }
@@ -287,12 +286,11 @@ sandesha2_seq_offer_to_om_node(sandesha2_iom_rm_element_t *seq_offer,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_offer_impl->identifier), env, so_node);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_offer_impl->identifier, env, so_node);
     if(NULL != seq_offer_impl->expires)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        seq_offer_impl->expires), env, so_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_offer_impl->expires, env, 
+                        so_node);
     }
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, so_node);
     return (axiom_node_t*)om_node;

@@ -225,8 +225,8 @@ sandesha2_seq_fault_from_om_node(sandesha2_iom_rm_element_t *seq_fault,
         {
             return NULL;
         }
-        AXIS2_IOM_RM_ELEMENT_FROM_OM_NODE((sandesha2_iom_rm_element_t*)
-                        seq_fault_impl->fault_code, env, sf_node);
+        AXIS2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_fault_impl->fault_code, env, 
+                        sf_node);
     }    
     return seq_fault;    
 }
@@ -259,8 +259,8 @@ sandesha2_seq_fault_to_om_node(sandesha2_iom_rm_element_t *seq_fault,
     }
     if(NULL != seq_fault_impl->fault_code)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t*)
-                        seq_fault_impl->fault_code, env, sf_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_fault_impl->fault_code, env, 
+                        sf_node);
     }
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, sf_node);
     return (axiom_node_t*)om_node;

@@ -275,9 +275,8 @@ sandesha2_create_seq_from_om_node(sandesha2_iom_rm_element_t *create_seq,
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)
-                        create_seq_impl->acks_to), env, seq_node))
+    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(create_seq_impl->acks_to, 
+                        env, seq_node))
     {
         return NULL;
     }
@@ -298,8 +297,7 @@ sandesha2_create_seq_from_om_node(sandesha2_iom_rm_element_t *create_seq,
             return NULL;
         }
         if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)
-                        create_seq_impl->seq_offer), env, seq_node))
+                        create_seq_impl->seq_offer, env, seq_node))
         {
             return NULL;
         } 
@@ -321,7 +319,7 @@ sandesha2_create_seq_from_om_node(sandesha2_iom_rm_element_t *create_seq,
             return NULL;
         }
         if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        ((sandesha2_iom_rm_element_t*)create_seq_impl->expires),
+                        create_seq_impl->expires,
                         env, seq_node))
         {
             return NULL;
@@ -362,17 +360,16 @@ sandesha2_create_seq_to_om_node(sandesha2_iom_rm_element_t *create_seq,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        create_seq_impl->acks_to), env, cs_node);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_impl->acks_to, env, cs_node);
     if(NULL != create_seq_impl->expires)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        create_seq_impl->expires), env, cs_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_impl->expires, env, 
+                        cs_node);
     }
     if(NULL != create_seq_impl->seq_offer)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(((sandesha2_iom_rm_element_t*)
-                        create_seq_impl->seq_offer), env, cs_node);
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_impl->seq_offer, env, 
+                        cs_node);
     }
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, cs_node);
     return (axiom_node_t*)om_node;
