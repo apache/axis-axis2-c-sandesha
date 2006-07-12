@@ -77,15 +77,24 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element
 
 /************************** Start of function macros **************************/
 #define SANDESHA2_IOM_RM_ELEMENT_FREE(element, env) \
-    ((element)->ops->free (element, env))
+    (((sandesha2_iom_rm_element_t*)(element))->ops->free (\
+    (sandesha2_iom_rm_element_t*)element, env))
+    
 #define SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(element, env) \
-    ((element)->ops->get_namespace_value (element, env))
+    (((sandesha2_iom_rm_element_t*)(element))->ops->get_namespace_value (\
+    (sandesha2_iom_rm_element_t*)element, env))
+    
 #define SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(element, env, om_node) \
-    ((element)->ops->from_om_node (element, env, om_node))
+    (((sandesha2_iom_rm_element_t*)(element))->ops->from_om_node (\
+    (sandesha2_iom_rm_element_t*)element, env, om_node))
+    
 #define SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(element, env, om_node) \
-    ((element)->ops->to_om_node(element, env, om_node))
+    (((sandesha2_iom_rm_element_t*)(element))->ops->to_om_node(\
+    (sandesha2_iom_rm_element_t*)element, env, om_node))
+    
 #define SANDESHA2_IOM_RM_ELEMENT_IS_NAMESPACE_SUPPORTED(element, env, ns) \
-    ((element)->ops->is_namespace_supported (element, env, ns))
+    (((sandesha2_iom_rm_element_t*)(element))->ops->is_namespace_supported (\
+    (sandesha2_iom_rm_element_t*)element, env, ns))
 /************************** End of function macros ****************************/    
  /** @} */
 #ifdef __cplusplus

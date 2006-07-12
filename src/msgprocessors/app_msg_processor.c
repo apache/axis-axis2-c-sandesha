@@ -544,7 +544,7 @@ sandesha2_app_msg_processor_process_out_msg(
         
         req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(AXIS2_MSG_CTX_GET_OP_CTX(
                         msg_ctx1, env), env, AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
-        req_rm_msg_ctx = sandesha2_msg_initilizer_initilize_msg(env, req_msg_ctx);
+        req_rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, req_msg_ctx);
         req_seq = SANDESHA2_MSG_CTX_GET_MSG_PART(req_rm_msg_ctx, env,
                         SANDESHA2_MSG_PART_SEQ);
         if(NULL == req_seq)
@@ -697,7 +697,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        req_rm_msg_ctx = sandesha2_msg_initilizer_initilize_msg(env, req_msg_ctx);
+        req_rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, req_msg_ctx);
         seq = SANDESHA2_MSG_CTX_GET_MSG_PART(req_rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_SEQ);
         req_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
@@ -1180,7 +1180,7 @@ sandesha2_app_msg_processor_process_response_msg(
     
     if(AXIS2_TRUE == AXIS2_MSG_CTX_IS_SERVER_SIDE(msg, env))
     {
-        req_rm_msg = sandesha2_msg_initilizer_initilize_msg(env, req_msg);
+        req_rm_msg = sandesha2_msg_initilizer_init_msg(env, req_msg);
         req_seq = SANDESHA2_MSG_CTX_GET_MSG_PART(req_rm_msg, env, 
                             SANDESHA2_MSG_PART_SEQ);
         if(NULL == seq)

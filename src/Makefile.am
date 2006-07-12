@@ -1,7 +1,9 @@
-SUBDIRS = wsrm storage util client transport workers
+#SUBDIRS = wsrm storage util transport workers
+SUBDIRS = 
 noinst_LTLIBRARIES = libsandesha2.la
 
-libsandesha2_la_SOURCES = msg_ctx.c
+libsandesha2_la_SOURCES = msg_ctx.c\
+                          fault_manager.c
 
 INCLUDES = -I$(top_builddir)/include \
             @AXIS2INC@

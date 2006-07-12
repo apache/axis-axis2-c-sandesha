@@ -20,7 +20,7 @@ AC_PROG_MAKE_SET
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 
-CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE -Werror"
+CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"
 fi

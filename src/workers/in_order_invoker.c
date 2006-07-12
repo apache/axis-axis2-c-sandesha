@@ -411,7 +411,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                         env);
                 msg_to_invoke = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
-                rm_msg_ctx = sandesha2_msg_initilizer_initilize_msg(env, 
+                rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, 
                         msg_to_invoke);
                 /* have to commit the transaction before invoking. This may get 
                  * changed when WS-AT is available.

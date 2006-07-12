@@ -140,37 +140,37 @@ sandesha2_fault_data_create(
     ((data)->ops->get_detail(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_DETAIL(data, env, detail) \
-    ((data)->ops->set_detail(data, env. detail))
+    ((data)->ops->set_detail(data, env, detail))
     
 #define SANDESHA2_FAULT_DATA_GET_REASON(data, env) \
     ((data)->ops->get_reason(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_REASON(data, env, reason) \
-    ((data)->ops->set_reason(data, env. reason))
+    ((data)->ops->set_reason(data, env, reason))
     
 #define SANDESHA2_FAULT_DATA_GET_SUB_CODE(data, env) \
     ((data)->ops->get_sub_code(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_SUB_CODE(data, env, sub_code) \
-    ((data)->ops->set_sub_code(data, env. sub_code))
+    ((data)->ops->set_sub_code(data, env, sub_code))
     
 #define SANDESHA2_FAULT_DATA_GET_CODE(data, env) \
     ((data)->ops->get_sub_code(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_CODE(data, env, code) \
-    ((data)->ops->set_code(data, env. code))
+    ((data)->ops->set_code(data, env, code))
     
 #define SANDESHA2_FAULT_DATA_GET_TYPE(data, env) \
     ((data)->ops->get_type(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_TYPE(data, env, type) \
-    ((data)->ops->set_type(data, env. type))
+    ((data)->ops->set_type(data, env, type))
 
 #define SANDESHA2_FAULT_DATA_GET_SEQ_ID(data, env) \
     ((data)->ops->get_seq_id(data, env))
     
 #define SANDESHA2_FAULT_DATA_SET_SEQ_ID(data, env, seq_id) \
-    ((data)->ops->set_seq_id(data, env. seq_id)
+    ((data)->ops->set_seq_id(data, env, seq_id)
 /************************** End of function macros ****************************/
 
 /** @} */

@@ -89,6 +89,8 @@ extern "C"
         SANDESHA2_ERROR_SENDING_ACK,
         /* NULL to epr is specified */
         SANDESHA2_ERROR_NULL_TO,
+        /* Required msg part missing */
+        SANDESHA2_ERROR_REQD_MSG_PART_MISSING,
         /* NULL sequnce given for processing */
         SANDESHA2_ERROR_NULL_SEQ,
         /* Storage Map not present */
