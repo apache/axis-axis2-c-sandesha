@@ -142,6 +142,26 @@ sandesha2_report_create(
     }
 
     report_impl->report.ops->free = sandesha2_report_free;
+    report_impl->report.ops->get_completed_msgs_count = 
+        sandesha2_report_get_completed_msgs_count;
+    report_impl->report.ops->get_incoming_seq_list = 
+        sandesha2_report_get_incoming_seq_list;
+    report_impl->report.ops->get_outgoing_seq_list = 
+        sandesha2_report_get_outgoing_seq_list;
+    report_impl->report.ops->get_seq_status_map = 
+        sandesha2_report_get_seq_status_map;
+    report_impl->report.ops->add_to_incoming_seq_list = 
+        sandesha2_report_add_to_incoming_seq_list;
+    report_impl->report.ops->add_to_outgoing_seq_list = 
+        sandesha2_report_add_to_outgoing_seq_list;
+    report_impl->report.ops->add_to_no_of_completed_msgs_map = 
+        sandesha2_report_add_to_no_of_completed_msgs_map;
+    report_impl->report.ops->add_to_seq_status_map = 
+        sandesha2_report_add_to_seq_status_map;
+    report_impl->report.ops->get_internal_seq_id_of_out_seq = 
+        sandesha2_report_get_internal_seq_id_of_out_seq;
+    report_impl->report.ops->add_to_outgoing_internal_seq_map = 
+        sandesha2_report_add_to_outgoing_internal_seq_map;
 
     return &(report_impl->report);
 }
@@ -156,16 +176,34 @@ sandesha2_report_free(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    if(report_impl->completed_msgs)
+    if(report_impl->incoming_seq_list)
     {
-        AXIS2_ARRAY_LIST_FREE(report_impl->completed_msgs, env);
-        report_impl->completed_msgs = NULL;
+        AXIS2_ARRAY_LIST_FREE(report_impl->incoming_seq_list, env);
+        report_impl->incoming_seq_list = NULL;
     }
 
-    if(report_impl->seq_id)
+    if(report_impl->outgoing_seq_list)
     {
-        AXIS2_FREE(env->allocator, report_impl->seq_id);
-        report_impl->seq_id = NULL;
+        AXIS2_ARRAY_LIST_FREE(report_impl->outgoing_seq_list, env);
+        report_impl->outgoing_seq_list = NULL;
+    }
+
+    if(report_impl->seq_status_map)
+    {
+        axis2_hash_free(report_impl->seq_status_map, env);
+        report_impl->seq_status_map = NULL;
+    }
+
+    if(report_impl->no_of_completed_msgs_map)
+    {
+        axis2_hash_free(report_impl->no_of_completed_msgs_map, env);
+        report_impl->no_of_completed_msgs_map = NULL;
+    }
+
+    if(report_impl->outgoing_internal_seq_id_map)
+    {
+        axis2_hash_free(report_impl->outgoing_internal_seq_id_map, env);
+        report_impl->outgoing_internal_seq_id_map = NULL;
     }
     
     if((&(report_impl->report))->ops)
@@ -209,7 +247,6 @@ sandesha2_report_get_incoming_seq_list(
         const axis2_env_t *env)
 {
     sandesha2_report_impl_t *report_impl = NULL;
-    long *lng = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
@@ -222,7 +259,6 @@ sandesha2_report_get_outgoing_seq_list(
         const axis2_env_t *env)
 {
     sandesha2_report_impl_t *report_impl = NULL;
-    long *lng = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
@@ -320,7 +356,6 @@ sandesha2_report_get_internal_seq_id_of_out_seq(
         axis2_char_t *out_seq_id)
 {
     sandesha2_report_impl_t *report_impl = NULL;
-    long *lng = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
