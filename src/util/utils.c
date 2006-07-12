@@ -20,7 +20,7 @@
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_in_order_invoker.h>
 #include <sandesha2/sandesha2_transport_sender.h>
-#include <sandesha2/sandesha2_seq_property_bean_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
 #include <sandesha2/sandesha2_error.h>
 #include <axis2_string.h>
 #include <axis2_conf.h>
@@ -84,16 +84,16 @@ sandesha2_utils_get_rm_version(const axis2_env_t *env,
                         axis2_char_t *key,
                         sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_seq_property_bean_mgr_t *seq_prop_man = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *rm_version_bean = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     
-    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
+    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
-    rm_version_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MGR_RETRIEVE(seq_prop_man, 
+    rm_version_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_man, 
                         env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
     if(NULL == rm_version_bean)
         return NULL;
@@ -137,7 +137,7 @@ sandesha2_utils_get_seq_property(const axis2_env_t *env,
                         axis2_char_t *name,
                         sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_seq_property_bean_mgr_t *seq_prop_man = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -145,9 +145,9 @@ sandesha2_utils_get_seq_property(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, name, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     
-    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
+    seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
-    seq_prop_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MGR_RETRIEVE(seq_prop_man,
+    seq_prop_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_man,
                         env, id, name);
     if(NULL == seq_prop_bean)
         return NULL;
@@ -343,4 +343,3 @@ sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
     /*TODO implement when the persistent storage is avalable */
     return NULL;
 }
->>>>>>> .r420768

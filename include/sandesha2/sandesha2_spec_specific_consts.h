@@ -22,6 +22,13 @@
   * @brief 
   */
 
+#include <axis2_allocator.h>
+#include <axis2_env.h>
+#include <axis2_error.h>
+#include <axis2_string.h>
+#include <axis2_utils.h>
+#include <axis2_hash.h>
+#include <axis2_uri.h>
 
 
 #ifdef __cplusplus

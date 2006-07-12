@@ -90,7 +90,12 @@ sandesha2_error_init()
         "Storage Map not present";
     sandesha2_error_messages[SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING] =
         "Entry is not present for updating";
-
+    sandesha2_error_messages[SANDESHA2_ERROR_INVALID_NS_URI] = 
+        "Invalid namespace uri";
+    sandesha2_error_messages[SANDESHA2_ERROR_INVALID_SPEC_VERSION] = 
+        "Invalid Spec Version";
+    
+        
     return AXIS2_SUCCESS;
 }
 

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandehsa2_spec_specific_consts.h>
-#include <sandesha2/sandehsa2_consts.h>
+#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2/sandesha2_error.h>
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_spec_specific_consts_get_spec_ver_str(const axis2_env_t *env,
@@ -38,7 +39,7 @@ sandesha2_spec_specific_consts_get_spec_ver_str(const axis2_env_t *env,
                         AXIS2_FAILURE);
         return NULL;                                
     }
-    return NULL
+    return NULL;
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
@@ -75,7 +76,7 @@ sandesha2_spec_specific_consts_is_ack_final_allowed(const axis2_env_t *env,
     }
     else
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VER, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION, 
                         AXIS2_FAILURE);
         return AXIS2_FALSE;
     }
@@ -98,7 +99,7 @@ sandesha2_spec_specific_consts_is_ack_none_allowed(const axis2_env_t *env,
     }
     else
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VER, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION, 
                         AXIS2_FAILURE);
         return AXIS2_FALSE;
     }

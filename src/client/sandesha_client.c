@@ -16,6 +16,7 @@
  
 #include <sandesha2_client.h>
 #include <sandesha2_seq_report.h>
+#include <sandesha2_storage_mgr.h>
 #include <sandesha2_client_constants.h>
 #include <axis2_svc_client.h>
 #include <axis2_svc_ctx.h>
@@ -185,7 +186,7 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
 }
 
 sandesha2_seq_report_t *AXIS2_CALL
-sandesha2_client_get_outgoing_seq_report_with_seq_key(
+sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         sandesha2_client_t *sandesha2_client,
         const axis2_env_t *env,
         axis2_char_t *internal_seq_id,
@@ -193,10 +194,10 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
 {
     sandesha2_client_impl_t *schema_impl = NULL;
     sandesha2_seq_report_t *seq_report = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, to, NULL);
-    AXIS2_PARAM_CHECK(env->error, seq_key, NULL);
+    AXIS2_PARAM_CHECK(env->error, internal_seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     schema_impl = SANDESHA2_INTF_TO_IMPL(schema);
 
@@ -204,7 +205,7 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
     SANDESHSA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, 
             SANDESHA2_SEQ_DIRECTION_OUT);
 
-    
+    storage_mgr = SANDESHA2_UTIL_GET_STORAGE_MGR( 
     
 }
 
