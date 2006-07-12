@@ -330,11 +330,11 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker_impl->conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(invoker_impl->conf_ctx, env));
-        next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_BEAN_MGR(
+        next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
                         storage_mgr, env);
-        storage_map_mgr = SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_BEAN_MGR
+        storage_map_mgr = SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_MGR
                         (storage_mgr, env);
-        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
+        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_mgr, env);
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
                         env);
