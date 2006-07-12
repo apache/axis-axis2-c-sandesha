@@ -39,17 +39,17 @@ extern "C"
 typedef struct sandesha2_seq_report sandesha2_seq_report_t;
 typedef struct sandesha2_seq_report_ops sandesha2_seq_report_ops_t;
 
-#define SEQ_STATUS_UNKNOWN 0
-#define SEQ_STATUS_INITIAL 1
-#define SEQ_STATUS_ESTABLISHED 2
-#define SEQ_STATUS_TERMINATED 3
-#define SEQ_STATUS_TIMED_OUT 4
-#define MAX_SEQ_STATUS 4
+#define SANDESHA2_SEQ_STATUS_UNKNOWN 0
+#define SANDESHA2_SEQ_STATUS_INITIAL 1
+#define SANDESHA2_SEQ_STATUS_ESTABLISHED 2
+#define SANDESHA2_SEQ_STATUS_TERMINATED 3
+#define SANDESHA2_SEQ_STATUS_TIMED_OUT 4
+#define SANDESHA2_MAX_SEQ_STATUS 4
 
-#define SEQ_DIRECTION_UNKNOWN 0
-#define SEQ_DIRECTION_IN 1
-#define SEQ_DIRECTION_OUT 2
-#define MAX_SEQ_DIRECTION 2
+#define SANDESHA2_SEQ_DIRECTION_UNKNOWN 0
+#define SANDESHA2_SEQ_DIRECTION_IN 1
+#define SANDESHA2_SEQ_DIRECTION_OUT 2
+#define SANDESHA2_MAX_SEQ_DIRECTION 2
 
 
 /** @defgroup sandesha2_seq_report Sequence Report

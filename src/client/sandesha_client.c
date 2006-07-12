@@ -17,10 +17,15 @@
 #include <sandesha2_client.h>
 #include <sandesha2_seq_report.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_transaction.h>
 #include <sandesha2_client_constants.h>
 #include <axis2_svc_client.h>
 #include <axis2_svc_ctx.h>
 #include <axis2_conf_ctx.h>
+#include <axis2_ctx.h>
+#include <axis2_property.h>
 #include <axis2_log.h>
 
 typedef struct sandesha2_client_impl sandesha2_client_impl_t;
@@ -31,69 +36,69 @@ typedef struct sandesha2_client_impl sandesha2_client_impl_t;
  */ 
 struct sandesha2_client_impl
 {
-    sandesha2_client_t schema;
+    sandesha2_client_t client;
 
 };
 
-#define SANDESHA2_INTF_TO_IMPL(schema) ((sandesha2_client_impl_t *) schema)
+#define SANDESHA2_INTF_TO_IMPL(client) ((sandesha2_client_impl_t *) client)
 
 axis2_status_t AXIS2_CALL 
 sandesha2_client_free(
-        void *schema,
+        void *client,
         const axis2_env_t *envv);
 
 AXIS2_EXTERN sandesha2_client_t * AXIS2_CALL
 sandesha2_client_create(
         const axis2_env_t *env)
 {
-    sandesha2_client_impl_t *schema_impl = NULL;
+    sandesha2_client_impl_t *client_impl = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    schema_impl = AXIS2_MALLOC(env->allocator, 
+    client_impl = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_client_impl_t));
 
-    schema_impl->f_ = ;
+    client_impl->f_ = ;
 
-    schema_impl->schema.ops = AXIS2_MALLOC(env->allocator, 
+    client_impl->client.ops = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_client_ops_t)); 
     
-    schema_impl->super = axis2_hash_make(env);
-    if(!schema_impl->super) 
+    client_impl->super = axis2_hash_make(env);
+    if(!client_impl->super) 
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-    schema_impl->schema.ops->free = sandesha2_client_free;
+    client_impl->client.ops->free = sandesha2_client_free;
 
-    return &(schema_impl->schema);
+    return &(client_impl->client);
 }
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_free(
-        void *schema,
+        void *client,
         const axis2_env_t *env)
 {
-    sandesha2_client_impl_t *schema_impl = NULL;
+    sandesha2_client_impl_t *client_impl = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    schema_impl = SANDESHA2_INTF_TO_IMPL(schema);
+    client_impl = SANDESHA2_INTF_TO_IMPL(client);
 
-    if(schema_impl->f_namespc)
+    if(client_impl->f_namespc)
     {
-        AXIS2_URI_FREE(schema_impl->f_namespc, env);
-        schema_impl->f_namespc = NULL;
+        AXIS2_URI_FREE(client_impl->f_namespc, env);
+        client_impl->f_namespc = NULL;
     }
     
-    if((&(schema_impl->schema))->ops)
+    if((&(client_impl->client))->ops)
     {
-        AXIS2_FREE(env->allocator, (&(schema_impl->schema))->ops);
-        (&(schema_impl->schema))->ops = NULL;
+        AXIS2_FREE(env->allocator, (&(client_impl->client))->ops);
+        (&(client_impl->client))->ops = NULL;
     }
 
-    if(schema_impl)
+    if(client_impl)
     {
-        AXIS2_FREE(env->allocator, schema_impl);
-        schema_impl = NULL;
+        AXIS2_FREE(env->allocator, client_impl);
+        client_impl = NULL;
     }
     return AXIS2_SUCCESS;
 }
@@ -107,11 +112,9 @@ sandesha2_client_free(
  */
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_svc_client(
-        sandesha2_client_t *sandesha2_client,
         const axis2_env_t *env,
         axis2_svc_client_t *svc_client)
 {
-    sandesha2_client_impl_t *schema_impl = NULL;
     axis2_options_t *options = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_char_t *to = NULL;
@@ -121,7 +124,6 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, svc_client, NULL);
-    schema_impl = SANDESHA2_INTF_TO_IMPL(schema);
 
     options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
     if(options == NULL)
@@ -154,159 +156,149 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
     }
     conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);    
     internal_seq_id = sandesha2_client_get_internal_seq_id(
-            sandesha2_client, env, to, seq_key);
+            env, to, seq_key);
 
     return 
         sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
-            sandesha2_client, env, internal_seq_id, conf_ctx); 
+            env, internal_seq_id, conf_ctx); 
 
 }
 
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_seq_key(
-        sandesha2_client_t *sandesha2_client,
         const axis2_env_t *env,
         axis2_char_t *to,
         axis2_char_t *seq_key,
         axis2_conf_ctx_t *conf_ctx)
 {
-    sandesha2_client_impl_t *schema_impl = NULL;
     axis2_char_t *internal_seq_id = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, to, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_key, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
-    schema_impl = SANDESHA2_INTF_TO_IMPL(schema);
 
     internal_seq_id = SANDESHA2_UTIL_GET_INTERNAL_SEQ_ID(to, 
             seq_key);
-    return sandesha2_client_get_outgoing_seq_report(sandesha2_client, env, 
-            internal_seq_id, conf_ctx);
+    return sandesha2_client_get_outgoing_seq_report(env, internal_seq_id, 
+            conf_ctx);
 }
 
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
-        sandesha2_client_t *sandesha2_client,
         const axis2_env_t *env,
         axis2_char_t *internal_seq_id,
         axis2_conf_ctx_t *conf_ctx)
 {
-    sandesha2_client_impl_t *schema_impl = NULL;
     sandesha2_seq_report_t *seq_report = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
+    sandesha2_create_seq_bean_t *create_seq_find_bean = NULL;
+    sandesha2_create_seq_bean_t *create_seq_bean = NULL;
+    axis2_conf_t *conf = NULL;
+    axis2_ctx_t *ctx = NULL;
+    axis2_property_t *property = NULL;
+    axis2_bool_t within_transaction = AXIS2_FALSE;
+    axis2_bool_t rolled_back = AXIS2_FALSE;
+    sandesha2_transaction_t *report_transaction = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
-    schema_impl = SANDESHA2_INTF_TO_IMPL(schema);
 
     seq_report = sandesha2_seq_report_create(env);
     SANDESHSA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, 
             SANDESHA2_SEQ_DIRECTION_OUT);
 
-    storage_mgr = SANDESHA2_UTIL_GET_STORAGE_MGR( 
-    
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf); 
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env); 
+    create_seq_mgr = SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_MGR(storage_mgr, env); 
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env);
+    within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(within_transaction_str && 0 == AXIS2_STRCMP(within_transaction_str, 
+                SANDESHA2_VALUE_TRUE))
+    {
+        within_transaction = AXIS2_TRUE;
+    }
+    if(AXIS2_TRUE != within_transaction)
+        report_transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr, 
+                env);
+    SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, internal_seq_id);
+    create_seq_find_bean = sandesha2_create_seq_bean_create(env);
+    SANDESHA2_CREATE_SEQ_BEAN_SET_INTERNAL_SEQ_ID(create_seq_find_bean, 
+            env, internal_seq_id);
+    create_seq_bean = SANDESHA2_CREATE_SEQ_MGR_FIND_UNIQUE(create_seq_mgr, env, 
+            create_seq_find_bean);
+	/* if data not is available seq has to be terminated or timedOut.*/
+    if(create_seq_bean == NULL)
+    {
+	    /* check weather this is an terminated seq.*/
+        if(AXIS2_TRUE == sandesha2_client_is_seq_terminated(env, internal_seq_id, 
+                    seq_prop_mgr))
+        {
+            sandesha2_client_fill_terminated_outgoing_seq_info(env, seq_report, 
+                    internal_seq_id, seq_prop_mgr);
+            return seq_report;
+        }
+        if(AXIS2_TRUE == sandesha2_client_is_seq_timeout(env, internal_seq_id, 
+                    seq_prop_mgr))
+        {
+            sandesha2_client_fill_timeout_outgoing_seq_info(env, seq_report, 
+                    internal_seq_id, seq_prop_mgr);
+            return seq_report;
+        }
+
+        /* seq must have been timed out before establishing. No other
+         * posibility I can think of.
+         * this does not get recorded since there is no key (which is
+         * normally the seqID) to store it.
+         * (properties with key as the internalSequenceID get deleted in
+         * timing out)
+         */
+
+        /* so, setting the seq status to INITIAL */
+        SANDESHA2_SEQ_REPORT_SET_SEQ_STATUS(seq_report, env, 
+                SANDESHA2_SEQ_STATUS_INITIAL);
+		/* returning the current seq report.*/
+        return seq_report;
+    }
+    out_seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_SEQ_ID(create_seq_bean, env);
+    if(!out_seq_id)
+    {
+        SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, nev, 
+                internal_seq_id);
+        SANDESHA2_SEQ_REPORT_SET_SEQ_STATUS(seq_report, env, 
+                SANDESHA2_SEQ_STATUS_INITIAL);
+        SANDESHA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, 
+                SANDESHA2_SEQ_DIRECTION_OUT);
+        return seq_report;
+    }
+    SANDESHA2_SEQ_REPORT_SET_SEQ_STATUS(seq_report, env, 
+                SANDESHA2_SEQ_STATUS_ESTABLISHED);
+    sandesha2_client_fill_outgoing_seq_info(env, seq_report, out_seq_id, 
+            seq_prop_mgr);
+   
+    return seq_report;
 }
 
+/**
+ * Users can get a list of seq_reports each describing a incoming
+ * sequence, which are the sequences the client work as a RMD.
+ * 
+ * @param config_ctx
+ * @return
+ */
+axis2_array_list_t *AXIS2_CALL
+sandesha2_client_get_incoming_seq_reports(
+        axis2_env_t *env,
+        axis2_conf_ctx_t *conf_ctx)
+{
+    sandesha2_
+}
 
-	public static SequenceReport getOutgoingSequenceReport(String internalSequenceID,
-			ConfigurationContext configurationContext) throws SandeshaException {
-
-		SequenceReport seqReport = new SequenceReport();
-		seqReport.setSequenceDirection(SequenceReport.SEQ_DIRECTION_OUT);
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configurationContext,configurationContext.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-		CreateSeqBeanMgr createSeqMgr = storageManager.getCreateSeqBeanMgr();
-
-		String withinTransactionStr = (String) configurationContext.getProperty(Sandesha2Constants.WITHIN_TRANSACTION);
-		boolean withinTransaction = false;
-		if (withinTransactionStr != null && Sandesha2Constants.VALUE_TRUE.equals(withinTransactionStr))
-			withinTransaction = true;
-
-		Transaction reportTransaction = null;
-		if (!withinTransaction)
-			reportTransaction = storageManager.getTransaction();
-
-		boolean rolebacked = false;
-
-		try {
-
-			seqReport.setInternalSequenceID(internalSequenceID);
-
-			CreateSeqBean createSeqFindBean = new CreateSeqBean();
-			createSeqFindBean.setInternalSequenceID(internalSequenceID);
-
-			CreateSeqBean createSeqBean = createSeqMgr.findUnique(createSeqFindBean);
-
-			// if data not is available seq has to be terminated or
-			// timedOut.
-			if (createSeqBean == null) {
-
-				// check weather this is an terminated seq.
-				if (isSequenceTerminated(internalSequenceID, seqPropMgr)) {
-					fillTerminatedOutgoingSequenceInfo(seqReport, internalSequenceID, seqPropMgr);
-
-					return seqReport;
-				}
-
-				if (isSequenceTimedout(internalSequenceID, seqPropMgr)) {
-					fillTimedoutOutgoingSequenceInfo(seqReport, internalSequenceID, seqPropMgr);
-
-					return seqReport;
-				}
-
-				// seq must hv been timed out before establiching. No other
-				// posibility I can think of.
-				// this does not get recorded since there is no key (which is
-				// normally the seqID) to store it.
-				// (properties with key as the internalSequenceID get deleted in
-				// timing out)
-
-				// so, setting the seq status to INITIAL
-				seqReport.setSequenceStatus(SequenceReport.SEQ_STATUS_INITIAL);
-
-				// returning the current seq report.
-				return seqReport;
-			}
-
-			String outSequenceID = createSeqBean.getSequenceID();
-			if (outSequenceID == null) {
-				seqReport.setInternalSequenceID(internalSequenceID);
-				seqReport.setSequenceStatus(SequenceReport.SEQ_STATUS_INITIAL);
-				seqReport.setSequenceDirection(SequenceReport.SEQ_DIRECTION_OUT);
-
-				return seqReport;
-			}
-
-			seqReport.setSequenceStatus(SequenceReport.SEQ_STATUS_ESTABLISHED);
-			fillOutgoingSequenceInfo(seqReport, outSequenceID, seqPropMgr);
-
-		} catch (Exception e) {
-			if (!withinTransaction && reportTransaction!=null) {
-				reportTransaction.rollback();
-				configurationContext.setProperty(Sandesha2Constants.WITHIN_TRANSACTION, Sandesha2Constants.VALUE_FALSE);
-				rolebacked = true;
-			}
-		} finally {
-			if (!withinTransaction && !rolebacked && reportTransaction!=null) {
-				reportTransaction.commit();
-				configurationContext.setProperty(Sandesha2Constants.WITHIN_TRANSACTION, Sandesha2Constants.VALUE_FALSE);
-			}
-		}
-
-		return seqReport;
-	}
-
-	/**
-	 * Users can get a list of seqReports each describing a incoming
-	 * seq, which are the seqs the client work as a RMD.
-	 * 
-	 * @param configCtx
-	 * @return
-	 * @throws SandeshaException
-	 */
 	public static ArrayList getIncomingSequenceReports(ConfigurationContext configCtx) throws SandeshaException {
 
 		SandeshaReport report = getSandeshaReport(configCtx);

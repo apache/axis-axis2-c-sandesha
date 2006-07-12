@@ -35,11 +35,11 @@ typedef struct sandesha2_fault_mgr_impl sandesha2_fault_mgr_impl_t;
   
 struct sandesha2_fault_mgr_impl
 {
-    sandesha2_fault_mgr_t manager;
+    sandesha2_fault_mgr_t mgr;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(manager) \
-                        ((sandesha2_fault_mgr_impl_t *)(manager))
+#define SANDESHA2_INTF_TO_IMPL(mgr) \
+                        ((sandesha2_fault_mgr_impl_t *)(mgr))
 
 /***************************** Function headers *******************************/
 sandesha2_msg_ctx_t* AXIS2_CALL 
@@ -96,7 +96,7 @@ sandesha2_fault_mgr_get_fault
             sandesha2_storage_mgr_t *storage_man);
 
 axis2_status_t AXIS2_CALL 
-sandesha2_fault_mgr_free(sandesha2_fault_mgr_t *manager, 
+sandesha2_fault_mgr_free(sandesha2_fault_mgr_t *mgr, 
                         const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
@@ -116,9 +116,9 @@ sandesha2_fault_mgr_create(const axis2_env_t *env)
         return NULL;
 	}
     
-    fault_mgr_impl->manager.ops = AXIS2_MALLOC(env->allocator,
+    fault_mgr_impl->mgr.ops = AXIS2_MALLOC(env->allocator,
                         sizeof(sandesha2_fault_mgr_ops_t));
-    if(NULL == fault_mgr_impl->manager.ops)
+    if(NULL == fault_mgr_impl->mgr.ops)
 	{
 		sandesha2_fault_mgr_free((sandesha2_fault_mgr_t*)fault_mgr_impl, 
                         env);
@@ -126,38 +126,38 @@ sandesha2_fault_mgr_create(const axis2_env_t *env)
         return NULL;
 	}
     
-    fault_mgr_impl->manager.ops->check_for_create_seq_refused = 
+    fault_mgr_impl->mgr.ops->check_for_create_seq_refused = 
                         sandesha2_fault_mgr_check_for_create_seq_refused;
-    fault_mgr_impl->manager.ops->check_for_last_msg_num_exceeded = 
+    fault_mgr_impl->mgr.ops->check_for_last_msg_num_exceeded = 
                         sandesha2_fault_mgr_check_for_last_msg_num_exceeded;
-    fault_mgr_impl->manager.ops->check_for_msg_num_rollover = 
+    fault_mgr_impl->mgr.ops->check_for_msg_num_rollover = 
                         sandesha2_fault_mgr_check_for_msg_num_rollover;
-    fault_mgr_impl->manager.ops->check_for_unknown_seq = 
+    fault_mgr_impl->mgr.ops->check_for_unknown_seq = 
                         sandesha2_fault_mgr_check_for_unknown_seq;
-    fault_mgr_impl->manager.ops->check_for_invalid_ack = 
+    fault_mgr_impl->mgr.ops->check_for_invalid_ack = 
                         sandesha2_fault_mgr_check_for_invalid_ack;
-    fault_mgr_impl->manager.ops->check_for_seq_closed = 
+    fault_mgr_impl->mgr.ops->check_for_seq_closed = 
                         sandesha2_fault_mgr_check_for_seq_closed;
-    fault_mgr_impl->manager.ops->get_fault = 
+    fault_mgr_impl->mgr.ops->get_fault = 
                         sandesha2_fault_mgr_get_fault;
-    fault_mgr_impl->manager.ops->free = sandesha2_fault_mgr_free;
+    fault_mgr_impl->mgr.ops->free = sandesha2_fault_mgr_free;
                         
-	return &(fault_mgr_impl->manager);
+	return &(fault_mgr_impl->mgr);
 }
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_fault_mgr_free(sandesha2_fault_mgr_t *manager, 
+sandesha2_fault_mgr_free(sandesha2_fault_mgr_t *mgr, 
                         const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    if(NULL != manager->ops)
+    if(NULL != mgr->ops)
     {
-        AXIS2_FREE(env->allocator, manager->ops);
-        manager->ops = NULL;
+        AXIS2_FREE(env->allocator, mgr->ops);
+        mgr->ops = NULL;
     }
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(manager));
+	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(mgr));
 	return AXIS2_SUCCESS;
 }
 
@@ -219,7 +219,7 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded
     sandesha2_seq_t *sequence = NULL;
     long msg_num = -1;
     axis2_char_t *seq_id = NULL;
-    sandesha2_seq_property_bean_manager_t *seq_prop_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *last_msg_bean = NULL;
     axis2_bool_t exceeded = AXIS2_FALSE;
     axis2_char_t reason[256];
@@ -230,14 +230,14 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded
     
     sequence = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         app_rm_msg, env, SANDESHA2_MSG_PART_SEQ);
-    msg_num = SANDESHSA2_MSG_NUMBER_GET_MSG_NUM(SANDESHA2_SEQUENCE_GET_MSG_NUM(
+    msg_num = SANDESHSA2_MSG_NUMBER_GET_MSG_NUM(SANDESHA2_SEQ_GET_MSG_NUM(
                         sequence, env), env);
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQUENCE_GET_IDENTIFIER(sequence, env), env);
+                        SANDESHA2_SEQ_GET_IDENTIFIER(sequence, env), env);
                         
-    seq_prop_mgr = SANDESHA2_STORAGE_MANAGER_GET_SEQ_PROPERTY_BEAN_MANAGER(
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
-    last_msg_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_RETRIEVE(seq_prop_mgr,
+    last_msg_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, seq_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO);
     if(NULL != last_msg_bean)
     {
@@ -298,7 +298,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
             axis2_char_t *seq_id,
             sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_create_seq_bean_manager_t *create_seq_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     int type = -1;
     axis2_bool_t valid_seq = AXIS2_TRUE;
     
@@ -307,7 +307,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
-    create_seq_mgr = SANDESHA2_STORAGE_MANAGER_GET_CREATE_SEQ_BEAN_MANAGER(
+    create_seq_mgr = SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_MGR(
                         storage_man, env);
     type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_ACK == type || 
@@ -320,7 +320,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
         
         find_bean = sandesha2_create_seq_bean_create(env);
         SANDESHA2_CREATE_SEQ_BEAN_SET_SEQ_ID(find_bean, env, seq_id);
-        list = SANDESHA2_CREATE_SEQ_BEAN_MANAGER_FIND(create_seq_mgr, env, 
+        list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, 
                         find_bean);
         if(NULL != list)
         {
@@ -332,13 +332,13 @@ sandesha2_fault_mgr_check_for_unknown_seq
     }
     else
     {
-        sandesha2_next_msg_bean_manager_t *next_msg_mgr = NULL;
+        sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
         axis2_array_list_t *list = NULL;
         axis2_bool_t contains = AXIS2_FALSE;
         
-        next_msg_mgr = SANDESHA2_STORAGE_MANAGER_GET_NEXT_MSG_BEAN_MANAGER(
+        next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
                         storage_man, env);
-        list = SANDESHA2_NEXT_MSG_BEAN_MANAGER_RETRIEVE_ALL(next_msg_mgr, env);
+        list = SANDESHA2_NEXT_MSG_MGR_RETRIEVE_ALL(next_msg_mgr, env);
         if(NULL != list)
         {
             int i = 0;
@@ -348,7 +348,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
                 axis2_char_t *tmp_id = NULL;
                 
                 next_bean = AXIS2_ARRAY_LIST_GET(list, env, i);
-                tmp_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQUENCE_ID(next_bean, env);
+                tmp_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(next_bean, env);
                 if(0 == AXIS2_STRCMP(seq_id, tmp_id))
                 {
                     contains = AXIS2_TRUE;
@@ -479,7 +479,7 @@ sandesha2_fault_mgr_check_for_seq_closed
             axis2_char_t *seq_id,
             sandesha2_storage_mgr_t *storage_man)
 {
-    sandesha2_seq_property_bean_manager_t *seq_prop_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *closed_bean = NULL;
     axis2_bool_t seq_closed = AXIS2_FALSE;
     axis2_char_t reason[256];
@@ -489,9 +489,9 @@ sandesha2_fault_mgr_check_for_seq_closed
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MANAGER_GET_SEQ_PROPERTY_BEAN_MANAGER(
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
-    closed_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_RETRIEVE(seq_prop_mgr, env,
+    closed_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env,
                         seq_id, SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(NULL != closed_bean && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE,
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(closed_bean, env)))
@@ -583,14 +583,14 @@ sandesha2_fault_mgr_get_fault
     }
     else
     {
-        sandesha2_seq_property_bean_manager_t *seq_prop_mgr = NULL;
+        sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
         axis2_char_t *seq_id = NULL;
         
-        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(
+        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
         seq_id = SANDESHA2_FAULT_DATA_GET_SEQ_ID(fault_data, env);
-        acks_to_bean = SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_RETRIEVE(seq_prop_mgr,
+        acks_to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
         if(NULL != acks_to_bean)
             acks_to_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, 
