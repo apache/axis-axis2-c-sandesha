@@ -4,7 +4,8 @@ libsandesha_util_la_SOURCES = \
 							error.c \
 							utils.c \
 							spec_specific_consts.c\
-                            fault_data.c
+                            fault_data.c\
+                            fault_manager.c
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \

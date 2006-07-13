@@ -55,6 +55,13 @@ sandesha2_spec_specific_consts_is_ack_final_allowed(const axis2_env_t *env,
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_spec_specific_consts_is_ack_none_allowed(const axis2_env_t *env, 
                         axis2_char_t *rm_spec_ver);
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_spec_specific_consts_get_default_spec_version(const axis2_env_t *env);
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_spec_specific_consts_get_anon_uri(const axis2_env_t *env,
+                        axis2_char_t *addr_ns_val);
 /** @} */
 #ifdef __cplusplus
 }

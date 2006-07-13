@@ -17,6 +17,8 @@
 #include <sandesha2/sandesha2_spec_specific_consts.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_error.h>
+#include <axis2_string.h>
+#include <axis2_addr.h>
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_spec_specific_consts_get_spec_ver_str(const axis2_env_t *env,
@@ -107,4 +109,24 @@ sandesha2_spec_specific_consts_is_ack_none_allowed(const axis2_env_t *env,
 }
 
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_spec_specific_consts_get_default_spec_version(const axis2_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+    return SANDESHA2_SPEC_VERSION_1_0;
+}
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_spec_specific_consts_get_anon_uri(const axis2_env_t *env,
+                        axis2_char_t *addr_ns_val)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, addr_ns_val, NULL);
+    
+    if(0 == AXIS2_STRCMP(AXIS2_WSA_NAMESPACE_SUBMISSION, addr_ns_val))
+        return AXIS2_WSA_ANONYMOUS_URL_SUBMISSION;
+    else if(0 == AXIS2_STRCMP(AXIS2_WSA_NAMESPACE, addr_ns_val))
+        return AXIS2_WSA_ANONYMOUS_URL;
+    
+    return NULL;
+}

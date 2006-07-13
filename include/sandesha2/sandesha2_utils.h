@@ -105,6 +105,12 @@ AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx);
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
+                        axis2_char_t *incoming_seq_id);
+                        
+
+
 /** @} */
 #ifdef __cplusplus
 }

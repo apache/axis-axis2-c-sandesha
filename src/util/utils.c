@@ -343,3 +343,23 @@ sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
     /*TODO implement when the persistent storage is avalable */
     return NULL;
 }
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
+                        axis2_char_t *incoming_seq_id)
+{
+    axis2_char_t *start_str = NULL;
+    axis2_char_t *ret = NULL;
+    int start_len = 0;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, incoming_seq_id, NULL);
+    
+    start_str = axis2_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", NULL);
+    start_len = AXIS2_STRLEN(start_str);
+    if(0 != AXIS2_STRNCMP(incoming_seq_id, start_str, start_len))
+        return NULL;
+    ret = AXIS2_STRDUP((incoming_seq_id + start_len * sizeof(axis2_char_t)), env);
+    
+    return ret;    
+}
