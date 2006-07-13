@@ -96,7 +96,7 @@ sandesha2_create_seq_create(
 #define SANDESHA2_CREATE_SEQ_SET_SEQ_OFFER(create_seq, env, seq_offer) \
     ((create_seq)->ops->set_seq_offer(create_seq, env, seq_offer))
 #define SANDESHA2_CREATE_SEQ_GET_SEQ_OFFER(create_seq, env) \
-    ((create_seq)->ops->set_seq_offer (create_seq, env))
+    ((create_seq)->ops->get_seq_offer (create_seq, env))
 /************************** End of function macros ****************************/
 /** @} */
 #ifdef __cplusplus

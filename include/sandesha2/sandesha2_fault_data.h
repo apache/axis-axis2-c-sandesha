@@ -89,7 +89,7 @@ AXIS2_DECLARE_DATA struct sandesha2_fault_data_ops
         set_code) 
             (sandesha2_fault_data_t *data,
             const axis2_env_t *env,
-            axis2_char_t *sub_code);
+            axis2_char_t *code);
             
     int (AXIS2_CALL *
         get_type) 

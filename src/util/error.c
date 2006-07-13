@@ -125,7 +125,7 @@ sandesha2_error_create (axis2_allocator_t * allocator)
     if (!error)
         return NULL;
 
-    error->ops->get_extended_message = sandesha2_error_impl_get_message;
+    /*error->ops->get_extended_message = sandesha2_error_impl_get_message;*/
     error->ops->set_error_number = sandesha2_error_impl_set_error_number;
     error->ops->set_status_code = sandesha2_error_impl_set_status_code;
     error->ops->get_status_code = sandesha2_error_impl_get_status_code;

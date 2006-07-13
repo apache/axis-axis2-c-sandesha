@@ -29,7 +29,7 @@
 
 /** 
  * @brief Fault Manager struct impl
- *	Sandesha2 Message Context
+ *	Sandesha2 Fault Manager
  */
 typedef struct sandesha2_fault_mgr_impl sandesha2_fault_mgr_impl_t;  
   

@@ -331,8 +331,6 @@ extern "C"
 			
 	#define SANDESHA2_SOAP_FAULT_TYPE_LAST_MESSAGE_NO_EXCEEDED  5
 
-	#define SANDESHA2_PROPERTIES_
-		
 	#define SANDESHA2_PROPERTIES_RETRANSMISSION_INTERVAL  "RetransmissionInterval"
 		
 	#define SANDESHA2_PROPERTIES_ACK_INTERVAL  "AcknowledgementInterval"
