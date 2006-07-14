@@ -112,7 +112,7 @@ AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_default_spec_version(
         const axis2_env_t *env)
 {
-    return SANDESHA2_SPEC_VERSIONS.v1_0;
+    return SANDESHA2_SPEC_VERSION_1_0;
 }
 
 axis2_char_t *AXIS2_CALL
@@ -122,18 +122,12 @@ sandesha2_spec_specific_consts_get_terminate_seq_action(
 {
     if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
         return SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ;
-    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
         return SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ;
     else
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
     return NULL;
-}
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_spec_specific_consts_get_default_spec_version(const axis2_env_t *env)
-{
-    AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_SPEC_VERSION_1_0;
 }
 
 axis2_char_t *AXIS2_CALL
@@ -147,10 +141,10 @@ sandesha2_spec_specific_consts_get_close_seq_action(
                 AXIS2_FAILURE);
         return NULL;
     }
-    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
         return SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ;
     else
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
     return NULL;
 }
@@ -167,10 +161,10 @@ sandesha2_spec_specific_consts_get_ack_request_action(
                 AXIS2_FAILURE);
         return NULL;
     }
-    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
         return SANDESHA2_SPEC_2005_10_ACTION_ACK_REQUEST;
     else
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
     return NULL;
 }
