@@ -76,7 +76,7 @@ sandesha2_error_init()
     /* 'To' Address is not set */
     sandesha2_error_messages[SANDESHA2_ERROR_TO_ADDRESS_IS_NOT_SET] = 
         "'To' address is not set";
-    /* 'To' Address is not set */
+    /* Service Context is NULL */
     sandesha2_error_messages[SANDESHA2_ERROR_SVC_CTX_IS_NULL] = 
         "Service context is NULL";
     /* Non Unique Result */
@@ -94,8 +94,38 @@ sandesha2_error_init()
         "Invalid namespace uri";
     sandesha2_error_messages[SANDESHA2_ERROR_INVALID_SPEC_VERSION] = 
         "Invalid Spec Version";
-    
-        
+    sandesha2_error_messages[
+        SANDESHA2_ERROR_INCOMING_SEQ_REPORT_NOT_PRESENT_FOR_GIVEN_SEQ_ID] = 
+        "An incoming seq report is not present for the given seqID";
+    sandesha2_error_messages[SANDESHA2_ERROR_TO_EPR_NOT_SET] = 
+        "To EPR is not set";   
+    sandesha2_error_messages[SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET] = 
+        "Options object is not set";
+    sandesha2_error_messages[SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE] = 
+        "Unknown specification error message"; 
+    sandesha2_error_messages[SANDESHA2_ERROR_COULD_NOT_SEND_TERMINATE_MESSAGE] = 
+        "Could not send the terminate message";
+    sandesha2_error_messages[SANDESHA2_ERROR_RM_SPEC_VERSION_DOES_NOT_DEFINE_A_SEQ_CLOSE_ACTION] =
+        "This rm spec version does not define a sequence close action";
+    sandesha2_error_messages[SANDESHA2_ERROR_COULD_NOT_SEND_THE_CLOSE_SEQ_MESSAGE] =
+        "Could not send the close sequence message";
+    sandesha2_error_messages[SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1] =
+        "Close Sequence feature is only available for WSRM 1.1";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA] = 
+        "Cannnot find a seq report for the given data";   
+    sandesha2_error_messages[SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE] = 
+        "Sequence is not in a active state. Either create seq response has not \
+            being received or seq has been terminated, cannot get seqID";
+    sandesha2_error_messages[SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET] =
+        "Sequence id bean is not set";
+    sandesha2_error_messages[SANDESHA2_ERROR_EMPTY_ACK_REQUEST_MESSAGE] =
+        "Empty AckRequest messages can only be sent with the v1_1 spec"; 
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_GENERATE_SEQ_REPORT_FOR_GIVEN_INTERNAL_SEQ_ID] =
+        "Cannot generate the sequence report for the given internalSequenceID";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_SEND_ACK_REQUEST_MESSAGE_SINCE_IS_NOT_ACTIVE] =
+        "Canot send the ackRequest message since it is not active";
+    sandesha2_error_messages[SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION] =
+        "this spec version does not define a ackRequest action";
     return AXIS2_SUCCESS;
 }
 

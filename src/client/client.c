@@ -21,12 +21,23 @@
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_transaction.h>
 #include <sandesha2_client_constants.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_identifier.h>
+
 #include <axis2_svc_client.h>
 #include <axis2_svc_ctx.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_ctx.h>
 #include <axis2_property.h>
 #include <axis2_log.h>
+#include <axis2_options.h>
+#include <axiom_soap_envelope.h>
+#include <axiom_soap_body.h>
+#include <axiom_node.h>
+#include <axiom_element.h>
+#include <axiom_soap_const.h>
 
 typedef struct sandesha2_client_impl sandesha2_client_impl_t;
 
@@ -138,7 +149,7 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
     if(to_epr == NULL)
     {
         AXIS2_SANDESHA2_ERROR_SET(env->error, 
-                AXIS2_SANDESHA2_ERROR_TO_ADDRESS_IS_NOT_SET, AXIS2_FAILURE);
+                AXIS2_SANDESHA2_ERROR_TO_ADDRESS_NOT_SET, AXIS2_FAILURE);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "To address is not set.");
     }
@@ -180,8 +191,8 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
 
     internal_seq_id = SANDESHA2_UTIL_GET_INTERNAL_SEQ_ID(to, 
             seq_key);
-    return sandesha2_client_get_outgoing_seq_report(env, internal_seq_id, 
-            conf_ctx);
+    return sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(env, 
+            internal_seq_id, conf_ctx);
 }
 
 sandesha2_seq_report_t *AXIS2_CALL
@@ -287,6 +298,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
 /**
  * Users can get a list of seq_reports each describing a incoming
  * sequence, which are the sequences the client work as a RMD.
+ * Caller must free the returned array.
  * 
  * @param config_ctx
  * @return
@@ -296,808 +308,796 @@ sandesha2_client_get_incoming_seq_reports(
         axis2_env_t *env,
         axis2_conf_ctx_t *conf_ctx)
 {
-    sandesha2_
+    sandesha2_report_t *report = NULL;
+    axis2_array_list_t *incoming_seq_ids = NULL;
+    axis2_array_list_t *incoming_seq_reports = NULL;
+    int i =0, size = 0;
+
+    AXIS2_ENV_CHECK(env, NULL);
+
+    report = sandesha2_client_get_report(env, conf_ctx);
+    incoming_seq_reports = axis2_array_list_create(env, 0);
+    if(!incoming_seq_reports)
+    {
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+    }
+    incoming_seq_ids = SANDESHA2_REPORT_GET_INCOMING_SEQ_LIST(report, env);
+    for(i = 0; i < size; i++)
+    {
+        axis2_char_t *seq_id = NULL;
+        sandesha2_seq_report_t *incoming_seq_report = NULL;
+        
+        seq_id = (axis2_char_t *) AXIS2_ARRAY_LIST_GET(incoming_seq_ids, env, i);
+        incoming_seq_report = sandesha2_client_get_incoming_seq_report(env, 
+                seq_id, conf_ctx);
+        if(!incoming_seq_report)
+        {
+            AXIS2_ERROR_SET(env->error, 
+                    SANDESHA2_ERROR_INCOMING_SEQ_REPORT_NOT_PRESENT_FOR_GIVEN_SEQ_ID, 
+                    AXIS2_FAILURE);
+            return NULL;
+        }
+        AXIS2_ARRAY_LIST_ADD(incoming_seq_reports, env, incoming_seq_report);
+    }
+    return incoming_seq_reports;
 }
 
-	public static ArrayList getIncomingSequenceReports(ConfigurationContext configCtx) throws SandeshaException {
-
-		SandeshaReport report = getSandeshaReport(configCtx);
-		ArrayList incomingSequenceIDs = report.getIncomingSequenceList();
-		Iterator incomingSequenceIDIter = incomingSequenceIDs.iterator();
-
-		ArrayList incomingSequenceReports = new ArrayList();
-
-		while (incomingSequenceIDIter.hasNext()) {
-			String sequnceID = (String) incomingSequenceIDIter.next();
-			SequenceReport incomingSequenceReport = getIncomingSequenceReport(sequnceID, configCtx);
-			if (incomingSequenceReport == null) {
-				throw new SandeshaException("An incoming seq report is not present for the given seqID");
-			}
-			incomingSequenceReports.add(incomingSequenceReport);
-		}
-
-		return incomingSequenceReports;
-	}
-
-	/**
-	 * SandeshaReport gives the details of all incoming and outgoing seqs.
-	 * The outgoing seq have to pass the initial state (CS/CSR exchange) to
-	 * be included in a SandeshaReport
-	 * 
-	 * @param configurationContext
-	 * @return
-	 * @throws SandeshaException
-	 */
-	public static SandeshaReport getSandeshaReport(ConfigurationContext configurationContext) throws SandeshaException {
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configurationContext,configurationContext.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-		SandeshaReport sandesha2Report = new SandeshaReport();
-		SequencePropertyBean internalSequenceFindBean = new SequencePropertyBean();
-
-		String withinTransactionStr = (String) configurationContext.getProperty(Sandesha2Constants.WITHIN_TRANSACTION);
-		boolean withinTransaction = false;
-		if (withinTransactionStr != null && Sandesha2Constants.VALUE_TRUE.equals(withinTransactionStr))
-			withinTransaction = true;
-
-		Transaction reportTransaction = null;
-		if (!withinTransaction)
-			reportTransaction = storageManager.getTransaction();
-
-		boolean rolebacked = false;
-
-		try {
-
-			internalSequenceFindBean.setName(Sandesha2Constants.SequenceProperties.INTERNAL_SEQ_ID);
-			Collection collection = seqPropMgr.find(internalSequenceFindBean);
-			Iterator iterator = collection.iterator();
-			while (iterator.hasNext()) {
-				SequencePropertyBean bean = (SequencePropertyBean) iterator.next();
-				String seqID = bean.getSequenceID();
-				sandesha2Report.addToOutgoingSequenceList(seqID);
-				sandesha2Report.addToOutgoingInternalSequenceMap(seqID, bean.getValue());
-
-				SequenceReport report = getOutgoingSequenceReport(bean.getValue(), configurationContext);
-
-				sandesha2Report.addToNoOfCompletedMessagesMap(seqID, report.getCompletedMessages().size());
-				sandesha2Report.addToSequenceStatusMap(seqID, report.getSequenceStatus());
-			}
-
-			// incoming seqs
-			SequencePropertyBean serverCompletedMsgsFindBean = new SequencePropertyBean();
-			serverCompletedMsgsFindBean.setName(Sandesha2Constants.SequenceProperties.SERVER_COMPLETED_MESSAGES);
-
-			Collection serverCompletedMsgsBeans = seqPropMgr.find(serverCompletedMsgsFindBean);
-			Iterator iter = serverCompletedMsgsBeans.iterator();
-			while (iter.hasNext()) {
-				SequencePropertyBean serverCompletedMsgsBean = (SequencePropertyBean) iter.next();
-				String seqID = serverCompletedMsgsBean.getSequenceID();
-				sandesha2Report.addToIncomingSequenceList(seqID);
-
-				SequenceReport seqReport = getIncomingSequenceReport(seqID, configurationContext);
-
-				sandesha2Report.addToNoOfCompletedMessagesMap(seqID, seqReport.getCompletedMessages().size());
-				sandesha2Report.addToSequenceStatusMap(seqID, seqReport.getSequenceStatus());
-			}
-
-		} catch (Exception e) {
-			if (!withinTransaction && reportTransaction!=null) {
-				reportTransaction.rollback();
-				rolebacked = true;
-			}
-		} finally {
-			if (!withinTransaction && !rolebacked && reportTransaction!=null) {
-				reportTransaction.commit();
-			}
-		}
-
-		return sandesha2Report;
-	}
-
-	public static void createSequence(ServiceClient serviceClient, boolean offer) throws SandeshaException {
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		EndpointReference toEPR = serviceClient.getOptions().getTo();
-		if (toEPR == null)
-			throw new SandeshaException("ToEPR is not set");
-
-		String to = toEPR.getAddress();
-		if (to == null)
-			throw new SandeshaException("To EPR is not set");
-
-		if (offer) {
-			String offeredSequenceID = SandeshaUtil.getUUID();
-			options.setProperty(SandeshaClientConstants.OFFERED_SEQ_ID, offeredSequenceID);
-		}
-
-		// setting a new squenceKey if not already set.
-		String seqKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		if (seqKey == null) {
-			seqKey = SandeshaUtil.getUUID();
-			options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		}
-
-		options.setProperty(SandeshaClientConstants.DUMMY_MESSAGE, Sandesha2Constants.VALUE_TRUE);
-
-		try {
-			serviceClient.fireAndForget(null);
-		} catch (AxisFault e) {
-			throw new SandeshaException(e);
-		}
-
-		options.setProperty(SandeshaClientConstants.DUMMY_MESSAGE, Sandesha2Constants.VALUE_FALSE);
-
-	}
-
-	public static void createSequence(ServiceClient serviceClient, boolean offer, String seqKey)
-			throws SandeshaException {
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-
-		createSequence(serviceClient, offer);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-	
-	/**
-	 * User can terminate the seq defined by the passed serviceClient.
-	 * 
-	 * @deprecated
-	 */
-	public static void createSequnce(ServiceClient serviceClient, boolean offer, String seqKey)
-		throws SandeshaException {
-		createSequence(serviceClient,offer,seqKey);
-	}
-
-	/**
-	 * User can terminate the seq defined by the passed serviceClient.
-	 * 
-	 * @param serviceClient
-	 * @throws SandeshaException
-	 */
-	public static void terminateSequence(ServiceClient serviceClient) throws SandeshaException {
-		ServiceContext serviceContext = serviceClient.getServiceContext();
-		if (serviceContext == null)
-			throw new SandeshaException("ServiceContext is null");
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String rmSpecVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-
-		if (rmSpecVersion == null)
-			rmSpecVersion = SpecSpecificConstants.getDefaultSpecVersion();
-
-		String rmNamespaceValue = SpecSpecificConstants.getRMNamespaceValue(rmSpecVersion);
-
-		SOAPEnvelope terminateEnvelope = configureTerminateSequence(options, serviceContext.getConfigurationContext());
-		OMElement terminateBody = terminateEnvelope.getBody().getFirstChildWithName(
-				new QName(rmNamespaceValue, Sandesha2Constants.WSRM_COMMON.TERMINATE_SEQ));
-
-		String oldAction = options.getAction();
-		options.setAction(SpecSpecificConstants.getTerminateSequenceAction(rmSpecVersion));
-
-		try {
-			serviceClient.fireAndForget(terminateBody);
-		} catch (AxisFault e) {
-			String message = "Could not send the terminate message";
-			throw new SandeshaException(message, e);
-		} finally {
-			options.setAction(oldAction);
-		}
-	}
-
-	public static void terminateSequence(ServiceClient serviceClient, String seqKey) throws SandeshaException {
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		terminateSequence(serviceClient);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-
-	/**
-	 * User can close the seq defined by the passed serviceClient.
-	 * 
-	 * @param serviceClient
-	 * @throws SandeshaException
-	 */
-	public static void closeSequence(ServiceClient serviceClient) throws SandeshaException {
-		ServiceContext serviceContext = serviceClient.getServiceContext();
-		if (serviceContext == null)
-			throw new SandeshaException("ServiceContext is null");
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String rmSpecVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-
-		if (rmSpecVersion == null)
-			rmSpecVersion = SpecSpecificConstants.getDefaultSpecVersion();
-
-		String rmNamespaceValue = SpecSpecificConstants.getRMNamespaceValue(rmSpecVersion);
-
-		SOAPEnvelope closeSequnceEnvelope = configureCloseSequence(options, serviceContext.getConfigurationContext());
-		OMElement closeSequenceBody = closeSequnceEnvelope.getBody().getFirstChildWithName(
-				new QName(rmNamespaceValue, Sandesha2Constants.WSRM_COMMON.CLOSE_SEQ));
-
-		String oldAction = options.getAction();
-		options.setAction(SpecSpecificConstants.getCloseSequenceAction(rmSpecVersion));
-		try {
-			serviceClient.fireAndForget(closeSequenceBody);
-		} catch (AxisFault e) {
-			String message = "Could not send the close seq message";
-			throw new SandeshaException(message, e);
-		} finally {
-			options.setAction(oldAction);
-		}
-	}
-
-	public static void closeSequence(ServiceClient serviceClient, String seqKey) throws SandeshaException {
-		// TODO test
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String specVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-		if (!Sandesha2Constants.SPEC_VERSIONS.v1_1.equals(specVersion)) {
-			String message = "Close Sequence feature is only available for WSRM 1.1";
-			throw new SandeshaException (message);
-		}
-		
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		closeSequence(serviceClient);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-
-	/**
-	 * This blocks the system until the messages u have sent hv been completed.
-	 * 
-	 * @param serviceClient
-	 */
-	public static void waitUntilSequenceCompleted(ServiceClient serviceClient) throws SandeshaException {
-		waitUntilSequenceCompleted(serviceClient, -1);
-	}
-
-	public static void waitUntilSequenceCompleted(ServiceClient serviceClient, String seqKey)
-			throws SandeshaException {
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		waitUntilSequenceCompleted(serviceClient);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-
-	/**
-	 * This blocks the system until the messages u have sent hv been completed
-	 * or until the given time interval exceeds. (the time is taken in seconds)
-	 * 
-	 * @param serviceClient
-	 * @param maxWaitingTime
-	 */
-	public static void waitUntilSequenceCompleted(ServiceClient serviceClient, long maxWaitingTime)
-			throws SandeshaException {
-
-		long startTime = System.currentTimeMillis();
-
-		SequenceReport seqReport = getOutgoingSequenceReport(serviceClient);
-		if (seqReport == null) {
-			throw new SandeshaException("Cannnot find a seq report for the given data");
-		}
-
-		boolean done = false;
-		while (!done) {
-			seqReport = getOutgoingSequenceReport(serviceClient);
-			int status = seqReport.getSequenceStatus();
-			if (status == SequenceReport.SEQ_STATUS_TERMINATED)
-				done = true;
-			if (status == SequenceReport.SEQ_STATUS_TIMED_OUT)
-				done = true;
-
-			if (maxWaitingTime >= 0) {
-				long timeNow = System.currentTimeMillis();
-				if (timeNow > (startTime + maxWaitingTime))
-					done = true;
-			}
-		}
-	}
-
-	public static void waitUntilSequenceCompleted(ServiceClient serviceClient, long maxWaitingTime, String seqKey)
-			throws SandeshaException {
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		waitUntilSequenceCompleted(serviceClient, maxWaitingTime);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-
-	// gives the out seqID if CS/CSR exchange is done. Otherwise a
-	// SandeshaException
-	public static String getSequenceID(ServiceClient serviceClient) throws SandeshaException {
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		EndpointReference toEPR = options.getTo();
-		if (toEPR == null)
-			throw new SandeshaException("To EPR is not set");
-
-		String to = toEPR.getAddress();
-		String seqKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-
-		ServiceContext serviceContext = serviceClient.getServiceContext();
-		if (serviceContext == null)
-			throw new SandeshaException("Service context is not set");
-
-		ConfigurationContext configurationContext = serviceContext.getConfigurationContext();
-
-		String internalSequenceID = generateInternalSequenceIDForTheClientSide(to, seqKey);
-
-		SequenceReport seqReport = SandeshaClient.getOutgoingSequenceReport(serviceClient);
-		if (seqReport == null)
-			throw new SandeshaException("Cannot get a seq report from the given data");
-
-		if (seqReport.getSequenceStatus() != SequenceReport.SEQ_STATUS_ESTABLISHED) {
-			throw new SandeshaException(
-					"Sequence is not in a active state. Either create seq response has not being received or seq has been terminated,"
-							+ " cannot get seqID");
-		}
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configurationContext,configurationContext.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-
-		SequencePropertyBean seqIDBean = seqPropMgr.retrieve(internalSequenceID,
-				Sandesha2Constants.SequenceProperties.OUT_SEQ_ID);
-		if (seqIDBean == null)
-			throw new SandeshaException("SequenceIdBean is not set");
-
-		String seqID = seqIDBean.getValue();
-		return seqID;
-	}
-
-	public static void sendAckRequest(ServiceClient serviceClient) throws SandeshaException {
-
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		ServiceContext serviceContext = serviceClient.getServiceContext();
-		if (serviceContext == null)
-			throw new SandeshaException("ServiceContext is null");
-
-		ConfigurationContext configContext = serviceContext.getConfigurationContext();
-
-		EndpointReference toEPR = options.getTo();
-		if (toEPR == null)
-			throw new SandeshaException("'To' address is not set is not set");
-
-		String to = toEPR.getAddress();
-
-		String seqKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-
-		String rmSpecVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-		if (rmSpecVersion == null)
-			rmSpecVersion = Sandesha2Constants.SPEC_VERSIONS.v1_0;
-
-		if (Sandesha2Constants.SPEC_VERSIONS.v1_0.equals(rmSpecVersion)) {
-			throw new SandeshaException("Empty AckRequest messages can only be sent with the v1_1 spec");
-		}
-
-		String internalSequenceID = getInternalSequenceID(to, seqKey);
-
-		SequenceReport seqReport = SandeshaClient.getOutgoingSequenceReport(internalSequenceID, configContext);
-		if (seqReport == null)
-			throw new SandeshaException("Cannot generate the seq report for the given internalSequenceID");
-		if (seqReport.getSequenceStatus() != SequenceReport.SEQ_STATUS_ESTABLISHED)
-			throw new SandeshaException("Canot send the ackRequest message since it is not active");
-
-		String outSequenceID = getSequenceID(serviceClient);
-
-		String soapNamespaceURI = options.getSoapVersionURI();
-		SOAPFactory factory = null;
-		SOAPEnvelope dummyEnvelope = null;
-		if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapNamespaceURI)) {
-			factory = new SOAP11Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		} else {
-			factory = new SOAP12Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		}
-
-		String rmNamespaceValue = SpecSpecificConstants.getRMNamespaceValue(rmSpecVersion);
-
-		AckRequested ackRequested = new AckRequested(factory, rmNamespaceValue);
-		Identifier identifier = new Identifier(factory, rmNamespaceValue);
-		identifier.setIndentifer(outSequenceID);
-		ackRequested.setIdentifier(identifier);
-
-		ackRequested.toSOAPEnvelope(dummyEnvelope);
-
-		OMElement ackRequestedHeaderBlock = dummyEnvelope.getHeader().getFirstChildWithName(
-				new QName(rmNamespaceValue, Sandesha2Constants.WSRM_COMMON.ACK_REQUESTED));
-
-		String oldAction = options.getAction();
-
-		options.setAction(SpecSpecificConstants.getAckRequestAction(rmSpecVersion));
-
-		serviceClient.addHeader(ackRequestedHeaderBlock);
-
-		try {
-			serviceClient.fireAndForget(null);
-		} catch (AxisFault e) {
-			String message = "Could not send the ack request";
-			throw new SandeshaException(message, e);
-		}
-
-		serviceClient.removeHeaders();
-		options.setAction(oldAction);
-	}
-
-	public static void sendAckRequest(ServiceClient serviceClient, String seqKey) throws SandeshaException {
-		Options options = serviceClient.getOptions();
-		if (options == null)
-			throw new SandeshaException("Options object is not set");
-
-		String oldSequenceKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, seqKey);
-		sendAckRequest(serviceClient);
-
-		options.setProperty(SandeshaClientConstants.SEQ_KEY, oldSequenceKey);
-	}
-
-	private static String getInternalSequenceID(String to, String seqKey) {
-		return SandeshaUtil.getInternalSequenceID(to, seqKey);
-	}
-
-	private static SOAPEnvelope configureCloseSequence(Options options, ConfigurationContext configurationContext)
-			throws SandeshaException {
-
-		if (options == null)
-			throw new SandeshaException("You must set the Options object before calling this method");
-
-		EndpointReference epr = options.getTo();
-		if (epr == null)
-			throw new SandeshaException("You must set the toEPR before calling this method");
-
-		String to = epr.getAddress();
-		String seqKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-
-		String internalSequenceID = SandeshaUtil.getInternalSequenceID(to, seqKey);
-
-		SequenceReport seqReport = SandeshaClient.getOutgoingSequenceReport(internalSequenceID,
-				configurationContext);
-		if (seqReport == null)
-			throw new SandeshaException("Cannot generate the seq report for the given internalSequenceID");
-		if (seqReport.getSequenceStatus() != SequenceReport.SEQ_STATUS_ESTABLISHED)
-			throw new SandeshaException("Canot close the seq since it is not active");
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configurationContext,configurationContext.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-		SequencePropertyBean seqIDBean = seqPropMgr.retrieve(internalSequenceID,
-				Sandesha2Constants.SequenceProperties.OUT_SEQ_ID);
-		if (seqIDBean == null)
-			throw new SandeshaException("SequenceIdBean is not set");
-
-		String seqID = seqIDBean.getValue();
-
-		if (seqID == null)
-			throw new SandeshaException("Cannot find the seqID");
-
-		String rmSpecVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-
-		if (rmSpecVersion == null)
-			rmSpecVersion = SpecSpecificConstants.getDefaultSpecVersion();
-
-		if (!SpecSpecificConstants.isSequenceClosingAllowed(rmSpecVersion))
-			throw new SandeshaException("This rm version does not allow seq closing");
-
-		SOAPEnvelope dummyEnvelope = null;
-		SOAPFactory factory = null;
-		String soapNamespaceURI = options.getSoapVersionURI();
-		if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapNamespaceURI)) {
-			factory = new SOAP12Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		} else {
-			factory = new SOAP11Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		}
-
-		String rmNamespaceValue = SpecSpecificConstants.getRMNamespaceValue(rmSpecVersion);
-
-		CloseSequence closeSequence = new CloseSequence(factory, rmNamespaceValue);
-		Identifier identifier = new Identifier(factory, rmNamespaceValue);
-		identifier.setIndentifer(seqID);
-		closeSequence.setIdentifier(identifier);
-
-		closeSequence.toSOAPEnvelope(dummyEnvelope);
-
-		return dummyEnvelope;
-	}
-
-	private static boolean isSequenceTerminated(String internalSequenceID, SequencePropertyBeanMgr seqPropMgr)
-			throws SandeshaException {
-		SequencePropertyBean internalSequenceFindBean = new SequencePropertyBean();
-		internalSequenceFindBean.setValue(internalSequenceID);
-		internalSequenceFindBean.setName(Sandesha2Constants.SequenceProperties.INTERNAL_SEQ_ID);
-
-		SequencePropertyBean internalSequenceBean = seqPropMgr.findUnique(internalSequenceFindBean);
-		if (internalSequenceBean == null) {
-			String message = "Internal seq Bean is not available for the given seq";
-			log.debug(message);
-
-			return false;
-		}
-
-		String outSequenceID = internalSequenceBean.getSequenceID();
-
-		SequencePropertyBean seqTerminatedBean = seqPropMgr.retrieve(outSequenceID,
-				Sandesha2Constants.SequenceProperties.SEQ_TERMINATED);
-		if (seqTerminatedBean != null && Sandesha2Constants.VALUE_TRUE.equals(seqTerminatedBean.getValue())) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static boolean isSequenceTimedout(String internalSequenceID, SequencePropertyBeanMgr seqPropMgr)
-			throws SandeshaException {
-		SequencePropertyBean internalSequenceFindBean = new SequencePropertyBean();
-		internalSequenceFindBean.setValue(internalSequenceID);
-		internalSequenceFindBean.setName(Sandesha2Constants.SequenceProperties.INTERNAL_SEQ_ID);
-
-		SequencePropertyBean internalSequenceBean = seqPropMgr.findUnique(internalSequenceFindBean);
-		if (internalSequenceBean == null) {
-			String message = "Internal seq Bean is not available for the given seq";
-			log.debug(message);
-
-			return false;
-		}
-
-		String outSequenceID = internalSequenceBean.getSequenceID();
-		SequencePropertyBean seqTerminatedBean = seqPropMgr.retrieve(outSequenceID,
-				Sandesha2Constants.SequenceProperties.SEQ_TIMED_OUT);
-		if (seqTerminatedBean != null && Sandesha2Constants.VALUE_TRUE.equals(seqTerminatedBean.getValue())) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static void fillTerminatedOutgoingSequenceInfo(SequenceReport report, String internalSequenceID,
-			SequencePropertyBeanMgr seqPropMgr) throws SandeshaException {
-		SequencePropertyBean internalSequenceFindBean = new SequencePropertyBean();
-		internalSequenceFindBean.setValue(internalSequenceID);
-		internalSequenceFindBean.setName(Sandesha2Constants.SequenceProperties.INTERNAL_SEQ_ID);
-
-		SequencePropertyBean internalSequenceBean = seqPropMgr.findUnique(internalSequenceFindBean);
-		if (internalSequenceBean == null) {
-			String message = "Not a valid terminated seq. Internal seq Bean is not available for the given seq";
-			log.debug(message);
-
-			throw new SandeshaException(message);
-		}
-
-		report.setSequenceStatus(SequenceReport.SEQ_STATUS_TERMINATED);
-
-		String outSequenceID = internalSequenceBean.getSequenceID();
-		fillOutgoingSequenceInfo(report, outSequenceID, seqPropMgr);
-	}
-
-	private static void fillTimedoutOutgoingSequenceInfo(SequenceReport report, String internalSequenceID,
-			SequencePropertyBeanMgr seqPropMgr) throws SandeshaException {
-		SequencePropertyBean internalSequenceFindBean = new SequencePropertyBean();
-		internalSequenceFindBean.setValue(internalSequenceID);
-		internalSequenceFindBean.setName(Sandesha2Constants.SequenceProperties.INTERNAL_SEQ_ID);
-
-		SequencePropertyBean internalSequenceBean = seqPropMgr.findUnique(internalSequenceFindBean);
-		if (internalSequenceBean == null) {
-			String message = "Not a valid timedOut seq. Internal seq Bean is not available for the given seq";
-			log.debug(message);
-
-			throw new SandeshaException(message);
-		}
-
-		report.setSequenceStatus(SequenceReport.SEQ_STATUS_TIMED_OUT);
-		String outSequenceID = internalSequenceBean.getSequenceID();
-		fillOutgoingSequenceInfo(report, outSequenceID, seqPropMgr);
-	}
-
-	private static void fillOutgoingSequenceInfo(SequenceReport report, String outSequenceID,
-			SequencePropertyBeanMgr seqPropMgr) throws SandeshaException {
-		report.setSequenceID(outSequenceID);
-
-		ArrayList completedMessageList = AcknowledgementManager.getClientCompletedMessagesList(outSequenceID,
-				seqPropMgr);
-
-		Iterator iter = completedMessageList.iterator();
-		while (iter.hasNext()) {
-			Long lng = new Long(Long.parseLong((String) iter.next()));
-			report.addCompletedMessage(lng);
-		}
-	}
-
-	private static byte getServerSequenceStatus(String seqID, StorageManager storageManager)
-			throws SandeshaException {
-
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-
-		SequencePropertyBean terminatedBean = seqPropMgr.retrieve(seqID,
-				Sandesha2Constants.SequenceProperties.SEQ_TERMINATED);
-		if (terminatedBean != null) {
-			return SequenceReport.SEQ_STATUS_TERMINATED;
-		}
-
-		SequencePropertyBean timedOutBean = seqPropMgr.retrieve(seqID,
-				Sandesha2Constants.SequenceProperties.SEQ_TIMED_OUT);
-		if (timedOutBean != null) {
-			return SequenceReport.SEQ_STATUS_TIMED_OUT;
-		}
-
-		NextMsgBeanMgr nextMsgMgr = storageManager.getNextMsgBeanMgr();
-		NextMsgBean nextMsgBean = nextMsgMgr.retrieve(seqID);
-
-		if (nextMsgBean != null) {
-			return SequenceReport.SEQ_STATUS_ESTABLISHED;
-		}
-
-		throw new SandeshaException("Unrecorded seqID");
-	}
-
-	private class DummyCallback extends Callback {
-
-		public void onComplete(AsyncResult result) {
-			// TODO Auto-generated method stub
-			System.out.println("Error: dummy callback was called");
-		}
-
-		public void onError(Exception e) {
-			// TODO Auto-generated method stub
-			System.out.println("Error: dummy callback received an error");
-
-		}
-
-	}
-
-	private static String generateInternalSequenceIDForTheClientSide(String toEPR, String seqKey) {
-		return SandeshaUtil.getInternalSequenceID(toEPR, seqKey);
-	}
-
-	private static SequenceReport getIncomingSequenceReport(String seqID, ConfigurationContext configCtx)
-			throws SandeshaException {
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configCtx,configCtx.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-
-		String withinTransactionStr = (String) configCtx.getProperty(Sandesha2Constants.WITHIN_TRANSACTION);
-		boolean withinTransaction = false;
-		if (withinTransactionStr != null && Sandesha2Constants.VALUE_TRUE.equals(withinTransactionStr))
-			withinTransaction = true;
-
-		Transaction reportTransaction = null;
-		if (!withinTransaction)
-			reportTransaction = storageManager.getTransaction();
-
-		boolean rolebacked = false;
-
-		try {
-
-			SequenceReport seqReport = new SequenceReport();
-
-			ArrayList completedMessageList = AcknowledgementManager.getServerCompletedMessagesList(seqID,
-					seqPropMgr);
-
-			Iterator iter = completedMessageList.iterator();
-			while (iter.hasNext()) {
-				;
-				seqReport.addCompletedMessage((Long) iter.next());
-			}
-
-			seqReport.setSequenceID(seqID);
-			seqReport.setInternalSequenceID(seqID); // for the
-																// incoming side
-																// internalSequenceID=seqID
-			seqReport.setSequenceDirection(SequenceReport.SEQ_DIRECTION_IN);
-
-			seqReport.setSequenceStatus(getServerSequenceStatus(seqID, storageManager));
-
-			return seqReport;
-
-		} catch (Exception e) {
-			if (!withinTransaction && reportTransaction!=null) {
-				reportTransaction.rollback();
-				configCtx.setProperty(Sandesha2Constants.WITHIN_TRANSACTION, Sandesha2Constants.VALUE_FALSE);
-				rolebacked = true;
-			}
-		} finally {
-			if (!withinTransaction && !rolebacked && reportTransaction!=null) {
-				reportTransaction.commit();
-				configCtx.setProperty(Sandesha2Constants.WITHIN_TRANSACTION, Sandesha2Constants.VALUE_FALSE);
-			}
-		}
-
-		return null;
-	}
-
-	private static SOAPEnvelope configureTerminateSequence(Options options, ConfigurationContext configurationContext)
-			throws SandeshaException {
-
-		if (options == null)
-			throw new SandeshaException("You must set the Options object before calling this method");
-
-		EndpointReference epr = options.getTo();
-		if (epr == null)
-			throw new SandeshaException("You must set the toEPR before calling this method");
-
-		String to = epr.getAddress();
-		String seqKey = (String) options.getProperty(SandeshaClientConstants.SEQ_KEY);
-		String internalSequenceID = SandeshaUtil.getInternalSequenceID(to, seqKey);
-		SequenceReport seqReport = SandeshaClient.getOutgoingSequenceReport(internalSequenceID,
-				configurationContext);
-		if (seqReport == null)
-			throw new SandeshaException("Cannot generate the seq report for the given internalSequenceID");
-		if (seqReport.getSequenceStatus() != SequenceReport.SEQ_STATUS_ESTABLISHED)
-			throw new SandeshaException("Canot terminate the seq since it is not active");
-
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configurationContext,configurationContext.getAxisConfiguration());
-		SequencePropertyBeanMgr seqPropMgr = storageManager.getSequencePropertyBeanMgr();
-		SequencePropertyBean seqIDBean = seqPropMgr.retrieve(internalSequenceID,
-				Sandesha2Constants.SequenceProperties.OUT_SEQ_ID);
-		if (seqIDBean == null)
-			throw new SandeshaException("SequenceIdBean is not set");
-
-		String seqID = seqIDBean.getValue();
-
-		if (seqID == null)
-			throw new SandeshaException("Cannot find the seqID");
-
-		String rmSpecVersion = (String) options.getProperty(SandeshaClientConstants.RM_SPEC_VERSION);
-		if (rmSpecVersion == null)
-			rmSpecVersion = SpecSpecificConstants.getDefaultSpecVersion();
-
-		options.setAction(SpecSpecificConstants.getTerminateSequenceAction(rmSpecVersion));
-		SOAPEnvelope dummyEnvelope = null;
-		SOAPFactory factory = null;
-		String soapNamespaceURI = options.getSoapVersionURI();
-		if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(soapNamespaceURI)) {
-			factory = new SOAP12Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		} else {
-			factory = new SOAP11Factory();
-			dummyEnvelope = factory.getDefaultEnvelope();
-		}
-
-		String rmNamespaceValue = SpecSpecificConstants.getRMNamespaceValue(rmSpecVersion);
-		TerminateSequence terminateSequence = new TerminateSequence(factory, rmNamespaceValue);
-		Identifier identifier = new Identifier(factory, rmNamespaceValue);
-		identifier.setIndentifer(seqID);
-		terminateSequence.setIdentifier(identifier);
-		terminateSequence.toSOAPEnvelope(dummyEnvelope);
-
-		return dummyEnvelope;
-	}
-
+/**
+ * sandesha2_report gives the details of all incoming and outgoing sequences.
+ * The outgoing sequence have to pass the initial state (CS/CSR exchange) to
+ * be included in a sandesha2_report
+ * 
+ * @param conf_ctx
+ * @return
+ */
+sandesha2_report_t *AXIS2_CALL
+sandesha2_client_get_report(
+        const axis2_env_t *env,
+        axis2_conf_ctx_t *conf_ctx)
+{
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    axis2_conf_t *conf = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_report_t *sandesha2_report = NULL;
+    sandesha2_seq_property_bean_t *internla_seq_find_bean = NULL;
+    axis2_char_t *within_transaction_str = NULL;
+    axis2_bool_t within_transaction = AXIS2_FALSE;
+    sandesha2_transaction_t *report_transaction = NULL;
+    axis2_bool_t rolled_back = AXIS2_FALSE;
+    axis2_array_list_t *collection = NULL;
+    axis2_array_list_t *svr_completed_msgs_beans = NULL;
+    int i = 0, size = 0;
+    sandesha2_seq_property_bean_t *svc_completed_msgs_find_bean = NULL;
+    axis2_ctx_t *ctx = NULL;
+    axis2_property_t *property = NULL;
+
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    sandesha2_report = sandesha2_report_create(env);
+    internal_seq_find_bean = sandesha2_seq_property_bean_create(env);
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    property = (axis2_property_t *) AXIS2_CTX_GET_PROPERTY(ctx, env, 
+            SANDESHA2_WITHIN_TRANSACTION);
+    withing_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(within_transaction_str && 0 == AXIS2_STRCMP(within_transaction_str, 
+                SANDEHSA2_VALUE_TRUE))
+    {
+        within_transaction = AXIS2_TRUE;
+    }
+    if(AXIS2_TRUE != within_transaction)
+    {
+        report_transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr, env);
+    }
+    if(internal_seq_find_bean) 
+        SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(internal_seq_find_bean, env, 
+                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+    collection = SANDESHA2_SEQ_PROPERTY_MGR_FIND(seq_prop_mgr, env, internal_seq_find_bean);
+    if(AXIS2_SUCCESS != SANDESHA2_ERROR_GET_STATUS_CODE(env->error))
+    {
+        if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
+        {
+            SANDESHA2_TRANSACTION_ROLLBACK(report_transaction, env);
+            rolled_back = AXIS2_TRUE;
+        }
+        if (AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back && 
+                report_transaction != NULL) 
+        {
+            SANDESHA2_TRANSACTION_COMMIT(report_transaction, env);
+        }
+        return sandesha2_report;
+    }
+    if(collection)
+        size = AXIS2_ARRAY_LIST_SIZE(collection, env);
+    for(i = 0; i < size; i++)
+    {
+        sandesha2_seq_property_bean_t *bean = NULL;
+        axis2_char_t *seq_id = NULL;
+        sandesha2_seq_report_t *report = NULL;
+        axis2_char_t *value = NULL;
+        axis2_array_list_t *completed_msgs = NULL;
+        long no_of_msgs = 0;
+        axis2_char_t status = -1;
+
+        bean = (sandesha2_seq_property_bean_t *) AXIS2_ARRAY_LIST_GET(
+                collection, env i);
+        seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(bean, env);
+        SANDESHA2_REPORT_ADD_TO_OUTGOING_SEQ_LIST(sandesha2_report, env, seq_id);
+        value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(bean, env);
+        SANDESHA2_REPORT_ADD_TO_OUTGOING_INTERNAL_SEQ_MAP(sandesha2_report, 
+                seq_id, value);
+        report = sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
+                env, value, conf_ctx);
+        completed_msgs = SANDESHA2_SEQ_REPORT_GET_COMPLETED_MSGS(report, env);
+        if(completed_msgs)
+            no_of_msgs = AXIS2_ARRAY_LIST_SIZE(completed_msgs, env);
+        SANDESHA2_REPORT_ADD_TO_NO_OF_COMPLETED_MSGS_MAP(sandesha2_report, 
+                seq_id, no_of_msgs);
+        status = SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(report, env);
+        SANDESHA2_REPORT_ADD_TO_SEQ_STATUS_MAP(sandesha2_report, seq_id, status);
+    }
+	/* incoming sequences */
+    svr_completed_msgs_find_bean = sandesha2_seq_property_bean_create(env);
+    if(svr_completed_msgs_find_bean)
+        SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(svr_completed_msgs_find_bean, env, 
+                SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+    svr_completed_msgs_beans = SANDESHA2_SEQ_PROPERTY_MGR_FIND(seq_pro_mgr, 
+            env, svr_completed_msgs_find_bean);
+    if(AXIS2_SUCCESS != SANDESHA2_ERROR_GET_STATUS_CODE(env->error))
+    {
+        if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
+        {
+            SANDESHA2_TRANSACTION_ROLLBACK(report_transaction, env);
+            rolled_back = AXIS2_TRUE;
+        }
+        if (AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back && 
+                report_transaction != NULL) 
+        {
+            SANDESHA2_TRANSACTION_COMMIT(report_transaction, env);
+        }
+        return sandesha2_report;
+    }
+    if(svr_completed_msgs_beans)
+        size = AXIS2_ARRAY_LIST_SIZE(svr_completed_msgs_beans, env);
+    for(i = 0; i < size; i++)
+    {
+        sandesha2_seq_property_bean_t *svr_completed_msgs_bean = NULL;
+        axis2_char_t *seq_id = NULL;
+        sandesha2_seq_report_t *seq_report = NULL;
+        axis2_char_t *value = NULL;
+        axis2_array_list_t *completed_msgs = NULL;
+        long no_of_msgs = 0;
+        axis2_char_t status = -1;
+
+        svr_completed_msgs_bean = (sandesha2_seq_property_bean_t *) 
+            AXIS2_ARRAY_LIST_GET(svr_completed_msgs_beans, env i);
+        seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(svr_completed_msgs_bean, 
+                env);
+        SANDESHA2_REPORT_ADD_TO_INCOMING_SEQ_LIST(sandesha2_report, env, seq_id);
+        value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(svr_completed_msgs_bean, 
+                env);
+        seq_report = sandesha2_client_get_incoming_seq_report(env, value, 
+                conf_ctx);
+        completed_msgs = SANDESHA2_SEQ_REPORT_GET_COMPLETED_MSGS(seq_report, env);
+        if(completed_msgs)
+            no_of_msgs = AXIS2_ARRAY_LIST_SIZE(completed_msgs, env);
+        SANDESHA2_REPORT_ADD_TO_NO_OF_COMPLETED_MSGS_MAP(sandesha2_report, 
+                seq_id, no_of_msgs);
+        status = SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(seq_report, env);
+        SANDESHA2_REPORT_ADD_TO_SEQ_STATUS_MAP(sandesha2_report, seq_id, status);
+    }
+    if (AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back && 
+                report_transaction != NULL) 
+    {
+        SANDESHA2_TRANSACTION_COMMIT(report_transaction, env);
+    }
+	return sandesha2_report;
 }
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_create_seq_with_svc_client(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        axis2_bool_t *offer)
+{
+    axis2_options_t *options = NULL;
+    axis2_endpoint_ref_t *to_epr = NULL;
+    axis2_char_t *to = NULL;
+    axis2_char_t *seq_key = NULL;
+
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    to_epr = AXIS2_OPTIONS_GET_TO(options, env);
+    if(!to_epr)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    if(!to)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    if(AXIS2_TRUE == offer)
+    {
+        axis2_char_t *offered_seq_id = NULL;
+    
+        offered_seq_id = axis2_uuid_gen(env);
+        AXIS2_OPTIONS_SET_PROPERT(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, 
+                offered_seq_id);
+    }
+
+	/* setting a new squence key if not already set.*/
+    seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+	if (seq_key == NULL) 
+    {
+		seq_key = axis2_uuid_gen(env);
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
+                seq_key);
+	}
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
+            SANDESHA2_VALUE_TRUE);
+    AXIS2_SVC_CLIENT_FIRE_AND_FORGET(svc_client, env, NULL);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
+            SANDESHA2_VALUE_FALSE);
+
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_create_seq_with_svc_client_and_seq_key(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        axis2_bool_t offer,
+        axis2_char_t *seq_key)
+{
+    axis2_options_t *options = NULL;
+    axis2_char_t *old_seq_key = NULL;
+
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    old_seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, seq_key);
+    sandesha2_client_create_seq_key_with_svc_client(env, svc_client, offer);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_seq_key);
+
+    return AXIS2_SUCCESS;
+}
+
+/**
+ * User can terminate the sequence defined by the passed svc_client.
+ * 
+ * @param svc_client
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_client_terminate_seq_with_svc_client(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client)
+{
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_options_t *options = NULL;
+    axis2_char_t *rm_spec_version = NULL;
+    axis2_char_t *rm_namespc_value = NULL;
+    axis2_char_t *old_action = NULL;
+    axis2_char_t *action = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL; 
+    axiom_soap_envelope_t *terminate_envelope = NULL;
+    axiom_soap_body_t *body = NULL;
+    axiom_node_t *node = NULL;
+    axiom_node_t *terminate_body_node = NULL;
+    axiom_element_t *terminate_body_element = NULL;
+    axiom_element_t *element = NULL;
+    axis2_qname_t *qname = NULL;
+
+    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CONTEXT(svc_client, env);
+    if(!svc_ctx)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_IS_NULL, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    rm_spec_version = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION);
+    if(!rm_spec_version)
+    {
+        rm_spec_version = 
+            sandesha2_spec_specific_consts_get_default_spec_version(env);
+    }
+    rm_namespc_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
+            rm_spec_version);
+    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    terminate_envelope = sandesha2_client_configure_terminate_seq(env, options, 
+            conf_ctx);
+    body = AXIOM_ENVELOPE_GET_BODY(terminate_envelope, env);
+    node = AXIOM_BODY_GET_BASE_NODE(body, env);
+    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
+            rm_namespc_value, NULL);
+    terminate_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
+            qname, node, &terminate_body_node);
+    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
+            rm_spec_version);
+    AXIS2_OPTIONS_SET_ACTION(options, env, action);
+
+    AXIS2_SVC_CLIENT_FIRE_AND_FORGET(svc_client, env, terminate_body_node);
+    if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_COULD_NOT_SEND_TERMINATE_MESSAGE, AXIS2_FAILURE);
+        AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+        return AXIS2_FAILURE;
+    }
+    AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        axis2_char_t *seq_key)
+{
+    axis2_options_t *options = NULL;
+    axis2_char_t *old_seq_key = NULL;
+    
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    old_seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, seq_key);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client);
+    AXIS2_OPTIONS_SET_PROPERTY(options, SANDESHA2_CLIENT_SEQ_KEY, old_seq_key);
+    return AXIS2_SUCCESS;
+}
+
+/**
+ * User can close the seq defined by the passed svc_client.
+ * 
+ * @param svc_client
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_client_close_seq_with_svc_client(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client)
+{
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_options_t *options = NULL;
+    axis2_char_t *rm_spec_version = NULL;
+    axis2_char_t *rm_namespc_value = NULL;
+    axis2_char_t *old_action = NULL;
+    axis2_char_t *action = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL; 
+    axiom_soap_envelope_t *close_envelope = NULL;
+    axiom_soap_body_t *body = NULL;
+    axiom_node_t *node = NULL;
+    axiom_node_t *close_body_node = NULL;
+    axiom_element_t *close_body_element = NULL;
+    axiom_element_t *element = NULL;
+    axis2_qname_t *qname = NULL;
+    
+    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CONTEXT(svc_client, env);
+    if(!svc_ctx)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_IS_NULL, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    rm_spec_version = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION);
+    if(!rm_spec_version)
+    {
+        rm_spec_version = 
+            sandesha2_spec_specific_consts_get_default_spec_version(env);
+    }
+    rm_namespc_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
+            rm_spec_version);
+    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    close_envelope = sandesha2_client_configure_close_seq(env, options, 
+            conf_ctx);
+    body = AXIOM_ENVELOPE_GET_BODY(close_envelope, env);
+    node = AXIOM_BODY_GET_BASE_NODE(body, env);
+    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, 
+            rm_namespc_value, NULL);
+    close_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
+            qname, node, &close_body_node);
+    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    action = sandesha2_spec_specific_consts_get_close_seq_action(env, 
+            rm_spec_version);
+    AXIS2_OPTIONS_SET_ACTION(options, env, action);
+
+    AXIS2_SVC_CLIENT_FIRE_AND_FORGET(svc_client, env, close_body_node);
+    if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_COULD_NOT_SEND_THE_CLOSE_SEQ_MESSAGE, 
+                AXIS2_FAILURE);
+        AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+        return AXIS2_FAILURE;
+    }
+    AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_close_seq_with_svc_client_and_seq_key(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        axis2_char_t *seq_key)
+{
+    axis2_options_t *options = NULL;
+    axis2_char_t *spec_version = NULL;
+    axis2_char_t *old_seq_key = NULL;
+    
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    spec_version = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION);
+    if(0 != SANDESHA2_SPEC_VERSION_1_1, spec_version)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE
+    }
+    old_seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, seq_key);
+    sandesha2_client_close_seq_with_svc_client(env, svc_client);
+    AXIS2_OPTIONS_SET_PROPERTY(options, SANDESHA2_CLIENT_SEQ_KEY, old_seq_key);
+    return AXIS2_SUCCESS;
+}
+
+/**
+ * This blocks the system until the messages sent have been completed.
+ * 
+ * @param svc_client
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_client_wait_until_seq_completed_with_svc_client(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client)
+{
+    return sandesha2_client_wait_until_seq_completed_with_seq_key(env, 
+            svc_client, -1);
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_wait_until_seq_completed_with_svc_client_and_seq_key(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        axis2_char_t *seq_key)
+{
+    axis2_options_t *options = NULL;
+    axis2_char_t *old_seq_key = NULL;
+    
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    old_seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, seq_key);
+    sandesha2_client_wait_until_seq_completed_with_svc_client(env, svc_client);
+    AXIS2_OPTIONS_SET_PROPERTY(options, SANDESHA2_CLIENT_SEQ_KEY, old_seq_key);
+    return AXIS2_SUCCESS;
+}
+
+/**
+ * This blocks the system until the messages sent have been completed
+ * or until the given time interval exceeds. (the time is taken in seconds)
+ * 
+ * @param svc_client
+ * @param max_waiting_time
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_client_wait_until_seq_completed_with_svc_client_and_max_waiting_time(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        long max_waiting_time)
+{
+    long start_time = -1;
+    sandesha2_seq_report_t *seq_report = NULL;
+    axis2_bool_t done = AXIS2_FALSE;
+    
+    start_time = sandesha2_utils_get_current_time_in_millis(env);
+    seq_report = sandesha2_client_get_outgoing_seq_report_with_svc_client(env, svc_client);
+    if(!seq_report)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    while(AXIS2_TRUE != done)
+    {
+        int status = -1;
+
+        seq_report = sandesha2_client_get_outgoing_seq_report_with_svc_client(env, svc_client);
+        status = SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(seq_report, env);
+        if(status == SANDESHA2_SEQ_STATUS_TERMINATED)
+            done = AXIS2_TRUE;
+        if(status == SANDESHA2_SEQ_STATUS_TIMED_OUT)
+            done = AXIS2_TRUE;
+        if(max_waiting_time >= 0)
+        {
+            long time_now = sandesha2_utils_get_current_time_in_millis(env);
+            if(time_now > (start_time + max_waiting_time))
+                done = AXIS2_TRUE;
+        }
+    }
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_wait_until_seq_completed_with_svc_client_and_max_waiting_time_and_seq_key(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client,
+        long max_waiting_time,
+        axis2_char_t *seq_key)
+{
+    axis2_options_t *options = NULL;
+    axis2_char_t *old_seq_key = NULL;
+    
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    old_seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, seq_key);
+    sandesha2_client_wait_until_seq_completed_with_svc_client_and_max_waiting_time(
+            env, svc_client, max_waiting_time);
+    AXIS2_OPTIONS_SET_PROPERTY(options, SANDESHA2_CLIENT_SEQ_KEY, old_seq_key);
+    return AXIS2_SUCCESS;
+}
+
+/* 
+ * gives the out seqID if CS/CSR exchange is done. Otherwise an error
+ */
+axis2_char_t *AXIS2_CALL
+sandesha2_client_get_seq_id(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client)
+{
+    axis2_options_t *options = NULL;
+    axis2_endpoint_ref_t *to_epr = NULL;
+    axis2_char_t *to = NULL;
+    axis2_char_t *seq_key = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    sandesha2_seq_report_t *seq_report = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_seq_property_bean_t *seq_id_bean = NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t status = -1;
+
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    to_epr = AXIS2_OPTIONS_GET_TO(options, env);
+    if(!to_epr)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+   svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+   if(!svc_ctx)
+   {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_SVC_CTX_NOT_SET, AXIS2_FAILURE);
+        return NULL;
+   }
+   conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+   internal_seq_id = 
+       sandesha2_client_generate_internal_seq_id_for_the_client_side(env, to, 
+               seq_key);
+   seq_report = sandesha2_client_get_outgoing_seq_report_with_svc_client(env, svc_client);
+    if(!seq_report)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    status = SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(seq_report, env);
+    if(status != SANDESHA2_SEQ_STATUS_ESTABLISHED)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE, AXIS2_FAILURE);
+        return NULL;
+    }
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    storage_mgr = sandesha2_util_get_storage_mgr(env, conf_ctx, conf);
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_id_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
+            internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+    if(!seq_id_bean)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_id_bean, env);
+    return seq_id;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_send_ack_request(
+        const axis2_env_t *env,
+        axis2_svc_client_t *svc_client)
+{
+    axis2_options_t *options = NULL;
+    axis2_endpoint_ref_t *to_epr = NULL;
+    axis2_char_t *to = NULL;
+    axis2_char_t *seq_key = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    sandesha2_seq_report_t *seq_report = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_seq_property_bean_t *seq_id_bean = NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t status = -1;
+    axis2_char_t *out_seq_id = NULL;
+    axis2_char_t *soap_ns_uri = NULL;
+    axis2_char_t *rm_ns_value = NULL;
+    axis2_char_t *rm_spec_version = NULL;
+    axiom_soap_envelope_t *dummy_envelope = NULL;
+    sandesha2_ack_requested_t *ack_requested = NULL;
+    sandesha2_identifier_t *identifier = NULL;
+    axiom_soap_header_t *header = NULL;
+    axiom_node_t *node = NULL;
+    axiom_element_t *element = NULL;
+    axis2_qname_t *qname = NULL;
+    axiom_element_t *ack_requested_header_block = NULL;
+    axiom_node_t *ack_requested_header_block_node = NULL;
+    axis2_char_t *old_action = NULL;
+    axis2_char_t *action = NULL;
+    
+    options = AXIS2_SVC_CLIENT_GET_OPTIONS(svc_client, env);
+    if(!options)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+    if(!svc_ctx)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_SVC_CTX_NOT_SET, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    to_epr = AXIS2_OPTIONS_GET_TO(options, env);
+    if(!to_epr)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_SEQ_KEY);
+    rm_spec_version = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION);
+    if(!rm_spec_version)
+    {
+        rm_spec_version = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env); 
+    }
+    if(0  == AXIS2_STRCMP(rm_spec_version, SANDESHA2_SPEC_VERSION_1_0))
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_ACK_REQUEST_MESSAGE, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    internal_seq_id = sandesha2_client_get_internal_seq_id(env, to, seq_key);
+    seq_report = sandesha2_client_get_outgoing_seq_report_internal_seq_id(env, internal_seq_id, 
+            conf_ctx);
+    if(!seq_report)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CANNOT_GENERATE_SEQ_REPORT_FOR_GIVEN_INTERNAL_SEQ_ID, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    status = SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(seq_report, env);
+    if(status != SANDESHA2_SEQ_STATUS_ESTABLISHED)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CANNOT_SEND_ACK_REQUEST_MESSAGE_SINCE_IS_NOT_ACTIVE, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    out_seq_id = sandesha2_client_get_seq_id(env, svc_client);
+    soap_ns_uri = AXIS2_OPTIONS_GET_SOAP_VERSION_URI(options, env);
+    if(0 == AXIS2_STRCMP(AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
+    {
+        dummy_envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
+                AXIOM_SOAP11); 
+    }
+    else
+    {
+        dummy_envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
+                AXIOM_SOAP12); 
+    }
+    rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
+    ack_requested = sandesha2_ack_requested_create(env, rm_ns_value);
+    identifier = sandesha2_identifier_create(env, rm_ns_value);
+    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, out_seq_id);
+    SANDESHA2_ACK_REQUESTED_SET_IDENTIFIER(ack_requested, env, identifier);
+    SANDESHA2_IOM_RM_PART_TO_SOAP_ENVELOPE(ack_requested, env, dummy_envelope);
+    header = AXIOM_SOAP_ENVELOPE_GET_HEADER(dummy_envelope, env);
+    node = AXIOM_SOAP_HEADER_GET_BASE_NODE(header, env);
+    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
+            rm_ns_value, NULL);
+    ack_requested_header_block = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+            element, env, qname, node, &ack_requested_header_block_node);
+    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    action = sandesha2_spec_specific_consts_get_ack_request_action(env, 
+            rm_spec_version);
+    AXIS2_OPTIONS_SET_ACTION(options, env, action);
+    AXIS2_SVC_CLIENT_ADD_HEADER(svc_client, env, ack_requested_header_block_node); 
+    AXIS2_SVC_CLIENT_FIRE_AND_FORGET(svc_client, env, NULL);
+    AXIS2_SVC_CLIENT_REMOVE_HEADERS(svc_client, env);
+    AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+    
+    return AXIS2_SUCCESS;
+}
+

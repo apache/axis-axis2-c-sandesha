@@ -108,7 +108,27 @@ sandesha2_spec_specific_consts_is_ack_none_allowed(const axis2_env_t *env,
     return AXIS2_FALSE;   
 }
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_default_spec_version(
+        const axis2_env_t *env)
+{
+    return SANDESHA2_SPEC_VERSIONS.v1_0;
+}
 
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_terminate_seq_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+        return SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ;
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+        return SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
+}
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_spec_specific_consts_get_default_spec_version(const axis2_env_t *env)
 {
@@ -116,6 +136,45 @@ sandesha2_spec_specific_consts_get_default_spec_version(const axis2_env_t *env)
     return SANDESHA2_SPEC_VERSION_1_0;
 }
 
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_close_seq_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_RM_SPEC_VERSION_DOES_NOT_DEFINE_A_SEQ_CLOSE_ACTION, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+        return SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
+}
+	
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_ack_request_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, specVersion)) 
+        return SANDESHA2_SPEC_2005_10_ACTION_ACK_REQUEST;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOW_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
+}
+	
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_spec_specific_consts_get_anon_uri(const axis2_env_t *env,
                         axis2_char_t *addr_ns_val)
@@ -130,3 +189,4 @@ sandesha2_spec_specific_consts_get_anon_uri(const axis2_env_t *env,
     
     return NULL;
 }
+

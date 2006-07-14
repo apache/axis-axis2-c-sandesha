@@ -99,6 +99,38 @@ extern "C"
         SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING,
         /* Invalid namespace uri */
         SANDESHA2_ERROR_INVALID_NS_URI,
+        /* An incoming seq report is not present for the given seqID */
+        SANDESHA2_ERROR_INCOMING_SEQ_REPORT_NOT_PRESENT_FOR_GIVEN_SEQ_ID,
+        /* To EPR is not set */
+        SANDESHA2_ERROR_TO_EPR_NOT_SET,
+        /* Options object is not set */
+        SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET,
+        /* Unknown specification error message */
+        SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE,
+        /* Could not send the terminate message */
+        SANDESHA2_ERROR_COULD_NOT_SEND_TERMINATE_MESSAGE, 
+        /* This rm spec version does not define a sequence close action */
+        SANDESHA2_ERROR_RM_SPEC_VERSION_DOES_NOT_DEFINE_A_SEQ_CLOSE_ACTION,
+        /* Could not send the close sequence message */
+        SANDESHA2_ERROR_COULD_NOT_SEND_THE_CLOSE_SEQ_MESSAGE,
+        /* Close Sequence feature is only available for WSRM 1.1 */
+        SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1,
+        /* Cannnot find a seq report for the given data */
+        SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA, 
+        /* Sequence is not in a active state. Either create seq response has not
+         * being received or seq has been terminated, cannot get seqID
+         */
+        SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE,
+        /* Sequence id bean is not set */
+        SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET,
+        /* Empty AckRequest messages can only be sent with the v1_1 spec */
+        SANDESHA2_ERROR_EMPTY_ACK_REQUEST_MESSAGE,
+        /* Cannot generate the sequence report for the given internalSequenceID */
+        SANDESHA2_ERROR_CANNOT_GENERATE_SEQ_REPORT_FOR_GIVEN_INTERNAL_SEQ_ID,
+        /* Canot send the ackRequest message since it is not active */
+        SANDESHA2_ERROR_CANNOT_SEND_ACK_REQUEST_MESSAGE_SINCE_IS_NOT_ACTIVE,
+        /* This spec version does not define a ackRequest action */
+        SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION,
         /* Invalid endpoint reference */
         SANDESHA2_ERROR_INVALID_EPR,
         /** The following has to be the last error value all the time.
