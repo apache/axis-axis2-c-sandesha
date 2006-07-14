@@ -16,6 +16,7 @@
 #include <sandesha2_fault_mgr.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <axis2_hash.h>
+#include <axis2_core_utils.h>
 #include <axiom_soap_const.h>
 #include <sandesha2/sandesha2_iom_rm_part.h>
 #include <sandesha2/sandesha2_create_seq.h>
@@ -546,7 +547,7 @@ sandesha2_fault_mgr_get_fault
     AXIS2_PARAM_CHECK(env->error, fault_data, NULL);
     
     ref_msg = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
-    fault_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, ref_msg);
+    fault_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, ref_msg);
     
     /* Setting context hierachy - be caereful about freeing
      */

@@ -99,6 +99,8 @@ extern "C"
         SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING,
         /* Invalid namespace uri */
         SANDESHA2_ERROR_INVALID_NS_URI,
+        /* Invalid endpoint reference */
+        SANDESHA2_ERROR_INVALID_EPR,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present

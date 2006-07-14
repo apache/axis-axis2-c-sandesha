@@ -30,6 +30,7 @@
 #include <axiom_soap_envelope.h>
 #include <axis2_qname.h>
 #include <axis2_array_list.h>
+#include <axis2_op.h>
 #include <sandesha2/sandesha2_property_bean.h>
 
 #ifdef __cplusplus
@@ -45,8 +46,6 @@ extern "C"
 AXIS2_EXTERN long AXIS2_CALL
 sandesha2_utils_get_current_time_in_millis(
         const axis2_env_t *env);
-
-#define sandesha2_utils_get_current_time_in_millis SANDESHA2_UTILS_GET_CURRENT_TIME_IN_MILLIS
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
@@ -71,6 +70,10 @@ sandesha2_utils_get_seq_property(const axis2_env_t *env,
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(const axis2_env_t *env,
                         axis2_conf_t *conf);
+
+AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
+sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
+                        axis2_op_t *op);
 
 AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
 sandesha2_utils_get_array_list_from_string(const axis2_env_t *env,
@@ -108,8 +111,6 @@ sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
 sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
                         axis2_char_t *incoming_seq_id);
-                        
-
 
 /** @} */
 #ifdef __cplusplus

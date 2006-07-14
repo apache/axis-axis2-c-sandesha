@@ -122,39 +122,39 @@ sandesha2_sender_mgr_create(
 #define SANDESHA2_SENDER_MGR_FREE(sender, env) \
       (((sandesha2_sender_mgr_t *) sender)->ops->free (sender, env))
 
-#define SANDESHA2_SENDER_INSERT(sender, env, bean) \
+#define SANDESHA2_SENDER_MGR_INSERT(sender, env, bean) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        insert (sender, env, bean))
 
-#define SANDESHA2_SENDER_REMOVE(sender, env, msg_id) \
+#define SANDESHA2_SENDER_MGR_REMOVE(sender, env, msg_id) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        remove (sender, env, msg_id))
 
-#define SANDESHA2_SENDER_RETRIEVE(sender, env, msg_id) \
+#define SANDESHA2_SENDER_MGR_RETRIEVE(sender, env, msg_id) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        retrieve (sender, env, msg_id))
 
-#define SANDESHA2_SENDER_UPDATE(sender, env, bean) \
+#define SANDESHA2_SENDER_MGR_UPDATE(sender, env, bean) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        update (sender, env, bean))
 
-#define SANDESHA2_SENDER_FIND_BY_INTERNAL_SEQ_ID(sender, env, internal_seq_id) \
+#define SANDESHA2_SENDER_MGR_FIND_BY_INTERNAL_SEQ_ID(sender, env, internal_seq_id) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_by_internal_seq_id (sender, env, internal_seq_id))
 
-#define SANDESHA2_SENDER_FIND_BY_SENDER_BEAN(sender, env, bean) \
+#define SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(sender, env, bean) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_by_sender_bean (sender, env, bean))
 
-#define SANDESHA2_SENDER_FIND_UNIQUE(sender, env, bean) \
+#define SANDESHA2_SENDER_MGR_FIND_UNIQUE(sender, env, bean) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        find_unique (sender, env, bean))
 
-#define SANDESHA2_SENDER_GET_NEXT_MSG_TO_SEND(sender, env) \
+#define SANDESHA2_SENDER_MGR_GET_NEXT_MSG_TO_SEND(sender, env) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        get_next_msg_to_send (sender, env))
 
-#define SANDESHA2_SENDER_RETRIEVE_FROM_MSG_REF_KEY(sender, env, ref_key) \
+#define SANDESHA2_SENDER_MGR_RETRIEVE_FROM_MSG_REF_KEY(sender, env, ref_key) \
       (((sandesha2_sender_mgr_t *) sender)->ops->\
        retrieve_from_msg_ref_key (sender, env, ref_key))
 

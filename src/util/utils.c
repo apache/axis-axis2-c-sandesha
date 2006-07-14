@@ -363,3 +363,24 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
     
     return ret;    
 }
+
+
+AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
+sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
+                        axis2_op_t *op)
+{
+        axis2_param_t *param = NULL;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, op, NULL);
+    
+    param = AXIS2_OP_GET_PARAM(op, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    if(NULL == param)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
+                        AXIS2_FAILURE);
+        return NULL;
+    }
+    return (sandesha2_property_bean_t*)AXIS2_PARAM_GET_VALUE(param, env);
+
+}
