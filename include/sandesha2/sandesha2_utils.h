@@ -118,6 +118,19 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
                         axis2_char_t *incoming_seq_id);
 
+/**
+ * Caller must free the returned string.
+ * @param to
+ * @param seq_key
+ *
+ * @return internal_seq_id
+ */
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_get_internal_seq_id(
+        const axis2_env_t *env,
+        axis2_char_t *to,
+        axis2_char_t *seq_key);
+
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         sandesha2_msg_ctx_t *ref_rm_msg,

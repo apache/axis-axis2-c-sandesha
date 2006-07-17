@@ -183,4 +183,21 @@ sandesha2_spec_specific_consts_get_anon_uri(const axis2_env_t *env,
     
     return NULL;
 }
+	
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_spec_specific_consts_is_seq_closing_allowed(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        return AXIS2_FALSE;
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return AXIS2_TRUE;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return AXIS2_FALSE;
+} 
 

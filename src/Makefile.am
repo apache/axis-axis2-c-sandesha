@@ -1,4 +1,4 @@
-SUBDIRS = wsrm storage util transport workers
+SUBDIRS = wsrm storage util transport workers client
 noinst_LTLIBRARIES = libsandesha2.la
 
 libsandesha2_la_SOURCES = msg_ctx.c

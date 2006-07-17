@@ -74,10 +74,10 @@ sandesha2_error_init()
     "Ack None now allowed in the spec";
 
     /* 'To' Address is not set */
-    sandesha2_error_messages[SANDESHA2_ERROR_TO_ADDRESS_IS_NOT_SET] = 
+    sandesha2_error_messages[SANDESHA2_ERROR_TO_ADDRESS_NOT_SET] = 
         "'To' address is not set";
     /* Service Context is NULL */
-    sandesha2_error_messages[SANDESHA2_ERROR_SVC_CTX_IS_NULL] = 
+    sandesha2_error_messages[SANDESHA2_ERROR_SVC_CTX_NULL] = 
         "Service context is NULL";
     /* Non Unique Result */
     sandesha2_error_messages[SANDESHA2_ERROR_NON_UNIQUE_RESULT] = 
@@ -113,6 +113,8 @@ sandesha2_error_init()
         "Close Sequence feature is only available for WSRM 1.1";
     sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA] = 
         "Cannnot find a seq report for the given data";   
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_SEQ_ID] = 
+        "Cannnot find a seq report for the given sequence id";
     sandesha2_error_messages[SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE] = 
         "Sequence is not in a active state. Either create seq response has not \
             being received or seq has been terminated, cannot get seqID";
@@ -126,6 +128,20 @@ sandesha2_error_init()
         "Canot send the ackRequest message since it is not active";
     sandesha2_error_messages[SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION] =
         "this spec version does not define a ackRequest action";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID] =
+        "Cannot find the sequence id";
+    sandesha2_error_messages[SANDESHA2_ERROR_RM_VERSION_DOES_NOT_ALLOW_SEQ_CLOSING] =
+        "This RM version does not allow sequence closing";
+    sandesha2_error_messages[NOT_A_VALID_TERMINATED_SEQ] = 
+        "Not a valid terminated sequence. Internal sequence Bean is not \
+         available for the given sequence";
+    sandesha2_error_messages[NOT_A_VALID_TIMEDOUT_SEQ] =
+        "Not a valid timedout sequence. Internal sequence Bean is not \
+         available for the given sequence";
+    sandesha2_error_messages[SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL] =
+        "Completed messages bean is null, for the sequence"; 
+    sandesha2_error_messages[SANDESHA2_ERROR_UNRECORDED_SEQ_ID] =
+        "Sequence id is not recoreded"; 
     return AXIS2_SUCCESS;
 }
 

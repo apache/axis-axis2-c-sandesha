@@ -403,6 +403,36 @@ sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
 
 }
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_get_internal_seq_id(
+        const axis2_env_t *env,
+        axis2_char_t *to,
+        axis2_char_t *seq_key)
+{
+    axis2_char_t *ret = NULL;
+
+    AXIS2_ENV_CHECK(env, NULL);
+
+    if(!to && !seq_key)
+    {
+        return NULL;
+    }
+    else if(!to)
+    {
+        return AXIS2_STRDUP(seq_key, env);
+    }
+    else if(!seq_key)
+    {
+        return AXIS2_STRDUP(to, env);
+    }
+    else
+    {
+        ret = axis2_strcat(SANDESHA2_INTERNAL_SEQ_PREFIX, ":", to, ":", seq_key, NULL);
+        return ret;
+    }
+    return NULL;
+}
+
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         sandesha2_msg_ctx_t *ref_rm_msg,
@@ -581,3 +611,4 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         
     return new_msg;
 }
+

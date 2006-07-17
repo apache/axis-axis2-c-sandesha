@@ -24,6 +24,7 @@
 #include <axis2_uuid_gen.h>
 #include <axis2_addr.h>
 #include <axis2_property.h>
+#include <axis2_array_list.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
@@ -236,3 +237,87 @@ sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
     }
     return NULL;
 }
+
+/**
+ * This is used to get the acked messages of a sequence. If this is an outgoing 
+ * message the sequence_identifier should be the internal sequenceID.
+ * 
+ * @param sequence_identifier
+ * @param out_going_msg
+ * @return
+ */
+AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+sandesha2_ack_mgr_get_client_completed_msgs_list(
+        const axis2_env_t *env,
+        axis2_char_t *seq_id,
+        sandesha2_seq_property_mgr_t *seq_prop_mgr)
+{
+    sandesha2_seq_property_bean_t *internal_seq_bean = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    sandesha2_seq_property_bean_t *completed_msgs_bean = NULL;
+    axis2_array_list_t *completed_msg_list = NULL;
+    
+    /* First trying to get it from the internal sequence id.*/
+    internal_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
+            seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+    if(internal_seq_bean != NULL)
+    {
+        internal_seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                internal_seq_bean, env);
+    }
+    if(internal_seq_id != NULL)
+    {
+        completed_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
+                env, internal_seq_id, 
+                SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES);
+    }
+    if(completed_msgs_bean == NULL)
+    {
+        completed_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
+                env, seq_id, 
+                SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES);
+    }
+    if(completed_msgs_bean != NULL)
+    {
+        axis2_char_t *value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                completed_msgs_bean, env);
+        completed_msg_list = sandesha2_utils_get_array_list_from_string(env, value);
+    }
+    else
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    return completed_msg_list;
+}
+ 
+AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+sandesha2_ack_mgr_get_svr_completed_msgs_list(
+        const axis2_env_t *env,
+        axis2_char_t *seq_id,
+        sandesha2_seq_property_mgr_t *seq_prop_mgr)
+{
+    sandesha2_seq_property_bean_t *internal_seq_bean = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    sandesha2_seq_property_bean_t *completed_msgs_bean = NULL;
+    axis2_array_list_t *completed_msg_list = NULL;
+    
+    completed_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
+            env, seq_id, 
+            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+    if(completed_msgs_bean != NULL)
+    {
+        axis2_char_t *value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                completed_msgs_bean, env);
+        completed_msg_list = sandesha2_utils_get_array_list_from_string(env, value);
+    }
+    else
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    return completed_msg_list;
+}
+    

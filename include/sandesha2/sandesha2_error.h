@@ -60,9 +60,9 @@ extern "C"
         /* Ack Final now allowed in the spec */
         SANDESHA2_ERROR_ACK_FINAL_NOT_ALLOWED,
         /* 'To' address is not set */
-        SANDESHA2_ERROR_TO_ADDRESS_IS_NOT_SET,
+        SANDESHA2_ERROR_TO_ADDRESS_NOT_SET,
         /* Service Context is NULL */
-        SANDESHA2_ERROR_SVC_CTX_IS_NULL,
+        SANDESHA2_ERROR_SVC_CTX_NULL,
         /* Result is not unique */
         SANDESHA2_ERROR_NON_UNIQUE_RESULT,
         /* Key is NULL. Cannot insert */
@@ -117,6 +117,8 @@ extern "C"
         SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1,
         /* Cannnot find a seq report for the given data */
         SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_DATA, 
+        /* Cannnot find a seq report for the given sequence id */
+        SANDESHA2_ERROR_CANNOT_FIND_SEQ_REPORT_FOR_GIVEN_SEQ_ID, 
         /* Sequence is not in a active state. Either create seq response has not
          * being received or seq has been terminated, cannot get seqID
          */
@@ -133,6 +135,22 @@ extern "C"
         SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION,
         /* Invalid endpoint reference */
         SANDESHA2_ERROR_INVALID_EPR,
+        /* Cannot find the sequence id */
+        SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID,
+        /* This RM version does not allow sequence closing */
+        SANDESHA2_ERROR_RM_VERSION_DOES_NOT_ALLOW_SEQ_CLOSING,
+        /* "Not a valid terminated sequence. Internal sequence Bean is not
+         * available for the given sequence
+         */
+        NOT_A_VALID_TERMINATED_SEQ,
+        /* "Not a valid timedout sequence. Internal sequence Bean is not
+         * available for the given sequence
+         */
+        NOT_A_VALID_TIMEDOUT_SEQ,
+        /* Completed messages bean is null, for the sequence */
+        SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL,
+        /* Sequence id is not recoreded */
+        SANDESHA2_ERROR_UNRECORDED_SEQ_ID,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present
