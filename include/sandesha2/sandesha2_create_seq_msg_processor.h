@@ -14,11 +14,11 @@
  * limitations under the License.
  */
  
-#ifndef SANDESHA2_APP_MSG_PROCESSOR_H
-#define SANDESHA2_APP_MSG_PROCESSOR_H
+#ifndef SANDESHA2_CREATE_SEQ_MSG_PROCESSOR_H
+#define SANDESHA2_CREATE_SEQ_MSG_PROCESSOR_H
 
 /**
-  * @file sandesha2_app_msg_processor.h
+  * @file sandesha2_create_seq_msg_processor.h
   * @brief 
   */
 
@@ -32,18 +32,18 @@ extern "C"
 {
 #endif
 
-/** @defgroup sandesha2_app_msg_processor
+/** @defgroup sandesha2_create_seq_msg_processor
  * @ingroup sandesha2_msgprocessors
  * @{
  */
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_app_msg_processor_create(
+sandesha2_create_seq_msg_processor_create(
 						const axis2_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }
 #endif
 
-#endif                          /* SANDESHA2_APP_MSG_PROCESSOR_H */
+#endif                          /* SANDESHA2_CREATE_SEQ_MSG_PROCESSOR_H */
 

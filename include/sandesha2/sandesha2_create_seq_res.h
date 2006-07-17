@@ -98,17 +98,17 @@ sandesha2_create_seq_res_create(
 					    axis2_char_t *rm_ns_value, 
 					    axis2_char_t *addr_ns_value);
 /************************** Start of function macros **************************/
-#define SANDESHA2_CREARE_SEQ_RES_SET_IDENTIFIER(create_seq_res, env, identifier)\
+#define SANDESHA2_CREATE_SEQ_RES_SET_IDENTIFIER(create_seq_res, env, identifier)\
     ((create_seq_res)->ops->set_identifier (create_seq_res, env, identifier))
-#define SANDESHA2_CREARE_SEQ_RES_GET_IDENTIFIER(create_seq_res, env) \
+#define SANDESHA2_CREATE_SEQ_RES_GET_IDENTIFIER(create_seq_res, env) \
     ((create_seq_res)->ops->get_identifier (create_seq_res, env))
-#define SANDESHA2_CREARE_SEQ_RES_SET_ACCEPT(create_seq_res, env, accept) \
+#define SANDESHA2_CREATE_SEQ_RES_SET_ACCEPT(create_seq_res, env, accept) \
     ((create_seq_res)->ops->set_accept (create_seq_res, env, accept))
-#define SANDESHA2_CREARE_SEQ_RES_GET_ACCEPT(create_seq_res, env) \
+#define SANDESHA2_CREATE_SEQ_RES_GET_ACCEPT(create_seq_res, env) \
     ((create_seq_res)->ops->get_accept (create_seq_res, env))
-#define SANDESHA2_CREARE_SEQ_RES_EXPIRES (create_seq_res, env, expires) \
+#define SANDESHA2_CREATE_SEQ_RES_EXPIRES (create_seq_res, env, expires) \
     ((create_seq_res)->ops->set_expires (create_seq_res, env, expires))
-#define SANDESHA2_CREARE_SEQ_RES_GET_EXPIRES(create_seq_res, env) \
+#define SANDESHA2_CREATE_SEQ_RES_GET_EXPIRES(create_seq_res, env) \
     ((create_seq_res)->ops->get_expires (create_seq_res, env))
 /************************** End of function macros ****************************/
 /** @} */

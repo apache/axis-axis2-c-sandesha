@@ -32,6 +32,7 @@
 #include <axis2_array_list.h>
 #include <axis2_op.h>
 #include <sandesha2/sandesha2_property_bean.h>
+#include <sandesha2/sandesha2_msg_ctx.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -42,6 +43,10 @@ extern "C"
  * @ingroup sandesha2_util
  * @{
  */
+/* Array list types */
+#define SANDESHA2_ARRAY_LIST_STRING 0
+#define SANDESHA2_ARRAY_LIST_LONG 1
+
 
 AXIS2_EXTERN long AXIS2_CALL
 sandesha2_utils_get_current_time_in_millis(
@@ -86,7 +91,8 @@ sandesha2_utils_array_list_contains(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_array_list_to_string(const axis2_env_t *env,
-                        axis2_array_list_t *list);
+                        axis2_array_list_t *list,
+                        int type);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
@@ -111,6 +117,12 @@ sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
 sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
                         axis2_char_t *incoming_seq_id);
+
+AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
+sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
+                        sandesha2_msg_ctx_t *ref_rm_msg,
+                        axis2_op_t *op);
+                        
 
 /** @} */
 #ifdef __cplusplus

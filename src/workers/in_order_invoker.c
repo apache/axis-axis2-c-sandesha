@@ -375,7 +375,8 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                  * removing current element
                  */                 
                 i--;
-                str_list = sandesha2_utils_array_list_to_string(env, all_seq_list);
+                str_list = sandesha2_utils_array_list_to_string(env, all_seq_list, 
+                        SANDESHA2_ARRAY_LIST_STRING);
                 SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(all_seq_bean, env,
                         str_list);
                 SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 

@@ -49,8 +49,8 @@ struct sandesha2_app_msg_processor_impl
 	sandesha2_msg_processor_t msg_processor;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(identifier) \
-						((sandesha2_app_msg_processor_impl_t *)(identifier))
+#define SANDESHA2_INTF_TO_IMPL(msg_proc) \
+						((sandesha2_app_msg_processor_impl_t *)(msg_proc))
 
 /***************************** Function headers *******************************/
 axis2_status_t AXIS2_CALL 
@@ -121,12 +121,10 @@ sandesha2_app_msg_processor_free (sandesha2_msg_processor_t *element,
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_app_msg_processor_create(const axis2_env_t *env,  
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+sandesha2_app_msg_processor_create(const axis2_env_t *env)
 {
     sandesha2_app_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, NULL);
           
     msg_proc_impl =  (sandesha2_app_msg_processor_impl_t *)AXIS2_MALLOC 
                         (env->allocator, 
@@ -456,7 +454,7 @@ sandesha2_app_msg_processor_process_in_msg (
             axis2_char_t *str_seq_list = NULL;
             AXIS2_ARRAY_LIST_ADD(incoming_seq_list, env, str_seq_id);
             str_seq_list = sandesha2_utils_array_list_to_string(env, 
-                        incoming_seq_list);
+                        incoming_seq_list, SANDESHA2_ARRAY_LIST_STRING);
             /* saving the property. */
             SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(incoming_seq_list_bean, 
                         env, str_seq_list);

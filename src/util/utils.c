@@ -26,6 +26,13 @@
 #include <axis2_conf.h>
 #include <axis2_property.h>
 #include <axiom_soap_body.h>
+#include <axis2_options.h>
+#include <axis2_msg_ctx.h>
+#include <axis2_transport_out_desc.h>
+#include <axis2_transport_in_desc.h>
+#include <axis2_qname.h>
+#include <axis2_http_transport.h>
+#include <axis2_addr.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
@@ -226,7 +233,7 @@ sandesha2_utils_array_list_contains(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_array_list_to_string(const axis2_env_t *env,
-                        axis2_array_list_t *list)
+                        axis2_array_list_t *list, int type)
 {
     axis2_char_t *list_string = NULL;
     int i = 0;
@@ -237,8 +244,19 @@ sandesha2_utils_array_list_to_string(const axis2_env_t *env,
     list_string = AXIS2_STRDUP("[", env);
     for(i = 0; i < AXIS2_ARRY_LIST_SIZE(list, env); i++)
     {
-        axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
-        list_string = axis2_strcat(env, list_string, ",", element, NULL);
+             
+        if(SANDESHA2_ARRAY_LIST_STRING == type)
+        {
+            axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
+            list_string = axis2_strcat(env, list_string, ",", element, NULL);
+        }
+        else if(SANDESHA2_ARRAY_LIST_LONG == type)
+        {
+            long *element = AXIS2_ARRAY_LIST_GET(list, env, i);
+            axis2_char_t value[32];
+            sprintf(value, "%ld", *element);
+            list_string = axis2_strcat(env, list_string, ",", value, NULL);
+        } 
     }
     list_string = axis2_strcat(env, list_string, "]", NULL);
     
@@ -383,4 +401,183 @@ sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
     }
     return (sandesha2_property_bean_t*)AXIS2_PARAM_GET_VALUE(param, env);
 
+}
+
+AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
+sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
+                        sandesha2_msg_ctx_t *ref_rm_msg,
+                        axis2_op_t *op)
+{
+    axis2_msg_ctx_t *ref_msg = NULL;
+    axis2_msg_ctx_t *new_msg = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_conf_t *conf = NULL;
+    axis2_transport_out_desc_t *out_desc = NULL;
+    axis2_transport_in_desc_t *in_desc = NULL;
+    axis2_options_t *options = NULL;
+    axis2_svc_t *svc = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
+    axiom_soap_envelope_t *soap_env = NULL;
+    axis2_property_t *property = NULL;
+    axis2_char_t *addr_ver = NULL;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
+    AXIS2_PARAM_CHECK(env->error, op, NULL);
+    
+    ref_msg = SANDESHA2_MSG_CTX_GET_MSG_CTX(ref_rm_msg, env);
+    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(ref_msg, env);
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    
+    out_desc = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(ref_msg, env);
+    in_desc = AXIS2_MSG_CTX_GET_TRANSPORT_IN_DESC(ref_msg, env);
+    
+    new_msg = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
+        
+    options = axis2_options_create(env);
+    AXIS2_MSG_CTX_SET_OPTIONS(new_msg, env, options);
+    
+    if(NULL != AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env))
+    {
+        AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, 
+                        AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env));
+        if(NULL != AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env))
+        {
+            AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, 
+                    AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env));
+            AXIS2_MSG_CTX_SET_SVC_GRP_CTX_ID(new_msg, env, 
+                    AXIS2_MSG_CTX_GET_SVC_GRP_CTX_ID(ref_msg, env));
+        }
+        else
+        {
+            axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
+            svc_grp_ctx = axis2_svc_grp_ctx_create(env, 
+                        AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env), conf_ctx);
+            AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, svc_grp_ctx);
+        }
+    }
+    else
+    {
+        axis2_svc_grp_t *svc_grp = NULL;
+        axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
+        
+        svc_grp = axis2_svc_grp_create_with_conf(env, conf);
+        svc_grp_ctx = axis2_svc_grp_ctx_create(env, svc_grp, conf_ctx);
+        AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, svc_grp);
+        AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, svc_grp_ctx);
+    }
+    if(NULL != AXIS2_MSG_CTX_GET_SVC(ref_msg, env))
+    {
+        AXIS2_MSG_CTX_SET_SVC(new_msg, env, AXIS2_MSG_CTX_GET_SVC(ref_msg, env));
+        if(NULL != AXIS2_MSG_CTX_GET_SVC_CTX(ref_msg, env))
+        {
+            AXIS2_MSG_CTX_SET_SVC_CTX(new_msg, env, 
+                        AXIS2_MSG_CTX_GET_SVC_CTX(ref_msg, env));
+            AXIS2_MSG_CTX_SET_SVC_CTX_ID(new_msg, env, 
+                        AXIS2_MSG_CTX_GET_SVC_CTX_ID(ref_msg, env));
+        }
+        else
+        {
+            axis2_svc_ctx_t *svc_ctx =  NULL;
+            svc_ctx = axis2_svc_ctx_create(env, 
+                        AXIS2_MSG_CTX_GET_SVC(ref_msg, env),
+                        AXIS2_MSG_CTX_GET_SVC_GRP_CTX(new_msg, env));
+            AXIS2_MSG_CTX_SET_SVC_CTX(new_msg, env, svc_ctx);
+        }
+    }
+    else
+    {
+        axis2_svc_t *axis_svc = NULL;
+        axis2_qname_t *svc_qname = NULL;
+        axis2_svc_grp_t *svc_grp = NULL;
+        axis2_svc_ctx_t *svc_ctx = NULL;
+        axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
+        
+        svc_qname = axis2_qname_create(env, "AnonymousRMService", NULL, NULL);
+        axis_svc = axis2_svc_create_with_qname(env, svc_qname);
+        
+        svc_grp = AXIS2_MSG_CTX_GET_SVC_GRP(new_msg, env);
+        AXIS2_SVC_SET_PARENT(axis_svc, env, AXIS2_MSG_CTX_GET_SVC_GRP(new_msg,
+                        env));
+        AXIS2_SVC_GRP_ADD_SVC(svc_grp, env, axis_svc);
+        svc_grp_ctx = AXIS2_MSG_CTX_GET_SVC_GRP_CTX(new_msg, env);
+        svc_ctx = axis2_svc_ctx_create(env, axis_svc, svc_grp_ctx);
+    }
+    AXIS2_MSG_CTX_SET_OP(new_msg, env, op);
+    svc = AXIS2_MSG_CTX_GET_SVC(new_msg, env);
+    
+    if(NULL != svc && NULL != op)
+    {
+        AXIS2_SVC_ADD_OP(svc, env, op);
+        AXIS2_OP_SET_PARENT(op, env, svc);
+    }
+    
+    op_ctx = axis2_op_ctx_create(env, op, AXIS2_MSG_CTX_GET_SVC_CTX(new_msg, 
+                        env));
+    AXIS2_MSG_CTX_SET_OP_CTX(new_msg, env, op_ctx);
+    AXIS2_OP_CTX_ADD_MSG_CTX(op_ctx, env, new_msg);
+    
+    soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
+                        sandesha2_utils_get_soap_version(env, 
+                        AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(ref_msg, env)));
+    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(new_msg, env, soap_env);
+    
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_URL,
+                        AXIS2_FALSE);
+    if(NULL != property && NULL != AXIS2_PROPERTY_GET_VALUE(property, env))
+    {
+        axis2_char_t *val = AXIS2_PROPERTY_GET_VALUE(property, env);
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(val, env));
+        AXIS2_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_URL, property,
+                        AXIS2_FALSE);
+    }
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION,
+                        AXIS2_FALSE);
+    if(NULL == property)
+    {
+        axis2_msg_ctx_t *req_msg = NULL;
+        axis2_op_ctx_t *op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(ref_msg, env);
+        
+        req_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+                        AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
+        if(NULL != req_msg)
+        {
+            property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
+                        AXIS2_TRANSPORT_URL, AXIS2_FALSE);
+            if(NULL != property)
+                addr_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
+        }
+    }
+    else
+    {
+        addr_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
+    }
+    property = axis2_property_create(env);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ver, env));
+    AXIS2_CTX_SET_PROPERTY(new_msg, env, AXIS2_WSA_VERSION, property,
+                    AXIS2_FALSE);
+    
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_OUT, 
+                        AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_OUT, property, 
+                        AXIS2_FALSE);
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
+                        AXIS2_TRANSPORT_IN, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_IN, 
+                        property, AXIS2_FALSE);
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
+                        AXIS2_HTTP_OUT_TRANSPORT_INFO, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_HTTP_OUT_TRANSPORT_INFO, 
+                        property, AXIS2_FALSE);
+    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
+                        AXIS2_TRANSPORT_HEADERS, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_HEADERS, 
+                        property, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_EXECUTION_CHAIN(new_msg, env, 
+                        AXIS2_MSG_CTX_GET_EXECUTION_CHAIN(ref_msg, env));
+                        
+    return new_msg;
 }

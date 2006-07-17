@@ -5,7 +5,7 @@ libsandesha_util_la_SOURCES = \
 							utils.c \
 							spec_specific_consts.c\
                             fault_data.c\
-                            fault_manager.c\
+                            fault_mgr.c\
                             ack_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
