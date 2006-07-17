@@ -136,6 +136,10 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         sandesha2_msg_ctx_t *ref_rm_msg,
                         axis2_op_t *op);
                         
+AXIS2_EXTERN  int AXIS2_CALL
+sandesha2_utils_get_soap_version(const axis2_env_t *env, 
+                        axiom_soap_envelope_t *envelope);
+                        
 
 /** @} */
 #ifdef __cplusplus

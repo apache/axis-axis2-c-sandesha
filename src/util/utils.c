@@ -612,3 +612,13 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
     return new_msg;
 }
 
+AXIS2_EXTERN  int AXIS2_CALL
+sandesha2_utils_get_soap_version(const axis2_env_t *env, 
+                        axiom_soap_envelope_t *envelope)
+{
+    AXIS2_ENV_CHECK(env, -1);
+    AXIS2_PARAM_CHECK(env->error, envelope, -1);
+    
+    return AXIOM_SOAP_ENVELOPE_GET_SOAP_VERSION(envelope, env);
+}
+
