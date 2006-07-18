@@ -175,6 +175,10 @@ sandesha2_msg_ctx_get_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
                         const axis2_env_t *env, int flow);
+                        
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_rm_spec_ver(sandesha2_msg_ctx_t *rm_msg_ctx,
+                        const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_ctx_free(sandesha2_msg_ctx_t *rm_msg_ctx, const axis2_env_t *env);								
@@ -258,6 +262,8 @@ sandesha2_msg_ctx_create(const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
                         sandesha2_msg_ctx_set_addr_ns_val;
     msg_ctx_impl->rm_msg_ctx.ops->get_flow = sandesha2_msg_ctx_get_flow;
     msg_ctx_impl->rm_msg_ctx.ops->set_flow = sandesha2_msg_ctx_set_flow;
+    msg_ctx_impl->rm_msg_ctx.ops->get_rm_spec_ver = 
+                        sandesha2_msg_ctx_get_rm_spec_ver;
     msg_ctx_impl->rm_msg_ctx.ops->free = sandesha2_msg_ctx_free;
                         
 	return &(msg_ctx_impl->rm_msg_ctx);
@@ -675,6 +681,11 @@ sandesha2_msg_ctx_set_rm_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
         msg_ctx_impl->rm_ns_val = NULL;
     }
     msg_ctx_impl->rm_ns_val = AXIS2_STRDUP(ns_val, env);
+    if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
+        msg_ctx_impl->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env);
+    if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_10_NS_URI))
+        msg_ctx_impl->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_1, env);
+        
     return AXIS2_SUCCESS;
 }
     
@@ -729,4 +740,12 @@ sandesha2_msg_ctx_set_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
         return AXIS2_FAILURE;
         
     return AXIS2_MSG_CTX_SET_FLOW(msg_ctx_impl->msg_ctx, env, flow); 
+}
+
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_rm_spec_ver(sandesha2_msg_ctx_t *rm_msg_ctx,
+                        const axis2_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->spec_ver;
 }

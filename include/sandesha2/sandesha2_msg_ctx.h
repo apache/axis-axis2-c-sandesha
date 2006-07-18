@@ -235,6 +235,11 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_ctx_ops
             const axis2_env_t *env,
             int flow);
             
+    axis2_char_t *(AXIS2_CALL *
+    get_rm_spec_ver)
+            (sandesha2_msg_ctx_t *rm_msg_ctx,
+            const axis2_env_t *env);
+                        
     axis2_status_t (AXIS2_CALL *
         free) 
             (sandesha2_msg_ctx_t *rm_msg_ctx,
@@ -357,6 +362,9 @@ sandesha2_msg_ctx_create(
     
 #define SANDESHA2_MSG_CTX_GET_FLOW(rm_msg_ctx, env) \
     ((rm_msg_ctx)->ops->get_flow(rm_msg_ctx, env))
+    
+#define SANDESHA2_MSG_CTX_GET_RM_SPEC_VER(rm_msg_ctx, env) \
+    ((rm_msg_ctx)->ops->get_rm_spec_ver(rm_msg_ctx, env))
 /************************** End of function macros ****************************/
 
 /** @} */

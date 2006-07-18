@@ -151,6 +151,8 @@ extern "C"
         SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL,
         /* Sequence id is not recoreded */
         SANDESHA2_ERROR_UNRECORDED_SEQ_ID,
+        /* relates_to not found or invalid*/
+        SANDESHA2_ERROR_INVALID_RELATES_TO,
         /* To is NULL */
         SANDESHA2_ERROR_TO_IS_NULL,
         /* Create Sequence Part is NULL */
