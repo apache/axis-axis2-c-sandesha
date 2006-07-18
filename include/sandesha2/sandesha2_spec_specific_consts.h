@@ -66,6 +66,16 @@ sandesha2_spec_specific_consts_get_terminate_seq_action(
         axis2_char_t *spec_version);
 
 axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_create_seq_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_create_seq_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+
+axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_close_seq_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
