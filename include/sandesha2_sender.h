@@ -54,7 +54,7 @@ struct sandesha2_sender_ops
             const axis2_env_t *env);
      
     axis2_status_t (AXIS2_CALL *
-    stop_sender_for_the_seq) (
+    stop_for_seq) (
             sandesha2_sender_t *sender,
             const axis2_env_t *env,
             axis2_char_t *seq_id);
@@ -75,7 +75,7 @@ struct sandesha2_sender_ops
             const axis2_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
-    run_sender_for_the_seq) (
+    run_for_seq) (
             sandesha2_sender_t *sender,
             const axis2_env_t *env,
             axis2_conf_ctx_t *conf_ctx,
@@ -94,10 +94,10 @@ sandesha2_sender_create(
 #define SANDESHA2_SENDER_FREE(sender, env) \
       (((sandesha2_sender_t *) sender)->ops->free (sender, env))
 
-#define SANDESHA2_SENDER_STOP_SENDER_FOR_THE_SEQ(sender, env, \
+#define SANDESHA2_SENDER_STOP_FOR_SEQ(sender, env, \
         seq_id) \
       (((sandesha2_sender_t *) sender)->ops->\
-      stop_sender_for_the_seq (sender, env, seq_id))
+      stop_for_seq (sender, env, seq_id))
 
 #define SANDESHA2_SENDER_STOP_SENDING(sender, env) \
       (((sandesha2_sender_t *) sender)->ops->\
@@ -111,9 +111,9 @@ sandesha2_sender_create(
       (((sandesha2_sender_t *) sender)->ops->\
       run (sender, env))
 
-#define SANDESHA2_SENDER_RUN_SENDER_FOR_THE_SEQ(sender, env, conf_ctx, seq_id) \
+#define SANDESHA2_SENDER_RUN_FOR_SEQ(sender, env, conf_ctx, seq_id) \
       (((sandesha2_sender_t *) sender)->ops->\
-      run_sender_for_the_seq (sender, env, conf_ctx, seq_id))
+      run_for_seq (sender, env, conf_ctx, seq_id))
 
 /** @} */
 #ifdef __cplusplus
