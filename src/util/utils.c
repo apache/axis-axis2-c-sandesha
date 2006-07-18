@@ -292,6 +292,37 @@ sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
     SANDESHA2_IN_ORDER_INVOKER_RUN_FOR_SEQ(invoker, env, conf_ctx, seq_id);
     return AXIS2_SUCCESS;
 }
+/*
+AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
+sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx,
+                        axis2_char_t *seq_id)
+{
+    sandesha2_sender_t *sender = NULL;
+    axis2_property_t *property = NULL;
+    
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
+    
+    property = AXIS2_CTX_GET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
+                        env, SANDESHA2_INVOKER, AXIS2_FALSE);
+    if(NULL == property)
+        return AXIS2_FAILURE;
+    sender = AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(NULL == sender)
+    {
+        sender = sandesha2_transport_sender_create(env);
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, sender);
+        AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
+                        env, SANDESHA2_SENDER, property, AXIS2_FALSE);
+    }
+    SANDESHA2_SENDER_RUN_FOR_SEQ(sender, env, conf_ctx, seq_id);
+    return AXIS2_SUCCESS;
+}
+*/               
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,

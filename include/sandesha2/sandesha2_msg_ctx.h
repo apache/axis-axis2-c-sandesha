@@ -288,9 +288,15 @@ sandesha2_msg_ctx_create(
 
 #define SANDESHA2_MSG_CTX_SET_TO(rm_msg_ctx, env, to) \
     ((rm_msg_ctx)->ops->set_to(rm_msg_ctx, env, to))
+
+#define SANDESHA2_MSG_CTX_SET_TO(rm_msg_ctx, env, to) \
+    ((rm_msg_ctx)->ops->set_to(rm_msg_ctx, env, to))
     
 #define SANDESHA2_MSG_CTX_GET_TO(rm_msg_ctx, env) \
     ((rm_msg_ctx)->ops->get_to(rm_msg_ctx, env))
+    
+#define SANDESHA2_MSG_CTX_GET_REPLY_TO(rm_msg_ctx, env) \
+    ((rm_msg_ctx)->ops->get_reply_to(rm_msg_ctx, env))
 
 #define SANDESHA2_MSG_CTX_SET_FAULT_TO(rm_msg_ctx, env, fault_to) \
     ((rm_msg_ctx)->ops->set_fault_to(rm_msg_ctx, env, fault_to))
