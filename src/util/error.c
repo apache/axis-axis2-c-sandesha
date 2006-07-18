@@ -142,6 +142,19 @@ sandesha2_error_init()
         "Completed messages bean is null, for the sequence"; 
     sandesha2_error_messages[SANDESHA2_ERROR_UNRECORDED_SEQ_ID] =
         "Sequence id is not recoreded"; 
+    sandesha2_error_messages[SANDESHA2_ERROR_TO_IS_NULL] =
+        "To is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_CREATE_SEQ_PART_IS_NULL] =
+        "Create Sequence Part is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_ACKS_TO_IS_NULL] =
+        "AcksTo is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_WSA_ACTION_VALUE] = 
+        "Create sequence message does not have the WSA:Action value";
+    SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
+        "Create sequence message does not has a valid RM namespace value. \
+        Can't decide the RM version";
+        
+
     return AXIS2_SUCCESS;
 }
 

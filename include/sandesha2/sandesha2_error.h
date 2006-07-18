@@ -151,6 +151,19 @@ extern "C"
         SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL,
         /* Sequence id is not recoreded */
         SANDESHA2_ERROR_UNRECORDED_SEQ_ID,
+        /* To is NULL */
+        SANDESHA2_ERROR_TO_IS_NULL,
+        /* Create Sequence Part is NULL */
+        SANDESHA2_ERROR_CREATE_SEQ_PART_IS_NULL,
+        /* AcksTo is NULL */
+        SANDESHA2_ERROR_ACKS_TO_IS_NULL,
+        /* Create sequence message does not have the WSA:Action value */
+        SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_WSA_ACTION_VALUE,
+        /* Create sequence message does not has a valid RM namespace value. 
+         * Can't decide the RM version
+         */
+        SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
+        
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present
