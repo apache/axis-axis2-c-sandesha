@@ -201,3 +201,40 @@ sandesha2_spec_specific_consts_is_seq_closing_allowed(
     return AXIS2_FALSE;
 } 
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_terminate_seq_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, spec_version, NULL);
+    
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+        return SANDESHA2_SPEC_2005_02_SOAP_ACTION_TERMINATE_SEQ;
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
+}
+
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL        
+sandesha2_spec_specific_consts_is_term_seq_res_reqd(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FALSE);
+    
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+        return AXIS2_TRUE;
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return AXIS2_FALSE;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+                
+    return AXIS2_FALSE;
+}
