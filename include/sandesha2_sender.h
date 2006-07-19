@@ -75,7 +75,7 @@ struct sandesha2_sender_ops
             const axis2_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
-    run_sender_for_seq) (
+    run_for_seq) (
             sandesha2_sender_t *sender,
             const axis2_env_t *env,
             axis2_conf_ctx_t *conf_ctx,

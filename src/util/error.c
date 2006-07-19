@@ -150,10 +150,15 @@ sandesha2_error_init()
         "AcksTo is NULL";
     sandesha2_error_messages[SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_WSA_ACTION_VALUE] = 
         "Create sequence message does not have the WSA:Action value";
-    SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
+    sandesha2_error_messages[SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE]=
         "Create sequence message does not has a valid RM namespace value. \
         Can't decide the RM version";
-        
+    sandesha2_error_messages[SANDESHA2_ERROR_APPLICATION_MSG_NULL]=
+        "Application message is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_CONF_CTX_NULL]=
+        "Configuration Context is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG]=
+        "Cannot find the rmVersion of the given message";
 
     return AXIS2_SUCCESS;
 }

@@ -165,7 +165,14 @@ extern "C"
          * Can't decide the RM version
          */
         SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
-        
+
+        /* Application message is NULL */
+        SANDESHA2_ERROR_APPLICATION_MSG_NULL, 
+        /* Configuration Context is NULL */
+        SANDESHA2_ERROR_CONF_CTX_NULL,
+        /* Cannot find the rmVersion of the given message */
+        SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG,
+
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present
