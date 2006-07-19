@@ -97,7 +97,7 @@ sandesha2_in_order_invoker_create(
 #define SANDESHA2_IN_ORDER_INVOKER_FREE(invoker, env) \
     ((invoker)->ops->free (invoker, env))
     
-#define SANDESHA2_IN_ORDER_INVOKER_STOP_INVOKER_FOR_SEQ(invoker, env, id) \
+#define SANDESHA2_IN_ORDER_INVOKER_STOP_FOR_SEQ(invoker, env, id) \
     ((invoker)->ops->stop_invoker_for_seq(invoker, env, id))
     
 #define SANDESHA2_IN_ORDER_INVOKER_STOP_INVOKING(invoker, env) \
@@ -106,7 +106,7 @@ sandesha2_in_order_invoker_create(
 #define SANDESHA2_IN_ORDER_INVOKER_IS_INVOKER_STARTED(invoker, env) \
     ((invoker)->ops->is_invoker_started(invoker, env))
     
-#define SANDESHA2_IN_ORDER_INVOKER_RUN_INVOKER_FOR_SEQ(invoker, env, \
+#define SANDESHA2_IN_ORDER_INVOKER_RUN_FOR_SEQ(invoker, env, \
     conf_ctx, id) \
     ((invoker)->ops->run_invoker_for_seq(invoker, env, conf_ctx, id))
 

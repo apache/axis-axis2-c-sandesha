@@ -25,6 +25,11 @@
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdio.h>
+#include <axis2_http_transport.h>
+#include <axis2_http_transport_utils.h>
+#include <axiom_soap_const.h>
+#include <axiom_soap_fault.h>
+#include <axiom_soap_body.h>
 
 
 /** 
@@ -302,13 +307,76 @@ sandesha2_sender_check_for_sync_res(
                         const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *property = NULL;
+    axis2_msg_ctx_t *res_msg_ctx = NULL;
+    axis2_op_ctx_t *req_op_ctx = NULL;
+    axiom_soap_envelope_t *res_envelope = NULL;
+    axis2_char_t *soap_ns_uri = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_IN,
                     AXIS2_FALSE);
-    
+    if(NULL == property)
+        return AXIS2_SUCCESS;
+        
+    res_msg_ctx = axis2_msg_ctx_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx,
+                    env), AXIS2_MSG_CTX_GET_TRANSPORT_IN_DESC(
+                    msg_ctx, env), AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx,
+                    env));
+    AXIS2_MSG_CTX_SET_SVR_SIDE(res_msg_ctx, env, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_PROPERTY(res_msg_ctx, env, AXIS2_TRANSPORT_IN,
+                    AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_IN,
+                    AXIS2_FALSE), AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_SVC_CTX(res_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(
+                    msg_ctx, env));
+    AXIS2_MSG_CTX_SET_SVC_GRP_CTX(res_msg_ctx, env, 
+                    AXIS2_MSG_CTX_GET_SVC_GRP_CTX(msg_ctx, env));
+    req_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    if(NULL != req_op_ctx)
+    {
+        axis2_ctx_t *ctx = NULL;
+        ctx = AXIS2_OP_CTX_GET_BASE(req_op_ctx, env);
+        if(NULL != AXIS2_CTX_GET_PROPERTY(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
+                    AXIS2_FALSE))
+        {
+            AXIS2_MSG_CTX_SET_PROPERTY(res_msg_ctx, env, 
+                    MTOM_RECIVED_CONTENT_TYPE, AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                    MTOM_RECIVED_CONTENT_TYPE, AXIS2_FALSE), AXIS2_FALSE);
+        }
+        if(NULL != AXIS2_CTX_GET_PROPERTY(ctx, env, AXIS2_HTTP_CHAR_SET_ENCODING, 
+                    AXIS2_FALSE))
+        {
+            AXIS2_MSG_CTX_SET_PROPERTY(res_msg_ctx, env, 
+                    AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                    AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_FALSE), AXIS2_FALSE);
+        }
+    }
+    AXIS2_MSG_CTX_SET_DOING_REST(res_msg_ctx, env, AXIS2_MSG_CTX_GET_DOING_REST(
+                    msg_ctx, env));
+    soap_ns_uri = AXIS2_MSG_CTX_GET_IS_SOAP_11(msg_ctx, env) ?
+                    AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+                    AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
+    res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
+                    soap_ns_uri);
+   
+    AXIS2_MSG_CTX_SET_PROPERTY(res_msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
+                    AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env,
+                    SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE), AXIS2_FALSE);
+    if(NULL != res_envelope)
+    {
+        axis2_engine_t *engine = NULL;
+        AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(res_msg_ctx, env, res_envelope);
+        
+        engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, 
+                    env));
+        if(AXIS2_FALSE == sandesha2_sender_is_fault_envelope(sender, env, 
+                    res_envelope))
+            AXIS2_ENGINE_RECIEVE_FAULT(engine, env, res_msg_ctx);
+        else
+            AXIS2_ENGINE_RECIEVE(engine, env, res_msg_ctx);        
+    }
     return AXIS2_SUCCESS;
 }
 
@@ -320,9 +388,11 @@ sandesha2_sender_is_piggybackable_msg_type(
 {
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-        
     
-    return AXIS2_FALSE;
+    if(SANDESHA2_MSG_TYPE_ACK == msg_type)
+        return AXIS2_FALSE;
+    
+    return AXIS2_TRUE;
 }
 
 axis2_bool_t AXIS2_CALL
@@ -334,6 +404,9 @@ sandesha2_sender_is_ack_already_piggybacked(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
+    if(NULL != SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT))
+        return AXIS2_TRUE;
     
     return AXIS2_FALSE;
 }
@@ -344,10 +417,15 @@ sandesha2_sender_is_fault_envelope(
                         const axis2_env_t *env, 
                         axiom_soap_envelope_t *soap_envelope)
 {
+    axiom_soap_fault_t *fault = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     
-    
+    fault = AXIOM_SOAP_BODY_GET_FAULT(AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope,
+                        env), env);
+    if(NULL != fault)
+        return AXIS2_TRUE;
+        
     return AXIS2_FALSE;
 }
 
@@ -361,18 +439,22 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
     sandesha2_sender_t *sender = NULL;
     sandesha2_sender_args_t *args;
     axis2_env_t *env = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
     
     args = (sandesha2_sender_args_t*)data;
     env = args->env;
     sender_impl = args->impl;
     sender = (sandesha2_sender_t*)sender_impl;
     
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, 
+                        sender_impl->conf_ctx, 
+                        AXIS2_CONF_CTX_GET_CONF(sender_impl->conf_ctx, env));
+                        
     while(AXIS2_TRUE == sender_impl->run_sender)
     {
         sandesha2_transaction_t *transaction = NULL;
         /* Use when transaction handling is done 
         axis2_bool_t rollbacked = AXIS2_FALSE;*/
-        sandesha2_storage_mgr_t *storage_mgr = NULL;
         sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
         sandesha2_sender_mgr_t *storage_map_mgr = NULL;
         sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -380,10 +462,7 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
         axis2_array_list_t *all_seq_list = NULL;
         int i = 0;
         
-        sleep(1);
-        storage_mgr = sandesha2_utils_get_storage_mgr(env, 
-                        sender_impl->conf_ctx, 
-                        AXIS2_CONF_CTX_GET_CONF(sender_impl->conf_ctx, env));
+        
         next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
                         storage_mgr, env);
         storage_map_mgr = SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_MGR
