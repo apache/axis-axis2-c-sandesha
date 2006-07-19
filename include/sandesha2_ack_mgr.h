@@ -62,6 +62,11 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
         axis2_char_t *seq_id,
         sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_ack_mgr_verify_seq_completion(const axis2_env_t *env,
+        axis2_array_list_t *ack_ranges,
+        long last_msg_no);
+
 /** @} */
 #ifdef __cplusplus
 }

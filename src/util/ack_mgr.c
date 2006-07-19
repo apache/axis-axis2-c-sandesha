@@ -19,6 +19,7 @@
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_property_bean.h>
 #include <sandesha2_seq_property_bean.h>
+#include <sandesha2_ack_range.h>
 #include <sandesha2/sandesha2_spec_specific_consts.h>
 #include <axis2_string.h>
 #include <axis2_uuid_gen.h>
@@ -320,4 +321,42 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
     }
     return completed_msg_list;
 }
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_ack_mgr_verify_seq_completion(const axis2_env_t *env,
+        axis2_array_list_t *ack_ranges,
+        long last_msg_no)
+{
+    axis2_hash_t *hash = NULL;
+    axis2_char_t tmp[32];
+    int i = 0;
+    long start = 1;
     
+    
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, ack_ranges, AXIS2_FALSE);
+    
+    hash = axis2_hash_make(env);
+    for(i  = 0; i< AXIS2_ARRAY_LIST_SIZE(ack_ranges, env); i++)
+    {
+        sandesha2_ack_range_t *ack_range = NULL;
+        
+        ack_range = AXIS2_ARRAY_LIST_GET(ack_ranges, env, i);
+        sprintf(tmp, "%ld", SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env));
+        axis2_hash_set(hash, tmp, AXIS2_HASH_KEY_STRING, ack_range);
+    }
+    
+    while(AXIS2_TRUE)
+    {
+        sandesha2_ack_range_t *ack_range = NULL;
+        sprintf(tmp, "%ld", start);
+        ack_range = axis2_hash_get(hash, tmp, AXIS2_HASH_KEY_STRING);
+        
+        if(NULL == ack_range)
+            break;
+        if(SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) >= last_msg_no)
+            return AXIS2_TRUE;
+        start = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) + 1;        
+    }
+    return AXIS2_FALSE;
+}

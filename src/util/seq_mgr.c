@@ -34,7 +34,7 @@
 #include <axis2_log.h>
 #include <axis2_uuid_gen.h>
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_mgr_set_up_new_seq(
         const axis2_env_t *env,
         sandesha2_msg_ctx_t *create_seq_msg, 
@@ -179,7 +179,7 @@ sandesha2_seq_mgr_set_up_new_seq(
  * @param internal_seq_id
  * @param config_ctx
  */
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_mgr_update_last_activated_time(
         const axis2_env_t *env,
         axis2_char_t *property_key,
