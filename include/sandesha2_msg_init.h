@@ -46,6 +46,22 @@ typedef struct sandesha2_msg_init_ops sandesha2_msg_init_ops_t;
   * @{
   */
 
+/**
+ * Called to create a rm_msg_ctx out of an message context. Finds out things 
+ * like rm version and message type as well.
+ * 
+ * @param ctx
+ * @param assumed_rm_ns
+ * this is used for validation (to find out weather the rm_ns of the current 
+ * message is equal to the regietered rm_ns of the sequence). 
+ * If NULL validation will not happen.
+ * 
+ * @return
+ */
+sandesha2_msg_ctx_t *
+sandesha2_msg_init_init_msg(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *ctx);
 
 /** @} */
 #ifdef __cplusplus
