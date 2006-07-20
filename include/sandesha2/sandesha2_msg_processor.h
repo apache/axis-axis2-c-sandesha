@@ -72,6 +72,15 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_processor
     sandesha2_msg_processor_ops_t *ops;
 };
 
+/** 
+ * @brief Application Message Processor Creator struct impl
+ *	Sandesha2 App Msg Processor Creator
+ */
+sandesha2_msg_processor_t *AXIS2_CALL   
+sandesha2_msg_processor_create_msg_processor(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *rm_msg_ctx);
+
 #define SANDESHA2_MSG_PROCESSOR_FREE(proc, env) \
     ((proc)->ops->free (proc, env))
 #define SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(proc, env, rm_msg_ctx) \

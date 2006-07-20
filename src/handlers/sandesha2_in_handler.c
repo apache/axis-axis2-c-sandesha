@@ -72,9 +72,7 @@ axis2_sandesha2_in_handler_invoke(
         const axis2_env_t *env,
         struct axis2_msg_ctx *msg_ctx)
 {
-    axis2_property_t *property = NULL;
     axis2_property_t *temp_prop = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
@@ -185,7 +183,7 @@ axis2_sandesha2_in_handler_invoke(
      * TODO Validate the message
      * SANDESHA2_MSG_VALIDATOR_VALIDATE(env, rm_msg_ctx, storage_mgr);
      */
-    msg_processor = sandesha2_msg_processor_get_msg_processor(env, rm_msg_ctx);
+    msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
     if(msg_processor)
         SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(msg_processor, env, rm_msg_ctx);
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
@@ -200,7 +198,8 @@ axis2_sandesha2_in_handler_invoke(
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
             AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
-            AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
+            AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                    prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
         }
         if(AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back)
@@ -211,7 +210,8 @@ axis2_sandesha2_in_handler_invoke(
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
             AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
-            AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
+            AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                    prop, AXIS2_FALSE);
         }
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
@@ -226,7 +226,8 @@ axis2_sandesha2_in_handler_invoke(
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
-        AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
+        AXIS2_CTX_SET_PROPERTY(temp_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                prop, AXIS2_FALSE);
     }
     AXIS2_LOG_INFO(env->log, "Exit: sandesha2_in_handler::invoke");
     
@@ -238,6 +239,7 @@ axis2_sandesha2_in_handler_get_qname(
         struct axis2_handler *handler, 
         const axis2_env_t *env)
 {
-    return axis2_qname_creaet(env, SANDESHA2_IN_HANDLER_NAME, NULL, NULL);
+    return (axis2_qname_t *) axis2_qname_create(env, SANDESHA2_IN_HANDLER_NAME, 
+            NULL, NULL);
 }
 

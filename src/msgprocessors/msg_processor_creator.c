@@ -37,7 +37,7 @@
  */
 sandesha2_msg_processor_t *AXIS2_CALL   
 sandesha2_msg_processor_create_msg_processor(
-        axis2_env_t *env,
+        const axis2_env_t *env,
         sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     int msg_type = -1;
