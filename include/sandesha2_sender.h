@@ -113,7 +113,7 @@ sandesha2_sender_create(
 
 #define SANDESHA2_SENDER_RUN_FOR_SEQ(sender, env, conf_ctx, seq_id) \
       (((sandesha2_sender_t *) sender)->ops->\
-      run_sender_for_seq (sender, env, conf_ctx, seq_id))
+      run_for_seq (sender, env, conf_ctx, seq_id))
 
 /** @} */
 #ifdef __cplusplus

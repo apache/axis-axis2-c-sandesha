@@ -49,14 +49,14 @@ extern "C"
 #define SANDESHA2_CLEANED_AFTER_INVOCATION "CleanedAfterInvocation"
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_clean_recv_side_after_terminate_msg(
+sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                         const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx,
                         axis2_char_t *seq_id,
                         sandesha2_storage_mgr_t *storage_man);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_clean_recv_side_after_invocation(
+sandesha2_terminate_mgr_clean_recv_side_after_invocation(
                         const axis2_env_t *env,
                         axis2_conf_ctx_t *conf_ctx,
                         axis2_char_t *seq_id,

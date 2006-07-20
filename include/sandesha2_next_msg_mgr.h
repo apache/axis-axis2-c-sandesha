@@ -128,7 +128,7 @@ sandesha2_next_msg_mgr_create(
 
 #define SANDESHA2_NEXT_MSG_MGR_FIND(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
-       find_by_next_msg_bean (next_msg, env, bean))
+       find (next_msg, env, bean))
 
 #define SANDESHA2_NEXT_MSG_MGR_FIND_UNIQUE(next_msg, env, bean) \
       (((sandesha2_next_msg_mgr_t *) next_msg)->ops->\
