@@ -137,15 +137,15 @@ AXIS2_DECLARE_DATA struct sandesha2_rm_elements_ops
             sandesha2_terminate_seq_res_t *terminate_seq_res);
             
     sandesha2_ack_requested_t* (AXIS2_CALL *
-        get_ack_reqested) 
+        get_ack_requested) 
             (sandesha2_rm_elements_t *rm_elements,
             const axis2_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
-        set_ack_reqested) 
+        set_ack_requested) 
             (sandesha2_rm_elements_t *rm_elements,
             const axis2_env_t *env,
-            sandesha2_ack_requested_t *ack_reqested);
+            sandesha2_ack_requested_t *ack_requested);
     
     sandesha2_close_seq_t* (AXIS2_CALL *
         get_close_seq) 
