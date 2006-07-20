@@ -219,7 +219,7 @@ sandesha2_property_bean_create(
     ((bean)->ops->get_permanent_storage_mgr(bean, env))
     
 #define SANDESHA2_PROPERTY_BEAN_SET_PERMENENT_STORAGE_MGR(bean, env, mgr)\
-    ((bean)->ops->get_permanent_storage_mgr(bean, env, mgr))
+    ((bean)->ops->set_permanent_storage_mgr(bean, env, mgr))
     
 #define SANDESHA2_PROPERTY_BEAN_IS_IN_ORDER(bean, env)\
     ((bean)->ops->is_in_order(bean, env))

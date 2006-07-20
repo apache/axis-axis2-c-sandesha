@@ -19,7 +19,10 @@
 #include <axiom_soap_const.h>
 #include <sandesha2/sandesha2_iom_rm_part.h>
 #include <sandesha2/sandesha2_utils.h>
+#include <axiom_soap_header.h>
+#include <axiom_soap_body.h>
 #include <stdio.h>
+#include <axis2_addr.h>
 
 
 /** 
@@ -165,6 +168,20 @@ sandesha2_rm_elements_get_addr_ns_val
             (sandesha2_rm_elements_t *rm_elements,
             const axis2_env_t *env);
 
+axis2_char_t* AXIS2_CALL 
+sandesha2_rm_elements_get_rm_ns_val
+            (sandesha2_rm_elements_t *rm_elements,
+            const axis2_env_t *env,
+            axiom_soap_envelope_t *soap_envelope,
+            axis2_char_t *action);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_rm_elements_get_addr_ns_val_from_env
+            (sandesha2_rm_elements_t *rm_elements,
+            const axis2_env_t *env,
+            axiom_soap_envelope_t *soap_envelope,
+            axis2_char_t *action);
+            
 axis2_status_t AXIS2_CALL 
 sandesha2_rm_elements_free(sandesha2_rm_elements_t *mgr, 
                         const axis2_env_t *env);								
@@ -291,10 +308,180 @@ sandesha2_rm_elements_from_soap_envelope
             axiom_soap_envelope_t *soap_envelope,
             axis2_char_t *action)
 {
+    int soap_version = -1;
+    sandesha2_rm_elements_impl_t *elements_impl = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axiom_soap_body_t *soap_body = NULL;
+    axiom_node_t *header_node = NULL;
+    axiom_element_t *body_element = NULL;
+    axiom_node_t *body_node = NULL;
+    axiom_element_t *header_element = NULL;
+    axiom_element_t *seq_element = NULL;
+    axiom_node_t *seq_node = NULL;
+    axiom_element_t *seq_ack_element = NULL;
+    axiom_node_t *seq_ack_node = NULL;
+    axiom_element_t *create_seq_element = NULL;
+    axiom_node_t *create_seq_node = NULL;
+    axiom_element_t *create_seq_res_element = NULL;
+    axiom_node_t *create_seq_res_node = NULL;
+    axiom_element_t *terminate_seq_element = NULL;
+    axiom_node_t *terminate_seq_node = NULL;
+    axiom_element_t *terminate_seq_res_element = NULL;
+    axiom_node_t *terminate_seq_res_node = NULL;
+    axiom_element_t *close_seq_element = NULL;
+    axiom_node_t *close_seq_node = NULL;
+    axiom_element_t *close_seq_res_element = NULL;
+    axiom_node_t *close_seq_res_node = NULL;
+    axiom_element_t *ack_requested_element = NULL;
+    axiom_node_t *ack_requested_node = NULL;
+    axis2_qname_t *qname = NULL;
+    axis2_char_t *rm_ns_val = NULL;
+    axis2_char_t *addr_ns_val = NULL;
+    
+    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
+    elements_impl = SANDESHA2_INTF_TO_IMPL(rm_elements);
+    soap_version = AXIOM_SOAP_ENVELOPE_GET_SOAP_VERSION(soap_envelope, env);
+    
+    elements_impl->rm_ns_val = sandesha2_rm_elements_get_rm_ns_val(rm_elements,
+                        env, soap_envelope, action);
+                        
+    if(NULL == elements_impl->rm_ns_val)
+        return AXIS2_SUCCESS;
+        
+    elements_impl->addr_ns_val = sandesha2_rm_elements_get_addr_ns_val_from_env(
+                        rm_elements, env, soap_envelope, action);
+                        
+    if(NULL == elements_impl->addr_ns_val)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cant find the"
+                        " addressing version");
+        return AXIS2_FAILURE;
+    }
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);    
+    header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
+    header_element = AXIOM_NODE_GET_DATA_ELEMENT(header_node, env);
+    
+    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope, env);
+    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
+    
+    
+                        
+    rm_ns_val = elements_impl->rm_ns_val;
+    addr_ns_val = elements_impl->addr_ns_val;
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, rm_ns_val, NULL);
+    seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, env,
+                        qname, header_node, &seq_node);
+    if(NULL != seq_node)
+    {
+        elements_impl->seq = sandesha2_seq_create(env, rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq, env, 
+                        header_node);
+    }
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
+                        NULL);
+    seq_ack_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element,
+                        env, qname, header_node, &seq_ack_node);
+    if(NULL != seq_ack_element)
+    {
+        elements_impl->seq_ack = sandesha2_seq_ack_create(env, rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq_ack, env,
+                        header_node);
+    }
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ, rm_ns_val,
+                        NULL);
+    create_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element,
+                        env, qname, body_node, &create_seq_node);
+    if(NULL != create_seq_node)
+    {
+        elements_impl->create_seq = sandesha2_create_seq_create(env, rm_ns_val, 
+                        addr_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq, env,
+                        body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, 
+                        rm_ns_val, NULL);
+    create_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        body_element, env, qname, body_node, 
+                        &create_seq_res_node);
+    if(NULL != create_seq_res_node)
+    {
+        elements_impl->create_seq_res = sandesha2_create_seq_res_create(env, 
+                        rm_ns_val, addr_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq_res, env,
+                        body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
+                        rm_ns_val, NULL);
+    terminate_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        body_element, env, qname, body_node, 
+                        &terminate_seq_node);
+    if(NULL != terminate_seq_node)
+    {
+        elements_impl->terminate_seq = sandesha2_terminate_seq_create(env, 
+                        rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->terminate_seq, env,
+                        body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, 
+                        rm_ns_val, NULL);
+    terminate_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        body_element, env, qname, body_node, 
+                        &terminate_seq_res_node);
+    if(NULL != terminate_seq_res_node)
+    {
+        elements_impl->terminate_seq_res = sandesha2_terminate_seq_res_create(
+                        env, rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->terminate_seq_res, 
+                        env, body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, 
+                        rm_ns_val, NULL);
+    close_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        body_element, env, qname, body_node, 
+                        &close_seq_node);
+    if(NULL != close_seq_node)
+    {
+        elements_impl->close_seq = sandesha2_close_seq_create(env, 
+                        rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->close_seq, env,
+                        body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
+                        rm_ns_val, NULL);
+    close_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        body_element, env, qname, body_node, 
+                        &close_seq_res_node);
+    if(NULL != close_seq_res_node)
+    {
+        elements_impl->close_seq_res = sandesha2_close_seq_res_create(env, 
+                        rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->close_seq_res, env,
+                        body_node);
+    }
+    
+    qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
+                        rm_ns_val, NULL);
+    ack_requested_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        header_element, env, qname, header_node, 
+                        &ack_requested_node);
+    if(NULL != ack_requested_node)
+    {
+        elements_impl->ack_requested = sandesha2_ack_requested_create(env, 
+                        rm_ns_val);
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->ack_requested, env,
+                        header_node);
+    }
     return AXIS2_SUCCESS;
 }
             
@@ -304,10 +491,61 @@ sandesha2_rm_elements_to_soap_envelope
             const axis2_env_t *env,
             axiom_soap_envelope_t *soap_envelope)
 {
+    sandesha2_rm_elements_impl_t *rm_elements_impl = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axiom_soap_body_t *soap_body = NULL;
+    axiom_node_t *body_node = NULL;
+    
+    
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
     
-    return NULL;
+    rm_elements_impl = SANDESHA2_INTF_TO_IMPL(rm_elements);
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
+    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope, env);
+    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    
+    if(NULL != rm_elements_impl->seq)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->seq, env, 
+                        soap_header);
+    }
+    if(NULL != rm_elements_impl->seq_ack)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->seq_ack, env, 
+                        soap_header);
+    }
+    if(NULL != rm_elements_impl->create_seq)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->create_seq, env, 
+                        body_node);
+    }
+    if(NULL != rm_elements_impl->create_seq_res)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->create_seq_res, 
+                        env, body_node);
+    }
+    if(NULL != rm_elements_impl->terminate_seq)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->terminate_seq, 
+                        env, body_node);
+    }
+    if(NULL != rm_elements_impl->terminate_seq_res)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->terminate_seq_res, 
+                        env, body_node);
+    }
+    if(NULL != rm_elements_impl->close_seq)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->close_seq, 
+                        env, body_node);
+    }
+    if(NULL != rm_elements_impl->close_seq_res)
+    {
+        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->close_seq_res, 
+                        env, body_node);
+    }
+    return soap_envelope;
 }
             
 sandesha2_create_seq_t* AXIS2_CALL 
@@ -516,4 +754,97 @@ sandesha2_rm_elements_get_addr_ns_val
     AXIS2_ENV_CHECK(env, NULL);
     
     return SANDESHA2_INTF_TO_IMPL(rm_elements)->addr_ns_val;
+}
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_rm_elements_get_rm_ns_val
+            (sandesha2_rm_elements_t *rm_elements,
+            const axis2_env_t *env,
+            axiom_soap_envelope_t *soap_envelope,
+            axis2_char_t *action)
+{
+    axiom_soap_header_t *soap_header = NULL;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
+    
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
+    if(NULL != soap_header)
+    {
+        axis2_array_list_t *headers = NULL;
+        
+        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+                        soap_header, env, SANDESHA2_SPEC_2005_02_NS_URI);
+        if(NULL != headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+            return SANDESHA2_SPEC_2005_02_NS_URI;
+        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+                        soap_header, env, SANDESHA2_SPEC_2005_10_NS_URI);
+                
+        if(NULL != headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+            return SANDESHA2_SPEC_2005_10_NS_URI;
+    }
+    if(NULL == action)
+        return NULL;
+    
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
+        return SANDESHA2_SPEC_2005_02_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2005_02_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT))
+        return SANDESHA2_SPEC_2005_02_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
+        return SANDESHA2_SPEC_2005_02_NS_URI;
+        
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2005_10_NS_URI;
+    
+    return NULL;
+    
+}
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_rm_elements_get_addr_ns_val_from_env
+            (sandesha2_rm_elements_t *rm_elements,
+            const axis2_env_t *env,
+            axiom_soap_envelope_t *soap_envelope,
+            axis2_char_t *action)
+{
+    axiom_soap_header_t *soap_header = NULL;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
+    
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
+    if(NULL != soap_header)
+    {
+        axis2_array_list_t *headers = NULL;
+        
+        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+                        soap_header, env, AXIS2_WSA_NAMESPACE);
+        if(NULL != headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+            return AXIS2_WSA_NAMESPACE;
+            
+        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+                        soap_header, env, AXIS2_WSA_NAMESPACE_SUBMISSION);
+                
+        if(NULL != headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+            return AXIS2_WSA_NAMESPACE_SUBMISSION;
+    }
+    return NULL;
+    
+    
 }

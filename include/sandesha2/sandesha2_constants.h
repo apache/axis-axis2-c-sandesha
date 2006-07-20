@@ -361,11 +361,11 @@ extern "C"
 			
 	#define SANDESHA2_DEF_VAL_ACK_INTERVAL  4000
 			
-	#define SANDESHA2_DEF_VAL_EXP_BACKOFF  true
+	#define SANDESHA2_DEF_VAL_EXP_BACKOFF  AXIS2_TRUE
 			
 	#define SANDESHA2_DEF_VAL_INACTIVETIMEOUT  -1
-			
-	#define SANDESHA2_DEF_VAL_INACTIVETIMEOUT_MEASURE  "seconds"   //this can be - seconds,minutes,hours,days
+	/*  this can be - seconds,minutes,hours,days */		
+	#define SANDESHA2_DEF_VAL_INACTIVETIMEOUT_MEASURE  "seconds"   
 			
 	#define SANDESHA2_DEF_VAL_STORAGE_MGR  "InMemoryStorageManager"
 		
@@ -373,9 +373,9 @@ extern "C"
 			
 	#define SANDESHA2_DEF_VAL_PERM_STORAGE_MGR  "InMemoryStorageManager"
 			
-	#define SANDESHA2_DEF_VAL_INORDER_INVOCATION  true
+	#define SANDESHA2_DEF_VAL_INORDER_INVOCATION  AXIS2_TRUE
 			
-	#define SANDESHA2_DEF_VAL_MSG_TYPES_TO_DROP  VALUE_NONE
+	#define SANDESHA2_DEF_VAL_MSG_TYPES_TO_DROP  "none"
 			
 	#define SANDESHA2_DEF_VAL_RETR_COUNT  8
 			

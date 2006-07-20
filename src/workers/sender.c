@@ -30,6 +30,7 @@
 #include <axiom_soap_const.h>
 #include <axiom_soap_fault.h>
 #include <axiom_soap_body.h>
+#include <sandesha2_msg_init.h>
 
 
 /** 
@@ -146,13 +147,13 @@ sandesha2_sender_create(const axis2_env_t *env)
     sender_impl->mutex = axis2_thread_mutex_create(env->allocator,
                         AXIS2_THREAD_MUTEX_DEFAULT);
                         
-    sender_impl->sender.ops->stop_sender_for_seq = 
+    sender_impl->sender.ops->stop_for_seq = 
                         sandesha2_sender_stop_sender_for_seq;
     sender_impl->sender.ops->stop_sending = 
                         sandesha2_sender_stop_sending;
     sender_impl->sender.ops->is_sender_started = 
                         sandesha2_sender_is_sender_started;
-    sender_impl->sender.ops->run_sender_for_seq = 
+    sender_impl->sender.ops->run_for_seq = 
                         sandesha2_sender_run_sender_for_seq;
     sender_impl->sender.ops->run = sandesha2_sender_run;
     sender_impl->sender.ops->free = sandesha2_sender_free;
@@ -455,162 +456,83 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
         sandesha2_transaction_t *transaction = NULL;
         /* Use when transaction handling is done 
         axis2_bool_t rollbacked = AXIS2_FALSE;*/
-        sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
-        sandesha2_sender_mgr_t *storage_map_mgr = NULL;
+        sandesha2_sender_mgr_t *mgr = NULL;
+        sandesha2_sender_bean_t *sender_bean = NULL;
         sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-        sandesha2_seq_property_bean_t *all_seq_bean = NULL;
-        axis2_array_list_t *all_seq_list = NULL;
         int i = 0;
+        axis2_char_t *key = NULL;
+        axis2_msg_ctx_t *msg_ctx = NULL;
+        axis2_property_t *property = NULL;
+        axis2_bool_t continue_sending = AXIS2_TRUE;
+        axis2_char_t *qualified_for_sending = NULL;
+        sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
+        sandesha2_property_bean_t *prop_bean = NULL;
+        axis2_array_list_t *msgs_not_to_send = NULL;
         
-        
-        next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
-                        storage_mgr, env);
-        storage_map_mgr = SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_MGR
-                        (storage_mgr, env);
-        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
-                        storage_mgr, env);
+        sleep(1);
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
                         env);
-        all_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
-                        env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
-                        SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
-        if(NULL == all_seq_bean)
-            continue;
-        all_seq_list = sandesha2_utils_get_array_list_from_string(env,
-                        SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(all_seq_bean, env));
-        if(NULL == all_seq_list)
-            continue;
-            
-        for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(all_seq_list, env); i++)
-        {
-            axis2_char_t *seq_id = NULL;
-            long next_msg_no = -1;
-            sandesha2_next_msg_bean_t *next_msg_bean = NULL;
-            axis2_array_list_t *st_map_list = NULL;
-            sandesha2_sender_bean_t *find_bean = NULL;
-            axis2_bool_t invoked = AXIS2_FALSE;
-            int j = 0;
-            axis2_bool_t continue_seq = AXIS2_TRUE;
-            
-            seq_id = AXIS2_ARRAY_LIST_GET(all_seq_list, env, i);
-            SANDESHA2_TRANSACTION_COMMIT(transaction, env);
-            transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
+        mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);
+        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_mgr, env);
-            next_msg_bean = SANDESHA2_NEXT_MSG_MGR_RETRIEVE(
-                        next_msg_mgr, env, seq_id);
-            if(NULL == next_msg_bean)
-            {
-                axis2_char_t *str_list = NULL;
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Next message not set" 
-                        " correctly. Removing invalid entry.");
-                AXIS2_ARRAY_LIST_REMOVE(all_seq_list, env, i);
-                /* We need to make sure we are not skipping element after 
-                 * removing current element
-                 */                 
-                i--;
-                str_list = sandesha2_utils_array_list_to_string(env, all_seq_list, 
-                        SANDESHA2_ARRAY_LIST_STRING);
-                SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(all_seq_bean, env,
-                        str_list);
-                SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
-                        all_seq_bean);
-                continue;
-            }
-            next_msg_no = SANDESHA2_NEXT_MSG_BEAN_GET_NEXT_MSG_NO_TO_PROCESS(
-                        next_msg_bean, env);
-            if(next_msg_no < 0)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid message number"
-                        " as the Next Message Number.");
-                return data;
-            }
-            /*find_bean = sandesha2_sender_bean_create_with_data(env, NULL,
-                        next_msg_no, seq_id, AXIS2_FALSE);*/
-            st_map_list = SANDESHA2_INVOKER_MGR_FIND(storage_map_mgr,
-                        env, find_bean);
-            for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(st_map_list, env); j++)
-            {
-                sandesha2_sender_bean_t *st_map_bean = NULL;
-                axis2_char_t *key = NULL;
-                axis2_msg_ctx_t *msg_to_invoke = NULL;
-                sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
-                axis2_property_t *property = NULL;
-                axis2_bool_t post_failure_invocation = AXIS2_FALSE;
-                axis2_char_t *post_failure_str = NULL;
-                axis2_msg_ctx_t *msg_ctx = NULL;
-                axis2_engine_t *engine = NULL;
-                
-                st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
-                key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(st_map_bean,
-                        env);
-                msg_to_invoke = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
-                        storage_mgr, env, key, sender_impl->conf_ctx);
-                rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, 
-                        msg_to_invoke);
-                /* have to commit the transaction before invoking. This may get 
-                 * changed when WS-AT is available.
-                 */
-                SANDESHA2_TRANSACTION_COMMIT(transaction, env);
-                property = axis2_property_create(env);
-                AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-                AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_TRUE, env));
-                AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
-                        SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
                         
-                property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env,
-                        SANDESHA2_POST_FAILURE_MESSAGE, AXIS2_FALSE);
-                if(NULL != property)
-                    post_failure_str = AXIS2_PROPERTY_GET_VALUE(property, env);
-                if(NULL != post_failure_str && 0 == AXIS2_STRCMP(
-                        post_failure_str, SANDESHA2_VALUE_TRUE))
-                    post_failure_invocation = AXIS2_TRUE;
-                engine = axis2_engine_create(env, sender_impl->conf_ctx);
-                if(AXIS2_TRUE == post_failure_invocation)
-                {
-                    sandesha2_sender_make_msg_ready_for_reinjection(
-                        sender, env, msg_to_invoke);
-                    AXIS2_ENGINE_RECIEVE(engine, env, msg_to_invoke);
-                }
-                else
-                    AXIS2_ENGINE_RESUME_RECIEVE(engine, env, msg_to_invoke);
-                invoked = AXIS2_TRUE;
-                transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
-                        storage_mgr, env);
-                SANDESHA2_STORAGE_MGR_DELETE(storage_mgr, env, key);
-                msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
-                        storage_mgr, env, key, sender_impl->conf_ctx);
-                if(NULL != msg_ctx)
-                    SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr,
-                        env, key);
-                if(SANDESHA2_MSG_TYPE_APPLICATION == 
-                        SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env))
-                {
-                    sandesha2_seq_t *seq = NULL;
-                    seq = (sandesha2_seq_t*)_MSG_CTX_GET_MSG_PART(
-                            rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
-                    if(NULL != SANDESHA2_SEQ_GET_LAST_MSG(seq, env))
-                    {
-                        sandesha2_terminate_mgr_clean_recv_side_after_invocation(
-                            env, sender_impl->conf_ctx, seq_id, 
-                            storage_mgr);
-                        /* we are done with current seq */
-                        continue_seq = AXIS2_FALSE;
-                        break;
-                    }
-                }
-            }
-            if(AXIS2_FALSE == continue_seq)
-                break;
-            if(AXIS2_TRUE == invoked)
-            {
-                next_msg_no++;
-                SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_msg_bean,
-                        env, next_msg_no);
-                SANDESHA2_NEXT_MSG_BEAN_MGR_UPDATE(next_msg_mgr, env, 
-                        next_msg_bean);
-            }
+        sender_bean = SANDESHA2_SENDER_MGR_GET_NEXT_MSG_TO_SEND(mgr, env);
+        if(NULL == sender_bean)
+            continue;
+            
+        key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(sender_bean, env);
+        msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_mgr, env, key, 
+                        sender_impl->conf_ctx);
+        if(NULL == msg_ctx)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
+                        "not present in the store");
+            break;
         }
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
+                        SANDESHA2_VALUE_TRUE, env));
+        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
+                        property, AXIS2_FALSE);
+        continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
+                        sender, sender_impl->conf_ctx, storage_mgr);
+        if(AXIS2_FALSE == continue_sending)
+            continue;
+        
+        property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
+                        SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
+        if(NULL != property)
+            qualified_for_sending = AXIS2_PROPERTY_GET_VALUE(property, env);
+            
+        if(NULL != qualified_for_sending && 0 != AXIS2_STRCMP(
+                        qualified_for_sending, SANDESHA2_VALUE_TRUE))
+            continue;
+        rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+        
+        prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
+                        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));
+        if(NULL != prop_bean)
+            msgs_not_to_send = SANDESHA2_PROPERTY_BEAN_GET_MSG_TYPES_TO_DROP(
+                        prop_bean, env);
+        if(NULL != msgs_not_to_send)
+        {
+            int j = 0;
+            for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(msgs_not_to_send, env); j++)
+            {
+                axis2_char_t *value = NULL;
+                int int_val = -1;
+                
+                value = AXIS2_ARRAY_LIST_GET(msgs_not_to_send, env, j);
+                int_val = atoi(value);
+                if(SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env) == int_val)
+                    continue_sending = AXIS2_FALSE;
+            }
+            if(AXIS2_FALSE == continue_sending)
+                continue;
+        }
+        
+
         SANDESHA2_TRANSACTION_COMMIT(transaction, env);
         
         /* TODO make transaction handling effective */

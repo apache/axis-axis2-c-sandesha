@@ -54,7 +54,7 @@ struct sandesha2_sender_ops
             const axis2_env_t *env);
      
     axis2_status_t (AXIS2_CALL *
-    stop_sender_for_seq) (
+    stop_for_seq) (
             sandesha2_sender_t *sender,
             const axis2_env_t *env,
             axis2_char_t *seq_id);
@@ -97,7 +97,7 @@ sandesha2_sender_create(
 #define SANDESHA2_SENDER_STOP_FOR_SEQ(sender, env, \
         seq_id) \
       (((sandesha2_sender_t *) sender)->ops->\
-      stop_sender_for_seq (sender, env, seq_id))
+      stop_for_seq (sender, env, seq_id))
 
 #define SANDESHA2_SENDER_STOP_SENDING(sender, env) \
       (((sandesha2_sender_t *) sender)->ops->\
