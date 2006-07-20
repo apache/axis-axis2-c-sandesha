@@ -79,6 +79,8 @@ sandesha2_error_init()
     /* Service Context is NULL */
     sandesha2_error_messages[SANDESHA2_ERROR_SVC_CTX_NULL] = 
         "Service context is NULL";
+    sandesha2_error_messages[SANDESHA2_ERROR_SVC_NULL]=
+        "Service is NULL";
     /* Non Unique Result */
     sandesha2_error_messages[SANDESHA2_ERROR_NON_UNIQUE_RESULT] = 
         "Result is Not Unique";
@@ -162,6 +164,10 @@ sandesha2_error_init()
     sandesha2_error_messages[SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ]=
         "Given message has rmNamespace value, which is different from the \
                         reqistered namespace for the sequence";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_INIT_MSG]=
+        "Cannot initialize the message";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_PROCESS_MSG]=
+        "Error in processing the message";
     return AXIS2_SUCCESS;
 }
 

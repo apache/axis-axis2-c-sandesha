@@ -63,6 +63,8 @@ extern "C"
         SANDESHA2_ERROR_TO_ADDRESS_NOT_SET,
         /* Service Context is NULL */
         SANDESHA2_ERROR_SVC_CTX_NULL,
+        /* Service is NULL */
+        SANDESHA2_ERROR_SVC_NULL,
         /* Result is not unique */
         SANDESHA2_ERROR_NON_UNIQUE_RESULT,
         /* Key is NULL. Cannot insert */
@@ -83,8 +85,6 @@ extern "C"
         SANDESHA2_ERROR_SEQ_NOT_EXIST,
         /* RM Spec version is invalid */
         SANDESHA2_ERROR_INVALID_SPEC_VERSION,
-        /* NULL axis2 configuration context */
-        SANDESHA2_ERROR_NULL_CONF_CTX,
         /* Error occured while sending ack */
         SANDESHA2_ERROR_SENDING_ACK,
         /* NULL to epr is specified */
@@ -176,6 +176,10 @@ extern "C"
          * reqistered namespace for the sequence
          */
         SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ,
+        /* Cannot initialize the message */
+        SANDESHA2_ERROR_CANNOT_INIT_MSG,
+        /* Error in processing the message */
+        SANDESHA2_ERROR_CANNOT_PROCESS_MSG,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present

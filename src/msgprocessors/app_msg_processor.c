@@ -933,7 +933,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
                         env), env);
     if(NULL == conf_ctx)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_CONF_CTX, AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     ack_requested = (sandesha2_ack_requested_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
