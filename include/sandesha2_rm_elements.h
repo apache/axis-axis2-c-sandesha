@@ -25,7 +25,13 @@
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
 #include <sandesha2/sandesha2_create_seq.h>
+#include <sandesha2/sandesha2_create_seq_res.h>
+#include <sandesha2/sandesha2_terminate_seq.h>
+#include <sandesha2/sandesha2_terminate_seq_res.h>
+#include <sandesha2/sandesha2_close_seq.h>
+#include <sandesha2/sandesha2_close_seq_res.h>
 #include <sandesha2/sandesha2_seq_ack.h>
+#include <sandesha2/sandesha2_ack_requested.h>
 #include <sandesha2/sandesha2_seq.h>
 #include <sandesha2/sandesha2_identifier.h>
 #include <sandesha2/sandesha2_msg_number.h>
@@ -86,16 +92,16 @@ AXIS2_DECLARE_DATA struct sandesha2_rm_elements_ops
             const axis2_env_t *env,
             sandesha2_create_seq_res_t *create_seq_res);
             
-    sandesha2_sequence_t* (AXIS2_CALL *
-        get_sequence) 
+    sandesha2_seq_t* (AXIS2_CALL *
+        get_seq) 
             (sandesha2_rm_elements_t *rm_elements,
             const axis2_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
-        set_sequence) 
+        set_seq) 
             (sandesha2_rm_elements_t *rm_elements,
             const axis2_env_t *env,
-            sandesha2_sequence_t *seq);
+            sandesha2_seq_t *seq);
             
     sandesha2_seq_ack_t* (AXIS2_CALL *
         get_seq_ack) 
@@ -210,10 +216,10 @@ sandesha2_rm_elements_create(
 #define SANDESHA2_RM_ELEMENTS_SET_CREATE_SEQ_RES(rm_elements, env, element) \
     ((rm_elements)->ops->set_create_seq_res (rm_elements, env, element))
     
-#define SANDESHA2_RM_ELEMENTS_GET_SEQUENCE(rm_elements, env) \
+#define SANDESHA2_RM_ELEMENTS_GET_SEQ(rm_elements, env) \
     ((rm_elements)->ops->get_sequence (rm_elements, env))
     
-#define SANDESHA2_RM_ELEMENTS_SET_SEQUENCE(rm_elements, env, element) \
+#define SANDESHA2_RM_ELEMENTS_SET_SEQ(rm_elements, env, element) \
     ((rm_elements)->ops->set_sequence (rm_elements, env, element))
     
 #define SANDESHA2_RM_ELEMENTS_GET_SEQ_ACK(rm_elements, env) \

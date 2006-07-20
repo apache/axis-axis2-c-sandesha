@@ -23,7 +23,8 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                create_seq_res.c\
                                seq_fault.c\
                                terminate_seq.c\
-                               terminate_seq_res.c
+                               terminate_seq_res.c\
+                               rm_elements.c
 
 INCLUDES = -I$(top_builddir)/include \
             @AXIS2INC@

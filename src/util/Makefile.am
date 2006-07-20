@@ -8,7 +8,6 @@ libsandesha_util_la_SOURCES = \
                             fault_mgr.c\
                             ack_mgr.c \
 							seq_mgr.c \
-							msg_creator.c \
                             terminate_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \

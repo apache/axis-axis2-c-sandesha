@@ -204,7 +204,7 @@ sandesha2_seq_mgr_update_last_activated_time(
                 SANDESHA2_SEQ_PROP_LAST_ACTIVATED_TIME);
     }
     current_time = sandesha2_utils_get_current_time_in_millis(env);
-    sprintf(current_time_str, "%l", current_time);
+    sprintf(current_time_str, "%ld", current_time);
     SANDESHA2_LAST_ACTIVATED_BEAN_SET_VALUE(last_activated_bean, env, current_time_str); 
     if(AXIS2_TRUE == added)
     {
