@@ -331,7 +331,7 @@ sandesha2_msg_creator_create_create_seq_response_msg(
     temp_om_node = AXIOM_SOAP_BODY_GET_BASE_NODE(temp_soap_body, env);
     SANDESHA2_IMO_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t *) response, 
             env, temp_om_node);
-    temp_action = sandesha2_spec_specific_consts_get_create_seq_response_action(
+    temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(
             env, rm_version);
     AXIS2_MSG_CTX_SET_WSA_ACTION(out_msg, env, temp_action);
     temp_action = 
@@ -407,11 +407,11 @@ sandesha2_msg_creator_create_close_seq_response_msg(
     SANDESHA2_MSG_CTX_SET_SET_MSG_PART(close_seq_response, env, 
             SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, response);
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
-    temp_action = sandesha2_spec_specific_consts_get_close_seq_response_action(
+    temp_action = sandesha2_spec_specific_consts_get_close_seq_res_action(
             env, rm_version);
     AXIS2_MSG_CTX_SET_WSA_ACTION(out_msg, env, temp_action);
     temp_action = 
-        sandesha2_spec_specific_consts_get_close_seq_response_action(env, 
+        sandesha2_spec_specific_consts_get_close_seq_res_action(env, 
                 rm_version);
     AXIS2_MSG_CTX_SET_SOAP_ACTION(out_msg, env, temp_action);
 
