@@ -172,7 +172,10 @@ extern "C"
         SANDESHA2_ERROR_CONF_CTX_NULL,
         /* Cannot find the rmVersion of the given message */
         SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG,
-
+        /* Given message has rmNamespace value, which is different from the
+         * reqistered namespace for the sequence
+         */
+        SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present

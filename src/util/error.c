@@ -159,7 +159,9 @@ sandesha2_error_init()
         "Configuration Context is NULL";
     sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG]=
         "Cannot find the rmVersion of the given message";
-
+    sandesha2_error_messages[SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ]=
+        "Given message has rmNamespace value, which is different from the \
+                        reqistered namespace for the sequence";
     return AXIS2_SUCCESS;
 }
 

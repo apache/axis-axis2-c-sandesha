@@ -217,7 +217,7 @@ sandesha2_rm_elements_create(
     ((rm_elements)->ops->set_create_seq_res (rm_elements, env, element))
     
 #define SANDESHA2_RM_ELEMENTS_GET_SEQ(rm_elements, env) \
-    ((rm_elements)->ops->get_sequence (rm_elements, env))
+    ((rm_elements)->ops->get_seq (rm_elements, env))
     
 #define SANDESHA2_RM_ELEMENTS_SET_SEQ(rm_elements, env, element) \
     ((rm_elements)->ops->set_sequence (rm_elements, env, element))
@@ -241,7 +241,7 @@ sandesha2_rm_elements_create(
     ((rm_elements)->ops->set_terminate_seq_res (rm_elements, env, element))
     
 #define SANDESHA2_RM_ELEMENTS_GET_ACK_REQUESTED(rm_elements, env) \
-    ((rm_elements)->ops->get_ack_reqested (rm_elements, env))
+    ((rm_elements)->ops->get_ack_requested (rm_elements, env))
     
 #define SANDESHA2_RM_ELEMENTS_SET_ACK_REQUESTED(rm_elements, env, element) \
     ((rm_elements)->ops->set_ack_reqested (rm_elements, env, element)

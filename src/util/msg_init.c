@@ -22,12 +22,19 @@
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_msg_ctx.h>
-#include <sandesha2_create_seq.h>
-#include <sandesha2_create_seq_res.h>
 #include <sandesha2_acks_to.h>
 #include <sandesha2_address.h>
 #include <sandesha2_seq_offer.h>
 #include <sandesha2_accept.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_create_seq_res.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_close_seq.h>
+#include <sandesha2_close_seq_res.h>
+#include <sandesha2_rm_elements.h>
 #include "../client/sandesha2_client_constants.h"
 
 #include <axis2_conf_ctx.h>
@@ -41,195 +48,346 @@
 #include <axiom_soap_body.h>
 #include <axiom_node.h>
 
+/**
+ * Adds the message parts to the sandesha2_msg_ctx.
+ * 
+ * @param msg_ctx
+ * @param rm_msg_ctx
+ */
+static axis2_status_t
+populate_rm_msg_ctx(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        sandesha2_msg_ctx_t *rm_msg_ctx);
 
 /**
- * Called to create a rmMessageContext out of an message context. Finds out things like rm version and message type
- * as well.
+ * This is used to validate the message.
+ * Also set an Message type. Possible types are given in the sandesha2_constants
+ * 
+ * @param rm_msg_ctx
+ * @return
+ */
+static axis2_bool_t validate_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *rm_msg_ctx);
+
+/**
+ * Called to create a rm_msg_ctx out of an message context. Finds out things 
+ * like rm version and message type as well.
  * 
  * @param ctx
- * @param assumedRMNamespace
- * this is used for validation (to find out weather the rmNamespace of the current message
- * is equal to the regietered rmNamespace of the sequence). 
- * If null validation will not happen.
+ * @param assumed_rm_ns
+ * this is used for validation (to find out weather the rm_ns of the current 
+ * message is equal to the regietered rm_ns of the sequence). 
+ * If NULL validation will not happen.
  * 
  * @return
- * @throws SandeshaException
  */
-public static RMMsgContext initializeMessage(MessageContext ctx)
-        throws SandeshaException {
-    RMMsgContext rmMsgCtx = new RMMsgContext(ctx);
+sandesha2_msg_ctx_t *
+sandesha2_msg_init_init_msg(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *ctx)
+{
+    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
+
+    rm_msg_ctx = sandesha2_msg_ctx_create(env, ctx);
+    populate_rm_msg_ctx(env, ctx, rm_msg_ctx);
+    validate_msg(env, rm_msg_ctx);
+    return rm_msg_ctx;
+}
+
+static axis2_status_t
+populate_rm_msg_ctx(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    axis2_char_t *addressing_ns = NULL;
+    axis2_char_t *addressing_ns_value = NULL;
+    axis2_char_t *rm_ns = NULL;
+    axis2_char_t *action = NULL;
+    axis2_property_t *prop = NULL;
+    axiom_soap_envelope_t *envelope = NULL;
+    sandesha2_rm_elements_t *elements = NULL;
+    sandesha2_create_seq_t *create_seq = NULL;
+    sandesha2_create_seq_res_t *create_seq_res = NULL;
+    sandesha2_seq_t *seq = NULL;
+    sandesha2_seq_ack_t *seq_ack = NULL;
+    sandesha2_terminate_seq_t *terminate_seq = NULL;
+    sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
+    sandesha2_ack_requested_t *ack_request = NULL;
+    sandesha2_close_seq_t *close_seq = NULL;
+    sandesha2_close_seq_res_t *close_seq_res = NULL;
     
-    populateRMMsgContext(ctx, rmMsgCtx);
-    validateMessage(rmMsgCtx);
-    return rmMsgCtx;
+    /* If client side and the addressing version is not set. 
+     * Assuming the default addressing version.
+     */
+    prop = AXIS2_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
+    addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
+    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_IS_SERVER_SIDE(msg_ctx, env))
+    {
+        addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
+    }
+    elements = sandesha2_rm_elements_create(env, addressing_ns);
+    envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
+    action = AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    SANDESHA2_RM_ELEMENTS_FROM_SOAP_ENVELOPE(elements, env, envelope, action);
+    create_seq = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ(elements, env);
+    if(create_seq)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_CREATE_SEQ, (sandesha2_iom_rm_part_t *) 
+                create_seq);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) create_seq, env);
+    }
+    create_seq_res = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ_RES(elements, env);
+    if(create_seq_res)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE, 
+                (sandesha2_iom_rm_part_t *) create_seq_res);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) create_seq_res, env);
+    }
+    seq = SANDESHA2_RM_ELEMENTS_GET_SEQ(elements, env);
+    if(seq)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_SEQ, (sandesha2_iom_rm_part_t *) seq);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) seq, env);
+    }
+    seq_ack = SANDESHA2_RM_ELEMENTS_GET_SEQ_ACK(elements, env);
+    if(seq_ack)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
+                (sandesha2_iom_rm_part_t *) seq_ack);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) seq_ack, env);
+    }
+    terminate_seq = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ(elements, env);
+    if(terminate_seq)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ, 
+                (sandesha2_iom_rm_part_t *) terminate_seq);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) terminate_seq, env);
+    }
+    terminate_seq_res = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ_RES(elements, env);
+    if(terminate_seq_res)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE, 
+                (sandesha2_iom_rm_part_t *) terminate_seq_res);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) terminate_seq_res, env);
+    }
+    ack_request = SANDESHA2_RM_ELEMENTS_GET_ACK_REQUESTED(elements, env);
+    if(ack_request)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_ACK_REQUEST, 
+                (sandesha2_iom_rm_part_t *) ack_request);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) ack_request, env);
+    }
+    close_seq = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ(elements, env);
+    if(close_seq)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_CLOSE_SEQ, 
+                (sandesha2_iom_rm_part_t *) close_seq);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) close_seq, env);
+    }
+    close_seq_res = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ_RES(elements, env);
+    if(close_seq_res)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, 
+                (sandesha2_iom_rm_part_t *) close_seq_res);
+        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+                (sandesha2_iom_rm_element_t *) close_seq_res, env);
+    }
+    SANDESHA2_MSG_CTX_SET_RM_NS_VALUE(rm_msg_ctx, env, rm_ns);
+    addressing_ns_value = SANDESHA2_RM_ELEMENTS_GET_ADDR_NS_VAL(
+            elements, env);
+    if(addressing_ns_value)
+    {
+        SANDESHA2_RM_ELEMENTS_SET_ADDRESSING_NS_VALUE(elements, env, 
+                addressing_ns_value);
+    }
+    return AXIS2_SUCCESS;
 }
 
-	/**
-	 * Adds the message parts the the RMMessageContext.
-	 * 
-	 * @param msgCtx
-	 * @param rmMsgContext
-	 */
-	private static void populateRMMsgContext(MessageContext msgCtx,
-			RMMsgContext rmMsgContext) throws SandeshaException {
+static axis2_bool_t validate_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_conf_t *conf = NULL;
+    axis2_msg_ctx_t *temp_msg_ctx = NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t *rm_ns = NULL;
+    axis2_char_t *prop_key = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_t *create_seq = NULL;
+    sandesha2_create_seq_res_t *create_seq_res = NULL;
+    sandesha2_terminate_seq_t *terminate_seq = NULL;
+    sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
+    sandesha2_seq_ack_t *seq_ack = NULL;
+    sandesha2_seq_t *seq = NULL;
+    sandesha2_ack_requested_t *ack_request = NULL;
+    sandesha2_close_seq_t *close_seq = NULL;
+    sandesha2_close_seq_res_t *close_seq_res = NULL;
+    int temp_flow = -1;
 
-		//if client side and the addressing version is not set. assuming the default addressing version
-		String addressingNamespace = (String) msgCtx.getProperty(AddressingConstants.WS_ADDRESSING_VERSION);
-		if (addressingNamespace==null && !msgCtx.isServerSide())
-			addressingNamespace = AddressingConstants.Final.WSA_NAMESPACE;
-		
-		RMElements elements = new RMElements(addressingNamespace);
-		elements.fromSOAPEnvelope(msgCtx.getEnvelope(), msgCtx.getWSAAction());
+    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
+    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(temp_msg_ctx, env);
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    create_seq = (sandesha2_create_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+            rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+    create_seq_res = (sandesha2_create_seq_res_t *) 
+        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
+    terminate_seq = (sandesha2_terminate_seq_t *) 
+        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ);
+    terminate_seq_res = (sandesha2_terminate_seq_res_t *) 
+        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
+    seq_ack = (sandesha2_seq_ack_t *) 
+        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+            rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
+    ack_request = (sandesha2_ack_requested_t *) 
+        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_ACK_REQUEST);
+    close_seq = (sandesha2_close_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+            rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
+    close_seq_res = (sandesha2_close_seq_res_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+            rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
+    /* Setting message type */
+    if(create_seq)
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_CREATE_SEQ);
+    }
+    else if(create_seq_res)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE);
+        idf = SANDESHA2_CREATE_SEQ_RES_GET_IDENTIFIER(create_seq_res, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(terminate_seq)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_TERMINATE_SEQ);
+        idf = SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(terminate_seq, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(terminate_seq_res)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE);
+        idf = SANDESHA2_TERMINATE_SEQ_RES_GET_IDENTIFIER(terminate_seq_res, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(seq)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_APPLICATION);
+        idf = SANDESHA2_SEQ_GET_IDENTIFIER(seq, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(seq_ack)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_ACK);
+        idf = SANDESHA2_SEQ_ACK_GET_IDENTIFIER(seq_ack, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(ack_request)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_ACK_REQUEST);
+        idf = SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_request, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(close_seq)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_CLOSE_SEQ);
+        idf = SANDESHA2_CLOSE_SEQ_GET_IDENTIFIER(close_seq, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else if(close_seq_res)
+    {
+        sandesha2_identifier_t *idf = NULL;
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+                SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE);
+        idf = SANDESHA2_CLOSE_SEQ_RES_GET_IDENTIFIER(close_seq_res, env);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(idf, env);
+    }
+    else
+    {
+        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, SANDESHA2_MSG_TYPE_UNKNOWN);
+    }
+    temp_flow = AXIS2_MSG_CTX_GET_FLOW(temp_msg_ctx, env);
+    if(temp_flow == AXIS2_IN_FLOW)
+    {
+        prop_key = AXIS2_STRDUP(seq_id, env);
+    }
+    else
+    {
+        sandesha2_seq_property_bean_t *internal_seq_id_bean = NULL;
 
-		String rmNamespace = null;
-		
-		if (elements.getCreateSequence() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.CREATE_SEQ,
-					elements.getCreateSequence());
-			rmNamespace = elements.getCreateSequence().getNamespaceValue();
-		}
-
-		if (elements.getCreateSequenceResponse() != null) {
-			rmMsgContext.setMessagePart(
-					Sandesha2Constants.MessageParts.CREATE_SEQ_RESPONSE, elements
-							.getCreateSequenceResponse());
-			rmNamespace = elements.getCreateSequenceResponse().getNamespaceValue();
-		}
-
-		if (elements.getSequence() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.SEQUENCE,
-					elements.getSequence());
-			rmNamespace = elements.getSequence().getNamespaceValue();	
-		}
-
-		if (elements.getSequenceAcknowledgement() != null) {
-			rmMsgContext.setMessagePart(
-					Sandesha2Constants.MessageParts.SEQ_ACKNOWLEDGEMENT, elements
-							.getSequenceAcknowledgement());
-			rmNamespace = elements.getSequenceAcknowledgement().getNamespaceValue();
-		}
-
-		if (elements.getTerminateSequence() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.TERMINATE_SEQ,
-					elements.getTerminateSequence());
-			rmNamespace = elements.getTerminateSequence().getNamespaceValue();
-		}
-		
-		if (elements.getTerminateSequenceResponse() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.TERMINATE_SEQ_RESPONSE,
-					elements.getTerminateSequenceResponse());
-			rmNamespace = elements.getTerminateSequenceResponse().getNamespaceValue();
-		}
-
-		if (elements.getAckRequested() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.ACK_REQUEST,
-					elements.getAckRequested());
-			rmNamespace = elements.getAckRequested().getNamespaceValue();
-		}
-		
-		if (elements.getCloseSequence() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.CLOSE_SEQUENCE,
-					elements.getCloseSequence());
-			rmNamespace = elements.getCloseSequence().getNamespaceValue();
-		}
-		
-		if (elements.getCloseSequenceResponse() != null) {
-			rmMsgContext.setMessagePart(Sandesha2Constants.MessageParts.CLOSE_SEQUENCE_RESPONSE,
-					elements.getCloseSequenceResponse());
-			rmNamespace = elements.getCloseSequenceResponse().getNamespaceValue();
-		}
-		
-		rmMsgContext.setRMNamespaceValue(rmNamespace);
-		
-		String addressingNamespaceValue = elements.getAddressingNamespaceValue();
-		if (addressingNamespaceValue!=null)
-			rmMsgContext.setAddressingNamespaceValue(addressingNamespaceValue);
-	}
-
-	/**
-	 * This is used to validate the message.
-	 * Also set an Message type. Possible types are given in the Sandesha2Constants.MessageTypes interface.
-	 * 
-	 * @param rmMsgCtx
-	 * @return
-	 * @throws SandeshaException
-	 */
-	private static boolean validateMessage(RMMsgContext rmMsgCtx)
-			throws SandeshaException {
-
-		ConfigurationContext configContext = rmMsgCtx.getMessageContext().getConfigurationContext();
-		AxisConfiguration axisConfiguration = configContext.getAxisConfiguration();
-		StorageManager storageManager = SandeshaUtil.getSandeshaStorageManager(configContext,axisConfiguration);
-		SequencePropertyBeanMgr sequencePropertyBeanMgr = storageManager.getSequencePropertyBeanMgr();
-		
-		String sequenceID = null;
-		
-		CreateSequence createSequence = (CreateSequence) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.CREATE_SEQ);
-		CreateSequenceResponse createSequenceResponse = (CreateSequenceResponse) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.CREATE_SEQ_RESPONSE);
-		TerminateSequence terminateSequence = (TerminateSequence) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.TERMINATE_SEQ);
-		TerminateSequenceResponse terminateSequenceResponse = (TerminateSequenceResponse) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.TERMINATE_SEQ_RESPONSE);
-		SequenceAcknowledgement sequenceAcknowledgement = (SequenceAcknowledgement) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.SEQ_ACKNOWLEDGEMENT);
-		Sequence sequence = (Sequence) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.SEQUENCE);
-		AckRequested ackRequest = (AckRequested) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.ACK_REQUEST);
-		CloseSequence closeSequence = (CloseSequence) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.CLOSE_SEQUENCE);
-		CloseSequenceResponse closeSequenceResponse = (CloseSequenceResponse) rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.CLOSE_SEQUENCE_RESPONSE);
-		
-		//Setting message type.
-		if (createSequence != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.CREATE_SEQ);
-		}else if (createSequenceResponse != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.CREATE_SEQ_RESPONSE);
-			sequenceID = createSequenceResponse.getIdentifier().getIdentifier();
-		}else if (terminateSequence != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.TERMINATE_SEQ);
-			sequenceID = terminateSequence.getIdentifier().getIdentifier();
-		}else if (terminateSequenceResponse != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.TERMINATE_SEQ_RESPONSE);
-			sequenceID = terminateSequenceResponse.getIdentifier().getIdentifier();
-		}else if (rmMsgCtx.getMessagePart(Sandesha2Constants.MessageParts.SEQUENCE) != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.APPLICATION);
-			sequenceID = sequence.getIdentifier().getIdentifier();
-		} else if (sequenceAcknowledgement != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.ACK);
-			sequenceID = sequenceAcknowledgement.getIdentifier().getIdentifier();
-		} else if (ackRequest != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.ACK_REQUEST);
-			sequenceID = ackRequest.getIdentifier().getIdentifier(); 
-		} else if (closeSequence != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.CLOSE_SEQUENCE);
-			sequenceID = closeSequence.getIdentifier().getIdentifier(); 
-		} else if (closeSequenceResponse != null) {
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.CLOSE_SEQUENCE_RESPONSE);
-			sequenceID = closeSequenceResponse.getIdentifier().getIdentifier(); 
-		} else
-			rmMsgCtx.setMessageType(Sandesha2Constants.MessageTypes.UNKNOWN);
-
-		String propertyKey = null;
-		if (rmMsgCtx.getMessageContext().getFLOW()==MessageContext.IN_FLOW) {
-			propertyKey = sequenceID;
-		} else {
-			SequencePropertyBean internalSequenceIDBean = sequencePropertyBeanMgr.retrieve(sequenceID,Sandesha2Constants.SequenceProperties.INTERNAL_SEQUENCE_ID);
-			if (internalSequenceIDBean!=null) {
-				propertyKey = internalSequenceIDBean.getValue();
-			}
-		}
-		
-        String rmNamespace = rmMsgCtx.getRMNamespaceValue();
-        if (sequenceID!=null) {
-        	String specVersion = SandeshaUtil.getRMVersion(propertyKey,storageManager);
-    		
-        	String sequenceRMNamespace = null;
-        	if (specVersion!=null)
-    			sequenceRMNamespace = SpecSpecificConstants.getRMNamespaceValue(specVersion);
-    		if (sequenceRMNamespace!=null && rmNamespace!=null) {
-    			if (!sequenceRMNamespace.equals(rmNamespace)) {
-    				throw new SandeshaException ("Given message has rmNamespace value, which is different from the " +
-    						"reqistered namespace for the sequence");
-    			}
-    		}
+        internal_seq_id_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
+                env, seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+        if(internal_seq_id_bean)
+        {
+            prop_key = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                    internal_seq_id_bean, env);
         }
-		
-		return true;
-	}
-
+    }
+    rm_ns = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx, env);
+    if(seq_id)
+    {
+        axis2_char_t *spec_version = NULL;
+        axis2_char_t *seq_rm_ns = NULL;
+        
+        spec_version = sandesha2_utils_get_rm_version(env, prop_key, storage_mgr);
+        if(spec_version)
+        {
+            seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
+                    spec_version);
+        }
+        if(seq_rm_ns && rm_ns)
+        {
+            if(0 != AXIS2_STRCMP(seq_rm_ns, rm_ns))
+            {
+                AXIS2_ERROR_SET(env->error, 
+                    SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ, 
+                    AXIS2_FAILURE);
+                return AXIS2_FALSE;
+            }
+        }
+    }
+    return AXIS2_TRUE; 
 }
+    
