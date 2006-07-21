@@ -27,6 +27,7 @@
 #include <axis2_property.h>
 #include <axis2_array_list.h>
 #include <axis2_engine.h>
+#include <sandesha2_msg_creator.h>
 
 axis2_hash_t *sandesha2_terminate_mgr_rcv_side_clean_map = NULL;
 

@@ -459,7 +459,8 @@ sandesha2_utils_get_internal_seq_id(
     }
     else
     {
-        ret = axis2_strcat(SANDESHA2_INTERNAL_SEQ_PREFIX, ":", to, ":", seq_key, NULL);
+        ret = axis2_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", to, ":", 
+                        seq_key, NULL);
         return ret;
     }
     return NULL;
@@ -670,7 +671,7 @@ sandesha2_utils_trim_string(const axis2_env_t *env,
     while(' ' == *tmp)
         tmp++;
         
-    tmp2 = orig_string[AXIS2_STRLEN(orig_string)];
+    tmp2 = orig_string + AXIS2_STRLEN(orig_string);
     while(' ' == *tmp2 && tmp2 != orig_string)
         tmp2--;
         

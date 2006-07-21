@@ -25,6 +25,8 @@
 #include <sandesha2/sandesha2_identifier.h>
 #include <sandesha2/sandesha2_msg_number.h>
 #include <sandesha2/sandesha2_utils.h>
+#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_msg_init.h>
 #include <stdio.h>
 
 
@@ -177,7 +179,7 @@ sandesha2_fault_mgr_check_for_create_seq_refused
     AXIS2_PARAM_CHECK(env->error, create_seq_msg, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_man, NULL);
     
-    rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, create_seq_msg);
+    rm_msg_ctx = sandesha2_msg_init_init_msg(env, create_seq_msg);
     create_seq = (sandesha2_create_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     
@@ -597,7 +599,7 @@ sandesha2_fault_mgr_get_fault
             acks_to_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, 
                         env);
     }
-    anon_uri = sandesha2_spec_specific_consts_get_addr_anon_uri(env, addr_ns_uri);
+    anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     if(NULL!= acks_to_str && 0 != AXIS2_STRCMP(acks_to_str, anon_uri))
         AXIS2_MSG_CTX_SET_TO(fault_msg_ctx, env, axis2_endpoint_ref_create(env,
                         acks_to_str));
@@ -606,6 +608,6 @@ sandesha2_fault_mgr_get_fault
     sandesha2_soap_env_creator_add_soap_env(env, fault_msg_ctx, soap_ver, 
                         fault_data, SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx,
                         env));
-    fault_rm_msg = sandesha2_msg_initilizer_init_msg(env, fault_msg_ctx);
+    fault_rm_msg = sandesha2_msg_init_init_msg(env, fault_msg_ctx);
     return fault_rm_msg;
 }

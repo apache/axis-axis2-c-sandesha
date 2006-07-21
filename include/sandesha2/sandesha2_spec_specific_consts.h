@@ -114,7 +114,7 @@ sandesha2_spec_specific_consts_get_anon_uri(
         const axis2_env_t *env,
         axis2_char_t *addr_ns_val);
 
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL        
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_spec_specific_consts_is_term_seq_res_reqd(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
