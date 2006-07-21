@@ -16,6 +16,9 @@
 #include <axis2_module.h>
 #include <sandesha2_module.h>
 #include <sandesha2/sandesha2_property_bean.h>
+#include <sandesha2/sandesha2_property_mgr.h>
+#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2/sandesha2_constants.h>
 
 /******************************************************************************/
 axis2_status_t AXIS2_CALL
@@ -60,13 +63,40 @@ mod_sandesha2_init(
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc)
 {
+    sandesha2_property_bean_t *const_property_bean = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
+    axis2_param_t *param = NULL;
+    axis2_conf_t *conf = NULL;
+    axis2_ctx_t *ctx = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, module_desc, AXIS2_FAILURE);
     
+    const_property_bean = sandesha2_property_mgr_load_properties_from_def_values
+                        (env);
+    property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
+                        module_desc);
+    if(NULL == property_bean)
+        property_bean = const_property_bean;
+        
+    param = axis2_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
+                        property_bean);
     
+    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    AXIS2_CONF_ADD_PARAM(conf, env, param);
     
+    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 
+                        AXIS2_FALSE);
+    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL, 
+                        AXIS2_FALSE);
+    
+    storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
+    SANDESHA2_STORAGE_MGR_INIT_STORAGE(storage_mgr, env, module_desc);
+    
+    /* we need to add permenent storage mgr as well */
     return AXIS2_SUCCESS;
 }
 
@@ -74,6 +104,9 @@ axis2_status_t AXIS2_CALL
 mod_sandesha2_shutdown(axis2_module_t *module,
                         const axis2_env_t *env)
 {
+
+    sandesha2_utils_stop_sender(env);
+    sandesha2_utils_stop_invoker(env);
     if(module->ops)
     {
         AXIS2_FREE(env->allocator, module->ops);
