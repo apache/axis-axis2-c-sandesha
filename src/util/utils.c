@@ -654,3 +654,30 @@ sandesha2_utils_get_soap_version(const axis2_env_t *env,
     return AXIOM_SOAP_ENVELOPE_GET_SOAP_VERSION(envelope, env);
 }
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_trim_string(const axis2_env_t *env, 
+                        axis2_char_t *orig_string)
+{
+    axis2_char_t *tmp = NULL;
+    axis2_char_t *tmp2 = NULL;
+    axis2_char_t *ret = NULL;
+    int len = 0;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, orig_string, NULL);
+    
+    tmp = orig_string;
+    while(' ' == *tmp)
+        tmp++;
+        
+    tmp2 = orig_string[AXIS2_STRLEN(orig_string)];
+    while(' ' == *tmp2 && tmp2 != orig_string)
+        tmp2--;
+        
+    len = tmp2 - tmp;
+    if(len > 0)
+        ret = AXIS2_MALLOC(env->allocator, len);
+        
+    memcpy(ret, tmp, len);
+    return ret;
+}

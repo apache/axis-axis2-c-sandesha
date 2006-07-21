@@ -144,6 +144,10 @@ AXIS2_EXTERN  int AXIS2_CALL
 sandesha2_utils_get_soap_version(const axis2_env_t *env, 
                         axiom_soap_envelope_t *envelope);
                         
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+sandesha2_utils_trim_string(const axis2_env_t *env, 
+                        axis2_char_t *orig_string);
+                        
 
 /** @} */
 #ifdef __cplusplus
