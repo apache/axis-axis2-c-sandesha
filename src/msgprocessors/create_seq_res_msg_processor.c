@@ -47,6 +47,7 @@
 #include <sandesha2/sandesha2_ack_requested.h>
 #include <axis2_relates_to.h>
 #include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_msg_init.h>
 
 
 /** 
@@ -374,7 +375,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         }
         assumed_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env,
                         rm_ver);
-        app_rm_msg = sandesha2_msg_initilizer_init_msg(env, app_msg_ctx);
+        app_rm_msg = sandesha2_msg_init_init_msg(env, app_msg_ctx);
         seq_part = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         app_rm_msg, env, SANDESHA2_MSG_PART_SEQ);
         if(NULL == seq_part)

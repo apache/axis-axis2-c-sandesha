@@ -38,6 +38,8 @@
 #include <axis2_op_ctx.h>
 #include <sandesha2/sandesha2_spec_specific_consts.h>
 #include <axis2_core_utils.h>
+#include <sandesha2_ack_mgr.h>
+#include <sandesha2_msg_creator.h>
 
 /** 
  * @brief Close Sequence Message Processor struct impl
@@ -201,7 +203,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     close_seq_res_msg = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
     
     close_seq_res_rm_msg = sandesha2_msg_creator_create_close_seq_res_msg(env, 
-                        close_seq_res_msg);
+                        rm_msg_ctx, close_seq_res_msg, storage_mgr);
     
     SANDESHA2_MSG_CTX_SET_MSG_PART(close_seq_res_rm_msg, env, 
                         SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT,

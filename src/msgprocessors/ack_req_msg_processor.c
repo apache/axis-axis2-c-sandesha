@@ -40,6 +40,7 @@
 #include <sandesha2/sandesha2_spec_specific_consts.h>
 #include <sandesha2/sandesha2_ack_requested.h>
 #include <axis2_addr.h>
+#include <sandesha2_msg_init.h>
 
 /** 
  * @brief Ack Requested Message Processor struct impl
@@ -210,7 +211,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property, 
                         AXIS2_FALSE);
-    ack_rm_msg = sandesha2_msg_initilizer_init_msg(env, ack_msg_ctx);
+    ack_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
     SANDESHA2_MSG_CTX_SET_RM_NS_VAL(ack_rm_msg, env, 
                         SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx, env));
     AXIS2_MSG_CTX_SET_MSG_ID(ack_msg_ctx, env, axis2_uuid_gen(env));

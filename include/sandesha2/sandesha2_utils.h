@@ -147,8 +147,18 @@ sandesha2_utils_get_soap_version(const axis2_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_trim_string(const axis2_env_t *env, 
                         axis2_char_t *orig_string);
-                        
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL                        
+sandesha2_utils_is_retriable_on_faults(const axis2_env_t *env,
+                        axis2_msg_ctx_t *msg_ctx);
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_rm_global_msg(const axis2_env_t *env,
+                        axis2_msg_ctx_t *msg_ctx);
+                        
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env, 
+                        sandesha2_msg_ctx_t *rm_msg_ctx);
 /** @} */
 #ifdef __cplusplus
 }

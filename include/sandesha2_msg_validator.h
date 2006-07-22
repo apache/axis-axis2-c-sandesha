@@ -14,55 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_SEQ_MGR_H
-#define SANDESHA2_SEQ_MGR_H
+#ifndef SANDESHA2_MSG_VALIDATOR_H
+#define SANDESHA2_MSG_VALIDATOR_H
 
 /**
- * @file sandesha2_seq_mgr.h
- * @brief Sandesha In Memory Sequence Manager Interface
+ * @file sandesha2_msg_validator.h
+ * @brief Sandesha Message Validator
  */
 
 #include <axis2_allocator.h>
 #include <axis2_env.h>
-#include <axis2_utils_defines.h>
 #include <axis2_error.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
 #include <sandesha2_storage_mgr.h>
-#include <sandesha2_msg_ctx.h>
+#include <sandesha2/sandesha2_msg_ctx.h>
+#include <axis2_msg_ctx.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_seq_mgr sandesha2_seq_mgr_t;
-typedef struct sandesha2_seq_mgr_ops sandesha2_seq_mgr_ops_t;
-
-/** @defgroup sandesha2_seq_mgr In Memory Sequence Manager
+/** @defgroup sandesha2_msg_validator 
   * @ingroup sandesha2
   * @{
   */
 
-AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-sandesha2_seq_mgr_set_up_new_seq(
+axis2_status_t AXIS2_CALL
+sandesha2_msg_validator_validate_msg(
         const axis2_env_t *env,
-        sandesha2_msg_ctx_t *create_seq_msg, 
+        sandesha2_msg_ctx_t *rm_msg_ctx, 
         sandesha2_storage_mgr_t *storage_mgr);
-       
-/**
- * Takes the internal_seq_id as the param. Not the seq_id
- * @param internal_seq_id
- * @param config_ctx
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_seq_mgr_update_last_activated_time(
-        const axis2_env_t *env,
-        axis2_char_t *property_key,
-        sandesha2_storage_mgr_t *storage_mgr);
+
 
 /** @} */
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_SEQ_MGR_H */
+#endif /* SANDESHA2_MSG_VALIDATOR_H */

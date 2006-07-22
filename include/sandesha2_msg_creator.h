@@ -67,7 +67,7 @@ sandesha2_msg_creator_create_create_seq_msg(
  * @return
  */
 sandesha2_msg_ctx_t *
-sandesha2_msg_creator_create_create_seq_response_msg(
+sandesha2_msg_creator_create_create_seq_res_msg(
         const axis2_env_t *env,
         sandesha2_msg_ctx_t *create_seq_msg,
         axis2_msg_ctx_t *out_msg,
@@ -82,13 +82,28 @@ sandesha2_msg_creator_create_create_seq_response_msg(
  * @return
  */
 sandesha2_msg_ctx_t *
-sandesha2_msg_creator_create_close_seq_response_msg(
+sandesha2_msg_creator_create_close_seq_res_msg(
         const axis2_env_t *env,
         sandesha2_msg_ctx_t *close_seq_msg,
         axis2_msg_ctx_t *out_msg,
         sandesha2_storage_mgr_t *storage_mgr);
 
 
+sandesha2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_creator_create_terminate_seq_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *ref_rm_msg,
+        axis2_char_t *seq_id,
+        axis2_char_t *internal_seq_id,
+        sandesha2_storage_mgr_t *storage_mgr);
+
+
+sandesha2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_creator_create_terminate_seq_res_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *ref_rm_msg,
+        axis2_msg_ctx_t *out_msg,
+        sandesha2_storage_mgr_t *storage_mgr);
 /** @} */
 #ifdef __cplusplus
 }

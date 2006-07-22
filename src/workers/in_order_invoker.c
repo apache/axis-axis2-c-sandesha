@@ -22,6 +22,7 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2/sandesha2_msg_ctx.h>
 #include <sandesha2/sandesha2_seq.h>
+#include <sandesha2_msg_init.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdio.h>
@@ -424,7 +425,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                         env);
                 msg_to_invoke = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
-                rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, 
+                rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
                 /* have to commit the transaction before invoking. This may get 
                  * changed when WS-AT is available.

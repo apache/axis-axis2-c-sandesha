@@ -43,6 +43,8 @@
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
 #include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_msg_creator.h>
+#include <sandesha2_seq_mgr.h>
 
 /** 
  * @brief Create Sequence Message Processor struct impl
@@ -198,9 +200,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_BEAN_MGR(storage_mgr, 
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, 
                         env);
-    new_seq_id = sadesha2_seq_manager_setup_new_seq(env, rm_msg_ctx, 
+    new_seq_id = sandesha2_seq_mgr_set_up_new_seq(env, rm_msg_ctx, 
                         storage_mgr);
     create_seq_res_msg = sandesha2_msg_creator_create_create_seq_res_msg(env,
                         rm_msg_ctx, out_msg_ctx, new_seq_id, storage_mgr);

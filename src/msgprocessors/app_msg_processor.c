@@ -15,6 +15,7 @@
  */
  
 #include <sandesha2/sandesha2_app_msg_processor.h>
+#include <sandesha2/sandesha2_ack_msg_processor.h>
 #include <sandesha2/sandesha2_seq_ack.h>
 #include <sandesha2/sandesha2_seq.h>
 #include <sandesha2/sandesha2_ack_requested.h>
@@ -38,6 +39,10 @@
 #include <axiom_soap_const.h>
 #include "../client/sandesha2_client_constants.h"
 #include <stdio.h>
+#include <sandesha2_msg_init.h>
+#include <sandesha2_ack_mgr.h>
+#include <sandesha2_msg_creator.h>
+
 /** 
  * @brief Application Message Processor struct impl
  *	Sandesha2 App Msg Processor
@@ -214,7 +219,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(NULL != seq_ack)
     {
         sandesha2_msg_processor_t *ack_proc = NULL;
-        ack_proc = sandesha2_ack_processor_create(env);
+        ack_proc = sandesha2_ack_msg_processor_create(env);
         SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(ack_proc, env, msg_ctx);
     }
     
@@ -551,7 +556,7 @@ sandesha2_app_msg_processor_process_out_msg(
         
         req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(AXIS2_MSG_CTX_GET_OP_CTX(
                         msg_ctx1, env), env, AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
-        req_rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, req_msg_ctx);
+        req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
         req_seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         req_rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
         if(NULL == req_seq)
@@ -705,7 +710,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        req_rm_msg_ctx = sandesha2_msg_initilizer_init_msg(env, req_msg_ctx);
+        req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
         seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(req_rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
         req_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
@@ -1193,7 +1198,7 @@ sandesha2_app_msg_processor_process_response_msg(
     
     if(AXIS2_TRUE == AXIS2_MSG_CTX_IS_SERVER_SIDE(msg, env))
     {
-        req_rm_msg = sandesha2_msg_initilizer_init_msg(env, req_msg);
+        req_rm_msg = sandesha2_msg_init_init_msg(env, req_msg);
         req_seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(req_rm_msg, 
                         env, SANDESHA2_MSG_PART_SEQ);
         if(NULL == seq)

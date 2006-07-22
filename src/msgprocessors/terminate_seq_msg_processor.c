@@ -42,6 +42,9 @@
 #include <sandesha2/sandesha2_ack_msg_processor.h>
 #include <sandesha2/sandesha2_seq.h>
 #include "../client/sandesha2_client_constants.h"
+#include <sandesha2_msg_init.h>
+#include <sandesha2_msg_creator.h>
+#include <sandesha2_ack_mgr.h>
 
 /** 
  * @brief Terminate Sequence Message Processor struct impl
@@ -305,7 +308,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         {
             sandesha2_msg_ctx_t *highest_out_rm_msg = NULL;
             sandesha2_seq_t *seq_of_out_msg = NULL;
-            highest_out_rm_msg = sandesha2_msg_initilizer_init_msg(env, 
+            highest_out_rm_msg = sandesha2_msg_init_init_msg(env, 
                         highest_out_msg);
             seq_of_out_msg = (sandesha2_seq_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(highest_out_rm_msg, env,

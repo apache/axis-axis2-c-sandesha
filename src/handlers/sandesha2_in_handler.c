@@ -29,12 +29,12 @@
 #include <sandesha2_utils.h>
 
 axis2_qname_t *AXIS2_CALL
-axis2_sandesha2_in_handler_get_qname(
+sandesha2_in_handler_get_qname(
         struct axis2_handler *handler, 
         const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-axis2_sandesha2_in_handler_invoke(
+sandesha2_in_handler_invoke(
         struct axis2_handler *handler, 
         const axis2_env_t *env,
         struct axis2_msg_ctx *msg_ctx);
@@ -42,7 +42,7 @@ axis2_sandesha2_in_handler_invoke(
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
-axis2_sandesha2_in_handler_create(
+sandesha2_in_handler_create(
         const axis2_env_t *env, 
         axis2_qname_t *qname) 
 {
@@ -60,14 +60,14 @@ axis2_sandesha2_in_handler_create(
     
     /* set the base struct's invoke op */
     if (handler->ops) 
-        handler->ops->invoke = axis2_sandesha2_in_handler_invoke;
+        handler->ops->invoke = sandesha2_in_handler_invoke;
 
     return handler;
 }
 
 
 axis2_status_t AXIS2_CALL
-axis2_sandesha2_in_handler_invoke(
+sandesha2_in_handler_invoke(
         struct axis2_handler *handler, 
         const axis2_env_t *env,
         struct axis2_msg_ctx *msg_ctx)
@@ -233,7 +233,7 @@ axis2_sandesha2_in_handler_invoke(
 }
 
 axis2_qname_t *AXIS2_CALL
-axis2_sandesha2_in_handler_get_qname(
+sandesha2_in_handler_get_qname(
         struct axis2_handler *handler, 
         const axis2_env_t *env)
 {

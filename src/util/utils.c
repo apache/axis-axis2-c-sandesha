@@ -34,6 +34,12 @@
 #include <axis2_qname.h>
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
+#include <axiom_soap_header.h>
+#include <sandesha2/sandesha2_seq.h>
+#include <sandesha2/sandesha2_seq_ack.h>
+#include <sandesha2/sandesha2_ack_requested.h>
+#include <sandesha2/sandesha2_close_seq.h>
+#include <sandesha2/sandesha2_close_seq_res.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
@@ -681,4 +687,160 @@ sandesha2_utils_trim_string(const axis2_env_t *env,
         
     memcpy(ret, tmp, len);
     return ret;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL                        
+sandesha2_utils_is_retriable_on_faults(const axis2_env_t *env,
+                        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_bool_t ret = AXIS2_FALSE;
+    axis2_char_t *action = NULL;
+    
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
+    
+    action =  AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    if(NULL == action)
+        return AXIS2_FALSE;
+        
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
+        ret = AXIS2_TRUE;
+    else if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ))
+        ret = AXIS2_TRUE;
+        
+    return ret;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_rm_global_msg(const axis2_env_t *env,
+                        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_bool_t is_global_msg = AXIS2_FALSE;
+    axis2_char_t *action = NULL;
+    axiom_soap_envelope_t *soap_env = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axiom_element_t *header_element = NULL;
+    axiom_node_t *header_node = NULL;
+    axiom_element_t *seq_element = NULL;
+    axiom_node_t *seq_node = NULL;
+    axis2_qname_t *qname = NULL;
+    
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
+    
+    action =  AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    soap_env = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
+    
+    if(NULL == soap_env)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] SOAP envelope is"
+                        " null");
+        return AXIS2_FALSE;
+    }
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_env, env);
+    
+    if(NULL != soap_header)
+    {
+        header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
+        header_element = AXIOM_NODE_GET_DATA_ELEMENT(header_node, env);
+    
+        qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
+                        SANDESHA2_SPEC_2005_02_NS_URI, NULL);
+        seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, 
+                        env, qname, header_node, &seq_node);
+        if(NULL == seq_element)
+        {
+            qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
+                        SANDESHA2_SPEC_2005_10_NS_URI, NULL);
+            seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+                        header_element, env, qname, header_node, &seq_node);
+        }
+    }
+    if(NULL != seq_element)
+        is_global_msg = AXIS2_TRUE;
+        
+    if(0 == AXIS2_STRCMP(action, 
+                        SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT))
+        is_global_msg = AXIS2_TRUE;
+        
+    if(0 == AXIS2_STRCMP(action, 
+                        SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ_RESPONSE))
+        is_global_msg = AXIS2_TRUE;
+        
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
+        is_global_msg = AXIS2_TRUE;    
+        
+    if(0 == AXIS2_STRCMP(action, 
+                        SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT))
+        is_global_msg = AXIS2_TRUE;
+        
+    if(0 == AXIS2_STRCMP(action, 
+                        SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ_RESPONSE))
+        is_global_msg = AXIS2_TRUE;
+        
+    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ))
+        is_global_msg = AXIS2_TRUE;    
+    
+    return is_global_msg;
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env, 
+                        sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    int msg_type = -1;
+    axis2_char_t *seq_id = NULL;
+    
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, NULL);
+    
+    msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
+    
+    if(SANDESHA2_MSG_TYPE_APPLICATION == msg_type)
+    {
+        sandesha2_seq_t *seq = NULL;
+        seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env,
+                        SANDESHA2_MSG_PART_SEQ);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+                        SANDESHA2_SEQ_GET_IDENTIFIER(seq, env), env);
+    }
+    else if(SANDESHA2_MSG_TYPE_ACK == msg_type)
+    {
+        sandesha2_seq_ack_t *seq_ack = NULL;
+        seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
+                        rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+                        SANDESHA2_SEQ_ACK_GET_IDENTIFIER(seq_ack, env), env);
+    }
+    else if(SANDESHA2_MSG_TYPE_ACK_REQUEST == msg_type)
+    {
+        sandesha2_ack_requested_t *ack_requested = NULL;
+        ack_requested = (sandesha2_ack_requested_t*)
+                        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                        SANDESHA2_MSG_PART_ACK_REQUEST);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+                        SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_requested, 
+                        env), env);
+    }
+    else if(SANDESHA2_MSG_TYPE_CLOSE_SEQ == msg_type)
+    {
+        sandesha2_close_seq_t *close_seq = NULL;
+        close_seq = (sandesha2_close_seq_t*)
+                        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                        SANDESHA2_MSG_PART_CLOSE_SEQ);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+                        SANDESHA2_CLOSE_SEQ_GET_IDENTIFIER(close_seq, 
+                        env), env);
+    }
+    else if(SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE == msg_type)
+    {
+        sandesha2_close_seq_res_t *close_seq_res = NULL;
+        close_seq_res = (sandesha2_close_seq_res_t*)
+                        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+                        SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
+        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+                        SANDESHA2_CLOSE_SEQ_RES_GET_IDENTIFIER(close_seq_res, 
+                        env), env);
+    }
+    return seq_id;
 }

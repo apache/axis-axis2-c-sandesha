@@ -11,6 +11,7 @@ libsandesha_util_la_SOURCES = \
                             terminate_mgr.c \
 							msg_init.c \
 							msg_creator.c\
+                            msg_retrans_adjuster.c\
                             property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
