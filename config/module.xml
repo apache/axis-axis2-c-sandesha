@@ -1,0 +1,50 @@
+<module name="sandesha2" class="sandesha2">
+
+    <Description>
+        This module implements WS-ReliableMessaging for Axis2C. This implements both the WSRM submitted spec and the new spec being developed under the OASIS WSRX group.
+    </Description>
+    
+    <inflow>
+        <handler name="SandeshaGlobalInHandler" class="sandesha2">
+            <!-- Global In handler should come before instance dispatching -->
+            <order phase="Dispatch" before="InstanceDispatcher" />
+        </handler> 
+        <handler name="SandeshaInHandler" class="mod_sandesha2">
+            <order phase="RMPhase"/>
+        </handler>
+    </inflow>
+
+    <outflow>        
+        <handler name="SandeshaOutHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>   
+    </outflow>
+    
+    <INfaultflow>        
+        <handler name="SandeshaGlobalInHandler" class="sandesha2">
+            <!-- Global In handler should come before instance dispatching -->
+            <order phase="Dispatch" before="InstanceDispatcher" />
+        </handler> 
+        <handler name="SandeshaInHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>
+    </INfaultflow>
+    
+    <OUTfaultflow>        
+        <handler name="SandeshaOutHandler" class="sandesha2">
+            <order phase="RMPhase"/>
+        </handler>   
+    </OUTfaultflow>
+
+
+   <!-- Database connection parameters -->
+   <parameter name="sandesha2.db.conn.id" locked="false">jdbc:derby:SANDESHA2DB;create=true</parameter>
+   <parameter name="sandesha2.db.driver" locked="false">org.apache.derby.jdbc.EmbeddedDriver</parameter>
+   <parameter name="sandesha2.db.sql.dialect" locked="false">org.hibernate.dialect.DerbyDialect</parameter>
+   <parameter name="sandesha2.db.username" locked="false"></parameter>
+   <parameter name="sandesha2.db.password" locked="false"></parameter>  
+   <parameter name="sandesha2.db.create.mode" locked="false">update</parameter> 
+
+
+
+</module>

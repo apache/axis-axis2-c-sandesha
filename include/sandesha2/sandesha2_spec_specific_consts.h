@@ -123,6 +123,12 @@ AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_terminate_seq_soap_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL        
+sandesha2_spec_specific_consts_get_teminate_seq_res_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+        
 /** @} */
 #ifdef __cplusplus
 }

@@ -16,4 +16,4 @@ libsandesha_util_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
-			@UTILINC@
+			@AXIS2INC@

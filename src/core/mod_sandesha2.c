@@ -105,8 +105,11 @@ mod_sandesha2_shutdown(axis2_module_t *module,
                         const axis2_env_t *env)
 {
 
-    sandesha2_utils_stop_sender(env);
-    sandesha2_utils_stop_invoker(env);
+    /* currently we don't have conf_ctx passing to shutdown. When we have that
+     * we need to write these util functions at sandesha2_utils
+     * sandesha2_utils_stop_sender(env, conf_ctx);
+     * sandesha2_utils_stop_invoker(env, conf_ctx);
+     */
     if(module->ops)
     {
         AXIS2_FREE(env->allocator, module->ops);

@@ -60,6 +60,12 @@ sandesha2_seq_mgr_update_last_activated_time(
         const axis2_env_t *env,
         axis2_char_t *property_key,
         sandesha2_storage_mgr_t *storage_mgr);
+    
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_seq_mgr_has_seq_timedout(const axis2_env_t *env,
+        axis2_char_t *property_key,
+        sandesha2_msg_ctx_t *rm_msg_ctx,
+        sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

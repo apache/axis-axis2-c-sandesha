@@ -201,8 +201,16 @@ sandesha2_utils_get_array_list_from_string(const axis2_env_t *env,
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, string, NULL);
-    
-    dup_string = AXIS2_STRDUP(string, env);
+    /* remove the array markers - []  if present */
+    if('[' == *string)
+        temp_str = string + sizeof(axis2_char_t);
+    else
+        temp_str = string;
+    dup_string = AXIS2_STRDUP(temp_str, env);
+    if(']' == dup_string[AXIS2_STRLEN(dup_string)])
+        dup_string[AXIS2_STRLEN(dup_string)] = '\0';
+        
+    temp_str = NULL;
     temp_str = strtok(dup_string, ",");
     while(NULL != temp_str)
     {
@@ -843,4 +851,26 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
                         env), env);
     }
     return seq_id;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_utils_stop_invoker(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
+    
+    /*TODO */
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_utils_stop_sender(const axis2_env_t *env,
+                        axis2_conf_ctx_t *conf_ctx)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
+    
+    /*TODO */
+    return AXIS2_SUCCESS;
 }
