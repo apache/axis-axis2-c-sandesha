@@ -116,7 +116,8 @@ sandesha2_next_msg_mgr_create(
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_BEAN_MAP_NEXT_MESSAGE, AXIS2_FALSE);
-    next_msg_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(NULL != property)
+        next_msg_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!next_msg_impl->table)
     {
         axis2_property_t *property = NULL;

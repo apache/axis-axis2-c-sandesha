@@ -95,19 +95,19 @@ sandesha2_out_handler_invoke(
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    AXIS2_LOG_INFO(env->log, "Starting sandesha2 out handler .........");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
 
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(conf_ctx == NULL)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Configuration Context is NULL");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
     if(svc == NULL)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Axis2 Service is NULL");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -118,7 +118,7 @@ sandesha2_out_handler_invoke(
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "Exit: sandesha2_out_handler::invoke, Application Processing Done");
+                "[sandesha2] Exit: sandesha2_out_handler::invoke, Application Processing Done");
         return AXIS2_SUCCESS; 
     }
     temp_prop = axis2_property_create(env);
@@ -210,7 +210,7 @@ sandesha2_out_handler_invoke(
                     prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Error in processing the message");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -226,7 +226,7 @@ sandesha2_out_handler_invoke(
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
     }
-    AXIS2_LOG_INFO(env->log, "Exit: sandesha2_out_handler::invoke");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
     
     return AXIS2_SUCCESS;
 }

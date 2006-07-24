@@ -141,7 +141,8 @@ sandesha2_sender_mgr_create(
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_BEAN_MAP_RETRANSMITTER, AXIS2_FALSE);
-    sender_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(NULL != property)
+        sender_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!sender_impl->table)
     {
         axis2_property_t *property = NULL;
@@ -541,7 +542,7 @@ sandesha2_sender_mgr_get_next_msg_to_send(
             long time_now = 0;
 
             time_to_send = SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(temp, env);
-            time_now = SANDESHA2_UTIL_GET_CURRENT_TIME_IN_MILLIS(env);
+            time_now = sandesha2_utils_get_current_time_in_millis(env);
             if(time_now >= time_to_send)
             {
                 int msg_type = SANDESHA2_SENDER_BEAN_GET_MSG_TYPE(temp, env);
@@ -571,7 +572,7 @@ sandesha2_sender_mgr_get_next_msg_to_send(
             long time_now = 0;
 
             time_to_send = SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(temp, env);
-            time_now = SANDESHA2_UTIL_GET_CURRENT_TIME_IN_MILLIS(env);
+            time_now = sandesha2_utils_get_current_time_in_millis(env);
             if(time_now >= time_to_send)
             {
                 axis2_bool_t valid = AXIS2_FALSE;

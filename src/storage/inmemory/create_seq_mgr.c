@@ -108,7 +108,8 @@ sandesha2_create_seq_mgr_create(
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_BEAN_MAP_CREATE_SEQUECE, AXIS2_FALSE);
-    seq_mgr_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(NULL != property)
+        seq_mgr_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!seq_mgr_impl->table)
     {
         axis2_property_t *property = NULL;
@@ -361,7 +362,7 @@ sandesha2_create_seq_mgr_find_unique(
         size = AXIS2_ARRAY_LIST_SIZE(beans, env);
     if( size > 1)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Non-Unique result");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Non-Unique result");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, AXIS2_FAILURE);
         axis2_thread_mutex_unlock(seq_mgr_impl->mutex);
         return NULL;

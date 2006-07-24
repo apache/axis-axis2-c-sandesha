@@ -102,7 +102,7 @@ sandesha2_property_mgr_load_properties_from_def_values(const axis2_env_t *env)
                         SANDESHA2_DEF_VAL_PERM_STORAGE_MGR);
     SANDESHA2_PROPERTY_BEAN_SET_MAX_RETRANS_COUNT(property_bean, env,
                         SANDESHA2_DEF_VAL_MAX_RETR_COUNT);
-    sandesha2_property_mgr_set_msg_types_to_drop(env, 
+    sandesha2_property_mgr_load_msg_types_to_drop(env, 
                         SANDESHA2_DEF_VAL_MSG_TYPES_TO_DROP, property_bean);
     return property_bean;
 }

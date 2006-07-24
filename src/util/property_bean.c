@@ -17,7 +17,7 @@
 #include <sandesha2/sandesha2_constants.h>
 #include <stdio.h>
 #include <axis2_string.h>
-
+#include <axis2_utils.h>
 
 /** 
  * @brief Property Bean struct impl
@@ -32,8 +32,8 @@ struct sandesha2_property_bean_impl
     long ack_interval;
     long retrans_interval;
     axis2_bool_t is_exp_backoff;
-    axis2_char_t *in_mem_storage_manager;
-    axis2_char_t *permanent_storage_manager;
+    axis2_char_t *in_mem_storage_mgr;
+    axis2_char_t *permanent_storage_mgr;
     axis2_bool_t is_in_order;
     axis2_array_list_t *msg_types_to_drop;
     int max_retrans_count;
@@ -90,22 +90,22 @@ sandesha2_property_bean_set_exp_backoff
                         const axis2_env_t *env, axis2_bool_t exp_backoff);
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_in_mem_storage_manager 
+sandesha2_property_bean_get_in_mem_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_in_mem_storage_manager 
+sandesha2_property_bean_set_in_mem_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env, axis2_char_t *manager);
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_permanent_storage_manager 
+sandesha2_property_bean_get_permanent_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_permanent_storage_manager 
+sandesha2_property_bean_set_permanent_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env, axis2_char_t *manager);
             
@@ -168,8 +168,8 @@ sandesha2_property_bean_create(const axis2_env_t *env)
     property_bean_impl->ack_interval = 0;
     property_bean_impl->retrans_interval = 0;
     property_bean_impl->is_exp_backoff = 0;
-    property_bean_impl->in_mem_storage_manager = NULL;
-    property_bean_impl->permanent_storage_manager= NULL;
+    property_bean_impl->in_mem_storage_mgr = NULL;
+    property_bean_impl->permanent_storage_mgr= NULL;
     property_bean_impl->is_in_order = AXIS2_FALSE;
     property_bean_impl->msg_types_to_drop = NULL;
     property_bean_impl->max_retrans_count = 0;
@@ -202,14 +202,14 @@ sandesha2_property_bean_create(const axis2_env_t *env)
         sandesha2_property_bean_is_exp_backoff;
     property_bean_impl->bean.ops->set_exp_backoff = 
         sandesha2_property_bean_set_exp_backoff;
-    property_bean_impl->bean.ops->get_in_mem_storage_manager = 
-        sandesha2_property_bean_get_in_mem_storage_manager;
-    property_bean_impl->bean.ops->set_in_mem_storage_manager = 
-        sandesha2_property_bean_set_in_mem_storage_manager;
-    property_bean_impl->bean.ops->get_permanent_storage_manager = 
-        sandesha2_property_bean_get_permanent_storage_manager;
-    property_bean_impl->bean.ops->set_permanent_storage_manager = 
-        sandesha2_property_bean_set_permanent_storage_manager;
+    property_bean_impl->bean.ops->get_in_mem_storage_mgr = 
+        sandesha2_property_bean_get_in_mem_storage_mgr;
+    property_bean_impl->bean.ops->set_in_mem_storage_mgr = 
+        sandesha2_property_bean_set_in_mem_storage_mgr;
+    property_bean_impl->bean.ops->get_permanent_storage_mgr = 
+        sandesha2_property_bean_get_permanent_storage_mgr;
+    property_bean_impl->bean.ops->set_permanent_storage_mgr = 
+        sandesha2_property_bean_set_permanent_storage_mgr;
     property_bean_impl->bean.ops->is_in_order = 
         sandesha2_property_bean_is_in_order;
     property_bean_impl->bean.ops->set_in_order = 
@@ -222,6 +222,8 @@ sandesha2_property_bean_create(const axis2_env_t *env)
         sandesha2_property_bean_add_msg_type_to_drop;
     property_bean_impl->bean.ops->get_max_retrans_count = 
         sandesha2_property_bean_get_max_retrans_count;
+    property_bean_impl->bean.ops->set_max_retrans_count = 
+        sandesha2_property_bean_set_max_retrans_count;
     property_bean_impl->bean.ops->free = sandesha2_property_bean_free;
                         
 	return &(property_bean_impl->bean);
@@ -249,15 +251,15 @@ sandesha2_property_bean_free(sandesha2_property_bean_t *bean, const axis2_env_t 
         }
         AXIS2_ARRAY_LIST_FREE(property_bean_impl->msg_types_to_drop, env);
     }
-    if(NULL != property_bean_impl->in_mem_storage_manager)
+    if(NULL != property_bean_impl->in_mem_storage_mgr)
     {
-        AXIS2_FREE(env->allocator, property_bean_impl->in_mem_storage_manager);
-        property_bean_impl->in_mem_storage_manager = NULL;
+        AXIS2_FREE(env->allocator, property_bean_impl->in_mem_storage_mgr);
+        property_bean_impl->in_mem_storage_mgr = NULL;
     }
-    if(NULL != property_bean_impl->permanent_storage_manager)
+    if(NULL != property_bean_impl->permanent_storage_mgr)
     {
-        AXIS2_FREE(env->allocator, property_bean_impl->permanent_storage_manager);
-        property_bean_impl->permanent_storage_manager = NULL;
+        AXIS2_FREE(env->allocator, property_bean_impl->permanent_storage_mgr);
+        property_bean_impl->permanent_storage_mgr = NULL;
     }
     if(NULL != bean->ops)
     {
@@ -372,43 +374,43 @@ sandesha2_property_bean_set_exp_backoff
 }
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_in_mem_storage_manager 
+sandesha2_property_bean_get_in_mem_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(bean)->in_mem_storage_manager;
+    return SANDESHA2_INTF_TO_IMPL(bean)->in_mem_storage_mgr;
 }
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_in_mem_storage_manager 
+sandesha2_property_bean_set_in_mem_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env, axis2_char_t *manager)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    SANDESHA2_INTF_TO_IMPL(bean)->in_mem_storage_manager = AXIS2_STRDUP(manager,
+    SANDESHA2_INTF_TO_IMPL(bean)->in_mem_storage_mgr = AXIS2_STRDUP(manager,
                         env);
     return AXIS2_SUCCESS;
 }
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_permanent_storage_manager 
+sandesha2_property_bean_get_permanent_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(bean)->permanent_storage_manager;
+    return SANDESHA2_INTF_TO_IMPL(bean)->permanent_storage_mgr;
 }
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_permanent_storage_manager 
+sandesha2_property_bean_set_permanent_storage_mgr 
                         (sandesha2_property_bean_t *bean,
                         const axis2_env_t *env, axis2_char_t *manager)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    SANDESHA2_INTF_TO_IMPL(bean)->permanent_storage_manager = AXIS2_STRDUP(
+    SANDESHA2_INTF_TO_IMPL(bean)->permanent_storage_mgr = AXIS2_STRDUP(
                         manager, env);
     return AXIS2_SUCCESS;
 }

@@ -36,15 +36,45 @@
         </handler>   
     </OUTfaultflow>
 
+    <operation name="RMInOnlyOperation" mep="http://www.w3.org/2004/08/wsdl/in-only">
+        <messageReceiver class="axis2_receivers"/>
+        
+        <!-- namespaces for the 2005-02 spec -->
+        
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement</actionMapping>
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse</actionMapping>
+
+        <!-- namespaces for the 2005-10 spec -->
+        
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested</actionMapping>
+     </operation>
+ 
+     <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
+        <messageReceiver class="axis2_receivers"/>
+        
+        <!-- namespaces for the 2005-02 spec -->
+        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
+
+        <!-- namespaces for the 2005-10 spec -->
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse</actionMapping>
+
+    </operation>
+
 
    <!-- Database connection parameters -->
-   <parameter name="sandesha2.db.conn.id" locked="false">jdbc:derby:SANDESHA2DB;create=true</parameter>
-   <parameter name="sandesha2.db.driver" locked="false">org.apache.derby.jdbc.EmbeddedDriver</parameter>
-   <parameter name="sandesha2.db.sql.dialect" locked="false">org.hibernate.dialect.DerbyDialect</parameter>
-   <parameter name="sandesha2.db.username" locked="false"></parameter>
-   <parameter name="sandesha2.db.password" locked="false"></parameter>  
-   <parameter name="sandesha2.db.create.mode" locked="false">update</parameter> 
-
+    <parameter name="sandesha2.db.conn.id" locked="false">jdbc:derby:SANDESHA2DB;create=true</parameter>
+    <parameter name="sandesha2.db.driver" locked="false">org.apache.derby.jdbc.EmbeddedDriver</parameter>
+    <parameter name="sandesha2.db.sql.dialect" locked="false">org.hibernate.dialect.DerbyDialect</parameter>
+    <parameter name="sandesha2.db.username" locked="false"></parameter>
+    <parameter name="sandesha2.db.password" locked="false"></parameter>  
+    <parameter name="sandesha2.db.create.mode" locked="false">update</parameter> 
 
 
 </module>

@@ -74,6 +74,7 @@ mod_sandesha2_init(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, module_desc, AXIS2_FAILURE);
     
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing ..");
     const_property_bean = sandesha2_property_mgr_load_properties_from_def_values
                         (env);
     property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
@@ -97,6 +98,7 @@ mod_sandesha2_init(
     SANDESHA2_STORAGE_MGR_INIT_STORAGE(storage_mgr, env, module_desc);
     
     /* we need to add permenent storage mgr as well */
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing completed");
     return AXIS2_SUCCESS;
 }
 
@@ -150,7 +152,7 @@ mod_sandesha2_fill_handler_create_func_map(axis2_module_t *module,
         AXIS2_HASH_KEY_STRING, sandesha2_global_in_handler_create);
     axis2_hash_set(module->handler_create_func_map, "SandeshaInHandler", 
         AXIS2_HASH_KEY_STRING, sandesha2_in_handler_create);
-    axis2_hash_set(module->handler_create_func_map, "SandeshaOutHandler", 
+    axis2_hash_set(module->handler_create_func_map, "SandeshaOutHandler",
         AXIS2_HASH_KEY_STRING, sandesha2_out_handler_create);
     
     return AXIS2_SUCCESS;

@@ -130,7 +130,8 @@ sandesha2_seq_property_mgr_create(
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_BEAN_MAP_SEQ_PROPERTY, AXIS2_FALSE);
-    seq_property_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(NULL != property)
+        seq_property_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!seq_property_impl->table)
     {
         axis2_property_t *property = NULL;
