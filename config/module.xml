@@ -9,7 +9,7 @@
             <!-- Global In handler should come before instance dispatching -->
             <order phase="Dispatch" before="InstanceDispatcher" />
         </handler> 
-        <handler name="SandeshaInHandler" class="mod_sandesha2">
+        <handler name="SandeshaInHandler" class="sandesha2">
             <order phase="RMPhase"/>
         </handler>
     </inflow>
