@@ -691,9 +691,10 @@ sandesha2_utils_trim_string(const axis2_env_t *env,
         
     len = tmp2 - tmp;
     if(len > 0)
-        ret = AXIS2_MALLOC(env->allocator, len);
+        ret = AXIS2_MALLOC(env->allocator, len + sizeof(axis2_char_t));
         
     memcpy(ret, tmp, len);
+    ret[len] = '\0';
     return ret;
 }
 
