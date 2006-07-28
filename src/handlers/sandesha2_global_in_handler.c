@@ -181,7 +181,7 @@ sandesha2_global_in_handler_invoke(
                         req_msg_ctx))
                     {
                         /* TODO we need to notify the listners */
-                        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+                        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
                         return AXIS2_SUCCESS;
                     }
                 }

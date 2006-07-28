@@ -19,6 +19,7 @@
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
 #include <string.h>
+#include <axis2_string.h>
 
 
 /*create_seq_bean struct */

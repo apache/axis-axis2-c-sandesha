@@ -16,6 +16,8 @@
 
 #include <sandesha2_seq_property_bean.h>
 #include <string.h>
+#include <axis2_string.h>
+
 
 /*seq_property_bean struct */
 typedef struct sandesha2_seq_property_bean_impl sandesha2_seq_property_bean_impl_t;
@@ -127,9 +129,9 @@ AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 	}
 
 	/* initialize properties */
-	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(env, seq_id);
-	bean_impl->name = (axis2_char_t *)AXIS2_STRDUP(env, prop_name);
-	bean_impl->value = (axis2_char_t *)AXIS2_STRDUP(env, value);
+	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
+	bean_impl->name = (axis2_char_t *)AXIS2_STRDUP(prop_name, env);
+	bean_impl->value = (axis2_char_t *)AXIS2_STRDUP(value, env);
 
 	bean_impl->o_bean.ops = NULL;
 	bean_impl->o_bean.ops = (sandesha2_seq_property_bean_ops_t*)AXIS2_MALLOC(env->allocator,
@@ -206,7 +208,7 @@ void AXIS2_CALL
 		bean_impl->name = NULL;
 	}
 
-	bean_impl->name = (axis2_char_t *)AXIS2_STRDUP(env, name);
+	bean_impl->name = (axis2_char_t *)AXIS2_STRDUP(name, env);
 }
 
 axis2_char_t *AXIS2_CALL
@@ -234,7 +236,7 @@ void AXIS2_CALL
 		bean_impl->seq_id = NULL;
 	}
 
-	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(env, seq_id);
+	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
 }
 
 axis2_char_t* AXIS2_CALL
@@ -262,7 +264,7 @@ void AXIS2_CALL
 		bean_impl->value = NULL;
 	}
 
-	bean_impl->value = (axis2_char_t *)AXIS2_STRDUP(env, value);
+	bean_impl->value = (axis2_char_t *)AXIS2_STRDUP(value, env);
 
 }
 

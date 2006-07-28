@@ -16,6 +16,8 @@
 
 #include <sandesha2_next_msg_bean.h>
 #include <string.h>
+#include <axis2_string.h>
+
 
 /* invoker_bean struct */
 typedef struct sandesha2_next_msg_bean_impl sandesha2_next_msg_bean_impl_t;
@@ -110,7 +112,7 @@ AXIS2_EXTERN sandesha2_next_msg_bean_t* AXIS2_CALL
 	}
 
 	/* init the properties. */
-	bean->seq_id = (axis2_char_t*)AXIS2_STRDUP(env, seq_id);
+	bean->seq_id = (axis2_char_t*)AXIS2_STRDUP(seq_id, env);
 	bean->msg_no = msg_no;
 
 	bean->o_bean.ops = NULL;
@@ -172,7 +174,7 @@ sandesha2_next_msg_bean_set_seq_id(sandesha2_next_msg_bean_t *next_msg_bean,
 		bean_impl->seq_id = NULL;
 	}
 
-	bean_impl->seq_id = (axis2_char_t*) AXIS2_STRDUP(env, seq_id); 
+	bean_impl->seq_id = (axis2_char_t*) AXIS2_STRDUP(seq_id, env); 
 }
 
 

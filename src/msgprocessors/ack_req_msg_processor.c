@@ -379,7 +379,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             return AXIS2_FAILURE;
         }
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);
-        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     }
     return AXIS2_SUCCESS;
 }

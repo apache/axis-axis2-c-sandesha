@@ -144,7 +144,7 @@ sandesha2_seq_property_mgr_create(
             return NULL;
         }
         AXIS2_PROPERTY_SET_VALUE(property, env, seq_property_impl->table);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, seq_property_impl->seq_property.ops->free);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_SEQ_PROPERTY, 
                 property, AXIS2_FALSE);
     }

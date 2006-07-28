@@ -39,6 +39,7 @@ extern "C"
     *
     * Set of error codes for Sandesha2
     */
+    typedef enum sandesha2_error_codes sandesha2_error_codes_t;
     enum sandesha2_error_codes
     { 
         /* No error */

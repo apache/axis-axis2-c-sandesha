@@ -16,6 +16,8 @@
 
 #include <sandesha2_invoker_bean.h>
 #include <string.h>
+#include <axis2_string.h>
+
 
 /* create_seq_bean struct */
 typedef struct sandesha2_invoker_bean_impl sandesha2_invoker_bean_impl_t;

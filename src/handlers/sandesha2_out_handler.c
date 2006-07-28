@@ -114,7 +114,8 @@ sandesha2_out_handler_invoke(
     ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
-    str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+    if(NULL != temp_prop)
+        str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -130,7 +131,9 @@ sandesha2_out_handler_invoke(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
-    within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env);
+    if(NULL != temp_prop)
+        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+                        temp_prop, env);
     if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
                 within_transaction_str))
     {
@@ -151,7 +154,8 @@ sandesha2_out_handler_invoke(
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
             AXIS2_FALSE);
-    dummy_msg_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+    if(NULL != temp_prop)
+        dummy_msg_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
     if(dummy_msg_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, dummy_msg_str))
     {
         dummy_msg = AXIS2_TRUE;
@@ -196,7 +200,7 @@ sandesha2_out_handler_invoke(
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
-        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         /* Rolling back the transaction */
         if(AXIS2_TRUE != within_transaction)
         {

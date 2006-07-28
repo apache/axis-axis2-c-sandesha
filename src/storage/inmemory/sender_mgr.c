@@ -155,7 +155,7 @@ sandesha2_sender_mgr_create(
             return NULL;
         }
         AXIS2_PROPERTY_SET_VALUE(property, env, sender_impl->table);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, sender_impl->sender.ops->free);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_RETRANSMITTER, 
                 property, AXIS2_FALSE);
     }

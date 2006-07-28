@@ -171,6 +171,8 @@ sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     					sandesha2_seq_to_om_node;
     seq_impl->seq.part.element.ops->is_namespace_supported = 
     					sandesha2_seq_is_namespace_supported;
+    seq_impl->seq.part.ops->to_soap_env = 
+    					sandesha2_seq_to_soap_env;
     seq_impl->seq.ops->set_identifier = 
                         sandesha2_seq_set_identifier;
     seq_impl->seq.ops->get_identifier = 
@@ -183,6 +185,10 @@ sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
                         sandesha2_seq_set_must_understand;
     seq_impl->seq.ops->is_must_understand = 
                         sandesha2_seq_is_must_understand;
+    seq_impl->seq.ops->get_msg_num = 
+                        sandesha2_seq_get_msg_num;
+    seq_impl->seq.ops->set_msg_num = 
+                        sandesha2_seq_set_msg_num;
     seq_impl->seq.part.element.ops->free = sandesha2_seq_free;
     
                         

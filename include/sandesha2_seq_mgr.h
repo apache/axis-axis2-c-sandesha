@@ -66,6 +66,13 @@ sandesha2_seq_mgr_has_seq_timedout(const axis2_env_t *env,
         axis2_char_t *property_key,
         sandesha2_msg_ctx_t *rm_msg_ctx,
         sandesha2_storage_mgr_t *storage_mgr);
+        
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_seq_mgr_setup_new_client_seq(const axis2_env_t *env,
+                        axis2_msg_ctx_t *first_app_msg,
+                        axis2_char_t *int_seq_id,
+                        axis2_char_t *spec_version,
+                        sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

@@ -235,7 +235,7 @@ sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
         
         ret_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
         sandesha2_utils_start_invoker_for_seq(env, conf_ctx, seq_id);
-        AXIS2_MSG_CTX_PAUSE(ref_msg, env);
+        AXIS2_MSG_CTX_SET_PAUSED(ref_msg, env, AXIS2_TRUE);
         return ret_rm_msg;
     }
     return NULL;

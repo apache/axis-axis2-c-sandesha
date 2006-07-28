@@ -83,11 +83,19 @@ AXIS2_EXTERN long AXIS2_CALL
 sandesha2_utils_get_current_time_in_millis(
         const axis2_env_t *env)
 {
+    const long fixed_time = 1153918446;
+    long seconds = -1;
+    long millis = -1;
     struct timeb *tp = AXIS2_MALLOC(env->allocator, sizeof(struct timeb));
     ftime(tp);
-    long seconds = tp->time;
-    seconds = seconds * 1000;
-    long millis = tp->millitm;
+    /* To prevent an overflow we substract a contstant from seconds value
+     * This value is taken as 18.23.xx seconds on 26 Jul 2006
+     *
+     */
+    seconds = tp->time;
+    seconds -= fixed_time;
+    seconds *= 1000;
+    millis = tp->millitm;
     millis = millis + seconds;
 
     return millis;
@@ -321,10 +329,10 @@ sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
     property = AXIS2_CTX_GET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
-                        env, SANDESHA2_INVOKER, AXIS2_FALSE);
-    if(NULL == property)
-        return AXIS2_FAILURE;
-    sender = AXIS2_PROPERTY_GET_VALUE(property, env);
+                        env, SANDESHA2_SENDER, AXIS2_FALSE);
+    if(NULL != property)
+        sender = AXIS2_PROPERTY_GET_VALUE(property, env);
+        
     if(NULL == sender)
     {
         sender = sandesha2_sender_create(env);

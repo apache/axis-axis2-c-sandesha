@@ -205,7 +205,7 @@ sandesha2_sender_stop_sender_for_seq
     
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
     axis2_thread_mutex_lock(sender_impl->mutex);
-    for(i = 0; i < AXIS2_ARRY_LIST_SIZE(sender_impl->working_seqs, env); i++)
+    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(sender_impl->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = AXIS2_ARRAY_LIST_GET(sender_impl->working_seqs, env, i);
@@ -215,7 +215,7 @@ sandesha2_sender_stop_sender_for_seq
             break;
         }
     }
-    if(0 == AXIS2_ARRY_LIST_SIZE(sender_impl->working_seqs, env))
+    if(0 == AXIS2_ARRAY_LIST_SIZE(sender_impl->working_seqs, env))
         sender_impl->run_sender = AXIS2_FALSE;
     axis2_thread_mutex_unlock(sender_impl->mutex);
     return AXIS2_SUCCESS;
@@ -267,7 +267,7 @@ sandesha2_sender_run_sender_for_seq
     axis2_thread_mutex_lock(sender_impl->mutex);
     if(AXIS2_FALSE == sandesha2_utils_array_list_contains(env, 
                         sender_impl->working_seqs, seq_id))
-        AXIS2_ARRY_LIST_ADD(sender_impl->working_seqs, env, seq_id);
+        AXIS2_ARRAY_LIST_ADD(sender_impl->working_seqs, env, seq_id);
     if(AXIS2_FALSE == sender_impl->run_sender)
     {
         sender_impl->conf_ctx = conf_ctx;
@@ -284,15 +284,16 @@ sandesha2_sender_run (sandesha2_sender_t *sender,
 {
     sandesha2_sender_impl_t *sender_impl = NULL;
     axis2_thread_t *worker_thread = NULL;
-    sandesha2_sender_args_t args;
+    sandesha2_sender_args_t *args = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
-    
-    args.impl = sender_impl;
-    args.env = (axis2_env_t*)env;
+   
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t)); 
+    args->impl = sender_impl;
+    args->env = (axis2_env_t*)env;
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
-                        sandesha2_sender_worker_func, (void*)&args);
+                        sandesha2_sender_worker_func, (void*)args);
     if(NULL == worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Thread creation "
@@ -502,7 +503,7 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
                         property, AXIS2_FALSE);
         continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
-                        sender, sender_impl->conf_ctx, storage_mgr);
+                        sender_bean, sender_impl->conf_ctx, storage_mgr);
         if(AXIS2_FALSE == continue_sending)
             continue;
         

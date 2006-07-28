@@ -123,8 +123,10 @@ populate_rm_msg_ctx(
      * Assuming the default addressing version.
      */
     prop = AXIS2_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
-    addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
-    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_IS_SERVER_SIDE(msg_ctx, env))
+    if(NULL != prop)
+        addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
+    
+    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
     {
         addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
     }
@@ -212,12 +214,12 @@ populate_rm_msg_ctx(
         rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
                 (sandesha2_iom_rm_element_t *) close_seq_res, env);
     }
-    SANDESHA2_MSG_CTX_SET_RM_NS_VALUE(rm_msg_ctx, env, rm_ns);
+    SANDESHA2_MSG_CTX_SET_RM_NS_VAL(rm_msg_ctx, env, rm_ns);
     addressing_ns_value = SANDESHA2_RM_ELEMENTS_GET_ADDR_NS_VAL(
             elements, env);
     if(addressing_ns_value)
     {
-        SANDESHA2_RM_ELEMENTS_SET_ADDRESSING_NS_VALUE(elements, env, 
+        SANDESHA2_MSG_CTX_SET_ADDR_NS_VAL(rm_msg_ctx, env, 
                 addressing_ns_value);
     }
     return AXIS2_SUCCESS;

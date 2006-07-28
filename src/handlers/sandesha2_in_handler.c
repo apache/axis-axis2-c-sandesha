@@ -147,7 +147,7 @@ sandesha2_in_handler_invoke(
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
-        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         if(AXIS2_TRUE != within_transaction)
         {
             axis2_property_t *prop = NULL;
@@ -187,7 +187,7 @@ sandesha2_in_handler_invoke(
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
-        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         if(AXIS2_TRUE != within_transaction)
         {
             axis2_property_t *prop = NULL;

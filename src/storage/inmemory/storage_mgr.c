@@ -172,7 +172,7 @@ sandesha2_storage_mgr_create(
     storage_impl->seq_property_mgr = NULL;
     storage_impl->sender_mgr = NULL;
     storage_impl->invoker_mgr = NULL;
-    storage_impl->conf_ctx = NULL;
+    storage_impl->conf_ctx = conf_ctx;
 
     storage_impl->storage.ops = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_storage_mgr_ops_t)); 

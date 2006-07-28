@@ -122,7 +122,7 @@ sandesha2_invoker_mgr_create(
             return NULL;
         }
         AXIS2_PROPERTY_SET_VALUE(property, env, invoker_impl->table);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, invoker_impl->invoker.ops->free);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_STORAGE_MAP, 
                 property, AXIS2_FALSE);
     }

@@ -94,7 +94,17 @@ sandesha2_acks_to_create(const axis2_env_t *env, sandesha2_address_t *address,
     acks_to_impl->addr_ns_val = NULL;
     acks_to_impl->address = NULL;
     acks_to_impl->acks_to.ops = NULL;
-     
+    
+    acks_to_impl->acks_to.element.ops = AXIS2_MALLOC(env->allocator,
+        sizeof(sandesha2_iom_rm_element_ops_t));
+    if(NULL == acks_to_impl->acks_to.element.ops)
+    {
+        sandesha2_acks_to_free((sandesha2_iom_rm_element_t*)
+                         acks_to_impl, env);
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+    }
+  
     acks_to_impl->acks_to.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
     if(NULL == acks_to_impl->acks_to.ops)

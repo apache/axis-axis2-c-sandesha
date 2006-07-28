@@ -185,7 +185,7 @@ sandesha2_in_order_invoker_stop_invoker_for_seq
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
     axis2_thread_mutex_lock(invoker_impl->mutex);
-    for(i = 0; i < AXIS2_ARRY_LIST_SIZE(invoker_impl->working_seqs, env); i++)
+    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = AXIS2_ARRAY_LIST_GET(invoker_impl->working_seqs, env, i);
@@ -195,7 +195,7 @@ sandesha2_in_order_invoker_stop_invoker_for_seq
             break;
         }
     }
-    if(0 == AXIS2_ARRY_LIST_SIZE(invoker_impl->working_seqs, env))
+    if(0 == AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env))
         invoker_impl->run_invoker = AXIS2_FALSE;
     axis2_thread_mutex_unlock(invoker_impl->mutex);
     return AXIS2_SUCCESS;
@@ -247,7 +247,7 @@ sandesha2_in_order_invoker_run_invoker_for_seq
     axis2_thread_mutex_lock(invoker_impl->mutex);
     if(AXIS2_FALSE == sandesha2_utils_array_list_contains(env, 
                         invoker_impl->working_seqs, seq_id))
-        AXIS2_ARRY_LIST_ADD(invoker_impl->working_seqs, env, seq_id);
+        AXIS2_ARRAY_LIST_ADD(invoker_impl->working_seqs, env, seq_id);
     if(AXIS2_FALSE == invoker_impl->run_invoker)
     {
         invoker_impl->conf_ctx = conf_ctx;
@@ -264,15 +264,17 @@ sandesha2_in_order_invoker_run (sandesha2_in_order_invoker_t *invoker,
 {
     sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     axis2_thread_t *worker_thread = NULL;
-    sandesha2_in_order_invoker_args_t args;
+    sandesha2_in_order_invoker_args_t *args = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    
-    args.impl = invoker_impl;
-    args.env = (axis2_env_t*)env;
+   
+    args = AXIS2_MALLOC(env->allocator, sizeof(
+                        sandesha2_in_order_invoker_args_t)); 
+    args->impl = invoker_impl;
+    args->env = (axis2_env_t*)env;
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
-                        sandesha2_in_order_invoker_worker_func, (void*)&args);
+                        sandesha2_in_order_invoker_worker_func, (void*)args);
     if(NULL == worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed"

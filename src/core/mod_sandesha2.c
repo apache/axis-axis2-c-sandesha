@@ -79,7 +79,7 @@ mod_sandesha2_init(
                         (env);
     property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
                         module_desc);
-    if(NULL == property_bean)
+    /*if(NULL == property_bean) */
         property_bean = const_property_bean;
         
     param = axis2_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 

@@ -30,12 +30,12 @@ typedef struct sandesha2_msg_ctx_impl sandesha2_msg_ctx_impl_t;
 struct sandesha2_msg_ctx_impl
 {
     sandesha2_msg_ctx_t rm_msg_ctx;
-	axis2_msg_ctx_t *msg_ctx;
     axis2_hash_t *msg_parts;
     int msg_type;
     axis2_char_t *rm_ns_val;
     axis2_char_t *addr_ns_val;
     axis2_char_t *spec_ver;
+	axis2_msg_ctx_t *msg_ctx;
 };
 
 #define SANDESHA2_INTF_TO_IMPL(rm_msg_ctx) \
@@ -202,6 +202,7 @@ sandesha2_msg_ctx_create(const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
     msg_ctx_impl->rm_ns_val = NULL;
     msg_ctx_impl->addr_ns_val = NULL;
     msg_ctx_impl->msg_parts = NULL;
+    msg_ctx_impl->msg_ctx = NULL;
     msg_ctx_impl->spec_ver = NULL;
     msg_ctx_impl->rm_msg_ctx.ops = NULL;
     
@@ -216,6 +217,8 @@ sandesha2_msg_ctx_create(const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
     
     msg_ctx_impl->msg_parts = axis2_hash_make(env);
     msg_ctx_impl->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
+    msg_ctx_impl->msg_ctx = msg_ctx;
+
     
     msg_ctx_impl->rm_msg_ctx.ops->set_msg_ctx = sandesha2_msg_ctx_set_msg_ctx;
     msg_ctx_impl->rm_msg_ctx.ops->get_msg_ctx = sandesha2_msg_ctx_get_msg_ctx;

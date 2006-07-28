@@ -174,7 +174,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND(engine, env, SANDESHA2_MSG_CTX_GET_MSG_CTX(
                         fault_rm_msg_ctx, env));
-        AXIS2_MSG_CTX_PAUSE(msg_ctx, env);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);

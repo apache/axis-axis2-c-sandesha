@@ -16,6 +16,8 @@
 
 #include <sandesha2_sender_bean.h>
 #include <string.h>
+#include <axis2_string.h>
+
 
 /*sender_bean struct */
 typedef struct sandesha2_sender_bean_impl sandesha2_sender_bean_impl_t;
@@ -222,10 +224,10 @@ sandesha2_sender_bean_create_with_data(const axis2_env_t *env,
 	}
 
 	/* init properties */
-	bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(env, key);
-	bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(env, msg_id);
+	bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
+	bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
 	bean_impl->send = send; 
-	bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(env, int_seq_id);
+	bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
 	bean_impl->sent_count = -1;
 	bean_impl->msg_no = msg_no;
 	bean_impl->resend = AXIS2_FALSE;
@@ -330,7 +332,7 @@ void AXIS2_CALL
 		bean_impl->msg_context_ref_key = NULL;
 	}
 
-	bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key);
+	bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key, env);
 
 }
 
@@ -358,7 +360,7 @@ void AXIS2_CALL
 		bean_impl->msg_id = NULL;
 	}
 
-	bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(env, msg_id);
+	bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
 }
 
 
@@ -410,7 +412,7 @@ void AXIS2_CALL
 		bean_impl->internal_seq_id = NULL;
 	}
 
-	bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(env, int_seq_id);
+	bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
 }
 
 int AXIS2_CALL 
@@ -548,6 +550,6 @@ void AXIS2_CALL
 		bean_impl->seq_id = NULL;
 	}
 
-	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(env, seq_id);
+	bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
 }
 
