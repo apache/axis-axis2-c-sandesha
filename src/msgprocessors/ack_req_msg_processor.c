@@ -224,7 +224,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     AXIS2_MSG_CTX_SET_REPLY_TO(ack_msg_ctx, env, AXIS2_MSG_CTX_GET_TO(msg_ctx, 
                         env));
     sandesha2_msg_creator_add_ack_msg(env, ack_rm_msg, seq_id, storage_mgr);
-    AXIS2_MSG_CTX_SET_SVR_SIDE(ack_msg_ctx, env, AXIS2_TRUE);
+    AXIS2_MSG_CTX_SET_SERVER_SIDE(ack_msg_ctx, env, AXIS2_TRUE);
     
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_WSA_VERSION, 
                         AXIS2_FALSE);

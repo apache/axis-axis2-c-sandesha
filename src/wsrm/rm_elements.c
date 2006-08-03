@@ -352,8 +352,12 @@ sandesha2_rm_elements_from_soap_envelope
     if(NULL == elements_impl->rm_ns_val)
         return AXIS2_SUCCESS;
         
-    elements_impl->addr_ns_val = sandesha2_rm_elements_get_addr_ns_val_from_env(
+    addr_ns_val =  sandesha2_rm_elements_get_addr_ns_val_from_env(
                         rm_elements, env, soap_envelope, action);
+    if(NULL != addr_ns_val)
+        elements_impl->addr_ns_val = addr_ns_val;
+
+    addr_ns_val = NULL;
                         
     if(NULL == elements_impl->addr_ns_val)
     {
@@ -399,8 +403,8 @@ sandesha2_rm_elements_from_soap_envelope
                         env, qname, body_node, &create_seq_node);
     if(NULL != create_seq_node)
     {
-        elements_impl->create_seq = sandesha2_create_seq_create(env, rm_ns_val, 
-                        addr_ns_val);
+        elements_impl->create_seq = sandesha2_create_seq_create(env,
+                        addr_ns_val, rm_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq, env,
                         body_node);
     }

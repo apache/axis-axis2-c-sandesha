@@ -122,7 +122,10 @@ sandesha2_msg_creator_create_create_seq_msg(
     /* Creating by copying common contents. (This will not see contexts except
      * for conf_ctx)
      */
-    create_seq_op = axis2_op_create(env);
+    qname = axis2_qname_create(env, "CreateSequenceOperation", NULL, NULL);
+    create_seq_op = axis2_op_create_with_qname(env, qname);
+    AXIS2_QNAME_FREE(qname, env);
+
     create_seq_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
             application_rm_msg, create_seq_op);
     sandesha2_msg_creator_init_creation(env, application_msg_ctx, 
@@ -134,9 +137,6 @@ sandesha2_msg_creator_create_create_seq_msg(
             create_seq_op_ctx);
     app_msg_op_desc = AXIS2_MSG_CTX_GET_OP(application_msg_ctx, env);
     create_seq_op = AXIS2_MSG_CTX_GET_OP(create_seq_msg_ctx, env);
-    qname = axis2_qname_create(env, "CreateSequenceOperation", NULL, NULL);
-    AXIS2_OP_SET_QNAME(create_seq_op, env, qname);
-    AXIS2_QNAME_FREE(qname, env);
     if(app_msg_op_desc)
     {
         axis2_array_list_t *outflow = NULL;
@@ -155,7 +155,10 @@ sandesha2_msg_creator_create_create_seq_msg(
     }
     AXIS2_MSG_CTX_SET_OP(create_seq_msg_ctx, env, create_seq_op);
     temp_to = SANDESHA2_MSG_CTX_GET_TO(application_rm_msg, env); 
-    AXIS2_MSG_CTX_SET_TO(create_seq_msg_ctx, env, temp_to);
+    to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        temp_to, env));
+    AXIS2_MSG_CTX_SET_TO(create_seq_msg_ctx, env, to_epr);
+    to_epr = NULL;
     temp_reply_to = SANDESHA2_MSG_CTX_GET_REPLY_TO(application_rm_msg, env); 
     AXIS2_MSG_CTX_SET_REPLY_TO(create_seq_msg_ctx, env, temp_reply_to);
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);
@@ -610,7 +613,7 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(ref_rm_msg, env);
     sandesha2_msg_creator_finalize_creation(env, SANDESHA2_MSG_CTX_GET_MSG_CTX(
                         ref_rm_msg, env), out_msg);
-    AXIS2_MSG_CTX_SET_SVR_SIDE(SANDESHA2_MSG_CTX_GET_MSG_CTX(ref_rm_msg, env), 
+    AXIS2_MSG_CTX_SET_SERVER_SIDE(SANDESHA2_MSG_CTX_GET_MSG_CTX(ref_rm_msg, env), 
                         env, AXIS2_TRUE);
     return res_rm_msg;
 }

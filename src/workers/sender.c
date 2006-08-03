@@ -328,7 +328,7 @@ sandesha2_sender_check_for_sync_res(
                     env), AXIS2_MSG_CTX_GET_TRANSPORT_IN_DESC(
                     msg_ctx, env), AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx,
                     env));
-    AXIS2_MSG_CTX_SET_SVR_SIDE(res_msg_ctx, env, AXIS2_FALSE);
+    AXIS2_MSG_CTX_SET_SERVER_SIDE(res_msg_ctx, env, AXIS2_FALSE);
     AXIS2_MSG_CTX_SET_PROPERTY(res_msg_ctx, env, AXIS2_TRANSPORT_IN,
                     AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_IN,
                     AXIS2_FALSE), AXIS2_FALSE);
@@ -377,7 +377,7 @@ sandesha2_sender_check_for_sync_res(
                     env));
         if(AXIS2_FALSE == sandesha2_sender_is_fault_envelope(sender, env, 
                     res_envelope))
-            AXIS2_ENGINE_RECIEVE_FAULT(engine, env, res_msg_ctx);
+            AXIS2_ENGINE_RECEIVE_FAULT(engine, env, res_msg_ctx);
         else
             AXIS2_ENGINE_RECIEVE(engine, env, res_msg_ctx);        
     }
@@ -586,7 +586,7 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
         }
         if(AXIS2_TRUE == successfully_sent)
         {
-            if(AXIS2_FALSE == AXIS2_MSG_CTX_IS_SVR_SIDE(msg_ctx, env))
+            if(AXIS2_FALSE == AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
                 sandesha2_sender_check_for_sync_res(sender, env, msg_ctx);
         }
         if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == SANDESHA2_MSG_CTX_GET_MSG_TYPE(
@@ -607,7 +607,7 @@ sandesha2_sender_worker_func(axis2_thread_t *thd, void *data)
             int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
                         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
             sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-                        int_seq_id, AXIS2_MSG_CTX_IS_SVR_SIDE(msg_ctx, env), 
+                        int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
                         storage_mgr);
         }
         property = axis2_property_create(env);

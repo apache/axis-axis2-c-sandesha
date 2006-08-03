@@ -107,7 +107,9 @@ sandesha2_in_handler_invoke(
         return AXIS2_SUCCESS;
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
             AXIS2_FALSE);
-    reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+    if(NULL != temp_prop)
+        reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, 
+                        env); 
     if(reinjected_msg && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -119,7 +121,9 @@ sandesha2_in_handler_invoke(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
-    within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env);
+    if(NULL != temp_prop)
+        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+                        temp_prop, env);
     if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
                 within_transaction_str))
     {

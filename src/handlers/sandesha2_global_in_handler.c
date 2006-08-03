@@ -121,7 +121,8 @@ sandesha2_global_in_handler_invoke(
     }
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
             AXIS2_FALSE);
-    reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env); 
+    if(NULL != property)
+        reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env); 
     if(reinjected_msg && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"
@@ -138,7 +139,8 @@ sandesha2_global_in_handler_invoke(
     }
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
                         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
-    within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+    if(NULL != property)
+        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
                         property, env);
     if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
                 within_transaction_str))
