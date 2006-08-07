@@ -126,7 +126,8 @@ populate_rm_msg_ctx(
     if(NULL != prop)
         addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
     
-    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
+    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_GET_SERVER_SIDE(
+        msg_ctx, env))
     {
         addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
     }

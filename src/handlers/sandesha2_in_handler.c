@@ -176,7 +176,8 @@ sandesha2_in_handler_invoke(
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot initialize the message");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Cannot initialize the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_INIT_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;

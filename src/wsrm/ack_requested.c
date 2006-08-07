@@ -304,8 +304,10 @@ sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_ack_requested_to_om_node(sandesha2_iom_rm_element_t *ack_requested,
-                    	const axis2_env_t *env, void *om_node)
+sandesha2_ack_requested_to_om_node(
+        sandesha2_iom_rm_element_t *ack_requested,
+       	const axis2_env_t *env, 
+        void *om_node)
 {
 	sandesha2_ack_requested_impl_t *ack_requested_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -449,8 +451,10 @@ sandesha2_ack_requested_set_must_understand(
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_ack_requested_to_soap_env(sandesha2_iom_rm_part_t *ack_requested,
-                    	const axis2_env_t *env, axiom_soap_envelope_t *envelope)
+sandesha2_ack_requested_to_soap_env(
+        sandesha2_iom_rm_part_t *ack_requested,
+       	const axis2_env_t *env, 
+        axiom_soap_envelope_t *envelope)
 {
 	sandesha2_ack_requested_impl_t *ack_requested_impl = NULL;
     axiom_soap_header_t *soap_header = NULL;

@@ -367,7 +367,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         highest_in_msg_key_str);
         SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_man, env, 
                         highest_in_msg_key_str);
-        SANDESHA2_STORAGE_MGR_store_MSG_CTX(storage_man, env, 
+        SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, 
                         highest_in_msg_key_str, msg_ctx1);
         if(NULL != highest_in_msg_no_str)
         {

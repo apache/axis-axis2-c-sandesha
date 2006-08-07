@@ -352,16 +352,12 @@ sandesha2_rm_elements_from_soap_envelope
     if(NULL == elements_impl->rm_ns_val)
         return AXIS2_SUCCESS;
         
-    addr_ns_val =  sandesha2_rm_elements_get_addr_ns_val_from_env(
+    elements_impl->addr_ns_val =  
+            sandesha2_rm_elements_get_addr_ns_val_from_env(
                         rm_elements, env, soap_envelope, action);
-    if(NULL != addr_ns_val)
-        elements_impl->addr_ns_val = addr_ns_val;
-
-    addr_ns_val = NULL;
-                        
     if(NULL == elements_impl->addr_ns_val)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cant find the"
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the"
                         " addressing version");
         return AXIS2_FAILURE;
     }
@@ -372,8 +368,6 @@ sandesha2_rm_elements_from_soap_envelope
     soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope, env);
     body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
     body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
-    
-    
                         
     rm_ns_val = elements_impl->rm_ns_val;
     addr_ns_val = elements_impl->addr_ns_val;

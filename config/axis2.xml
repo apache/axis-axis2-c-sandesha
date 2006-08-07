@@ -158,9 +158,9 @@
     <phaseOrder type="Outfaultflow">
         <!--      user can add his own phases to this area  -->
         <phase name="RMPhase"/>
+        <phase name="MessageOut"/>
         <!--phase name="userphase1"/-->
         <!--phase name="PolicyDetermination"/-->
-        <phase name="MessageOut"/>
     </phaseOrder>
 </axisconfig>
 
