@@ -102,7 +102,8 @@ sandesha2_in_handler_invoke(
     ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
-    str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+    if(temp_prop)
+        str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
         return AXIS2_SUCCESS;
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 

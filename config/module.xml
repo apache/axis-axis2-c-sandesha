@@ -38,6 +38,7 @@
 
     <operation name="RMInOnlyOperation" mep="http://www.w3.org/2004/08/wsdl/in-only">
         <messageReceiver class="axis2_receivers"/>
+        <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</parameter>
         
         <!-- namespaces for the 2005-02 spec -->
         
@@ -54,6 +55,7 @@
  
      <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
         <messageReceiver class="axis2_receivers"/>
+        <parameter name="wsamapping" >http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</parameter>
         
         <!-- namespaces for the 2005-02 spec -->
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
