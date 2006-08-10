@@ -76,7 +76,7 @@ sandesha2_sender_is_sender_started
                         const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_run_sender_for_seq 
+sandesha2_sender_run_for_seq 
                         (sandesha2_sender_t *sender, 
                         const axis2_env_t *env, 
                         axis2_conf_ctx_t *conf_ctx, 
@@ -156,7 +156,7 @@ sandesha2_sender_create(const axis2_env_t *env)
     sender_impl->sender.ops->is_sender_started = 
                         sandesha2_sender_is_sender_started;
     sender_impl->sender.ops->run_for_seq = 
-                        sandesha2_sender_run_sender_for_seq;
+                        sandesha2_sender_run_for_seq;
     sender_impl->sender.ops->run = sandesha2_sender_run;
     sender_impl->sender.ops->free = sandesha2_sender_free;
                         
@@ -253,7 +253,7 @@ sandesha2_sender_is_sender_started
 }
             
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_run_sender_for_seq 
+sandesha2_sender_run_for_seq 
                         (sandesha2_sender_t *sender, 
                         const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
                         axis2_char_t *seq_id)
@@ -308,7 +308,8 @@ sandesha2_sender_run (sandesha2_sender_t *sender,
 axis2_status_t AXIS2_CALL
 sandesha2_sender_check_for_sync_res(
                         sandesha2_sender_t *sender, 
-                        const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
+                        const axis2_env_t *env, 
+                        axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *property = NULL;
     axis2_msg_ctx_t *res_msg_ctx = NULL;

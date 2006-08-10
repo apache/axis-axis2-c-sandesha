@@ -505,6 +505,7 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
     axiom_soap_envelope_t *soap_env = NULL;
     axis2_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
+    axis2_char_t *paused_phase_name = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -663,7 +664,9 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         property, AXIS2_FALSE);
     AXIS2_MSG_CTX_SET_EXECUTION_CHAIN(new_msg, env, 
                         AXIS2_MSG_CTX_GET_EXECUTION_CHAIN(ref_msg, env));
-                        
+    paused_phase_name = AXIS2_MSG_CTX_GET_PAUSED_PHASE_NAME(ref_msg, env);
+    AXIS2_MSG_CTX_SET_PAUSED_PHASE_NAME(new_msg, env, paused_phase_name);
+
     return new_msg;
 }
 

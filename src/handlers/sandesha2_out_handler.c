@@ -96,7 +96,6 @@ sandesha2_out_handler_invoke(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
-
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(conf_ctx == NULL)
     {
