@@ -371,7 +371,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
     }
     if(AXIS2_TRUE == drop)
     {
-        SANDESHA2_MSG_CTX_PAUSE(rm_msg_ctx, env);
+        SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
         return AXIS2_TRUE;
     }
     return AXIS2_FALSE;

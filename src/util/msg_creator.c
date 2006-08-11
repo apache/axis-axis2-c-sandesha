@@ -336,13 +336,13 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
     temp_soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
     temp_om_node = AXIOM_SOAP_BODY_GET_BASE_NODE(temp_soap_body, env);
-    SANDESHA2_IMO_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t *) response, 
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE((sandesha2_iom_rm_element_t *) response, 
             env, temp_om_node);
     temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(
             env, rm_version);
     AXIS2_MSG_CTX_SET_WSA_ACTION(out_msg, env, temp_action);
     temp_action = 
-        sandesha2_spec_specific_consts_get_create_seq_res_soap_action(env, 
+        sandesha2_spec_specific_consts_get_create_seq_res_action(env, 
                 rm_version);
     AXIS2_MSG_CTX_SET_SOAP_ACTION(out_msg, env, temp_action);
     ctx = AXIS2_MSG_CTX_GET_BASE(out_msg, env);
@@ -351,8 +351,8 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     AXIS2_PROPERTY_SET_VALUE(prop, env, addressing_ns_value);
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_WSA_VERSION, prop, AXIS2_FALSE);
     new_msg_id = axis2_uuid_gen(env);
-    AXIS2_MSG_CTX_SET_MSG_ID(out_msg, env, new_msg_id);
-    AXIS2_MSG_CTX_SET_ENVELOPE(out_msg, env, envelope);
+    AXIS2_MSG_CTX_SET_MESSAGE_ID(out_msg, env, new_msg_id);
+    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(out_msg, env, envelope);
     temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_msg, env);
     sandesha2_msg_creator_init_creation(env, temp_msg_ctx,out_msg);
     create_seq_response = sandesha2_msg_init_init_msg(env, out_msg);
@@ -531,7 +531,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         return NULL;
     }
     temp_msg_id = axis2_uuid_gen(env);
-    AXIS2_MSG_SET_MSG_ID(terminate_seq_msg_ctx, env, temp_msg_id);
+    AXIS2_MSG_CTX_SET_MESSAGE_ID(terminate_seq_msg_ctx, env, temp_msg_id);
     ref_msg_op = AXIS2_MSG_CTX_GET_OP(ref_msg_ctx, env);
     if(ref_msg_op)
     {
@@ -661,7 +661,7 @@ sandesha2_msg_creator_finalize_creation(
                 temp_value = AXIS2_PARAM_GET_VALUE(next_param, env);
                 new_param = axis2_param_create(env, temp_name, temp_value);
                 new_param->ops->value_free = next_param->ops->value_free;
-                AXIS2_OP_SET_PARAM(new_op, env, new_param); 
+                AXIS2_OP_ADD_PARAM(new_op, env, new_param); 
             }
         }
     }

@@ -199,7 +199,7 @@ sandesha2_address_from_om_node(sandesha2_iom_rm_element_t *address,
         return NULL;
     }
     str_address = AXIOM_ELEMENT_GET_TEXT(addr_part, env, addr_node);
-    if(NULL == str_address || AXIS2_STRLEN(str_address))
+    if(NULL == str_address || 0 == AXIS2_STRLEN(str_address))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
                         AXIS2_FAILURE);

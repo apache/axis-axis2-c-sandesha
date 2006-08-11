@@ -409,7 +409,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("TRUE", env));
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
                         AXIS2_FALSE);
-    SANDESHA2_MSG_CTX_PAUSE(rm_msg_ctx, env);
+    SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
     return AXIS2_SUCCESS;
     
 }

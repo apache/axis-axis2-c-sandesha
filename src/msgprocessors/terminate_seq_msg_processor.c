@@ -239,7 +239,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, transmit_bean);
     sandesha2_seq_mgr_update_last_activated_time(env, seq_id, storage_man);
     
-    SANDESHA2_MSG_CTX_PAUSE(msg_ctx, env);
+    SANDESHA2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     
     return AXIS2_SUCCESS;
 }

@@ -346,7 +346,7 @@ sandesha2_ack_msg_processor_process_in_msg (
                         out_seq_id, int_seq_id, storage_mgr);
         }
     }
-    SANDESHA2_MSG_CTX_PAUSE(rm_msg_ctx, env);
+    SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
     return AXIS2_SUCCESS;
 }
     
