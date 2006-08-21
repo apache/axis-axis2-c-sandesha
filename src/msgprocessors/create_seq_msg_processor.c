@@ -202,7 +202,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
     seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, 
                         env);
-    new_seq_id = sandesha2_seq_mgr_set_up_new_seq(env, rm_msg_ctx, 
+    new_seq_id = sandesha2_seq_mgr_setup_new_seq(env, rm_msg_ctx, 
                         storage_mgr);
     create_seq_res_msg = sandesha2_msg_creator_create_create_seq_res_msg(env,
                         rm_msg_ctx, out_msg_ctx, new_seq_id, storage_mgr);
@@ -319,9 +319,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
                     env)))
-        AXIS2_PROPERTY_SET_VALUE(property, env, "TRUE");
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("TRUE", env));
     else
-        AXIS2_PROPERTY_SET_VALUE(property, env, "FALSE");
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("FALSE", env));
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
                     AXIS2_FALSE);
     

@@ -121,6 +121,10 @@ sandesha2_seq_create(
     ((seq)->ops->set_last_msg (seq, env, last_msg))
 #define SANDESHA2_SEQ_GET_LAST_MSG(seq, env) \
     ((seq)->ops->get_last_msg (seq, env))
+#define SANDESHA2_SEQ_SET_MUST_UNDERSTAND(seq, env, mu) \
+    ((seq)->ops->set_must_understand (seq, env, mu))
+#define SANDESHA2_SEQ_IS_MUST_UNDERSTAND(seq, env) \
+    ((seq)->ops->is_must_understand (seq, env))
 /************************** End of function macros ****************************/
 /** @} */
 #ifdef __cplusplus

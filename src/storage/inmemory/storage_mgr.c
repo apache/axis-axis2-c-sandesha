@@ -478,6 +478,7 @@ sandesha2_storage_mgr_store_msg_ctx(
     if(!storage_map)
     {
         storage_map = axis2_hash_make(env);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_map);
         AXIS2_CTX_SET_PROPERTY(ctx, env, storage_impl->SANDESHA2_MSG_MAP_KEY, 
                 property, AXIS2_FALSE);

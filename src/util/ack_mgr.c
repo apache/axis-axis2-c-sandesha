@@ -30,10 +30,11 @@
 #include <sandesha2/sandesha2_seq_ack.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
-sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *ref_rm_msg,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_mgr)
+sandesha2_ack_mgr_generate_ack_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *ref_rm_msg,
+        axis2_char_t *seq_id,
+        sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -89,7 +90,8 @@ sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
                         ack_op);
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION, 
                         AXIS2_FALSE);
-    wsa_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(property)
+        wsa_version = AXIS2_PROPERTY_GET_VALUE(property, env);
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(wsa_version, env));
@@ -210,7 +212,7 @@ sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
         orig_trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(ack_msg_ctx, 
                         env);
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, orig_trans_out);
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env,
                             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,

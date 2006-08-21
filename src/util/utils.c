@@ -102,9 +102,10 @@ sandesha2_utils_get_current_time_in_millis(
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_rm_version(const axis2_env_t *env,
-                        axis2_char_t *key,
-                        sandesha2_storage_mgr_t *storage_man)
+sandesha2_utils_get_rm_version(
+        const axis2_env_t *env,
+        axis2_char_t *key,
+        sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *rm_version_bean = NULL;
@@ -115,7 +116,8 @@ sandesha2_utils_get_rm_version(const axis2_env_t *env,
     
     seq_prop_man = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
                         storage_man, env);
-    rm_version_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_man, 
+    if(seq_prop_man)
+        rm_version_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_man, 
                         env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
     if(NULL == rm_version_bean)
         return NULL;
@@ -198,98 +200,135 @@ sandesha2_utils_get_property_bean(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
-sandesha2_utils_get_array_list_from_string(const axis2_env_t *env,
-                        axis2_char_t *string)
+sandesha2_utils_get_array_list_from_string(
+        const axis2_env_t *env,
+        axis2_char_t *str)
 {
-    axis2_char_t *dup_string = NULL;
+    axis2_char_t *dup_str = NULL;
     axis2_char_t *temp_str = NULL;
-    axis2_bool_t added = AXIS2_FALSE;
-    axis2_array_list_t *ret = axis2_array_list_create(env, 
-                        AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
+    axis2_array_list_t *ret = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, string, NULL);
+    if(NULL == str || 0 == AXIS2_STRCMP("", str))
+    {
+        ret = axis2_array_list_create(env, AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
+        return ret;
+    }
+    if(2 > AXIS2_STRLEN(str))
+    {
+        axis2_char_t *ret_str = NULL;
+
+        ret_str = axis2_strcat(env, "Invalid String Array", str, NULL);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
+            AXIS2_FAILURE);
+        AXIS2_FREE(env->allocator, ret_str);
+        return NULL;
+    }
     /* remove the array markers - []  if present */
-    if('[' == *string)
-        temp_str = string + sizeof(axis2_char_t);
+    if('[' == *str)
+        temp_str = str + sizeof(axis2_char_t);
     else
-        temp_str = string;
-    dup_string = AXIS2_STRDUP(temp_str, env);
-    if(']' == dup_string[AXIS2_STRLEN(dup_string)])
-        dup_string[AXIS2_STRLEN(dup_string)] = '\0';
+    {
+        axis2_char_t *ret_str = NULL;
+
+        ret_str = axis2_strcat(env, "Invalid String Array", str, NULL);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
+            AXIS2_FAILURE);
+        AXIS2_FREE(env->allocator, ret_str);
+        return NULL;
+    }
+    dup_str = AXIS2_STRDUP(temp_str, env);
+    if(']' == dup_str[AXIS2_STRLEN(dup_str) - 1])
+        dup_str[AXIS2_STRLEN(dup_str) - 1] = '\0';
+    else
+    {
+        axis2_char_t *ret_str = NULL;
+
+        ret_str = axis2_strcat(env, "Invalid String Array", str, NULL);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
+            AXIS2_FAILURE);
+        AXIS2_FREE(env->allocator, ret_str);
+        return NULL;
+    }
         
+    ret = axis2_array_list_create(env, AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
     temp_str = NULL;
-    temp_str = strtok(dup_string, ",");
+    temp_str = strtok(dup_str, ",");
     while(NULL != temp_str)
     {
         axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
-        added = AXIS2_TRUE;
         AXIS2_ARRAY_LIST_ADD(ret, env, temp_element);
+        temp_str = strtok(dup_str, ",");
     }
-    AXIS2_FREE(env->allocator, dup_string);
-    if(AXIS2_FALSE == added)
-    {
-        AXIS2_ARRAY_LIST_FREE(ret, env);
-        return NULL;
-    }
+    AXIS2_FREE(env->allocator, dup_str);
     return ret;
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_utils_array_list_contains(const axis2_env_t *env,
                         axis2_array_list_t *list,
-                        axis2_char_t *string)
+                        axis2_char_t *str)
 {
     int i = 0;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, list, AXIS2_FALSE);
-    AXIS2_PARAM_CHECK(env->error, string, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, str, AXIS2_FALSE);
     
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(list, env); i++)
     {
         axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
-        if(NULL != element && 0 == AXIS2_STRCMP(element, string))
+        if(NULL != element && 0 == AXIS2_STRCMP(element, str))
             return AXIS2_TRUE;
     }
     return AXIS2_FAILURE;
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_array_list_to_string(const axis2_env_t *env,
-                        axis2_array_list_t *list, int type)
+sandesha2_utils_array_list_to_string(
+        const axis2_env_t *env,
+        axis2_array_list_t *list, 
+        int type)
 {
-    axis2_char_t *list_string = NULL;
-    int i = 0;
+    axis2_char_t *list_str = NULL;
+    int i = 0, size = 0;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
-    list_string = AXIS2_STRDUP("[", env);
-    for(i = 0; i < AXIS2_ARRY_LIST_SIZE(list, env); i++)
+    list_str = AXIS2_STRDUP("[", env);
+    size = AXIS2_ARRAY_LIST_SIZE(list, env);
+    for(i = 0; i < size; i++)
     {
-             
         if(SANDESHA2_ARRAY_LIST_STRING == type)
         {
             axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
-            list_string = axis2_strcat(env, list_string, ",", element, NULL);
+            if(0 == i)
+                list_str = axis2_strcat(env, list_str, element, NULL);
+            list_str = axis2_strcat(env, list_str, ",", element, NULL);
         }
         else if(SANDESHA2_ARRAY_LIST_LONG == type)
         {
             long *element = AXIS2_ARRAY_LIST_GET(list, env, i);
             axis2_char_t value[32];
             sprintf(value, "%ld", *element);
-            list_string = axis2_strcat(env, list_string, ",", value, NULL);
+            if(0 == i)
+                list_str = axis2_strcat(env, list_str, value, NULL);
+            list_str = axis2_strcat(env, list_str, ",", value, NULL);
         } 
     }
-    list_string = axis2_strcat(env, list_string, "]", NULL);
+    list_str = axis2_strcat(env, list_str, "]", NULL);
     
-    return list_string;
+    return list_str;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id)
+sandesha2_utils_start_invoker_for_seq(
+        const axis2_env_t *env,
+        axis2_conf_ctx_t *conf_ctx,
+        axis2_char_t *seq_id)
 {
     sandesha2_in_order_invoker_t *invoker = NULL;
     axis2_property_t *property = NULL;
@@ -300,9 +339,8 @@ sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
     
     property = AXIS2_CTX_GET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_INVOKER, AXIS2_FALSE);
-    if(NULL == property)
-        return AXIS2_FAILURE;
-    invoker = AXIS2_PROPERTY_GET_VALUE(property, env);
+    if(property)
+        invoker = AXIS2_PROPERTY_GET_VALUE(property, env);
     if(NULL == invoker)
     {
         invoker = sandesha2_in_order_invoker_create(env);
@@ -682,7 +720,7 @@ sandesha2_utils_get_soap_version(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_trim_string(const axis2_env_t *env, 
-                        axis2_char_t *orig_string)
+                        axis2_char_t *orig_str)
 {
     axis2_char_t *tmp = NULL;
     axis2_char_t *tmp2 = NULL;
@@ -690,14 +728,14 @@ sandesha2_utils_trim_string(const axis2_env_t *env,
     int len = 0;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, orig_string, NULL);
+    AXIS2_PARAM_CHECK(env->error, orig_str, NULL);
     
-    tmp = orig_string;
+    tmp = orig_str;
     while(' ' == *tmp)
         tmp++;
         
-    tmp2 = orig_string + AXIS2_STRLEN(orig_string);
-    while(' ' == *tmp2 && tmp2 != orig_string)
+    tmp2 = orig_str + AXIS2_STRLEN(orig_str);
+    while(' ' == *tmp2 && tmp2 != orig_str)
         tmp2--;
         
     len = tmp2 - tmp;

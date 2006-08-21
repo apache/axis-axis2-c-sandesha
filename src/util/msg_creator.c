@@ -673,7 +673,7 @@ sandesha2_msg_creator_finalize_creation(
         axis2_ctx_t *ctx = NULL;
 
         ctx = AXIS2_OP_CTX_GET_BASE(old_op_ctx, env);
-        old_op_ctx_props = AXIS2_CTX_GET_PROPERTIES(ctx, env);
+        old_op_ctx_props = AXIS2_CTX_GET_ALL_PROPERTIES(ctx, env);
         if(old_op_ctx_props)
         {
             axis2_op_ctx_t *new_op_ctx = NULL;
@@ -704,7 +704,7 @@ sandesha2_msg_creator_finalize_creation(
         axis2_ctx_t *ctx = NULL;
         
         ctx = AXIS2_MSG_CTX_GET_BASE(related_msg, env);
-        old_msg_ctx_props = AXIS2_CTX_GET_PROPERTIES(ctx, env);
+        old_msg_ctx_props = AXIS2_CTX_GET_ALL_PROPERTIES(ctx, env);
         if(old_msg_ctx_props)
         {
             axis2_hash_index_t *i = NULL;
@@ -729,9 +729,9 @@ sandesha2_msg_creator_finalize_creation(
     /* Setting options with properties copied from the old one */
 
     related_ctx = AXIS2_MSG_CTX_GET_BASE(related_msg, env);
-    related_msg_props = AXIS2_CTX_GET_PROPERTIES(related_ctx, env);
+    related_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(related_ctx, env);
     new_ctx = AXIS2_MSG_CTX_GET_BASE(new_msg, env);
-    new_msg_props = AXIS2_CTX_GET_PROPERTIES(new_ctx, env);
+    new_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(new_ctx, env);
     if(!new_msg_props)
     {
         new_msg_props = axis2_hash_make(env);

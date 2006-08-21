@@ -154,6 +154,7 @@ sandesha2_sender_mgr_create(
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
         }
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, sender_impl->table);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_RETRANSMITTER, 
@@ -230,17 +231,14 @@ sandesha2_sender_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
 
-    msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
+    msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_ID(bean, env);
     if(!msg_id)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_KEY_IS_NULL, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return AXIS2_FALSE;
     }
     axis2_hash_set(sender_impl->table, msg_id, AXIS2_HASH_KEY_STRING, bean);
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -258,9 +256,7 @@ sandesha2_sender_mgr_remove(
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     axis2_hash_set(sender_impl->table, msg_id, AXIS2_HASH_KEY_STRING, NULL);
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -274,15 +270,15 @@ sandesha2_sender_mgr_retrieve(
 {
     sandesha2_sender_mgr_impl_t *sender_impl = NULL;
     sandesha2_sender_bean_t *bean = NULL;
+    axis2_hash_index_t *ind = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
+
     bean = (sandesha2_sender_bean_t *) axis2_hash_get(sender_impl->table, 
             msg_id, AXIS2_HASH_KEY_STRING);
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return bean;
 }
@@ -300,14 +296,11 @@ sandesha2_sender_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
     if(!msg_id)
     {
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return AXIS2_FALSE;
     }
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return AXIS2_TRUE; /* No need to update. Being a reference does the job */
 }
@@ -325,13 +318,11 @@ sandesha2_sender_mgr_find_by_internal_seq_id(
     AXIS2_ENV_CHECK(env, NULL);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     
     list = axis2_array_list_create(env, 0);
     if(!list)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return NULL;
     }
     if(!internal_seq_id || 0 == AXIS2_STRCMP(internal_seq_id, ""))
@@ -354,7 +345,6 @@ sandesha2_sender_mgr_find_by_internal_seq_id(
         }
         
     }
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return list;
 }
@@ -373,17 +363,14 @@ sandesha2_sender_mgr_find_by_sender_bean(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     beans = axis2_array_list_create(env, 0);
     if(!beans)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return NULL;
     }
     if(!bean)
     {
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return beans;
     }
     for (i = axis2_hash_first (sender_impl->table, env); i; 
@@ -413,13 +400,13 @@ sandesha2_sender_mgr_find_by_sender_bean(
         temp = (sandesha2_sender_bean_t *) v;
         ref_key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
         temp_ref_key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(temp, env);
-        if(time_to_send > 0 && (time_to_send != temp_time_to_send))
+        if(ref_key && temp_ref_key && 0 != AXIS2_STRCMP(ref_key, temp_ref_key))
         {
             add = AXIS2_FALSE;
         }
-        ref_key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
-        temp_ref_key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(temp, env);
-        if(ref_key && temp_ref_key && 0 != AXIS2_STRCMP(ref_key, temp_ref_key))
+        time_to_send = SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(bean, env);
+        temp_time_to_send = SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(temp, env);
+        if(time_to_send > 0 && (time_to_send != temp_time_to_send))
         {
             add = AXIS2_FALSE;
         }
@@ -467,7 +454,6 @@ sandesha2_sender_mgr_find_by_sender_bean(
         }
         
     }
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return beans;
 }
@@ -487,7 +473,6 @@ sandesha2_sender_mgr_find_unique(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     
     beans = sandesha2_sender_mgr_find_by_sender_bean(sender, env, 
             bean);
@@ -498,7 +483,6 @@ sandesha2_sender_mgr_find_unique(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Non-Unique result");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, 
                 AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return NULL;
     }
     for(i = 0; i < size; i++)
@@ -507,7 +491,6 @@ sandesha2_sender_mgr_find_unique(
        break;
     }
     
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return ret;
 }
@@ -524,7 +507,6 @@ sandesha2_sender_mgr_get_next_msg_to_send(
     AXIS2_ENV_CHECK(env, NULL);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     
     for (i = axis2_hash_first (sender_impl->table, env); i; 
             i = axis2_hash_next (env, i))
@@ -565,7 +547,11 @@ sandesha2_sender_mgr_get_next_msg_to_send(
         
         axis2_hash_this (i, NULL, NULL, &v);
         temp = (sandesha2_sender_bean_t *) v;
+        /* test code */
+        axis2_char_t *msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_ID(temp, env);
+        /* end of test code */
         is_send = SANDESHA2_SENDER_BEAN_IS_SEND(temp, env);
+        printf("is_send:%d\n", is_send);
         if(AXIS2_TRUE == is_send)
         {
             long time_to_send = 0;
@@ -584,6 +570,7 @@ sandesha2_sender_mgr_get_next_msg_to_send(
                     
                     if(msg_no == lowest_app_msg_no)
                         valid = AXIS2_TRUE;
+                    printf("valid:%d\n", valid);
                 }
                 else
                     valid = AXIS2_TRUE;
@@ -591,14 +578,12 @@ sandesha2_sender_mgr_get_next_msg_to_send(
                 {
                     sandesha2_sender_mgr_update_next_sending_time(
                             sender, env, temp);
-                    axis2_thread_mutex_unlock(sender_impl->mutex);
                     return temp;
                 }
             }
         }
     }
-    axis2_thread_mutex_unlock(sender_impl->mutex);
-
+    printf("return NULL from sender_mgr\n");
     return NULL;
 }
 
@@ -627,13 +612,11 @@ sandesha2_sender_mgr_find_beans_with_msg_no(
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     
     beans = axis2_array_list_create(env, 0);
     if(!beans)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(sender_impl->mutex);
         return NULL;
     }
     size = AXIS2_ARRAY_LIST_SIZE(list, env); 
@@ -651,7 +634,6 @@ sandesha2_sender_mgr_find_beans_with_msg_no(
         }
         
     }
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return beans;
 }
@@ -670,7 +652,6 @@ sandesha2_sender_mgr_retrieve_from_msg_ref_key(
     AXIS2_PARAM_CHECK(env->error, msg_ctx_ref_key, NULL);
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
 
-    axis2_thread_mutex_lock(sender_impl->mutex);
     
     for (i = axis2_hash_first (sender_impl->table, env); i; 
             i = axis2_hash_next (env, i))
@@ -685,11 +666,9 @@ sandesha2_sender_mgr_retrieve_from_msg_ref_key(
         if(msg_ctx_ref_key_l && 0 == AXIS2_STRCMP(msg_ctx_ref_key_l, 
                     msg_ctx_ref_key))
         {
-            axis2_thread_mutex_unlock(sender_impl->mutex);
             return bean;
         }
     }    
-    axis2_thread_mutex_unlock(sender_impl->mutex);
 
     return NULL;
 }

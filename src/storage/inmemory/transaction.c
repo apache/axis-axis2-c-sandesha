@@ -58,8 +58,10 @@ sandesha2_transaction_create(
     sandesha2_transaction_impl_t *transaction_impl = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    transaction_impl = AXIS2_MALLOC(env->allocator, 
-                    sizeof(sandesha2_transaction_impl_t));
+    
+    transaction_impl =  (sandesha2_transaction_impl_t *)AXIS2_MALLOC 
+                        (env->allocator, 
+                        sizeof(sandesha2_transaction_impl_t));
 
     transaction_impl->transaction.ops = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_transaction_ops_t)); 

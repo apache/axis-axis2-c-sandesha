@@ -375,6 +375,7 @@ static axis2_bool_t validate_msg(
         axis2_char_t *seq_rm_ns = NULL;
         
         spec_version = sandesha2_utils_get_rm_version(env, prop_key, storage_mgr);
+        printf("spec_version:%s\n", spec_version);
         if(spec_version)
         {
             seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 

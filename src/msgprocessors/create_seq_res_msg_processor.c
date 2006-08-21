@@ -171,7 +171,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_accept_t *accept = NULL;
     sandesha2_sender_bean_t *target_bean = NULL;
     axis2_array_list_t *found_list = NULL;
-    int i = 0;
+    int i = 0, size = 0;
     axis2_ctx_t *ctx = NULL;
     axis2_property_t *property = NULL;
     
@@ -245,6 +245,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     }
     SANDESHA2_CREATE_SEQ_BEAN_SET_SEQ_ID(create_seq_bean, env, new_out_seq_id);
     SANDESHA2_CREATE_SEQ_MGR_UPDATE(create_seq_mgr, env, create_seq_bean);
+    
     create_seq_sender_bean = SANDESHA2_SENDER_MGR_RETRIEVE(retrans_mgr,
                         env, create_seq_msg_id);
     if(NULL == create_seq_sender_bean)
@@ -343,8 +344,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     
     found_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
                         target_bean);
-    
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)
+    size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
+    for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *tmp_bean = NULL;
         axis2_char_t *key = NULL;

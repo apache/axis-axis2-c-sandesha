@@ -579,7 +579,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx1, env);
     
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, transport_out);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx1, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,

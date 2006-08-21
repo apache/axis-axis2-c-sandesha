@@ -28,10 +28,10 @@ struct sandesha2_sender_bean_impl
 
 	axis2_char_t *msg_context_ref_key;
 	axis2_char_t *msg_id;
-	axis2_bool_t send;
 	axis2_char_t *internal_seq_id;
 	int sent_count;
 	long msg_no;
+	axis2_bool_t send;
 	axis2_bool_t resend;
 	long time_to_send;
 	int msg_type;
@@ -154,13 +154,13 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 	/* init properties */
 	bean_impl->msg_context_ref_key = NULL;
 	bean_impl->msg_id = NULL;
-	bean_impl->send = AXIS2_FALSE;
 	bean_impl->internal_seq_id = NULL;
 	bean_impl->sent_count = -1;
 	bean_impl->msg_no = -1;
-	bean_impl->resend = AXIS2_FALSE;
+	bean_impl->send = AXIS2_FALSE;
+	bean_impl->resend = AXIS2_TRUE;
 	bean_impl->time_to_send = -1;
-	bean_impl->msg_type = -1;
+	bean_impl->msg_type = 0;
 	bean_impl->seq_id = NULL;
 
 	bean_impl->o_bean.ops = NULL;
@@ -226,13 +226,13 @@ sandesha2_sender_bean_create_with_data(const axis2_env_t *env,
 	/* init properties */
 	bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
 	bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
-	bean_impl->send = send; 
 	bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
 	bean_impl->sent_count = -1;
 	bean_impl->msg_no = msg_no;
-	bean_impl->resend = AXIS2_FALSE;
+	bean_impl->send = send; 
+	bean_impl->resend = AXIS2_TRUE;
 	bean_impl->time_to_send = time_to_send;
-	bean_impl->msg_type = -1;
+	bean_impl->msg_type = 0;
 	bean_impl->seq_id = NULL;
 
 	bean_impl->o_bean.ops = NULL;

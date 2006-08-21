@@ -169,10 +169,10 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *completed_bean = NULL;
     axis2_char_t *str_list = NULL;
     axis2_char_t *last_out_msg_no_str = NULL;
-    
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    
+    printf("In ack_msg_processor\n");    
     seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     if(NULL == seq_ack)
@@ -311,7 +311,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(no_of_msgs_acked_bean, env, 
                         str_long);
-        SANDESHA2_SEQ_PROPERY_MGR_UPDATE(seq_prop_mgr, env, 
+        SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
                         no_of_msgs_acked_bean); 
     }
     completed_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
@@ -328,7 +328,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     str_list = sandesha2_utils_array_list_to_string(env, acked_list,
                         SANDESHA2_ARRAY_LIST_LONG);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(completed_bean, env, str_list);
-    SANDESHA2_SEQ_PROPERY_MGR_UPDATE(seq_prop_mgr, env, completed_bean);
+    SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, completed_bean);
     
     last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
                         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, storage_mgr);

@@ -181,6 +181,8 @@ extern "C"
         SANDESHA2_ERROR_CANNOT_INIT_MSG,
         /* Error in processing the message */
         SANDESHA2_ERROR_CANNOT_PROCESS_MSG,
+        /* String array is invalid */
+        SANDESHA2_ERROR_INVALID_STRING_ARRAY,
         /** The following has to be the last error value all the time.
             All other error codes should appear above this.
             SANDESHA_ERROR_LAST is used to track the number of error codes present

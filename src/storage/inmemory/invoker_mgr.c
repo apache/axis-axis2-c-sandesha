@@ -121,6 +121,7 @@ sandesha2_invoker_mgr_create(
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
         }
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, invoker_impl->table);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_STORAGE_MAP, 
@@ -191,10 +192,8 @@ sandesha2_invoker_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     ref_key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
     axis2_hash_set(invoker_impl->table, ref_key, AXIS2_HASH_KEY_STRING, bean);
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -212,9 +211,7 @@ sandesha2_invoker_mgr_remove(
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     axis2_hash_set(invoker_impl->table, key, AXIS2_HASH_KEY_STRING, NULL);
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -233,10 +230,8 @@ sandesha2_invoker_mgr_retrieve(
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     bean = (sandesha2_invoker_bean_t *) axis2_hash_get(invoker_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return bean;
 }
@@ -254,15 +249,12 @@ sandesha2_invoker_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     ref_key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(bean, env);
     if(!ref_key)
     {
-        axis2_thread_mutex_unlock(invoker_impl->mutex);
         return AXIS2_FALSE;
     }
     axis2_hash_set(invoker_impl->table, ref_key, AXIS2_HASH_KEY_STRING, bean);
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return AXIS2_TRUE;
 }
@@ -282,17 +274,14 @@ sandesha2_invoker_mgr_find(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     beans = axis2_array_list_create(env, 0);
     if(!beans)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(invoker_impl->mutex);
         return NULL;
     }
     if(!bean)
     {
-        axis2_thread_mutex_unlock(invoker_impl->mutex);
         return beans;
     }
     for (i = axis2_hash_first (invoker_impl->table, env); i; 
@@ -340,7 +329,6 @@ sandesha2_invoker_mgr_find(
         }
         
     }
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return beans;
 }
@@ -360,7 +348,6 @@ sandesha2_invoker_mgr_find_unique(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
 
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     
     beans = sandesha2_invoker_mgr_find(invoker, env, bean);
     if(beans)
@@ -369,7 +356,6 @@ sandesha2_invoker_mgr_find_unique(
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Non-Unique result");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(invoker_impl->mutex);
         return NULL;
     }
     for(i = 0; i < size; i++)
@@ -378,7 +364,6 @@ sandesha2_invoker_mgr_find_unique(
        break;
     }
     
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
 
     return ret;
 }

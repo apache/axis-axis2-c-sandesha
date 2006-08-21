@@ -233,7 +233,7 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded
     
     sequence = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         app_rm_msg, env, SANDESHA2_MSG_PART_SEQ);
-    msg_num = SANDESHSA2_MSG_NUMBER_GET_MSG_NUM(SANDESHA2_SEQ_GET_MSG_NUM(
+    msg_num = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(SANDESHA2_SEQ_GET_MSG_NUM(
                         sequence, env), env);
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
                         SANDESHA2_SEQ_GET_IDENTIFIER(sequence, env), env);

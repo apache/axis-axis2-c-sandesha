@@ -184,7 +184,6 @@ sandesha2_in_order_invoker_stop_invoker_for_seq
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
@@ -197,7 +196,6 @@ sandesha2_in_order_invoker_stop_invoker_for_seq
     }
     if(0 == AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env))
         invoker_impl->run_invoker = AXIS2_FALSE;
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
     return AXIS2_SUCCESS;
 }
             
@@ -209,9 +207,7 @@ sandesha2_in_order_invoker_stop_invoking (sandesha2_in_order_invoker_t *invoker,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     SANDESHA2_INTF_TO_IMPL(invoker)->run_invoker = AXIS2_FALSE;
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
     return AXIS2_SUCCESS;
 }
             
@@ -226,9 +222,7 @@ sandesha2_in_order_invoker_is_invoker_started
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     started = SANDESHA2_INTF_TO_IMPL(invoker)->run_invoker;
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
     return started;    
 }
             
@@ -244,7 +238,6 @@ sandesha2_in_order_invoker_run_invoker_for_seq
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    axis2_thread_mutex_lock(invoker_impl->mutex);
     if(AXIS2_FALSE == sandesha2_utils_array_list_contains(env, 
                         invoker_impl->working_seqs, seq_id))
         AXIS2_ARRAY_LIST_ADD(invoker_impl->working_seqs, env, seq_id);
@@ -254,7 +247,6 @@ sandesha2_in_order_invoker_run_invoker_for_seq
         invoker_impl->run_invoker = AXIS2_TRUE;
         sandesha2_in_order_invoker_run(invoker, env);
     }
-    axis2_thread_mutex_unlock(invoker_impl->mutex);
     return AXIS2_SUCCESS;
 }
             

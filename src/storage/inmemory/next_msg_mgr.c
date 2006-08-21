@@ -113,6 +113,12 @@ sandesha2_next_msg_mgr_create(
         sandesha2_next_msg_mgr_free(&(next_msg_impl->next_msg), env);
         return NULL;
     }
+    next_msg_impl->values = axis2_array_list_create(env, 0);
+    if(!next_msg_impl->values)
+    {
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+    }
 
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_BEAN_MAP_NEXT_MESSAGE, AXIS2_FALSE);
@@ -129,6 +135,7 @@ sandesha2_next_msg_mgr_create(
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
         }
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, next_msg_impl->table);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_NEXT_MESSAGE, 
@@ -207,17 +214,14 @@ sandesha2_next_msg_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
 
     seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(bean, env);
     if(!seq_id)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_KEY_IS_NULL, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(next_msg_impl->mutex);
         return AXIS2_FALSE;
     }
     axis2_hash_set(next_msg_impl->table, seq_id, AXIS2_HASH_KEY_STRING, bean);
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -235,9 +239,7 @@ sandesha2_next_msg_mgr_remove(
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     axis2_hash_set(next_msg_impl->table, seq_id, AXIS2_HASH_KEY_STRING, NULL);
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return AXIS2_TRUE;
 
@@ -256,10 +258,8 @@ sandesha2_next_msg_mgr_retrieve(
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     bean = (sandesha2_next_msg_bean_t *) axis2_hash_get(next_msg_impl->table, 
             seq_id, AXIS2_HASH_KEY_STRING);
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return bean;
 }
@@ -277,15 +277,12 @@ sandesha2_next_msg_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     seq_id = SANDESHA2_NEXT_MSG_BEAN_GET_SEQ_ID(bean, env);
     if(!seq_id)
     {
-        axis2_thread_mutex_unlock(next_msg_impl->mutex);
         return AXIS2_FALSE;
     }
     axis2_hash_set(next_msg_impl->table, seq_id, AXIS2_HASH_KEY_STRING, bean);
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -302,12 +299,10 @@ sandesha2_next_msg_mgr_find(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     beans = axis2_array_list_create(env, 0);
     if(!beans)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(next_msg_impl->mutex);
         return NULL;
     }
     if(!bean)
@@ -343,7 +338,6 @@ sandesha2_next_msg_mgr_find(
         }
         
     }
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return beans;
 }
@@ -363,7 +357,6 @@ sandesha2_next_msg_mgr_find_unique(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     
     beans = sandesha2_next_msg_mgr_find(next_msg, env, 
             bean);
@@ -374,7 +367,6 @@ sandesha2_next_msg_mgr_find_unique(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Non-Unique result");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, 
                 AXIS2_FAILURE);
-        axis2_thread_mutex_unlock(next_msg_impl->mutex);
         return NULL;
     }
     for(i = 0; i < size; i++)
@@ -383,7 +375,6 @@ sandesha2_next_msg_mgr_find_unique(
        break;
     }
     
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return ret;
 }
@@ -399,7 +390,6 @@ sandesha2_next_msg_mgr_retrieve_all(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     next_msg_impl = SANDESHA2_INTF_TO_IMPL(next_msg);
 
-    axis2_thread_mutex_lock(next_msg_impl->mutex);
     for (i = axis2_hash_first (next_msg_impl->table, env); i; 
             i = axis2_hash_next (env, i))
     {
@@ -410,8 +400,6 @@ sandesha2_next_msg_mgr_retrieve_all(
         bean = (sandesha2_next_msg_bean_t *) v;
         AXIS2_ARRAY_LIST_ADD(next_msg_impl->values, env, bean);
     }
-
-    axis2_thread_mutex_unlock(next_msg_impl->mutex);
 
     return next_msg_impl->values;
 }

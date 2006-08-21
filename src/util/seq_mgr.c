@@ -49,7 +49,7 @@ sandesha2_seq_mgr_get_last_activated_time(const axis2_env_t *env,
 /******************************************************************************/
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-sandesha2_seq_mgr_set_up_new_seq(
+sandesha2_seq_mgr_setup_new_seq(
         const axis2_env_t *env,
         sandesha2_msg_ctx_t *create_seq_msg, 
         sandesha2_storage_mgr_t *storage_mgr)

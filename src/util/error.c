@@ -168,6 +168,8 @@ sandesha2_error_init()
         "Cannot initialize the message";
     sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_PROCESS_MSG]=
         "Error in processing the message";
+    sandesha2_error_messages[SANDESHA2_ERROR_INVALID_STRING_ARRAY]=
+        "String array is invalid";
     return AXIS2_SUCCESS;
 }
 

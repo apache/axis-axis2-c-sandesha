@@ -155,7 +155,7 @@ sandesha2_global_in_handler_invoke(
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_TRUE);
+        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, env));
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -269,13 +269,16 @@ sandesha2_global_in_handler_drop_if_duplicate(
             {
                 axis2_char_t *rcvd_msgs_str = NULL;
                 axis2_array_list_t *msg_no_list = NULL;
-                int i = 0;
+                int i = 0, size = 0;
                 
                 rcvd_msgs_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
                         rcvd_msgs_bean, env);
                 msg_no_list = sandesha2_utils_get_array_list_from_string(env,
                         rcvd_msgs_str);
-                for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(msg_no_list, env); i++)
+                if(msg_no_list)
+                    size = AXIS2_ARRAY_LIST_SIZE(msg_no_list, env);
+                printf("global_in_handler, size:%d\n", size);
+                for(i = 0; i < size; i++)
                 {
                     axis2_char_t *temp = NULL;
                     
