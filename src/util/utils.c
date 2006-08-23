@@ -41,6 +41,18 @@
 #include <sandesha2/sandesha2_close_seq.h>
 #include <sandesha2/sandesha2_close_seq_res.h>
 
+
+static axis2_array_list_t *
+get_sorted_msg_no_list(
+        const axis2_env_t *env,
+        axis2_char_t *msg_no_str,
+        axis2_char_t *delim);
+
+static axis2_array_list_t *
+sandesha2_utils_sort(
+        const axis2_env_t *env,
+        axis2_array_list_t *list);
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
                         axiom_soap_envelope_t *envelope, axis2_qname_t *qname)
@@ -261,7 +273,7 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
         AXIS2_ARRAY_LIST_ADD(ret, env, temp_element);
-        temp_str = strtok(dup_str, ",");
+        temp_str = strtok(NULL, ",");
     }
     AXIS2_FREE(env->allocator, dup_str);
     return ret;
@@ -544,6 +556,7 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
     axis2_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
     axis2_char_t *paused_phase_name = NULL;
+    axis2_svc_grp_t *svc_grp = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -560,11 +573,10 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
         
     options = axis2_options_create(env);
     AXIS2_MSG_CTX_SET_OPTIONS(new_msg, env, options);
-    
-    if(NULL != AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env))
+    svc_grp = AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env); 
+    if(NULL != svc_grp)
     {
-        AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, 
-                        AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env));
+        AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, svc_grp);
         if(NULL != AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env))
         {
             AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, 
@@ -709,8 +721,9 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN  int AXIS2_CALL
-sandesha2_utils_get_soap_version(const axis2_env_t *env, 
-                        axiom_soap_envelope_t *envelope)
+sandesha2_utils_get_soap_version(
+        const axis2_env_t *env, 
+        axiom_soap_envelope_t *envelope)
 {
     AXIS2_ENV_CHECK(env, -1);
     AXIS2_PARAM_CHECK(env->error, envelope, -1);
@@ -924,3 +937,141 @@ sandesha2_utils_stop_sender(const axis2_env_t *env,
     /*TODO */
     return AXIS2_SUCCESS;
 }
+
+/**
+ * Used to convert a message number list (a comma seperated list of message
+ * numbers) into a set of Acknowledgement Ranges. This breaks the list, sort
+ * the items and group them to create the ack_range objects.
+ * 
+ * @param msg_no_str
+ * @return
+ */
+AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+sandesha2_utils_get_ack_range_list(
+        const axis2_env_t *env,
+        axis2_char_t *msg_no_str,
+        axis2_char_t *rm_ns_value)
+{
+    axis2_array_list_t *ack_ranges = NULL;
+    axis2_array_list_t *sorted_msg_no_list = NULL;
+    int i = 0, size = 0;
+    long lower = 0;
+    long upper = 0;
+    axis2_bool_t completed = AXIS2_TRUE;
+
+    ack_ranges = axis2_array_list_create(env, 0);
+    sorted_msg_no_list = get_sorted_msg_no_list(env, msg_no_str, ",");
+    if(sorted_msg_no_list)
+        size = AXIS2_ARRAY_LIST_SIZE(sorted_msg_no_list, env);
+    for(i = 0; i < size; i ++)
+    {
+        long *temp = AXIS2_ARRAY_LIST_GET(sorted_msg_no_list, env, i);
+        if(lower == 0)
+        {
+            lower = *temp;
+            upper = *temp;
+            completed = AXIS2_FALSE;
+        }
+        else if(*temp == (upper + 1))
+        {
+            upper = *temp;
+            completed = AXIS2_FALSE;
+        }
+        else
+        {
+             sandesha2_ack_range_t *ack_range = NULL;
+             
+            /* add ack_range (lower, upper) */
+             ack_range = sandesha2_ack_range_create(env, rm_ns_value);
+             SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
+             SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
+             AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
+             lower = *temp;
+             upper = *temp;
+             completed = AXIS2_FALSE;
+        }
+    }
+    if(AXIS2_TRUE != completed)
+    {
+         sandesha2_ack_range_t *ack_range = NULL;
+         
+         ack_range = sandesha2_ack_range_create(env, rm_ns_value);
+         SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
+         SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
+         AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
+         completed = AXIS2_FALSE;
+    }
+    /*AXIS2_ARRAY_LIST_FREE(sorted_msg_no_list, env);*/
+    return ack_ranges;
+}
+
+static axis2_array_list_t *
+get_sorted_msg_no_list(
+        const axis2_env_t *env,
+        axis2_char_t *msg_no_str,
+        axis2_char_t *delim)
+{
+    axis2_array_list_t *msg_numbers = NULL;
+    axis2_array_list_t *sorted_msg_no_list = NULL;
+    axis2_char_t *temp_str = NULL;
+
+    msg_numbers = axis2_array_list_create(env, 0);
+    temp_str = strtok(msg_no_str, delim);
+    while(NULL != temp_str)
+    {
+        long long_val = 0;
+
+        long_val = atol(temp_str);
+        AXIS2_ARRAY_LIST_ADD(msg_numbers, env, &long_val);
+        temp_str = strtok(NULL, delim);
+    }
+    sorted_msg_no_list = sandesha2_utils_sort(env, msg_numbers);
+    /*AXIS2_ARRAY_LIST_FREE(msg_numbers, env);*/
+    return sorted_msg_no_list;
+}
+
+static axis2_array_list_t *
+sandesha2_utils_sort(
+        const axis2_env_t *env,
+        axis2_array_list_t *list)
+{
+    axis2_array_list_t *sorted_list = NULL;
+    long max = 0;
+    int i = 0, size = 0;
+    long j = 0;
+    
+    sorted_list = axis2_array_list_create(env, 0);
+    if(list)
+        size = AXIS2_ARRAY_LIST_SIZE(list, env);
+    for(i = 0; i < size; i++)
+    {
+        long *temp_long = NULL;
+
+        temp_long = (long *) AXIS2_ARRAY_LIST_GET(list, env, i);
+        if(*temp_long > max)
+            max = *temp_long;
+    }
+    for(j = 1; j <= max; j++)
+    {
+        long temp = 0;
+        axis2_bool_t contains = AXIS2_FALSE;
+        
+        temp = j;
+        for(i = 0; i < size; i++)
+        {
+            long *value = NULL;
+            value = AXIS2_ARRAY_LIST_GET(list, env, i);
+            if(*value == temp)
+            {
+                contains = AXIS2_TRUE;
+                break;
+            }
+        }
+        if(AXIS2_TRUE == contains)
+        {
+            AXIS2_ARRAY_LIST_ADD(sorted_list, env, &temp);
+        }
+    }
+    return sorted_list;    
+}
+

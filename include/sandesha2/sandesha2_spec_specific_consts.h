@@ -76,6 +76,11 @@ sandesha2_spec_specific_consts_get_create_seq_soap_action(
         axis2_char_t *spec_version);
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_ack_req_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_create_seq_res_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
@@ -96,7 +101,7 @@ sandesha2_spec_specific_consts_get_close_seq_res_action(
         axis2_char_t *spec_version);
 	
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-sandesha2_spec_specific_consts_get_ack_request_action(
+sandesha2_spec_specific_consts_get_ack_req_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
 	
@@ -126,6 +131,16 @@ sandesha2_spec_specific_consts_get_terminate_seq_soap_action(
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL        
 sandesha2_spec_specific_consts_get_teminate_seq_res_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_seq_ack_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+	
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_seq_ack_soap_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version);
         

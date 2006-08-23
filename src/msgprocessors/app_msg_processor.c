@@ -496,8 +496,9 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_utils_start_invoker_for_seq(env, conf_ctx, str_seq_id);
     }
     /* test code uncomment this when send_ack_if_reqd method function correctly */
-    /*sandesha2_app_msg_processor_send_ack_if_reqd(msg_processor, env, msg_ctx,
-                        msgs_str, storage_man);*/
+    sandesha2_app_msg_processor_send_ack_if_reqd(msg_processor, env, msg_ctx,
+                        msgs_str, storage_man);
+    printf("came1\n");
     return AXIS2_SUCCESS;
     
 }
@@ -535,7 +536,8 @@ sandesha2_app_msg_processor_process_out_msg(
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    
+   
+    printf("came2\n");
     msg_ctx1 = SANDESHA2_MSG_CTX_GET_MSG_CTX(msg_ctx, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx1, env);
     /* TODO setting up fault callback */

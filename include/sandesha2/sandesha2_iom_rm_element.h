@@ -56,7 +56,8 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element_ops
 
     axiom_node_t* (AXIS2_CALL *to_om_node) 
     					(sandesha2_iom_rm_element_t *element,
-                    	const axis2_env_t *env, void *om_node);
+                    	const axis2_env_t *env, 
+                        void *om_node);
 
 	axis2_bool_t (AXIS2_CALL *is_namespace_supported) 
     					(sandesha2_iom_rm_element_t *element,

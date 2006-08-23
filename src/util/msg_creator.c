@@ -20,6 +20,7 @@
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_ack_mgr.h>
+#include <sandesha2_seq_ack.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_create_seq.h>
@@ -44,6 +45,7 @@
 #include <axis2_addr.h>
 #include <axis2_options.h>
 #include <axiom_soap_envelope.h>
+#include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <axiom_node.h>
 #include <sandesha2/sandesha2_terminate_seq_res.h>
@@ -786,3 +788,115 @@ sandesha2_msg_creator_init_creation(
     }
     return AXIS2_SUCCESS;
 }
+
+/**
+ * Adds an ack message to the given application message.
+ * 
+ * @param app_msg
+ * @param sequence_id
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_msg_creator_add_ack_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *app_msg,
+        axis2_char_t *seq_id,
+        sandesha2_storage_mgr_t *storage_mgr)
+{
+    axiom_soap_envelope_t *envelope = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_char_t *rm_version = NULL;
+    axis2_char_t *rm_ns_value = NULL;
+    axis2_char_t *msg_no_list = NULL;
+    axis2_char_t *ack_req_action = NULL;
+    axis2_char_t *ack_req_soap_action = NULL;
+    axis2_char_t *str_value = NULL;
+    axis2_char_t *uuid = NULL;
+    sandesha2_identifier_t *id = NULL;
+    sandesha2_seq_ack_t *seq_ack = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_seq_property_bean_t *seq_bean = NULL;
+    sandesha2_seq_property_bean_t *seq_closed_bean = NULL;
+    axis2_msg_ctx_t *msg_ctx = NULL;
+    axis2_array_list_t *ack_range_list = NULL;
+    int i = 0, size = 0;
+
+    envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(app_msg, env);
+    if(NULL == envelope)
+    {
+        SANDESHA2_ERROR_SET(env->error, 
+                AXIS2_ERROR_NULL_SOAP_ENVELOPE_IN_MSG_CTX, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(app_msg, env);
+    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
+    if(NULL == rm_version)
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
+                AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
+    seq_ack = sandesha2_seq_ack_create(env, rm_ns_value);
+    id = sandesha2_identifier_create(env, rm_ns_value);
+    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(id, env, seq_id);
+    SANDESHA2_SEQ_ACK_SET_IDENTIFIER(seq_ack, env, id);
+    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id, 
+            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+    msg_no_list = (axis2_char_t *) SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+            seq_bean, env); 
+    ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
+            rm_ns_value);
+    if(ack_range_list)
+        size = AXIS2_ARRAY_LIST_SIZE(ack_range_list, env);
+    for(i = 0; i < size; i++)
+    {
+        sandesha2_ack_range_t *ack_range = NULL;
+
+        ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
+        SANDESHA2_SEQ_ACK_ADD_ACK_RANGE(seq_ack, env, ack_range);
+    }
+    seq_closed_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id, 
+            SANDESHA2_SEQ_PROP_SEQ_CLOSED);
+    if(seq_closed_bean)
+        str_value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_closed_bean, env);
+    if(seq_closed_bean && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_value))
+    {
+        axis2_bool_t is_allowed = AXIS2_FALSE;
+        
+        /* sequence is closed. so add the 'Final' part. */
+        is_allowed = sandesha2_spec_specific_consts_is_ack_final_allowed(env, 
+               rm_version);
+        if(AXIS2_TRUE == is_allowed)
+        {
+            sandesha2_ack_final_t *ack_final = NULL;
+
+            ack_final = sandesha2_ack_final_create(env,rm_ns_value);
+            SANDESHA2_SEQ_ACK_SET_ACK_FINAL(seq_ack, env, ack_final);
+        }
+    }
+    SANDESHA2_MSG_CTX_SET_MSG_PART(app_msg, env, 
+            SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
+            (sandesha2_iom_rm_part_t *) seq_ack);
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_ack, env, soap_header);
+
+    rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
+    ack_req_action = sandesha2_spec_specific_consts_get_seq_ack_action(env, 
+            rm_version);
+    SANDESHA2_MSG_CTX_SET_WSA_ACTION(app_msg, env, ack_req_action); 
+    ack_req_soap_action = 
+        sandesha2_spec_specific_consts_get_seq_ack_soap_action(env, 
+                rm_version);
+    SANDESHA2_MSG_CTX_SET_SOAP_ACTION(app_msg, env, ack_req_soap_action); 
+    uuid = axis2_uuid_gen(env);
+    SANDESHA2_MSG_CTX_SET_MSG_ID(app_msg, env, uuid);
+
+    return AXIS2_SUCCESS;
+        
+}
+    

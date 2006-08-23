@@ -204,7 +204,7 @@ sandesha2_spec_specific_consts_get_close_seq_res_action(
 	
 
 axis2_char_t *AXIS2_CALL
-sandesha2_spec_specific_consts_get_ack_request_action(
+sandesha2_spec_specific_consts_get_ack_req_action(
         const axis2_env_t *env,
         axis2_char_t *spec_version)
 {
@@ -273,6 +273,29 @@ sandesha2_spec_specific_consts_get_terminate_seq_soap_action(
     return NULL;
 }
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_ack_req_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version))
+    {
+        AXIS2_ERROR_SET(env->error, 
+                SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_SOAP_ACTION, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+    else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version))
+    {
+        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_ACK_REQUEST;
+    }
+    else
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+}
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL        
 sandesha2_spec_specific_consts_is_term_seq_res_reqd(
@@ -309,3 +332,43 @@ sandesha2_spec_specific_consts_get_teminate_seq_res_action(
 
     return NULL;
 }
+
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_seq_ack_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        return SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT;
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
+}
+	
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_seq_ack_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version)
+{
+    if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version))
+    {
+        return SANDESHA2_SPEC_2005_02_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT;
+    }
+    else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version))
+    {
+        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT;
+    }
+    else
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+        return NULL;
+    }
+}
+
+

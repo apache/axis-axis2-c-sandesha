@@ -129,7 +129,9 @@ sandesha2_error_init()
     sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_SEND_ACK_REQUEST_MESSAGE_SINCE_IS_NOT_ACTIVE] =
         "Canot send the ackRequest message since it is not active";
     sandesha2_error_messages[SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION] =
-        "this spec version does not define a ackRequest action";
+        "This spec version does not define a ackRequest action";
+    sandesha2_error_messages[SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_SOAP_ACTION] = 
+        "This spec version does not define a ackRequest soap action";
     sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID] =
         "Cannot find the sequence id";
     sandesha2_error_messages[SANDESHA2_ERROR_RM_VERSION_DOES_NOT_ALLOW_SEQ_CLOSING] =

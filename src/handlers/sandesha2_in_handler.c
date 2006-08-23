@@ -86,7 +86,7 @@ sandesha2_in_handler_invoke(
     sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
-    
+
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     

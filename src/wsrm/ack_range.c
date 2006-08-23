@@ -294,8 +294,10 @@ sandesha2_ack_range_to_om_node(sandesha2_iom_rm_element_t *ack_range,
 }
 
 axis2_bool_t AXIS2_CALL 
-sandesha2_ack_range_is_namespace_supported(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+sandesha2_ack_range_is_namespace_supported(
+        sandesha2_iom_rm_element_t *ack_range,
+        const axis2_env_t *env, 
+        axis2_char_t *namespace)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -303,7 +305,7 @@ sandesha2_ack_range_is_namespace_supported(sandesha2_iom_rm_element_t *ack_range
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
     if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
-        return AXIS2_FALSE;
+        return AXIS2_TRUE;
     }
     if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_10_NS_URI))
     {

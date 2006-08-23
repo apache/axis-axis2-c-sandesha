@@ -131,34 +131,61 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
  * @return internal_seq_id
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_internal_seq_id(const axis2_env_t *env,
-                        axis2_char_t *to,
-                        axis2_char_t *seq_key);
+sandesha2_utils_get_internal_seq_id(
+        const axis2_env_t *env,
+        axis2_char_t *to,
+        axis2_char_t *seq_key);
 
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
-sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *ref_rm_msg,
-                        axis2_op_t *op);
+sandesha2_utils_create_new_related_msg_ctx(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *ref_rm_msg,
+        axis2_op_t *op);
                         
 AXIS2_EXTERN  int AXIS2_CALL
-sandesha2_utils_get_soap_version(const axis2_env_t *env, 
-                        axiom_soap_envelope_t *envelope);
+sandesha2_utils_get_soap_version(
+        const axis2_env_t *env, 
+        axiom_soap_envelope_t *envelope);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_trim_string(const axis2_env_t *env, 
-                        axis2_char_t *orig_string);
+sandesha2_utils_trim_string(
+        const axis2_env_t *env, 
+        axis2_char_t *orig_string);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL                        
-sandesha2_utils_is_retriable_on_faults(const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx);
+sandesha2_utils_is_retriable_on_faults(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_utils_is_rm_global_msg(const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx);
+sandesha2_utils_is_rm_global_msg(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *msg_ctx);
                         
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env, 
-                        sandesha2_msg_ctx_t *rm_msg_ctx);
+sandesha2_utils_get_seq_id_from_rm_msg_ctx(
+        const axis2_env_t *env, 
+        sandesha2_msg_ctx_t *rm_msg_ctx);
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_ack_req_soap_action(
+        const axis2_env_t *env,
+        axis2_char_t *spec_version);
+
+/**
+ * Used to convert a message number list (a comma seperated list of message
+ * numbers) into a set of Acknowledgement Ranges. This breaks the list, sort
+ * the items and group them to create the ack_range objects.
+ * 
+ * @param msg_no_str
+ * @return
+ */
+AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+sandesha2_utils_get_ack_range_list(
+        const axis2_env_t *env,
+        axis2_char_t *msg_no_str,
+        axis2_char_t *rm_ns_value);
+
 /** @} */
 #ifdef __cplusplus
 }

@@ -104,6 +104,20 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
         sandesha2_msg_ctx_t *ref_rm_msg,
         axis2_msg_ctx_t *out_msg,
         sandesha2_storage_mgr_t *storage_mgr);
+
+/**
+ * Adds an ack message to the given application message.
+ * 
+ * @param app_msg
+ * @param sequence_id
+ */
+axis2_status_t AXIS2_CALL
+sandesha2_msg_creator_add_ack_msg(
+        const axis2_env_t *env,
+        sandesha2_msg_ctx_t *app_msg,
+        axis2_char_t *seq_id,
+        sandesha2_storage_mgr_t *storage_mgr);
+
 /** @} */
 #ifdef __cplusplus
 }

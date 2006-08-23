@@ -155,7 +155,7 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
     to_epr = AXIS2_OPTIONS_GET_TO(options, env);
     if(to_epr == NULL)
     {
-        AXIS2_SANDESHA2_ERROR_SET(env->error, 
+        AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_TO_ADDRESS_NOT_SET, AXIS2_FAILURE);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "To address is not set.");
@@ -166,7 +166,7 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
     svc_ctx = (axis2_svc_ctx_t *)AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     if(svc_ctx == NULL)
     {
-        AXIS2_SANDESHA2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_NULL, 
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_NULL, 
                 AXIS2_FAILURE);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "Service Context is NULL.");
@@ -1097,7 +1097,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     ack_requested_header_block = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
             element, env, qname, node, &ack_requested_header_block_node);
     old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
-    action = sandesha2_spec_specific_consts_get_ack_request_action(env, 
+    action = sandesha2_spec_specific_consts_get_ack_req_action(env, 
             rm_spec_version);
     AXIS2_OPTIONS_SET_ACTION(options, env, action);
     AXIS2_SVC_CLIENT_ADD_HEADER(svc_client, env, ack_requested_header_block_node); 

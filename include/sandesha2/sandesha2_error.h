@@ -134,6 +134,8 @@ extern "C"
         SANDESHA2_ERROR_CANNOT_SEND_ACK_REQUEST_MESSAGE_SINCE_IS_NOT_ACTIVE,
         /* This spec version does not define a ackRequest action */
         SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_ACTION,
+        /* This spec version does not define a ackRequest soap action */
+        SANDESHA2_ERROR_SPEC_VERSION_DOES_NOT_DEFINE_A_ACK_REQUEST_SOAP_ACTION,
         /* Invalid endpoint reference */
         SANDESHA2_ERROR_INVALID_EPR,
         /* Cannot find the sequence id */

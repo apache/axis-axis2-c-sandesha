@@ -160,6 +160,7 @@ sandesha2_out_handler_invoke(
         dummy_msg = AXIS2_TRUE;
     }
     msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
+    printf("msg_type1:%d\n", msg_type);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
         axis2_msg_ctx_t *req_msg_ctx = NULL;
@@ -195,7 +196,9 @@ sandesha2_out_handler_invoke(
                 rm_msg_ctx);
     }
     if(msg_processor)
+    {
         SANDESHA2_MSG_PROCESSOR_PROCESS_OUT_MSG(msg_processor, env, rm_msg_ctx);
+    }
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */

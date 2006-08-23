@@ -195,6 +195,7 @@ sandesha2_global_in_handler_invoke(
     if(AXIS2_FALSE == is_rm_global_msg)
         return AXIS2_SUCCESS;
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    printf("came\n");
     dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
                         rm_msg_ctx, storage_mgr);
     if(AXIS2_TRUE == dropped)
