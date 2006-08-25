@@ -40,7 +40,7 @@
 #include <sandesha2/sandesha2_ack_requested.h>
 #include <sandesha2/sandesha2_close_seq.h>
 #include <sandesha2/sandesha2_close_seq_res.h>
-
+#include <stdlib.h>
 
 static axis2_array_list_t *
 get_sorted_msg_no_list(

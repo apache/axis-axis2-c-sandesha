@@ -156,7 +156,7 @@ sandesha2_create_seq_mgr_free(
 
     if(seq_mgr_impl->mutex)
     {
-        axis2_thread_mutex_destry(seq_mgr_impl->mutex);
+        axis2_thread_mutex_destroy(seq_mgr_impl->mutex);
         seq_mgr_impl->mutex = NULL;
     }
     if(seq_mgr_impl->table)

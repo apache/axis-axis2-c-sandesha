@@ -389,8 +389,10 @@ sandesha2_ack_requested_set_identifier(sandesha2_ack_requested_t *ack_requested,
 	ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
  	if(NULL != ack_requested_impl->identifier)
 	{
+		/*
 		SANDESHA2_IDENTIFIER_FREE(ack_requested_impl->identifier, env);
 		ack_requested_impl->identifier = NULL;
+		*/
 	}
 	ack_requested_impl->identifier = identifier;
  	return AXIS2_SUCCESS;
@@ -418,8 +420,10 @@ sandesha2_ack_requested_set_msg_number(sandesha2_ack_requested_t *ack_requested,
 	ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
  	if(NULL != ack_requested_impl->msg_num)
 	{
+	    /*
 		SANDESHA2_MSG_NUMBER_FREE(ack_requested_impl->msg_num, env);
 		ack_requested_impl->msg_num = NULL;
+		*/
 	}
 	ack_requested_impl->msg_num = msg_number;
  	return AXIS2_SUCCESS;

@@ -31,6 +31,7 @@
 #include <axis2_qname.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <axis2_param.h>
+#include <stdlib.h>
 
 /******************************************************************************/
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL

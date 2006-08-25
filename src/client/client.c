@@ -19,7 +19,7 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_transaction.h>
-#include <sandesha2_client_constants.h>
+#include "sandesha2_client_constants.h"
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_ack_requested.h>
@@ -227,7 +227,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
     seq_report = sandesha2_seq_report_create(env);
-    SANDESHSA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, 
+    SANDESHA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, 
             SANDESHA2_SEQ_DIRECTION_OUT);
 
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
@@ -539,7 +539,7 @@ sandesha2_client_create_seq_with_svc_client(
         axis2_char_t *offered_seq_id = NULL;
     
         offered_seq_id = axis2_uuid_gen(env);
-        AXIS2_OPTIONS_SET_PROPERT(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, 
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, 
                 offered_seq_id);
     }
 
@@ -1276,7 +1276,7 @@ sandesha2_client_is_seq_terminated(
     internal_seq_find_bean =sandesha2_seq_property_bean_create(env);
     if(!internal_seq_find_bean)
     {
-        AXIS2_SET_ERROR(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return AXIS2_FALSE;
     }
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(internal_seq_find_bean, env, 
@@ -1507,12 +1507,12 @@ sandesha2_client_get_incoming_seq_report(
     sandesha2_transaction_t *report_transaction = NULL;
     axis2_array_list_t *completed_msg_list = NULL;
     axis2_char_t *within_transaction_str = NULL;
+    axis2_char_t status = -1;
+    int i = 0, size = 0;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
-    axis2_char_t status = -1;
-    int i = 0, size = 0;
 
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf); 

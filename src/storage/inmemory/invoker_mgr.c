@@ -156,7 +156,7 @@ sandesha2_invoker_mgr_free(
 
     if(invoker_impl->mutex)
     {
-        axis2_thread_mutex_destry(invoker_impl->mutex);
+        axis2_thread_mutex_destroy(invoker_impl->mutex);
         invoker_impl->mutex = NULL;
     }
     if(invoker_impl->table)

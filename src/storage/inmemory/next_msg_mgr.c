@@ -172,7 +172,7 @@ sandesha2_next_msg_mgr_free(
 
     if(next_msg_impl->mutex)
     {
-        axis2_thread_mutex_destry(next_msg_impl->mutex);
+        axis2_thread_mutex_destroy(next_msg_impl->mutex);
         next_msg_impl->mutex = NULL;
     }
     if(next_msg_impl->table)

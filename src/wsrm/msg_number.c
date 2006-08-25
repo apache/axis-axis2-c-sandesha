@@ -17,6 +17,7 @@
 #include <sandesha2/sandesha2_msg_number.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /** 
  * @brief MessageNumber struct impl

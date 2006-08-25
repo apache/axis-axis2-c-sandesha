@@ -189,7 +189,7 @@ sandesha2_seq_property_mgr_free(
 
     if(seq_property_impl->mutex)
     {
-        axis2_thread_mutex_destry(seq_property_impl->mutex);
+        axis2_thread_mutex_destroy(seq_property_impl->mutex);
         seq_property_impl->mutex = NULL;
     }
     if(seq_property_impl->values)

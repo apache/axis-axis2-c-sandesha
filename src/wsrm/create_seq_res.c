@@ -16,7 +16,7 @@
 #include <sandesha2/sandesha2_create_seq_res.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <axiom_soap_body.h>
-
+#include <sandesha2_utils.h>
 /** 
  * @brief CreateSeqenceResponse struct impl
  *	Sandesha2 IOM CreateSeqenceResponse

@@ -30,6 +30,8 @@
 #include <axiom_soap_fault.h>
 #include <axiom_soap_body.h>
 #include <axis2_relates_to.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <stdlib.h>
 #include <sandesha2/sandesha2_seq.h>
 #include <sandesha2/sandesha2_msg_number.h>
 #include <sandesha2/sandesha2_identifier.h>
@@ -45,7 +47,21 @@ sandesha2_global_in_handler_invoke(
         struct axis2_handler *handler, 
         const axis2_env_t *env,
         struct axis2_msg_ctx *msg_ctx);
+        
+axis2_bool_t AXIS2_CALL
+sandesha2_global_in_handler_drop_if_duplicate(
+                        struct axis2_handler *handler, 
+                        const axis2_env_t *env,
+                        sandesha2_msg_ctx_t *rm_msg_ctx,
+                        sandesha2_storage_mgr_t *storage_mgr);        
                                              
+
+axis2_status_t AXIS2_CALL
+sandesha2_global_in_handler_process_dropped_msg(
+                        struct axis2_handler *handler, 
+                        const axis2_env_t *env,
+                        sandesha2_msg_ctx_t *rm_msg_ctx,
+                        sandesha2_storage_mgr_t *storage_mgr);                                             
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
@@ -336,7 +352,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                     
                     SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(rcvd_msgs_bean, env,
                         bean_value);
-                    SANDEASHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
+                    SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
                         rcvd_msgs_bean);
                     app_msg_processor = sandesha2_app_msg_processor_create(env);
                     sandesha2_app_msg_processor_send_ack_if_reqd(

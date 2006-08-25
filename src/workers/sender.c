@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <sandesha2_sender.h>
+#include <sandesha2_ack_mgr.h>
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <sandesha2_transaction.h>
@@ -24,7 +25,7 @@
 #include <sandesha2/sandesha2_seq.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <axis2_http_transport.h>
 #include <axis2_http_transport_utils.h>
 #include <axiom_soap_const.h>
@@ -33,7 +34,7 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2/sandesha2_terminate_seq.h>
 #include <sandesha2/sandesha2_terminate_mgr.h>
-
+#include <sandesha2_msg_retrans_adjuster.h>
 
 /** 
  * @brief Sender struct impl
@@ -181,7 +182,7 @@ sandesha2_sender_free(sandesha2_sender_t *sender,
     }
     if(NULL != sender_impl->working_seqs)
     {
-        AXIS2_ARRY_LIST_FREE(sender_impl->working_seqs, env);
+        AXIS2_ARRAY_LIST_FREE(sender_impl->working_seqs, env);
         sender_impl->working_seqs = NULL;
     }
     if(NULL != sender->ops)
@@ -378,7 +379,7 @@ sandesha2_sender_check_for_sync_res(
                     res_envelope))
             AXIS2_ENGINE_RECEIVE_FAULT(engine, env, res_msg_ctx);
         else
-            AXIS2_ENGINE_RECIEVE(engine, env, res_msg_ctx);        
+            AXIS2_ENGINE_RECEIVE(engine, env, res_msg_ctx);        
     }
     return AXIS2_SUCCESS;
 }

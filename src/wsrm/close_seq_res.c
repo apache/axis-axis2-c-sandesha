@@ -18,7 +18,7 @@
 #include <sandesha2/sandesha2_constants.h>
 #include <sandesha2/sandesha2_utils.h>
 #include <axiom_soap_body.h>
-
+#include <sandesha2_identifier.h>
 /** 
  * @brief CloseSeqResponse struct impl
  *	Sandesha2 IOM CloseSeqResponse
@@ -333,8 +333,10 @@ sandesha2_close_seq_res_set_identifier(sandesha2_close_seq_res_t *close_seq_res,
 	close_seq_res_impl = SANDESHA2_INTF_TO_IMPL(close_seq_res);
  	if(NULL != close_seq_res_impl->identifier)
 	{
+	    /*
 		SANDESHA2_IDENTIFIER_FREE(close_seq_res_impl->identifier, env);
 		close_seq_res_impl->identifier = NULL;
+		*/
 	}
 	close_seq_res_impl->identifier = identifier;
  	return AXIS2_SUCCESS;

@@ -195,7 +195,7 @@ sandesha2_sender_mgr_free(
 
     if(sender_impl->mutex)
     {
-        axis2_thread_mutex_destry(sender_impl->mutex);
+        axis2_thread_mutex_destroy(sender_impl->mutex);
         sender_impl->mutex = NULL;
     }
     if(sender_impl->table)
@@ -543,12 +543,13 @@ sandesha2_sender_mgr_get_next_msg_to_send(
     {
         sandesha2_sender_bean_t *temp = NULL;
         void *v = NULL;
+        axis2_char_t *msg_id = NULL;
         axis2_bool_t is_send = AXIS2_FALSE;
         
         axis2_hash_this (i, NULL, NULL, &v);
         temp = (sandesha2_sender_bean_t *) v;
         /* test code */
-        axis2_char_t *msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_ID(temp, env);
+        msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_ID(temp, env);
         /* end of test code */
         is_send = SANDESHA2_SENDER_BEAN_IS_SEND(temp, env);
         printf("is_send:%d\n", is_send);

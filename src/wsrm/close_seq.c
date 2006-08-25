@@ -325,8 +325,10 @@ sandesha2_close_seq_set_identifier(sandesha2_close_seq_t *close_seq,
 	close_seq_impl = SANDESHA2_INTF_TO_IMPL(close_seq);
  	if(NULL != close_seq_impl->identifier)
 	{
+	    /*
 		SANDESHA2_IDENTIFIER_FREE(close_seq_impl->identifier, env);
 		close_seq_impl->identifier = NULL;
+		*/
 	}
 	close_seq_impl->identifier = identifier;
  	return AXIS2_SUCCESS;

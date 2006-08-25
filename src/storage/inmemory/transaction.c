@@ -51,7 +51,7 @@ sandesha2_transaction_rollback(
         sandesha2_transaction_t *transaction,
         const axis2_env_t *env);
 
-sandesha2_transaction_t *
+AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL
 sandesha2_transaction_create(
         const axis2_env_t *env)
 {

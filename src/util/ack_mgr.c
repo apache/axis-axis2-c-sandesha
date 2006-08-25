@@ -28,6 +28,7 @@
 #include <axis2_array_list.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2/sandesha2_seq_ack.h>
+#include <axis2_op.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(
