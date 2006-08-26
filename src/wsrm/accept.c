@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- #include <sandesha2/sandesha2_accept.h>
- #include <sandesha2/sandesha2_acks_to.h>
- #include <sandesha2/sandesha2_constants.h>
+ #include <sandesha2_accept.h>
+ #include <sandesha2_acks_to.h>
+ #include <sandesha2_constants.h>
 
 /** 
  * @brief Accept struct impl

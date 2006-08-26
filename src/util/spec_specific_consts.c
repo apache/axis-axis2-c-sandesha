@@ -14,9 +14,9 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_error.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_error.h>
 #include <axis2_string.h>
 #include <axis2_addr.h>
 

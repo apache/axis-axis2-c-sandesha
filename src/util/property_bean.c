@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_property_bean.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_property_bean.h>
+#include <sandesha2_constants.h>
 #include <stdio.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>

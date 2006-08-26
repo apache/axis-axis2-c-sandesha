@@ -14,24 +14,24 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_app_msg_processor.h>
-#include <sandesha2/sandesha2_ack_msg_processor.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_ack_requested.h>
-#include <sandesha2/sandesha2_last_msg.h>
-#include <sandesha2/sandesha2_create_seq.h>
-#include <sandesha2/sandesha2_identifier.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_app_msg_processor.h>
+#include <sandesha2_ack_msg_processor.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_last_msg.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_identifier.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_invoker_mgr.h>
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_fault_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -498,7 +498,6 @@ sandesha2_app_msg_processor_process_in_msg (
     /* test code uncomment this when send_ack_if_reqd method function correctly */
     sandesha2_app_msg_processor_send_ack_if_reqd(msg_processor, env, msg_ctx,
                         msgs_str, storage_man);
-    printf("came1\n");
     return AXIS2_SUCCESS;
     
 }
@@ -537,7 +536,6 @@ sandesha2_app_msg_processor_process_out_msg(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
    
-    printf("came2\n");
     msg_ctx1 = SANDESHA2_MSG_CTX_GET_MSG_CTX(msg_ctx, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx1, env);
     /* TODO setting up fault callback */

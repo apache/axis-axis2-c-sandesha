@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_ack_none.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_ack_none.h>
+#include <sandesha2_constants.h>
 /** 
  * @brief AckNone struct impl
  *	Sandesha2 IOM AckNone

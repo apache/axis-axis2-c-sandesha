@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_in_order_invoker.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_in_order_invoker.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
 #include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
-#include <sandesha2/sandesha2_seq.h>
+#include <sandesha2_msg_ctx.h>
+#include <sandesha2_seq.h>
 #include <sandesha2_msg_init.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>

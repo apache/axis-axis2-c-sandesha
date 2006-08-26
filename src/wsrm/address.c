@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_address.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_address.h>
+#include <sandesha2_constants.h>
 /** 
  * @brief Address struct impl
  *	Sandesha2 IOM Address

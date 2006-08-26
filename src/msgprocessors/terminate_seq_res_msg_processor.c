@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_terminate_seq_res_msg_processor.h>
+#include <sandesha2_terminate_seq_res_msg_processor.h>
 
 
 /** 

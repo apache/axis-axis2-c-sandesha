@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 #include <sandesha2_rm_elements.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_constants.h>
 #include <axis2_hash.h>
 #include <axiom_soap_const.h>
-#include <sandesha2/sandesha2_iom_rm_part.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_iom_rm_part.h>
+#include <sandesha2_utils.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <stdio.h>
@@ -383,10 +383,12 @@ sandesha2_rm_elements_from_soap_envelope
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
                         NULL);
+    printf("came1\n");
     seq_ack_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element,
                         env, qname, header_node, &seq_ack_node);
     if(NULL != seq_ack_element)
     {
+        printf("came2\n");
         elements_impl->seq_ack = sandesha2_seq_ack_create(env, rm_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq_ack, env,
                         header_node);
@@ -410,6 +412,7 @@ sandesha2_rm_elements_from_soap_envelope
                         &create_seq_res_node);
     if(NULL != create_seq_res_node)
     {
+        printf("came3\n");
         elements_impl->create_seq_res = sandesha2_create_seq_res_create(env, 
                         rm_ns_val, addr_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq_res, env,

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_constants.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_header_block.h>
 

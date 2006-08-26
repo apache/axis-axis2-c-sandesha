@@ -30,7 +30,7 @@
 #include <axis2_string.h>
 #include <axis2_utils.h>
 #include <sandesha2_storage_mgr.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
+#include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 
 #ifdef __cplusplus

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_transport_sender.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_transport_sender.h>
+#include <sandesha2_constants.h>
 #include <sandesha2_storage_mgr.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <axis2_conf.h>
 #include <axis2_string.h>
 

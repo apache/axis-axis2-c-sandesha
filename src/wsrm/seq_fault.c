@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_seq_fault.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_seq_fault.h>
+#include <sandesha2_constants.h>
 
 /** 
  * @brief SequenceFault struct impl

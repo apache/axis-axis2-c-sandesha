@@ -15,12 +15,12 @@
  */
  
 #include <sandesha2_msg_retrans_adjuster.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_msg_init.h>
 #include <axis2_property.h>
-#include <sandesha2/sandesha2_terminate_mgr.h>
+#include <sandesha2_terminate_mgr.h>
 
 /******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL

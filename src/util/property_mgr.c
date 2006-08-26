@@ -14,11 +14,11 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_property_mgr.h>
+#include <sandesha2_property_mgr.h>
 #include <sys/timeb.h>
 #include <axis2_param.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_error.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_error.h>
 #include <sandesha2_sender.h>
 #include <axis2_string.h>
 #include <axis2_conf.h>
@@ -29,7 +29,7 @@
 #include <axis2_transport_out_desc.h>
 #include <axis2_transport_in_desc.h>
 #include <axis2_qname.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <axis2_param.h>
 #include <stdlib.h>
 

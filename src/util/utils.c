@@ -14,14 +14,14 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <sys/timeb.h>
 #include <axis2_param.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_in_order_invoker.h>
-#include <sandesha2/sandesha2_transport_sender.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_in_order_invoker.h>
+#include <sandesha2_transport_sender.h>
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2/sandesha2_error.h>
+#include <sandesha2_error.h>
 #include <sandesha2_sender.h>
 #include <axis2_string.h>
 #include <axis2_conf.h>
@@ -35,11 +35,11 @@
 #include <axis2_http_transport.h>
 #include <axis2_addr.h>
 #include <axiom_soap_header.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_ack_requested.h>
-#include <sandesha2/sandesha2_close_seq.h>
-#include <sandesha2/sandesha2_close_seq_res.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_close_seq.h>
+#include <sandesha2_close_seq_res.h>
 #include <stdlib.h>
 
 static axis2_array_list_t *

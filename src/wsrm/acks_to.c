@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_acks_to.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_acks_to.h>
+#include <sandesha2_constants.h>
 /** 
  * @brief AcksTo struct impl
  *	Sandesha2 IOM AcksTo

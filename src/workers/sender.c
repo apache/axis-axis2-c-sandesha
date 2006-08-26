@@ -15,14 +15,14 @@
  */
 #include <sandesha2_sender.h>
 #include <sandesha2_ack_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
 #include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
-#include <sandesha2/sandesha2_seq.h>
+#include <sandesha2_msg_ctx.h>
+#include <sandesha2_seq.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdlib.h>
@@ -32,8 +32,8 @@
 #include <axiom_soap_fault.h>
 #include <axiom_soap_body.h>
 #include <sandesha2_msg_init.h>
-#include <sandesha2/sandesha2_terminate_seq.h>
-#include <sandesha2/sandesha2_terminate_mgr.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_mgr.h>
 #include <sandesha2_msg_retrans_adjuster.h>
 
 /** 
@@ -488,7 +488,6 @@ sandesha2_sender_worker_func(
         sender_bean = SANDESHA2_SENDER_MGR_GET_NEXT_MSG_TO_SEND(mgr, env);
         if(NULL == sender_bean)
         {
-            printf("sender_bean is NULL\n");
             continue;
         }
             
@@ -511,7 +510,6 @@ sandesha2_sender_worker_func(
                         sender_bean, sender_impl->conf_ctx, storage_mgr);
         if(AXIS2_FALSE == continue_sending)
         {
-            printf("continue_sending true\n");
             continue;
         }
         
@@ -610,7 +608,6 @@ sandesha2_sender_worker_func(
             axis2_bool_t resend = AXIS2_FALSE;
             
             resend = SANDESHA2_SENDER_BEAN_IS_RESEND(sender_bean, env);
-            printf("resend:%d\n", resend);                
             if(AXIS2_TRUE == resend)
             {
                 SANDESHA2_SENDER_BEAN_SET_SENT_COUNT(bean1, env, 
@@ -674,3 +671,4 @@ sandesha2_sender_worker_func(
     
     return NULL;
 }
+

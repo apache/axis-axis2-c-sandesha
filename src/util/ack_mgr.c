@@ -14,20 +14,20 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <sandesha2_ack_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_property_bean.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_property_bean.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_ack_range.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <axis2_string.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_addr.h>
 #include <axis2_property.h>
 #include <axis2_array_list.h>
 #include <sandesha2_msg_init.h>
-#include <sandesha2/sandesha2_seq_ack.h>
+#include <sandesha2_seq_ack.h>
 #include <axis2_op.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
@@ -80,11 +80,13 @@ sandesha2_ack_mgr_generate_ack_msg(
     if(NULL != ref_op)
     {
         axis2_array_list_t *out_flows = NULL;
-        out_flows = AXIS2_OP_GET_PHASES_OUTFLOW(ref_op, env);
+        axis2_array_list_t *out_fault_flows = NULL;
+        out_flows = AXIS2_OP_GET_OUT_FLOW(ref_op, env);
+        out_fault_flows = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_op, env);
         if(NULL != out_flows)
         {
-            AXIS2_OP_SET_PHASES_OUTFLOW(ack_op, env, out_flows);
-            AXIS2_OP_SET_PHASES_OUT_FAULT_FLOW(ack_op, env, out_flows);
+            AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flows);
+            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, out_fault_flows);
         }
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg,

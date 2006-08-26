@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_identifier.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_identifier.h>
+#include <sandesha2_constants.h>
 /** 
  * @brief Identifier struct impl
  *	Sandesha2 IOM Identifier
@@ -184,7 +184,8 @@ sandesha2_identifier_get_namespace_value (
 void* AXIS2_CALL 
 sandesha2_identifier_from_om_node(
         sandesha2_iom_rm_element_t *identifier,
-        const axis2_env_t *env, axiom_node_t *om_node)
+        const axis2_env_t *env, 
+        axiom_node_t *om_node)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
     axiom_element_t *om_element = NULL;

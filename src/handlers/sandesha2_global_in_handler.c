@@ -32,10 +32,10 @@
 #include <axis2_relates_to.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <stdlib.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_msg_number.h>
-#include <sandesha2/sandesha2_identifier.h>
-#include <sandesha2/sandesha2_app_msg_processor.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_msg_number.h>
+#include <sandesha2_identifier.h>
+#include <sandesha2_app_msg_processor.h>
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_global_in_handler_get_qname(

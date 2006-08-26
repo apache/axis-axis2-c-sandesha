@@ -14,10 +14,10 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_ack_requested.h>
+#include <sandesha2_ack_requested.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_header_block.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_constants.h>
 
 /** 
  * @brief AckRequested struct impl

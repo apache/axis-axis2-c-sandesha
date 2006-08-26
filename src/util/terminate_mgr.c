@@ -14,13 +14,13 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <sandesha2_terminate_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_property_bean.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_property_bean.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_ack_range.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <axis2_string.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_addr.h>

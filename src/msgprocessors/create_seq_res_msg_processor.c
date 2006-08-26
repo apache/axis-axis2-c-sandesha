@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_create_seq_res_msg_processor.h>
+#include <sandesha2_create_seq_res_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_fault_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -28,23 +28,23 @@
 #include <stdio.h>
 #include <sandesha2_storage_mgr.h>
 #include <axis2_msg_ctx.h>
-#include <sandesha2/sandesha2_create_seq.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_create_seq_res.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_core_utils.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
-#include <sandesha2/sandesha2_seq_offer.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
+#include <sandesha2_create_seq_res.h>
+#include <sandesha2_seq_offer.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_create_seq_res.h>
 #include <axis2_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_ack_msg_processor.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_ack_requested.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_ack_msg_processor.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_ack_requested.h>
 #include <axis2_relates_to.h>
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_msg_init.h>

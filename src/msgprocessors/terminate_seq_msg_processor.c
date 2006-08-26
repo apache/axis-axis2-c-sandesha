@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_terminate_seq_msg_processor.h>
+#include <sandesha2_terminate_seq_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_fault_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
-#include <sandesha2/sandesha2_terminate_seq.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_msg_ctx.h>
+#include <sandesha2_terminate_seq.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -31,16 +31,16 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_core_utils.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_create_seq_res.h>
 #include <axis2_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_ack_msg_processor.h>
-#include <sandesha2/sandesha2_seq.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_ack_msg_processor.h>
+#include <sandesha2_seq.h>
 #include "../client/sandesha2_client_constants.h"
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
@@ -482,8 +482,8 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     out_in_op = axis2_op_create_with_qname(env, qname);
     AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(out_in_op, env, AXIS2_MEP_URI_OUT_IN);
-    AXIS2_OP_SET_REMAINING_PHASES_INFLOW(out_in_op, env, 
-                        AXIS2_OP_GET_REMAINING_PHASES_INFLOW(old_op, env));
+    AXIS2_OP_SET_IN_FLOW(out_in_op, env, 
+                        AXIS2_OP_GET_IN_FLOW(old_op, env));
     op_ctx = axis2_op_ctx_create(env, out_in_op, NULL);
     AXIS2_OP_CTX_SET_PARENT(op_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(msg_ctx, env));
     AXIS2_CONF_CTX_REGISTER_OP_CTX(conf_ctx, env, SANDESHA2_MSG_CTX_GET_MSG_ID(

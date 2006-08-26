@@ -15,10 +15,10 @@
  */
 #include <axis2_module.h>
 #include <sandesha2_module.h>
-#include <sandesha2/sandesha2_property_bean.h>
-#include <sandesha2/sandesha2_property_mgr.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_property_bean.h>
+#include <sandesha2_property_mgr.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_constants.h>
 
 /******************************************************************************/
 axis2_status_t AXIS2_CALL

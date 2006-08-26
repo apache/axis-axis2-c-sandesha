@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_msg_ctx.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_msg_ctx.h>
+#include <sandesha2_constants.h>
 #include <axis2_hash.h>
 #include <axiom_soap_const.h>
-#include <sandesha2/sandesha2_iom_rm_part.h>
+#include <sandesha2_iom_rm_part.h>
 #include <stdio.h>
 
 

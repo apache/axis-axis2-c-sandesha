@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_msg_number.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_msg_number.h>
+#include <sandesha2_constants.h>
 #include <stdio.h>
 #include <stdlib.h>
 

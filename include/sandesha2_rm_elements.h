@@ -24,17 +24,17 @@
 
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
-#include <sandesha2/sandesha2_create_seq.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
-#include <sandesha2/sandesha2_terminate_seq.h>
-#include <sandesha2/sandesha2_terminate_seq_res.h>
-#include <sandesha2/sandesha2_close_seq.h>
-#include <sandesha2/sandesha2_close_seq_res.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_ack_requested.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_identifier.h>
-#include <sandesha2/sandesha2_msg_number.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_create_seq_res.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
+#include <sandesha2_close_seq.h>
+#include <sandesha2_close_seq_res.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_identifier.h>
+#include <sandesha2_msg_number.h>
 
 
 

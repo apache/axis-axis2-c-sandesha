@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <sandesha2/sandesha2_ack_req_msg_processor.h>
+#include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_fault_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -30,15 +30,15 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_core_utils.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_create_seq_res.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_create_seq_res.h>
 #include <axis2_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_ack_requested.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_ack_requested.h>
 #include <axis2_addr.h>
 #include <sandesha2_msg_init.h>
 
@@ -195,11 +195,11 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     if(NULL != rm_msg_op)
     {
         axis2_array_list_t *out_flow = NULL;
-        out_flow = AXIS2_OP_GET_PHASES_OUTFLOW(rm_msg_op, env);
+        out_flow = AXIS2_OP_GET_OUTFLOW(rm_msg_op, env);
         if(NULL != out_flow)
         {
-            AXIS2_OP_SET_PHASES_OUTFLOW(ack_op, env, out_flow);
-            AXIS2_OP_SET_PHASES_OUT_FAULT_FLOW(ack_op, env, out_flow);
+            AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flow);
+            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, out_flow);
         }
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, rm_msg_ctx, 

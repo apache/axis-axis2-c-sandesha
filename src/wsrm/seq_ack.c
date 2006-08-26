@@ -14,9 +14,9 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_header_block.h>
 
@@ -202,8 +202,9 @@ sandesha2_seq_ack_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_seq_ack_free (sandesha2_iom_rm_element_t *seq_ack, 
-						const axis2_env_t *env)
+sandesha2_seq_ack_free (
+        sandesha2_iom_rm_element_t *seq_ack, 
+		const axis2_env_t *env)
 {
     sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -249,8 +250,9 @@ sandesha2_seq_ack_free (sandesha2_iom_rm_element_t *seq_ack,
 }
 
 axis2_char_t* AXIS2_CALL 
-sandesha2_seq_ack_get_namespace_value (sandesha2_iom_rm_element_t *seq_ack,
-						const axis2_env_t *env)
+sandesha2_seq_ack_get_namespace_value (
+        sandesha2_iom_rm_element_t *seq_ack,
+		const axis2_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -261,8 +263,10 @@ sandesha2_seq_ack_get_namespace_value (sandesha2_iom_rm_element_t *seq_ack,
 
 
 void* AXIS2_CALL 
-sandesha2_seq_ack_from_om_node(sandesha2_iom_rm_element_t *seq_ack,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+sandesha2_seq_ack_from_om_node(
+        sandesha2_iom_rm_element_t *seq_ack,
+        const axis2_env_t *env, 
+        axiom_node_t *om_node)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
     axiom_element_t *om_element = NULL;

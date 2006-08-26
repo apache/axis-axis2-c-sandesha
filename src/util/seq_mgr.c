@@ -19,7 +19,7 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_utils.h>
+#include <sandesha2_utils.h>
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_msg_ctx.h>
@@ -153,7 +153,7 @@ sandesha2_seq_mgr_setup_new_seq(
     SANDESHA2_NEXT_MSG_MGR_INSERT(next_msg_mgr, env, next_msg_bean);
 
     /* Message to invoke. This will apply for only in-order invocations */
-    /*sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);*/
+    sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);
     /* Setting the RM Spec version for this sequence */
     create_seq_msg_action = SANDESHA2_MSG_CTX_GET_WSA_ACTION(create_seq_msg, env);
     if(create_seq_msg_action == NULL)

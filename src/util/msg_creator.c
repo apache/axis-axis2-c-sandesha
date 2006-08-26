@@ -32,8 +32,8 @@
 #include <sandesha2_seq_offer.h>
 #include <sandesha2_accept.h>
 #include <sandesha2_msg_init.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_terminate_seq.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_terminate_seq.h>
 #include "../client/sandesha2_client_constants.h"
 
 #include <axis2_conf_ctx.h>
@@ -48,7 +48,7 @@
 #include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <axiom_node.h>
-#include <sandesha2/sandesha2_terminate_seq_res.h>
+#include <sandesha2_terminate_seq_res.h>
 
   
 static axis2_status_t
@@ -146,14 +146,14 @@ sandesha2_msg_creator_create_create_seq_msg(
         axis2_array_list_t *in_fault_flow = NULL;
         axis2_array_list_t *inflow = NULL;
 
-        outflow = AXIS2_OP_GET_PHASES_OUTFLOW(app_msg_op_desc, env);
-        AXIS2_OP_SET_PHASES_OUTFLOW(create_seq_op, env, outflow);
-        out_fault_flow = AXIS2_OP_GET_PHASES_OUT_FAULT_FLOW(app_msg_op_desc, env);
-        AXIS2_OP_SET_PHASES_OUT_FAULT_FLOW(create_seq_op, env, out_fault_flow);
-        in_fault_flow = AXIS2_OP_GET_PHASES_IN_FAULT_FLOW(app_msg_op_desc, env);
-        AXIS2_OP_SET_PHASES_IN_FAULT_FLOW(create_seq_op, env, in_fault_flow);
-        inflow = AXIS2_OP_GET_REMAINING_PHASES_INFLOW(app_msg_op_desc, env);
-        AXIS2_OP_SET_REMAINING_PHASES_INFLOW(create_seq_op, env, inflow);
+        outflow = AXIS2_OP_GET_OUT_FLOW(app_msg_op_desc, env);
+        AXIS2_OP_SET_OUT_FLOW(create_seq_op, env, outflow);
+        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(app_msg_op_desc, env);
+        AXIS2_OP_SET_FAULT_OUT_FLOW(create_seq_op, env, out_fault_flow);
+        in_fault_flow = AXIS2_OP_GET_FAULT_IN_FLOW(app_msg_op_desc, env);
+        AXIS2_OP_SET_FAULT_IN_FLOW(create_seq_op, env, in_fault_flow);
+        inflow = AXIS2_OP_GET_IN_FLOW(app_msg_op_desc, env);
+        AXIS2_OP_SET_IN_FLOW(create_seq_op, env, inflow);
     }
     AXIS2_MSG_CTX_SET_OP(create_seq_msg_ctx, env, create_seq_op);
     temp_to = SANDESHA2_MSG_CTX_GET_TO(application_rm_msg, env); 
@@ -508,8 +508,8 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         AXIS2_OP_SET_PHASES_OUT_FAULT_FLOW(terminate_seq_op, env, out_fault_flow);
         in_fault_flow = AXIS2_OP_GET_PHASES_IN_FAULT_FLOW(ref_msg_op, env);
         AXIS2_OP_SET_PHASES_IN_FAULT_FLOW(terminate_seq_op, env, in_fault_flow);
-        inflow = AXIS2_OP_GET_REMAINING_PHASES_INFLOW(ref_msg_op, env);
-        AXIS2_OP_SET_REMAINING_PHASES_INFLOW(terminate_seq_op, env, inflow);
+        inflow = AXIS2_OP_GET_IN_FLOW(ref_msg_op, env);
+        AXIS2_OP_SET_IN_FLOW(terminate_seq_op, env, inflow);
     }
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
     if(rm_version == NULL)
@@ -642,7 +642,7 @@ sandesha2_msg_creator_finalize_creation(
     {
         axis2_array_list_t *op_params = NULL;
 
-        op_params = AXIS2_OP_GET_PARAMS(old_op, env);
+        op_params = AXIS2_OP_GET_ALL_PARAMS(old_op, env);
         if(op_params)
         {
             axis2_op_t *new_op = NULL;

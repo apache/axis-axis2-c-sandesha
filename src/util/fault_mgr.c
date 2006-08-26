@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 #include <sandesha2_fault_mgr.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_constants.h>
 #include <axis2_hash.h>
 #include <axis2_core_utils.h>
 #include <axiom_soap_const.h>
-#include <sandesha2/sandesha2_iom_rm_part.h>
-#include <sandesha2/sandesha2_create_seq.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_seq.h>
-#include <sandesha2/sandesha2_identifier.h>
-#include <sandesha2/sandesha2_msg_number.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
+#include <sandesha2_iom_rm_part.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_identifier.h>
+#include <sandesha2_msg_number.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_msg_init.h>
 #include <stdio.h>
 

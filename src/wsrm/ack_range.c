@@ -14,8 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_ack_range.h>
-#include <sandesha2/sandesha2_constants.h>
+#include <sandesha2_ack_range.h>
+#include <sandesha2_constants.h>
 #include <stdio.h>
 /** 
  * @brief AckRange struct impl

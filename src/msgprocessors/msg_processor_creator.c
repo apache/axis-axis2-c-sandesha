@@ -14,14 +14,14 @@
  * limitations under the License.
  */
  
-#include <sandesha2/sandesha2_msg_processor.h>
-#include <sandesha2/sandesha2_seq_ack.h>
-#include <sandesha2/sandesha2_ack_requested.h>
-#include <sandesha2/sandesha2_create_seq.h>
-#include <sandesha2/sandesha2_spec_specific_consts.h>
-#include <sandesha2/sandesha2_constants.h>
-#include <sandesha2/sandesha2_utils.h>
-#include <sandesha2/sandesha2_msg_ctx.h>
+#include <sandesha2_msg_processor.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_ack_requested.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_constants.h>
+#include <sandesha2_utils.h>
+#include <sandesha2_msg_ctx.h>
 #include <sandesha2_create_seq.h>
 #include <sandesha2_create_seq_res.h>
 #include <sandesha2_terminate_seq.h>
