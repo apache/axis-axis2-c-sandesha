@@ -502,11 +502,11 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         axis2_array_list_t *in_fault_flow = NULL;
         axis2_array_list_t *inflow = NULL;
 
-        outflow = AXIS2_OP_GET_PHASES_OUTFLOW(ref_msg_op, env);
+        outflow = AXIS2_OP_GET_OUT_FLOW(ref_msg_op, env);
         AXIS2_OP_SET_PHASES_OUTFLOW(terminate_seq_op, env, outflow);
-        out_fault_flow = AXIS2_OP_GET_PHASES_OUT_FAULT_FLOW(ref_msg_op, env);
+        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_msg_op, env);
         AXIS2_OP_SET_PHASES_OUT_FAULT_FLOW(terminate_seq_op, env, out_fault_flow);
-        in_fault_flow = AXIS2_OP_GET_PHASES_IN_FAULT_FLOW(ref_msg_op, env);
+        in_fault_flow = AXIS2_OP_GET_FAULT_IN_FLOW(ref_msg_op, env);
         AXIS2_OP_SET_PHASES_IN_FAULT_FLOW(terminate_seq_op, env, in_fault_flow);
         inflow = AXIS2_OP_GET_IN_FLOW(ref_msg_op, env);
         AXIS2_OP_SET_IN_FLOW(terminate_seq_op, env, inflow);
@@ -539,7 +539,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     {
         axis2_array_list_t *outphases = NULL;
 
-        outphases = AXIS2_OP_GET_PHASES_OUTFLOW(ref_msg_op, env);
+        outphases = AXIS2_OP_GET_OUT_FLOW(ref_msg_op, env);
         if(outphases)
         {
             AXIS2_OP_SET_PHASES_OUTFLOW(terminate_seq_op, env, outphases);

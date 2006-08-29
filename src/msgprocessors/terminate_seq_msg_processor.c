@@ -224,7 +224,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                         SANDESHA2_SEQ_PROP_TERMINATE_RECEIVED);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(term_rcvd_bean, env, 
                         SANDESHA2_VALUE_TRUE);
-    SANDESHA2_SEQ_PRPERTY_MGR_INSERT(seq_prop_mgr, env, term_rcvd_bean);
+    SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, term_rcvd_bean);
     
     if(AXIS2_TRUE == sandesha2_spec_specific_consts_is_term_seq_res_reqd(env, 
                         SANDESHA2_MSG_CTX_GET_RM_SPEC_VER(rm_msg_ctx, env)))

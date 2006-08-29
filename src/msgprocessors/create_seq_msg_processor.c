@@ -270,7 +270,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         offer_seq_id);
             SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(out_seq_bean, env, 
                         int_seq_id);
-            SANDESHA2_SEQ_PROPERTY_BEAN_MANAGER_INSERT(seq_prop_mgr, env, 
+            SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, 
                         out_seq_bean);
         }
         else

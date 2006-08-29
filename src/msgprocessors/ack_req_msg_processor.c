@@ -195,7 +195,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     if(NULL != rm_msg_op)
     {
         axis2_array_list_t *out_flow = NULL;
-        out_flow = AXIS2_OP_GET_OUTFLOW(rm_msg_op, env);
+        out_flow = AXIS2_OP_GET_OUT_FLOW(rm_msg_op, env);
         if(NULL != out_flow)
         {
             AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flow);

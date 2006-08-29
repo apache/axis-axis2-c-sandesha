@@ -224,7 +224,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND_FAULT(engine, env, SANDESHA2_MSG_CTX_GET_MSG_CTX(
                         fault_msg_ctx, env));
-        AXIS2_MSG_CTX_SET_PAUSE(msg_ctx, env, AXIS2_TRUE);
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     }
     int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
                         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);

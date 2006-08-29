@@ -309,7 +309,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         next_bean = sandesha2_next_msg_bean_create(env);
         SANDESHA2_NEXT_MSG_BEAN_SET_SEQ_ID(next_bean, env, offered_seq_id);
-        SANDESHA2_NEXT_MSG_BEAN_SET_SET_NEXT_MSG_TO_PROCESS(next_bean, env, 1);
+        SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_bean, env, 1);
         next_bean_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(storage_mgr,
                         env);
         SANDESHA2_NEXT_MSG_BEAN_MGR_INSERT(next_bean_mgr, env, next_bean);

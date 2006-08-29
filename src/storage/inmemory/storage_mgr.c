@@ -251,7 +251,7 @@ sandesha2_storage_mgr_free(
 
     if(storage_impl->instance)
     {
-        axis2_thread_mutex_destry(storage_impl->instance);
+        axis2_thread_mutex_destroy(storage_impl->instance);
         storage_impl->instance = NULL;
     }
     if(storage_impl->create_seq_mgr)

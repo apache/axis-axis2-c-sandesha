@@ -17,6 +17,7 @@
 #include <sandesha2_app_msg_processor.h>
 #include <sandesha2_ack_msg_processor.h>
 #include <sandesha2_seq_ack.h>
+#include <sandesha2_seq_mgr.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_ack_requested.h>
 #include <sandesha2_last_msg.h>
@@ -489,7 +490,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         msg_no, str_seq_id, AXIS2_FALSE);
         SANDESHA2_INVOKER_MGR_INSERT(storage_map_mgr, env, invoker_bean);
         property = axis2_property_create(env);
-        AXIX2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
         AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
                     SANDESHA2_VALUE_TRUE, env));
         /* To avoid performing application processing more than once. */
@@ -1078,7 +1079,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
                         internal_seq_id);
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(offer_seq_bean, env,
                         seq_offer_id);
-        SANDESHA2_SEQUNCE_PROPERTY_MGR_INSERT(seq_prop_mgr, env, 
+        SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, 
                         offer_seq_bean);
     }
     create_seq_msg = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_rm_msg, env);
@@ -1299,13 +1300,14 @@ sandesha2_app_msg_processor_process_response_msg(
                     axis2_char_t *spec_ver = NULL;
                     spec_ver = sandesha2_utils_get_rm_version(env,
                         internal_seq_id, mgr);
-                    if(AXIS2_TRUE == 
+                    /* uncomment if we need following ?*/
+                    /*if(AXIS2_TRUE == 
                         sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                         (env, spec_ver))
                     {
                         SANDESHA2_SEQ_SET_LAST_MSG(seq, env, 
                             sandesha2_last_msg_create(env, rm_ns_val));
-                    }
+                    }*/
                 }
             }
         }

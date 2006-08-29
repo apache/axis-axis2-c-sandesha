@@ -29,6 +29,7 @@
 #include <sandesha2_ack_requested.h>
 #include <sandesha2_close_seq.h>
 #include <sandesha2_close_seq_res.h>
+#include <sandesha2_create_seq_msg_processor.h>
 #include <axis2_string.h>
 #include <stdio.h>
 /** 
