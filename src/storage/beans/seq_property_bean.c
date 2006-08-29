@@ -110,10 +110,11 @@ AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 }
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
-        sandesha2_seq_property_bean_create_with_data(const axis2_env_t *env,
-					axis2_char_t *seq_id,
-					axis2_char_t *prop_name,
-					axis2_char_t *value)
+sandesha2_seq_property_bean_create_with_data(
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *prop_name,
+    axis2_char_t *value)
 
 {
 	sandesha2_seq_property_bean_impl_t *bean_impl = NULL;

@@ -115,10 +115,12 @@ sandesha2_out_handler_invoke(
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(NULL != temp_prop)
         str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+    printf("str_done:%s\n", str_done);
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Exit: sandesha2_out_handler::invoke, Application Processing Done");
+                "[sandesha2] Exit: sandesha2_out_handler::invoke, Application \
+                    Processing Done");
         return AXIS2_SUCCESS; 
     }
     temp_prop = axis2_property_create(env);
@@ -163,20 +165,35 @@ sandesha2_out_handler_invoke(
     printf("msg_type1:%d\n", msg_type);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
-        axis2_msg_ctx_t *req_msg_ctx = NULL;
+        /*axis2_msg_ctx_t *req_msg_ctx = NULL;*/
         axis2_op_ctx_t *op_ctx = NULL;
 
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-        req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+        /*req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
                 AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
-        if(req_msg_ctx) /* For the server side */
+        if(req_msg_ctx)*/ /* For the server side */
+        /* test code */
+        if(AXIS2_TRUE == AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
         {
+        /* end test code */
+            /* test code */
+            axis2_property_t *property = NULL;
+            axis2_ctx_t *ctx = NULL;
+            /* end test code */
             sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
             sandesha2_seq_t *seq_part = NULL;
-            
-            req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
+
+            /* test code */
+            ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
+            property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                SANDESHA2_WSRM_COMMON_SEQ, AXIS2_FALSE);
+            seq_part = (sandesha2_seq_t *)  AXIS2_PROPERTY_GET_VALUE(property, 
+                    env);
+            /* end test code */
+            /*req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
             seq_part = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
                     req_rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
+            */
             if(seq_part)
             {
                 msg_processor = (sandesha2_msg_processor_t *) 

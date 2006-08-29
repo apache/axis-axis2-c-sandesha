@@ -25,6 +25,7 @@
 #include <sandesha2_transaction.h>
 #include <sandesha2_msg_processor.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_seq.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
 
@@ -86,6 +87,9 @@ sandesha2_in_handler_invoke(
     sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
+    /* test code */
+    sandesha2_seq_t *seq_part = NULL;
+    /* end test code */
 
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -149,6 +153,26 @@ sandesha2_in_handler_invoke(
         return AXIS2_FAILURE;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    /* test code */
+
+    seq_part = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+        rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
+    if(seq_part)
+    {
+        axis2_property_t *property = NULL;
+        axis2_op_ctx_t *op_ctx = NULL;
+        axis2_ctx_t *ctx = NULL;
+
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+        AXIS2_PROPERTY_SET_VALUE(property, env, seq_part);
+        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
+        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WSRM_COMMON_SEQ, property, 
+                AXIS2_FALSE);
+    }
+    /* end of test code */
+
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */

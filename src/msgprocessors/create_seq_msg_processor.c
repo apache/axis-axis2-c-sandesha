@@ -212,9 +212,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
                         env));
-    AXIS2_MSG_CTX_SET_PROPERTY(out_msg_ctx, env, 
-                        SANDESHA2_APPLICATION_PROCESSING_DONE, property,
-                        AXIS2_FALSE);
+    /* For making sure that this won't be processed again */
+    SANDESHA2_MSG_CTX_SET_PROPERTY(create_seq_res_msg, env, 
+                        SANDESHA2_APPLICATION_PROCESSING_DONE, property); 
     
     create_seq_res_part = (sandesha2_create_seq_res_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(create_seq_res_msg, 

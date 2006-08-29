@@ -359,7 +359,8 @@ sandesha2_rm_elements_from_soap_envelope
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the"
                         " addressing version");
-        return AXIS2_FAILURE;
+        /*return AXIS2_FAILURE;*/
+        elements_impl->addr_ns_val = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE ,env);
     }
     soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);    
     header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);

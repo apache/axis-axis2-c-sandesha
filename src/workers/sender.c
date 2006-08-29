@@ -50,6 +50,7 @@ struct sandesha2_sender_impl
     axis2_bool_t run_sender;
     axis2_array_list_t *working_seqs;
     axis2_thread_mutex_t *mutex;
+    int counter;
 };
 
 struct sandesha2_sender_args
@@ -133,6 +134,7 @@ sandesha2_sender_create(const axis2_env_t *env)
     sender_impl->run_sender = AXIS2_FALSE;
     sender_impl->working_seqs = NULL;
     sender_impl->mutex = NULL;
+    sender_impl->counter = 0;
     sender_impl->sender.ops = NULL;
     
     sender_impl->sender.ops = AXIS2_MALLOC(env->allocator,
@@ -287,10 +289,6 @@ sandesha2_sender_run (
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t)); 
     args->impl = sender_impl;
     args->env = (axis2_env_t*)env;
-    /* Assigning like theis cause seg faults when trying to allocate memory
-     * inside worker function. So created new env */
-    /*args->env->allocator = env->allocator;*/
-    args->env = axis2_env_create(env->allocator);
 
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
                         sandesha2_sender_worker_func, (void*)args);
@@ -375,7 +373,7 @@ sandesha2_sender_check_for_sync_res(
         
         engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, 
                     env));
-        if(AXIS2_FALSE == sandesha2_sender_is_fault_envelope(sender, env, 
+        if(AXIS2_TRUE == sandesha2_sender_is_fault_envelope(sender, env, 
                     res_envelope))
             AXIS2_ENGINE_RECEIVE_FAULT(engine, env, res_msg_ctx);
         else
@@ -448,7 +446,7 @@ sandesha2_sender_worker_func(
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     
     args = (sandesha2_sender_args_t*)data;
-    env = args->env;
+    env = axis2_init_thread_env(args->env);
     sender_impl = args->impl;
     sender = (sandesha2_sender_t*)sender_impl;
     
@@ -591,6 +589,10 @@ sandesha2_sender_worker_func(
             /* Consider building soap envelope */
             AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
             successfully_sent = AXIS2_TRUE;
+        sender_impl->counter++;
+        /*printf("**********************counter******************:%d\n", sender_impl->counter);
+        if(2 == sender_impl->counter)
+            sleep(300000);*/
                         
         }
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,

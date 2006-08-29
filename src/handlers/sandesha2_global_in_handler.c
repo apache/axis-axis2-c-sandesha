@@ -208,20 +208,24 @@ sandesha2_global_in_handler_invoke(
         }
     }
     is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
+    printf("is_rm_global_msg:%d\n", is_rm_global_msg);
     if(AXIS2_FALSE == is_rm_global_msg)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
         return AXIS2_SUCCESS;
+    }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
-    printf("came\n");
     dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
                         rm_msg_ctx, storage_mgr);
     if(AXIS2_TRUE == dropped)
     {
         sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx,
                         storage_mgr);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_ctx dropped");
         return AXIS2_SUCCESS;
     }
     /*Process if global processing possible. - Currently none*/
-    if(AXIS2_TRUE == within_transaction)
+    if(AXIS2_TRUE != within_transaction)
     {
         SANDESHA2_TRANSACTION_COMMIT(transaction, env);
         property = axis2_property_create(env);

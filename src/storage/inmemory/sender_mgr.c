@@ -584,7 +584,6 @@ sandesha2_sender_mgr_get_next_msg_to_send(
             }
         }
     }
-    printf("return NULL from sender_mgr\n");
     return NULL;
 }
 

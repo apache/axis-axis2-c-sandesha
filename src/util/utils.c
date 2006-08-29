@@ -115,9 +115,9 @@ sandesha2_utils_get_current_time_in_millis(
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(
-        const axis2_env_t *env,
-        axis2_char_t *key,
-        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_char_t *key,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_man = NULL;
     sandesha2_seq_property_bean_t *rm_version_bean = NULL;
@@ -137,9 +137,10 @@ sandesha2_utils_get_rm_version(
 }
 
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_storage_mgr(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_conf_t *conf)
+sandesha2_utils_get_storage_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_conf_t *conf)
 {
     axis2_param_t *parameter = NULL;
     axis2_char_t *value = NULL;
@@ -800,6 +801,7 @@ sandesha2_utils_is_rm_global_msg(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
     action =  AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    printf("action:%s\n", action);
     soap_env = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     
     if(NULL == soap_env)
@@ -1007,9 +1009,9 @@ sandesha2_utils_get_ack_range_list(
 
 static axis2_array_list_t *
 get_sorted_msg_no_list(
-        const axis2_env_t *env,
-        axis2_char_t *msg_no_str,
-        axis2_char_t *delim)
+    const axis2_env_t *env,
+    axis2_char_t *msg_no_str,
+    axis2_char_t *delim)
 {
     axis2_array_list_t *msg_numbers = NULL;
     axis2_array_list_t *sorted_msg_no_list = NULL;
@@ -1019,10 +1021,10 @@ get_sorted_msg_no_list(
     temp_str = strtok(msg_no_str, delim);
     while(NULL != temp_str)
     {
-        long long_val = 0;
+        long *long_val = AXIS2_MALLOC(env->allocator, sizeof(long));
 
-        long_val = atol(temp_str);
-        AXIS2_ARRAY_LIST_ADD(msg_numbers, env, &long_val);
+        *long_val = atol(temp_str);
+        AXIS2_ARRAY_LIST_ADD(msg_numbers, env, long_val);
         temp_str = strtok(NULL, delim);
     }
     sorted_msg_no_list = sandesha2_utils_sort(env, msg_numbers);
@@ -1053,15 +1055,15 @@ sandesha2_utils_sort(
     }
     for(j = 1; j <= max; j++)
     {
-        long temp = 0;
+        long *temp = AXIS2_MALLOC(env->allocator, sizeof(long));
         axis2_bool_t contains = AXIS2_FALSE;
         
-        temp = j;
+        *temp = j;
         for(i = 0; i < size; i++)
         {
             long *value = NULL;
             value = AXIS2_ARRAY_LIST_GET(list, env, i);
-            if(*value == temp)
+            if(*value == *temp)
             {
                 contains = AXIS2_TRUE;
                 break;
@@ -1069,7 +1071,7 @@ sandesha2_utils_sort(
         }
         if(AXIS2_TRUE == contains)
         {
-            AXIS2_ARRAY_LIST_ADD(sorted_list, env, &temp);
+            AXIS2_ARRAY_LIST_ADD(sorted_list, env, temp);
         }
     }
     return sorted_list;    

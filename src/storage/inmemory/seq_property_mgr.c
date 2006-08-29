@@ -495,9 +495,9 @@ sandesha2_seq_property_mgr_update_or_insert(
 
 static axis2_char_t *
 sandesha2_seq_property_mgr_get_id(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean)
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_char_t *seq_id = NULL;

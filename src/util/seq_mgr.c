@@ -296,11 +296,12 @@ sandesha2_seq_mgr_get_last_activated_time(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_seq_mgr_setup_new_client_seq(const axis2_env_t *env,
-                        axis2_msg_ctx_t *first_app_msg,
-                        axis2_char_t *int_seq_id,
-                        axis2_char_t *spec_version,
-                        sandesha2_storage_mgr_t *storage_mgr)
+sandesha2_seq_mgr_setup_new_client_seq(
+        const axis2_env_t *env,
+        axis2_msg_ctx_t *first_app_msg,
+        axis2_char_t *int_seq_id,
+        axis2_char_t *spec_version,
+        sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -381,7 +382,7 @@ sandesha2_seq_mgr_setup_new_client_seq(const axis2_env_t *env,
         axis2_endpoint_ref_t *reply_to_epr = NULL;
         
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(first_app_msg, env);
-        req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+        /*req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
                         AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
         if(NULL == req_msg_ctx)
         {
@@ -389,7 +390,8 @@ sandesha2_seq_mgr_setup_new_client_seq(const axis2_env_t *env,
                         " the request message from the operation context");
             return AXIS2_FAILURE;
         }
-        reply_to_epr = AXIS2_MSG_CTX_GET_TO(req_msg_ctx, env);
+        reply_to_epr = AXIS2_MSG_CTX_GET_TO(req_msg_ctx, env);*/
+        reply_to_epr = AXIS2_MSG_CTX_GET_TO(first_app_msg, env);
         if(NULL != reply_to_epr)
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,

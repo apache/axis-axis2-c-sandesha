@@ -308,8 +308,9 @@ sandesha2_seq_from_om_node(sandesha2_iom_rm_element_t *seq,
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_seq_to_om_node(sandesha2_iom_rm_element_t *seq,
-                    	const axis2_env_t *env, void *om_node)
+sandesha2_seq_to_om_node(
+        sandesha2_iom_rm_element_t *seq,
+        const axis2_env_t *env, void *om_node)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
