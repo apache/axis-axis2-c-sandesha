@@ -16,6 +16,7 @@
  
 #include <sandesha2_ack_range.h>
 #include <sandesha2_constants.h>
+#include <axis2_types.h>
 #include <stdio.h>
 /** 
  * @brief AckRange struct impl
@@ -29,6 +30,7 @@ struct sandesha2_ack_range_impl
 	long upper_val;
 	long lower_val;
 	axis2_char_t *ns_val;
+    axis2_char_t *prefix;
 };
 
 #define SANDESHA2_INTF_TO_IMPL(ack_range) \
@@ -74,7 +76,10 @@ sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range,
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
-sandesha2_ack_range_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_ack_range_create(
+    const axis2_env_t *env,  
+    axis2_char_t *ns_val,
+    axis2_char_t *prefix)
 {
     sandesha2_ack_range_impl_t *ack_range_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -97,6 +102,7 @@ sandesha2_ack_range_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         return NULL;
 	}
     ack_range_impl->ns_val = NULL;
+    ack_range_impl->prefix = NULL;
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     ack_range_impl->ack_range.element.ops = NULL;
@@ -123,6 +129,7 @@ sandesha2_ack_range_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 	}
         
     ack_range_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    ack_range_impl->prefix = (axis2_char_t *)AXIS2_STRDUP(prefix, env);
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     
@@ -161,6 +168,13 @@ sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range,
         AXIS2_FREE(env->allocator, ack_range_impl->ns_val);
         ack_range_impl->ns_val = NULL;
     }
+    
+    if(NULL != ack_range_impl->prefix)
+    {
+        AXIS2_FREE(env->allocator, ack_range_impl->prefix);
+        ack_range_impl->prefix = NULL;
+    }
+
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     
@@ -191,8 +205,10 @@ sandesha2_ack_range_get_namespace_value (sandesha2_iom_rm_element_t *ack_range,
 
 
 void* AXIS2_CALL 
-sandesha2_ack_range_from_om_node(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+sandesha2_ack_range_from_om_node(
+    sandesha2_iom_rm_element_t *ack_range,
+    const axis2_env_t *env, 
+    axiom_node_t *om_node)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
     axis2_qname_t *low_qname = NULL;
@@ -206,13 +222,13 @@ sandesha2_ack_range_from_om_node(sandesha2_iom_rm_element_t *ack_range,
     
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
     low_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LOWER, 
-                        ack_range_impl->ns_val, NULL);
+                        ack_range_impl->ns_val, ack_range_impl->prefix);
     if(NULL == low_qname)
     {
         return NULL;
     }
     upper_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_UPPER,
-                        ack_range_impl->ns_val, NULL);
+                        ack_range_impl->ns_val, ack_range_impl->prefix);
     if(NULL == upper_qname)
     {
         return NULL;

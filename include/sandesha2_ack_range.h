@@ -79,8 +79,9 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_range
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value,
+    axis2_char_t *prefix);
                         
 /************************** Start of function macros **************************/
 #define SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, value) \

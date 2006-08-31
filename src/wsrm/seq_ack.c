@@ -292,6 +292,8 @@ sandesha2_seq_ack_from_om_node(
     axis2_qname_t *ack_range_qname = NULL;
     axis2_qname_t *nack_qname = NULL;
     axis2_char_t *rm_spec_ver = NULL;
+    axiom_namespace_t *rm_ns = NULL;
+    axis2_char_t *prefix = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
@@ -318,19 +320,18 @@ sandesha2_seq_ack_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
+    rm_ns = AXIOM_ELEMENT_GET_NAMESPACE(sa_part, env, sa_node);
+    prefix = AXIOM_NAMESPACE_GET_PREFIX(rm_ns, env);
     seq_ack_impl->identifier = sandesha2_identifier_create(env, 
                         seq_ack_impl->ns_val);
     if(NULL == seq_ack_impl->identifier)
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_ack_impl->identifier, 
-                        env, sa_node))
-    {
-        return NULL;
-    }
+    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_ack_impl->identifier, 
+                        env, sa_node);
     ack_range_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_RANGE,
-                        seq_ack_impl->ns_val, NULL);
+                        seq_ack_impl->ns_val, prefix);
     if(NULL == ack_range_qname)
     {
         return NULL;
@@ -349,7 +350,7 @@ sandesha2_seq_ack_from_om_node(
         ack_node = AXIOM_CHILDREN_QNAME_ITERATOR_NEXT(ack_iter, env);
         if(NULL != ack_node)
         {
-            ack_range = sandesha2_ack_range_create(env, seq_ack_impl->ns_val);
+            ack_range = sandesha2_ack_range_create(env, seq_ack_impl->ns_val, prefix);
             if(NULL == ack_range)
             {
                 return NULL;

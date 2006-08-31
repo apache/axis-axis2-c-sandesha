@@ -984,7 +984,7 @@ sandesha2_utils_get_ack_range_list(
              sandesha2_ack_range_t *ack_range = NULL;
              
             /* add ack_range (lower, upper) */
-             ack_range = sandesha2_ack_range_create(env, rm_ns_value);
+             ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
              SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
              SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
              AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
@@ -997,7 +997,7 @@ sandesha2_utils_get_ack_range_list(
     {
          sandesha2_ack_range_t *ack_range = NULL;
          
-         ack_range = sandesha2_ack_range_create(env, rm_ns_value);
+         ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
          SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
          SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
          AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
