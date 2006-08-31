@@ -380,6 +380,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         axis2_op_ctx_t *op_ctx = NULL;
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         axis2_endpoint_ref_t *reply_to_epr = NULL;
+        axis2_property_t *property = NULL;
         
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(first_app_msg, env);
         /*req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
@@ -391,7 +392,10 @@ sandesha2_seq_mgr_setup_new_client_seq(
             return AXIS2_FAILURE;
         }
         reply_to_epr = AXIS2_MSG_CTX_GET_TO(req_msg_ctx, env);*/
-        reply_to_epr = AXIS2_MSG_CTX_GET_TO(first_app_msg, env);
+        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
+        property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                SANDESHA2_SEQ_PROP_REPLY_TO_EPR, AXIS2_FALSE);
+        reply_to_epr = AXIS2_PROPERTY_GET_VALUE(property, env);
         if(NULL != reply_to_epr)
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,

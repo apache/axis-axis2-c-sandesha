@@ -353,6 +353,9 @@ sandesha2_sender_check_for_sync_res(
                     AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_CTX_GET_PROPERTY(ctx, env, 
                     AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_FALSE), AXIS2_FALSE);
         }
+        /* test code */
+        AXIS2_MSG_CTX_SET_OP_CTX(res_msg_ctx, env, req_op_ctx);
+        /* end test code */
     }
     AXIS2_MSG_CTX_SET_DOING_REST(res_msg_ctx, env, AXIS2_MSG_CTX_GET_DOING_REST(
                     msg_ctx, env));

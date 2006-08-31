@@ -111,7 +111,6 @@ sandesha2_global_in_handler_invoke(
     sandesha2_transaction_t *transaction = NULL;
     axis2_property_t *property = NULL;
     
-    
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
@@ -241,18 +240,18 @@ sandesha2_global_in_handler_invoke(
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_global_in_handler_get_qname(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env)
 {
     return axis2_qname_create(env, SANDESHA2_GLOBAL_IN_HANDLER_NAME, NULL, NULL);
 }
 
 axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
-                        struct axis2_handler *handler, 
-                        const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_bool_t drop = AXIS2_FALSE;
     
@@ -298,7 +297,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                         rcvd_msgs_str);
                 if(msg_no_list)
                     size = AXIS2_ARRAY_LIST_SIZE(msg_no_list, env);
-                printf("global_in_handler, size:%d\n", size);
+                printf("global_in_handler, msg_no_list->size:%d\n", size);
                 for(i = 0; i < size; i++)
                 {
                     axis2_char_t *temp = NULL;
@@ -404,10 +403,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
 
 axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_process_dropped_msg(
-                        struct axis2_handler *handler, 
-                        const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);

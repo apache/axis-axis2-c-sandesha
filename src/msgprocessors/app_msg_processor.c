@@ -1042,7 +1042,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_property_t *property = NULL;
     axis2_char_t *msg_id = NULL;
     
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);

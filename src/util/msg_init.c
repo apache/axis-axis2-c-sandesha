@@ -138,6 +138,7 @@ populate_rm_msg_ctx(
     create_seq = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ(elements, env);
     if(create_seq)
     {
+        printf("create_seq\n");
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ, (sandesha2_iom_rm_part_t *) 
                 create_seq);
@@ -147,6 +148,7 @@ populate_rm_msg_ctx(
     create_seq_res = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ_RES(elements, env);
     if(create_seq_res)
     {
+        printf("create_seq_res\n");
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) create_seq_res);
@@ -156,6 +158,7 @@ populate_rm_msg_ctx(
     seq = SANDESHA2_RM_ELEMENTS_GET_SEQ(elements, env);
     if(seq)
     {
+        printf("seq\n");
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ, (sandesha2_iom_rm_part_t *) seq);
         rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
@@ -164,6 +167,7 @@ populate_rm_msg_ctx(
     seq_ack = SANDESHA2_RM_ELEMENTS_GET_SEQ_ACK(elements, env);
     if(seq_ack)
     {
+        printf("seq_ack\n");
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
                 (sandesha2_iom_rm_part_t *) seq_ack);
@@ -392,6 +396,7 @@ static axis2_bool_t validate_msg(
             }
         }
     }
+    printf("came2\n");
     return AXIS2_TRUE; 
 }
     

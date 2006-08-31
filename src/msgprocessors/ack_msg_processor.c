@@ -140,9 +140,9 @@ sandesha2_ack_msg_processor_free (sandesha2_msg_processor_t *msg_processor,
 
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_msg_processor_process_in_msg (
-                        sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     sandesha2_seq_ack_t *seq_ack = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;

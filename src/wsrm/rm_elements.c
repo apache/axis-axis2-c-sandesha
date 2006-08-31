@@ -373,23 +373,24 @@ sandesha2_rm_elements_from_soap_envelope
     rm_ns_val = elements_impl->rm_ns_val;
     addr_ns_val = elements_impl->addr_ns_val;
     
+    printf("came1\n");
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, rm_ns_val, NULL);
     seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, env,
                         qname, header_node, &seq_node);
     if(NULL != seq_node)
     {
+        printf("rm:seq\n");
         elements_impl->seq = sandesha2_seq_create(env, rm_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq, env, 
                         header_node);
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
                         NULL);
-    printf("came1\n");
     seq_ack_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element,
                         env, qname, header_node, &seq_ack_node);
     if(NULL != seq_ack_element)
     {
-        printf("came2\n");
+        printf("rm:seq_ack\n");
         elements_impl->seq_ack = sandesha2_seq_ack_create(env, rm_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq_ack, env,
                         header_node);
@@ -400,6 +401,7 @@ sandesha2_rm_elements_from_soap_envelope
                         env, qname, body_node, &create_seq_node);
     if(NULL != create_seq_node)
     {
+        printf("rm:create_seq\n");
         elements_impl->create_seq = sandesha2_create_seq_create(env,
                         addr_ns_val, rm_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq, env,
@@ -413,7 +415,7 @@ sandesha2_rm_elements_from_soap_envelope
                         &create_seq_res_node);
     if(NULL != create_seq_res_node)
     {
-        printf("came3\n");
+        printf("rm:create_seq_res\n");
         elements_impl->create_seq_res = sandesha2_create_seq_res_create(env, 
                         rm_ns_val, addr_ns_val);
         SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq_res, env,
