@@ -500,7 +500,6 @@ sandesha2_app_msg_processor_process_in_msg (
         /* Start the invoker if stopped */
         sandesha2_utils_start_invoker_for_seq(env, conf_ctx, str_seq_id);
     }
-    /* test code uncomment this when send_ack_if_reqd method function correctly */
     sandesha2_app_msg_processor_send_ack_if_reqd(msg_processor, env, msg_ctx,
                         msgs_str, storage_man);
     return AXIS2_SUCCESS;

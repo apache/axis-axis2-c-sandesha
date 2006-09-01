@@ -497,8 +497,8 @@ sandesha2_sender_mgr_find_unique(
 
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_get_next_msg_to_send(
-        sandesha2_sender_mgr_t *sender,
-        const axis2_env_t *env)
+    sandesha2_sender_mgr_t *sender,
+    const axis2_env_t *env)
 {
     sandesha2_sender_mgr_impl_t *sender_impl = NULL;
     long lowest_app_msg_no = 0;

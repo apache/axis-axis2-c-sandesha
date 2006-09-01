@@ -228,7 +228,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
                         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
-    sandesha2_seq_manager_update_last_activated_time(env, int_seq_id, 
+    sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
                         storage_mgr);
     int_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
                         out_seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
@@ -252,18 +252,24 @@ sandesha2_ack_msg_processor_process_in_msg (
     SANDESHA2_SENDER_BEAN_SET_RESEND(input_bean, env, AXIS2_TRUE);
     retrans_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
                         input_bean);
-    
+   
+    acked_list = axis2_array_list_create(env, 0);
+    if(!acked_list)
+    {
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(ack_range_list, env); i++)
     {
         sandesha2_ack_range_t *ack_range  = NULL;
         long lower = -1;
         long upper = -1;
-        int j = 0;
+        long j = 0;
         
         ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
         lower = SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env);
         upper = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env);
-        for(j = lower; j < upper; j++)
+        for(j = lower; j <= upper; j++)
         {
             sandesha2_sender_bean_t *retrans_bean = NULL;
             long *add_no = NULL;
@@ -304,7 +310,7 @@ sandesha2_ack_msg_processor_process_in_msg (
                         out_seq_id);
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(no_of_msgs_acked_bean, env, 
                         str_long);
-        SANDESHA2_SEQ_PROPERY_MGR_INSERT(seq_prop_mgr, env, 
+        SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, 
                         no_of_msgs_acked_bean); 
     }
     else
@@ -323,7 +329,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(completed_bean, env, int_seq_id);
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(completed_bean, env, 
                         SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES);
-        SANDESHA2_SEQ_PROPERY_MGR_INSERT(seq_prop_mgr, env, completed_bean);
+        SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, completed_bean);
     }
     str_list = sandesha2_utils_array_list_to_string(env, acked_list,
                         SANDESHA2_ARRAY_LIST_LONG);

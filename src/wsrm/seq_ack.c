@@ -466,12 +466,6 @@ sandesha2_seq_ack_to_om_node(
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
     soap_header = (axiom_soap_header_t*)om_node;
-    if(NULL == seq_ack_impl->identifier)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
-                        AXIS2_FAILURE);
-        return NULL;
-    }
     rm_ns = axiom_namespace_create(env, seq_ack_impl->ns_val,
                         SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
     if(NULL == rm_ns)
@@ -484,9 +478,17 @@ sandesha2_seq_ack_to_om_node(
     {
         return NULL;
     }
+    if(NULL == seq_ack_impl->identifier)
+    {
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
+                        AXIS2_FAILURE);
+        return NULL;
+    }
     AXIOM_SOAP_HEADER_BLOCK_SET_MUST_UNDERSTAND_WITH_BOOL(sa_block, env, 
                         seq_ack_impl->must_understand);
     sa_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(sa_block, env);
+    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_ack_impl->identifier, env, sa_node);
+
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(seq_ack_impl->ack_range_list, env); i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
