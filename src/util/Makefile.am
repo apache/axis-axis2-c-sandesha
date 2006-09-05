@@ -2,7 +2,7 @@ noinst_LTLIBRARIES = libsandesha_util.la
 
 libsandesha_util_la_SOURCES = \
 							error.c \
-							utils.c \
+							sandesha2_utils.c \
 							spec_specific_consts.c\
                             fault_data.c\
                             fault_mgr.c\
