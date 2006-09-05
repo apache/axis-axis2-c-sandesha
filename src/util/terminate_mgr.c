@@ -215,11 +215,11 @@ sandesha2_terminate_mgr_remove_recv_side_propertis(
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        axis2_bool_t svr_side,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    axis2_bool_t svr_side,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
@@ -241,10 +241,10 @@ sandesha2_terminate_mgr_terminate_sending_side(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_do_updates_if_needed(
-                        const axis2_env_t *env,
-                        axis2_char_t *seq_id,
-                        sandesha2_seq_property_bean_t *prop_bean,
-                        sandesha2_seq_property_mgr_t *prop_mgr)
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    sandesha2_seq_property_bean_t *prop_bean,
+    sandesha2_seq_property_mgr_t *prop_mgr)
 {
     axis2_bool_t add_entry_with_seq_id = AXIS2_FALSE;
     axis2_char_t *name = NULL;
@@ -285,8 +285,8 @@ sandesha2_terminate_mgr_do_updates_if_needed(
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_terminate_mgr_is_property_deletable(
-                        const axis2_env_t *env,
-                        axis2_char_t *name)
+    const axis2_env_t *env,
+    axis2_char_t *name)
 {
     axis2_bool_t deletable = AXIS2_TRUE;
     
@@ -311,11 +311,11 @@ sandesha2_terminate_mgr_is_property_deletable(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_time_out_sending_side_seq(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        axis2_bool_t svr_side,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    axis2_bool_t svr_side,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
@@ -449,11 +449,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_add_terminate_seq_msg(
-                        const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        axis2_char_t *out_seq_id,
-                        axis2_char_t *int_seq_id,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    axis2_char_t *out_seq_id,
+    axis2_char_t *int_seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;

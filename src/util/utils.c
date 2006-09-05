@@ -540,9 +540,10 @@ sandesha2_utils_get_internal_seq_id(
 }
 
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
-sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *ref_rm_msg,
-                        axis2_op_t *op)
+sandesha2_utils_create_new_related_msg_ctx(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_op_t *op)
 {
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_msg_ctx_t *new_msg = NULL;
@@ -681,8 +682,8 @@ sandesha2_utils_create_new_related_msg_ctx(const axis2_env_t *env,
                         AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
         if(NULL != req_msg)
         {
-            property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
-                        AXIS2_TRANSPORT_URL, AXIS2_FALSE);
+            property = AXIS2_MSG_CTX_GET_PROPERTY(req_msg, env, 
+                        AXIS2_WSA_VERSION, AXIS2_FALSE);
             if(NULL != property)
                 addr_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
         }

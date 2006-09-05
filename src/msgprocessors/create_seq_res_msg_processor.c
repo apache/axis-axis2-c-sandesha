@@ -68,32 +68,34 @@ struct sandesha2_create_seq_res_msg_processor_impl
 /***************************** Function headers *******************************/
 axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_in_msg (
-                        sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx);
-    
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx);
+
 axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_out_msg(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        sandesha2_msg_ctx_t *rm_msg_ctx);
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
     
 axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_offer_accepted(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        axis2_char_t *seq_id,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr);
-                    	
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);
+                    
 axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_res_msg_processor_free (sandesha2_msg_processor_t *element, 
-						const axis2_env_t *env);								
+sandesha2_create_seq_res_msg_processor_free (
+    sandesha2_msg_processor_t *element, 
+    const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_create_seq_res_msg_processor_create(const axis2_env_t *env)
+sandesha2_create_seq_res_msg_processor_create(
+    const axis2_env_t *env)
 {
     sandesha2_create_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -130,8 +132,9 @@ sandesha2_create_seq_res_msg_processor_create(const axis2_env_t *env)
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_res_msg_processor_free (sandesha2_msg_processor_t *msg_processor, 
-						const axis2_env_t *env)
+sandesha2_create_seq_res_msg_processor_free (
+    sandesha2_msg_processor_t *msg_processor, 
+    const axis2_env_t *env)
 {
     sandesha2_create_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -147,9 +150,9 @@ sandesha2_create_seq_res_msg_processor_free (sandesha2_msg_processor_t *msg_proc
 
 axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_in_msg (
-                        sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -344,7 +347,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     
     found_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
                         target_bean);
-    size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
+    if(found_list)
+        size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *tmp_bean = NULL;
@@ -417,9 +421,9 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     
 axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_out_msg(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

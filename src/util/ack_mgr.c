@@ -182,7 +182,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         retrans_mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);
         key = axis2_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
-        SANDESHA2_SENDER_BEAN_SET_MSG_CTX_REF_KEY(ack_bean, env, key);
+        SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(ack_bean, env, key);
         SANDESHA2_SENDER_BEAN_SET_MSG_ID(ack_bean, env, 
                         AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(ack_msg_ctx, env));
         SANDESHA2_SENDER_BEAN_SET_RESEND(ack_bean, env, AXIS2_FALSE);
@@ -344,9 +344,10 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_ack_mgr_verify_seq_completion(const axis2_env_t *env,
-        axis2_array_list_t *ack_ranges,
-        long last_msg_no)
+sandesha2_ack_mgr_verify_seq_completion(
+    const axis2_env_t *env,
+    axis2_array_list_t *ack_ranges,
+    long last_msg_no)
 {
     axis2_hash_t *hash = NULL;
     axis2_char_t tmp[32];
@@ -384,9 +385,10 @@ sandesha2_ack_mgr_verify_seq_completion(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_ack_mgr_piggyback_acks_if_present(const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx,
-        sandesha2_storage_mgr_t *storage_mgr)
+sandesha2_ack_mgr_piggyback_acks_if_present(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_sender_mgr_t *retrans_mgr = NULL;
@@ -394,6 +396,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(const axis2_env_t *env,
     sandesha2_sender_bean_t *find_bean = NULL;
     axis2_char_t *to_str = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
+    axis2_endpoint_ref_t *to = NULL;
     axis2_array_list_t *found_list = NULL;
     int i = 0;
     
@@ -410,9 +413,10 @@ sandesha2_ack_mgr_piggyback_acks_if_present(const axis2_env_t *env,
     SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(find_bean, env, SANDESHA2_MSG_TYPE_ACK);
     SANDESHA2_SENDER_BEAN_SET_SEND(find_bean, env, AXIS2_TRUE);
     SANDESHA2_SENDER_BEAN_SET_RESEND(find_bean, env, AXIS2_FALSE);
-    
-    to_str = AXIS2_ENDPOINT_REF_GET_ADDRESS(SANDESHA2_MSG_CTX_GET_TO(rm_msg_ctx,
-                        env), env);
+   
+    to = SANDESHA2_MSG_CTX_GET_TO(rm_msg_ctx, env);
+    if(to)
+        to_str = AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
                         
     found_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
                         find_bean);
@@ -442,7 +446,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(const axis2_env_t *env,
             SANDESHA2_SENDER_MGR_REMOVE(retrans_mgr, env, 
                         SANDESHA2_SENDER_BEAN_GET_MSG_ID(sender_bean, env));
             ack_rm_msg = sandesha2_msg_init_init_msg(env, msg_ctx1);
-            if(SANDESHA2_MSG_TYPE_ACK != SANDESHA2_MSG_CTX_GET_TYPE(ack_rm_msg, 
+            if(SANDESHA2_MSG_TYPE_ACK != SANDESHA2_MSG_CTX_GET_MSG_TYPE(ack_rm_msg, 
                         env))
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid"

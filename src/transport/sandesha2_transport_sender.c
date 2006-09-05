@@ -37,32 +37,34 @@ struct sandesha2_transport_sender_impl
 
 /***************************** Function headers *******************************/
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_init
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env, 
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_transport_out_desc_t *transport_out);
+sandesha2_transport_sender_init(
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env, 
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_transport_out_desc_t *transport_out);
             
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_cleanup
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx);
+sandesha2_transport_sender_cleanup(
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
             
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_invoke 
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx);
+sandesha2_transport_sender_invoke (
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_transport_sender_free(axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env);								
+sandesha2_transport_sender_free(
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN axis2_transport_sender_t* AXIS2_CALL
-sandesha2_transport_sender_create(const axis2_env_t *env)
+sandesha2_transport_sender_create(
+    const axis2_env_t *env)
 {
     sandesha2_transport_sender_impl_t *transport_sender_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -101,8 +103,9 @@ sandesha2_transport_sender_create(const axis2_env_t *env)
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_transport_sender_free(axis2_transport_sender_t *transport_sender, 
-                        const axis2_env_t *env)
+sandesha2_transport_sender_free(
+    axis2_transport_sender_t *transport_sender, 
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
        
@@ -116,11 +119,11 @@ sandesha2_transport_sender_free(axis2_transport_sender_t *transport_sender,
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_init
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env, 
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_transport_out_desc_t *transport_out)
+sandesha2_transport_sender_init(
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env, 
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_transport_out_desc_t *transport_out)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -131,10 +134,10 @@ sandesha2_transport_sender_init
 }
             
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_cleanup
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx)
+sandesha2_transport_sender_cleanup(
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -145,10 +148,10 @@ sandesha2_transport_sender_cleanup
 
 
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_invoke 
-                        (axis2_transport_sender_t *transport_sender,
-                        const axis2_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx)
+sandesha2_transport_sender_invoke (
+    axis2_transport_sender_t *transport_sender,
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *property = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;

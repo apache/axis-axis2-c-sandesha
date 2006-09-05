@@ -116,8 +116,10 @@ sandesha2_msg_ctx_get_msg_id(sandesha2_msg_ctx_t *rm_msg_ctx,
                         const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_id(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env, axis2_char_t *msg_id);
+sandesha2_msg_ctx_set_msg_id(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env, 
+    axis2_char_t *msg_id);
     
 axiom_soap_envelope_t *AXIS2_CALL
 sandesha2_msg_ctx_get_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,

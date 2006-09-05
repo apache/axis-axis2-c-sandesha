@@ -537,7 +537,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     key = axis2_uuid_gen(env);
     term_bean = sandesha2_sender_bean_create(env);
-    SANDESHA2_SENDER_BEAN_SET_MSG_CTX_REF_KEY(term_bean, env, key);
+    SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(term_bean, env, key);
     SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, key, msg_ctx);
     
     /* TODO: refine the terminate delay */

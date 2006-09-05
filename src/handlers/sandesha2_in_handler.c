@@ -69,9 +69,9 @@ sandesha2_in_handler_create(
 
 axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    struct axis2_msg_ctx *msg_ctx)
 {
     axis2_property_t *temp_prop = NULL;
     axis2_property_t *property = NULL;

@@ -571,7 +571,7 @@ sandesha2_fault_mgr_get_fault
     AXIS2_MSG_CTX_SET_OP(fault_msg_ctx, env, op);
     AXIS2_MSG_CTX_SET_OP_CTX(fault_msg_ctx, env, op_ctx);
     
-    if(SANDESHA2_MSG_TYPE_CREATE_SEQ == SANDESHA2_MSG_CTX_GET_TYPE(rm_msg_ctx, 
+    if(SANDESHA2_MSG_TYPE_CREATE_SEQ == SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, 
                         env))
     {
         sandesha2_create_seq_t *create_seq = NULL;
@@ -605,9 +605,11 @@ sandesha2_fault_mgr_get_fault
                         acks_to_str));
     soap_ver = sandesha2_utils_get_soap_version(env, 
                         SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx, env));
-    sandesha2_soap_env_creator_add_soap_env(env, fault_msg_ctx, soap_ver, 
+    /* this method is not implemented. Uncomment this when implemented */
+    /* sandesha2_soap_env_creator_add_soap_env(env, fault_msg_ctx, soap_ver, 
                         fault_data, SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx,
-                        env));
+                        env));*/
+    
     fault_rm_msg = sandesha2_msg_init_init_msg(env, fault_msg_ctx);
     return fault_rm_msg;
 }
