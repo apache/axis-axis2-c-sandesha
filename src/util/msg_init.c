@@ -185,11 +185,13 @@ populate_rm_msg_ctx(
     terminate_seq = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ(elements, env);
     if(terminate_seq)
     {
+        printf("terminate_seq\n");
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ, 
                 (sandesha2_iom_rm_part_t *) terminate_seq);
         rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
                 (sandesha2_iom_rm_element_t *) terminate_seq, env);
+        add_op_if_null(env, msg_ctx);
     }
     terminate_seq_res = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ_RES(elements, env);
     if(terminate_seq_res)

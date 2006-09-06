@@ -305,9 +305,9 @@ sandesha2_sender_run (
 
 axis2_status_t AXIS2_CALL
 sandesha2_sender_check_for_sync_res(
-                        sandesha2_sender_t *sender, 
-                        const axis2_env_t *env, 
-                        axis2_msg_ctx_t *msg_ctx)
+    sandesha2_sender_t *sender, 
+    const axis2_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *property = NULL;
     axis2_msg_ctx_t *res_msg_ctx = NULL;
@@ -338,6 +338,8 @@ sandesha2_sender_check_for_sync_res(
     if(NULL != req_op_ctx)
     {
         axis2_ctx_t *ctx = NULL;
+        axis2_endpoint_ref_t *to = NULL;
+        
         ctx = AXIS2_OP_CTX_GET_BASE(req_op_ctx, env);
         if(NULL != AXIS2_CTX_GET_PROPERTY(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
                     AXIS2_FALSE))

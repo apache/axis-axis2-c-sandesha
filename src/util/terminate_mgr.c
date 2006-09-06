@@ -514,6 +514,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         return AXIS2_FAILURE;
     }
     SANDESHA2_MSG_CTX_SET_TO(rm_msg_ctx, env, to_epr);
+    SANDESHA2_MSG_CTX_SET_TO(terminate_rm_msg, env, to_epr);
     rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_man);
     if(NULL == rm_ver)
     {
@@ -602,6 +603,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         sandesha2_utils_get_transport_out(env));
                         
     engine = axis2_engine_create(env, conf_ctx);
-        
+    
+    printf("came100********************************************\n");
     return AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
 }

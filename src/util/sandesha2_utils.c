@@ -559,6 +559,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_char_t *addr_ver = NULL;
     axis2_char_t *paused_phase_name = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
+    axis2_endpoint_ref_t *to = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -572,7 +573,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     in_desc = AXIS2_MSG_CTX_GET_TRANSPORT_IN_DESC(ref_msg, env);
     
     new_msg = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
-        
+       
     options = axis2_options_create(env);
     AXIS2_MSG_CTX_SET_OPTIONS(new_msg, env, options);
     svc_grp = AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env); 
@@ -1076,5 +1077,38 @@ sandesha2_utils_sort(
         }
     }
     return sorted_list;    
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_all_msgs_acked_upto(
+    const axis2_env_t *env,
+    long highest_in_msg_no,
+    axis2_char_t *internal_seq_id,
+    sandesha2_storage_mgr_t *storage_mgr)
+{
+    axis2_char_t *client_completed_msgs = NULL;
+    axis2_array_list_t *acked_msgs_list = NULL;
+    long smallest_msg_no = 1;
+    long temp_msg_no = 0;
+
+    client_completed_msgs = sandesha2_utils_get_seq_property(env, 
+        internal_seq_id, SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, 
+        storage_mgr);
+    acked_msgs_list = sandesha2_utils_get_array_list_from_string(env, 
+            client_completed_msgs);
+    for(temp_msg_no = smallest_msg_no; temp_msg_no <= highest_in_msg_no; 
+            temp_msg_no++)
+    {
+        axis2_char_t *str_msg_no = NULL;
+        
+        str_msg_no = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
+        sprintf(str_msg_no, "%ld", temp_msg_no);
+        if(AXIS2_TRUE != AXIS2_ARRAY_LIST_CONTAINS(acked_msgs_list, env, 
+                    str_msg_no))
+        {
+            return AXIS2_FALSE;
+        }
+    }
+    return AXIS2_TRUE; /* All messages upto the highest have been acked */
 }
 

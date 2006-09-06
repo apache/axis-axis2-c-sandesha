@@ -526,7 +526,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
     if(AXIS2_TRUE != is_seq_res_reqd)
     {
-        AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_TRANSPORT_IN, NULL, AXIS2_FALSE);
+        AXIS2_CTX_SET_PROPERTY(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL, AXIS2_FALSE);
     }
     terminate_rm_msg = sandesha2_msg_init_init_msg(env, terminate_seq_msg_ctx);
     if(terminate_rm_msg == NULL)
@@ -570,10 +570,10 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_terminate_seq_res_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *ref_rm_msg,
-        axis2_msg_ctx_t *out_msg,
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_msg_ctx_t *out_msg,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     sandesha2_msg_ctx_t *res_rm_msg = NULL;
     sandesha2_terminate_seq_t *terminate_seq = NULL;
@@ -586,7 +586,7 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     
     res_rm_msg = sandesha2_msg_ctx_create(env, out_msg);
     terminate_seq = (sandesha2_terminate_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
-                        res_rm_msg, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);
+                        ref_rm_msg, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
                         SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(terminate_seq,
                         env), env);
@@ -625,9 +625,9 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
 
 static axis2_status_t
 sandesha2_msg_creator_finalize_creation(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *related_msg,
-        axis2_msg_ctx_t *new_msg)
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *related_msg,
+    axis2_msg_ctx_t *new_msg)
 {
     axis2_op_t *old_op = NULL;
     axis2_op_ctx_t *old_op_ctx = NULL;
@@ -764,9 +764,9 @@ sandesha2_msg_creator_finalize_creation(
  
 static axis2_status_t
 sandesha2_msg_creator_init_creation(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *related_msg,
-        axis2_msg_ctx_t *new_msg)
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *related_msg,
+    axis2_msg_ctx_t *new_msg)
 {
     axis2_svc_t *related_svc = NULL;
     axis2_svc_t *new_svc = NULL;
@@ -777,7 +777,8 @@ sandesha2_msg_creator_init_creation(
     {
         axis2_param_t *ref_policy_param = NULL;
 
-        ref_policy_param = AXIS2_SVC_GET_PARAM(related_svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+        ref_policy_param = AXIS2_SVC_GET_PARAM(related_svc, env, 
+                SANDESHA2_SANDESHA_PROPERTY_BEAN);
         if(ref_policy_param)
         {
             void *value = NULL;

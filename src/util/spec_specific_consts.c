@@ -306,9 +306,9 @@ sandesha2_spec_specific_consts_is_term_seq_res_reqd(
     AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FALSE);
     
     if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
-        return AXIS2_TRUE;
-    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
         return AXIS2_FALSE;
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return AXIS2_TRUE;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);

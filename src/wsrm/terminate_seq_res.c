@@ -81,7 +81,9 @@ sandesha2_terminate_seq_res_free (sandesha2_iom_rm_element_t *terminate_seq_res,
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_terminate_seq_res_t* AXIS2_CALL
-sandesha2_terminate_seq_res_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_terminate_seq_res_create(
+    const axis2_env_t *env,  
+    axis2_char_t *ns_val)
 {
     sandesha2_terminate_seq_res_impl_t *terminate_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -304,8 +306,9 @@ sandesha2_terminate_seq_res_to_om_node(
 
 axis2_bool_t AXIS2_CALL 
 sandesha2_terminate_seq_res_is_namespace_supported(
-						sandesha2_iom_rm_element_t *terminate_seq_res,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+    sandesha2_iom_rm_element_t *terminate_seq_res,
+    const axis2_env_t *env, 
+    axis2_char_t *namespace)
 {
 	sandesha2_terminate_seq_res_impl_t *terminate_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
