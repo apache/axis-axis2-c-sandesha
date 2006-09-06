@@ -604,6 +604,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         
     engine = axis2_engine_create(env, conf_ctx);
     
-    printf("came100********************************************\n");
     return AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
 }
+

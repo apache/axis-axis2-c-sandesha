@@ -659,8 +659,10 @@ sandesha2_msg_ctx_set_soap_action(sandesha2_msg_ctx_t *rm_msg_ctx,
 }
     
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_paused(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_bool_t paused)
+sandesha2_msg_ctx_set_paused(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_bool_t paused)
 {
     sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

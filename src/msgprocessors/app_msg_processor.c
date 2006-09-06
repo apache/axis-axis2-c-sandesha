@@ -399,13 +399,13 @@ sandesha2_app_msg_processor_process_in_msg (
                         SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(msgs_bean, env, msgs_str);
     }
-    if(AXIS2_TRUE == sandesha2_app_msg_processor_msg_num_is_in_list(
+    /*if(AXIS2_TRUE == sandesha2_app_msg_processor_msg_num_is_in_list(
                         msg_processor, env, msgs_str, msg_no) &&
                         0 == AXIS2_STRCMP(SANDESHA2_QOS_DEFAULT_INVOCATION_TYPE, 
                         SANDESHA2_QOS_EXACTLY_ONCE))
     {
         SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
-    }
+    }*/
     if(NULL != msgs_str && 0 < AXIS2_STRLEN(msgs_str))
         msgs_str = axis2_strcat(env, msgs_str, ",", msg_num_str, NULL);
     else

@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/sandesha2
 prglib_LTLIBRARIES = libsandesha2.la
 
-libsandesha2_la_SOURCES = msg_ctx.c\
+libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
                           mod_sandesha2.c\
                           msg_validator.c
 
