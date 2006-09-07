@@ -559,7 +559,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_char_t *addr_ver = NULL;
     axis2_char_t *paused_phase_name = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
-    axis2_endpoint_ref_t *to = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -717,7 +716,8 @@ sandesha2_utils_create_new_related_msg_ctx(
                         property, AXIS2_FALSE);
     AXIS2_MSG_CTX_SET_EXECUTION_CHAIN(new_msg, env, 
                         AXIS2_MSG_CTX_GET_EXECUTION_CHAIN(ref_msg, env));
-    paused_phase_name = AXIS2_MSG_CTX_GET_PAUSED_PHASE_NAME(ref_msg, env);
+    paused_phase_name = (axis2_char_t*)AXIS2_MSG_CTX_GET_PAUSED_PHASE_NAME(
+                        ref_msg, env);
     AXIS2_MSG_CTX_SET_PAUSED_PHASE_NAME(new_msg, env, paused_phase_name);
 
     return new_msg;
@@ -773,7 +773,7 @@ sandesha2_utils_is_retriable_on_faults(const axis2_env_t *env,
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
-    action =  AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    action =  (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
     if(NULL == action)
         return AXIS2_FALSE;
         
@@ -802,7 +802,7 @@ sandesha2_utils_is_rm_global_msg(const axis2_env_t *env,
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
-    action =  AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    action = (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
     printf("action:%s\n", action);
     soap_env = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     

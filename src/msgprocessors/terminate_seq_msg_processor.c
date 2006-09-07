@@ -464,8 +464,8 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env);
-    to_address = AXIS2_ENDPOINT_REF_GET_ADDRESS(AXIS2_MSG_CTX_GET_TO(msg_ctx,
-                        env), env);
+    to_address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        AXIS2_MSG_CTX_GET_TO(msg_ctx, env), env);
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY,
                         AXIS2_FALSE);
     seq_key = AXIS2_PROPERTY_GET_VALUE(property, env);

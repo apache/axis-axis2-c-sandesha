@@ -307,7 +307,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(acks_to_bean, env, 
                         offered_seq_id);
         SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(acks_to_bean, env, 
-                        AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to_epr, env));
+                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        acks_to_epr, env));
         SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, acks_to_bean);
         
         next_bean = sandesha2_next_msg_bean_create(env);

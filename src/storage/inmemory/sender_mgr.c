@@ -270,7 +270,6 @@ sandesha2_sender_mgr_retrieve(
 {
     sandesha2_sender_mgr_impl_t *sender_impl = NULL;
     sandesha2_sender_bean_t *bean = NULL;
-    axis2_hash_index_t *ind = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);

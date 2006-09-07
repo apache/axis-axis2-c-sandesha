@@ -293,7 +293,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     }
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, 
                     new_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR, 
-                    AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env));
+                    (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env));
     SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, acks_to_bean);
     AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(out_msg_ctx, env, AXIS2_TRUE);
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, 

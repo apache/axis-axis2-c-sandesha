@@ -456,7 +456,6 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     axis2_op_t *terminate_seq_op = NULL;
     axis2_op_t *ref_msg_op = NULL;
     axis2_op_ctx_t *terminate_seq_op_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
     axis2_char_t *terminate_seq_msg_id = NULL;
     axis2_char_t *temp_msg_id = NULL;
     axis2_char_t *rm_version = NULL;
@@ -491,7 +490,8 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     terminate_seq_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
             ref_rm_msg, terminate_seq_op);
     terminate_seq_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(terminate_seq_msg_ctx, env);
-    terminate_seq_msg_id = AXIS2_MSG_CTX_GET_MSG_ID(terminate_seq_msg_ctx, env);
+    terminate_seq_msg_id = (axis2_char_t*)AXIS2_MSG_CTX_GET_MSG_ID(
+                        terminate_seq_msg_ctx, env);
     if(terminate_seq_msg_id)
         AXIS2_CONF_CTX_REGISTER_OP_CTX(conf_ctx, env, terminate_seq_msg_id, 
             terminate_seq_op_ctx);

@@ -81,12 +81,12 @@ sandesha2_client_fill_terminated_outgoing_seq_info(
         axis2_char_t *internal_seq_id,
         sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
-static axis2_status_t
+/*static axis2_status_t
 sandesha2_client_fill_timedout_outgoing_seq_info(
         const axis2_env_t *env,
         sandesha2_seq_report_t *report,
         axis2_char_t *internal_seq_id,
-        sandesha2_seq_property_mgr_t *seq_prop_mgr);
+        sandesha2_seq_property_mgr_t *seq_prop_mgr);*/
 
 static axis2_status_t
 sandesha2_client_fill_outgoing_seq_info(
@@ -160,7 +160,7 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "To address is not set.");
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     svc_ctx = (axis2_svc_ctx_t *)AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
@@ -528,7 +528,7 @@ sandesha2_client_create_seq_with_svc_client(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     if(!to)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
@@ -645,7 +645,7 @@ sandesha2_client_terminate_seq_with_svc_client(
             rm_namespc_value, NULL);
     terminate_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
             qname, node, &terminate_body_node);
-    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
     action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
             rm_spec_version);
     AXIS2_OPTIONS_SET_ACTION(options, env, action);
@@ -745,7 +745,7 @@ sandesha2_client_close_seq_with_svc_client(
             rm_namespc_value, NULL);
     close_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
             qname, node, &close_body_node);
-    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
     action = sandesha2_spec_specific_consts_get_close_seq_action(env, 
             rm_spec_version);
     AXIS2_OPTIONS_SET_ACTION(options, env, action);
@@ -944,7 +944,7 @@ sandesha2_client_get_seq_id(
                 AXIS2_FAILURE);
         return NULL;
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
    svc_ctx = (axis2_svc_ctx_t *) AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
@@ -1037,7 +1037,7 @@ sandesha2_client_send_ack_request_with_svc_client(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     rm_spec_version = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
@@ -1096,7 +1096,7 @@ sandesha2_client_send_ack_request_with_svc_client(
             rm_ns_value, NULL);
     ack_requested_header_block = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
             element, env, qname, node, &ack_requested_header_block_node);
-    old_action = AXIS2_OPTIONS_GET_ACTION(options, env);
+    old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
     action = sandesha2_spec_specific_consts_get_ack_req_action(env, 
             rm_spec_version);
     AXIS2_OPTIONS_SET_ACTION(options, env, action);
@@ -1185,7 +1185,7 @@ sandesha2_client_configure_close_seq(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);
@@ -1383,7 +1383,7 @@ sandesha2_client_fill_terminated_outgoing_seq_info(
     return AXIS2_SUCCESS; 
 }
 
-static axis2_status_t
+/*static axis2_status_t
 sandesha2_client_fill_timedout_outgoing_seq_info(
         const axis2_env_t *env,
         sandesha2_seq_report_t *report,
@@ -1419,7 +1419,7 @@ sandesha2_client_fill_timedout_outgoing_seq_info(
     out_seq_id = SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(internal_seq_bean, env);
     sandesha2_client_fill_outgoing_seq_info(env, report, out_seq_id, seq_prop_mgr);
     return AXIS2_SUCCESS; 
-}
+}*/
 
 static axis2_status_t
 sandesha2_client_fill_outgoing_seq_info(
@@ -1593,7 +1593,7 @@ sandesha2_client_configure_terminate_seq(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    to = AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
+    to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
     seq_key = (axis2_char_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);

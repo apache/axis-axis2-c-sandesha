@@ -546,7 +546,8 @@ sandesha2_msg_ctx_get_msg_id(sandesha2_msg_ctx_t *rm_msg_ctx,
     AXIS2_ENV_CHECK(env, NULL);
     
     msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(msg_ctx_impl->msg_ctx, env);
+    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(
+                        msg_ctx_impl->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -597,7 +598,7 @@ sandesha2_msg_ctx_get_wsa_action(sandesha2_msg_ctx_t *rm_msg_ctx,
         
     msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     
-    return AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx_impl->msg_ctx, env);
+    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx_impl->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL

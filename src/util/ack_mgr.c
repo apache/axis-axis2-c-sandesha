@@ -46,7 +46,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_op_t *ack_op = NULL;
     axis2_op_t *ref_op = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
-    axis2_char_t *wsa_version = NULL;
     axis2_char_t *addr_ns_uri = NULL;
     axis2_char_t *anon_uri = NULL;
     axis2_property_t *property = NULL;
@@ -67,7 +66,7 @@ sandesha2_ack_mgr_generate_ack_msg(
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, 
                         env));
     if(NULL != acks_to)
-        acks_to_str = AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
+        acks_to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
     if(NULL == acks_to_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_EPR, AXIS2_FAILURE);
@@ -184,7 +183,8 @@ sandesha2_ack_mgr_generate_ack_msg(
         ack_bean = sandesha2_sender_bean_create(env);
         SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(ack_bean, env, key);
         SANDESHA2_SENDER_BEAN_SET_MSG_ID(ack_bean, env, 
-                        AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(ack_msg_ctx, env));
+                        (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(
+                        ack_msg_ctx, env));
         SANDESHA2_SENDER_BEAN_SET_RESEND(ack_bean, env, AXIS2_FALSE);
         SANDESHA2_SENDER_BEAN_SET_SEQ_ID(ack_bean, env, seq_id);
         SANDESHA2_SENDER_BEAN_SET_SEND(ack_bean, env, AXIS2_TRUE);
@@ -416,7 +416,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
    
     to = SANDESHA2_MSG_CTX_GET_TO(rm_msg_ctx, env);
     if(to)
-        to_str = AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
+        to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
                         
     found_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
                         find_bean);
@@ -439,8 +439,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             msg_ctx1 = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_mgr, env,
                         SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(
                         sender_bean, env), conf_ctx);
-            to = AXIS2_ENDPOINT_REF_GET_ADDRESS(AXIS2_MSG_CTX_GET_TO(msg_ctx1,
-                        env), env);
+            to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        AXIS2_MSG_CTX_GET_TO(msg_ctx1, env), env);
             if(0 == AXIS2_STRCMP(to, to_str))
                 continue; 
             SANDESHA2_SENDER_MGR_REMOVE(retrans_mgr, env, 

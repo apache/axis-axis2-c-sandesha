@@ -49,7 +49,6 @@ struct sandesha2_storage_mgr_impl
     sandesha2_seq_property_mgr_t *seq_property_mgr;
     sandesha2_sender_mgr_t *sender_mgr;
     sandesha2_invoker_mgr_t *invoker_mgr;
-
     axis2_conf_ctx_t *conf_ctx;
 };
 
@@ -251,7 +250,7 @@ sandesha2_storage_mgr_free(
 
     if(storage_impl->instance)
     {
-        axis2_thread_mutex_destroy(storage_impl->instance);
+        sandesha2_storage_mgr_free(storage_impl->instance, env);
         storage_impl->instance = NULL;
     }
     if(storage_impl->create_seq_mgr)

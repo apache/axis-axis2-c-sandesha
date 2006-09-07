@@ -582,7 +582,7 @@ sandesha2_fault_mgr_get_fault
         epr =  SANDESHA2_ADDRESS_GET_EPR(SANDESHA2_ACKS_TO_GET_ADDRESS(
                         SANDESHA2_CREATE_SEQ_GET_ACKS_TO(create_seq, env), 
                         env), env);
-        acks_to_str = AXIS2_ENDPOINT_REF_GET_ADDRESS(epr, env);
+        acks_to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(epr, env);
     }
     else
     {

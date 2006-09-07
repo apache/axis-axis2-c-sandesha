@@ -139,7 +139,7 @@ populate_rm_msg_ctx(
     }
     elements = sandesha2_rm_elements_create(env, addressing_ns);
     envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
-    action = AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    action = (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
     SANDESHA2_RM_ELEMENTS_FROM_SOAP_ENVELOPE(elements, env, envelope, action);
     create_seq = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ(elements, env);
     if(create_seq)
@@ -432,7 +432,7 @@ static void add_op_if_null(
         {
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, 
                     AXIS2_FAILURE);
-            return AXIS2_FAILURE;
+            return;
         }
         op = axis2_op_create_with_qname(env, tmp_qname);
         AXIS2_QNAME_FREE(tmp_qname, env);

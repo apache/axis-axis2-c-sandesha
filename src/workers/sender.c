@@ -244,7 +244,7 @@ sandesha2_sender_is_sender_started
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     
     sender_impl = SANDESHA2_INTF_TO_IMPL(sender);
-    sender_impl->run_sender;
+    return sender_impl->run_sender;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -338,7 +338,6 @@ sandesha2_sender_check_for_sync_res(
     if(NULL != req_op_ctx)
     {
         axis2_ctx_t *ctx = NULL;
-        axis2_endpoint_ref_t *to = NULL;
         
         ctx = AXIS2_OP_CTX_GET_BASE(req_op_ctx, env);
         if(NULL != AXIS2_CTX_GET_PROPERTY(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 

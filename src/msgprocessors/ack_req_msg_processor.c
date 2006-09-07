@@ -302,7 +302,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         ack_bean = sandesha2_sender_bean_create(env);
         SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(ack_bean, env, key);
         SANDESHA2_SENDER_BEAN_SET_MSG_ID(ack_bean, env, 
-                        AXIS2_MSG_CTX_GET_MSG_ID(ack_msg_ctx, env));
+                        (axis2_char_t*)AXIS2_MSG_CTX_GET_MSG_ID(ack_msg_ctx, env));
         SANDESHA2_SENDER_BEAN_SET_RESEND(ack_bean, env, AXIS2_FALSE);
         SANDESHA2_SENDER_BEAN_SET_SEQ_ID(ack_bean, env, seq_id);
         SANDESHA2_SENDER_BEAN_SET_SEND(ack_bean, env, AXIS2_TRUE);

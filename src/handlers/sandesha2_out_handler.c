@@ -180,7 +180,7 @@ sandesha2_out_handler_invoke(
             axis2_property_t *property = NULL;
             axis2_ctx_t *ctx = NULL;
             /* end test code */
-            sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
+            /*sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;*/
             sandesha2_seq_t *seq_part = NULL;
 
             /* test code */

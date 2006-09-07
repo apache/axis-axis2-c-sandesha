@@ -125,7 +125,7 @@ sandesha2_seq_mgr_setup_new_seq(
     /* If no replyTo value. Send responses as sync. */
     if(reply_to)
     {
-        address = AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to, env);
+        address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to, env);
         to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_TO_EPR, address);
     }
@@ -134,10 +134,10 @@ sandesha2_seq_mgr_setup_new_seq(
         to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_TO_EPR, anonymous_uri);
     }
-    address = AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
+    address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
     reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_REPLY_TO_EPR, address);
-    address = AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
+    address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_ACKS_TO_EPR, address);
     SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, received_msg_bean);
@@ -373,12 +373,12 @@ sandesha2_seq_mgr_setup_new_client_seq(
     
     to_bean = sandesha2_seq_property_bean_create_with_data(env, int_seq_id,
                        SANDESHA2_SEQ_PROP_TO_EPR, 
-                       AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env));
+                       (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
+                       env));
     
     if(AXIS2_TRUE == AXIS2_MSG_CTX_GET_SERVER_SIDE(first_app_msg, env))
     {
         axis2_op_ctx_t *op_ctx = NULL;
-        axis2_msg_ctx_t *req_msg_ctx = NULL;
         axis2_endpoint_ref_t *reply_to_epr = NULL;
         axis2_property_t *property = NULL;
         
@@ -399,7 +399,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
         if(NULL != reply_to_epr)
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,
-                        AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to_epr, env));
+                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        reply_to_epr, env));
         else
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get"
