@@ -502,6 +502,10 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     sandesha2_app_msg_processor_send_ack_if_reqd(msg_processor, env, rm_msg_ctx,
                         msgs_str, storage_man);
+    if(AXIS2_TRUE == AXIS2_MSG_CTX_IS_PAUSED(msg_ctx, env))
+    {
+        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_FALSE);
+    }
     return AXIS2_SUCCESS;
     
 }
@@ -1350,7 +1354,9 @@ sandesha2_app_msg_processor_process_response_msg(
                         SANDESHA2_MSG_TYPE_APPLICATION);
     if(NULL == out_seq_bean || NULL == SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
                         out_seq_bean, env))
+    {
         SANDESHA2_SENDER_BEAN_SET_SEND(app_msg_entry, env, AXIS2_FALSE);
+    }
     else
     {
         SANDESHA2_SENDER_BEAN_SET_SEND(app_msg_entry, env, AXIS2_TRUE);
@@ -1358,7 +1364,7 @@ sandesha2_app_msg_processor_process_response_msg(
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
         AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
                             SANDESHA2_VALUE_TRUE, env));
-        AXIS2_MSG_CTX_SET_PROPERTY(req_msg, env, 
+        AXIS2_MSG_CTX_SET_PROPERTY(app_msg_ctx, env, 
                             SANDESHA2_SET_SEND_TO_TRUE, property, AXIS2_FALSE);
     }
     SANDESHA2_SENDER_BEAN_SET_INTERNAL_SEQ_ID(app_msg_entry, env, internal_seq_id);

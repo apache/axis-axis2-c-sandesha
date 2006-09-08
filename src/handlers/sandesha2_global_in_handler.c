@@ -113,7 +113,8 @@ sandesha2_global_in_handler_invoke(
     
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    
+   
+    printf("came**********************************************\n");
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Starting sandesha2 global in handler ......");
 
