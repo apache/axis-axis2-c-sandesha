@@ -40,7 +40,7 @@
     <!-- Transport Ins -->
     <!-- ================================================= -->
     <transportReceiver name="http" class="axis2_http_receiver">
-        <parameter name="port" locked="false">6060</parameter>
+        <parameter name="port" locked="false">6666</parameter>
     </transportReceiver>
 
     <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
@@ -54,7 +54,7 @@
     
     <!--
     <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPServer">
-        <parameter name="port" locked="false">6060</parameter>
+        <parameter name="port" locked="false">6666</parameter>
     </transportReceiver>
     -->
     <!-- ================================================= -->
@@ -89,8 +89,6 @@
     <!-- ================================================= -->
     <!-- Comment this to disable Addressing -->
     <module ref="addressing"/>
-    <module ref="sandesha2"/>
-
 
     <!--Configuring module , providing paramters for modules whether they refer or not-->
     <!--<moduleConfig name="addressing">-->
