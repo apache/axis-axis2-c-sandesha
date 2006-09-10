@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     env = axis2_env_create_all("mtom.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of mtom service */
-    address = "http://localhost:9090/axis2/services/mtom";
+    address = "http://localhost:9090/axis2/services/rm_mtom";
     if (argc > 1 )
         address = argv[1];
     if (AXIS2_STRCMP(address, "-h") == 0)
@@ -116,6 +116,7 @@ int main(int argc, char** argv)
             property);
     /* Send request */
     ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    AXIS2_SLEEP(10);
     
     if(ret_node)
     {
