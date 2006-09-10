@@ -78,8 +78,19 @@ AC_CONFIG_FILES([Makefile \
     src/storage/Makefile\
     src/storage/beans/Makefile\
     src/storage/inmemory/Makefile\
-    src/client/Makefile
-    src/core/Makefile
+    src/client/Makefile \
+    src/core/Makefile \
+    samples/Makefile \
+    samples/server/Makefile \
+    samples/server/rm_mtom/Makefile \
+    samples/server/rm_echo/Makefile \
+    samples/server/rm_ping/Makefile \
+    samples/client/Makefile \
+    samples/client/rm_mtom/Makefile \
+    samples/client/rm_mtom/resources/Makefile \
+    samples/client/rm_echo/Makefile \
+    samples/client/rm_echo_blocking/Makefile \
+    samples/client/rm_ping/Makefile
     ])
     
 AC_OUTPUT
