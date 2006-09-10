@@ -1,4 +1,4 @@
 datadir=$(prefix)/sandesha2
-SUBDIRS = src samples
+SUBDIRS = src
 data_DATA = LICENSE config/module.xml
 

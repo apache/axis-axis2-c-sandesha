@@ -37,6 +37,23 @@ AC_FUNC_REALLOC
 PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
 CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS"
 
+AC_MSG_CHECKING(whether to build dynamic invocation client)
+AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient. default=no],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    DICLIENT_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    DICLIENT_DIR="diclient"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  DICLIENT_DIR=""
+)
+
 AC_MSG_CHECKING(To Use Axis2 C AXIOM. This is a compulsory module to build Axis2 C)
 AC_ARG_WITH(axiom,
 [  --with-axiom[=PATH]      use axiom.],
