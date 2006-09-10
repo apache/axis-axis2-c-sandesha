@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://ws.apache.org/axis2/c/samples/echoString");
-    reply_to = axis2_endpoint_ref_create(env, "http://192.168.1.106:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+    reply_to = axis2_endpoint_ref_create(env, "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
 
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
     property = axis2_property_create(env);
