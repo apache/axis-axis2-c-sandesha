@@ -187,6 +187,12 @@ sandesha2_out_handler_invoke(
             ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
             property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
                 SANDESHA2_WSRM_COMMON_SEQ, AXIS2_FALSE);
+            if (!property)
+            {
+                /* it could be the case that RM is not used by client but only 
+                   engaged at server */
+                return AXIS2_SUCCESS;
+            }
             seq_part = (sandesha2_seq_t *)  AXIS2_PROPERTY_GET_VALUE(property, 
                     env);
             /* end test code */
