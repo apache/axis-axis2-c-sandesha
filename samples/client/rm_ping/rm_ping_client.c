@@ -20,6 +20,10 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 
+#define MAX_COUNT  10
+/* to check whether the callback is completed */
+int is_complete = 0;
+
 axiom_node_t *
 build_om_programatically(
     const axis2_env_t *env,
@@ -36,6 +40,7 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_property_t *property = NULL;
+    int count = 0;
    
     /* Set up the environment */
     env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
@@ -62,12 +67,13 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://example.org/action/ping");
 
-    /* Set up deploy folder. It is from the deploy folder, the configuration is picked up 
-     * using the axis2.xml file.
-     * In this sample client_home points to the Axis2/C default deploy folder. The client_home can 
-     * be different from this folder on your system. For example, you may have a different folder 
-     * (say, my_client_folder) with its own axis2.xml file. my_client_folder/modules will have the 
-     * modules that the client uses
+    /* Set up deploy folder. It is from the deploy folder, the configuration is 
+     * picked up using the axis2.xml file.
+     * In this sample client_home points to the Axis2/C default deploy folder. 
+     * The client_home can be different from this folder on your system. For 
+     * example, you may have a different folder (say, my_client_folder) with its 
+     * own axis2.xml file. my_client_folder/modules will have the modules that 
+     * the client uses
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
@@ -125,17 +131,28 @@ int main(int argc, char** argv)
                         AXIS2_ERROR_GET_MESSAGE(env->error));
         printf("ping client invoke FAILED!\n");
     }
-    AXIS2_SLEEP(10);
+     /** Wait till callback is complete. Simply keep the parent thread running
+       until our on_complete or on_error is invoked */
+    while(count < MAX_COUNT )
+    {
+        if (is_complete)
+        {
+         /* We are done with the callback */
+         break;
+        }
+        AXIS2_SLEEP(1);
+        count++;
+    }
+    
+    if (!(count < MAX_COUNT))
+    {
+        printf("\nCounter timed out.\n");
+    }
     
     if (svc_client)
     {
         AXIS2_SVC_CLIENT_FREE(svc_client, env);
         svc_client = NULL;
-    }
-    if (endpoint_ref)
-    {
-        AXIS2_ENDPOINT_REF_FREE(endpoint_ref, env);
-        endpoint_ref = NULL;
     }
     return 0;
 }

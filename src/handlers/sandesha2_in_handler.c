@@ -89,26 +89,24 @@ sandesha2_in_handler_invoke(
     sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
-    /* test code */
     sandesha2_seq_t *seq_part = NULL;
     axis2_endpoint_ref_t *reply_to_epr = NULL;
-    /* end test code */
 
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
-    printf("came10\n");
+    printf("Starting Sandesha2 in handler\n");
 
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(conf_ctx == NULL)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Configuration Context is NULL");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
-    printf("came11\n");
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(temp_prop)

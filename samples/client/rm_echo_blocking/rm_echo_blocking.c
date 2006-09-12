@@ -19,7 +19,7 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 
-#define MAX_COUNT  3000000
+#define MAX_COUNT  10
 
 /* to check whether the callback is completed */
 int is_complete = 0;
@@ -65,19 +65,21 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://ws.apache.org/axis2/c/samples/echoString");
-    reply_to = axis2_endpoint_ref_create(env, "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+    reply_to = axis2_endpoint_ref_create(env, "http://localhost:6060/axis2/" \
+            "services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
 
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
 
-    /* Set up deploy folder. It is from the deploy folder, the configuration is picked up 
-     * using the axis2.xml file.
-     * In this sample client_home points to the Axis2/C default deploy folder. The client_home can 
-     * be different from this folder on your system. For example, you may have a different folder 
-     * (say, my_client_folder) with its own axis2.xml file. my_client_folder/modules will have the 
-     * modules that the client uses
+    /* Set up deploy folder. It is from the deploy folder, the configuration is 
+     * picked up using the axis2.xml file.
+     * In this sample client_home points to the Axis2/C default deploy folder. 
+     * The client_home can be different from this folder on your system. For 
+     * example, you may have a different folder 
+     * (say, my_client_folder) with its own axis2.xml file. 
+     * my_client_folder/modules will have the modules that the client uses
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)

@@ -43,77 +43,104 @@ struct sandesha2_msg_ctx_impl
 
 /***************************** Function headers *******************************/
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_ctx(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx);
+sandesha2_msg_ctx_set_msg_ctx(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx);
             
 axis2_msg_ctx_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_ctx(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_msg_ctx(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env);
     
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_add_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
-            
+sandesha2_msg_ctx_add_soap_envelope(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
+        
 int AXIS2_CALL
-sandesha2_msg_ctx_get_msg_type (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_msg_type (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
+        
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_type (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    int msg_type);
             
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_type (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int msg_type);
-            
-axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_part (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int part_id,
-                        sandesha2_iom_rm_part_t *part);
-            
+sandesha2_msg_ctx_set_msg_part (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    int part_id,
+    sandesha2_iom_rm_part_t *part);
+        
 sandesha2_iom_rm_part_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_part(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int part_id);
+sandesha2_msg_ctx_get_msg_part(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    int part_id);
     
 axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_from(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_from(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_from(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *from);
+sandesha2_msg_ctx_set_from(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *from);
     
 axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_to (sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_to (
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_to(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env, axis2_endpoint_ref_t *to);
+sandesha2_msg_ctx_set_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *to);
     
 axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_reply_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_reply_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_reply_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *reply_to);
+sandesha2_msg_ctx_set_reply_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *reply_to);
     
 axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_fault_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_fault_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_fault_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *fault_to);
+sandesha2_msg_ctx_set_fault_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *fault_to);
     
 axis2_relates_to_t *AXIS2_CALL
-sandesha2_msg_ctx_get_relates_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_relates_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_relates_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_relates_to_t *relates_to);
+sandesha2_msg_ctx_set_relates_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_relates_to_t *relates_to);
     
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_id(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_msg_id(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_id(
@@ -122,73 +149,101 @@ sandesha2_msg_ctx_set_msg_id(
     axis2_char_t *msg_id);
     
 axiom_soap_envelope_t *AXIS2_CALL
-sandesha2_msg_ctx_get_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_soap_envelope(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, 
-                        axiom_soap_envelope_t *soap_envelope);
+sandesha2_msg_ctx_set_soap_envelope(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axiom_soap_envelope_t *soap_envelope);
             
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_wsa_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_wsa_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_wsa_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *action);
+sandesha2_msg_ctx_set_wsa_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *action);
             
 void *AXIS2_CALL
-sandesha2_msg_ctx_get_property(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *key);
+sandesha2_msg_ctx_get_property(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *key);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_property(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *key, void *val);
+sandesha2_msg_ctx_set_property(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *key, 
+    void *val);
     
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *soap_action);
+sandesha2_msg_ctx_set_soap_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *soap_action);
     
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_paused(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_bool_t paused);
+sandesha2_msg_ctx_set_paused(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_bool_t paused);
     
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_rm_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_rm_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *ns_val);
+sandesha2_msg_ctx_set_rm_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *ns_val);
     
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_addr_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_addr_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_addr_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *ns_val);
+sandesha2_msg_ctx_set_addr_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_char_t *ns_val);
             
 int AXIS2_CALL
-sandesha2_msg_ctx_get_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_flow(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int flow);
+sandesha2_msg_ctx_set_flow(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    int flow);
                         
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_spec_ver(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env);
+sandesha2_msg_ctx_get_rm_spec_ver(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_msg_ctx_free(sandesha2_msg_ctx_t *rm_msg_ctx, const axis2_env_t *env);								
+sandesha2_msg_ctx_free(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_ctx_t* AXIS2_CALL
-sandesha2_msg_ctx_create(const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
+sandesha2_msg_ctx_create(
+    const axis2_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
     sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -539,8 +594,9 @@ sandesha2_msg_ctx_set_relates_to(sandesha2_msg_ctx_t *rm_msg_ctx,
 }
     
 axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_id(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env)
+sandesha2_msg_ctx_get_msg_id(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env)
 {
     sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);

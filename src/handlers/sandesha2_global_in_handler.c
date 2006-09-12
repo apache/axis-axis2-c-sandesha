@@ -39,35 +39,35 @@
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_global_in_handler_get_qname(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env);
+    struct axis2_handler *handler, 
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_invoke(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx);
-        
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    struct axis2_msg_ctx *msg_ctx);
+    
 axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
-                        struct axis2_handler *handler, 
-                        const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr);        
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);        
                                              
 
 axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_process_dropped_msg(
-                        struct axis2_handler *handler, 
-                        const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr);                                             
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);                                             
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 sandesha2_global_in_handler_create(
-        const axis2_env_t *env, 
-        axis2_qname_t *qname) 
+    const axis2_env_t *env, 
+    axis2_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
     
@@ -91,9 +91,9 @@ sandesha2_global_in_handler_create(
 
 axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_invoke(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    struct axis2_msg_ctx *msg_ctx)
 {
     
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -196,7 +196,7 @@ sandesha2_global_in_handler_invoke(
                         AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
                 if(NULL != req_msg_ctx)
                 {
-                    if(AXIS2_TRUE == sandesha2_utils_is_retriable_on_faults(env,
+                    if(AXIS2_TRUE == sandesha2_utils_is_retrievable_on_faults(env,
                         req_msg_ctx))
                     {
                         /* TODO we need to notify the listeners */

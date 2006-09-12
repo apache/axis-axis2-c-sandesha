@@ -241,8 +241,8 @@ populate_rm_msg_ctx(
 }
 
 static axis2_bool_t validate_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;

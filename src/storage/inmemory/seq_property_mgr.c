@@ -43,68 +43,68 @@ struct sandesha2_seq_property_mgr_impl
 
 axis2_status_t AXIS2_CALL 
 sandesha2_seq_property_mgr_free(
-        void *seq_property,
-        const axis2_env_t *envv);
+    void *seq_property,
+    const axis2_env_t *envv);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_insert(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_remove(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        axis2_char_t *seq_id,
-        axis2_char_t *name);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *name);
 
 sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        axis2_char_t *seq_id,
-        axis2_char_t *name);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *name);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_find_unique(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve_all(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update_or_insert(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 static axis2_char_t *
 sandesha2_seq_property_mgr_get_id(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        sandesha2_seq_property_bean_t *bean);
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
 
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
 sandesha2_seq_property_mgr_create(
-        const axis2_env_t *env,
-        axis2_ctx_t *ctx)
+    const axis2_env_t *env,
+    axis2_ctx_t *ctx)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     axis2_property_t *property = NULL;
@@ -280,10 +280,10 @@ sandesha2_seq_property_mgr_remove(
 
 sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
-        sandesha2_seq_property_mgr_t *seq_property,
-        const axis2_env_t *env,
-        axis2_char_t *seq_id,
-        axis2_char_t *name)
+    sandesha2_seq_property_mgr_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *name)
 {
     sandesha2_seq_property_mgr_impl_t *seq_property_impl = NULL;
     sandesha2_seq_property_bean_t *bean = NULL;

@@ -50,7 +50,8 @@ int main(int argc, char** argv)
         address = argv[1];
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
-        printf("Usage : %s [endpoint_url] [image_name] [to_save_name]\n", argv[0]);
+        printf("Usage : %s [endpoint_url] [image_name] [to_save_name]\n", 
+                argv[0]);
         printf("use -h for help\n");
         return 0;
     }
@@ -74,18 +75,19 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://ws.apache.org/axis2/c/samples/mtomSample");
-    reply_to = axis2_endpoint_ref_create(env, 
-            "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+    reply_to = axis2_endpoint_ref_create(env, "http://localhost:6060/axis2/" \
+            "services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
 
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
     AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP11);
     AXIS2_OPTIONS_SET_ENABLE_MTOM(options, env, AXIS2_TRUE);
 
-    /* Set up deploy folder. It is from the deploy folder, the configuration is picked up 
-     * using the axis2.xml file.
-     * In this sample client_home points to the Axis2/C default deploy folder. The client_home can 
-     * be different from this folder on your system. For example, you may have a different folder 
-     * (say, my_client_folder) with its own axis2.xml file. my_client_folder/modules will have the 
+    /* Set up deploy folder. It is from the deploy folder, the configuration is 
+     * picked up using the axis2.xml file.
+     * In this sample client_home points to the Axis2/C default deploy folder. 
+     * The client_home can be different from this folder on your system. For 
+     * example, you may have a different folder (say, my_client_folder) with 
+     * its own axis2.xml file. my_client_folder/modules will have the 
      * modules that the client uses
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");

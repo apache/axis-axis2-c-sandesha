@@ -50,78 +50,95 @@ extern "C"
 
 AXIS2_EXTERN long AXIS2_CALL
 sandesha2_utils_get_current_time_in_millis(
-        const axis2_env_t *env);
+    const axis2_env_t *env);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_utils_remove_soap_body_part(const axis2_env_t *env, 
-                        axiom_soap_envelope_t *envelope, axis2_qname_t *qname);
+sandesha2_utils_remove_soap_body_part(
+    const axis2_env_t *env, 
+    axiom_soap_envelope_t *envelope, 
+    axis2_qname_t *qname);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_rm_version(const axis2_env_t *env,
-                        axis2_char_t *key,
-                        sandesha2_storage_mgr_t *storage_man);
+sandesha2_utils_get_rm_version(
+    const axis2_env_t *env,
+    axis2_char_t *key,
+    sandesha2_storage_mgr_t *storage_man);
                         
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_storage_mgr(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_conf_t *conf);
+sandesha2_utils_get_storage_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_conf_t *conf);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_seq_property(const axis2_env_t *env,
-                        axis2_char_t *id,
-                        axis2_char_t *name,
-                        sandesha2_storage_mgr_t *storage_man);
+sandesha2_utils_get_seq_property(
+    const axis2_env_t *env,
+    axis2_char_t *id,
+    axis2_char_t *name,
+    sandesha2_storage_mgr_t *storage_man);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
-sandesha2_utils_get_property_bean(const axis2_env_t *env,
-                        axis2_conf_t *conf);
+sandesha2_utils_get_property_bean(
+    const axis2_env_t *env,
+    axis2_conf_t *conf);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
-sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
-                        axis2_op_t *op);
+sandesha2_utils_get_property_bean_from_op(
+    const axis2_env_t *env,
+    axis2_op_t *op);
 
 AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
-sandesha2_utils_get_array_list_from_string(const axis2_env_t *env,
-                        axis2_char_t *string);
+sandesha2_utils_get_array_list_from_string(
+    const axis2_env_t *env,
+    axis2_char_t *string);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_utils_array_list_contains(const axis2_env_t *env,
-                        axis2_array_list_t *list,
-                        axis2_char_t *string);
+sandesha2_utils_array_list_contains(
+    const axis2_env_t *env,
+    axis2_array_list_t *list,
+    axis2_char_t *string);
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_array_list_to_string(const axis2_env_t *env,
-                        axis2_array_list_t *list,
-                        int type);
+sandesha2_utils_array_list_to_string(
+    const axis2_env_t *env,
+    axis2_array_list_t *list,
+    int type);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_invoker_for_seq(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id);
+sandesha2_utils_start_invoker_for_seq(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id);
+sandesha2_utils_start_sender_for_seq(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,
-                        axis2_char_t *seq_id);
+sandesha2_utils_get_outgoing_internal_seq_id(
+    const axis2_env_t *env,
+    axis2_char_t *seq_id);
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
-sandesha2_utils_get_transport_out(const axis2_env_t *env);
+sandesha2_utils_get_transport_out(
+    const axis2_env_t *env);
 
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx);
+sandesha2_utils_get_inmemory_storage_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
                         
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_permanent_storage_mgr(const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx);
+sandesha2_utils_get_permanent_storage_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
-sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
-                        axis2_char_t *incoming_seq_id);
+sandesha2_utils_get_svr_side_incoming_seq_id(
+    const axis2_env_t *env,
+    axis2_char_t *incoming_seq_id);
 
 /**
  * Caller must free the returned string.
@@ -132,45 +149,45 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_internal_seq_id(
-        const axis2_env_t *env,
-        axis2_char_t *to,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_char_t *to,
+    axis2_char_t *seq_key);
 
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *ref_rm_msg,
-        axis2_op_t *op);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_op_t *op);
                         
 AXIS2_EXTERN  int AXIS2_CALL
 sandesha2_utils_get_soap_version(
-        const axis2_env_t *env, 
-        axiom_soap_envelope_t *envelope);
+    const axis2_env_t *env, 
+    axiom_soap_envelope_t *envelope);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_trim_string(
-        const axis2_env_t *env, 
-        axis2_char_t *orig_string);
+    const axis2_env_t *env, 
+    axis2_char_t *orig_string);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL                        
-sandesha2_utils_is_retriable_on_faults(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx);
+sandesha2_utils_is_retrievable_on_faults(
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_rm_global_msg(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx);
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
                         
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_utils_get_seq_id_from_rm_msg_ctx(
-        const axis2_env_t *env, 
-        sandesha2_msg_ctx_t *rm_msg_ctx);
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_ack_req_soap_action(
-        const axis2_env_t *env,
-        axis2_char_t *spec_version);
+    const axis2_env_t *env,
+    axis2_char_t *spec_version);
 
 /**
  * Used to convert a message number list (a comma seperated list of message
@@ -182,9 +199,9 @@ sandesha2_spec_specific_consts_get_ack_req_soap_action(
  */
 AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_utils_get_ack_range_list(
-        const axis2_env_t *env,
-        axis2_char_t *msg_no_str,
-        axis2_char_t *rm_ns_value);
+    const axis2_env_t *env,
+    axis2_char_t *msg_no_str,
+    axis2_char_t *rm_ns_value);
 
 /** @} */
 #ifdef __cplusplus
