@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
 
     /* Build the SOAP request message payload using OM API.*/
-    payload = build_om_payload_for_echo_svc(env);
+    /*payload = build_om_payload_for_echo_svc(env, "echo1");
     
     callback1 = axis2_callback_create(env);
    
@@ -125,8 +125,8 @@ int main(int argc, char** argv)
     
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, 
         payload, callback1);
-    AXIS2_SLEEP(20);
-    payload = build_om_payload_for_echo_svc(env);
+    AXIS2_SLEEP(10);
+    payload = build_om_payload_for_echo_svc(env, "echo2");
     
     callback2 = axis2_callback_create(env);
    
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, 
         payload, callback2);
-    AXIS2_SLEEP(20);
+    AXIS2_SLEEP(10);*/
     /* Create the callback object with default on_complete and on_error 
        callback functions */
     callback3 = axis2_callback_create(env);
@@ -145,12 +145,13 @@ int main(int argc, char** argv)
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
    /* Set our on_error function pointer to the callback object */
     AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
-    payload = build_om_payload_for_echo_svc(env);
+    payload = build_om_payload_for_echo_svc(env, "echo3");
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     /* Send request */
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, 
         payload, callback3);
+    AXIS2_SLEEP(10);
     
     /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
@@ -180,8 +181,9 @@ int main(int argc, char** argv)
 }
 
 axis2_status_t AXIS2_CALL
-rm_echo_callback_on_complete(struct axis2_callback *callback,
-                                  const axis2_env_t *env)
+rm_echo_callback_on_complete(
+    struct axis2_callback *callback,
+    const axis2_env_t *env)
 {
    /** SOAP response has arrived here; get the soap envelope 
      from the callback object and do whatever you want to do with it */
@@ -228,9 +230,10 @@ rm_echo_callback_on_complete(struct axis2_callback *callback,
 }
 
 axis2_status_t AXIS2_CALL
-rm_echo_callback_on_error(struct axis2_callback *callback,
-                            const axis2_env_t *env,
-                            int exception)
+rm_echo_callback_on_error(
+    struct axis2_callback *callback,
+    const axis2_env_t *env,
+    int exception)
 {
    /** take necessary action on error */
    printf("\nEcho client invoke FAILED. Error code:%d ::%s", exception, 

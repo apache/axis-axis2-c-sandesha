@@ -98,7 +98,7 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
     
     /* Send request */
-    /*payload = build_om_programatically(env, "ping1");
+    payload = build_om_programatically(env, "ping1");
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status == AXIS2_SUCCESS)
     {
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
                   " %d :: %s", env->error->error_number,
                         AXIS2_ERROR_GET_MESSAGE(env->error));
         printf("ping client invoke FAILED!\n");
-    }*/
+    }
 
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);

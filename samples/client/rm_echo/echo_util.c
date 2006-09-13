@@ -18,7 +18,9 @@
 
 /* build SOAP request message content using OM */
 axiom_node_t *
-build_om_payload_for_echo_svc(const axis2_env_t *env)
+build_om_payload_for_echo_svc(
+   const axis2_env_t *env,
+   axis2_char_t *text)
 {
     axiom_node_t *echo_om_node = NULL;
     axiom_element_t* echo_om_ele = NULL;
@@ -30,7 +32,7 @@ build_om_payload_for_echo_svc(const axis2_env_t *env)
     ns1 = axiom_namespace_create (env, "http://ws.apache.org/axis2/c/samples", "ns1");
     echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, "echo5", text_om_node);
+    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
     
     om_str = AXIOM_NODE_TO_STRING(echo_om_node, env);
     if (om_str)

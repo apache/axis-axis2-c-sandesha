@@ -21,6 +21,8 @@
 #include <axiom.h>
 
 axiom_node_t *
-build_om_payload_for_echo_svc(const axis2_env_t *env);
+build_om_payload_for_echo_svc(
+   const axis2_env_t *env,
+   axis2_char_t *text);
 
 #endif
