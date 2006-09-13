@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
-    
+    AXIS2_OPTIONS_SET_TIMEOUT_IN_MILLI_SECONDS(options, env, 30000);
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://ws.apache.org/axis2/c/samples/echoString");
@@ -103,9 +103,9 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
     
     /* Build the SOAP request message payload using OM API.*/
-    /*payload = build_om_payload_for_echo_svc(env, "echo1");
+    payload = build_om_payload_for_echo_svc(env, "echo1");
     AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(2);*/
+    AXIS2_SLEEP(2);
 
     /* Build the SOAP request message payload using OM API.*/
     payload2 = build_om_payload_for_echo_svc(env, "echo2");

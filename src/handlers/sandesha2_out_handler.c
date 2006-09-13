@@ -125,7 +125,8 @@ sandesha2_out_handler_invoke(
     }
     temp_prop = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(temp_prop, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(temp_prop, env, SANDESHA2_VALUE_TRUE);
+    AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
+                env));
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE, 
             temp_prop, AXIS2_FALSE);
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
@@ -257,6 +258,11 @@ sandesha2_out_handler_invoke(
     }
     AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
     
+    temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+            SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
+    if(NULL != temp_prop)
+    AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(
+                    SANDESHA2_VALUE_FALSE, env));
     return AXIS2_SUCCESS;
 }
 

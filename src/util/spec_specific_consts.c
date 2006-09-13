@@ -21,8 +21,9 @@
 #include <axis2_addr.h>
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_spec_specific_consts_get_spec_ver_str(const axis2_env_t *env,
-                        axis2_char_t *ns_val)
+sandesha2_spec_specific_consts_get_spec_ver_str(
+    const axis2_env_t *env,
+    axis2_char_t *ns_val)
 {       
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, ns_val, AXIS2_FAILURE);
@@ -371,4 +372,21 @@ sandesha2_spec_specific_consts_get_seq_ack_soap_action(
     }
 }
 
+axis2_bool_t AXIS2_CALL
+sandesha2_spec_specific_consts_is_last_msg_indicator_reqd(
+    const axis2_env_t *env,
+    axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        return AXIS2_TRUE;
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return AXIS2_FALSE;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return AXIS2_FALSE;
+}
+	
 

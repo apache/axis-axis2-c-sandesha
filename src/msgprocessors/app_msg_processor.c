@@ -543,7 +543,8 @@ sandesha2_app_msg_processor_process_out_msg(
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-   
+  
+    printf("In Application Message Processor*************************************** \n");
     msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     /* TODO setting up fault callback */
@@ -706,8 +707,6 @@ sandesha2_app_msg_processor_process_out_msg(
     {
         axis2_char_t *incoming_seq_id = NULL;
         sandesha2_seq_property_bean_t *incoming_to_bean = NULL;
-        /*axis2_msg_ctx_t *req_msg_ctx = NULL;
-        sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;*/
         sandesha2_seq_t *seq = NULL;
         axis2_char_t *req_seq_id = NULL;
         sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
@@ -1256,18 +1255,20 @@ sandesha2_app_msg_processor_process_response_msg(
         axis2_property_t *property = NULL;
         axis2_ctx_t *ctx = NULL;
         
+        printf("came20*********************************************************************\n");
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(app_msg_ctx, env);
         if(NULL != op_ctx)
         {
-            ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-            property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+            property = AXIS2_CTX_GET_PROPERTY(app_msg_ctx, env, 
                         SANDESHA2_CLIENT_LAST_MESSAGE, AXIS2_FALSE);
+                printf("came21******************************************************************\n");
             if(NULL != property)
             {
                 axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
                 if(NULL != value && 0 == AXIS2_STRCMP(value, 
                         SANDESHA2_VALUE_TRUE))
                 {
+                     printf("came22***************************************************************\n");
                     axis2_char_t *spec_ver = NULL;
                     spec_ver = sandesha2_utils_get_rm_version(env,
                         internal_seq_id, mgr);
@@ -1276,6 +1277,7 @@ sandesha2_app_msg_processor_process_response_msg(
                         sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                         (env, spec_ver))
                     {
+                     printf("came23*************************************************************\n");
                         SANDESHA2_SEQ_SET_LAST_MSG(seq, env, 
                             sandesha2_last_msg_create(env, rm_ns_val));
                     }

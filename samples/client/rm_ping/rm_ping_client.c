@@ -63,7 +63,6 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
-    /*AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);*/
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://example.org/action/ping");
 
@@ -111,8 +110,8 @@ int main(int argc, char** argv)
                   " %d :: %s", env->error->error_number,
                         AXIS2_ERROR_GET_MESSAGE(env->error));
         printf("ping client invoke FAILED!\n");
-    }
-    AXIS2_SLEEP(2);*/
+    }*/
+
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
