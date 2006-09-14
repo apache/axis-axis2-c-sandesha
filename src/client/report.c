@@ -248,7 +248,7 @@ sandesha2_report_get_incoming_seq_list(
 {
     sandesha2_report_impl_t *report_impl = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_ENV_CHECK(env, NULL);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
     return report_impl->incoming_seq_list;
 }
@@ -260,7 +260,7 @@ sandesha2_report_get_outgoing_seq_list(
 {
     sandesha2_report_impl_t *report_impl = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_ENV_CHECK(env, NULL);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
     return report_impl->outgoing_seq_list;
 }
@@ -357,7 +357,7 @@ sandesha2_report_get_internal_seq_id_of_out_seq(
 {
     sandesha2_report_impl_t *report_impl = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_ENV_CHECK(env, NULL);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
     return (axis2_char_t *) axis2_hash_get(
             report_impl->outgoing_internal_seq_id_map, out_seq_id, 

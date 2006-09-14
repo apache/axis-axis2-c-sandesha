@@ -18,6 +18,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_msg_ctx.h>
@@ -26,6 +27,7 @@
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdio.h>
+#include <axis2_platform_auto_sense.h>
 
 
 /** 
@@ -333,7 +335,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
         axis2_array_list_t *all_seq_list = NULL;
         int i = 0;
 
-        sleep(1);
+        AXIS2_SLEEP(1);
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker_impl->conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(invoker_impl->conf_ctx, env));
@@ -451,7 +453,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                 invoked = AXIS2_TRUE;
                 transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
                         storage_mgr, env);
-                SANDESHA2_STORAGE_MGR_DELETE(storage_mgr, env, key);
+                SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env, key);
                 msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
                 if(NULL != msg_ctx)
@@ -481,7 +483,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                 next_msg_no++;
                 SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_msg_bean,
                         env, next_msg_no);
-                SANDESHA2_NEXT_MSG_BEAN_MGR_UPDATE(next_msg_mgr, env, 
+                SANDESHA2_NEXT_MSG_MGR_UPDATE(next_msg_mgr, env, 
                         next_msg_bean);
             }
         }

@@ -35,6 +35,7 @@
 #include <sandesha2_terminate_seq.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_msg_retrans_adjuster.h>
+#include <axis2_platform_auto_sense.h>
 
 /** 
  * @brief Sender struct impl
@@ -481,7 +482,7 @@ sandesha2_sender_worker_func(
         axis2_bool_t successfully_sent = AXIS2_FALSE;
         axis2_char_t *msg_id = NULL;
    
-        sleep(1);
+        AXIS2_SLEEP(1);
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
                         env);
         mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);

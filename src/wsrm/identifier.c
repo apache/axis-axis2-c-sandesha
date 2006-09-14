@@ -63,8 +63,8 @@ sandesha2_identifier_set_identifier(sandesha2_identifier_t *identifier,
 
 axis2_status_t AXIS2_CALL 
 sandesha2_identifier_free (sandesha2_iom_rm_element_t *identifier, 
-						const axis2_env_t *env);								
-
+						const axis2_env_t *env);	
+						
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
@@ -109,6 +109,7 @@ sandesha2_identifier_create(
 	}
     identifier_impl->identifier.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
+
     if(NULL == identifier_impl->identifier.element.ops)
 	{
 		sandesha2_identifier_free((sandesha2_iom_rm_element_t*)

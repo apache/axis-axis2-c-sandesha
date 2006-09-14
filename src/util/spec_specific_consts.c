@@ -25,8 +25,8 @@ sandesha2_spec_specific_consts_get_spec_ver_str(
     const axis2_env_t *env,
     axis2_char_t *ns_val)
 {       
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, ns_val, AXIS2_FAILURE);
+    AXIS2_ENV_CHECK(env, NULL);
+    AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
     if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
     {

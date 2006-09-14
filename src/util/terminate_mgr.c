@@ -98,7 +98,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     find_bean = sandesha2_invoker_bean_create(env);
     
     SANDESHA2_INVOKER_BEAN_SET_SEQ_ID(find_bean, env, seq_id);
-    SANDESHA2_INVOKER_BEAN_SET_INVOKER(find_bean, env, AXIS2_TRUE);
+    SANDESHA2_INVOKER_BEAN_SET_INVOKED(find_bean, env, AXIS2_TRUE);
     
     found_list = SANDESHA2_INVOKER_MGR_FIND(invoker_mgr, env, find_bean);
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)

@@ -275,7 +275,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         }
         else
         {
-            SANDESHA2_CREATE_SEQ_SET_ACCEPT(create_seq_res_part, env, NULL);
+            SANDESHA2_CREATE_SEQ_RES_SET_ACCEPT(create_seq_res_part, env, NULL);
             SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(create_seq_res_msg, env);
         }
     }

@@ -17,6 +17,7 @@
 #include <sandesha2_terminate_seq_res.h>
 #include <sandesha2_constants.h>
 #include <axiom_soap_body.h>
+#include <sandesha2_utils.h>
 
 /** 
  * @brief TerminateSeqResponse struct impl
@@ -346,8 +347,9 @@ sandesha2_terminate_seq_res_set_identifier(
 	terminate_seq_res_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq_res);
  	if(NULL != terminate_seq_res_impl->identifier)
 	{
-		SANDESHA2_IDENTIFIER_FREE(terminate_seq_res_impl->identifier, env);
+/*		SANDESHA2_IDENTIFIER_FREE(terminate_seq_res_impl->identifier, env);
 		terminate_seq_res_impl->identifier = NULL;
+*/		
 	}
 	terminate_seq_res_impl->identifier = identifier;
  	return AXIS2_SUCCESS;

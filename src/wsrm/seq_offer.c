@@ -231,7 +231,7 @@ sandesha2_seq_offer_from_om_node(sandesha2_iom_rm_element_t *seq_offer,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(seq_offer_impl->identifier, env, so_node);
+    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_offer_impl->identifier, env, so_node);
     exp_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_EXPIRES,
                         seq_offer_impl->ns_val, NULL);
     if(NULL == exp_qname)
@@ -248,7 +248,7 @@ sandesha2_seq_offer_from_om_node(sandesha2_iom_rm_element_t *seq_offer,
         {
             return NULL;
         }
-        SANDESHA2_IOM_RM_NODE_FROM_OM_NODE(seq_offer_impl->expires, env, 
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_offer_impl->expires, env, 
                         exp_node);
     }
     return seq_offer;
@@ -339,8 +339,10 @@ sandesha2_seq_offer_set_identifier(sandesha2_seq_offer_t *seq_offer,
 	seq_offer_impl = SANDESHA2_INTF_TO_IMPL(seq_offer);
  	if(NULL != seq_offer_impl->identifier)
 	{
+	/*
 		SANDESHA2_IDENTIFIER_FREE(seq_offer_impl->identifier, env);
 		seq_offer_impl->identifier = NULL;
+    */		
 	}
 	seq_offer_impl->identifier = identifier;
  	return AXIS2_SUCCESS;

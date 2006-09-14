@@ -327,8 +327,8 @@ sandesha2_terminate_seq_set_identifier(sandesha2_terminate_seq_t *terminate_seq,
 	terminate_seq_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq);
  	if(NULL != terminate_seq_impl->identifier)
 	{
-		SANDESHA2_IDENTIFIER_FREE(terminate_seq_impl->identifier, env);
-		terminate_seq_impl->identifier = NULL;
+/*		SANDESHA2_IDENTIFIER_FREE(terminate_seq_impl->identifier, env); 
+		terminate_seq_impl->identifier = NULL;  */
 	}
 	terminate_seq_impl->identifier = identifier;
  	return AXIS2_SUCCESS;

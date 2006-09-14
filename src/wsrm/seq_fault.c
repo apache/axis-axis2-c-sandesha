@@ -16,6 +16,7 @@
  
 #include <sandesha2_seq_fault.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_iom_rm_element.h>
 
 /** 
  * @brief SequenceFault struct impl
@@ -225,7 +226,7 @@ sandesha2_seq_fault_from_om_node(sandesha2_iom_rm_element_t *seq_fault,
         {
             return NULL;
         }
-        AXIS2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_fault_impl->fault_code, env, 
+        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(seq_fault_impl->fault_code, env, 
                         sf_node);
     }    
     return seq_fault;    
