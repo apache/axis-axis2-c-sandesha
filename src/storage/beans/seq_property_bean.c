@@ -17,7 +17,7 @@
 #include <sandesha2_seq_property_bean.h>
 #include <string.h>
 #include <axis2_string.h>
-#include <axis2_env.h>
+#include <axis2_utils.h>
 
 
 /*seq_property_bean struct */

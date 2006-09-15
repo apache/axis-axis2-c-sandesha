@@ -17,6 +17,7 @@
 #include <sandesha2_sender_bean.h>
 #include <string.h>
 #include <axis2_string.h>
+#include <axis2_utils.h>
 
 
 /*sender_bean struct */

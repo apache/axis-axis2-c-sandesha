@@ -17,6 +17,7 @@
 #include <sandesha2_invoker_bean.h>
 #include <string.h>
 #include <axis2_string.h>
+#include <axis2_utils.h>
 
 
 /* create_seq_bean struct */

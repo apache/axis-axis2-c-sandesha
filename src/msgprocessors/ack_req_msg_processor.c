@@ -41,6 +41,7 @@
 #include <sandesha2_ack_requested.h>
 #include <axis2_addr.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_msg_creator.h>
 
 /** 
  * @brief Ack Requested Message Processor struct impl

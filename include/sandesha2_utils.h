@@ -202,6 +202,13 @@ sandesha2_utils_get_ack_range_list(
     const axis2_env_t *env,
     axis2_char_t *msg_no_str,
     axis2_char_t *rm_ns_value);
+    
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_all_msgs_acked_upto(
+    const axis2_env_t *env,
+    long highest_in_msg_no,
+    axis2_char_t *internal_seq_id,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

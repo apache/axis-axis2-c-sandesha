@@ -17,7 +17,7 @@
 #include <sandesha2_next_msg_bean.h>
 #include <string.h>
 #include <axis2_string.h>
-
+#include <axis2_utils.h>
 
 /* invoker_bean struct */
 typedef struct sandesha2_next_msg_bean_impl sandesha2_next_msg_bean_impl_t;

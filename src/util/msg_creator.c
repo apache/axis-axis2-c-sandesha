@@ -329,7 +329,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
             acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
             SANDESHA2_ADDRESS_SET_EPR(address, env, acks_to_epr);
-            SANDESHA2_ACKS2_TO_SET_ADDRESS(acks_to, env, address);
+            SANDESHA2_ACKS_TO_SET_ADDRESS(acks_to, env, address);
             SANDESHA2_ACCEPT_SET_ACKS_TO(accept, env, acks_to);
             SANDESHA2_CREATE_SEQ_RES_SET_ACCEPT(response, env, accept);
         }
@@ -413,8 +413,8 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     temp_envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(close_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
-    SANDESHA2_MSG_CTX_SET_ENVELOPE(close_seq_response, env, envelope);
-    SANDESHA2_MSG_CTX_SET_SET_MSG_PART(close_seq_response, env, 
+    SANDESHA2_MSG_CTX_SET_SOAP_ENVELOPE(close_seq_response, env, envelope);
+    SANDESHA2_MSG_CTX_SET_MSG_PART(close_seq_response, env, 
             SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, response);
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
     temp_action = sandesha2_spec_specific_consts_get_close_seq_res_action(
@@ -828,7 +828,7 @@ sandesha2_msg_creator_add_ack_msg(
     envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(app_msg, env);
     if(NULL == envelope)
     {
-        SANDESHA2_ERROR_SET(env->error, 
+        AXIS2_ERROR_SET(env->error, 
                 AXIS2_ERROR_NULL_SOAP_ENVELOPE_IN_MSG_CTX, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }

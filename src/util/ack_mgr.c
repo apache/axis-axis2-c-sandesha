@@ -29,6 +29,7 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq_ack.h>
 #include <axis2_op.h>
+#include <sandesha2_msg_creator.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(
@@ -455,7 +456,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             }
             seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         ack_rm_msg, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-            SANDESHA2_MSG_CTX_SET_MSG_PARM(rm_msg_ctx, env, 
+            SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, seq_ack);
             SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(rm_msg_ctx, env);
             break;

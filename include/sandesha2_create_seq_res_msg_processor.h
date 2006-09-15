@@ -25,7 +25,6 @@
 #include <sandesha2_msg_processor.h>
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
-#include <sandesha2_create_seq_res_msg_processor.h>
 
 
 #ifdef __cplusplus
@@ -33,14 +32,14 @@ extern "C"
 {
 #endif
 
-/** @defgroup sandesha2_ack_msg_processor
+/** @defgroup sandesha2_create_seq_res_msg_processor
  * @ingroup sandesha2_msgprocessors
  * @{
  */
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_ack_msg_processor_create(
-						const axis2_env_t *env);
+sandesha2_create_seq_res_msg_processor_create(
+    const axis2_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

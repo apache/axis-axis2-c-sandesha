@@ -38,6 +38,9 @@
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
 #include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_seq_mgr.h>
+#include <sandesha2_terminate_mgr.h>
+#include <sandesha2_ack_mgr.h>
 
 /** 
  * @brief Acknowledgement Message Processor struct impl

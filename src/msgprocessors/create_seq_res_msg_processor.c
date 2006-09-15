@@ -48,6 +48,7 @@
 #include <axis2_relates_to.h>
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_seq_mgr.h>
 
 
 /** 
@@ -316,7 +317,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_bean, env, 1);
         next_bean_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(storage_mgr,
                         env);
-        SANDESHA2_NEXT_MSG_BEAN_MGR_INSERT(next_bean_mgr, env, next_bean);
+        SANDESHA2_NEXT_MSG_MGR_INSERT(next_bean_mgr, env, next_bean);
         rm_spec_ver = SANDESHA2_MSG_CTX_GET_RM_SPEC_VER(rm_msg_ctx, env);
         
         spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, 

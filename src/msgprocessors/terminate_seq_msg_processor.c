@@ -45,6 +45,8 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
 #include <sandesha2_ack_mgr.h>
+#include <sandesha2_terminate_mgr.h>
+#include <sandesha2_seq_mgr.h>
 
 /** 
  * @brief Terminate Sequence Message Processor struct impl
@@ -550,7 +552,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(term_bean, env, 
                         sandesha2_utils_get_current_time_in_millis(env) + 
                         SANDESHA2_TERMINATE_DELAY);
-    SANDESHA2_SENDER_BEAN_MSG_ID(term_bean, env, AXIS2_MSG_CTX_GET_MSG_ID(
+    SANDESHA2_SENDER_BEAN_SET_MSG_ID(term_bean, env, AXIS2_MSG_CTX_GET_MSG_ID(
                         msg_ctx, env));
     SANDESHA2_SENDER_BEAN_SET_SEND(term_bean, env, AXIS2_TRUE);
     

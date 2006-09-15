@@ -30,6 +30,13 @@
 #include <sandesha2_close_seq.h>
 #include <sandesha2_close_seq_res.h>
 #include <sandesha2_create_seq_msg_processor.h>
+#include <sandesha2_create_seq_res_msg_processor.h>
+#include <sandesha2_terminate_seq_msg_processor.h>
+#include <sandesha2_terminate_seq_res_msg_processor.h>
+#include <sandesha2_ack_msg_processor.h>
+#include <sandesha2_close_seq_msg_processor.h>
+#include <sandesha2_ack_req_msg_processor.h>
+#include <sandesha2_app_msg_processor.h>
 #include <axis2_string.h>
 #include <stdio.h>
 /** 

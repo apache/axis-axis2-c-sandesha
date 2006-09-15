@@ -21,6 +21,7 @@
 #include <sandesha2_msg_init.h>
 #include <axis2_property.h>
 #include <sandesha2_terminate_mgr.h>
+#include <sandesha2_seq_mgr.h>
 
 /******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL
