@@ -27,7 +27,7 @@
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdio.h>
-#include <axis2_platform_auto_sense.h>
+#include <platforms/axis2_platform_auto_sense.h>
 
 
 /** 

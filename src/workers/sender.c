@@ -35,7 +35,7 @@
 #include <sandesha2_terminate_seq.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_msg_retrans_adjuster.h>
-#include <axis2_platform_auto_sense.h>
+#include <platforms/axis2_platform_auto_sense.h>
 
 /** 
  * @brief Sender struct impl
