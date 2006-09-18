@@ -806,7 +806,6 @@ sandesha2_utils_is_rm_global_msg(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
     action = (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
-    printf("action:%s\n", action);
     soap_env = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     
     if(NULL == soap_env)

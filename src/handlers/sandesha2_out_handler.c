@@ -116,7 +116,6 @@ sandesha2_out_handler_invoke(
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(NULL != temp_prop)
         str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
-    printf("str_done:%s\n", str_done);
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -164,7 +163,6 @@ sandesha2_out_handler_invoke(
         dummy_msg = AXIS2_TRUE;
     }
     msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
-    printf("msg_type1:%d\n", msg_type);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
         /*axis2_msg_ctx_t *req_msg_ctx = NULL;*/

@@ -208,7 +208,6 @@ sandesha2_global_in_handler_invoke(
         }
     }
     is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
-    printf("is_rm_global_msg:%d\n", is_rm_global_msg);
     if(AXIS2_FALSE == is_rm_global_msg)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
@@ -298,7 +297,6 @@ sandesha2_global_in_handler_drop_if_duplicate(
                         rcvd_msgs_str);
                 if(msg_no_list)
                     size = AXIS2_ARRAY_LIST_SIZE(msg_no_list, env);
-                printf("global_in_handler, msg_no_list->size:%d\n", size);
                 for(i = 0; i < size; i++)
                 {
                     axis2_char_t *temp = NULL;

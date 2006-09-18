@@ -551,7 +551,6 @@ sandesha2_sender_mgr_get_next_msg_to_send(
         msg_id = SANDESHA2_SENDER_BEAN_GET_MSG_ID(temp, env);
         /* end of test code */
         is_send = SANDESHA2_SENDER_BEAN_IS_SEND(temp, env);
-        printf("is_send:%d\n", is_send);
         if(AXIS2_TRUE == is_send)
         {
             long time_to_send = 0;
@@ -570,7 +569,6 @@ sandesha2_sender_mgr_get_next_msg_to_send(
                     
                     if(msg_no == lowest_app_msg_no)
                         valid = AXIS2_TRUE;
-                    printf("valid:%d\n", valid);
                 }
                 else
                     valid = AXIS2_TRUE;
