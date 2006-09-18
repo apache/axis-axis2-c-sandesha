@@ -482,7 +482,7 @@ sandesha2_sender_worker_func(
         axis2_bool_t successfully_sent = AXIS2_FALSE;
         axis2_char_t *msg_id = NULL;
    
-        AXIS2_SLEEP(1);
+        AXIS2_SLEEP(1); 
         transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
                         env);
         mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);

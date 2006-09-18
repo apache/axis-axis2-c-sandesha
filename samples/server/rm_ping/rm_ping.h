@@ -25,5 +25,6 @@
 #include <axiom_element.h>
 
 void axis2_rm_ping_notify(const axis2_env_t *env, axiom_node_t *node);
+void axis2_rm_ping_ping (const axis2_env_t *env, axiom_node_t *node);
 
 #endif /* CALC_H*/
