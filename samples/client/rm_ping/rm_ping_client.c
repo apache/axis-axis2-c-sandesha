@@ -132,22 +132,9 @@ int main(int argc, char** argv)
     }
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
-    while(count < MAX_COUNT )
-    {
-        if (is_complete)
-        {
-         /* We are done with the callback */
-         break;
-        }
-        AXIS2_SLEEP(1);
-        count++;
-    }
-    
-    if (!(count < MAX_COUNT))
-    {
-        printf("\nCounter timed out.\n");
-    }
-    
+
+    AXIS2_SLEEP(8);
+   
     if (svc_client)
     {
         AXIS2_SVC_CLIENT_FREE(svc_client, env);
