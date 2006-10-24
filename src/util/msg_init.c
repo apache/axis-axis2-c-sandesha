@@ -127,7 +127,8 @@ populate_rm_msg_ctx(
     /* If client side and the addressing version is not set. 
      * Assuming the default addressing version.
      */
-    ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
+    if(msg_ctx)
+        ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
     prop = AXIS2_CTX_GET_PROPERTY(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(NULL != prop)
         addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);

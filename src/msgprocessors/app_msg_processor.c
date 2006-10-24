@@ -371,6 +371,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         highest_in_msg_key_str);
         SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env, 
                         highest_in_msg_key_str);
+        AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);
         SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_mgr, env, 
                         highest_in_msg_key_str, msg_ctx);
         if(NULL != highest_in_msg_no_str)
@@ -484,6 +485,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         incoming_seq_list_bean);
         }
         /* save the message */
+        AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);
         SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_mgr, env, str_key, 
                         msg_ctx);
         invoker_bean = sandesha2_invoker_bean_create_with_data(env, str_key,
@@ -1320,6 +1322,7 @@ sandesha2_app_msg_processor_process_response_msg(
                             SANDESHA2_SET_SEND_TO_TRUE, property, AXIS2_FALSE);
     }
     SANDESHA2_SENDER_BEAN_SET_INTERNAL_SEQ_ID(app_msg_entry, env, internal_seq_id);
+    AXIS2_MSG_CTX_SET_KEEP_ALIVE(app_msg_ctx, env, AXIS2_TRUE);
     SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(mgr, env, storage_key, app_msg_ctx);
     SANDESHA2_SENDER_MGR_INSERT(retransmitter_man, env, app_msg_entry);
     
@@ -1356,6 +1359,7 @@ sandesha2_app_msg_processor_process_response_msg(
     AXIS2_MSG_CTX_SET_CURRENT_HANDLER_INDEX(app_msg_ctx, env, 
                         AXIS2_MSG_CTX_GET_CURRENT_HANDLER_INDEX(app_msg_ctx, env) + 1);
     engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(app_msg_ctx, env));
+    AXIS2_MSG_CTX_SET_KEEP_ALIVE(app_msg_ctx, env, AXIS2_FALSE);
     return AXIS2_ENGINE_RESUME_SEND(engine, env, app_msg_ctx);
 }
 

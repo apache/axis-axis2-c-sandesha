@@ -592,6 +592,7 @@ sandesha2_sender_worker_func(
             AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
             /* Consider building soap envelope */
+            AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_FALSE);
             AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
             successfully_sent = AXIS2_TRUE;
         sender_impl->counter++;

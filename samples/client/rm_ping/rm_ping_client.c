@@ -33,7 +33,9 @@ int main(int argc, char** argv)
 {
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
+    const axis2_char_t *to = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
+    axis2_endpoint_ref_t* target_epr = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
@@ -47,8 +49,11 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "http://localhost:9090/axis2/services/rm_ping";
+    to = "http://localhost:9090/axis2/services/rm_ping";
     if (argc > 1 )
+    {
         address = argv[1];
+    }
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url]\n", argv[0]);
@@ -58,11 +63,15 @@ int main(int argc, char** argv)
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    endpoint_ref = axis2_endpoint_ref_create(env, address);
+    endpoint_ref = axis2_endpoint_ref_create(env, to);
+    target_epr = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+    property = axis2_property_create(env);
+    AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://example.org/action/ping");
 
@@ -99,37 +108,17 @@ int main(int argc, char** argv)
     
     /* Send request */
     payload = build_om_programatically(env, "ping1");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    if(status == AXIS2_SUCCESS)
-    {
-        printf("\nping client invoke SUCCESSFUL!\n");
-    }
-    else
-    {
-      AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-                  " %d :: %s", env->error->error_number,
-                        AXIS2_ERROR_GET_MESSAGE(env->error));
-        printf("ping client invoke FAILED!\n");
-    }
+    AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    printf("\nping client invoke SUCCESSFUL!\n");
 
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     payload = build_om_programatically(env, "ping2");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    if(status == AXIS2_SUCCESS)
-    {
-        printf("\nping client invoke SUCCESSFUL!\n");
-    }
-    else
-    {
-      AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-                  " %d :: %s", env->error->error_number,
-                        AXIS2_ERROR_GET_MESSAGE(env->error));
-        printf("ping client invoke FAILED!\n");
-    }
+    AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    printf("\nping client invoke SUCCESSFUL!\n");
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 

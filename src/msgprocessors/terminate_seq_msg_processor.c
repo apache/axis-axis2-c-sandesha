@@ -302,6 +302,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         sandesha2_seq_property_bean_t *last_in_msg_bean = NULL;
         axis2_msg_ctx_t *highest_in_msg = NULL;
         axis2_msg_ctx_t *highest_out_msg = NULL;
+        axis2_op_ctx_t *op_ctx = NULL;
         
         last_in_msg_bean = sandesha2_seq_property_bean_create_with_data(env,
                         seq_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_NO,
@@ -309,9 +310,13 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, last_in_msg_bean);
         highest_in_msg = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_man, env,
                         highest_msg_key, conf_ctx);
-        highest_out_msg = AXIS2_OP_CTX_GET_MSG_CTX(AXIS2_MSG_CTX_GET_OP_CTX(
-                        highest_in_msg, env), env, 
-                        AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
+        if(highest_in_msg)
+            op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(highest_in_msg, env);
+        /* temporarily comment this and add the line below. This is because
+         * highest_out_msg is gargage otherwise */
+        if(op_ctx)
+            highest_out_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+                AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
         if(NULL != highest_out_msg)
         {
             sandesha2_msg_ctx_t *highest_out_rm_msg = NULL;
