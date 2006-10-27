@@ -108,8 +108,9 @@ int main(int argc, char** argv)
     
     /* Send request */
     payload = build_om_programatically(env, "ping1");
-    AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    printf("\nping client invoke SUCCESSFUL!\n");
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nping client invoke SUCCESSFUL!\n");
 
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
@@ -117,8 +118,9 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     payload = build_om_programatically(env, "ping2");
-    AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    printf("\nping client invoke SUCCESSFUL!\n");
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nping client invoke SUCCESSFUL!\n");
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
