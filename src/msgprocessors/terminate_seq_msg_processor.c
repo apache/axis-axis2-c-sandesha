@@ -312,8 +312,6 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
                         highest_msg_key, conf_ctx);
         if(highest_in_msg)
             op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(highest_in_msg, env);
-        /* temporarily comment this and add the line below. This is because
-         * highest_out_msg is gargage otherwise */
         if(op_ctx)
             highest_out_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
                 AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
@@ -551,6 +549,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     key = axis2_uuid_gen(env);
     term_bean = sandesha2_sender_bean_create(env);
     SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(term_bean, env, key);
+    /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);*/
     SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, key, msg_ctx);
     
     /* TODO: refine the terminate delay */
@@ -586,6 +585,8 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, out_desc);
+    AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+            axis2_transport_out_desc_free_void_arg);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, 
                         AXIS2_FALSE);

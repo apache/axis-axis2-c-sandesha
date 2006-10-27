@@ -144,6 +144,17 @@ sandesha2_in_order_invoker_create(const axis2_env_t *env)
 	return &(invoker_impl->invoker);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_in_order_invoker_free_void_arg(
+    void *invoker,
+    const axis2_env_t *env)
+{
+    sandesha2_in_order_invoker_t *invoker_l = NULL;
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    invoker_l = (sandesha2_in_order_invoker_t *) invoker;
+    return sandesha2_in_order_invoker_free(invoker_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_free(sandesha2_in_order_invoker_t *invoker, 
@@ -290,9 +301,7 @@ sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_WSA_VERSION, property, 
+    AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_WSA_VERSION, NULL, 
                         AXIS2_FALSE);
     AXIS2_MSG_CTX_SET_MESSAGE_ID(msg_ctx, env, NULL);
     AXIS2_MSG_CTX_SET_TO(msg_ctx, env, NULL);

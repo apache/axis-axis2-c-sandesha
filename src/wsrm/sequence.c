@@ -195,6 +195,17 @@ sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 	return &(seq_impl->seq);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_seq_free_void_arg(
+    void *seq,
+    const axis2_env_t *env)
+{
+    sandesha2_seq_t *seq_l = NULL;
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    seq_l = (sandesha2_seq_t *) seq;
+    return sandesha2_seq_free(seq_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
 sandesha2_seq_free (sandesha2_iom_rm_element_t *seq, 

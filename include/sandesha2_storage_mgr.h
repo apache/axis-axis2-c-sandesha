@@ -167,6 +167,18 @@ AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_storage_mgr_create(
 						const axis2_env_t *env, 
 					    axis2_conf_ctx_t *conf_ctx);
+ 
+/**
+ * Frees the storage_mgr given as a void pointer. This method would cast the 
+ * void parameter to an storage_mgr pointer and then call free method.
+ * @param storage_mgr pointer to storage_mgr as a void pointer
+ * @param env pointer to environment struct
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_storage_mgr_free_void_arg(
+    void *storage_mgr,
+    const axis2_env_t *env);
 
 sandesha2_storage_mgr_t *AXIS2_CALL
 sandesha2_storage_mgr_get_instance(

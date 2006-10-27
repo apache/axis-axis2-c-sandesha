@@ -73,7 +73,7 @@ AXIS2_DECLARE_DATA struct sandesha2_in_order_invoker_ops
         run) 
             (sandesha2_in_order_invoker_t *invoker,
             const axis2_env_t *env);
-            
+    
     axis2_status_t (AXIS2_CALL *
         free) 
             (sandesha2_in_order_invoker_t *invoker,
@@ -92,7 +92,20 @@ AXIS2_DECLARE_DATA struct sandesha2_in_order_invoker
 AXIS2_EXTERN sandesha2_in_order_invoker_t* AXIS2_CALL
 sandesha2_in_order_invoker_create(
 						const axis2_env_t *env);
-                        
+ 
+/**
+ * Frees the in_order_invoker given as a void pointer. This method would cast the 
+ * void parameter to an in_order_invoker pointer and then call free method.
+ * @param invoker pointer to in_order_invoker as a void pointer
+ * @param env pointer to environment struct
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_in_order_invoker_free_void_arg(
+    void *invoker,
+    const axis2_env_t *env);
+
+                       
 /************************** Start of function macros **************************/
 #define SANDESHA2_IN_ORDER_INVOKER_FREE(invoker, env) \
     ((invoker)->ops->free (invoker, env))

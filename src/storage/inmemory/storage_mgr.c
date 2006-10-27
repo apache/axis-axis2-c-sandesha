@@ -239,6 +239,19 @@ sandesha2_storage_mgr_get_instance(
 }
 
 axis2_status_t AXIS2_CALL
+sandesha2_storage_mgr_free_void_arg(
+    void *storage_mgr,
+    const axis2_env_t *env)
+{
+    sandesha2_storage_mgr_t *storage_mgr_l = NULL;
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    storage_mgr_l = (sandesha2_storage_mgr_t *) storage_mgr;
+    return sandesha2_storage_mgr_free(storage_mgr_l, env);
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_free(
     void *storage,
     const axis2_env_t *env)
@@ -479,6 +492,7 @@ sandesha2_storage_mgr_store_msg_ctx(
         storage_map = axis2_hash_make(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_map);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(ctx, env, storage_impl->SANDESHA2_MSG_MAP_KEY, 
                 property, AXIS2_FALSE);
     }
@@ -486,6 +500,7 @@ sandesha2_storage_mgr_store_msg_ctx(
     {
         key = axis2_uuid_gen(env);
     }
+    AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);
     axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, msg_ctx);
     return AXIS2_SUCCESS;
 }
@@ -570,6 +585,7 @@ sandesha2_storage_mgr_remove_msg_ctx(
     entry = axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
     if(entry)
     {
+        /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_FALSE);*/
         axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, NULL);
     }
     return AXIS2_SUCCESS;

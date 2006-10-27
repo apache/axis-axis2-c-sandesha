@@ -526,7 +526,8 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
     if(AXIS2_TRUE != is_seq_res_reqd)
     {
-        AXIS2_CTX_SET_PROPERTY(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL, AXIS2_FALSE);
+        AXIS2_CTX_SET_PROPERTY(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, 
+                NULL, AXIS2_FALSE);
     }
     terminate_rm_msg = sandesha2_msg_init_init_msg(env, terminate_seq_msg_ctx);
     if(terminate_rm_msg == NULL)

@@ -108,6 +108,12 @@ AXIS2_EXTERN sandesha2_seq_t* AXIS2_CALL
 sandesha2_seq_create(
 						const axis2_env_t *env, 
 					    axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL
+sandesha2_seq_free_void_arg(
+    void *seq,
+    const axis2_env_t *env);
+
 /************************** Start of function macros **************************/
 #define SANDESHA2_SEQ_SET_IDENTIFIER(seq, env, identifier) \
     ((seq)->ops->set_identifier (seq, env, identifier))

@@ -456,6 +456,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_storage_mgr_t *storage_man)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
+    axis2_msg_ctx_t *terminate_msg_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *terminated = NULL;
@@ -546,8 +547,9 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     key = axis2_uuid_gen(env);
     terminate_bean = sandesha2_sender_bean_create(env);
     SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(terminate_bean, env, key);
-    SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, key, 
-                        SANDESHA2_MSG_CTX_GET_MSG_CTX(terminate_rm_msg, env));
+    terminate_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(terminate_rm_msg, env);
+    /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(terminate_msg_ctx, env, AXIS2_TRUE);*/
+    SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, key, terminate_msg_ctx);
     SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(terminate_bean, env,
                         sandesha2_utils_get_current_time_in_millis(env) +
                         SANDESHA2_TERMINATE_DELAY);
@@ -582,6 +584,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, transport_out);
+    AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+            axis2_transport_out_desc_free_void_arg);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx1, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,
                         AXIS2_FALSE);

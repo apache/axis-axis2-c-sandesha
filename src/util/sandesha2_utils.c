@@ -362,6 +362,8 @@ sandesha2_utils_start_invoker_for_seq(
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, invoker);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+                sandesha2_in_order_invoker_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_INVOKER, property, AXIS2_FALSE);
     }
@@ -392,6 +394,8 @@ sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, sender);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+                sandesha2_sender_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_SENDER, property, AXIS2_FALSE);
     }
@@ -450,6 +454,8 @@ sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_mgr);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+                sandesha2_storage_mgr_free_void_arg);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_INMEMORY_STORAGE_MGR, property, 
                         AXIS2_FALSE);

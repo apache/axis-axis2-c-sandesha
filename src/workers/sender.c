@@ -167,6 +167,17 @@ sandesha2_sender_create(const axis2_env_t *env)
 	return &(sender_impl->sender);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_sender_free_void_arg(
+    void *sender,
+    const axis2_env_t *env)
+{
+    sandesha2_sender_t *sender_l = NULL;
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    sender_l = (sandesha2_sender_t *) sender;
+    return sandesha2_sender_free(sender_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_free(sandesha2_sender_t *sender, 
@@ -355,9 +366,6 @@ sandesha2_sender_check_for_sync_res(
                     AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_CTX_GET_PROPERTY(ctx, env, 
                     AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_FALSE), AXIS2_FALSE);
         }
-        /* test code */
-        AXIS2_MSG_CTX_SET_OP_CTX(res_msg_ctx, env, req_op_ctx);
-        /* end test code */
     }
     AXIS2_MSG_CTX_SET_DOING_REST(res_msg_ctx, env, AXIS2_MSG_CTX_GET_DOING_REST(
                     msg_ctx, env));
@@ -592,7 +600,7 @@ sandesha2_sender_worker_func(
             AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
             /* Consider building soap envelope */
-            AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_FALSE);
+            /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_FALSE);*/
             AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
             successfully_sent = AXIS2_TRUE;
         sender_impl->counter++;

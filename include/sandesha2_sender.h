@@ -90,6 +90,18 @@ struct sandesha2_sender
 AXIS2_EXTERN sandesha2_sender_t * AXIS2_CALL
 sandesha2_sender_create(
         const axis2_env_t *env);
+ 
+/**
+ * Frees the sender given as a void pointer. This method would cast the 
+ * void parameter to an sender pointer and then call free method.
+ * @param sender pointer to sender as a void pointer
+ * @param env pointer to environment struct
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_sender_free_void_arg(
+    void *sender,
+    const axis2_env_t *env);
 
 #define SANDESHA2_SENDER_FREE(sender, env) \
       (((sandesha2_sender_t *) sender)->ops->free (sender, env))

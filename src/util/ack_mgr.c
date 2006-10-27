@@ -94,16 +94,23 @@ sandesha2_ack_mgr_generate_ack_msg(
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION, 
                         AXIS2_FALSE);
     if(property)
+    {
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, AXIS2_WSA_VERSION, property,
                         AXIS2_FALSE);
+        property = NULL;
+    }
     
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
+    if(property)
+    {
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
                         env));
-    AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
+        AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property,
                         AXIS2_FALSE);
+        property = NULL;
+    }
     ack_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
     SANDESHA2_MSG_CTX_SET_RM_NS_VAL(ack_rm_msg, env, 
                         SANDESHA2_MSG_CTX_GET_RM_NS_VAL(ref_rm_msg, env));
@@ -123,15 +130,16 @@ sandesha2_ack_mgr_generate_ack_msg(
     if(addr_ns_uri)
     {
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ns_uri, env));
+        if(property)
+        {
+            AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ns_uri, env));
+            AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, AXIS2_WSA_VERSION, property, 
+                AXIS2_FALSE);
+            property = NULL;
+        }
     }
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-    if(property)
-    {
-        AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, AXIS2_WSA_VERSION, property, 
-            AXIS2_FALSE);
-    }
     if(0 == AXIS2_STRCMP(acks_to_str, anon_uri))
     {
         axis2_ctx_t *ref_ctx = NULL;
@@ -157,10 +165,10 @@ sandesha2_ack_mgr_generate_ack_msg(
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
         AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
                         SANDESHA2_VALUE_TRUE, env));
-        /* AXIS2_MSG_CTX_SET_PROPERTY(ref_msg, env, SANDESHA2_ACK_WRITTEN, property,
-                        AXIS2_FALSE);*/
-        AXIS2_CTX_SET_PROPERTY(ref_ctx, env, SANDESHA2_ACK_WRITTEN, property, 
-                AXIS2_FALSE);
+        AXIS2_MSG_CTX_SET_PROPERTY(ref_msg, env, SANDESHA2_ACK_WRITTEN, property,
+                        AXIS2_FALSE);
+        /*AXIS2_CTX_SET_PROPERTY(ref_ctx, env, SANDESHA2_ACK_WRITTEN, property, 
+                AXIS2_FALSE);*/
         AXIS2_MSG_CTX_SET_SERVER_SIDE(ack_msg_ctx, env, AXIS2_TRUE);
         return ack_rm_msg;
     }
@@ -226,6 +234,7 @@ sandesha2_ack_mgr_generate_ack_msg(
                         old_ack_bean, env));
         }
         SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(ack_bean, env, time_to_send);
+        /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(ack_msg_ctx, env, AXIS2_TRUE);*/
         SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_mgr, env, key, ack_msg_ctx);
         SANDESHA2_SENDER_MGR_INSERT(retrans_mgr, env, ack_bean);
         
@@ -234,6 +243,8 @@ sandesha2_ack_mgr_generate_ack_msg(
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, orig_trans_out);
+        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
+            axis2_transport_out_desc_free_void_arg);
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env,
                             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,
                             AXIS2_FALSE);

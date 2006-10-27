@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
-    AXIS2_OPTIONS_SET_TIMEOUT_IN_MILLI_SECONDS(options, env, 30000);
+    AXIS2_OPTIONS_SET_TIMEOUT_IN_MILLI_SECONDS(options, env, MAX_COUNT);
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://ws.apache.org/axis2/c/samples/echoString");
@@ -114,24 +114,7 @@ int main(int argc, char** argv)
             property);
     /* Send request */
     AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload2);
-
-    /** Wait till callback is complete. Simply keep the parent thread running
-       until our on_complete or on_error is invoked */
-   while(count < MAX_COUNT )
-   {
-      if (is_complete)
-      {
-         /* We are done with the callback */
-         break;
-      }
-        AXIS2_SLEEP(1);
-        count++;
-   }
-    
-    if (!(count < MAX_COUNT))
-    {
-        printf("\nrm_echo client invoke FAILED. Counter timed out.\n");
-    }
+    AXIS2_SLEEP(MAX_COUNT);
     
     if (svc_client)
     {

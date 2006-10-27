@@ -156,32 +156,6 @@ sandesha2_in_handler_invoke(
         return AXIS2_FAILURE;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
-    /* test code */
-    reply_to_epr = AXIS2_MSG_CTX_GET_TO(msg_ctx, env);
-    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-    ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, reply_to_epr);
-    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_SEQ_PROP_REPLY_TO_EPR, property, 
-            AXIS2_FALSE);
-    seq_part = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
-        rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
-    if(seq_part)
-    {
-        axis2_property_t *property = NULL;
-        axis2_op_ctx_t *op_ctx = NULL;
-        axis2_ctx_t *ctx = NULL;
-
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env, seq_part);
-        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WSRM_COMMON_SEQ, property, 
-                AXIS2_FALSE);
-    }
-    /* end of test code */
 
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
@@ -207,7 +181,7 @@ sandesha2_in_handler_invoke(
             SANDESHA2_TRANSACTION_COMMIT(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
+            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, env));
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
         }
