@@ -40,15 +40,14 @@ extern "C"
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_app_msg_processor_create(
-						const axis2_env_t *env);
+    const axis2_env_t *env);
                         
 axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_send_ack_if_reqd(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *msg_ctx,
-                        axis2_char_t *msg_str,
-                        sandesha2_storage_mgr_t *mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *msg_ctx,
+    axis2_char_t *msg_str,
+    sandesha2_storage_mgr_t *mgr);
 /** @} */
 #ifdef __cplusplus
 }

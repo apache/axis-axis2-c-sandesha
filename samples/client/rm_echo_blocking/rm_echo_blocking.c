@@ -19,7 +19,7 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 
-#define MAX_COUNT  10
+#define MAX_COUNT  100000000000000000
 
 /* to check whether the callback is completed */
 int is_complete = 0;
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axiom_node_t *payload2 = NULL;
+    axiom_node_t *ret_node = NULL;
     int count = 0;
     axis2_property_t *property = NULL;
     /*axis2_qname_t *op_qname = NULL;*/
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
                   " %d :: %s", env->error->error_number,
                         AXIS2_ERROR_GET_MESSAGE(env->error));
-        return -1;
+        return AXIS2_FAILURE;
     }
 
     /* Set service client options */
@@ -103,18 +103,63 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
     
     /* Build the SOAP request message payload using OM API.*/
-    /*payload = build_om_payload_for_echo_svc(env, "echo1");
-    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(2);*/
+    payload = build_om_payload_for_echo_svc(env, "echo1");
+    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    if(ret_node)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+    }else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, 
+                AXIS2_ERROR_GET_MESSAGE(env->error));
+        printf("echo stub invoke FAILED!\n");
+    }
+    payload = NULL;
 
-    /* Build the SOAP request message payload using OM API.*/
-    payload2 = build_om_payload_for_echo_svc(env, "echo2");
+    payload = build_om_payload_for_echo_svc(env, "echo2");
+    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    if(ret_node)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+    }else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, 
+                AXIS2_ERROR_GET_MESSAGE(env->error));
+        printf("echo stub invoke FAILED!\n");
+    }
+    payload = NULL;
     
+    /* Build the SOAP request message payload using OM API.*/
+    payload = build_om_payload_for_echo_svc(env, "echo3");
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     /* Send request */
-    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload2);
-    AXIS2_SLEEP(MAX_COUNT);
+    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    if(ret_node)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+    }else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, 
+                AXIS2_ERROR_GET_MESSAGE(env->error));
+        printf("echo stub invoke FAILED!\n");
+    }
+    AXIS2_SLEEP(10);
     
     if (svc_client)
     {

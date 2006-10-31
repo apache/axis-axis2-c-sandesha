@@ -33,10 +33,10 @@
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *ref_rm_msg,
-        axis2_char_t *seq_id,
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -66,9 +66,9 @@ sandesha2_ack_mgr_generate_ack_msg(
     acks_to = axis2_endpoint_ref_create(env, 
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, 
                         env));
-    if(NULL != acks_to)
+    if(acks_to)
         acks_to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
-    if(NULL == acks_to_str)
+    if(!acks_to_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_EPR, AXIS2_FAILURE);
         return NULL;
@@ -77,13 +77,13 @@ sandesha2_ack_mgr_generate_ack_msg(
     AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);
     
     ref_op = AXIS2_MSG_CTX_GET_OP(ref_msg, env);
-    if(NULL != ref_op)
+    if(ref_op)
     {
         axis2_array_list_t *out_flows = NULL;
         axis2_array_list_t *out_fault_flows = NULL;
         out_flows = AXIS2_OP_GET_OUT_FLOW(ref_op, env);
         out_fault_flows = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_op, env);
-        if(NULL != out_flows)
+        if(out_flows)
         {
             AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flows);
             AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, out_fault_flows);
@@ -146,7 +146,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_op_ctx_t *op_ctx = NULL;
 
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(ref_msg, env);
-        if(NULL == op_ctx)
+        if(!op_ctx)
         {
             axis2_op_t *op = axis2_op_create(env);
             AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_IN_OUT);
@@ -234,7 +234,6 @@ sandesha2_ack_mgr_generate_ack_msg(
                         old_ack_bean, env));
         }
         SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(ack_bean, env, time_to_send);
-        /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(ack_msg_ctx, env, AXIS2_TRUE);*/
         SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_mgr, env, key, ack_msg_ctx);
         SANDESHA2_SENDER_MGR_INSERT(retrans_mgr, env, ack_bean);
         
@@ -386,8 +385,10 @@ sandesha2_ack_mgr_verify_seq_completion(
         sprintf(tmp, "%ld", start);
         ack_range = axis2_hash_get(hash, tmp, AXIS2_HASH_KEY_STRING);
         
-        if(NULL == ack_range)
+        if(!ack_range)
+        {
             break;
+        }
         if(SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) >= last_msg_no)
             return AXIS2_TRUE;
         start = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) + 1;        
@@ -446,7 +447,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             axis2_msg_ctx_t *msg_ctx1 = NULL;
             axis2_char_t *to = NULL;
             sandesha2_msg_ctx_t *ack_rm_msg = NULL;
-            sandesha2_seq_ack_t *seq_ack = NULL;
+            sandesha2_iom_rm_part_t *seq_ack = NULL;
             
             msg_ctx1 = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_mgr, env,
                         SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(
@@ -465,7 +466,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                         " ack message entry");
                 return AXIS2_FAILURE;
             }
-            seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
+            seq_ack = (sandesha2_iom_rm_part_t *)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         ack_rm_msg, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
             SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, seq_ack);

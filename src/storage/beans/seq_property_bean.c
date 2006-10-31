@@ -225,9 +225,10 @@ axis2_char_t *AXIS2_CALL
 
 
 void AXIS2_CALL
-	sandesha2_seq_property_bean_set_seq_id (struct sandesha2_seq_property_bean *seq_property,
-		const axis2_env_t *env,
-		axis2_char_t *seq_id)
+sandesha2_seq_property_bean_set_seq_id (
+    struct sandesha2_seq_property_bean *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id)
 {
 	sandesha2_seq_property_bean_impl_t *bean_impl = NULL;
 	bean_impl = AXIS2_INTF_TO_IMPL(seq_property);

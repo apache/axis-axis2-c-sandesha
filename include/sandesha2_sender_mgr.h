@@ -65,13 +65,13 @@ struct sandesha2_sender_mgr_ops
     remove) (
             sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
-            axis2_char_t *msg_id);
+            const axis2_char_t *msg_id);
 
     sandesha2_sender_bean_t *(AXIS2_CALL *
     retrieve) (
             sandesha2_sender_mgr_t *sender,
             const axis2_env_t *env,
-            axis2_char_t *msg_id);
+            const axis2_char_t *msg_id);
 
     axis2_bool_t (AXIS2_CALL *
     update) (

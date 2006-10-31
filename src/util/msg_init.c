@@ -130,11 +130,10 @@ populate_rm_msg_ctx(
     if(msg_ctx)
         ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
     prop = AXIS2_CTX_GET_PROPERTY(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
-    if(NULL != prop)
+    if(prop)
         addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
     
-    if(addressing_ns == NULL && AXIS2_TRUE != AXIS2_MSG_CTX_GET_SERVER_SIDE(
-        msg_ctx, env))
+    if(!addressing_ns && !AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
     {
         addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
     }
@@ -403,7 +402,7 @@ static axis2_bool_t validate_msg(
     }
     return AXIS2_TRUE; 
 }
-    
+
 static void add_op_if_null(
     const axis2_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
@@ -411,14 +410,10 @@ static void add_op_if_null(
     axis2_op_t *op = NULL;
         
     op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
-    if(NULL == op)
+    if(!op)
     {
         axis2_svc_t *svc = NULL;
         axis2_qname_t *tmp_qname = NULL;
-        axis2_status_t status = AXIS2_FAILURE;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_conf_t *conf = NULL;
-        axis2_phases_info_t *info = NULL;
     
         tmp_qname = axis2_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
                 NULL);
@@ -428,29 +423,40 @@ static void add_op_if_null(
                     AXIS2_FAILURE);
             return;
         }
-        op = axis2_op_create_with_qname(env, tmp_qname);
-        AXIS2_QNAME_FREE(tmp_qname, env);
-        AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_OUT_IN);
-        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-        conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
-        info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
-        AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
         svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
-        status = AXIS2_SVC_ADD_OP(svc, env, op);
-        if(AXIS2_SUCCESS == status)
+        op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env, tmp_qname);
+        if(!op)
         {
-            status = AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
-            if(AXIS2_SUCCESS != status)
+            axis2_status_t status = AXIS2_FAILURE;
+            axis2_conf_ctx_t *conf_ctx = NULL;
+            axis2_conf_t *conf = NULL;
+            axis2_phases_info_t *info = NULL;
+
+            op = axis2_op_create_with_qname(env, tmp_qname);
+            AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_OUT_IN);
+            conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+            conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+            info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
+            AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
+            status = AXIS2_SVC_ADD_OP(svc, env, op);
+            if(AXIS2_SUCCESS == status)
+            {
+                status = AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
+                if(AXIS2_SUCCESS != status)
+                {
+                    AXIS2_OP_FREE(op, env);
+                    op = NULL;
+                }
+            }
+            else
             {
                 AXIS2_OP_FREE(op, env);
                 op = NULL;
             }
         }
-        else
-        {
-            AXIS2_OP_FREE(op, env);
-            op = NULL;
-        }
-    } 
+        AXIS2_QNAME_FREE(tmp_qname, env);
+        AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
+    }
 }
+
 

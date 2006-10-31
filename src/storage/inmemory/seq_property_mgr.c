@@ -314,7 +314,6 @@ sandesha2_seq_property_mgr_update(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_property_impl = SANDESHA2_INTF_TO_IMPL(seq_property);
-
     id = sandesha2_seq_property_mgr_get_id(seq_property, env, bean);
     if(!id)
     {

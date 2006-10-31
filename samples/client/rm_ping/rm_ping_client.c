@@ -21,8 +21,6 @@
 #include <axis2_client.h>
 
 #define MAX_COUNT  10
-/* to check whether the callback is completed */
-int is_complete = 0;
 
 axiom_node_t *
 build_om_programatically(
@@ -111,13 +109,20 @@ int main(int argc, char** argv)
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
+    payload = NULL;
+    
+    payload = build_om_programatically(env, "ping2");
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nping client invoke SUCCESSFUL!\n");
+    payload = NULL;
 
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
-    payload = build_om_programatically(env, "ping2");
+    payload = build_om_programatically(env, "ping3");
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
@@ -154,3 +159,4 @@ build_om_programatically(
 
     return ping_om_node;
 }
+

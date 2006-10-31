@@ -60,7 +60,7 @@ sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_create_seq_mgr_retrieve(
         sandesha2_create_seq_mgr_t *seq_mgr,
         const axis2_env_t *env,
-        axis2_char_t *msg_id);
+        const axis2_char_t *msg_id);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_create_seq_mgr_update(
@@ -221,7 +221,7 @@ sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_create_seq_mgr_retrieve(
         sandesha2_create_seq_mgr_t *seq_mgr,
         const axis2_env_t *env,
-        axis2_char_t *msg_id)
+        const axis2_char_t *msg_id)
 {
     sandesha2_create_seq_mgr_impl_t *seq_mgr_impl = NULL;
     sandesha2_create_seq_bean_t *bean = NULL;

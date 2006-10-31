@@ -392,7 +392,7 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     axiom_soap_envelope_t *temp_envelope = NULL;
     sandesha2_close_seq_t *cs = NULL;
     sandesha2_msg_ctx_t *close_seq_response = NULL;
-    sandesha2_close_seq_res_t *response = NULL;
+    sandesha2_iom_rm_part_t *response = NULL;
     sandesha2_identifier_t *identifier = NULL;
     sandesha2_identifier_t *temp_identifier = NULL;
     int soap_version = -1;
@@ -406,10 +406,10 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(temp_identifier, env);
     ns = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(close_seq_msg, env);
     SANDESHA2_MSG_CTX_SET_RM_NS_VAL(close_seq_response, env, ns);
-    response = sandesha2_close_seq_res_create(env, ns);
+    response = (sandesha2_iom_rm_part_t *) sandesha2_close_seq_res_create(env, ns);
     identifier = sandesha2_identifier_create(env, ns);
     SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, seq_id);
-    SANDESHA2_CLOSE_SEQ_RES_SET_IDENTIFIER(response, env, identifier);
+    SANDESHA2_CLOSE_SEQ_RES_SET_IDENTIFIER((sandesha2_close_seq_res_t *) response, env, identifier);
     temp_envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(close_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
@@ -802,10 +802,10 @@ sandesha2_msg_creator_init_creation(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_msg_creator_add_ack_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *app_msg,
-        axis2_char_t *seq_id,
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *app_msg,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axiom_soap_envelope_t *envelope = NULL;
     axiom_soap_header_t *soap_header = NULL;
@@ -827,7 +827,7 @@ sandesha2_msg_creator_add_ack_msg(
     int i = 0, size = 0;
 
     envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(app_msg, env);
-    if(NULL == envelope)
+    if(!envelope)
     {
         AXIS2_ERROR_SET(env->error, 
                 AXIS2_ERROR_NULL_SOAP_ENVELOPE_IN_MSG_CTX, AXIS2_FAILURE);
@@ -836,7 +836,7 @@ sandesha2_msg_creator_add_ack_msg(
     msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(app_msg, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
-    if(NULL == rm_version)
+    if(!rm_version)
     {
         AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
@@ -875,7 +875,7 @@ sandesha2_msg_creator_add_ack_msg(
         /* sequence is closed. so add the 'Final' part. */
         is_allowed = sandesha2_spec_specific_consts_is_ack_final_allowed(env, 
                rm_version);
-        if(AXIS2_TRUE == is_allowed)
+        if(is_allowed)
         {
             sandesha2_ack_final_t *ack_final = NULL;
 

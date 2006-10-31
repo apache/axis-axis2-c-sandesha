@@ -204,7 +204,7 @@ sandesha2_utils_get_property_bean(
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
     param = AXIS2_CONF_GET_PARAM(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
-    if(NULL == param)
+    if(!param)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
                         AXIS2_FAILURE);
@@ -341,9 +341,9 @@ sandesha2_utils_array_list_to_string(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_invoker_for_seq(
-        const axis2_env_t *env,
-        axis2_conf_ctx_t *conf_ctx,
-        axis2_char_t *seq_id)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id)
 {
     sandesha2_in_order_invoker_t *invoker = NULL;
     axis2_property_t *property = NULL;
@@ -356,7 +356,7 @@ sandesha2_utils_start_invoker_for_seq(
                         env, SANDESHA2_INVOKER, AXIS2_FALSE);
     if(property)
         invoker = AXIS2_PROPERTY_GET_VALUE(property, env);
-    if(NULL == invoker)
+    if(!invoker)
     {
         invoker = sandesha2_in_order_invoker_create(env);
         property = axis2_property_create(env);
@@ -960,9 +960,9 @@ sandesha2_utils_stop_sender(const axis2_env_t *env,
  */
 AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_utils_get_ack_range_list(
-        const axis2_env_t *env,
-        axis2_char_t *msg_no_str,
-        axis2_char_t *rm_ns_value)
+    const axis2_env_t *env,
+    axis2_char_t *msg_no_str,
+    axis2_char_t *rm_ns_value)
 {
     axis2_array_list_t *ack_ranges = NULL;
     axis2_array_list_t *sorted_msg_no_list = NULL;
@@ -975,7 +975,7 @@ sandesha2_utils_get_ack_range_list(
     sorted_msg_no_list = get_sorted_msg_no_list(env, msg_no_str, ",");
     if(sorted_msg_no_list)
         size = AXIS2_ARRAY_LIST_SIZE(sorted_msg_no_list, env);
-    for(i = 0; i < size; i ++)
+    for(i = 0; i < size; i++)
     {
         long *temp = AXIS2_ARRAY_LIST_GET(sorted_msg_no_list, env, i);
         if(lower == 0)
@@ -993,7 +993,6 @@ sandesha2_utils_get_ack_range_list(
         {
              sandesha2_ack_range_t *ack_range = NULL;
              
-            /* add ack_range (lower, upper) */
              ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
              SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
              SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
@@ -1003,7 +1002,7 @@ sandesha2_utils_get_ack_range_list(
              completed = AXIS2_FALSE;
         }
     }
-    if(AXIS2_TRUE != completed)
+    if(!completed)
     {
          sandesha2_ack_range_t *ack_range = NULL;
          
@@ -1011,7 +1010,7 @@ sandesha2_utils_get_ack_range_list(
          SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
          SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
          AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
-         completed = AXIS2_FALSE;
+         completed = AXIS2_TRUE;
     }
     /*AXIS2_ARRAY_LIST_FREE(sorted_msg_no_list, env);*/
     return ack_ranges;
@@ -1025,11 +1024,13 @@ get_sorted_msg_no_list(
 {
     axis2_array_list_t *msg_numbers = NULL;
     axis2_array_list_t *sorted_msg_no_list = NULL;
+    axis2_char_t *dup_str = NULL;
     axis2_char_t *temp_str = NULL;
 
+    dup_str = AXIS2_STRDUP(msg_no_str, env);
     msg_numbers = axis2_array_list_create(env, 0);
-    temp_str = strtok(msg_no_str, delim);
-    while(NULL != temp_str)
+    temp_str = strtok(dup_str, delim);
+    while(temp_str)
     {
         long *long_val = AXIS2_MALLOC(env->allocator, sizeof(long));
 
@@ -1039,6 +1040,7 @@ get_sorted_msg_no_list(
     }
     sorted_msg_no_list = sandesha2_utils_sort(env, msg_numbers);
     /*AXIS2_ARRAY_LIST_FREE(msg_numbers, env);*/
+    AXIS2_FREE(env->allocator, dup_str);
     return sorted_msg_no_list;
 }
 
@@ -1079,7 +1081,7 @@ sandesha2_utils_sort(
                 break;
             }
         }
-        if(AXIS2_TRUE == contains)
+        if(contains)
         {
             AXIS2_ARRAY_LIST_ADD(sorted_list, env, temp);
         }

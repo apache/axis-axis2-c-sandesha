@@ -39,7 +39,7 @@ extern "C"
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_ack_req_msg_processor_create(
-						const axis2_env_t *env);
+    const axis2_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

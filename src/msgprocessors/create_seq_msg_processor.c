@@ -62,34 +62,35 @@ struct sandesha2_create_seq_msg_processor_impl
 						((sandesha2_create_seq_msg_processor_impl_t *)(msg_proc))
 
 /***************************** Function headers *******************************/
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_process_in_msg (
-                        sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx);
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx);
     
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_process_out_msg(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        sandesha2_msg_ctx_t *rm_msg_ctx);
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
     
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_offer_accepted(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        axis2_char_t *seq_id,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr);
-                    	
-axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_msg_processor_free (sandesha2_msg_processor_t *element, 
-						const axis2_env_t *env);								
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);
+                    
+static axis2_status_t AXIS2_CALL 
+sandesha2_create_seq_msg_processor_free (
+    sandesha2_msg_processor_t *msg_processor, 
+    const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_create_seq_msg_processor_create(const axis2_env_t *env)
+sandesha2_create_seq_msg_processor_create(
+    const axis2_env_t *env)
 {
     sandesha2_create_seq_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -124,9 +125,10 @@ sandesha2_create_seq_msg_processor_create(const axis2_env_t *env)
 }
 
 
-axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_msg_processor_free (sandesha2_msg_processor_t *msg_processor, 
-						const axis2_env_t *env)
+static axis2_status_t AXIS2_CALL 
+sandesha2_create_seq_msg_processor_free (
+    sandesha2_msg_processor_t *msg_processor, 
+	const axis2_env_t *env)
 {
     sandesha2_create_seq_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -140,11 +142,11 @@ sandesha2_create_seq_msg_processor_free (sandesha2_msg_processor_t *msg_processo
 }
 
 
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_process_in_msg (
-                        sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq_part = NULL;
@@ -170,6 +172,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
      
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
+    AXIS2_LOG_INFO(env->log, 
+            "[sandesha2] sandesha2_create_seq_msg_processor_process_in_msg .........");
+    printf("sandesha2_create_seq_msg_processor_process_in_msg\n");
     
     msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
     create_seq_part = (sandesha2_create_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
@@ -241,7 +246,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         offer_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
                         SANDESHA2_SEQ_OFFER_GET_IDENTIFIER(seq_offer, env), env);
         offer_accepted = sandesha2_create_seq_msg_processor_offer_accepted(
-                        msg_processor, env, offer_seq_id, rm_msg_ctx, 
+                        env, offer_seq_id, rm_msg_ctx, 
                         storage_mgr);
         if(AXIS2_TRUE == offer_accepted)
         {
@@ -326,11 +331,13 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     AXIS2_FALSE);
     
     SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
+    AXIS2_LOG_INFO(env->log, 
+            "[sandesha2] Exit: sandesha2_create_seq_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
     
 }
     
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_process_out_msg(
                         sandesha2_msg_processor_t *msg_processor,
                     	const axis2_env_t *env, 
@@ -347,13 +354,12 @@ sandesha2_create_seq_msg_processor_process_out_msg(
 }
 
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_offer_accepted(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
-                        axis2_char_t *seq_id,
-                        sandesha2_msg_ctx_t *rm_msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_create_seq_bean_t *find_bean = NULL;
@@ -377,3 +383,4 @@ sandesha2_create_seq_msg_processor_offer_accepted(
         
     return AXIS2_TRUE;
 }
+

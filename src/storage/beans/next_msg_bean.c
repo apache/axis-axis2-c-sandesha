@@ -90,6 +90,7 @@ sandesha2_next_msg_bean_create(const axis2_env_t *env)
 	bean->o_bean.ops->get_seq_id = sandesha2_next_msg_bean_get_seq_id;
 	bean->o_bean.ops->set_seq_id = sandesha2_next_msg_bean_set_seq_id;
 	bean->o_bean.ops->set_next_msg_no_to_process = sandesha2_next_msg_bean_set_next_msg_no_to_process;
+	bean->o_bean.ops->get_next_msg_no_to_process = sandesha2_next_msg_bean_get_next_msg_no_to_process;
 
 	return &(bean->o_bean);
 }
@@ -129,6 +130,7 @@ AXIS2_EXTERN sandesha2_next_msg_bean_t* AXIS2_CALL
 	bean->o_bean.ops->get_seq_id = sandesha2_next_msg_bean_get_seq_id;
 	bean->o_bean.ops->set_seq_id = sandesha2_next_msg_bean_set_seq_id;
 	bean->o_bean.ops->set_next_msg_no_to_process = sandesha2_next_msg_bean_set_next_msg_no_to_process;
+	bean->o_bean.ops->get_next_msg_no_to_process = sandesha2_next_msg_bean_get_next_msg_no_to_process;
 
 	return &(bean->o_bean);
 }

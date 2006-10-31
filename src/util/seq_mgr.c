@@ -380,7 +380,6 @@ sandesha2_seq_mgr_setup_new_client_seq(
     {
         axis2_op_ctx_t *op_ctx = NULL;
         axis2_endpoint_ref_t *reply_to_epr = NULL;
-        axis2_property_t *property = NULL;
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(first_app_msg, env);

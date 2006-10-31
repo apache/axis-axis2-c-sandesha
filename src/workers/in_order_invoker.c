@@ -240,10 +240,11 @@ sandesha2_in_order_invoker_is_invoker_started
 }
             
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_run_invoker_for_seq 
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
-                        axis2_char_t *seq_id)
+sandesha2_in_order_invoker_run_invoker_for_seq (
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, 
+    axis2_conf_ctx_t *conf_ctx, 
+    axis2_char_t *seq_id)
 {
     sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -251,10 +252,10 @@ sandesha2_in_order_invoker_run_invoker_for_seq
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    if(AXIS2_FALSE == sandesha2_utils_array_list_contains(env, 
+    if(!sandesha2_utils_array_list_contains(env, 
                         invoker_impl->working_seqs, seq_id))
         AXIS2_ARRAY_LIST_ADD(invoker_impl->working_seqs, env, seq_id);
-    if(AXIS2_FALSE == invoker_impl->run_invoker)
+    if(!invoker_impl->run_invoker)
     {
         invoker_impl->conf_ctx = conf_ctx;
         invoker_impl->run_invoker = AXIS2_TRUE;
@@ -264,8 +265,9 @@ sandesha2_in_order_invoker_run_invoker_for_seq
 }
             
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_run (sandesha2_in_order_invoker_t *invoker,
-                        const axis2_env_t *env)
+sandesha2_in_order_invoker_run (
+    sandesha2_in_order_invoker_t *invoker,
+    const axis2_env_t *env)
 {
     sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     axis2_thread_t *worker_thread = NULL;
@@ -293,8 +295,9 @@ sandesha2_in_order_invoker_run (sandesha2_in_order_invoker_t *invoker,
 
 axis2_status_t AXIS2_CALL
 sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
-                        sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *property = NULL;
     
@@ -319,7 +322,9 @@ sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
  * Thread worker function.
  */
 void * AXIS2_THREAD_FUNC
-sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
+sandesha2_in_order_invoker_worker_func(
+    axis2_thread_t *thd, 
+    void *data)
 {
     sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     sandesha2_in_order_invoker_t *invoker = NULL;
@@ -331,7 +336,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
     invoker_impl = args->impl;
     invoker = (sandesha2_in_order_invoker_t*)invoker_impl;
     
-    while(AXIS2_TRUE == invoker_impl->run_invoker)
+    while(invoker_impl->run_invoker)
     {
         sandesha2_transaction_t *transaction = NULL;
         /* Use when transaction handling is done 
@@ -359,11 +364,11 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
         all_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
                         SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
-        if(NULL == all_seq_bean)
+        if(!all_seq_bean)
             continue;
         all_seq_list = sandesha2_utils_get_array_list_from_string(env,
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(all_seq_bean, env));
-        if(NULL == all_seq_list)
+        if(!all_seq_list)
             continue;
             
         for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(all_seq_list, env); i++)
@@ -383,7 +388,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                         storage_mgr, env);
             next_msg_bean = SANDESHA2_NEXT_MSG_MGR_RETRIEVE(
                         next_msg_mgr, env, seq_id);
-            if(NULL == next_msg_bean)
+            if(!next_msg_bean)
             {
                 axis2_char_t *str_list = NULL;
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Next message not set" 
@@ -430,8 +435,10 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                         env);
                 msg_to_invoke = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
-                rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
+                if(msg_to_invoke)
+                    rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
+                else continue;
                 /* have to commit the transaction before invoking. This may get 
                  * changed when WS-AT is available.
                  */
@@ -440,14 +447,14 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                 AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
                 AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
                         SANDESHA2_VALUE_TRUE, env));
-                AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
+                AXIS2_MSG_CTX_SET_PROPERTY(msg_to_invoke, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
                         
-                property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env,
+                property = AXIS2_MSG_CTX_GET_PROPERTY(msg_to_invoke, env,
                         SANDESHA2_POST_FAILURE_MESSAGE, AXIS2_FALSE);
-                if(NULL != property)
+                if(property)
                     post_failure_str = AXIS2_PROPERTY_GET_VALUE(property, env);
-                if(NULL != post_failure_str && 0 == AXIS2_STRCMP(
+                if(post_failure_str && 0 == AXIS2_STRCMP(
                         post_failure_str, SANDESHA2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;
                 engine = axis2_engine_create(env, invoker_impl->conf_ctx);
@@ -458,14 +465,17 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                     AXIS2_ENGINE_RECEIVE(engine, env, msg_to_invoke);
                 }
                 else
+                {
+                    AXIS2_MSG_CTX_SET_PAUSED(msg_to_invoke, env, AXIS2_FALSE);
                     AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
+                }
                 invoked = AXIS2_TRUE;
                 transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
                         storage_mgr, env);
                 SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env, key);
                 msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
-                if(NULL != msg_ctx)
+                if(msg_ctx)
                     SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr,
                         env, key);
                 if(SANDESHA2_MSG_TYPE_APPLICATION == 
@@ -474,7 +484,7 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                     sandesha2_seq_t *seq = NULL;
                     seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                             rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
-                    if(NULL != SANDESHA2_SEQ_GET_LAST_MSG(seq, env))
+                    if(SANDESHA2_SEQ_GET_LAST_MSG(seq, env))
                     {
                         sandesha2_terminate_mgr_clean_recv_side_after_invocation(
                             env, invoker_impl->conf_ctx, seq_id, 
@@ -485,9 +495,11 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
                     }
                 }
             }
-            if(AXIS2_FALSE == continue_seq)
+            if(!continue_seq)
+            {
                 break;
-            if(AXIS2_TRUE == invoked)
+            }
+            if(invoked)
             {
                 next_msg_no++;
                 SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_msg_bean,
@@ -502,3 +514,4 @@ sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data)
     }
     return NULL;
 }
+
