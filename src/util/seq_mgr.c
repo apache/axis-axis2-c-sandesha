@@ -53,9 +53,9 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_mgr_setup_new_seq(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *create_seq_msg, 
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *create_seq_msg, 
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_char_t *seq_id = NULL;
     axis2_endpoint_ref_t *to = NULL;
@@ -150,7 +150,9 @@ sandesha2_seq_mgr_setup_new_seq(
     next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(storage_mgr, env);
     next_msg_bean = sandesha2_next_msg_bean_create_with_data(env, seq_id, 1); 
                                                     /* 1 will be the next */
+    AXIS2_LOG_INFO(env->log, "[sandesha2] came1");
     SANDESHA2_NEXT_MSG_MGR_INSERT(next_msg_mgr, env, next_msg_bean);
+    AXIS2_LOG_INFO(env->log, "[sandesha2] came2");
 
     /* Message to invoke. This will apply for only in-order invocations */
     sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);

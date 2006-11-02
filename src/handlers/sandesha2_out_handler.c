@@ -72,9 +72,9 @@ sandesha2_out_handler_create(
 
 axis2_status_t AXIS2_CALL
 sandesha2_out_handler_invoke(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    struct axis2_msg_ctx *msg_ctx)
 {
     axis2_property_t *temp_prop = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -97,16 +97,18 @@ sandesha2_out_handler_invoke(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
+    printf("[sandesha2] Starting out handler .........\n");
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-    if(conf_ctx == NULL)
+    if(!conf_ctx)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
-    if(svc == NULL)
+    if(!svc)
     {
+        printf("came1 .........\n");
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -114,7 +116,7 @@ sandesha2_out_handler_invoke(
     ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
-    if(NULL != temp_prop)
+    if(temp_prop)
         str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
     {
@@ -123,6 +125,7 @@ sandesha2_out_handler_invoke(
                     Processing Done");
         return AXIS2_SUCCESS; 
     }
+    printf("came2 .........\n");
     temp_prop = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(temp_prop, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
@@ -133,7 +136,7 @@ sandesha2_out_handler_invoke(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
-    if(NULL != temp_prop)
+    if(temp_prop)
         within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
                         temp_prop, env);
     if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
@@ -141,7 +144,7 @@ sandesha2_out_handler_invoke(
     {
         within_transaction = AXIS2_TRUE;
     }
-    if(AXIS2_TRUE != within_transaction)
+    if(!within_transaction)
     {
         axis2_property_t *prop = NULL;
         
@@ -152,6 +155,7 @@ sandesha2_out_handler_invoke(
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
+    printf("came3 .........\n");
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
@@ -165,6 +169,7 @@ sandesha2_out_handler_invoke(
     msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
+        printf("came4 .........\n");
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         axis2_op_ctx_t *op_ctx = NULL;
 
@@ -173,6 +178,7 @@ sandesha2_out_handler_invoke(
                 AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
         if(req_msg_ctx) /* For the server side */
         {
+            printf("came44 .........\n");
             sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
             sandesha2_seq_t *seq_part = NULL;
 
@@ -182,24 +188,28 @@ sandesha2_out_handler_invoke(
             
             if(seq_part)
             {
+                printf("came444 .........\n");
                 msg_processor = (sandesha2_msg_processor_t *) 
                     sandesha2_app_msg_processor_create(env); /* rm 
                                                                 intended msg */
             }
         }
-        else if(AXIS2_TRUE != AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
+        else if(!AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
         {
+            printf("came4444 .........\n");
             msg_processor = (sandesha2_msg_processor_t *) 
                 sandesha2_app_msg_processor_create(env);
         }
     }
     else
     {
+        printf("came5 .........\n");
         msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
                 rm_msg_ctx);
     }
     if(msg_processor)
     {
+        printf("came6 .........\n");
         SANDESHA2_MSG_PROCESSOR_PROCESS_OUT_MSG(msg_processor, env, rm_msg_ctx);
     }
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
@@ -207,7 +217,7 @@ sandesha2_out_handler_invoke(
         /* Message should not be sent in an exception situation */
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         /* Rolling back the transaction */
-        if(AXIS2_TRUE != within_transaction)
+        if(!within_transaction)
         {
             axis2_property_t *prop = NULL;
 
@@ -224,7 +234,7 @@ sandesha2_out_handler_invoke(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    if(AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back)
+    if(!within_transaction && !rolled_back)
     {
         axis2_property_t *prop = NULL;
 

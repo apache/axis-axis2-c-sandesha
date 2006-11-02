@@ -275,11 +275,13 @@ sandesha2_in_order_invoker_run (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
+    AXIS2_LOG_INFO(env->log, "came10*************************");
    
     args = AXIS2_MALLOC(env->allocator, sizeof(
                         sandesha2_in_order_invoker_args_t)); 
     args->impl = invoker_impl;
     args->env = (axis2_env_t*)env;
+    AXIS2_LOG_INFO(env->log, "came11*************************");
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
                         sandesha2_in_order_invoker_worker_func, (void*)args);
     if(NULL == worker_thread)
@@ -350,6 +352,7 @@ sandesha2_in_order_invoker_worker_func(
         int i = 0;
 
         AXIS2_SLEEP(1);
+        AXIS2_LOG_INFO(env->log, "came20*************************");
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker_impl->conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(invoker_impl->conf_ctx, env));
@@ -373,6 +376,7 @@ sandesha2_in_order_invoker_worker_func(
             
         for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(all_seq_list, env); i++)
         {
+            AXIS2_LOG_INFO(env->log, "came21*************************");
             axis2_char_t *seq_id = NULL;
             long next_msg_no = -1;
             sandesha2_next_msg_bean_t *next_msg_bean = NULL;

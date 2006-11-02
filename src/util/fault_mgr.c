@@ -296,11 +296,11 @@ sandesha2_fault_mgr_check_for_msg_num_rollover
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_unknown_seq
-            (sandesha2_fault_mgr_t *fault_mgr,
-            const axis2_env_t *env,
-            sandesha2_msg_ctx_t *rm_msg_ctx,
-            axis2_char_t *seq_id,
-            sandesha2_storage_mgr_t *storage_man)
+    (sandesha2_fault_mgr_t *fault_mgr,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     int type = -1;
@@ -319,6 +319,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
         SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == type ||
         SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE == type)
     {
+        AXIS2_LOG_INFO(env->log, "[sandesha2] came10 .........");
         sandesha2_create_seq_bean_t *find_bean = NULL;
         axis2_array_list_t *list = NULL;
         
@@ -326,7 +327,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
         SANDESHA2_CREATE_SEQ_BEAN_SET_SEQ_ID(find_bean, env, seq_id);
         list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, 
                         find_bean);
-        if(NULL != list)
+        if(list)
         {
             if(0 == AXIS2_ARRAY_LIST_SIZE(list, env))
                 valid_seq = AXIS2_FALSE;
@@ -343,11 +344,14 @@ sandesha2_fault_mgr_check_for_unknown_seq
         next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
                         storage_man, env);
         list = SANDESHA2_NEXT_MSG_MGR_RETRIEVE_ALL(next_msg_mgr, env);
-        if(NULL != list)
+        if(list)
         {
+            int size = AXIS2_ARRAY_LIST_SIZE(list, env);
+            AXIS2_LOG_INFO(env->log, "[sandesha2] size:%d ", size);
             int i = 0;
-            for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(list, env); i++)
+            for(i = 0; i < size; i++)
             {
+                AXIS2_LOG_INFO(env->log, "[sandesha2] came12 .........");
                 sandesha2_next_msg_bean_t *next_bean = NULL;
                 axis2_char_t *tmp_id = NULL;
                 
@@ -365,7 +369,7 @@ sandesha2_fault_mgr_check_for_unknown_seq
         else
             valid_seq = AXIS2_FALSE;
     }
-    if(AXIS2_FALSE == valid_seq)
+    if(!valid_seq)
     {
         sandesha2_fault_data_t *fault_data = NULL;
         axis2_char_t *rm_ns_val = NULL;
