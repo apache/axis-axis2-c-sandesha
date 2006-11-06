@@ -23,6 +23,7 @@
 #include <axis2_op_client.h>
 #include <axis2_listener_manager.h>
 #include <callback_recv.h>
+#include <axis2_svc_client.h>
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -305,7 +306,7 @@ send_non_blocking(
     callback_recv = axis2_callback_recv_create(env);
     if (!(callback_recv))
     {
-        axis2_svc_client_free(svc_client, env);
+        AXIS2_SVC_CLIENT_FREE(svc_client, env);
         return AXIS2_FAILURE;
     }
 
