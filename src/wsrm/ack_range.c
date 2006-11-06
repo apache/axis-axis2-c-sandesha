@@ -223,28 +223,33 @@ sandesha2_ack_range_from_om_node(
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
     low_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LOWER, 
                         ack_range_impl->ns_val, ack_range_impl->prefix);
-    if(NULL == low_qname)
+    if(!low_qname)
     {
         return NULL;
     }
     upper_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_UPPER,
                         ack_range_impl->ns_val, ack_range_impl->prefix);
-    if(NULL == upper_qname)
+    if(!upper_qname)
     {
         return NULL;
     }
     om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
-    if(NULL == om_element)
+    if(!om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
                         AXIS2_FAILURE);
         return NULL;
     }
-    lower_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE(om_element, env,
+    /*lower_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE(om_element, env,
                         low_qname);
     upper_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE(om_element, env,
-                        upper_qname);
-    if(NULL == lower_str || NULL == upper_str)
+                        upper_qname);*/
+    lower_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(om_element, env,
+                        SANDESHA2_WSRM_COMMON_LOWER);
+    upper_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(om_element, env,
+                        SANDESHA2_WSRM_COMMON_UPPER);
+    
+    if(!lower_str || !upper_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ATTRIBUTE,
                         AXIS2_FAILURE);
@@ -258,8 +263,10 @@ sandesha2_ack_range_from_om_node(
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_ack_range_to_om_node(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, void *om_node)
+sandesha2_ack_range_to_om_node(
+    sandesha2_iom_rm_element_t *ack_range,
+    const axis2_env_t *env, 
+    void *om_node)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -285,14 +292,18 @@ sandesha2_ack_range_to_om_node(sandesha2_iom_rm_element_t *ack_range,
     {
         return NULL;
     }
+    /*lower_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_LOWER,
+                        lower_str, rm_ns);*/
     lower_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_LOWER,
-                        lower_str, rm_ns);
+                        lower_str, NULL);
     if(NULL == lower_attr)
     {
         return NULL;
     }
+    /*upper_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_UPPER,
+                        upper_str, rm_ns);*/
     upper_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_UPPER,
-                        upper_str, rm_ns);
+                        upper_str, NULL);
     if(NULL == upper_attr)
     {
         return NULL;

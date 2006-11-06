@@ -362,6 +362,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] Exit: sandesha2_ack_msg_processor_process_in_msg");
+    printf("[sandesha2] Exit: sandesha2_ack_msg_processor_process_in_msg\n");
     return AXIS2_SUCCESS;
 }
     

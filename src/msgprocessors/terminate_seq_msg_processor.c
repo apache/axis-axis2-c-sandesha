@@ -214,7 +214,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     fault_mgr = sandesha2_fault_mgr_create(env);
     fault_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_UNKNOWN_SEQ(fault_mgr, env, 
                         rm_msg_ctx, seq_id, storage_man);
-    if(NULL != fault_ctx)
+    if(fault_ctx)
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
@@ -250,6 +250,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     SANDESHA2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] Exit: sandesha2_terminate_msg_processor_process_in_msg");
+    printf("[sandesha2] Exit: sandesha2_terminate_msg_processor_process_in_msg\n");
     
     return AXIS2_SUCCESS;
 }

@@ -25,12 +25,12 @@
 #include <axiom_element.h>
 
 axiom_node_t *
-rm_svc_interop_echo(
+rm_sample_svc_echo(
     const axis2_env_t *env, 
     axiom_node_t *node);
 
 void
-rm_svc_interop_ping (
+rm_sample_svc_ping (
     const axis2_env_t *env, 
     axiom_node_t *node);
 

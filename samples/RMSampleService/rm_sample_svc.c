@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "rm_svc_interop.h"
+#include "rm_sample_svc.h"
 #include <axiom_xml_writer.h>
 #include <stdio.h>
 #include <axis2_qname.h>
@@ -24,7 +24,7 @@ build_echo_om(
     axis2_char_t *text);
 
 axiom_node_t *
-rm_svc_interop_echo (
+rm_sample_svc_echo (
     const axis2_env_t *env, 
     axiom_node_t *node)
 {
@@ -133,7 +133,7 @@ build_echo_om(
 }
 
 void
-rm_svc_interop_ping (
+rm_sample_svc_ping (
     const axis2_env_t *env, 
     axiom_node_t *node)
 {

@@ -206,7 +206,7 @@ sandesha2_app_msg_processor_process_in_msg (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] sandesha2_app_msg_processor_process_in_msg .........*******************");
+            "[sandesha2] sandesha2_app_msg_processor_process_in_msg .........");
     printf("sandesha2_app_msg_processor_process_in_msg\n");
    
     seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
@@ -270,8 +270,6 @@ sandesha2_app_msg_processor_process_in_msg (
                         fault_mgr, env, rm_msg_ctx, storage_mgr);
     if(fault_ctx)
     {
-        AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] came3 .........");
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
         if(AXIS2_FAILURE == AXIS2_ENGINE_SEND_FAULT(engine, env, 
                         SANDESHA2_MSG_CTX_GET_MSG_CTX(fault_ctx, env)))
@@ -295,7 +293,6 @@ sandesha2_app_msg_processor_process_in_msg (
                         rm_msg_ctx, str_seq_id, storage_mgr);
     if(fault_ctx)
     {
-        AXIS2_LOG_INFO(env->log, "[sandesha2] came4 .........");
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
         if(AXIS2_FAILURE == AXIS2_ENGINE_SEND_FAULT(engine, env, 
                         SANDESHA2_MSG_CTX_GET_MSG_CTX(fault_ctx, env)))
@@ -308,15 +305,11 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     SANDESHA2_SEQ_SET_MUST_UNDERSTAND(seq, env, AXIS2_FALSE);
-    AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] came5 .........");
     SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(rm_msg_ctx, env);
     fault_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_SEQ_CLOSED(fault_mgr, env, 
                         rm_msg_ctx, str_seq_id, storage_mgr);
     if(fault_ctx)
     {
-        AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] came6 .........");
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
         if(AXIS2_FAILURE == AXIS2_ENGINE_SEND_FAULT(engine, env, 
                         SANDESHA2_MSG_CTX_GET_MSG_CTX(fault_ctx, env)))
@@ -622,7 +615,7 @@ sandesha2_app_msg_processor_process_out_msg(
         to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
         property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_CLIENT_SEQ_KEY, AXIS2_FALSE);
-        if(NULL != property)
+        if(property)
             seq_key = AXIS2_PROPERTY_GET_VALUE(property, env);
         internal_seq_id = sandesha2_utils_get_internal_seq_id(env, 
                         to, seq_key);
@@ -667,12 +660,12 @@ sandesha2_app_msg_processor_process_out_msg(
      */
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_CLIENT_DUMMY_MESSAGE, AXIS2_FALSE);
-    if(NULL != property)
+    if(property)
         dummy_msg_str = AXIS2_PROPERTY_GET_VALUE(property, env);
-    if(NULL != dummy_msg_str && 0 == AXIS2_STRCMP(dummy_msg_str, 
+    if(dummy_msg_str && 0 == AXIS2_STRCMP(dummy_msg_str, 
                         SANDESHA2_VALUE_TRUE))
         dummy_msg = AXIS2_TRUE;
-    if(AXIS2_FALSE == dummy_msg)
+    if(!dummy_msg)
         sandesha2_app_msg_processor_set_next_msg_no(env, internal_seq_id, 
                 msg_number, storage_mgr);
     
@@ -683,7 +676,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         msg_number_str);
     SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, 
                         res_highest_msg_bean);
-    if(AXIS2_TRUE == last_msg)
+    if(last_msg)
     {
         sandesha2_seq_property_bean_t *res_highest_msg_key_bean = NULL;
         sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
@@ -703,7 +696,7 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     out_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
                         internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
-    if(AXIS2_TRUE == is_svr_side)
+    if(is_svr_side)
     {
         axis2_char_t *incoming_seq_id = NULL;
         sandesha2_seq_property_bean_t *incoming_to_bean = NULL;
@@ -814,13 +807,13 @@ sandesha2_app_msg_processor_process_out_msg(
                 reply_to_epr_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(
                         seq_prop_mgr, env, incoming_seq_id, 
                         SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
-                if(NULL != reply_to_epr_bean)
+                if(reply_to_epr_bean)
                 {
                     axis2_endpoint_ref_t *acks_epr = NULL;
                     acks_epr = axis2_endpoint_ref_create(env, 
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(reply_to_epr_bean, 
                         env));
-                    if(NULL != acks_epr)
+                    if(acks_epr)
                         acks_to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
                             acks_epr, env);
                 }
@@ -834,17 +827,17 @@ sandesha2_app_msg_processor_process_out_msg(
         }
     }
     soap_env = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx, env);
-    if(NULL == soap_env)
+    if(!soap_env)
     {
         soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
                         AXIOM_SOAP12);
         SANDESHA2_MSG_CTX_SET_SOAP_ENVELOPE(rm_msg_ctx, env, soap_env);
     }
     msg_id = axis2_uuid_gen(env);
-    if(NULL == SANDESHA2_MSG_CTX_GET_MSG_ID(rm_msg_ctx, env))
+    if(!SANDESHA2_MSG_CTX_GET_MSG_ID(rm_msg_ctx, env))
         SANDESHA2_MSG_CTX_SET_MSG_ID(rm_msg_ctx, env, msg_id);
         
-    if(AXIS2_TRUE == is_svr_side)
+    if(is_svr_side)
     {
         /* let the request end with 202 if a ack has not been
          * written in the incoming thread
@@ -855,15 +848,15 @@ sandesha2_app_msg_processor_process_out_msg(
         ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
         property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_ACK_WRITTEN, 
                 AXIS2_FALSE);
-        if(NULL != property)
+        if(property)
             written = AXIS2_PROPERTY_GET_VALUE(property, env);
-        if(NULL == written || 0 != AXIS2_STRCMP(written, SANDESHA2_VALUE_TRUE))
+        if(!written || 0 != AXIS2_STRCMP(written, SANDESHA2_VALUE_TRUE))
         {
             axis2_ctx_t *ctx = NULL;
-            if (NULL != op_ctx)
+            if (op_ctx)
             {
                 ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-                if (NULL != ctx)
+                if (ctx)
                 {
                     property = axis2_property_create(env);
                     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
@@ -879,14 +872,20 @@ sandesha2_app_msg_processor_process_out_msg(
                         AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env), env), 
                         env);
     to_addr = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env);
-    if(NULL == AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env))
+    /* test code */
+    /*if(!AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env))
         AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, axis2_strcat(env, to_addr, 
-                        "/", op_name, NULL));
-    if(NULL == AXIS2_MSG_CTX_GET_SOAP_ACTION(msg_ctx, env))
+                        "/", op_name, NULL));*/
+    if(!AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env))
+        AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, to_addr);
+    printf("to_addr:%s#############################\n", to_addr);
+    /*if(!AXIS2_MSG_CTX_GET_SOAP_ACTION(msg_ctx, env))
         AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx, env, axis2_strcat(env, "\"",
-                        to_addr, "/", op_name, "\"", NULL));
+                        to_addr, "/", op_name, "\"", NULL));*/
+    if(!AXIS2_MSG_CTX_GET_SOAP_ACTION(msg_ctx, env))
+        AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx, env, to_addr);
     
-    if(AXIS2_FALSE == dummy_msg)
+    if(!dummy_msg)
         sandesha2_app_msg_processor_process_response_msg(env, rm_msg_ctx, 
                 internal_seq_id, msg_number, storage_key, storage_mgr);
     AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);    
