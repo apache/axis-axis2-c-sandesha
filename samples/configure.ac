@@ -118,16 +118,9 @@ AC_SUBST(GUTHTHILA_LIBS)
 AC_SUBST(DICLIENT_DIR)
 
 AC_CONFIG_FILES([Makefile \
-    server/Makefile \
-    server/rm_mtom/Makefile \
-    server/rm_ping/Makefile \
-    server/rm_echo/Makefile \
-    client/Makefile \
-    client/rm_mtom/Makefile \
-    client/rm_mtom/resources/Makefile \
-    client/rm_ping/Makefile \
-    client/rm_echo/Makefile \
-    client/rm_echo_blocking/Makefile
+    RMSampleService/Makefile \
+    rm_echo/Makefile
+    rm_ping/Makefile
     ])
     
 AC_OUTPUT

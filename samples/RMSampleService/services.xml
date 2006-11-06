@@ -1,0 +1,16 @@
+<service name="RMSampleService">
+    <module ref="sandesha2"/>
+    <parameter name="ServiceClass" locked="xsd:false">RMSampleService</parameter>
+
+   <description>
+        This is a Relaible Messaging test service to be used in interop testing with java
+   </description>
+
+    <operation name="echoString">
+            <parameter name="wsamapping" >http://tempuri.org/echoString</parameter>
+    </operation>
+    <operation name="ping">
+            <parameter name="wsamapping" >http://tempuri.org/ping</parameter>
+    </operation>
+
+</service>

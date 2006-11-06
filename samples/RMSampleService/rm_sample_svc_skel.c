@@ -13,39 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "axis2_svc_skeleton.h"
-#include "rm_ping.h"
+#include <axis2_svc_skeleton.h>
+#include "rm_svc_interop.h"
 #include <axis2_array_list.h>
+#include <axis2_op.h>
 
 int AXIS2_CALL
-rm_ping_free(axis2_svc_skeleton_t *svc_skeleton,
+rm_svc_interop_free(axis2_svc_skeleton_t *svc_skeleton,
             const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-rm_ping_free_void_arg(void *svc_skeleton,
+rm_svc_interop_free_void_arg(void *svc_skeleton,
                     const axis2_env_t *env);
 
 /*
  * This method invokes the right service method 
  */
 axiom_node_t* AXIS2_CALL 
-rm_ping_invoke(axis2_svc_skeleton_t *svc_skeleton,
+rm_svc_interop_invoke(axis2_svc_skeleton_t *svc_skeleton,
             const axis2_env_t *env,
             axiom_node_t *node,
             axis2_msg_ctx_t *msg_ctx);
             
 
 int AXIS2_CALL 
-rm_ping_init(axis2_svc_skeleton_t *svc_skeleton,
+rm_svc_interop_init(axis2_svc_skeleton_t *svc_skeleton,
           const axis2_env_t *env);
 
 axiom_node_t* AXIS2_CALL
-rm_ping_on_fault(axis2_svc_skeleton_t *svc_skeli, 
+rm_svc_interop_on_fault(axis2_svc_skeleton_t *svc_skeli, 
               const axis2_env_t *env, axiom_node_t *node);
 
 /*Create function */
 axis2_svc_skeleton_t *
-axis2_rm_ping_create(const axis2_env_t *env)
+rm_svc_interop_create(const axis2_env_t *env)
 {
     axis2_svc_skeleton_t *svc_skeleton = NULL;
     /* Allocate memory for the structs */
@@ -56,27 +57,28 @@ axis2_rm_ping_create(const axis2_env_t *env)
         env->allocator, sizeof(axis2_svc_skeleton_ops_t));
 
     svc_skeleton->func_array = NULL;
-
     /* Assign function pointers */
-    svc_skeleton->ops->free = rm_ping_free;
-    svc_skeleton->ops->init = rm_ping_init;
-    svc_skeleton->ops->invoke = rm_ping_invoke;
-    svc_skeleton->ops->on_fault = rm_ping_on_fault;
+    svc_skeleton->ops->free = rm_svc_interop_free;
+    svc_skeleton->ops->init = rm_svc_interop_init;
+    svc_skeleton->ops->invoke = rm_svc_interop_invoke;
+    svc_skeleton->ops->on_fault = rm_svc_interop_on_fault;
 
     return svc_skeleton;
 }
 
 /* Initialize the service */
 int AXIS2_CALL
-rm_ping_init(axis2_svc_skeleton_t *svc_skeleton,
-                        const axis2_env_t *env)
+rm_svc_interop_init(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axis2_env_t *env)
 {
     svc_skeleton->func_array = axis2_array_list_create(env, 0);
     /* Add the implemented operation names of the service to  
      * the array list of functions 
      */
+    AXIS2_ARRAY_LIST_ADD(svc_skeleton->func_array, env, "echoString");
     AXIS2_ARRAY_LIST_ADD(svc_skeleton->func_array, env, "ping");
-    /* Any initialization stuff of ping service should go here */
+    /* Any initialization stuff of echo service should go here */
     return AXIS2_SUCCESS;
 }
 
@@ -84,24 +86,39 @@ rm_ping_init(axis2_svc_skeleton_t *svc_skeleton,
  * This method invokes the right service method 
  */
 axiom_node_t* AXIS2_CALL
-rm_ping_invoke(axis2_svc_skeleton_t *svc_skeleton,
-            const axis2_env_t *env,
-            axiom_node_t *node,
-            axis2_msg_ctx_t *msg_ctx)
+rm_svc_interop_invoke(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axis2_env_t *env,
+    axiom_node_t *node,
+    axis2_msg_ctx_t *msg_ctx)
 {
-    /* Invoke the business logic.
-     * Depending on the function name invoke the correct impl method.
-     * We have only ping in this sample, hence invoke ping method.
-     * To see how to deal with multiple impl methods, have a look at the
-     * math sample.
-     */
-    axis2_rm_ping_ping(env, node);
+    axis2_op_t *op = NULL;
+    axis2_qname_t *op_qname = NULL;
+    axis2_char_t *op_name = NULL;
+    
+    op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
+    if(op)
+    {
+        op_qname = AXIS2_OP_GET_QNAME(op, env);
+        if(op_qname)
+            op_name = AXIS2_QNAME_GET_LOCALPART(op_qname, env);
+        if(op_name)
+        {
+            if (AXIS2_STRCMP(op_name, "echoString") == 0)
+                return rm_svc_interop_echo(env, node);
+            if (AXIS2_STRCMP(op_name, "ping") == 0)
+            {
+                rm_svc_interop_ping(env, node);
+                return NULL;
+            }
+        }
+    }
     return NULL;
 }
 
 /* On fault, handle the fault */
 axiom_node_t* AXIS2_CALL
-rm_ping_on_fault(axis2_svc_skeleton_t *svc_skeli, 
+rm_svc_interop_on_fault(axis2_svc_skeleton_t *svc_skeli, 
               const axis2_env_t *env, axiom_node_t *node)
 {
    /* Here we are just setting a simple error message inside an element 
@@ -119,7 +136,7 @@ rm_ping_on_fault(axis2_svc_skeleton_t *svc_skeli,
 
 /* Free the resources used */
 int AXIS2_CALL
-rm_ping_free(axis2_svc_skeleton_t *svc_skeleton,
+rm_svc_interop_free(axis2_svc_skeleton_t *svc_skeleton,
             const axis2_env_t *env)
 {
     /* Free the function array */
@@ -154,7 +171,7 @@ AXIS2_EXPORT int
 axis2_get_instance(axis2_svc_skeleton_t **inst,
                    const axis2_env_t *env)
 {
-   *inst = axis2_rm_ping_create(env);
+   *inst = rm_svc_interop_create(env);
     if(!(*inst))
     {
         return AXIS2_FAILURE;
@@ -164,8 +181,9 @@ axis2_get_instance(axis2_svc_skeleton_t **inst,
 }
 
 AXIS2_EXPORT int 
-axis2_remove_instance(axis2_svc_skeleton_t *inst,
-                      const axis2_env_t *env)
+axis2_remove_instance(
+    axis2_svc_skeleton_t *inst,
+    const axis2_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
    if (inst)
