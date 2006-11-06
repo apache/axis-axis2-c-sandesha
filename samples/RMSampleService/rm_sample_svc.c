@@ -17,6 +17,8 @@
 #include <axiom_xml_writer.h>
 #include <stdio.h>
 #include <axis2_qname.h>
+#include <axiom_output.h>
+#include <axiom_element.h>
 
 axiom_node_t *
 build_echo_om(

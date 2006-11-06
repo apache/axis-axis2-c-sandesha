@@ -17,6 +17,7 @@
 #include "rm_sample_svc.h"
 #include <axis2_array_list.h>
 #include <axis2_op.h>
+#include <axiom_element.h>
 
 int AXIS2_CALL
 rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,

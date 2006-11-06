@@ -30,6 +30,7 @@
 #include <sandesha2_seq_ack.h>
 #include <axis2_op.h>
 #include <sandesha2_msg_creator.h>
+#include <axis2_transport_out_desc.h>
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(
@@ -243,7 +244,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, orig_trans_out);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            axis2_transport_out_desc_free_void_arg);
+            orig_trans_out->ops->free_void_arg);
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env,
                             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,
                             AXIS2_FALSE);

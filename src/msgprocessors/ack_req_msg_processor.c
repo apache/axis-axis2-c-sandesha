@@ -42,6 +42,7 @@
 #include <axis2_addr.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
+#include <axis2_transport_out_desc.h>
 
 /** 
  * @brief Ack Requested Message Processor struct impl
@@ -361,7 +362,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, transport_out);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            axis2_transport_out_desc_free_void_arg);
+			transport_out->ops->free_void_arg);
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, 
                         AXIS2_FALSE);

@@ -47,7 +47,7 @@
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_mgr.h>
-
+#include <axis2_transport_out_desc.h>
 /** 
  * @brief Terminate Sequence Message Processor struct impl
  *	Sandesha2 Terminate Sequence Msg Processor
@@ -590,7 +590,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, out_desc);
     AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            axis2_transport_out_desc_free_void_arg);
+            out_desc->ops->free_void_arg);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, 
                         AXIS2_FALSE);

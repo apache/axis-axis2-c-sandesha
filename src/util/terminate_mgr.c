@@ -28,6 +28,7 @@
 #include <axis2_array_list.h>
 #include <axis2_engine.h>
 #include <sandesha2_msg_creator.h>
+#include <axis2_transport_out_desc.h>
 
 axis2_hash_t *sandesha2_terminate_mgr_rcv_side_clean_map = NULL;
 
@@ -585,7 +586,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, transport_out);
     AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            axis2_transport_out_desc_free_void_arg);
+            transport_out->ops->free_void_arg);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx1, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,
                         AXIS2_FALSE);

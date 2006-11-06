@@ -169,7 +169,6 @@ sandesha2_out_handler_invoke(
     msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
-        printf("came4 .........\n");
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         axis2_op_ctx_t *op_ctx = NULL;
 
@@ -178,7 +177,6 @@ sandesha2_out_handler_invoke(
                 AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
         if(req_msg_ctx) /* For the server side */
         {
-            printf("came44 .........\n");
             sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
             sandesha2_seq_t *seq_part = NULL;
 
@@ -188,28 +186,24 @@ sandesha2_out_handler_invoke(
             
             if(seq_part)
             {
-                printf("came444 .........\n");
                 msg_processor = (sandesha2_msg_processor_t *) 
-                    sandesha2_app_msg_processor_create(env); /* rm 
+                sandesha2_app_msg_processor_create(env); /* rm 
                                                                 intended msg */
             }
         }
         else if(!AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
         {
-            printf("came4444 .........\n");
             msg_processor = (sandesha2_msg_processor_t *) 
-                sandesha2_app_msg_processor_create(env);
+            sandesha2_app_msg_processor_create(env);
         }
     }
     else
     {
-        printf("came5 .........\n");
         msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
-                rm_msg_ctx);
+        rm_msg_ctx);
     }
     if(msg_processor)
     {
-        printf("came6 .........\n");
         SANDESHA2_MSG_PROCESSOR_PROCESS_OUT_MSG(msg_processor, env, rm_msg_ctx);
     }
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
