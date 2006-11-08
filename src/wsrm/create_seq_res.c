@@ -290,8 +290,8 @@ sandesha2_create_seq_res_from_om_node(
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        create_seq_res_impl->identifier, env, csr_node))
+    if(!sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)create_seq_res_impl->identifier, 
+                env, csr_node))
     {
         return NULL;
     }
@@ -311,8 +311,8 @@ sandesha2_create_seq_res_from_om_node(
         {
             return NULL;
         }
-        if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
-                        create_seq_res_impl->expires, env, csr_node))
+        if(!sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+            create_seq_res_impl->expires, env, csr_node))
         {
             return NULL;
         }
@@ -334,7 +334,7 @@ sandesha2_create_seq_res_from_om_node(
         {
             return NULL;
         }
-        if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(
+        if(!sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
                         create_seq_res_impl->accept, env, csr_node))
         {
             return NULL;
@@ -376,16 +376,16 @@ sandesha2_create_seq_res_to_om_node(sandesha2_iom_rm_element_t *create_seq_res,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_res_impl->identifier, env,
+    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)create_seq_res_impl->identifier, env,
                         csr_node);
     if(NULL != create_seq_res_impl->accept)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_res_impl->accept, env, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)create_seq_res_impl->accept, env, 
                         csr_node);
     }
     if(NULL != create_seq_res_impl->expires)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(create_seq_res_impl->expires, env, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)create_seq_res_impl->expires, env, 
                         csr_node);
     }
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, csr_node);

@@ -147,7 +147,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ, (sandesha2_iom_rm_part_t *) 
                 create_seq);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) create_seq, env);
     }
     create_seq_res = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ_RES(elements, env);
@@ -156,7 +156,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) create_seq_res);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) create_seq_res, env);
         add_op_if_null(env, msg_ctx);
     }
@@ -165,7 +165,7 @@ populate_rm_msg_ctx(
     {
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ, (sandesha2_iom_rm_part_t *) seq);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) seq, env);
     }
     seq_ack = SANDESHA2_RM_ELEMENTS_GET_SEQ_ACK(elements, env);
@@ -174,7 +174,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
                 (sandesha2_iom_rm_part_t *) seq_ack);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) seq_ack, env);
         add_op_if_null(env, msg_ctx);
     }
@@ -184,7 +184,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ, 
                 (sandesha2_iom_rm_part_t *) terminate_seq);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) terminate_seq, env);
         add_op_if_null(env, msg_ctx);
     }
@@ -194,7 +194,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) terminate_seq_res);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) terminate_seq_res, env);
     }
     ack_request = SANDESHA2_RM_ELEMENTS_GET_ACK_REQUESTED(elements, env);
@@ -203,7 +203,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_ACK_REQUEST, 
                 (sandesha2_iom_rm_part_t *) ack_request);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) ack_request, env);
     }
     close_seq = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ(elements, env);
@@ -212,7 +212,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CLOSE_SEQ, 
                 (sandesha2_iom_rm_part_t *) close_seq);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) close_seq, env);
     }
     close_seq_res = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ_RES(elements, env);
@@ -221,7 +221,7 @@ populate_rm_msg_ctx(
         SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) close_seq_res);
-        rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) close_seq_res, env);
     }
     SANDESHA2_MSG_CTX_SET_RM_NS_VAL(rm_msg_ctx, env, rm_ns);

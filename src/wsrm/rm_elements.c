@@ -379,7 +379,7 @@ sandesha2_rm_elements_from_soap_envelope
     if(NULL != seq_node)
     {
         elements_impl->seq = sandesha2_seq_create(env, rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq, env, 
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->seq, env, 
                         header_node);
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
@@ -389,7 +389,7 @@ sandesha2_rm_elements_from_soap_envelope
     if(NULL != seq_ack_element)
     {
         elements_impl->seq_ack = sandesha2_seq_ack_create(env, rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->seq_ack, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->seq_ack, env,
                         header_node);
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ, rm_ns_val,
@@ -400,7 +400,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->create_seq = sandesha2_create_seq_create(env,
                         addr_ns_val, rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->create_seq, env,
                         body_node);
     }
     
@@ -413,7 +413,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->create_seq_res = sandesha2_create_seq_res_create(env, 
                         rm_ns_val, addr_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->create_seq_res, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->create_seq_res, env,
                         body_node);
     }
     
@@ -426,7 +426,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->terminate_seq = sandesha2_terminate_seq_create(env, 
                         rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->terminate_seq, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->terminate_seq, env,
                         body_node);
     }
     
@@ -439,7 +439,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->terminate_seq_res = sandesha2_terminate_seq_res_create(
                         env, rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->terminate_seq_res, 
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->terminate_seq_res, 
                         env, body_node);
     }
     
@@ -452,7 +452,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->close_seq = sandesha2_close_seq_create(env, 
                         rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->close_seq, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->close_seq, env,
                         body_node);
     }
     
@@ -465,7 +465,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->close_seq_res = sandesha2_close_seq_res_create(env, 
                         rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->close_seq_res, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->close_seq_res, env,
                         body_node);
     }
     
@@ -478,7 +478,7 @@ sandesha2_rm_elements_from_soap_envelope
     {
         elements_impl->ack_requested = sandesha2_ack_requested_create(env, 
                         rm_ns_val);
-        SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(elements_impl->ack_requested, env,
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->ack_requested, env,
                         header_node);
     }
     return AXIS2_SUCCESS;
@@ -506,42 +506,42 @@ sandesha2_rm_elements_to_soap_envelope
     
     if(NULL != rm_elements_impl->seq)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->seq, env, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->seq, env, 
                         soap_header);
     }
     if(NULL != rm_elements_impl->seq_ack)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->seq_ack, env, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->seq_ack, env, 
                         soap_header);
     }
     if(NULL != rm_elements_impl->create_seq)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->create_seq, env, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->create_seq, env, 
                         body_node);
     }
     if(NULL != rm_elements_impl->create_seq_res)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->create_seq_res, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->create_seq_res, 
                         env, body_node);
     }
     if(NULL != rm_elements_impl->terminate_seq)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->terminate_seq, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->terminate_seq, 
                         env, body_node);
     }
     if(NULL != rm_elements_impl->terminate_seq_res)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->terminate_seq_res, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->terminate_seq_res, 
                         env, body_node);
     }
     if(NULL != rm_elements_impl->close_seq)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->close_seq, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->close_seq, 
                         env, body_node);
     }
     if(NULL != rm_elements_impl->close_seq_res)
     {
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(rm_elements_impl->close_seq_res, 
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)rm_elements_impl->close_seq_res, 
                         env, body_node);
     }
     return soap_envelope;

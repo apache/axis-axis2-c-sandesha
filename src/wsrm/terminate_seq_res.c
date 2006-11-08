@@ -260,7 +260,7 @@ sandesha2_terminate_seq_res_from_om_node(
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(terminate_seq_res_impl->identifier, 
+    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)terminate_seq_res_impl->identifier, 
                         env, tsr_node);
     return terminate_seq_res;
 }
@@ -299,7 +299,7 @@ sandesha2_terminate_seq_res_to_om_node(
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(terminate_seq_res_impl->identifier, 
+    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)terminate_seq_res_impl->identifier, 
                         env, tsr_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, tsr_node);
     return (axiom_node_t*)om_node;

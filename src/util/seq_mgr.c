@@ -165,7 +165,7 @@ sandesha2_seq_mgr_setup_new_seq(
                 AXIS2_FAILURE);
         return NULL;
     }
-    msg_rm_ns = SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(
+    msg_rm_ns = sandesha2_iom_rm_element_get_namespace_value(
             (sandesha2_iom_rm_element_t *) create_seq, env);
     if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
     {

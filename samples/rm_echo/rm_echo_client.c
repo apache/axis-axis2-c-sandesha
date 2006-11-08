@@ -22,7 +22,7 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_op_client.h>
 #include <axis2_listener_manager.h>
-#include <callback_recv.h>
+#include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 
 /* on_complete callback function */

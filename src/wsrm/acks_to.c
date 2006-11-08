@@ -222,8 +222,8 @@ sandesha2_acks_to_from_om_node(sandesha2_iom_rm_element_t *acks_to,
     {
         return NULL;
     }
-    if(NULL == SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(acks_to_impl->address, env,
-                        acks_to_node))
+    if(!sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *) 
+                acks_to_impl->address, env, acks_to_node))
     {
         return NULL;
     }
@@ -262,7 +262,7 @@ sandesha2_acks_to_to_om_node(sandesha2_iom_rm_element_t *acks_to,
     {
         return NULL;
     }
-    SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(acks_to_impl->address, env, at_node);
+    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *) acks_to_impl->address, env, at_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, at_node);
     return (axiom_node_t*)om_node;
 }

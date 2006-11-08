@@ -52,23 +52,7 @@ sandesha2_ack_range_to_om_node(sandesha2_iom_rm_element_t *ack_range,
 axis2_bool_t AXIS2_CALL 
 sandesha2_ack_range_is_namespace_supported(sandesha2_iom_rm_element_t *ack_range,
                     	const axis2_env_t *env, axis2_char_t *namespace);
-                    	
-long AXIS2_CALL
-sandesha2_ack_range_get_lower_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL                 
-sandesha2_ack_range_set_lower_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env, long value);
-
-long AXIS2_CALL                    	
-sandesha2_ack_range_get_upper_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env);
-                    	
-axis2_status_t AXIS2_CALL
-sandesha2_ack_range_set_upper_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env, long value);
-                    	
+                   	
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range, 
 						const axis2_env_t *env);								
@@ -118,16 +102,6 @@ sandesha2_ack_range_create(
         return NULL;
 	}
     
-    ack_range_impl->ack_range.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_ack_range_ops_t));
-    if(NULL == ack_range_impl->ack_range.ops)
-	{
-		sandesha2_ack_range_free((sandesha2_iom_rm_element_t*)
-                         ack_range_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-        
     ack_range_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
     ack_range_impl->prefix = (axis2_char_t *)AXIS2_STRDUP(prefix, env);
     ack_range_impl->upper_val = 0;
@@ -141,14 +115,6 @@ sandesha2_ack_range_create(
     					sandesha2_ack_range_to_om_node;
     ack_range_impl->ack_range.element.ops->is_namespace_supported = 
     					sandesha2_ack_range_is_namespace_supported;
-    ack_range_impl->ack_range.ops->get_lower_value = 
-                        sandesha2_ack_range_get_lower_value;
-    ack_range_impl->ack_range.ops->set_lower_value = 
-                        sandesha2_ack_range_set_lower_value;
-    ack_range_impl->ack_range.ops->get_upper_value = 
-                        sandesha2_ack_range_get_upper_value;
-    ack_range_impl->ack_range.ops->set_upper_value = 
-                        sandesha2_ack_range_set_upper_value;
     ack_range_impl->ack_range.element.ops->free = sandesha2_ack_range_free;
                         
 	return &(ack_range_impl->ack_range);

@@ -39,35 +39,6 @@ typedef struct sandesha2_ack_range_ops sandesha2_ack_range_ops_t;
 typedef struct sandesha2_ack_range sandesha2_ack_range_t;
  
 /**
- * @brief Acknowledgement Range ops struct
- * Encapsulator struct for ops of sandesha2_ack_range
- */
-AXIS2_DECLARE_DATA struct sandesha2_ack_range_ops
-{
-    long (AXIS2_CALL *
-        get_lower_value)
-            (sandesha2_ack_range_t *ack_range,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_lower_value)
-            (sandesha2_ack_range_t *ack_range,
-            const axis2_env_t *env, 
-            long value);
-
-    long (AXIS2_CALL *
-        get_upper_value)
-            (sandesha2_ack_range_t *ack_range,
-            const axis2_env_t *env);
-                    	
-    axis2_status_t (AXIS2_CALL *
-        set_upper_value)
-            (sandesha2_ack_range_t *ack_range,
-            const axis2_env_t *env, 
-            long value);
-};
-
-/**
  * @brief sandesha2_ack_range
  *    sandesha2_ack_range
  */
@@ -82,17 +53,29 @@ sandesha2_ack_range_create(
     const axis2_env_t *env, 
     axis2_char_t *ns_value,
     axis2_char_t *prefix);
-                        
-/************************** Start of function macros **************************/
-#define SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, value) \
-    ((ack_range)->ops->set_lower_value (ack_range, env, value))
-#define SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env) \
-    ((ack_range)->ops->get_lower_value (ack_range, env))
-#define SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, value) \
-    ((ack_range)->ops->set_upper_value(ack_range, env, value))
-#define SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) \
-    ((ack_range)->ops->get_upper_value (ack_range, env))
-/************************** End of function macros ****************************/    
+                         	
+long AXIS2_CALL
+sandesha2_ack_range_get_lower_value(
+    sandesha2_ack_range_t *ack_range,
+    const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_ack_range_set_lower_value(
+    sandesha2_ack_range_t *ack_range,
+    const axis2_env_t *env, 
+    long value);
+
+long AXIS2_CALL                    	
+sandesha2_ack_range_get_upper_value(
+    sandesha2_ack_range_t *ack_range,
+    const axis2_env_t *env);
+                    	
+axis2_status_t AXIS2_CALL
+sandesha2_ack_range_set_upper_value(
+    sandesha2_ack_range_t *ack_range,
+    const axis2_env_t *env, 
+    long value);
+                    
 /** @} */
 #ifdef __cplusplus
 }

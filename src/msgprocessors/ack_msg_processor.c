@@ -160,8 +160,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_fault_mgr_t *fault_mgr = NULL;
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
     axis2_char_t *int_seq_id = NULL;
-    sandesha2_seq_property_bean_t *int_seq_bean = NULL;
-    axis2_char_t *internal_seq_id = NULL;
     axis2_property_t *property = NULL;
     sandesha2_sender_bean_t *input_bean = NULL;
     axis2_array_list_t *retrans_list = NULL;
@@ -237,16 +235,6 @@ sandesha2_ack_msg_processor_process_in_msg (
                         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
     sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
                         storage_mgr);
-    int_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
-                        out_seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
-    if(!int_seq_bean || NULL == SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
-                        int_seq_bean, env))
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] TempSequenceId "
-                        "is not set correctly");
-        return AXIS2_FAILURE;
-    }
-    internal_seq_id  = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(int_seq_bean, env);
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
@@ -274,8 +262,8 @@ sandesha2_ack_msg_processor_process_in_msg (
         long j = 0;
         
         ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
-        lower = SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env);
-        upper = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env);
+        lower = sandesha2_ack_range_get_lower_value(ack_range, env);
+        upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         for(j = lower; j <= upper; j++)
         {
             sandesha2_sender_bean_t *retrans_bean = NULL;
@@ -354,7 +342,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             axis2_bool_t completed = AXIS2_FALSE;
             completed = sandesha2_ack_mgr_verify_seq_completion(env, 
                         ack_range_list, highest_out_msg_no);
-            if(AXIS2_TRUE == completed)
+            if(completed)
                 sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx,
                         out_seq_id, int_seq_id, storage_mgr);
         }
@@ -378,7 +366,6 @@ sandesha2_ack_msg_processor_process_out_msg(
     
     return AXIS2_SUCCESS;
 }
-
 
 static sandesha2_sender_bean_t* AXIS2_CALL 
 sandesha2_ack_msg_processor_get_retrans_entry(
@@ -420,8 +407,8 @@ sandesha2_ack_msg_processor_get_no_of_msgs_acked(
         long diff = 0;
         
         ack_range = AXIS2_ARRAY_LIST_GET(list, env, i);
-        lower = SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env);
-        upper = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env);
+        lower = sandesha2_ack_range_get_lower_value(ack_range, env);
+        upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         
         diff = upper - lower;
         if(diff > 0)

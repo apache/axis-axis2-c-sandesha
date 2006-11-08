@@ -37,25 +37,8 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_accept_ops sandesha2_accept_ops_t;
 typedef struct sandesha2_accept sandesha2_accept_t;
  
-/**
- * @brief Accept ops struct
- * Encapsulator struct for ops of sandesha2_accept
- */
-AXIS2_DECLARE_DATA struct sandesha2_accept_ops
-{
-    axis2_status_t (AXIS2_CALL *
-        set_acks_to) 
-		    (sandesha2_accept_t *accept, const axis2_env_t *env, 
-            sandesha2_acks_to_t *acks_to);
-            
-    sandesha2_acks_to_t* (AXIS2_CALL *
-        get_acks_to) 
-		    (sandesha2_accept_t *accept, const axis2_env_t *env);
-};
-
 /**
  * @brief sandesha2_accept
  *    sandesha2_accept
@@ -63,21 +46,24 @@ AXIS2_DECLARE_DATA struct sandesha2_accept_ops
 AXIS2_DECLARE_DATA struct sandesha2_accept
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_accept_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_accept_t* AXIS2_CALL
 sandesha2_accept_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *rm_ns_value, 
-					    axis2_char_t *addr_ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *rm_ns_value, 
+    axis2_char_t *addr_ns_value);
                         
-/************************** Start of function macros **************************/
-#define SANDESHA2_ACCEPT_SET_ACKS_TO(accept, env, acks_to) \
-    ((accept)->ops->set_acks_to (accept, env, acks_to))
-#define SANDESHA2_ACCEPT_GET_ACKS_TO(accept, env) \
-    ((accept)->ops->get_acks_to (accept, env))
-/************************** End of function macros ****************************/
+axis2_status_t AXIS2_CALL
+sandesha2_accept_set_acks_to(
+    sandesha2_accept_t *accept,
+    const axis2_env_t *env, 
+    sandesha2_acks_to_t *acks_to);
+
+sandesha2_acks_to_t * AXIS2_CALL
+sandesha2_accept_get_acks_to(
+    sandesha2_accept_t *accept,
+    const axis2_env_t *env);                    	 
 
 /** @} */
 #ifdef __cplusplus

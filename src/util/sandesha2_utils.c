@@ -187,10 +187,9 @@ sandesha2_utils_get_seq_property(
                         storage_mgr, env);
     seq_prop_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, incoming_seq_id, name);
-    if(NULL == seq_prop_bean)
+    if(!seq_prop_bean)
         return NULL;
     return  SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_prop_bean, env);
-    return NULL;
 }
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
@@ -584,10 +583,10 @@ sandesha2_utils_create_new_related_msg_ctx(
     options = axis2_options_create(env);
     AXIS2_MSG_CTX_SET_OPTIONS(new_msg, env, options);
     svc_grp = AXIS2_MSG_CTX_GET_SVC_GRP(ref_msg, env); 
-    if(NULL != svc_grp)
+    if(svc_grp)
     {
         AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, svc_grp);
-        if(NULL != AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env))
+        if(AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env))
         {
             AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, 
                     AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env));
@@ -612,7 +611,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         AXIS2_MSG_CTX_SET_SVC_GRP(new_msg, env, svc_grp);
         AXIS2_MSG_CTX_SET_SVC_GRP_CTX(new_msg, env, svc_grp_ctx);
     }
-    if(NULL != AXIS2_MSG_CTX_GET_SVC(ref_msg, env))
+    if(AXIS2_MSG_CTX_GET_SVC(ref_msg, env))
     {
         AXIS2_MSG_CTX_SET_SVC(new_msg, env, AXIS2_MSG_CTX_GET_SVC(ref_msg, env));
         if(NULL != AXIS2_MSG_CTX_GET_SVC_CTX(ref_msg, env))
@@ -652,7 +651,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     AXIS2_MSG_CTX_SET_OP(new_msg, env, op);
     svc = AXIS2_MSG_CTX_GET_SVC(new_msg, env);
     
-    if(NULL != svc && NULL != op)
+    if(svc && op)
     {
         AXIS2_SVC_ADD_OP(svc, env, op);
         AXIS2_OP_SET_PARENT(op, env, svc);
@@ -670,7 +669,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_URL,
                         AXIS2_FALSE);
-    if(NULL != property && NULL != AXIS2_PROPERTY_GET_VALUE(property, env))
+    if(property && AXIS2_PROPERTY_GET_VALUE(property, env))
     {
         axis2_char_t *val = AXIS2_PROPERTY_GET_VALUE(property, env);
         property = axis2_property_create(env);
@@ -681,18 +680,18 @@ sandesha2_utils_create_new_related_msg_ctx(
     }
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION,
                         AXIS2_FALSE);
-    if(NULL == property)
+    if(!property)
     {
         axis2_msg_ctx_t *req_msg = NULL;
         axis2_op_ctx_t *op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(ref_msg, env);
         
         req_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
                         AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
-        if(NULL != req_msg)
+        if(req_msg)
         {
             property = AXIS2_MSG_CTX_GET_PROPERTY(req_msg, env, 
                         AXIS2_WSA_VERSION, AXIS2_FALSE);
-            if(NULL != property)
+            if(property)
                 addr_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
         }
     }
@@ -994,8 +993,8 @@ sandesha2_utils_get_ack_range_list(
              sandesha2_ack_range_t *ack_range = NULL;
              
              ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
-             SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
-             SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
+             sandesha2_ack_range_set_lower_value(ack_range, env, lower);
+             sandesha2_ack_range_set_upper_value(ack_range, env, upper);
              AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
              lower = *temp;
              upper = *temp;
@@ -1007,8 +1006,8 @@ sandesha2_utils_get_ack_range_list(
          sandesha2_ack_range_t *ack_range = NULL;
          
          ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
-         SANDESHA2_ACK_RANGE_SET_LOWER_VALUE(ack_range, env, lower);
-         SANDESHA2_ACK_RANGE_SET_UPPER_VALUE(ack_range, env, upper);
+         sandesha2_ack_range_set_lower_value(ack_range, env, lower);
+         sandesha2_ack_range_set_upper_value(ack_range, env, upper);
          AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
          completed = AXIS2_TRUE;
     }

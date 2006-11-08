@@ -340,7 +340,7 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
     completed_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
             env, seq_id, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
-    if(completed_msgs_bean != NULL)
+    if(completed_msgs_bean)
     {
         axis2_char_t *value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
                 completed_msgs_bean, env);
@@ -376,7 +376,7 @@ sandesha2_ack_mgr_verify_seq_completion(
         sandesha2_ack_range_t *ack_range = NULL;
         
         ack_range = AXIS2_ARRAY_LIST_GET(ack_ranges, env, i);
-        sprintf(tmp, "%ld", SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env));
+        sprintf(tmp, "%ld", sandesha2_ack_range_get_lower_value(ack_range, env));
         axis2_hash_set(hash, tmp, AXIS2_HASH_KEY_STRING, ack_range);
     }
     
@@ -390,9 +390,9 @@ sandesha2_ack_mgr_verify_seq_completion(
         {
             break;
         }
-        if(SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) >= last_msg_no)
+        if(sandesha2_ack_range_get_upper_value(ack_range, env) >= last_msg_no)
             return AXIS2_TRUE;
-        start = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env) + 1;        
+        start = sandesha2_ack_range_get_upper_value(ack_range, env) + 1;        
     }
     return AXIS2_FALSE;
 }

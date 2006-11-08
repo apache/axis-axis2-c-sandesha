@@ -429,8 +429,8 @@ sandesha2_fault_mgr_check_for_invalid_ack
             long upper = -1;
             long lower = -1;
             ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
-            lower = SANDESHA2_ACK_RANGE_GET_LOWER_VALUE(ack_range, env);
-            upper = SANDESHA2_ACK_RANGE_GET_UPPER_VALUE(ack_range, env);
+            lower = sandesha2_ack_range_get_lower_value(ack_range, env);
+            upper = sandesha2_ack_range_get_upper_value(ack_range, env);
             if(lower > upper)
             {
                 invalid_ack = AXIS2_TRUE;
@@ -462,7 +462,7 @@ sandesha2_fault_mgr_check_for_invalid_ack
                         SANDESHA2_SOAP_FAULT_SUBCODE_INVALID_ACKNOWLEDGEMENT);
         dummy_ele = axiom_element_create(env, NULL, "dummy_ele", NULL, 
                         &dummy_node);
-        SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(seq_ack, env, dummy_node);
+        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, dummy_node);
         qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
                         NULL, NULL);
         detail_ele = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(dummy_ele, env,

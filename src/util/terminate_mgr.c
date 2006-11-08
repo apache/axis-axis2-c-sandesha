@@ -34,10 +34,10 @@ axis2_hash_t *sandesha2_terminate_mgr_rcv_side_clean_map = NULL;
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
     axis2_bool_t in_order_invoke = AXIS2_FALSE;
     sandesha2_property_bean_t *prop_bean = NULL;
@@ -74,10 +74,10 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_invocation(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
      sandesha2_invoker_mgr_t *invoker_mgr = NULL;
     sandesha2_invoker_bean_t *find_bean = NULL;
@@ -133,10 +133,10 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_complete_term_on_recv_side(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_next_msg_mgr_t *next_mgr = NULL;
     sandesha2_next_msg_bean_t *find_bean = NULL;
@@ -167,10 +167,10 @@ sandesha2_terminate_mgr_complete_term_on_recv_side(
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_remove_recv_side_propertis(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *all_seq_bean = NULL;
@@ -338,11 +338,11 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_sending_side_data(
-                        const axis2_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id,
-                        axis2_bool_t svr_side,
-                        sandesha2_storage_mgr_t *storage_man)
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id,
+    axis2_bool_t svr_side,
+    sandesha2_storage_mgr_t *storage_man)
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_sender_mgr_t *retrans_mgr = NULL;
@@ -487,10 +487,9 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env);
     terminated = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
                         out_seq_id, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-    if(NULL != terminated && NULL != SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
-                        terminated, env) && 0 == AXIS2_STRCMP(
-                        SANDESHA2_VALUE_TRUE, 
-                        SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(terminated, env)))
+    if(terminated && SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(terminated, env) 
+            && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
+            SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(terminated, env)))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate was"
                         " added previously");
@@ -509,7 +508,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         SANDESHA2_SEQ_PROP_TO_EPR);
     to_epr = axis2_endpoint_ref_create(env, 
                         SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(to_bean, env));
-    if(NULL == to_epr)
+    if(!to_epr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] To EPR has an "
                         "invalid value");
@@ -518,7 +517,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     SANDESHA2_MSG_CTX_SET_TO(rm_msg_ctx, env, to_epr);
     SANDESHA2_MSG_CTX_SET_TO(terminate_rm_msg, env, to_epr);
     rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_man);
-    if(NULL == rm_ver)
+    if(!rm_ver)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the "
                         "rm version for msg");
@@ -532,7 +531,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         (env, rm_ver));
     transport_to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env,
                         int_seq_id, SANDESHA2_SEQ_PROP_TRANSPORT_TO);
-    if(NULL != transport_to_bean)
+    if(transport_to_bean)
     {
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);

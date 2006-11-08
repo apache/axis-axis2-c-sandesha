@@ -48,23 +48,25 @@ extern "C"
 AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element_ops
 {
     axis2_char_t* (AXIS2_CALL *get_namespace_value) 
-						(sandesha2_iom_rm_element_t *element,
-                    	const axis2_env_t *env);
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env);
 
-    void* (AXIS2_CALL *from_om_node) (sandesha2_iom_rm_element_t *element,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+    void* (AXIS2_CALL *from_om_node) 
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env, axiom_node_t *om_node);
 
     axiom_node_t* (AXIS2_CALL *to_om_node) 
-    					(sandesha2_iom_rm_element_t *element,
-                    	const axis2_env_t *env, 
-                        void *om_node);
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env, 
+        void *om_node);
 
 	axis2_bool_t (AXIS2_CALL *is_namespace_supported) 
-    					(sandesha2_iom_rm_element_t *element,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env, axis2_char_t *ns);
                     	
-    axis2_status_t (AXIS2_CALL *free) (sandesha2_iom_rm_element_t *element,
-                    const axis2_env_t *env);
+    axis2_status_t (AXIS2_CALL *free)
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env);
 };
 
 /**
@@ -76,27 +78,34 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element
     sandesha2_iom_rm_element_ops_t *ops;
 };
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_IOM_RM_ELEMENT_FREE(element, env) \
-    (((sandesha2_iom_rm_element_t*)(element))->ops->free (\
-    (sandesha2_iom_rm_element_t*)element, env))
+axis2_status_t AXIS2_CALL
+sandesha2_iom_rm_element_free(
+    sandesha2_iom_rm_element_t *element,
+    const axis2_env_t *env);
     
-#define SANDESHA2_IOM_RM_ELEMENT_GET_NAMESPACE_VALUE(element, env) \
-    (((sandesha2_iom_rm_element_t*)(element))->ops->get_namespace_value (\
-    (sandesha2_iom_rm_element_t*)element, env))
-    
-#define SANDESHA2_IOM_RM_ELEMENT_FROM_OM_NODE(element, env, om_node) \
-    (((sandesha2_iom_rm_element_t*)(element))->ops->from_om_node (\
-    (sandesha2_iom_rm_element_t*)element, env, om_node))
-    
-#define SANDESHA2_IOM_RM_ELEMENT_TO_OM_NODE(element, env, om_node) \
-    (((sandesha2_iom_rm_element_t*)(element))->ops->to_om_node(\
-    (sandesha2_iom_rm_element_t*)element, env, om_node))
-    
-#define SANDESHA2_IOM_RM_ELEMENT_IS_NAMESPACE_SUPPORTED(element, env, ns) \
-    (((sandesha2_iom_rm_element_t*)(element))->ops->is_namespace_supported (\
-    (sandesha2_iom_rm_element_t*)element, env, ns))
-/************************** End of function macros ****************************/    
+axis2_char_t* AXIS2_CALL
+sandesha2_iom_rm_element_get_namespace_value( 
+    sandesha2_iom_rm_element_t *element,
+    const axis2_env_t *env);
+
+void* AXIS2_CALL
+sandesha2_iom_rm_element_from_om_node(
+    sandesha2_iom_rm_element_t *element,
+    const axis2_env_t *env, 
+    axiom_node_t *om_node);
+
+axiom_node_t * AXIS2_CALL
+sandesha2_iom_rm_element_to_om_node(
+    sandesha2_iom_rm_element_t *element,
+    const axis2_env_t *env, 
+    void *om_node);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_iom_rm_element_is_namespace_supported( 
+    sandesha2_iom_rm_element_t *element,
+    const axis2_env_t *env, 
+    axis2_char_t *ns);
+
  /** @} */
 #ifdef __cplusplus
 }
