@@ -58,17 +58,6 @@ sandesha2_terminate_seq_res_is_namespace_supported(
 						sandesha2_iom_rm_element_t *terminate_seq_res,
                     	const axis2_env_t *env, axis2_char_t *namespace);
                     	
-sandesha2_identifier_t * AXIS2_CALL
-sandesha2_terminate_seq_res_get_identifier(
-                        sandesha2_terminate_seq_res_t *terminate_seq_res,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL                 
-sandesha2_terminate_seq_res_set_identifier(
-                        sandesha2_terminate_seq_res_t *terminate_seq_res,
-                    	const axis2_env_t *env, 
-                        sandesha2_identifier_t *identifier);
-
 axis2_status_t AXIS2_CALL
 sandesha2_terminate_seq_res_to_soap_env(
                         sandesha2_iom_rm_part_t *terminate_seq_res,
@@ -109,20 +98,9 @@ sandesha2_terminate_seq_res_create(
 	}
     terminate_seq_res_impl->ns_val = NULL;
     terminate_seq_res_impl->identifier = NULL;
-    terminate_seq_res_impl->terminate_seq_res.ops = NULL;
     terminate_seq_res_impl->terminate_seq_res.part.ops = NULL;
     terminate_seq_res_impl->terminate_seq_res.part.element.ops = NULL;
     
-    terminate_seq_res_impl->terminate_seq_res.ops = AXIS2_MALLOC(
-    						env->allocator,
-        					sizeof(sandesha2_terminate_seq_res_ops_t));
-    if(NULL == terminate_seq_res_impl->terminate_seq_res.ops)
-	{
-		sandesha2_terminate_seq_res_free((sandesha2_iom_rm_element_t*)
-                         terminate_seq_res_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     terminate_seq_res_impl->terminate_seq_res.part.ops = AXIS2_MALLOC(
     						env->allocator,
         					sizeof(sandesha2_iom_rm_part_ops_t));
@@ -136,13 +114,6 @@ sandesha2_terminate_seq_res_create(
     terminate_seq_res_impl->terminate_seq_res.part.element.ops = AXIS2_MALLOC(
     						env->allocator,
         					sizeof(sandesha2_iom_rm_element_ops_t));
-    if(NULL == terminate_seq_res_impl->terminate_seq_res.ops)
-	{
-		sandesha2_terminate_seq_res_free((sandesha2_iom_rm_element_t*)
-                         terminate_seq_res_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     
     terminate_seq_res_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
     
@@ -158,10 +129,6 @@ sandesha2_terminate_seq_res_create(
     					sandesha2_terminate_seq_res_is_namespace_supported;
     terminate_seq_res_impl->terminate_seq_res.part.ops->to_soap_env = 
     					sandesha2_terminate_seq_res_to_soap_env;
-    terminate_seq_res_impl->terminate_seq_res.ops->set_identifier = 
-    					sandesha2_terminate_seq_res_set_identifier;
-    terminate_seq_res_impl->terminate_seq_res.ops->get_identifier = 
-    					sandesha2_terminate_seq_res_get_identifier;
     terminate_seq_res_impl->terminate_seq_res.part.element.ops->free = 
     					sandesha2_terminate_seq_res_free;
                         
@@ -183,21 +150,10 @@ sandesha2_terminate_seq_res_free (sandesha2_iom_rm_element_t *terminate_seq_res,
         terminate_seq_res_impl->ns_val = NULL;
     }
     terminate_seq_res_impl->identifier = NULL;
-    if(NULL != terminate_seq_res->ops)
-    {
-        AXIS2_FREE(env->allocator, terminate_seq_res->ops);
-        terminate_seq_res->ops = NULL;
-    }
     if(NULL != terminate_seq_res_impl->terminate_seq_res.part.ops)
     {
         AXIS2_FREE(env->allocator, 
                         terminate_seq_res_impl->terminate_seq_res.part.ops);
-        terminate_seq_res_impl->terminate_seq_res.part.ops = NULL;
-    }
-    if(NULL != terminate_seq_res_impl->terminate_seq_res.ops)
-    {
-        AXIS2_FREE(env->allocator, 
-                        terminate_seq_res_impl->terminate_seq_res.ops);
         terminate_seq_res_impl->terminate_seq_res.part.ops = NULL;
     }
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(terminate_seq_res));
@@ -324,8 +280,8 @@ sandesha2_terminate_seq_res_is_namespace_supported(
 
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_terminate_seq_res_get_identifier(
-                        sandesha2_terminate_seq_res_t *terminate_seq_res,
-                    	const axis2_env_t *env)
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axis2_env_t *env)
 {
 	sandesha2_terminate_seq_res_impl_t *terminate_seq_res_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -337,9 +293,9 @@ sandesha2_terminate_seq_res_get_identifier(
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_terminate_seq_res_set_identifier(
-                        sandesha2_terminate_seq_res_t *terminate_seq_res,
-                    	const axis2_env_t *env, 
-                        sandesha2_identifier_t *identifier)
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axis2_env_t *env, 
+    sandesha2_identifier_t *identifier)
 {
 	sandesha2_terminate_seq_res_impl_t *terminate_seq_res_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

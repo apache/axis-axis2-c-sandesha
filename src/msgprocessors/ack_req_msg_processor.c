@@ -181,7 +181,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     acks_to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id,
                         SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
     acks_to_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, env);
@@ -305,7 +305,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         axis2_engine_t *engine = NULL;
         axis2_transport_out_desc_t *transport_out = NULL;
         
-        retrans_mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);
+        retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         key = axis2_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
         SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(ack_bean, env, key);
@@ -353,7 +353,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         }
         SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(ack_bean, env, time_to_send); 
         /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(ack_msg_ctx, env, AXIS2_TRUE);*/
-        SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_mgr, env, key, ack_msg_ctx);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx);
         SANDESHA2_SENDER_MGR_INSERT(retrans_mgr, env, ack_bean);
         
         property = axis2_property_create(env);

@@ -419,7 +419,7 @@ sandesha2_msg_ctx_add_soap_envelope(
 
         axis2_hash_this(hi, NULL, NULL, &value);
         part = (sandesha2_iom_rm_part_t*)value;
-        SANDESHA2_IOM_RM_PART_TO_SOAP_ENVELOPE(part, env, soap_envelope);
+        sandesha2_iom_rm_part_to_soap_envelope(part, env, soap_envelope);
     }
     return AXIS2_SUCCESS;
 }

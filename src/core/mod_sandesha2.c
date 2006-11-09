@@ -95,7 +95,7 @@ mod_sandesha2_init(
                         AXIS2_FALSE);
     
     storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
-    SANDESHA2_STORAGE_MGR_INIT_STORAGE(storage_mgr, env, module_desc);
+    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);
     
     /* we need to add permenent storage mgr as well */
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing completed");

@@ -164,10 +164,10 @@ sandesha2_close_seq_msg_processor_process_in_msg (
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
     
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_CLOSE_SEQ_GET_IDENTIFIER(close_seq, env), env);
+                        sandesha2_close_seq_get_identifier(close_seq, env), env);
     
     fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_rm_msg_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_UNKNOWN_SEQ(fault_mgr, env,
+    fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(fault_mgr, env,
                         rm_msg_ctx, seq_id, storage_mgr);
     if(NULL != fault_rm_msg_ctx)
     {
@@ -177,7 +177,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     close_seq_bean = sandesha2_seq_property_bean_create(env);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(close_seq_bean, env, seq_id);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(close_seq_bean, env, 

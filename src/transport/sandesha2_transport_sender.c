@@ -188,7 +188,7 @@ sandesha2_transport_sender_invoke (
                         env));
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
                         property, AXIS2_FALSE);
-    SANDESHA2_STORAGE_MGR_UPDATE_MSG_CTX(storage_man, env, key, msg_ctx);
+    sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);
     return AXIS2_SUCCESS;
 }
 

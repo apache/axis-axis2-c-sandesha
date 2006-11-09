@@ -148,7 +148,7 @@ sandesha2_out_handler_invoke(
     {
         axis2_property_t *prop = NULL;
         
-        transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr, env);
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, env));

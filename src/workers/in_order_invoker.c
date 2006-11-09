@@ -353,13 +353,13 @@ sandesha2_in_order_invoker_worker_func(
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker_impl->conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(invoker_impl->conf_ctx, env));
-        next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(
+        next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
-        storage_map_mgr = SANDESHA2_STORAGE_MGR_GET_STORAGE_MAP_MGR
+        storage_map_mgr = sandesha2_storage_mgr_get_storage_map_mgr
                         (storage_mgr, env);
-        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+        seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
-        transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                         env);
         all_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
@@ -384,7 +384,7 @@ sandesha2_in_order_invoker_worker_func(
             
             seq_id = AXIS2_ARRAY_LIST_GET(all_seq_list, env, i);
             SANDESHA2_TRANSACTION_COMMIT(transaction, env);
-            transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
+            transaction = sandesha2_storage_mgr_get_transaction(
                         storage_mgr, env);
             next_msg_bean = SANDESHA2_NEXT_MSG_MGR_RETRIEVE(
                         next_msg_mgr, env, seq_id);
@@ -433,7 +433,7 @@ sandesha2_in_order_invoker_worker_func(
                 st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
                 key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(st_map_bean,
                         env);
-                msg_to_invoke = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
+                msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
@@ -470,13 +470,13 @@ sandesha2_in_order_invoker_worker_func(
                     AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
                 }
                 invoked = AXIS2_TRUE;
-                transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(
+                transaction = sandesha2_storage_mgr_get_transaction(
                         storage_mgr, env);
-                SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env, key);
-                msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+                msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
                         storage_mgr, env, key, invoker_impl->conf_ctx);
                 if(msg_ctx)
-                    SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr,
+                    sandesha2_storage_mgr_remove_msg_ctx(storage_mgr,
                         env, key);
                 if(SANDESHA2_MSG_TYPE_APPLICATION == 
                         SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env))
@@ -484,7 +484,7 @@ sandesha2_in_order_invoker_worker_func(
                     sandesha2_seq_t *seq = NULL;
                     seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                             rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
-                    if(SANDESHA2_SEQ_GET_LAST_MSG(seq, env))
+                    if(sandesha2_seq_get_last_msg(seq, env))
                     {
                         sandesha2_terminate_mgr_clean_recv_side_after_invocation(
                             env, invoker_impl->conf_ctx, seq_id, 

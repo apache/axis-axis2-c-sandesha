@@ -34,31 +34,23 @@ struct sandesha2_expires_impl
 						((sandesha2_expires_impl_t *)(expires))
 
 /***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_expires_get_namespace_value (sandesha2_iom_rm_element_t *expires,
 						const axis2_env_t *env);
     
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_expires_from_om_node(sandesha2_iom_rm_element_t *expires,
                     	const axis2_env_t *env, axiom_node_t *om_node);
     
-axiom_node_t* AXIS2_CALL 
+static axiom_node_t* AXIS2_CALL 
 sandesha2_expires_to_om_node(sandesha2_iom_rm_element_t *expires,
                     	const axis2_env_t *env, void *om_node);
                     	
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_expires_is_namespace_supported(sandesha2_iom_rm_element_t *expires,
                     	const axis2_env_t *env, axis2_char_t *namespace);
                     	
-axis2_char_t * AXIS2_CALL
-sandesha2_expires_get_duration(sandesha2_expires_t *expires,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL                 
-sandesha2_expires_set_duration(sandesha2_expires_t *expires,
-                    	const axis2_env_t *env, axis2_char_t *duration);
-                    	                    	
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_expires_free (sandesha2_iom_rm_element_t *expires, 
 						const axis2_env_t *env);								
 
@@ -90,20 +82,10 @@ sandesha2_expires_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     expires_impl->ns_val = NULL;
     expires_impl->duration = NULL;
     expires_impl->expires.element.ops = NULL;
-    expires_impl->expires.ops = NULL;
     
     expires_impl->expires.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
     if(NULL == expires_impl->expires.element.ops)
-	{
-		sandesha2_expires_free((sandesha2_iom_rm_element_t*)
-                         expires_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    expires_impl->expires.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_expires_ops_t));
-    if(NULL == expires_impl->expires.ops)
 	{
 		sandesha2_expires_free((sandesha2_iom_rm_element_t*)
                          expires_impl, env);
@@ -120,38 +102,32 @@ sandesha2_expires_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     					sandesha2_expires_to_om_node;
     expires_impl->expires.element.ops->is_namespace_supported = 
     					sandesha2_expires_is_namespace_supported;
-    expires_impl->expires.ops->get_duration = sandesha2_expires_get_duration;
-    expires_impl->expires.ops->set_duration = sandesha2_expires_set_duration;
     expires_impl->expires.element.ops->free = sandesha2_expires_free;
                         
 	return &(expires_impl->expires);
 }
 
 
-axis2_status_t AXIS2_CALL 
-sandesha2_expires_free (sandesha2_iom_rm_element_t *expires, 
-						const axis2_env_t *env)
+static axis2_status_t AXIS2_CALL 
+sandesha2_expires_free (
+    sandesha2_iom_rm_element_t *expires, 
+	const axis2_env_t *env)
 {
     sandesha2_expires_impl_t *expires_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     expires_impl = SANDESHA2_INTF_TO_IMPL(expires);
     
-    if(NULL != expires_impl->ns_val)
+    if(expires_impl->ns_val)
     {
         AXIS2_FREE(env->allocator, expires_impl->ns_val);
         expires_impl->ns_val = NULL;
     }
-    if(NULL != expires_impl->duration)
+    if(expires_impl->duration)
     {
     	AXIS2_FREE(env->allocator, expires_impl->duration);
     	expires_impl->duration = NULL;
     }
-    if(NULL != expires->ops)
-    {
-        AXIS2_FREE(env->allocator, expires->ops);
-        expires->ops = NULL;
-    }
-    if(NULL != expires_impl->expires.element.ops)
+    if(expires_impl->expires.element.ops)
     {
         AXIS2_FREE(env->allocator, expires_impl->expires.element.ops);
         expires_impl->expires.element.ops = NULL;
@@ -160,9 +136,10 @@ sandesha2_expires_free (sandesha2_iom_rm_element_t *expires,
 	return AXIS2_SUCCESS;
 }
 
-axis2_char_t* AXIS2_CALL 
-sandesha2_expires_get_namespace_value (sandesha2_iom_rm_element_t *expires,
-						const axis2_env_t *env)
+static axis2_char_t* AXIS2_CALL 
+sandesha2_expires_get_namespace_value (
+    sandesha2_iom_rm_element_t *expires,
+	const axis2_env_t *env)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -172,9 +149,11 @@ sandesha2_expires_get_namespace_value (sandesha2_iom_rm_element_t *expires,
 }
 
 
-void* AXIS2_CALL 
-sandesha2_expires_from_om_node(sandesha2_iom_rm_element_t *expires,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+static void* AXIS2_CALL 
+sandesha2_expires_from_om_node(
+    sandesha2_iom_rm_element_t *expires,
+    const axis2_env_t *env, 
+    axiom_node_t *om_node)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
     axiom_element_t *om_element = NULL;
@@ -231,9 +210,11 @@ sandesha2_expires_from_om_node(sandesha2_iom_rm_element_t *expires,
 }
 
 
-axiom_node_t* AXIS2_CALL 
-sandesha2_expires_to_om_node(sandesha2_iom_rm_element_t *expires,
-                    	const axis2_env_t *env, void *om_node)
+static axiom_node_t* AXIS2_CALL 
+sandesha2_expires_to_om_node(
+   sandesha2_iom_rm_element_t *expires,
+   const axis2_env_t *env, 
+   void *om_node)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -269,9 +250,11 @@ sandesha2_expires_to_om_node(sandesha2_iom_rm_element_t *expires,
     return (axiom_node_t*)om_node;
 }
 
-axis2_bool_t AXIS2_CALL 
-sandesha2_expires_is_namespace_supported(sandesha2_iom_rm_element_t *expires,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+static axis2_bool_t AXIS2_CALL 
+sandesha2_expires_is_namespace_supported(
+    sandesha2_iom_rm_element_t *expires,
+    const axis2_env_t *env, 
+    axis2_char_t *namespace)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -289,8 +272,9 @@ sandesha2_expires_is_namespace_supported(sandesha2_iom_rm_element_t *expires,
 }
 
 axis2_char_t * AXIS2_CALL
-sandesha2_expires_get_duration(sandesha2_expires_t *expires,
-                    	const axis2_env_t *env)
+sandesha2_expires_get_duration(
+    sandesha2_expires_t *expires,
+    const axis2_env_t *env)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -302,8 +286,10 @@ sandesha2_expires_get_duration(sandesha2_expires_t *expires,
 
 
 axis2_status_t AXIS2_CALL                 
-sandesha2_expires_set_duration(sandesha2_expires_t *expires,
-                    	const axis2_env_t *env, axis2_char_t *duration)
+sandesha2_expires_set_duration(
+    sandesha2_expires_t *expires,
+    const axis2_env_t *env, 
+    axis2_char_t *duration)
 {
 	sandesha2_expires_impl_t *expires_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -312,3 +298,4 @@ sandesha2_expires_set_duration(sandesha2_expires_t *expires,
     expires_impl->duration = duration;
 	return AXIS2_SUCCESS;
 }
+

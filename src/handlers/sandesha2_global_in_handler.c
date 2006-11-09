@@ -168,7 +168,7 @@ sandesha2_global_in_handler_invoke(
     {
         axis2_property_t *prop = NULL;
         
-        transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr, env);
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, env));
@@ -271,8 +271,8 @@ sandesha2_global_in_handler_drop_if_duplicate(
         if(sequence)
         {
             seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQ_GET_IDENTIFIER(sequence, env), env);
-            msg_no = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(SANDESHA2_SEQ_GET_MSG_NUM(
+                        sandesha2_seq_get_identifier(sequence, env), env);
+            msg_no = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(sandesha2_seq_get_msg_num(
                         sequence, env), env);
         }
         if(seq_id && 0 < msg_no)
@@ -280,7 +280,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
             sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
             sandesha2_seq_property_bean_t *rcvd_msgs_bean = NULL;
             
-            seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+            seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
             rcvd_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, seq_id, 
@@ -420,7 +420,7 @@ sandesha2_global_in_handler_process_dropped_msg(
                         env, SANDESHA2_MSG_PART_SEQ);
         if(sequence)
             seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQ_GET_IDENTIFIER(sequence, env), env);
+                        sandesha2_seq_get_identifier(sequence, env), env);
             
         if(seq_id)
         {
@@ -429,7 +429,7 @@ sandesha2_global_in_handler_process_dropped_msg(
             axis2_char_t *rcvd_msgs_str = NULL;
             sandesha2_msg_processor_t *app_msg_processor = NULL;
             
-            seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+            seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
             rcvd_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, seq_id, 

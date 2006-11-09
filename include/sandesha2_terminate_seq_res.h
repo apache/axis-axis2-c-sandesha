@@ -40,27 +40,8 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_terminate_seq_res_ops sandesha2_terminate_seq_res_ops_t;
 typedef struct sandesha2_terminate_seq_res sandesha2_terminate_seq_res_t;
  
-/**
- * @brief TerminateSequenceResponse ops struct
- * Encapsulator struct for ops of sandesha2_terminate_seq_res
- */
-AXIS2_DECLARE_DATA struct sandesha2_terminate_seq_res_ops
-{
-    sandesha2_identifier_t * (AXIS2_CALL *
-        get_identifier)
-            (sandesha2_terminate_seq_res_t *terminate_seq_res,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_identifier)
-            (sandesha2_terminate_seq_res_t *terminate_seq_res,
-            const axis2_env_t *env, 
-            sandesha2_identifier_t *identifier);
-};
-
 /**
  * @brief sandesha2_terminate_seq_res
  *    sandesha2_terminate_seq_res
@@ -68,22 +49,24 @@ AXIS2_DECLARE_DATA struct sandesha2_terminate_seq_res_ops
 AXIS2_DECLARE_DATA struct sandesha2_terminate_seq_res
 {
     sandesha2_iom_rm_part_t part;
-    sandesha2_terminate_seq_res_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_terminate_seq_res_t* AXIS2_CALL
 sandesha2_terminate_seq_res_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
+                          
+axis2_status_t AXIS2_CALL                 
+sandesha2_terminate_seq_res_set_identifier(
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axis2_env_t *env, 
+    sandesha2_identifier_t *identifier);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_TERMINATE_SEQ_RES_SET_IDENTIFIER(\
-    terminate_seq_res, env, identifier) \
-    ((terminate_seq_res)->ops->set_identifier \
-    (terminate_seq_res, env, identifier))
-#define SANDESHA2_TERMINATE_SEQ_RES_GET_IDENTIFIER(terminate_seq_res, env) \
-    ((terminate_seq_res)->ops->get_identifier (terminate_seq_res, env))
-/************************** End of function macros ****************************/
+sandesha2_identifier_t * AXIS2_CALL
+sandesha2_terminate_seq_res_get_identifier(
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axis2_env_t *env);
+
 /** @} */
 #ifdef __cplusplus
 }

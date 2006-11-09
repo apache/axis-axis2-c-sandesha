@@ -50,14 +50,6 @@ axis2_bool_t AXIS2_CALL
 sandesha2_fault_code_is_namespace_supported(
                         sandesha2_iom_rm_element_t *fault_code,
                     	const axis2_env_t *env, axis2_char_t *namespace);
-                    	
-axis2_char_t * AXIS2_CALL
-sandesha2_fault_code_get_fault_code(sandesha2_fault_code_t *fault_code,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL                 
-sandesha2_fault_code_set_fault_code(sandesha2_fault_code_t *fault_code,
-                    	const axis2_env_t *env, axis2_char_t *str_fault_code);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_code_free (sandesha2_iom_rm_element_t *fault_code, 
@@ -90,18 +82,8 @@ sandesha2_fault_code_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 	}
     fault_code_impl->ns_val = NULL;
     fault_code_impl->str_fault_code = NULL;
-    fault_code_impl->fault_code.ops = NULL;
     fault_code_impl->fault_code.element.ops = NULL;
     
-    fault_code_impl->fault_code.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_fault_code_ops_t));
-    if(NULL == fault_code_impl->fault_code.ops)
-	{
-		sandesha2_fault_code_free((sandesha2_iom_rm_element_t*)
-                         fault_code_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     fault_code_impl->fault_code.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
     if(NULL == fault_code_impl->fault_code.element.ops)
@@ -121,10 +103,6 @@ sandesha2_fault_code_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     					sandesha2_fault_code_to_om_node;
     fault_code_impl->fault_code.element.ops->is_namespace_supported = 
     					sandesha2_fault_code_is_namespace_supported;
-    fault_code_impl->fault_code.ops->get_fault_code = 
-                        sandesha2_fault_code_get_fault_code;
-    fault_code_impl->fault_code.ops->set_fault_code = 
-                        sandesha2_fault_code_set_fault_code;
     fault_code_impl->fault_code.element.ops->free = sandesha2_fault_code_free;
                         
 	return &(fault_code_impl->fault_code);
@@ -148,11 +126,6 @@ sandesha2_fault_code_free (sandesha2_iom_rm_element_t *fault_code,
     {
     	AXIS2_FREE(env->allocator, fault_code_impl->str_fault_code);
     	fault_code_impl->str_fault_code = NULL;
-    }
-    if(NULL != fault_code->ops)
-    {
-        AXIS2_FREE(env->allocator, fault_code->ops);
-        fault_code->ops = NULL;
     }
     if(NULL != fault_code_impl->fault_code.element.ops)
     {

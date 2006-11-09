@@ -201,7 +201,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                    SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(term_seq, env), env);
+                    sandesha2_terminate_seq_get_identifier(term_seq, env), env);
     if(NULL == seq_id || 0 == AXIS2_STRLEN(seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
@@ -212,7 +212,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_UNKNOWN_SEQ(fault_mgr, env, 
+    fault_ctx = sandesha2_fault_mgr_check_for_unknown_seq(fault_mgr, env, 
                         rm_msg_ctx, seq_id, storage_man);
     if(fault_ctx)
     {
@@ -224,7 +224,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_man, env);
     term_rcvd_bean = sandesha2_seq_property_bean_create(env);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(term_rcvd_bean, env, seq_id);
     SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(term_rcvd_bean, env, 
@@ -279,7 +279,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_man, env);
     
     highest_msg_num_str = sandesha2_utils_get_seq_property(env, seq_id,
                         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, storage_man);
@@ -310,7 +310,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
                         seq_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_NO,
                         highest_msg_num_str);
         SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, last_in_msg_bean);
-        highest_in_msg = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_man, env,
+        highest_in_msg = sandesha2_storage_mgr_retrieve_msg_ctx(storage_man, env,
                         highest_msg_key, conf_ctx);
         if(highest_in_msg)
             op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(highest_in_msg, env);
@@ -332,7 +332,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
                 sandesha2_seq_property_bean_t *highest_out_msg_bean = NULL;
                 
                 highest_out_msg_num = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(
-                        SANDESHA2_SEQ_GET_MSG_NUM(seq_of_out_msg, env), env);
+                        sandesha2_seq_get_msg_num(seq_of_out_msg, env), env);
                 sprintf(long_str, "%ld", highest_out_msg_num);
                 highest_out_msg_bean = 
                         sandesha2_seq_property_bean_create_with_data(env, 
@@ -472,7 +472,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_man, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_man, env);
     to_address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
                         AXIS2_MSG_CTX_GET_TO(msg_ctx, env), env);
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY,
@@ -512,7 +512,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     }
     term_seq_part = (sandesha2_terminate_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);
-    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(
+    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(sandesha2_terminate_seq_get_identifier(
                         term_seq_part, env), env, out_seq_id);
     SANDESHA2_MSG_CTX_SET_FLOW(rm_msg_ctx, env, AXIS2_OUT_FLOW);
     property = axis2_property_create(env);
@@ -554,7 +554,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     term_bean = sandesha2_sender_bean_create(env);
     SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(term_bean, env, key);
     /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);*/
-    SANDESHA2_STORAGE_MGR_STORE_MSG_CTX(storage_man, env, key, msg_ctx);
+    sandesha2_storage_mgr_store_msg_ctx(storage_man, env, key, msg_ctx);
     
     /* TODO: refine the terminate delay */
     SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(term_bean, env, 
@@ -573,7 +573,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     SANDESHA2_SENDER_BEAN_SET_RESEND(term_bean, env, AXIS2_FALSE);
     
-    retrans_mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_man, env);
+    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_man, env);
     SANDESHA2_SENDER_MGR_INSERT(retrans_mgr, env, term_bean);
     
     term_added = sandesha2_seq_property_bean_create(env);

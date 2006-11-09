@@ -112,7 +112,7 @@ sandesha2_seq_mgr_setup_new_seq(
     }
     msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_msg, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     received_msg_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
     /* Setting the addressing version */
@@ -147,7 +147,7 @@ sandesha2_seq_mgr_setup_new_seq(
     {
         SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env, to_bean);
     }
-    next_msg_mgr = SANDESHA2_STORAGE_MGR_GET_NEXT_MSG_MGR(storage_mgr, env);
+    next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(storage_mgr, env);
     next_msg_bean = sandesha2_next_msg_bean_create_with_data(env, seq_id, 1); 
                                                     /* 1 will be the next */
     AXIS2_LOG_INFO(env->log, "[sandesha2] came1");
@@ -210,7 +210,7 @@ sandesha2_seq_mgr_update_last_activated_time(
     long current_time = -1;
     axis2_char_t current_time_str[32];
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     last_activated_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
             property_key, SANDESHA2_SEQ_PROP_LAST_ACTIVATED_TIME);
     if(last_activated_bean == NULL)
@@ -283,7 +283,7 @@ sandesha2_seq_mgr_get_last_activated_time(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, property_key, -1);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, -1);
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_prop_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
                         property_key, SANDESHA2_SEQ_PROP_LAST_ACTIVATED_TIME);
     if(NULL != seq_prop_bean)
@@ -331,7 +331,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(first_app_msg, env);
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     
     property = AXIS2_MSG_CTX_GET_PROPERTY(first_app_msg, env, AXIS2_WSA_VERSION,
                         AXIS2_FALSE);

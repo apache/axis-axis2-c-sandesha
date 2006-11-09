@@ -63,13 +63,17 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_part
     sandesha2_iom_rm_part_ops_t *ops;
 };
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_IOM_RM_PART_TO_SOAP_ENVELOPE(part, env, envelope) \
-    ((part)->ops->to_soap_env(part, env, envelope))
-#define SANDESHA2_IOM_RM_PART_FREE(part, env) \
-    ((part)->element.ops->free (part, env))
-/************************** End of function macros ****************************/
-    
+axis2_status_t AXIS2_CALL
+sandesha2_iom_rm_part_free(
+    sandesha2_iom_rm_part_t *part,
+    const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_iom_rm_part_to_soap_envelope( 
+    sandesha2_iom_rm_part_t *part,
+    const axis2_env_t *env, 
+    axiom_soap_envelope_t *envelope);
+
  /** @} */
 #ifdef __cplusplus
 }

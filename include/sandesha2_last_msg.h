@@ -50,8 +50,9 @@ AXIS2_DECLARE_DATA struct sandesha2_last_msg
     
 AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
 sandesha2_last_msg_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
+
 /** @} */
 #ifdef __cplusplus
 }

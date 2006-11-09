@@ -300,8 +300,8 @@ sandesha2_spec_specific_consts_get_ack_req_soap_action(
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL        
 sandesha2_spec_specific_consts_is_term_seq_res_reqd(
-        const axis2_env_t *env,
-        axis2_char_t *spec_version)
+    const axis2_env_t *env,
+    axis2_char_t *spec_version)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FALSE);

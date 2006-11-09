@@ -126,7 +126,7 @@ sandesha2_utils_get_rm_version(
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
     if(seq_prop_mgr)
         rm_version_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
@@ -183,7 +183,7 @@ sandesha2_utils_get_seq_property(
     AXIS2_PARAM_CHECK(env->error, name, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
     
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
     seq_prop_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
                         env, incoming_seq_id, name);
@@ -884,7 +884,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env,
                         SANDESHA2_MSG_PART_SEQ);
         seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQ_GET_IDENTIFIER(seq, env), env);
+                        sandesha2_seq_get_identifier(seq, env), env);
     }
     else if(SANDESHA2_MSG_TYPE_ACK == msg_type)
     {
@@ -892,7 +892,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
         seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQ_ACK_GET_IDENTIFIER(seq_ack, env), env);
+                        sandesha2_seq_ack_get_identifier(seq_ack, env), env);
     }
     else if(SANDESHA2_MSG_TYPE_ACK_REQUEST == msg_type)
     {
@@ -911,7 +911,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_CLOSE_SEQ);
         seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_CLOSE_SEQ_GET_IDENTIFIER(close_seq, 
+                        sandesha2_close_seq_get_identifier(close_seq, 
                         env), env);
     }
     else if(SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE == msg_type)
@@ -921,7 +921,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
         seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_CLOSE_SEQ_RES_GET_IDENTIFIER(close_seq_res, 
+                        sandesha2_close_res_seq_get_identifier(close_seq_res, 
                         env), env);
     }
     return seq_id;

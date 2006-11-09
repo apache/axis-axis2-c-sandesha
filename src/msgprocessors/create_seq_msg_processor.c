@@ -192,7 +192,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     
     fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_rm_msg_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_CREATE_SEQ_REFUSED(
+    fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
                         fault_mgr, env, msg_ctx, storage_mgr);
     if(NULL != fault_rm_msg_ctx)
     {
@@ -205,7 +205,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, 
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, 
                         env);
     new_seq_id = sandesha2_seq_mgr_setup_new_seq(env, rm_msg_ctx, 
                         storage_mgr);
@@ -264,7 +264,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         int_seq_id);
             SANDESHA2_CREATE_SEQ_BEAN_SET_CREATE_SEQ_MSG_ID(create_seq_bean, env,
                         axis2_uuid_gen(env));
-            create_seq_mgr = SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_MGR(
+            create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(
                         storage_mgr, env);
             SANDESHA2_CREATE_SEQ_MGR_INSERT(create_seq_mgr, env, create_seq_bean);
             
@@ -370,7 +370,7 @@ sandesha2_create_seq_msg_processor_offer_accepted(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
-    create_seq_mgr = SANDESHA2_STORAGE_MGR_GET_CREATE_SEQ_MGR(storage_mgr, env);
+    create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
     find_bean = sandesha2_create_seq_bean_create_with_data(env, NULL, NULL, 
                         seq_id);
     list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, find_bean);

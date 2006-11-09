@@ -37,26 +37,18 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_expires_ops sandesha2_expires_ops_t;
 typedef struct sandesha2_expires sandesha2_expires_t;
  
-/**
- * @brief Expires ops struct
- * Encapsulator struct for ops of sandesha2_expires
- */
-AXIS2_DECLARE_DATA struct sandesha2_expires_ops
-{
-    axis2_char_t * (AXIS2_CALL *
-        get_duration)
-            (sandesha2_expires_t *expires,
-            const axis2_env_t *env);
+axis2_char_t *AXIS2_CALL
+sandesha2_expires_get_duration(
+    sandesha2_expires_t *expires,
+    const axis2_env_t *env);
 
-    axis2_status_t (AXIS2_CALL *
-        set_duration)
-            (sandesha2_expires_t *expires,
-            const axis2_env_t *env, 
-            axis2_char_t *duration);
-};
+axis2_status_t AXIS2_CALL 
+sandesha2_expires_set_duration(
+    sandesha2_expires_t *expires,
+    const axis2_env_t *env, 
+    axis2_char_t *duration);
 
 /**
  * @brief sandesha2_expires
@@ -65,20 +57,12 @@ AXIS2_DECLARE_DATA struct sandesha2_expires_ops
 AXIS2_DECLARE_DATA struct sandesha2_expires
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_expires_ops_t *ops;
 };
     
 AXIS2_EXTERN sandesha2_expires_t* AXIS2_CALL
 sandesha2_expires_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
-
-/************************** Start of function macros **************************/
-#define SANDESHA2_EXPIRES_SET_ACKS_TO(expires, env, duration) \
-    ((expires)->ops->set_duration (expires, env, duration))
-#define SANDESHA2_EXPIRES_GET_ACKS_TO(expires, env) \
-    ((expires)->ops->get_duration (expires, env))
-/************************** End of function macros ****************************/
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
 
 /** @} */
 #ifdef __cplusplus

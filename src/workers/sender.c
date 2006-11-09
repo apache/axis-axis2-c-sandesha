@@ -491,10 +491,10 @@ sandesha2_sender_worker_func(
         axis2_char_t *msg_id = NULL;
    
         AXIS2_SLEEP(1); 
-        transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                         env);
-        mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);
-        seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(
+        mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
+        seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
         sender_bean = SANDESHA2_SENDER_MGR_GET_NEXT_MSG_TO_SEND(mgr, env);
         if(!sender_bean)
@@ -503,7 +503,7 @@ sandesha2_sender_worker_func(
         }
             
         key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(sender_bean, env);
-        msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_mgr, env, key, 
+        msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
                         sender_impl->conf_ctx);
         if(!msg_ctx)
         {
@@ -573,7 +573,7 @@ sandesha2_sender_worker_func(
             seq = (sandesha2_seq_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
-            identifier = SANDESHA2_SEQ_GET_IDENTIFIER(seq, env);
+            identifier = sandesha2_seq_get_identifier(seq, env);
             seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(identifier, env);
         }
         
@@ -608,7 +608,7 @@ sandesha2_sender_worker_func(
             sleep(300000);*/
                         
         }
-        transaction = SANDESHA2_STORAGE_MGR_GET_TRANSACTION(storage_mgr,
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                         env);
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
@@ -640,7 +640,7 @@ sandesha2_sender_worker_func(
                 /* Removing the message from the storage */
                 msg_stored_key = SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(
                     bean1, env);
-                SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env, 
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                     msg_stored_key);
             }
         }
@@ -661,7 +661,7 @@ sandesha2_sender_worker_func(
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_TERMINATE_SEQ);
             seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(terminate_seq, 
+                        sandesha2_terminate_seq_get_identifier(terminate_seq, 
                         env), env);
             conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
             int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 

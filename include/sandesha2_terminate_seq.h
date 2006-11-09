@@ -39,27 +39,8 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_terminate_seq_ops sandesha2_terminate_seq_ops_t;
 typedef struct sandesha2_terminate_seq sandesha2_terminate_seq_t;
  
-/**
- * @brief TerminateSequence ops struct
- * Encapsulator struct for ops of sandesha2_terminate_seq
- */
-AXIS2_DECLARE_DATA struct sandesha2_terminate_seq_ops
-{
-    sandesha2_identifier_t * (AXIS2_CALL *
-        get_identifier)
-            (sandesha2_terminate_seq_t *terminate_seq,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_identifier)
-            (sandesha2_terminate_seq_t *terminate_seq,
-            const axis2_env_t *env, 
-            sandesha2_identifier_t *identifier);
-};
-
 /**
  * @brief sandesha2_terminate_seq
  *    sandesha2_terminate_seq
@@ -67,20 +48,25 @@ AXIS2_DECLARE_DATA struct sandesha2_terminate_seq_ops
 AXIS2_DECLARE_DATA struct sandesha2_terminate_seq
 {
     sandesha2_iom_rm_part_t part;
-    sandesha2_terminate_seq_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_terminate_seq_t* AXIS2_CALL
 sandesha2_terminate_seq_create(
-						const axis2_env_t *env,
-					    axis2_char_t *ns_value);
-                        
-/************************** Start of function macros **************************/
-#define SANDESHA2_TERMINATE_SEQ_SET_IDENTIFIER(terminate_seq, env, identifier) \
-    ((terminate_seq)->ops->set_identifier (terminate_seq, env, identifier))
-#define SANDESHA2_TERMINATE_SEQ_GET_IDENTIFIER(terminate_seq, env) \
-    ((terminate_seq)->ops->get_identifier (terminate_seq, env))
-/************************** End of function macros ****************************/
+    const axis2_env_t *env,
+	axis2_char_t *ns_value);
+                          
+axis2_status_t AXIS2_CALL                 
+sandesha2_terminate_seq_set_identifier(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axis2_env_t *env, 
+    sandesha2_identifier_t *identifier);
+
+sandesha2_identifier_t * AXIS2_CALL
+sandesha2_terminate_seq_get_identifier(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axis2_env_t *env);
+
+
 /** @} */
 #ifdef __cplusplus
 }

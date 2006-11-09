@@ -74,7 +74,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
                         " present in the retransmittable message");
         return AXIS2_FALSE;
     }
-    msg_ctx = SANDESHA2_STORAGE_MGR_RETRIEVE_MSG_CTX(storage_mgr, env, 
+    msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
                         stored_key, conf_ctx);
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     int_seq_id = SANDESHA2_SENDER_BEAN_GET_INTERNAL_SEQ_ID(retrans_bean, env);

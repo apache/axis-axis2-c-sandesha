@@ -193,16 +193,16 @@ sandesha2_ack_msg_processor_process_in_msg (
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
-    SANDESHA2_SEQ_ACK_SET_MUST_UNDERSTAND(seq_ack, env, AXIS2_FALSE);
+    sandesha2_seq_ack_set_must_understand(seq_ack, env, AXIS2_FALSE);
     SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(rm_msg_ctx, env);
     
-    retrans_mgr = SANDESHA2_STORAGE_MGR_GET_RETRANS_MGR(storage_mgr, env);
-    seq_prop_mgr = SANDESHA2_STORAGE_MGR_GET_SEQ_PROPERTY_MGR(storage_mgr, env);
+    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
+    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     
-    ack_range_list = SANDESHA2_SEQ_ACK_GET_ACK_RANGE_LIST(seq_ack, env);
-    nack_list = SANDESHA2_SEQ_ACK_GET_NACK_LIST(seq_ack, env);
+    ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
+    nack_list = sandesha2_seq_ack_get_nack_list(seq_ack, env);
     out_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
-                        SANDESHA2_SEQ_ACK_GET_IDENTIFIER(seq_ack, env), env);
+                        sandesha2_seq_ack_get_identifier(seq_ack, env), env);
     if(!out_seq_id || 0 == AXIS2_STRLEN(out_seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] OutSequenceId is"
@@ -211,7 +211,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         return AXIS2_FAILURE;        
     }
     fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_msg_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_UNKNOWN_SEQ(fault_mgr, env,
+    fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(fault_mgr, env,
                         rm_msg_ctx, out_seq_id, storage_mgr);
     if(fault_msg_ctx)
     {
@@ -221,7 +221,7 @@ sandesha2_ack_msg_processor_process_in_msg (
                         fault_msg_ctx, env));
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     }
-    fault_msg_ctx = SANDESHA2_FAULT_MGR_CHECK_FOR_INVALID_ACK(fault_mgr, env,
+    fault_msg_ctx = sandesha2_fault_mgr_check_for_invalid_ack(fault_mgr, env,
                         rm_msg_ctx, storage_mgr);
     if(fault_msg_ctx)
     {
@@ -275,7 +275,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             {
                 SANDESHA2_SENDER_MGR_REMOVE(retrans_mgr, env, 
                         SANDESHA2_SENDER_BEAN_GET_MSG_ID(retrans_bean, env));
-                SANDESHA2_STORAGE_MGR_REMOVE_MSG_CTX(storage_mgr, env,
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env,
                         SANDESHA2_SENDER_BEAN_GET_MSG_CONTEXT_REF_KEY(
                         retrans_bean, env));
             }
