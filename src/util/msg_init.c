@@ -353,7 +353,7 @@ static axis2_bool_t validate_msg(
         sandesha2_identifier_t *idf = NULL;
         SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE);
-        idf = sandesha2_close_res_seq_get_identifier(close_seq_res, env);
+        idf = sandesha2_close_seq_res_get_identifier(close_seq_res, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
     }
     else

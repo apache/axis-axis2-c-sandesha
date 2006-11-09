@@ -921,7 +921,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
         seq_id = sandesha2_identifier_get_identifier(
-                        sandesha2_close_res_seq_get_identifier(close_seq_res, 
+                        sandesha2_close_seq_res_get_identifier(close_seq_res, 
                         env), env);
     }
     return seq_id;
