@@ -175,7 +175,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(rm_msg_ctx, env);
     
     msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
-    seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+    seq_id = sandesha2_identifier_get_identifier(
                         SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_requested, 
                         env), env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
@@ -326,7 +326,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         
         prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
                         AXIS2_MSG_CTX_GET_OP(msg_ctx, env));
-        ack_interval = SANDESHA2_PROPERTY_BEAN_GET_ACK_INTERVAL(prop_bean, env);
+        ack_interval = sandesha2_property_bean_get_ack_interval(prop_bean, env);
         time_to_send = sandesha2_utils_get_current_time_in_millis(env) +
                         ack_interval;
                         

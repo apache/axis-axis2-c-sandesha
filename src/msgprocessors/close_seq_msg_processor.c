@@ -138,7 +138,6 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_close_seq_t *close_seq = NULL;
     axis2_char_t *seq_id = NULL;
-    sandesha2_fault_mgr_t *fault_mgr = NULL;
     sandesha2_msg_ctx_t *fault_rm_msg_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *close_seq_bean = NULL;
@@ -163,11 +162,10 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     close_seq = (sandesha2_close_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
     
-    seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+    seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_close_seq_get_identifier(close_seq, env), env);
     
-    fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(fault_mgr, env,
+    fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env,
                         rm_msg_ctx, seq_id, storage_mgr);
     if(NULL != fault_rm_msg_ctx)
     {
@@ -235,3 +233,4 @@ sandesha2_close_seq_msg_processor_process_out_msg(
     
     return AXIS2_SUCCESS;
 }
+

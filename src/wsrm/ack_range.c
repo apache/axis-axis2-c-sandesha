@@ -90,7 +90,6 @@ sandesha2_ack_range_create(
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     ack_range_impl->ack_range.element.ops = NULL;
-    ack_range_impl->ack_range.ops = NULL;
     
     ack_range_impl->ack_range.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));

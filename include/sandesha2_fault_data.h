@@ -38,9 +38,7 @@ extern "C"
  * @{
  */
  
-typedef struct sandesha2_fault_data sandesha2_fault_data_t;
-
-AXIS2_DECLARE_DATA struct sandesha2_fault_data{};
+typedef struct sandesha2_fault_data_t sandesha2_fault_data_t;
 
 AXIS2_EXTERN sandesha2_fault_data_t* AXIS2_CALL
 sandesha2_fault_data_create(

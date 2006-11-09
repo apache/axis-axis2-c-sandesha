@@ -45,7 +45,6 @@ typedef struct sandesha2_ack_range sandesha2_ack_range_t;
 AXIS2_DECLARE_DATA struct sandesha2_ack_range
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_ack_range_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 

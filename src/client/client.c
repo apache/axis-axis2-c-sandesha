@@ -247,7 +247,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
                 env);
     SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
-    SANDESHA2_CREATE_SEQ_BEAN_SET_INTERNAL_SEQ_ID(create_seq_find_bean, 
+    sandesha2_create_seq_bean_set_internal_seq_id(create_seq_find_bean, 
             env, internal_seq_id);
     create_seq_bean = SANDESHA2_CREATE_SEQ_MGR_FIND_UNIQUE(create_seq_mgr, env, 
             create_seq_find_bean);
@@ -284,7 +284,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
 		/* returning the current seq report.*/
         return seq_report;
     }
-    out_seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_SEQ_ID(create_seq_bean, env);
+    out_seq_id = sandesha2_create_seq_bean_get_seq_id(create_seq_bean, env);
     if(!out_seq_id)
     {
         SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, 
@@ -1085,7 +1085,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
     ack_requested = sandesha2_ack_requested_create(env, rm_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
-    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, out_seq_id);
+    sandesha2_identifier_set_identifier(identifier, env, out_seq_id);
     SANDESHA2_ACK_REQUESTED_SET_IDENTIFIER(ack_requested, env, identifier);
     sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *) 
             ack_requested, env, dummy_envelope);
@@ -1252,7 +1252,7 @@ sandesha2_client_configure_close_seq(
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
     close_seq = sandesha2_close_seq_create(env, rm_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
-    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, seq_id);
+    sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_close_seq_set_identifier(close_seq, env, identifier);
     sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *) close_seq, 
             env, dummy_envelope);
@@ -1656,7 +1656,7 @@ sandesha2_client_configure_terminate_seq(
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
     terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
-    SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, seq_id);
+    sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_terminate_seq_set_identifier(terminate_seq, env, identifier);
     sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *)  
             terminate_seq, env, dummy_envelope);

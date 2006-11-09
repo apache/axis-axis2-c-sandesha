@@ -36,100 +36,53 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_invoker_mgr sandesha2_invoker_mgr_t;
-typedef struct sandesha2_invoker_mgr_ops sandesha2_invoker_mgr_ops_t;
-
-/** @defgroup sandesha2_invoker_mgr In Memory Invoker Manager
-  * @ingroup sandesha2
-  * @{
-  */
-
-struct sandesha2_invoker_mgr_ops
-{
-   /** 
-     * Deallocate memory
-     * @return status code
-     */
-    axis2_status_t (AXIS2_CALL *
-    free) (
-            void *invoker,
-            const axis2_env_t *env);
-     
-    axis2_bool_t (AXIS2_CALL *
-    insert) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            sandesha2_invoker_bean_t *bean);
-
-    axis2_bool_t (AXIS2_CALL *
-    remove) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            axis2_char_t *ref_key);
-
-    sandesha2_invoker_bean_t *(AXIS2_CALL *
-    retrieve) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            axis2_char_t *ref_key);
-
-    axis2_bool_t (AXIS2_CALL *
-    update) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            sandesha2_invoker_bean_t *bean);
-
-    axis2_array_list_t *(AXIS2_CALL *
-    find) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            sandesha2_invoker_bean_t *bean);
-
-    sandesha2_invoker_bean_t *(AXIS2_CALL *
-    find_unique) (
-            sandesha2_invoker_mgr_t *invoker,
-            const axis2_env_t *env,
-            sandesha2_invoker_bean_t *bean);
-
-
-};
-
-struct sandesha2_invoker_mgr
-{
-    sandesha2_invoker_mgr_ops_t *ops;
-};
+typedef struct sandesha2_invoker_mgr_t sandesha2_invoker_mgr_t;
 
 AXIS2_EXTERN sandesha2_invoker_mgr_t * AXIS2_CALL
 sandesha2_invoker_mgr_create(
-        const axis2_env_t *env,
-        axis2_ctx_t *ctx);
+    const axis2_env_t *env,
+    axis2_ctx_t *ctx);
 
-#define SANDESHA2_INVOKER_MGR_FREE(invoker, env) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->free (invoker, env))
+axis2_status_t AXIS2_CALL 
+sandesha2_invoker_mgr_free(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *envv);
 
-#define SANDESHA2_INVOKER_MGR_INSERT(invoker, env, bean) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       insert (invoker, env, bean))
+axis2_bool_t AXIS2_CALL
+sandesha2_invoker_mgr_insert(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
 
-#define SANDESHA2_INVOKER_MGR_REMOVE(invoker, env, ref_key) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       remove (invoker, env, ref_key))
+axis2_bool_t AXIS2_CALL
+sandesha2_invoker_mgr_remove(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    axis2_char_t *ref_key);
 
-#define SANDESHA2_INVOKER_MGR_RETRIEVE(invoker, env, ref_key) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       retrieve (invoker, env, ref_key))
+sandesha2_invoker_bean_t *AXIS2_CALL
+sandesha2_invoker_mgr_retrieve(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    axis2_char_t *ref_key);
 
-#define SANDESHA2_INVOKER_MGR_UPDATE(invoker, env, bean) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       update (invoker, env, bean))
+axis2_bool_t AXIS2_CALL
+sandesha2_invoker_mgr_update(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
 
-#define SANDESHA2_INVOKER_MGR_FIND(invoker, env, bean) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       find (invoker, env, bean))
+axis2_array_list_t *AXIS2_CALL
+sandesha2_invoker_mgr_find(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
 
-#define SANDESHA2_INVOKER_MGR_FIND_UNIQUE(invoker, env, bean) \
-      (((sandesha2_invoker_mgr_t *) invoker)->ops->\
-       find_unique (invoker, env, bean))
+sandesha2_invoker_bean_t *AXIS2_CALL
+sandesha2_invoker_mgr_find_unique(
+    sandesha2_invoker_mgr_t *invoker,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
 
 
 /** @} */

@@ -44,11 +44,13 @@ extern "C"
  * @{
  */
 AXIS2_EXTERN  sandesha2_property_bean_t* AXIS2_CALL
-sandesha2_property_mgr_load_properties_from_def_values(const axis2_env_t *env);
+sandesha2_property_mgr_load_properties_from_def_values(
+    const axis2_env_t *env);
 
 AXIS2_EXTERN  sandesha2_property_bean_t* AXIS2_CALL
-sandesha2_property_mgr_load_properties_from_module_desc(const axis2_env_t *env,
-                        axis2_module_desc_t *module_desc);
+sandesha2_property_mgr_load_properties_from_module_desc(
+    const axis2_env_t *env,
+    axis2_module_desc_t *module_desc);
                         
 
 /** @} */

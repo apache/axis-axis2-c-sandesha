@@ -210,7 +210,7 @@ sandesha2_ack_mgr_generate_ack_msg(
 
         ack_int_bean = sandesha2_utils_get_property_bean_from_op(env,
                         AXIS2_MSG_CTX_GET_OP(ref_msg, env));
-        ack_interval = SANDESHA2_PROPERTY_BEAN_GET_ACK_INTERVAL(ack_int_bean, 
+        ack_interval = sandesha2_property_bean_get_ack_interval(ack_int_bean, 
                         env);
         time_to_send = sandesha2_utils_get_current_time_in_millis(env) + 
                         ack_interval;

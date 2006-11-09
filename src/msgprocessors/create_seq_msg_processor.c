@@ -152,7 +152,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     sandesha2_create_seq_t *create_seq_part = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_fault_mgr_t *fault_mgr  = NULL;
     sandesha2_msg_ctx_t *fault_rm_msg_ctx = NULL;
     axis2_msg_ctx_t *out_msg_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -191,9 +190,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     
-    fault_mgr = sandesha2_fault_mgr_create(env);
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
-                        fault_mgr, env, msg_ctx, storage_mgr);
+                        env, msg_ctx, storage_mgr);
     if(NULL != fault_rm_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
@@ -224,7 +222,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     create_seq_res_part = (sandesha2_create_seq_res_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(create_seq_res_msg, 
                         env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
-    seq_offer = SANDESHA2_CREATE_SEQ_GET_SEQ_OFFER(create_seq_part, 
+    seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, 
                         env);
     
     if(NULL != seq_offer)
@@ -234,7 +232,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         axis2_bool_t offer_accepted = AXIS2_FALSE;
 
         
-        accept = SANDESHA2_CREATE_SEQ_RES_GET_ACCEPT(create_seq_res_part, env);
+        accept = sandesha2_create_seq_res_get_accept(create_seq_res_part, env);
         if(NULL == accept)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Accept part "
@@ -243,7 +241,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        offer_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        offer_seq_id = sandesha2_identifier_get_identifier(
                         SANDESHA2_SEQ_OFFER_GET_IDENTIFIER(seq_offer, env), env);
         offer_accepted = sandesha2_create_seq_msg_processor_offer_accepted(
                         env, offer_seq_id, rm_msg_ctx, 
@@ -256,13 +254,13 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_t *out_seq_bean = NULL;
             
             create_seq_bean = sandesha2_create_seq_bean_create(env);
-            SANDESHA2_CREATE_SEQ_BEAN_SET_SEQ_ID(create_seq_bean, env, 
+            sandesha2_create_seq_bean_set_seq_id(create_seq_bean, env, 
                         offer_seq_id);
             int_seq_id = sandesha2_utils_get_outgoing_internal_seq_id(env,
                         new_seq_id);
-            SANDESHA2_CREATE_SEQ_BEAN_SET_INTERNAL_SEQ_ID(create_seq_bean, env,
+            sandesha2_create_seq_bean_set_internal_seq_id(create_seq_bean, env,
                         int_seq_id);
-            SANDESHA2_CREATE_SEQ_BEAN_SET_CREATE_SEQ_MSG_ID(create_seq_bean, env,
+            sandesha2_create_seq_bean_set_create_seq_msg_id(create_seq_bean, env,
                         axis2_uuid_gen(env));
             create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(
                         storage_mgr, env);
@@ -280,12 +278,12 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         }
         else
         {
-            SANDESHA2_CREATE_SEQ_RES_SET_ACCEPT(create_seq_res_part, env, NULL);
+            sandesha2_create_seq_res_set_accept(create_seq_res_part, env, NULL);
             SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(create_seq_res_msg, env);
         }
     }
     acks_to = SANDESHA2_ADDRESS_GET_EPR(SANDESHA2_ACKS_TO_GET_ADDRESS(
-                    SANDESHA2_CREATE_SEQ_GET_ACKS_TO(create_seq_part, env), 
+                    sandesha2_create_seq_get_acks_to(create_seq_part, env), 
                     env), env);
     if(NULL == acks_to || NULL == AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, 
                     env))

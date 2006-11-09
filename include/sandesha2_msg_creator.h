@@ -53,11 +53,11 @@ typedef struct sandesha2_msg_creator_ops sandesha2_msg_creator_ops_t;
  */
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_create_seq_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *application_rm_msg, 
-        axis2_char_t *internal_seq_id,
-        axis2_char_t *acks_to,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *application_rm_msg, 
+    axis2_char_t *internal_seq_id,
+    axis2_char_t *acks_to,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /**
  * Create a new create_seq_response message.
@@ -68,11 +68,11 @@ sandesha2_msg_creator_create_create_seq_msg(
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_creator_create_create_seq_res_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *create_seq_msg,
-        axis2_msg_ctx_t *out_msg,
-        axis2_char_t *new_seq_id,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *create_seq_msg,
+    axis2_msg_ctx_t *out_msg,
+    axis2_char_t *new_seq_id,
+    sandesha2_storage_mgr_t *storage_mgr);
  
 /**
  * Create a new close_seq_response message.
@@ -83,27 +83,27 @@ sandesha2_msg_creator_create_create_seq_res_msg(
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_creator_create_close_seq_res_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *close_seq_msg,
-        axis2_msg_ctx_t *out_msg,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *close_seq_msg,
+    axis2_msg_ctx_t *out_msg,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_terminate_seq_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *ref_rm_msg,
-        axis2_char_t *seq_id,
-        axis2_char_t *internal_seq_id,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_char_t *seq_id,
+    axis2_char_t *internal_seq_id,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_terminate_seq_res_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *ref_rm_msg,
-        axis2_msg_ctx_t *out_msg,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_msg_ctx_t *out_msg,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /**
  * Adds an ack message to the given application message.
@@ -113,10 +113,10 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_msg_creator_add_ack_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *app_msg,
-        axis2_char_t *seq_id,
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *app_msg,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

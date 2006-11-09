@@ -416,7 +416,7 @@ sandesha2_in_order_invoker_worker_func(
             }
             find_bean = sandesha2_invoker_bean_create_with_data(env, NULL,
                         next_msg_no, seq_id, AXIS2_FALSE);
-            st_map_list = SANDESHA2_INVOKER_MGR_FIND(storage_map_mgr,
+            st_map_list = sandesha2_invoker_mgr_find(storage_map_mgr,
                         env, find_bean);
             for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(st_map_list, env); j++)
             {
@@ -431,7 +431,7 @@ sandesha2_in_order_invoker_worker_func(
                 axis2_engine_t *engine = NULL;
                 
                 st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
-                key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(st_map_bean,
+                key = sandesha2_invoker_bean_get_msg_ctx_ref_key(st_map_bean,
                         env);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
                         storage_mgr, env, key, invoker_impl->conf_ctx);

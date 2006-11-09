@@ -537,7 +537,7 @@ sandesha2_sender_worker_func(
         prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
                         AXIS2_MSG_CTX_GET_OP(msg_ctx, env));
         if(prop_bean)
-            msgs_not_to_send = SANDESHA2_PROPERTY_BEAN_GET_MSG_TYPES_TO_DROP(
+            msgs_not_to_send = sandesha2_property_bean_get_msg_types_to_drop(
                         prop_bean, env);
         if(msgs_not_to_send)
         {
@@ -574,7 +574,7 @@ sandesha2_sender_worker_func(
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
             identifier = sandesha2_seq_get_identifier(seq, env);
-            seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(identifier, env);
+            seq_id = sandesha2_identifier_get_identifier(identifier, env);
         }
         
         if(sandesha2_sender_is_piggybackable_msg_type(sender, env,
@@ -660,7 +660,7 @@ sandesha2_sender_worker_func(
             terminate_seq = (sandesha2_terminate_seq_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_TERMINATE_SEQ);
-            seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+            seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_terminate_seq_get_identifier(terminate_seq, 
                         env), env);
             conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);

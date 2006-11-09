@@ -44,10 +44,10 @@ extern "C"
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_retrans(
-        const axis2_env_t *env,
-        sandesha2_sender_bean_t *retrans_bean,
-        axis2_conf_ctx_t *conf_ctx, 
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_sender_bean_t *retrans_bean,
+    axis2_conf_ctx_t *conf_ctx, 
+    sandesha2_storage_mgr_t *storage_mgr);
 
 
 /** @} */

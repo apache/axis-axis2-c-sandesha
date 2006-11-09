@@ -37,61 +37,38 @@ struct sandesha2_create_seq_res_impl
 						((sandesha2_create_seq_res_impl_t *)(create_seq_res))
 
 /***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_res_get_namespace_value (
-						sandesha2_iom_rm_element_t *create_seq_res,
-						const axis2_env_t *env);
+    sandesha2_iom_rm_element_t *create_seq_res,
+    const axis2_env_t *env);
     
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_create_seq_res_from_om_node(
-                        sandesha2_iom_rm_element_t *create_seq_res,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+   sandesha2_iom_rm_element_t *create_seq_res,
+   const axis2_env_t *env, 
+   axiom_node_t *om_node);
     
-axiom_node_t* AXIS2_CALL 
-sandesha2_create_seq_res_to_om_node(sandesha2_iom_rm_element_t *create_seq_res,
-                    	const axis2_env_t *env, void *om_node);
+static axiom_node_t* AXIS2_CALL 
+    sandesha2_create_seq_res_to_om_node(
+    sandesha2_iom_rm_element_t *create_seq_res,
+    const axis2_env_t *env, 
+    void *om_node);
                     	
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_res_is_namespace_supported(
-						sandesha2_iom_rm_element_t *create_seq_res, 
-                        const axis2_env_t *env, 
-						axis2_char_t *namespace);
+    sandesha2_iom_rm_element_t *create_seq_res, 
+    const axis2_env_t *env, 
+    axis2_char_t *namespace);
 
-axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_set_identifier(
-                        sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, 
-                        sandesha2_identifier_t *identifier);
-
-sandesha2_identifier_t * AXIS2_CALL
-sandesha2_create_seq_res_get_identifier(
-                        sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_set_accept(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, sandesha2_accept_t *accept);
-
-sandesha2_accept_t * AXIS2_CALL
-sandesha2_create_seq_res_get_accept(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env);
-                        
-axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_set_expires(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, sandesha2_expires_t *expires);
-
-sandesha2_expires_t * AXIS2_CALL
-sandesha2_create_seq_res_get_expires(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_create_seq_res_to_soap_env(sandesha2_iom_rm_part_t *create_seq_res,
-                        const axis2_env_t *env, 
-                        axiom_soap_envelope_t *envelope);  
+   const axis2_env_t *env, 
+   axiom_soap_envelope_t *envelope);  
 
-axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_res_free (sandesha2_iom_rm_element_t *create_seq_res,
-						const axis2_env_t *env);								
+static axis2_status_t AXIS2_CALL 
+sandesha2_create_seq_res_free (
+    sandesha2_iom_rm_element_t *create_seq_res,
+	const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
@@ -126,19 +103,9 @@ sandesha2_create_seq_res_create(const axis2_env_t *env,  axis2_char_t *rm_ns_val
     create_seq_res_impl->identifier = NULL;
     create_seq_res_impl->accept = NULL;
     create_seq_res_impl->expires = NULL;
-    create_seq_res_impl->create_seq_res.ops = NULL; 
     create_seq_res_impl->create_seq_res.part.ops = NULL;
     create_seq_res_impl->create_seq_res.part.element.ops = NULL;
     
-    create_seq_res_impl->create_seq_res.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_create_seq_res_ops_t));
-    if(NULL == create_seq_res_impl->create_seq_res.ops)
-	{
-		sandesha2_create_seq_res_free((sandesha2_iom_rm_element_t*)
-                         create_seq_res_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     create_seq_res_impl->create_seq_res.part.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_part_ops_t));
     if(NULL == create_seq_res_impl->create_seq_res.part.ops)
@@ -172,18 +139,6 @@ sandesha2_create_seq_res_create(const axis2_env_t *env,  axis2_char_t *rm_ns_val
                         = sandesha2_create_seq_res_is_namespace_supported;
     create_seq_res_impl->create_seq_res.part.ops->to_soap_env = 
     					sandesha2_create_seq_res_to_soap_env;
-    create_seq_res_impl->create_seq_res.ops->set_identifier = 
-    					sandesha2_create_seq_res_set_identifier;
-    create_seq_res_impl->create_seq_res.ops->get_identifier = 
-    					sandesha2_create_seq_res_get_identifier;
-    create_seq_res_impl->create_seq_res.ops->set_accept = 
-    					sandesha2_create_seq_res_set_accept;
-    create_seq_res_impl->create_seq_res.ops->get_accept = 
-    					sandesha2_create_seq_res_get_accept;
-    create_seq_res_impl->create_seq_res.ops->set_expires = 
-    					sandesha2_create_seq_res_set_expires;
-    create_seq_res_impl->create_seq_res.ops->get_expires = 
-    					sandesha2_create_seq_res_get_expires;
     create_seq_res_impl->create_seq_res.part.element.ops->free = 
     					sandesha2_create_seq_res_free;
                         
@@ -191,35 +146,26 @@ sandesha2_create_seq_res_create(const axis2_env_t *env,  axis2_char_t *rm_ns_val
 }
 
 
-axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_res_free (sandesha2_iom_rm_element_t *create_seq_res, 
-						const axis2_env_t *env)
+static axis2_status_t AXIS2_CALL 
+sandesha2_create_seq_res_free (
+    sandesha2_iom_rm_element_t *create_seq_res, 
+    const axis2_env_t *env)
 {
     sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     create_seq_res_impl = SANDESHA2_INTF_TO_IMPL(create_seq_res);
     
-    if(NULL != create_seq_res_impl->addr_ns_val)
+    if(create_seq_res_impl->addr_ns_val)
     {
         AXIS2_FREE(env->allocator, create_seq_res_impl->addr_ns_val);
         create_seq_res_impl->addr_ns_val = NULL;
     }
-    if(NULL != create_seq_res_impl->rm_ns_val)
+    if(create_seq_res_impl->rm_ns_val)
     {
         AXIS2_FREE(env->allocator, create_seq_res_impl->rm_ns_val);
         create_seq_res_impl->rm_ns_val = NULL;
     }
-    if(NULL != create_seq_res->ops)
-    {
-        AXIS2_FREE(env->allocator, create_seq_res->ops);
-        create_seq_res->ops = NULL;
-    }
-    if(NULL != create_seq_res_impl->create_seq_res.ops)
-    {
-        AXIS2_FREE(env->allocator, create_seq_res_impl->create_seq_res.ops);
-        create_seq_res_impl->create_seq_res.ops = NULL;
-    }
-    if(NULL != create_seq_res_impl->create_seq_res.part.ops)
+    if(create_seq_res_impl->create_seq_res.part.ops)
     {
         AXIS2_FREE(env->allocator, create_seq_res_impl->create_seq_res.part.ops);
         create_seq_res_impl->create_seq_res.part.ops = NULL;
@@ -228,10 +174,10 @@ sandesha2_create_seq_res_free (sandesha2_iom_rm_element_t *create_seq_res,
 	return AXIS2_SUCCESS;
 }
 
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_res_get_namespace_value (
-						sandesha2_iom_rm_element_t *create_seq_res, 
-                        const axis2_env_t *env)
+    sandesha2_iom_rm_element_t *create_seq_res, 
+    const axis2_env_t *env)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -241,10 +187,10 @@ sandesha2_create_seq_res_get_namespace_value (
 }
 
 
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_create_seq_res_from_om_node(
-                        sandesha2_iom_rm_element_t *create_seq_res,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+    sandesha2_iom_rm_element_t *create_seq_res,
+    const axis2_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     axiom_element_t *om_element = NULL;
@@ -344,9 +290,11 @@ sandesha2_create_seq_res_from_om_node(
 }
 
 
-axiom_node_t* AXIS2_CALL 
-sandesha2_create_seq_res_to_om_node(sandesha2_iom_rm_element_t *create_seq_res,
-                    	const axis2_env_t *env, void *om_node)
+static axiom_node_t* AXIS2_CALL 
+sandesha2_create_seq_res_to_om_node(
+    sandesha2_iom_rm_element_t *create_seq_res,
+    const axis2_env_t *env, 
+    void *om_node)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -392,11 +340,11 @@ sandesha2_create_seq_res_to_om_node(sandesha2_iom_rm_element_t *create_seq_res,
     return (axiom_node_t*)om_node;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_res_is_namespace_supported(
-						sandesha2_iom_rm_element_t *create_seq_res, 
-                        const axis2_env_t *env, 
-						axis2_char_t *namespace)
+    sandesha2_iom_rm_element_t *create_seq_res, 
+    const axis2_env_t *env, 
+    axis2_char_t *namespace)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -415,9 +363,9 @@ sandesha2_create_seq_res_is_namespace_supported(
 
 axis2_status_t AXIS2_CALL
 sandesha2_create_seq_res_set_identifier(
-                        sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, 
-                        sandesha2_identifier_t *identifier)
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env, 
+    sandesha2_identifier_t *identifier)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -430,8 +378,8 @@ sandesha2_create_seq_res_set_identifier(
 
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_create_seq_res_get_identifier(
-                        sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env)
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -441,8 +389,9 @@ sandesha2_create_seq_res_get_identifier(
 } 
 
 axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_set_accept(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, sandesha2_accept_t *accept)
+sandesha2_create_seq_res_set_accept(
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env, sandesha2_accept_t *accept)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -454,8 +403,9 @@ sandesha2_create_seq_res_set_accept(sandesha2_create_seq_res_t *create_seq_res,
 
 
 sandesha2_accept_t * AXIS2_CALL
-sandesha2_create_seq_res_get_accept(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env)
+sandesha2_create_seq_res_get_accept(
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -465,8 +415,9 @@ sandesha2_create_seq_res_get_accept(sandesha2_create_seq_res_t *create_seq_res,
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_set_expires(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env, sandesha2_expires_t *expires)
+sandesha2_create_seq_res_set_expires(
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env, sandesha2_expires_t *expires)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -478,8 +429,9 @@ sandesha2_create_seq_res_set_expires(sandesha2_create_seq_res_t *create_seq_res,
 
 
 sandesha2_expires_t * AXIS2_CALL
-sandesha2_create_seq_res_get_expires(sandesha2_create_seq_res_t *create_seq_res,
-                    	const axis2_env_t *env)
+sandesha2_create_seq_res_get_expires(
+    sandesha2_create_seq_res_t *create_seq_res,
+    const axis2_env_t *env)
 {
 	sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -488,9 +440,10 @@ sandesha2_create_seq_res_get_expires(sandesha2_create_seq_res_t *create_seq_res,
     return create_seq_res_impl->expires;
 }
 
-axis2_status_t AXIS2_CALL
-sandesha2_create_seq_res_to_soap_env(sandesha2_iom_rm_part_t *create_seq_res,
-                        const axis2_env_t *env, axiom_soap_envelope_t *envelope)
+static axis2_status_t AXIS2_CALL
+sandesha2_create_seq_res_to_soap_env(
+    sandesha2_iom_rm_part_t *create_seq_res,
+    const axis2_env_t *env, axiom_soap_envelope_t *envelope)
 {
     sandesha2_create_seq_res_impl_t *create_seq_res_impl = NULL;
     axiom_node_t *body_node = NULL;
@@ -517,3 +470,4 @@ sandesha2_create_seq_res_to_soap_env(sandesha2_iom_rm_part_t *create_seq_res,
                         create_seq_res, env, body_node);
     return AXIS2_SUCCESS;
 }
+

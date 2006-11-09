@@ -22,11 +22,9 @@
  * @brief Fault Data struct impl
  *	Sandesha2 Fault Data
  */
-typedef struct sandesha2_fault_data_impl sandesha2_fault_data_impl_t;  
   
-struct sandesha2_fault_data_impl
+struct sandesha2_fault_data_t
 {
-    sandesha2_fault_data_t data;
     int type;
     axis2_char_t *code;
     axis2_char_t *sub_code;
@@ -35,31 +33,29 @@ struct sandesha2_fault_data_impl
     axiom_node_t *detail;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(data) \
-                        ((sandesha2_fault_data_impl_t *)(data))
-
 AXIS2_EXTERN sandesha2_fault_data_t* AXIS2_CALL
-sandesha2_fault_data_create(const axis2_env_t *env)
+sandesha2_fault_data_create(
+    const axis2_env_t *env)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
+    sandesha2_fault_data_t *fault_data = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    fault_data_impl =  (sandesha2_fault_data_impl_t *)AXIS2_MALLOC 
-                        (env->allocator, sizeof(sandesha2_fault_data_impl_t));
+    fault_data =  (sandesha2_fault_data_t *)AXIS2_MALLOC 
+                        (env->allocator, sizeof(sandesha2_fault_data_t));
 	
-    if(NULL == fault_data_impl)
+    if(!fault_data)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    fault_data_impl->type = -1;
-    fault_data_impl->code = NULL;
-    fault_data_impl->sub_code = NULL;
-    fault_data_impl->reason = NULL;
-    fault_data_impl->seq_id = NULL;
-    fault_data_impl->detail = NULL;
+    fault_data->type = -1;
+    fault_data->code = NULL;
+    fault_data->sub_code = NULL;
+    fault_data->reason = NULL;
+    fault_data->seq_id = NULL;
+    fault_data->detail = NULL;
     
-	return &(fault_data_impl->data);
+	return fault_data;
 }
 
 
@@ -68,38 +64,35 @@ sandesha2_fault_data_free(
     sandesha2_fault_data_t *data, 
     const axis2_env_t *env)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    fault_data_impl = SANDESHA2_INTF_TO_IMPL(data);
-    fault_data_impl->type = -1;
-    if(NULL != fault_data_impl->code)
+    data->type = -1;
+    if(data->code)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->code);
-        fault_data_impl->code = NULL;
+        AXIS2_FREE(env->allocator, data->code);
+        data->code = NULL;
     }
-    if(NULL != fault_data_impl->sub_code)
+    if(data->sub_code)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->sub_code);
-        fault_data_impl->sub_code = NULL;
+        AXIS2_FREE(env->allocator, data->sub_code);
+        data->sub_code = NULL;
     }
-    if(NULL != fault_data_impl->reason)
+    if(data->reason)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->reason);
-        fault_data_impl->reason = NULL;
+        AXIS2_FREE(env->allocator, data->reason);
+        data->reason = NULL;
     }
-    if(NULL != fault_data_impl->seq_id)
+    if(data->seq_id)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->seq_id);
-        fault_data_impl->seq_id = NULL;
+        AXIS2_FREE(env->allocator, data->seq_id);
+        data->seq_id = NULL;
     }
     /* Not sure we have to free this.
      * TODO consider in memory cleaning stage
      */
-    fault_data_impl->detail = NULL;
+    data->detail = NULL;
     
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(data));
+	AXIS2_FREE(env->allocator, data);
 	return AXIS2_SUCCESS;
 }
 
@@ -109,7 +102,7 @@ sandesha2_fault_data_get_detail(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(data)->detail;
+    return data->detail;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -121,7 +114,7 @@ sandesha2_fault_data_set_detail(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, detail, AXIS2_FAILURE);
     
-    SANDESHA2_INTF_TO_IMPL(data)->detail = detail;
+    data->detail = detail;
     return AXIS2_SUCCESS;
 }
             
@@ -131,7 +124,7 @@ sandesha2_fault_data_get_reason(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(data)->reason;
+    return data->reason;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -140,18 +133,15 @@ sandesha2_fault_data_set_reason(
     const axis2_env_t *env,
     axis2_char_t *reason)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, reason, AXIS2_FAILURE);
     
-    fault_data_impl = SANDESHA2_INTF_TO_IMPL(data);
-    if(NULL != fault_data_impl->reason)
+    if(data->reason)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->reason);
-        fault_data_impl->reason = NULL;
+        AXIS2_FREE(env->allocator, data->reason);
+        data->reason = NULL;
     }
-    fault_data_impl->reason = AXIS2_STRDUP(reason, env);
+    data->reason = AXIS2_STRDUP(reason, env);
     return AXIS2_SUCCESS;
 }
 
@@ -161,7 +151,7 @@ sandesha2_fault_data_get_sub_code(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(data)->sub_code;
+    return data->sub_code;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -170,18 +160,15 @@ sandesha2_fault_data_set_sub_code(
     const axis2_env_t *env,
     axis2_char_t *sub_code)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sub_code, AXIS2_FAILURE);
     
-    fault_data_impl = SANDESHA2_INTF_TO_IMPL(data);
-    if(NULL != fault_data_impl->sub_code)
+    if(data->sub_code)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->sub_code);
-        fault_data_impl->sub_code = NULL;
+        AXIS2_FREE(env->allocator, data->sub_code);
+        data->sub_code = NULL;
     }
-    fault_data_impl->sub_code = AXIS2_STRDUP(sub_code, env);
+    data->sub_code = AXIS2_STRDUP(sub_code, env);
     return AXIS2_SUCCESS;
 }
             
@@ -191,7 +178,7 @@ sandesha2_fault_data_get_code(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(data)->code;
+    return data->code;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -200,18 +187,15 @@ sandesha2_fault_data_set_code(
     const axis2_env_t *env,
     axis2_char_t *code)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, code, AXIS2_FAILURE);
     
-    fault_data_impl = SANDESHA2_INTF_TO_IMPL(data);
-    if(NULL != fault_data_impl->code)
+    if(data->code)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->code);
-        fault_data_impl->code = NULL;
+        AXIS2_FREE(env->allocator, data->code);
+        data->code = NULL;
     }
-    fault_data_impl->code = AXIS2_STRDUP(code, env);
+    data->code = AXIS2_STRDUP(code, env);
     return AXIS2_SUCCESS;
 }
             
@@ -221,7 +205,7 @@ sandesha2_fault_data_get_type(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, -1);
-    return SANDESHA2_INTF_TO_IMPL(data)->type;
+    return data->type;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -231,7 +215,7 @@ sandesha2_fault_data_set_type(
     int type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    SANDESHA2_INTF_TO_IMPL(data)->type = type;
+    data->type = type;
     return AXIS2_SUCCESS;
 }
             
@@ -241,7 +225,7 @@ sandesha2_fault_data_get_seq_id(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(data)->seq_id;
+    return data->seq_id;
 }
             
 axis2_status_t AXIS2_CALL 
@@ -250,18 +234,16 @@ sandesha2_fault_data_set_seq_id(
     const axis2_env_t *env,
     axis2_char_t *seq_id)
 {
-    sandesha2_fault_data_impl_t *fault_data_impl = NULL;
-    
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    fault_data_impl = SANDESHA2_INTF_TO_IMPL(data);
-    if(NULL != fault_data_impl->seq_id)
+    if(data->seq_id)
     {
-        AXIS2_FREE(env->allocator, fault_data_impl->seq_id);
-        fault_data_impl->seq_id = NULL;
+        AXIS2_FREE(env->allocator, data->seq_id);
+        data->seq_id = NULL;
     }
-    fault_data_impl->seq_id = AXIS2_STRDUP(seq_id, env);
+    data->seq_id = AXIS2_STRDUP(seq_id, env);
     return AXIS2_SUCCESS;
     
 }
+

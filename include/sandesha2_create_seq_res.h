@@ -39,49 +39,8 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_create_seq_res_ops sandesha2_create_seq_res_ops_t;
 typedef struct sandesha2_create_seq_res sandesha2_create_seq_res_t;
  
-/**
- * @brief CreateSequenceResponse ops struct
- * Encapsulator struct for ops of sandesha2_create_seq_res
- */
-AXIS2_DECLARE_DATA struct sandesha2_create_seq_res_ops
-{
-    sandesha2_identifier_t * (AXIS2_CALL *
-        get_identifier)
-            (sandesha2_create_seq_res_t *create_seq_res,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_identifier)
-            (sandesha2_create_seq_res_t *create_seq_res,
-            const axis2_env_t *env, 
-            sandesha2_identifier_t *identifier);
-
-   axis2_status_t (AXIS2_CALL *
-        set_accept)
-            (sandesha2_create_seq_res_t *element,
-            const axis2_env_t *env, 
-            sandesha2_accept_t *accept);
-
-    sandesha2_accept_t * (AXIS2_CALL *
-        get_accept)
-            (sandesha2_create_seq_res_t *element,
-            const axis2_env_t *env);
-                        
-    axis2_status_t (AXIS2_CALL *
-        set_expires)
-            (sandesha2_create_seq_res_t *element,
-            const axis2_env_t *env, 
-            sandesha2_expires_t *expires);
-
-    sandesha2_expires_t * (AXIS2_CALL *
-        get_expires)
-            (sandesha2_create_seq_res_t *element,
-            const axis2_env_t *env);
-};
-
 /**
  * @brief sandesha2_create_seq_res
  *    sandesha2_create_seq_res
@@ -89,28 +48,46 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq_res_ops
 AXIS2_DECLARE_DATA struct sandesha2_create_seq_res
 {
     sandesha2_iom_rm_part_t part;
-    sandesha2_create_seq_res_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_create_seq_res_t* AXIS2_CALL
 sandesha2_create_seq_res_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *rm_ns_value, 
-					    axis2_char_t *addr_ns_value);
-/************************** Start of function macros **************************/
-#define SANDESHA2_CREATE_SEQ_RES_SET_IDENTIFIER(create_seq_res, env, identifier)\
-    ((create_seq_res)->ops->set_identifier (create_seq_res, env, identifier))
-#define SANDESHA2_CREATE_SEQ_RES_GET_IDENTIFIER(create_seq_res, env) \
-    ((create_seq_res)->ops->get_identifier (create_seq_res, env))
-#define SANDESHA2_CREATE_SEQ_RES_SET_ACCEPT(create_seq_res, env, accept) \
-    ((create_seq_res)->ops->set_accept (create_seq_res, env, accept))
-#define SANDESHA2_CREATE_SEQ_RES_GET_ACCEPT(create_seq_res, env) \
-    ((create_seq_res)->ops->get_accept (create_seq_res, env))
-#define SANDESHA2_CREATE_SEQ_RES_EXPIRES (create_seq_res, env, expires) \
-    ((create_seq_res)->ops->set_expires (create_seq_res, env, expires))
-#define SANDESHA2_CREATE_SEQ_RES_GET_EXPIRES(create_seq_res, env) \
-    ((create_seq_res)->ops->get_expires (create_seq_res, env))
-/************************** End of function macros ****************************/
+    const axis2_env_t *env, 
+    axis2_char_t *rm_ns_value, 
+    axis2_char_t *addr_ns_value);
+
+axis2_status_t AXIS2_CALL
+sandesha2_create_seq_res_set_identifier(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env, 
+   sandesha2_identifier_t *identifier);
+
+sandesha2_identifier_t * AXIS2_CALL
+sandesha2_create_seq_res_get_identifier(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_create_seq_res_set_accept(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env, sandesha2_accept_t *accept);
+
+sandesha2_accept_t * AXIS2_CALL
+sandesha2_create_seq_res_get_accept(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env);
+                        
+axis2_status_t AXIS2_CALL
+sandesha2_create_seq_res_set_expires(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env, sandesha2_expires_t *expires);
+
+sandesha2_expires_t * AXIS2_CALL
+sandesha2_create_seq_res_get_expires(
+   sandesha2_create_seq_res_t *create_seq_res,
+   const axis2_env_t *env);
+
+
 /** @} */
 #ifdef __cplusplus
 }

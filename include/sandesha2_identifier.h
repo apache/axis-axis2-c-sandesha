@@ -38,26 +38,7 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_identifier_ops sandesha2_identifier_ops_t;
 typedef struct sandesha2_identifier sandesha2_identifier_t;
-
-/**
- * @brief Identifier ops struct
- * Encapsulator struct for ops of sandesha2_identifier
- */
-AXIS2_DECLARE_DATA struct sandesha2_identifier_ops
-{
-    axis2_char_t * (AXIS2_CALL *
-        get_identifier)
-            (sandesha2_identifier_t *identifier,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_identifier)
-            (sandesha2_identifier_t *identifier,
-            const axis2_env_t *env, 
-            axis2_char_t *str_id);
-};
 
 /**
  * @brief sandesha2_identifier
@@ -66,21 +47,24 @@ AXIS2_DECLARE_DATA struct sandesha2_identifier_ops
 AXIS2_DECLARE_DATA struct sandesha2_identifier
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_identifier_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
 sandesha2_identifier_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
+                    	
+axis2_char_t * AXIS2_CALL
+sandesha2_identifier_get_identifier(
+    sandesha2_identifier_t *identifier,
+    const axis2_env_t *env);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_IDENTIFIER_GET_IDENTIFIER(identifier, env)\
-    ((identifier)->ops->get_identifier(identifier, env))
-#define SANDESHA2_IDENTIFIER_SET_IDENTIFIER(identifier, env, str_id)\
-    ((identifier)->ops->set_identifier(identifier, env, str_id))
-/************************** End of function macros ****************************/
-                      
+axis2_status_t AXIS2_CALL                 
+sandesha2_identifier_set_identifier(
+    sandesha2_identifier_t *identifier,
+    const axis2_env_t *env, axis2_char_t *str_id);
+
+
 /** @} */
 #ifdef __cplusplus
 }

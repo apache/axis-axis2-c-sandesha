@@ -45,13 +45,7 @@ extern "C"
  * @{
  */
  
-typedef struct sandesha2_storage_mgr sandesha2_storage_mgr_t;
-
-/**
- * @brief sandesha2_storage_mgr_ops
- *    sandesha2_storage_mgr_ops
- */
-AXIS2_DECLARE_DATA struct sandesha2_storage_mgr{};
+typedef struct sandesha2_storage_mgr_t sandesha2_storage_mgr_t;
 
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_storage_mgr_create(
@@ -78,7 +72,7 @@ sandesha2_storage_mgr_get_instance(
  
 axis2_status_t AXIS2_CALL 
 sandesha2_storage_mgr_free(
-    void *storage,
+    sandesha2_storage_mgr_t *storage,
     const axis2_env_t *envv);
 
 sandesha2_transaction_t *AXIS2_CALL

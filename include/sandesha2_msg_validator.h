@@ -43,9 +43,9 @@ extern "C"
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_validator_validate_msg(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx, 
-        sandesha2_storage_mgr_t *storage_mgr);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    sandesha2_storage_mgr_t *storage_mgr);
 
 
 /** @} */

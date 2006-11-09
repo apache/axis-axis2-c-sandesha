@@ -53,8 +53,8 @@ AXIS2_DECLARE_DATA struct sandesha2_close_seq
 
 AXIS2_EXTERN sandesha2_close_seq_t* AXIS2_CALL
 sandesha2_close_seq_create(
-						const axis2_env_t *env,
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env,
+    axis2_char_t *ns_value);
  
 axis2_status_t AXIS2_CALL                 
 sandesha2_close_seq_set_identifier(

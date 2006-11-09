@@ -192,7 +192,7 @@ sandesha2_create_seq_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
-    msg_id = SANDESHA2_CREATE_SEQ_BEAN_GET_CREATE_SEQ_MSG_ID(bean, env);
+    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
     axis2_hash_set(seq_mgr_impl->table, msg_id, AXIS2_HASH_KEY_STRING, bean);
 
     return AXIS2_TRUE;
@@ -249,7 +249,7 @@ sandesha2_create_seq_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
-    msg_id = SANDESHA2_CREATE_SEQ_BEAN_GET_CREATE_SEQ_MSG_ID(bean, env);
+    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
     if(!msg_id)
     {
         return AXIS2_FALSE;
@@ -297,21 +297,21 @@ sandesha2_create_seq_mgr_find(
         
         axis2_hash_this (i, NULL, NULL, &v);
         temp = (sandesha2_create_seq_bean_t *) v;
-        msg_id = SANDESHA2_CREATE_SEQ_BEAN_GET_CREATE_SEQ_MSG_ID(bean, env);
-        temp_msg_id = SANDESHA2_CREATE_SEQ_BEAN_GET_CREATE_SEQ_MSG_ID(temp, env);
+        msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
+        temp_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(temp, env);
         if(msg_id && temp_msg_id && 0 != AXIS2_STRCMP(msg_id, temp_msg_id))
         {
             equal = AXIS2_FALSE;
         }
-        seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_SEQ_ID(bean, env);
-        temp_seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_SEQ_ID(temp, env);
+        seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+        temp_seq_id = sandesha2_create_seq_bean_get_seq_id(temp, env);
         if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
         {
             equal = AXIS2_FALSE;
         }
-        internal_seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_INTERNAL_SEQ_ID(bean, 
+        internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, 
                 env);
-        temp_internal_seq_id = SANDESHA2_CREATE_SEQ_BEAN_GET_INTERNAL_SEQ_ID(
+        temp_internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(
                 temp, env);
         if(internal_seq_id && temp_internal_seq_id && 0 != AXIS2_STRCMP(
                     internal_seq_id, temp_internal_seq_id))

@@ -55,7 +55,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     
     prop_bean = sandesha2_utils_get_property_bean(env, AXIS2_CONF_CTX_GET_CONF(
                     conf_ctx, env));
-    in_order_invoke = SANDESHA2_PROPERTY_BEAN_IS_IN_ORDER(prop_bean, env);
+    in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
     if(AXIS2_FALSE == in_order_invoke)
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
                     seq_id, storage_man);
@@ -98,21 +98,21 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     invoker_mgr = sandesha2_storage_mgr_get_storage_map_mgr(storage_man, env);
     find_bean = sandesha2_invoker_bean_create(env);
     
-    SANDESHA2_INVOKER_BEAN_SET_SEQ_ID(find_bean, env, seq_id);
-    SANDESHA2_INVOKER_BEAN_SET_INVOKED(find_bean, env, AXIS2_TRUE);
+    sandesha2_invoker_bean_set_seq_id(find_bean, env, seq_id);
+    sandesha2_invoker_bean_set_invoked(find_bean, env, AXIS2_TRUE);
     
-    found_list = SANDESHA2_INVOKER_MGR_FIND(invoker_mgr, env, find_bean);
+    found_list = sandesha2_invoker_mgr_find(invoker_mgr, env, find_bean);
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)
     {
         sandesha2_invoker_bean_t *map_bean = NULL;
         axis2_char_t *msg_store_key = NULL;
         
         map_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
-        msg_store_key = SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(map_bean, 
+        msg_store_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(map_bean, 
                         env);
         sandesha2_storage_mgr_remove_msg_ctx(storage_man, env, msg_store_key);
-        SANDESHA2_INVOKER_MGR_REMOVE(invoker_mgr, env, 
-                        SANDESHA2_INVOKER_BEAN_GET_MSG_CONTEXT_REF_KEY(map_bean, 
+        sandesha2_invoker_mgr_remove(invoker_mgr, env, 
+                        sandesha2_invoker_bean_get_msg_ctx_ref_key(map_bean, 
                         env));
     }
     clean_status = axis2_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
@@ -403,7 +403,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     }
     
     find_create_seq_bean = sandesha2_create_seq_bean_create(env);
-    SANDESHA2_CREATE_SEQ_BEAN_SET_INTERNAL_SEQ_ID(find_create_seq_bean, env,
+    sandesha2_create_seq_bean_set_internal_seq_id(find_create_seq_bean, env,
                         seq_id);
     found_list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, 
                         find_create_seq_bean);
@@ -416,7 +416,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             
             create_seq_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
             SANDESHA2_CREATE_SEQ_MGR_REMOVE(create_seq_mgr, env,
-                        SANDESHA2_CREATE_SEQ_BEAN_GET_CREATE_SEQ_MSG_ID(
+                        sandesha2_create_seq_bean_get_create_seq_msg_id(
                         create_seq_bean, env));
         }
     }

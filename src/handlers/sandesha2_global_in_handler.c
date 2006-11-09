@@ -270,7 +270,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                         env, SANDESHA2_MSG_PART_SEQ);
         if(sequence)
         {
-            seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+            seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_get_identifier(sequence, env), env);
             msg_no = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(sandesha2_seq_get_msg_num(
                         sequence, env), env);
@@ -419,7 +419,7 @@ sandesha2_global_in_handler_process_dropped_msg(
         sequence = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
         if(sequence)
-            seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+            seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_get_identifier(sequence, env), env);
             
         if(seq_id)

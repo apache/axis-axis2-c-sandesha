@@ -33,37 +33,30 @@ struct sandesha2_identifier_impl
 						((sandesha2_identifier_impl_t *)(identifier))
 
 /***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_identifier_get_namespace_value (
-                        sandesha2_iom_rm_element_t *identifier,
-						const axis2_env_t *env);
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env);
     
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_identifier_from_om_node(
-        sandesha2_iom_rm_element_t *identifier,
-        const axis2_env_t *env, axiom_node_t *om_node);
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, axiom_node_t *om_node);
     
-axiom_node_t* AXIS2_CALL 
+static axiom_node_t* AXIS2_CALL 
 sandesha2_identifier_to_om_node(
-        sandesha2_iom_rm_element_t *identifier,
-        const axis2_env_t *env, void *om_node);
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, void *om_node);
                     	
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_identifier_is_namespace_supported(
-        sandesha2_iom_rm_element_t *identifier,
-       	const axis2_env_t *env, axis2_char_t *namespace);
-                    	
-axis2_char_t * AXIS2_CALL
-sandesha2_identifier_get_identifier(sandesha2_identifier_t *identifier,
-                    	const axis2_env_t *env);
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, axis2_char_t *namespace);
 
-axis2_status_t AXIS2_CALL                 
-sandesha2_identifier_set_identifier(sandesha2_identifier_t *identifier,
-                    	const axis2_env_t *env, axis2_char_t *str_id);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_identifier_free (sandesha2_iom_rm_element_t *identifier, 
-						const axis2_env_t *env);	
+static axis2_status_t AXIS2_CALL 
+sandesha2_identifier_free (
+    sandesha2_iom_rm_element_t *identifier, 
+    const axis2_env_t *env);	
 						
 /***************************** End of function headers ************************/
 
@@ -86,7 +79,6 @@ sandesha2_identifier_create(
 	}
     identifier_impl->ns_val = NULL;
     identifier_impl->str_id = NULL;
-    identifier_impl->identifier.ops = NULL;
     identifier_impl->identifier.element.ops = NULL;
     
     if(AXIS2_FALSE == sandesha2_identifier_is_namespace_supported(
@@ -98,15 +90,6 @@ sandesha2_identifier_create(
         return NULL;
     }        
     
-    identifier_impl->identifier.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_identifier_ops_t));
-    if(NULL == identifier_impl->identifier.ops)
-	{
-		sandesha2_identifier_free((sandesha2_iom_rm_element_t*)
-                         identifier_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     identifier_impl->identifier.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
 
@@ -127,52 +110,44 @@ sandesha2_identifier_create(
     					sandesha2_identifier_to_om_node;
     identifier_impl->identifier.element.ops->is_namespace_supported = 
     					sandesha2_identifier_is_namespace_supported;
-    identifier_impl->identifier.ops->get_identifier = 
-                        sandesha2_identifier_get_identifier;
-    identifier_impl->identifier.ops->set_identifier = 
-                        sandesha2_identifier_set_identifier;
     identifier_impl->identifier.element.ops->free = sandesha2_identifier_free;
     
 	return &(identifier_impl->identifier);
 }
 
 
-axis2_status_t AXIS2_CALL 
-sandesha2_identifier_free (sandesha2_iom_rm_element_t *identifier, 
-						const axis2_env_t *env)
+static axis2_status_t AXIS2_CALL 
+sandesha2_identifier_free (
+    sandesha2_iom_rm_element_t *identifier, 
+	const axis2_env_t *env)
 {
     sandesha2_identifier_impl_t *identifier_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
     
-    if(NULL != identifier_impl->ns_val)
+    if(identifier_impl->ns_val)
     {
         AXIS2_FREE(env->allocator, identifier_impl->ns_val);
         identifier_impl->ns_val = NULL;
     }
-    if(NULL != identifier_impl->str_id)
+    if(identifier_impl->str_id)
     {
     	AXIS2_FREE(env->allocator, identifier_impl->str_id);
         identifier_impl->str_id = NULL;
     }
-    if(NULL != identifier_impl->identifier.element.ops)
+    if(identifier_impl->identifier.element.ops)
     {
         AXIS2_FREE(env->allocator, identifier_impl->identifier.element.ops);
         identifier_impl->identifier.element.ops = NULL;
     }    
-    if(NULL != identifier->ops)
-    {
-        AXIS2_FREE(env->allocator, identifier->ops);
-        identifier->ops = NULL;
-    }
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(identifier));
 	return AXIS2_SUCCESS;
 }
 
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_identifier_get_namespace_value (
-                        sandesha2_iom_rm_element_t *identifier,
-						const axis2_env_t *env)
+    sandesha2_iom_rm_element_t *identifier,
+	const axis2_env_t *env)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -182,11 +157,11 @@ sandesha2_identifier_get_namespace_value (
 }
 
 
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_identifier_from_om_node(
-        sandesha2_iom_rm_element_t *identifier,
-        const axis2_env_t *env, 
-        axiom_node_t *om_node)
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, 
+    axiom_node_t *om_node)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
     axiom_element_t *om_element = NULL;
@@ -236,9 +211,10 @@ sandesha2_identifier_from_om_node(
 }
 
 
-axiom_node_t* AXIS2_CALL 
-sandesha2_identifier_to_om_node(sandesha2_iom_rm_element_t *identifier,
-                    	const axis2_env_t *env, void *om_node)
+static axiom_node_t* AXIS2_CALL 
+sandesha2_identifier_to_om_node(
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, void *om_node)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -249,7 +225,7 @@ sandesha2_identifier_to_om_node(sandesha2_iom_rm_element_t *identifier,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
-    if(NULL == identifier_impl->str_id || 0 == AXIS2_STRLEN(
+    if(!identifier_impl->str_id || 0 == AXIS2_STRLEN(
                         identifier_impl->str_id))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
@@ -258,13 +234,13 @@ sandesha2_identifier_to_om_node(sandesha2_iom_rm_element_t *identifier,
     }
     rm_ns = axiom_namespace_create(env, identifier_impl->ns_val,
                         SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-    if(NULL == rm_ns)
+    if(!rm_ns)
     {
         return NULL;
     }
     id_element = axiom_element_create(env, NULL, 
                         SANDESHA2_WSRM_COMMON_IDENTIFIER, rm_ns, &id_node);
-    if(NULL == id_element)
+    if(!id_element)
     {
         return NULL;
     }
@@ -274,10 +250,11 @@ sandesha2_identifier_to_om_node(sandesha2_iom_rm_element_t *identifier,
     return (axiom_node_t*)om_node;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_identifier_is_namespace_supported(
-                        sandesha2_iom_rm_element_t *identifier,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+    sandesha2_iom_rm_element_t *identifier,
+    const axis2_env_t *env, 
+    axis2_char_t *namespace)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -295,8 +272,9 @@ sandesha2_identifier_is_namespace_supported(
 }
 
 axis2_char_t * AXIS2_CALL
-sandesha2_identifier_get_identifier(sandesha2_identifier_t *identifier,
-                    	const axis2_env_t *env)
+sandesha2_identifier_get_identifier(
+    sandesha2_identifier_t *identifier,
+    const axis2_env_t *env)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -307,8 +285,9 @@ sandesha2_identifier_get_identifier(sandesha2_identifier_t *identifier,
 }                    	
 
 axis2_status_t AXIS2_CALL                 
-sandesha2_identifier_set_identifier(sandesha2_identifier_t *identifier,
-                    	const axis2_env_t *env, axis2_char_t *str_id)
+sandesha2_identifier_set_identifier(
+    sandesha2_identifier_t *identifier,
+    const axis2_env_t *env, axis2_char_t *str_id)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -323,3 +302,4 @@ sandesha2_identifier_set_identifier(sandesha2_identifier_t *identifier,
 	identifier_impl->str_id = (axis2_char_t *)AXIS2_STRDUP(str_id, env);
  	return AXIS2_SUCCESS;
 }
+

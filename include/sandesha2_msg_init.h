@@ -38,9 +38,6 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_msg_init sandesha2_msg_init_t;
-typedef struct sandesha2_msg_init_ops sandesha2_msg_init_ops_t;
-
 /** @defgroup sandesha2_msg_init In Memory Message init
   * @ingroup sandesha2
   * @{
@@ -60,8 +57,8 @@ typedef struct sandesha2_msg_init_ops sandesha2_msg_init_ops_t;
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_init_init_msg(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *ctx);
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *ctx);
 
 /** @} */
 #ifdef __cplusplus

@@ -883,7 +883,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         sandesha2_seq_t *seq = NULL;
         seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env,
                         SANDESHA2_MSG_PART_SEQ);
-        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_get_identifier(seq, env), env);
     }
     else if(SANDESHA2_MSG_TYPE_ACK == msg_type)
@@ -891,7 +891,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         sandesha2_seq_ack_t *seq_ack = NULL;
         seq_ack = (sandesha2_seq_ack_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_ack_get_identifier(seq_ack, env), env);
     }
     else if(SANDESHA2_MSG_TYPE_ACK_REQUEST == msg_type)
@@ -900,7 +900,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         ack_requested = (sandesha2_ack_requested_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_ACK_REQUEST);
-        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        seq_id = sandesha2_identifier_get_identifier(
                         SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_requested, 
                         env), env);
     }
@@ -910,7 +910,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         close_seq = (sandesha2_close_seq_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_CLOSE_SEQ);
-        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_close_seq_get_identifier(close_seq, 
                         env), env);
     }
@@ -920,7 +920,7 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(const axis2_env_t *env,
         close_seq_res = (sandesha2_close_seq_res_t*)
                         SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
                         SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
-        seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+        seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_close_res_seq_get_identifier(close_seq_res, 
                         env), env);
     }

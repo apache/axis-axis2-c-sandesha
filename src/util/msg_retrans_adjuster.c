@@ -87,7 +87,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
                         env) + 1);
     sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(env, retrans_bean,
                         property_bean);
-    max_attempts = SANDESHA2_PROPERTY_BEAN_GET_MAX_RETRANS_COUNT(property_bean, 
+    max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, 
                         env);
     
     if(max_attempts > 0 && SANDESHA2_SENDER_BEAN_GET_SENT_COUNT(retrans_bean, 
@@ -125,10 +125,10 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, property_bean, NULL);
     
     count = SANDESHA2_SENDER_BEAN_GET_SENT_COUNT(retrans_bean, env);
-    base_interval = SANDESHA2_PROPERTY_BEAN_GET_RETRANS_INTERVAL(property_bean,
+    base_interval = sandesha2_property_bean_get_retrans_interval(property_bean,
                         env);
     new_interval = base_interval;
-    if(AXIS2_TRUE == SANDESHA2_PROPERTY_BEAN_IS_EXP_BACKOFF(property_bean, env))
+    if(AXIS2_TRUE == sandesha2_property_bean_is_exp_backoff(property_bean, env))
     {
         new_interval = sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(env,
                         count, base_interval);

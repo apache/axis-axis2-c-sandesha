@@ -157,7 +157,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     axis2_array_list_t *ack_range_list = NULL;
     axis2_array_list_t *nack_list = NULL;
     axis2_char_t *out_seq_id = NULL;
-    sandesha2_fault_mgr_t *fault_mgr = NULL;
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
     axis2_char_t *int_seq_id = NULL;
     axis2_property_t *property = NULL;
@@ -201,7 +200,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     
     ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
     nack_list = sandesha2_seq_ack_get_nack_list(seq_ack, env);
-    out_seq_id = SANDESHA2_IDENTIFIER_GET_IDENTIFIER(
+    out_seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_ack_get_identifier(seq_ack, env), env);
     if(!out_seq_id || 0 == AXIS2_STRLEN(out_seq_id))
     {
@@ -210,8 +209,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_SEQ, AXIS2_FAILURE);
         return AXIS2_FAILURE;        
     }
-    fault_mgr = sandesha2_fault_mgr_create(env);
-    fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(fault_mgr, env,
+    fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env,
                         rm_msg_ctx, out_seq_id, storage_mgr);
     if(fault_msg_ctx)
     {
@@ -221,8 +219,8 @@ sandesha2_ack_msg_processor_process_in_msg (
                         fault_msg_ctx, env));
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     }
-    fault_msg_ctx = sandesha2_fault_mgr_check_for_invalid_ack(fault_mgr, env,
-                        rm_msg_ctx, storage_mgr);
+    fault_msg_ctx = sandesha2_fault_mgr_check_for_invalid_ack(env, rm_msg_ctx, 
+            storage_mgr);
     if(fault_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
