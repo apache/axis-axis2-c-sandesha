@@ -63,7 +63,7 @@ sandesha2_close_seq_res_set_identifier(
     sandesha2_identifier_t *identifier);
 
 sandesha2_identifier_t * AXIS2_CALL
-sandesha2_close_res_seq_get_identifier(
+sandesha2_close_seq_res_get_identifier(
     sandesha2_close_seq_res_t *close_seq_res,
     const axis2_env_t *env);
 
