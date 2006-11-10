@@ -266,6 +266,8 @@ sandesha2_in_order_invoker_worker_func(
         int i = 0;
 
         AXIS2_SLEEP(1);
+        if(!invoker->conf_ctx || !invoker->conf_ctx->ops)
+            return NULL;
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker->conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(invoker->conf_ctx, env));
