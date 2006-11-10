@@ -19,15 +19,14 @@
 #include <axiom_soap_header_block.h>
 #include <sandesha2_constants.h>
 
+typedef struct sandesha2_ack_requested_impl sandesha2_ack_requested_impl_t;
 /** 
  * @brief AckRequested struct impl
  *	Sandesha2 IOM AckRequested
  */
-typedef struct sandesha2_ack_requested_impl sandesha2_ack_requested_impl_t;  
-  
 struct sandesha2_ack_requested_impl
 {
-	sandesha2_ack_requested_t ack_requested;
+    sandesha2_ack_requested_t ack_requested;
 	sandesha2_identifier_t *identifier;
 	sandesha2_msg_number_t *msg_num;
 	axis2_bool_t must_understand;
@@ -37,61 +36,29 @@ struct sandesha2_ack_requested_impl
 #define SANDESHA2_INTF_TO_IMPL(ack_requested) \
 						((sandesha2_ack_requested_impl_t *)(ack_requested))
 
-/***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_ack_requested_get_namespace_value (
                         sandesha2_iom_rm_element_t *ack_requested,
 						const axis2_env_t *env);
     
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
                     	const axis2_env_t *env, axiom_node_t *om_node);
     
-axiom_node_t* AXIS2_CALL 
+static axiom_node_t* AXIS2_CALL 
 sandesha2_ack_requested_to_om_node(sandesha2_iom_rm_element_t *element,
                     	const axis2_env_t *env, void *om_node);
                     	
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_requested_is_namespace_supported(
                         sandesha2_iom_rm_element_t *ack_requested,
                     	const axis2_env_t *env, axis2_char_t *namespace);
                     	
-sandesha2_identifier_t * AXIS2_CALL
-sandesha2_ack_requested_get_identifier(
-                        sandesha2_ack_requested_t *ack_requested,
-                    	const axis2_env_t *env);
-
-axis2_status_t AXIS2_CALL                 
-sandesha2_ack_requested_set_identifier(
-                        sandesha2_ack_requested_t *ack_requested,
-                    	const axis2_env_t *env, 
-                        sandesha2_identifier_t *identifier);
-
-sandesha2_msg_number_t * AXIS2_CALL                    	
-sandesha2_ack_requested_get_msg_number(sandesha2_ack_requested_t *element,
-                    	const axis2_env_t *env);
-                    	
-axis2_status_t AXIS2_CALL
-sandesha2_ack_requested_set_msg_number(
-                        sandesha2_ack_requested_t *ack_requested,
-                    	const axis2_env_t *env, 
-                        sandesha2_msg_number_t *msg_number);
-
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_ack_requested_to_soap_env(sandesha2_iom_rm_part_t *ack_requested,
                     	const axis2_env_t *env, axiom_soap_envelope_t *envelope);
                     	
-axis2_bool_t AXIS2_CALL
-sandesha2_ack_requested_is_must_understand(
-                        sandesha2_ack_requested_t *ack_requested,
-                    	const axis2_env_t *env);
-                    	
-axis2_status_t AXIS2_CALL
-sandesha2_ack_requested_set_must_understand(
-                        sandesha2_ack_requested_t *ack_requested,
-                    	const axis2_env_t *env, axis2_bool_t mu);
-                    	
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_ack_requested_free (sandesha2_iom_rm_element_t *ack_requested, 
 						const axis2_env_t *env);								
 
@@ -123,19 +90,9 @@ sandesha2_ack_requested_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     ack_requested_impl->identifier = NULL;
     ack_requested_impl->msg_num = NULL;
     ack_requested_impl->must_understand = AXIS2_FALSE;
-    ack_requested_impl->ack_requested.ops = NULL;
     ack_requested_impl->ack_requested.part.ops = NULL;
     ack_requested_impl->ack_requested.part.element.ops = NULL;
     
-    ack_requested_impl->ack_requested.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_ack_requested_ops_t));
-    if(NULL == ack_requested_impl->ack_requested.ops)
-	{
-		sandesha2_ack_requested_free((sandesha2_iom_rm_element_t*)
-                         ack_requested_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
     ack_requested_impl->ack_requested.part.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_part_ops_t));
     if(NULL == ack_requested_impl->ack_requested.part.ops)
@@ -166,18 +123,6 @@ sandesha2_ack_requested_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     					sandesha2_ack_requested_is_namespace_supported;
     ack_requested_impl->ack_requested.part.ops->to_soap_env = 
     					sandesha2_ack_requested_to_soap_env;
-    ack_requested_impl->ack_requested.ops->set_identifier = 
-    					sandesha2_ack_requested_set_identifier;
-    ack_requested_impl->ack_requested.ops->get_identifier = 
-    					sandesha2_ack_requested_get_identifier;
-    ack_requested_impl->ack_requested.ops->set_msg_number = 
-    					sandesha2_ack_requested_set_msg_number;
-    ack_requested_impl->ack_requested.ops->get_msg_number = 
-    					sandesha2_ack_requested_get_msg_number;
-    ack_requested_impl->ack_requested.ops->set_must_understand =
-    					sandesha2_ack_requested_set_must_understand;
-    ack_requested_impl->ack_requested.ops->is_must_understand =
-    					sandesha2_ack_requested_is_must_understand;
     ack_requested_impl->ack_requested.part.element.ops->free = 
                         sandesha2_ack_requested_free;
                         
@@ -185,7 +130,7 @@ sandesha2_ack_requested_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 }
 
 
-axis2_status_t AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_ack_requested_free (sandesha2_iom_rm_element_t *ack_requested, 
 						const axis2_env_t *env)
 {
@@ -193,7 +138,7 @@ sandesha2_ack_requested_free (sandesha2_iom_rm_element_t *ack_requested,
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
     
-    if(NULL != ack_requested_impl->ns_val)
+    if(ack_requested_impl->ns_val)
     {
         AXIS2_FREE(env->allocator, ack_requested_impl->ns_val);
         ack_requested_impl->ns_val = NULL;
@@ -201,17 +146,7 @@ sandesha2_ack_requested_free (sandesha2_iom_rm_element_t *ack_requested,
     ack_requested_impl->identifier = NULL;
     ack_requested_impl->msg_num = NULL;
     
-    if(NULL != ack_requested->ops)
-    {
-        AXIS2_FREE(env->allocator, ack_requested->ops);
-        ack_requested->ops = NULL;
-    }
-    if(NULL != ack_requested_impl->ack_requested.ops)
-    {
-        AXIS2_FREE(env->allocator, ack_requested_impl->ack_requested.ops);
-        ack_requested_impl->ack_requested.ops = NULL;
-    }
-    if(NULL != ack_requested_impl->ack_requested.part.ops)
+    if(ack_requested_impl->ack_requested.part.ops)
     {
         AXIS2_FREE(env->allocator, ack_requested_impl->ack_requested.part.ops);
         ack_requested_impl->ack_requested.part.ops = NULL;
@@ -220,7 +155,7 @@ sandesha2_ack_requested_free (sandesha2_iom_rm_element_t *ack_requested,
 	return AXIS2_SUCCESS;
 }
 
-axis2_char_t* AXIS2_CALL 
+static axis2_char_t* AXIS2_CALL 
 sandesha2_ack_requested_get_namespace_value (
                         sandesha2_iom_rm_element_t *ack_requested,
 						const axis2_env_t *env)
@@ -233,7 +168,7 @@ sandesha2_ack_requested_get_namespace_value (
 }
 
 
-void* AXIS2_CALL 
+static void* AXIS2_CALL 
 sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
                     	const axis2_env_t *env, axiom_node_t *om_node)
 {
@@ -303,7 +238,7 @@ sandesha2_ack_requested_from_om_node(sandesha2_iom_rm_element_t *ack_requested,
 }
 
 
-axiom_node_t* AXIS2_CALL 
+static axiom_node_t* AXIS2_CALL 
 sandesha2_ack_requested_to_om_node(
         sandesha2_iom_rm_element_t *ack_requested,
        	const axis2_env_t *env, 
@@ -347,7 +282,7 @@ sandesha2_ack_requested_to_om_node(
     return ar_node;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_requested_is_namespace_supported(
                         sandesha2_iom_rm_element_t *ack_requested,
                     	const axis2_env_t *env, axis2_char_t *namespace)
@@ -365,6 +300,37 @@ sandesha2_ack_requested_is_namespace_supported(
         return AXIS2_TRUE;
     }
     return AXIS2_FALSE;
+}
+
+static axis2_status_t AXIS2_CALL
+sandesha2_ack_requested_to_soap_env(
+        sandesha2_iom_rm_part_t *ack_requested,
+       	const axis2_env_t *env, 
+        axiom_soap_envelope_t *envelope)
+{
+	sandesha2_ack_requested_impl_t *ack_requested_impl = NULL;
+    axiom_soap_header_t *soap_header = NULL;
+    axis2_qname_t *requested_qname = NULL;
+    
+	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
+	
+	ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
+    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+    /**
+     * Remove if header block exists
+     */
+    requested_qname = axis2_qname_create(env, 
+                        SANDESHA2_WSRM_COMMON_ACK_REQUESTED,
+                        ack_requested_impl->ns_val, NULL);
+    if(NULL == requested_qname)
+    {
+        return AXIS2_FAILURE;
+    } 
+    AXIOM_SOAP_HEADER_REMOVE_HEADER_BLOCK(soap_header, env, requested_qname);
+    sandesha2_ack_requested_to_om_node((sandesha2_iom_rm_element_t*)
+                        ack_requested, env, soap_header);
+	return AXIS2_SUCCESS;
 }
 
 sandesha2_identifier_t * AXIS2_CALL
@@ -454,33 +420,3 @@ sandesha2_ack_requested_set_must_understand(
 	return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
-sandesha2_ack_requested_to_soap_env(
-        sandesha2_iom_rm_part_t *ack_requested,
-       	const axis2_env_t *env, 
-        axiom_soap_envelope_t *envelope)
-{
-	sandesha2_ack_requested_impl_t *ack_requested_impl = NULL;
-    axiom_soap_header_t *soap_header = NULL;
-    axis2_qname_t *requested_qname = NULL;
-    
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
-	
-	ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
-    /**
-     * Remove if header block exists
-     */
-    requested_qname = axis2_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_ACK_REQUESTED,
-                        ack_requested_impl->ns_val, NULL);
-    if(NULL == requested_qname)
-    {
-        return AXIS2_FAILURE;
-    } 
-    AXIOM_SOAP_HEADER_REMOVE_HEADER_BLOCK(soap_header, env, requested_qname);
-    sandesha2_ack_requested_to_om_node((sandesha2_iom_rm_element_t*)
-                        ack_requested, env, soap_header);
-	return AXIS2_SUCCESS;
-}

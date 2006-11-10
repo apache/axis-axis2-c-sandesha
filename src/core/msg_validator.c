@@ -34,7 +34,7 @@ sandesha2_msg_validator_validate_msg(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
-    msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
+    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_CREATE_SEQ != msg_type && 
                         SANDESHA2_MSG_TYPE_UNKNOWN != msg_type)
     {
@@ -52,8 +52,8 @@ sandesha2_msg_validator_validate_msg(
             addr_ns_seq = sandesha2_utils_get_seq_property(env, seq_id, 
                         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, 
                         storage_mgr);
-            rm_ns_msg = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx, env);
-            addr_ns_msg = SANDESHA2_MSG_CTX_GET_ADDR_NS_VAL(rm_msg_ctx, env);
+            rm_ns_msg = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
+            addr_ns_msg = sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env);
             
             if(NULL != rm_ver_seq)
                 rm_ns_seq = sandesha2_spec_specific_consts_get_rm_ns_val(env,

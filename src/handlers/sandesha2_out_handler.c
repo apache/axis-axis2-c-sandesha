@@ -166,7 +166,7 @@ sandesha2_out_handler_invoke(
     {
         dummy_msg = AXIS2_TRUE;
     }
-    msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
+    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
         axis2_msg_ctx_t *req_msg_ctx = NULL;
@@ -181,7 +181,7 @@ sandesha2_out_handler_invoke(
             sandesha2_seq_t *seq_part = NULL;
 
             req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
-            seq_part = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+            seq_part = (sandesha2_seq_t *) sandesha2_msg_ctx_get_msg_part(
                     req_rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
             
             if(seq_part)

@@ -161,7 +161,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
-    ack_requested = (sandesha2_ack_requested_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
+    ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
     if(NULL == ack_requested)
     {
@@ -171,20 +171,20 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                         AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    SANDESHA2_ACK_REQUESTED_SET_MUST_UNDERSTAND(ack_requested, env, AXIS2_FALSE);
-    SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(rm_msg_ctx, env);
+    sandesha2_ack_requested_set_must_understand(ack_requested, env, AXIS2_FALSE);
+    sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     
-    msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
+    msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     seq_id = sandesha2_identifier_get_identifier(
-                        SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_requested, 
+                        sandesha2_ack_requested_get_identifier(ack_requested, 
                         env), env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    acks_to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id,
+    acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id,
                         SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
-    acks_to_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(acks_to_bean, env);
+    acks_to_str = sandesha2_seq_property_bean_get_value(acks_to_bean, env);
     
     if(NULL == acks_to_str)
     {
@@ -216,8 +216,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property, 
                         AXIS2_FALSE);
     ack_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
-    SANDESHA2_MSG_CTX_SET_RM_NS_VAL(ack_rm_msg, env, 
-                        SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx, env));
+    sandesha2_msg_ctx_set_rm_ns_val(ack_rm_msg, env, 
+                        sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env));
     AXIS2_MSG_CTX_SET_MESSAGE_ID(ack_msg_ctx, env, axis2_uuid_gen(env));
     
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
@@ -308,13 +308,13 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         key = axis2_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
-        SANDESHA2_SENDER_BEAN_SET_MSG_CONTEXT_REF_KEY(ack_bean, env, key);
-        SANDESHA2_SENDER_BEAN_SET_MSG_ID(ack_bean, env, 
+        sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
+        sandesha2_sender_bean_set_msg_id(ack_bean, env, 
                         (axis2_char_t*)AXIS2_MSG_CTX_GET_MSG_ID(ack_msg_ctx, env));
-        SANDESHA2_SENDER_BEAN_SET_RESEND(ack_bean, env, AXIS2_FALSE);
-        SANDESHA2_SENDER_BEAN_SET_SEQ_ID(ack_bean, env, seq_id);
-        SANDESHA2_SENDER_BEAN_SET_SEND(ack_bean, env, AXIS2_TRUE);
-        SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(ack_bean, env, 
+        sandesha2_sender_bean_set_resend(ack_bean, env, AXIS2_FALSE);
+        sandesha2_sender_bean_set_seq_id(ack_bean, env, seq_id);
+        sandesha2_sender_bean_set_send(ack_bean, env, AXIS2_TRUE);
+        sandesha2_sender_bean_set_msg_type(ack_bean, env, 
                         SANDESHA2_MSG_TYPE_ACK);
                         
         property = axis2_property_create(env);
@@ -331,12 +331,12 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                         ack_interval;
                         
         find_bean = sandesha2_sender_bean_create(env);
-        SANDESHA2_SENDER_BEAN_SET_RESEND(find_bean, env, AXIS2_FALSE);
-        SANDESHA2_SENDER_BEAN_SET_SEND(find_bean, env, AXIS2_TRUE);
-        SANDESHA2_SENDER_BEAN_SET_MSG_TYPE(find_bean, env, 
+        sandesha2_sender_bean_set_resend(find_bean, env, AXIS2_FALSE);
+        sandesha2_sender_bean_set_send(find_bean, env, AXIS2_TRUE);
+        sandesha2_sender_bean_set_msg_type(find_bean, env, 
                         SANDESHA2_MSG_TYPE_ACK);
                         
-        found_list = SANDESHA2_SENDER_MGR_FIND_BY_SENDER_BEAN(retrans_mgr, env, 
+        found_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
                         find_bean);
         if(NULL != found_list)
         {
@@ -345,16 +345,16 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             {
                 sandesha2_sender_bean_t *old_ack_bean = NULL;
                 old_ack_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
-                time_to_send = SANDESHA2_SENDER_BEAN_GET_TIME_TO_SEND(
+                time_to_send = sandesha2_sender_bean_get_time_to_send(
                         old_ack_bean, env);
-                SANDESHA2_SENDER_MGR_REMOVE(retrans_mgr, env, 
-                        SANDESHA2_SENDER_BEAN_GET_MSG_ID(old_ack_bean, env));
+                sandesha2_sender_mgr_remove(retrans_mgr, env, 
+                        sandesha2_sender_bean_get_msg_id(old_ack_bean, env));
             }
         }
-        SANDESHA2_SENDER_BEAN_SET_TIME_TO_SEND(ack_bean, env, time_to_send); 
+        sandesha2_sender_bean_set_time_to_send(ack_bean, env, time_to_send); 
         /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(ack_msg_ctx, env, AXIS2_TRUE);*/
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx);
-        SANDESHA2_SENDER_MGR_INSERT(retrans_mgr, env, ack_bean);
+        sandesha2_sender_mgr_insert(retrans_mgr, env, ack_bean);
         
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);

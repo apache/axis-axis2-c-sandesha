@@ -50,7 +50,7 @@ sandesha2_msg_processor_create_msg_processor(
 {
     int msg_type = -1;
 
-    msg_type = SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env);
+    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     switch(msg_type)
     {
         case SANDESHA2_MSG_TYPE_CREATE_SEQ:

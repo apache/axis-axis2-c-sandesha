@@ -37,38 +37,8 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_seq_offer_ops sandesha2_seq_offer_ops_t;
 typedef struct sandesha2_seq_offer sandesha2_seq_offer_t;
  
-/**
- * @brief SequenceOffer ops struct
- * Encapsulator struct for ops of sandesha2_seq_offer
- */
-AXIS2_DECLARE_DATA struct sandesha2_seq_offer_ops
-{
-    sandesha2_identifier_t * (AXIS2_CALL *
-        get_identifier)
-            (sandesha2_seq_offer_t *seq_offer,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_identifier)
-            (sandesha2_seq_offer_t *seq_offer,
-            const axis2_env_t *env, 
-            sandesha2_identifier_t *identifier);
-            
-    sandesha2_expires_t * (AXIS2_CALL *
-        get_expires)
-            (sandesha2_seq_offer_t *element,
-            const axis2_env_t *env);
-                    	
-    axis2_status_t (AXIS2_CALL *
-        set_expires)
-            (sandesha2_seq_offer_t *element,
-            const axis2_env_t *env, 
-            sandesha2_expires_t *expires);
-};
-
 /**
  * @brief sandesha2_seq_offer
  *    sandesha2_seq_offer
@@ -76,24 +46,34 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_offer_ops
 AXIS2_DECLARE_DATA struct sandesha2_seq_offer
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_seq_offer_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_seq_offer_t* AXIS2_CALL
 sandesha2_seq_offer_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_SEQ_OFFER_SET_IDENTIFIER(seq_offer, env, identifier) \
-    ((seq_offer)->ops->set_identifier (seq_offer, env, identifier))
-#define SANDESHA2_SEQ_OFFER_GET_IDENTIFIER(seq_offer, env) \
-    ((seq_offer)->ops->get_identifier (seq_offer, env))
-#define SANDESHA2_SEQ_OFFER_SET_EXPIRES(seq_offer, env, expires) \
-    ((seq_offer)->ops->set_expires (seq_offer, env, expires))
-#define SANDESHA2_SEQ_OFFER_GET_EXPIRES(seq_offer, env) \
-    ((seq_offer)->ops->get_expires (seq_offer, env))
-/************************** End of function macros ****************************/
+sandesha2_identifier_t * AXIS2_CALL
+sandesha2_seq_offer_get_identifier(
+    sandesha2_seq_offer_t *seq_offer,
+    const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_seq_offer_set_identifier(
+    sandesha2_seq_offer_t *seq_offer,
+    const axis2_env_t *env, 
+    sandesha2_identifier_t *identifier);
+
+sandesha2_expires_t * AXIS2_CALL                    	
+sandesha2_seq_offer_get_expires(
+    sandesha2_seq_offer_t *seq_offer,
+    const axis2_env_t *env);
+                    	
+axis2_status_t AXIS2_CALL
+sandesha2_seq_offer_set_expires(
+    sandesha2_seq_offer_t *seq_offer,
+    const axis2_env_t *env, sandesha2_expires_t *expires);
+ 
 /** @} */
 #ifdef __cplusplus
 }

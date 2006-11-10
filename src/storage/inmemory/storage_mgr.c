@@ -127,17 +127,17 @@ sandesha2_storage_mgr_free(
     }
     if(storage_mgr->next_msg_mgr)
     {
-        SANDESHA2_NEXT_MSG_MGR_FREE(storage_mgr->next_msg_mgr, env);
+        sandesha2_next_msg_mgr_free(storage_mgr->next_msg_mgr, env);
         storage_mgr->next_msg_mgr = NULL;
     }
     if(storage_mgr->sender_mgr)
     {
-        SANDESHA2_SENDER_MGR_FREE(storage_mgr->sender_mgr, env);
+        sandesha2_sender_mgr_free(storage_mgr->sender_mgr, env);
         storage_mgr->sender_mgr = NULL;
     }
     if(storage_mgr->seq_property_mgr)
     {
-        SANDESHA2_SEQ_PROPERTY_MGR_FREE(storage_mgr->seq_property_mgr, env);
+        sandesha2_seq_property_mgr_free(storage_mgr->seq_property_mgr, env);
         storage_mgr->seq_property_mgr = NULL;
     }
     if(storage_mgr->invoker_mgr)

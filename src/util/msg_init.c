@@ -144,7 +144,7 @@ populate_rm_msg_ctx(
     create_seq = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ(elements, env);
     if(create_seq)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ, (sandesha2_iom_rm_part_t *) 
                 create_seq);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -153,7 +153,7 @@ populate_rm_msg_ctx(
     create_seq_res = SANDESHA2_RM_ELEMENTS_GET_CREATE_SEQ_RES(elements, env);
     if(create_seq_res)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) create_seq_res);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -163,7 +163,7 @@ populate_rm_msg_ctx(
     seq = SANDESHA2_RM_ELEMENTS_GET_SEQ(elements, env);
     if(seq)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ, (sandesha2_iom_rm_part_t *) seq);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) seq, env);
@@ -171,7 +171,7 @@ populate_rm_msg_ctx(
     seq_ack = SANDESHA2_RM_ELEMENTS_GET_SEQ_ACK(elements, env);
     if(seq_ack)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
                 (sandesha2_iom_rm_part_t *) seq_ack);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -181,7 +181,7 @@ populate_rm_msg_ctx(
     terminate_seq = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ(elements, env);
     if(terminate_seq)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ, 
                 (sandesha2_iom_rm_part_t *) terminate_seq);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -191,7 +191,7 @@ populate_rm_msg_ctx(
     terminate_seq_res = SANDESHA2_RM_ELEMENTS_GET_TERMINATE_SEQ_RES(elements, env);
     if(terminate_seq_res)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) terminate_seq_res);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -200,7 +200,7 @@ populate_rm_msg_ctx(
     ack_request = SANDESHA2_RM_ELEMENTS_GET_ACK_REQUESTED(elements, env);
     if(ack_request)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_ACK_REQUEST, 
                 (sandesha2_iom_rm_part_t *) ack_request);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -209,7 +209,7 @@ populate_rm_msg_ctx(
     close_seq = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ(elements, env);
     if(close_seq)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CLOSE_SEQ, 
                 (sandesha2_iom_rm_part_t *) close_seq);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -218,18 +218,18 @@ populate_rm_msg_ctx(
     close_seq_res = SANDESHA2_RM_ELEMENTS_GET_CLOSE_SEQ_RES(elements, env);
     if(close_seq_res)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, 
                 (sandesha2_iom_rm_part_t *) close_seq_res);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) close_seq_res, env);
     }
-    SANDESHA2_MSG_CTX_SET_RM_NS_VAL(rm_msg_ctx, env, rm_ns);
+    sandesha2_msg_ctx_set_rm_ns_val(rm_msg_ctx, env, rm_ns);
     addressing_ns_value = SANDESHA2_RM_ELEMENTS_GET_ADDR_NS_VAL(
             elements, env);
     if(addressing_ns_value)
     {
-        SANDESHA2_MSG_CTX_SET_ADDR_NS_VAL(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_addr_ns_val(rm_msg_ctx, env, 
                 addressing_ns_value);
     }
     return AXIS2_SUCCESS;
@@ -258,44 +258,44 @@ static axis2_bool_t validate_msg(
     sandesha2_close_seq_res_t *close_seq_res = NULL;
     int temp_flow = -1;
 
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(rm_msg_ctx, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(temp_msg_ctx, env);
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    create_seq = (sandesha2_create_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     create_seq_res = (sandesha2_create_seq_res_t *) 
-        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
     terminate_seq = (sandesha2_terminate_seq_t *) 
-        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ);
     terminate_seq_res = (sandesha2_terminate_seq_res_t *) 
-        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
     seq_ack = (sandesha2_seq_ack_t *) 
-        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-    seq = (sandesha2_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    seq = (sandesha2_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
     ack_request = (sandesha2_ack_requested_t *) 
-        SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_ACK_REQUEST);
-    close_seq = (sandesha2_close_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    close_seq = (sandesha2_close_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
-    close_seq_res = (sandesha2_close_seq_res_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    close_seq_res = (sandesha2_close_seq_res_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE);
     /* Setting message type */
     if(create_seq)
     {
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_CREATE_SEQ);
     }
     else if(create_seq_res)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE);
         idf = sandesha2_create_seq_res_get_identifier(create_seq_res, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -303,7 +303,7 @@ static axis2_bool_t validate_msg(
     else if(terminate_seq)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_TERMINATE_SEQ);
         idf = sandesha2_terminate_seq_get_identifier(terminate_seq, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -311,7 +311,7 @@ static axis2_bool_t validate_msg(
     else if(terminate_seq_res)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE);
         idf = sandesha2_terminate_seq_res_get_identifier(terminate_seq_res, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -319,7 +319,7 @@ static axis2_bool_t validate_msg(
     else if(seq)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_APPLICATION);
         idf = sandesha2_seq_get_identifier(seq, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -327,7 +327,7 @@ static axis2_bool_t validate_msg(
     else if(seq_ack)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_ACK);
         idf = sandesha2_seq_ack_get_identifier(seq_ack, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -335,15 +335,15 @@ static axis2_bool_t validate_msg(
     else if(ack_request)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_ACK_REQUEST);
-        idf = SANDESHA2_ACK_REQUESTED_GET_IDENTIFIER(ack_request, env);
+        idf = sandesha2_ack_requested_get_identifier(ack_request, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
     }
     else if(close_seq)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_CLOSE_SEQ);
         idf = sandesha2_close_seq_get_identifier(close_seq, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
@@ -351,14 +351,14 @@ static axis2_bool_t validate_msg(
     else if(close_seq_res)
     {
         sandesha2_identifier_t *idf = NULL;
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, 
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
                 SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE);
         idf = sandesha2_close_seq_res_get_identifier(close_seq_res, env);
         seq_id = sandesha2_identifier_get_identifier(idf, env);
     }
     else
     {
-        SANDESHA2_MSG_CTX_SET_MSG_TYPE(rm_msg_ctx, env, SANDESHA2_MSG_TYPE_UNKNOWN);
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, SANDESHA2_MSG_TYPE_UNKNOWN);
     }
     temp_flow = AXIS2_MSG_CTX_GET_FLOW(temp_msg_ctx, env);
     if(temp_flow == AXIS2_IN_FLOW)
@@ -369,15 +369,15 @@ static axis2_bool_t validate_msg(
     {
         sandesha2_seq_property_bean_t *internal_seq_id_bean = NULL;
 
-        internal_seq_id_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, 
+        internal_seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
                 env, seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
         if(internal_seq_id_bean)
         {
-            prop_key = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+            prop_key = sandesha2_seq_property_bean_get_value(
                     internal_seq_id_bean, env);
         }
     }
-    rm_ns = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(rm_msg_ctx, env);
+    rm_ns = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
     if(seq_id)
     {
         axis2_char_t *spec_version = NULL;

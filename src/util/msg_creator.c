@@ -108,7 +108,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_address_t *temp_address = NULL;
     sandesha2_acks_to_t *temp_acks_to = NULL;
 
-    application_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(application_rm_msg, env);
+    application_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(application_rm_msg, env);
     if(application_msg_ctx == NULL)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_APPLICATION_MSG_NULL, 
@@ -157,12 +157,12 @@ sandesha2_msg_creator_create_create_seq_msg(
         AXIS2_OP_SET_IN_FLOW(create_seq_op, env, inflow);
     }
     AXIS2_MSG_CTX_SET_OP(create_seq_msg_ctx, env, create_seq_op);
-    temp_to = SANDESHA2_MSG_CTX_GET_TO(application_rm_msg, env); 
+    temp_to = sandesha2_msg_ctx_get_to(application_rm_msg, env); 
     to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
                         temp_to, env));
     AXIS2_MSG_CTX_SET_TO(create_seq_msg_ctx, env, to_epr);
     to_epr = NULL;
-    temp_reply_to = SANDESHA2_MSG_CTX_GET_REPLY_TO(application_rm_msg, env); 
+    temp_reply_to = sandesha2_msg_ctx_get_reply_to(application_rm_msg, env); 
     AXIS2_MSG_CTX_SET_REPLY_TO(create_seq_msg_ctx, env, temp_reply_to);
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
@@ -198,15 +198,15 @@ sandesha2_msg_creator_create_create_seq_msg(
             offer_part = sandesha2_seq_offer_create(env, rm_ns_value);
             identifier = sandesha2_identifier_create(env, rm_ns_value);
             sandesha2_identifier_set_identifier(identifier, env, offered_seq);
-            SANDESHA2_SEQ_OFFER_SET_IDENTIFIER(offer_part, env, identifier);
+            sandesha2_seq_offer_set_identifier(offer_part, env, identifier);
             sandesha2_create_seq_set_seq_offer(create_seq_part, env, offer_part);
         }
     }
-    reply_to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
+    reply_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
-    to_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, 
+    to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
-    temp_value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(to_bean, env);
+    temp_value = sandesha2_seq_property_bean_get_value(to_bean, env);
     if(to_bean == NULL || NULL == temp_value)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
@@ -222,31 +222,31 @@ sandesha2_msg_creator_create_create_seq_msg(
     acks_to_epr = axis2_endpoint_ref_create(env, acks_to);
     if(reply_to_bean && temp_value)
     {
-        temp_value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(reply_to_bean, env);
+        temp_value = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
         reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
     }
-    temp_to = SANDESHA2_MSG_CTX_GET_TO(create_seq_rm_msg, env);
+    temp_to = sandesha2_msg_ctx_get_to(create_seq_rm_msg, env);
     if(temp_to == NULL)
-        SANDESHA2_MSG_CTX_SET_TO(create_seq_rm_msg, env, to_epr);
+        sandesha2_msg_ctx_set_to(create_seq_rm_msg, env, to_epr);
     /* ReplyTo will be set only if not NULL */
     if(reply_to_epr)
     {
-        SANDESHA2_MSG_CTX_SET_REPLY_TO(create_seq_rm_msg, env, reply_to_epr);
+        sandesha2_msg_ctx_set_reply_to(create_seq_rm_msg, env, reply_to_epr);
     }
     temp_address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
     temp_acks_to = sandesha2_acks_to_create(env, temp_address, rm_ns_value, 
             addressing_ns_value);
     sandesha2_create_seq_set_acks_to(create_seq_part, env,  temp_acks_to);
-    SANDESHA2_MSG_CTX_SET_MSG_PART(create_seq_rm_msg, env, 
+    sandesha2_msg_ctx_set_msg_part(create_seq_rm_msg, env, 
             SANDESHA2_MSG_PART_CREATE_SEQ, (sandesha2_iom_rm_part_t *) 
             create_seq_part);
-    SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(create_seq_rm_msg, env);
+    sandesha2_msg_ctx_add_soap_envelope(create_seq_rm_msg, env);
     temp_action = sandesha2_spec_specific_consts_get_create_seq_action(env, 
             rm_version);
-    SANDESHA2_MSG_CTX_SET_WSA_ACTION(create_seq_rm_msg, env, temp_action);
+    sandesha2_msg_ctx_set_wsa_action(create_seq_rm_msg, env, temp_action);
     temp_soap_action = sandesha2_spec_specific_consts_get_create_seq_action(env, 
             rm_version);
-    SANDESHA2_MSG_CTX_SET_SOAP_ACTION(create_seq_rm_msg, env, temp_soap_action);
+    sandesha2_msg_ctx_set_soap_action(create_seq_rm_msg, env, temp_soap_action);
     sandesha2_msg_creator_finalize_creation(env, application_msg_ctx, 
             create_seq_msg_ctx);
     return create_seq_rm_msg;
@@ -288,9 +288,9 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     sandesha2_create_seq_t *cs = NULL;
     int soap_version = -1;
 
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_msg, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(temp_msg_ctx, env);
-    msg_part = (sandesha2_iom_rm_element_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    msg_part = (sandesha2_iom_rm_element_t *) sandesha2_msg_ctx_get_msg_part(
             create_seq_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     cs = (sandesha2_create_seq_t *) msg_part;
     rm_version = sandesha2_utils_get_rm_version(env, new_seq_id, storage_mgr);
@@ -315,7 +315,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
         axis2_char_t *out_seq_id = NULL;
         sandesha2_identifier_t *temp_identifier = NULL;
         
-        temp_identifier = SANDESHA2_SEQ_OFFER_GET_IDENTIFIER(offer, env);
+        temp_identifier = sandesha2_seq_offer_get_identifier(offer, env);
         out_seq_id = sandesha2_identifier_get_identifier(temp_identifier, env);
         if(out_seq_id && 0 != AXIS2_STRCMP("", out_seq_id))
         {
@@ -325,16 +325,16 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             sandesha2_address_t *address = NULL;
 
             accept = sandesha2_accept_create(env, rm_ns_value, addressing_ns_value);
-            acks_to_epr = SANDESHA2_MSG_CTX_GET_TO(create_seq_msg, env);
+            acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
             address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
             acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
             SANDESHA2_ADDRESS_SET_EPR(address, env, acks_to_epr);
-            SANDESHA2_ACKS_TO_SET_ADDRESS(acks_to, env, address);
+            sandesha2_acks_to_set_address(acks_to, env, address);
             sandesha2_accept_set_acks_to(accept, env, acks_to);
             sandesha2_create_seq_res_set_accept(response, env, accept);
         }
     }
-    temp_envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(create_seq_msg, env); 
+    temp_envelope = sandesha2_msg_ctx_get_soap_envelope(create_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
     temp_soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
@@ -356,13 +356,13 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     new_msg_id = axis2_uuid_gen(env);
     AXIS2_MSG_CTX_SET_MESSAGE_ID(out_msg, env, new_msg_id);
     AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(out_msg, env, envelope);
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_msg, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     sandesha2_msg_creator_init_creation(env, temp_msg_ctx,out_msg);
     create_seq_response = sandesha2_msg_init_init_msg(env, out_msg);
-    SANDESHA2_MSG_CTX_SET_MSG_PART(create_seq_response, env, 
+    sandesha2_msg_ctx_set_msg_part(create_seq_response, env, 
             SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE, (sandesha2_iom_rm_part_t *) 
             response);
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(create_seq_msg, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     sandesha2_msg_creator_finalize_creation(env, temp_msg_ctx, out_msg);
     AXIS2_MSG_CTX_SET_SERVER_SIDE(temp_msg_ctx, env, AXIS2_TRUE);
     return create_seq_response;
@@ -398,23 +398,23 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     int soap_version = -1;
 
     close_seq_response = sandesha2_msg_ctx_create(env, out_msg);
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(close_seq_msg, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(close_seq_msg, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(temp_msg_ctx, env);
-    cs = (sandesha2_close_seq_t *) SANDESHA2_MSG_CTX_GET_MSG_PART(
+    cs = (sandesha2_close_seq_t *) sandesha2_msg_ctx_get_msg_part(
             close_seq_msg, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
     temp_identifier = sandesha2_close_seq_get_identifier(cs, env);
     seq_id = sandesha2_identifier_get_identifier(temp_identifier, env);
-    ns = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(close_seq_msg, env);
-    SANDESHA2_MSG_CTX_SET_RM_NS_VAL(close_seq_response, env, ns);
+    ns = sandesha2_msg_ctx_get_rm_ns_val(close_seq_msg, env);
+    sandesha2_msg_ctx_set_rm_ns_val(close_seq_response, env, ns);
     response = (sandesha2_iom_rm_part_t *) sandesha2_close_seq_res_create(env, ns);
     identifier = sandesha2_identifier_create(env, ns);
     sandesha2_identifier_set_identifier(identifier, env, seq_id);
     SANDESHA2_CLOSE_SEQ_RES_SET_IDENTIFIER((sandesha2_close_seq_res_t *) response, env, identifier);
-    temp_envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(close_seq_msg, env); 
+    temp_envelope = sandesha2_msg_ctx_get_soap_envelope(close_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
-    SANDESHA2_MSG_CTX_SET_SOAP_ENVELOPE(close_seq_response, env, envelope);
-    SANDESHA2_MSG_CTX_SET_MSG_PART(close_seq_response, env, 
+    sandesha2_msg_ctx_set_soap_envelope(close_seq_response, env, envelope);
+    sandesha2_msg_ctx_set_msg_part(close_seq_response, env, 
             SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE, response);
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
     temp_action = sandesha2_spec_specific_consts_get_close_seq_res_action(
@@ -426,9 +426,9 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     AXIS2_MSG_CTX_SET_SOAP_ACTION(out_msg, env, temp_action);
 
 
-    temp_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(close_seq_msg, env);
+    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(close_seq_msg, env);
     sandesha2_msg_creator_init_creation(env, temp_msg_ctx,out_msg);
-    SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(close_seq_response, env);
+    sandesha2_msg_ctx_add_soap_envelope(close_seq_response, env);
     sandesha2_msg_creator_finalize_creation(env, temp_msg_ctx, out_msg);
     AXIS2_MSG_CTX_SET_SERVER_SIDE(temp_msg_ctx, env, AXIS2_TRUE);
     return close_seq_response;
@@ -468,7 +468,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     int soap_version = -1;
     sandesha2_identifier_t *identifier = NULL;
 
-    ref_msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(ref_rm_msg, env);
+    ref_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env);
     if(!ref_msg_ctx)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX,
@@ -550,16 +550,16 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         if(out_fault_phases)        
             AXIS2_OP_SET_FAULT_OUT_FLOW(terminate_seq_op, env, out_fault_phases);
     }*/
-    temp_envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(ref_msg_ctx, env);
+    temp_envelope = sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env);
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
-    SANDESHA2_MSG_CTX_SET_SOAP_ENVELOPE(terminate_rm_msg, env, envelope);
+    sandesha2_msg_ctx_set_soap_envelope(terminate_rm_msg, env, envelope);
 
     terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
     sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_terminate_seq_set_identifier(terminate_seq, env, identifier);
-    SANDESHA2_MSG_CTX_SET_MSG_PART(terminate_rm_msg, env, 
+    sandesha2_msg_ctx_set_msg_part(terminate_rm_msg, env, 
                         SANDESHA2_MSG_PART_TERMINATE_SEQ, 
                         (sandesha2_iom_rm_part_t*)terminate_seq);
     sandesha2_msg_creator_finalize_creation(env, ref_msg_ctx, 
@@ -586,13 +586,13 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     axis2_char_t *rm_version = NULL;
     
     res_rm_msg = sandesha2_msg_ctx_create(env, out_msg);
-    terminate_seq = (sandesha2_terminate_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
+    terminate_seq = (sandesha2_terminate_seq_t*)sandesha2_msg_ctx_get_msg_part(
                         ref_rm_msg, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);
     seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_terminate_seq_get_identifier(terminate_seq,
                         env), env);
-    rm_ns_val = SANDESHA2_MSG_CTX_GET_RM_NS_VAL(ref_rm_msg, env);
-    SANDESHA2_MSG_CTX_SET_RM_NS_VAL(res_rm_msg, env, rm_ns_val);
+    rm_ns_val = sandesha2_msg_ctx_get_rm_ns_val(ref_rm_msg, env);
+    sandesha2_msg_ctx_set_rm_ns_val(res_rm_msg, env, rm_ns_val);
     
     terminate_seq_res = sandesha2_terminate_seq_res_create(env, rm_ns_val);
     identifier = sandesha2_identifier_create(env, rm_ns_val);
@@ -601,9 +601,9 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
                         identifier);
     soap_envelope = axiom_soap_envelope_create_default_soap_envelope(env,
                         sandesha2_utils_get_soap_version(env,
-                        SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(ref_rm_msg, env)));
-    SANDESHA2_MSG_CTX_SET_SOAP_ENVELOPE(res_rm_msg, env, soap_envelope);
-    SANDESHA2_MSG_CTX_SET_MSG_PART(res_rm_msg, env, 
+                        sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env)));
+    sandesha2_msg_ctx_set_soap_envelope(res_rm_msg, env, soap_envelope);
+    sandesha2_msg_ctx_set_msg_part(res_rm_msg, env, 
                         SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE,
                         (sandesha2_iom_rm_part_t*)terminate_seq_res);
                         
@@ -614,12 +614,12 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     AXIS2_MSG_CTX_SET_SOAP_ACTION(out_msg, env, 
                         sandesha2_spec_specific_consts_get_teminate_seq_res_action(
                         env, rm_version));
-    sandesha2_msg_creator_init_creation(env, SANDESHA2_MSG_CTX_GET_MSG_CTX(
+    sandesha2_msg_creator_init_creation(env, sandesha2_msg_ctx_get_msg_ctx(
                         ref_rm_msg, env), out_msg);
-    SANDESHA2_MSG_CTX_ADD_SOAP_ENVELOPE(ref_rm_msg, env);
-    sandesha2_msg_creator_finalize_creation(env, SANDESHA2_MSG_CTX_GET_MSG_CTX(
+    sandesha2_msg_ctx_add_soap_envelope(ref_rm_msg, env);
+    sandesha2_msg_creator_finalize_creation(env, sandesha2_msg_ctx_get_msg_ctx(
                         ref_rm_msg, env), out_msg);
-    AXIS2_MSG_CTX_SET_SERVER_SIDE(SANDESHA2_MSG_CTX_GET_MSG_CTX(ref_rm_msg, env), 
+    AXIS2_MSG_CTX_SET_SERVER_SIDE(sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env), 
                         env, AXIS2_TRUE);
     return res_rm_msg;
 }
@@ -826,14 +826,14 @@ sandesha2_msg_creator_add_ack_msg(
     axis2_array_list_t *ack_range_list = NULL;
     int i = 0, size = 0;
 
-    envelope = SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(app_msg, env);
+    envelope = sandesha2_msg_ctx_get_soap_envelope(app_msg, env);
     if(!envelope)
     {
         AXIS2_ERROR_SET(env->error, 
                 AXIS2_ERROR_NULL_SOAP_ENVELOPE_IN_MSG_CTX, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    msg_ctx = SANDESHA2_MSG_CTX_GET_MSG_CTX(app_msg, env);
+    msg_ctx = sandesha2_msg_ctx_get_msg_ctx(app_msg, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
     if(!rm_version)
@@ -849,9 +849,9 @@ sandesha2_msg_creator_add_ack_msg(
     sandesha2_identifier_set_identifier(id, env, seq_id);
     sandesha2_seq_ack_set_identifier(seq_ack, env, id);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id, 
+    seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
-    msg_no_list = (axis2_char_t *) SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+    msg_no_list = (axis2_char_t *) sandesha2_seq_property_bean_get_value(
             seq_bean, env); 
     ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
             rm_ns_value);
@@ -864,10 +864,10 @@ sandesha2_msg_creator_add_ack_msg(
         ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
         sandesha2_seq_ack_add_ack_range(seq_ack, env, ack_range);
     }
-    seq_closed_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr, env, seq_id, 
+    seq_closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
             SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(seq_closed_bean)
-        str_value = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_closed_bean, env);
+        str_value = sandesha2_seq_property_bean_get_value(seq_closed_bean, env);
     if(seq_closed_bean && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_value))
     {
         axis2_bool_t is_allowed = AXIS2_FALSE;
@@ -883,7 +883,7 @@ sandesha2_msg_creator_add_ack_msg(
             sandesha2_seq_ack_set_ack_final(seq_ack, env, ack_final);
         }
     }
-    SANDESHA2_MSG_CTX_SET_MSG_PART(app_msg, env, 
+    sandesha2_msg_ctx_set_msg_part(app_msg, env, 
             SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
             (sandesha2_iom_rm_part_t *) seq_ack);
     soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
@@ -893,13 +893,13 @@ sandesha2_msg_creator_add_ack_msg(
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
     ack_req_action = sandesha2_spec_specific_consts_get_seq_ack_action(env, 
             rm_version);
-    SANDESHA2_MSG_CTX_SET_WSA_ACTION(app_msg, env, ack_req_action); 
+    sandesha2_msg_ctx_set_wsa_action(app_msg, env, ack_req_action); 
     ack_req_soap_action = 
         sandesha2_spec_specific_consts_get_seq_ack_soap_action(env, 
                 rm_version);
-    SANDESHA2_MSG_CTX_SET_SOAP_ACTION(app_msg, env, ack_req_soap_action); 
+    sandesha2_msg_ctx_set_soap_action(app_msg, env, ack_req_soap_action); 
     uuid = axis2_uuid_gen(env);
-    SANDESHA2_MSG_CTX_SET_MSG_ID(app_msg, env, uuid);
+    sandesha2_msg_ctx_set_msg_id(app_msg, env, uuid);
 
     return AXIS2_SUCCESS;
         

@@ -34,12 +34,10 @@
  * @brief In Order Invoker struct impl
  *	Sandesha2 In Order Invoker
  */
-typedef struct sandesha2_in_order_invoker_impl sandesha2_in_order_invoker_impl_t;  
 typedef struct sandesha2_in_order_invoker_args sandesha2_in_order_invoker_args_t;
 
-struct sandesha2_in_order_invoker_impl
+struct sandesha2_in_order_invoker_t
 {
-    sandesha2_in_order_invoker_t invoker;
 	axis2_conf_ctx_t *conf_ctx;
     axis2_bool_t run_invoker;
     axis2_array_list_t *working_seqs;
@@ -48,100 +46,36 @@ struct sandesha2_in_order_invoker_impl
 
 struct sandesha2_in_order_invoker_args
 {
-    sandesha2_in_order_invoker_impl_t *impl;
+    sandesha2_in_order_invoker_t *impl;
     axis2_env_t *env;
 };
-
-#define SANDESHA2_INTF_TO_IMPL(invoker) \
-                        ((sandesha2_in_order_invoker_impl_t *)(invoker))
-
-/***************************** Function headers *******************************/
-axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_stop_invoker_for_seq
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_char_t *seq_id);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_stop_invoking (sandesha2_in_order_invoker_t *invoker,
-                        const axis2_env_t *env);
-            
-axis2_bool_t AXIS2_CALL 
-sandesha2_in_order_invoker_is_invoker_started 
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_run_invoker_for_seq 
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
-                        axis2_char_t *seq_id);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_run (sandesha2_in_order_invoker_t *invoker,
-                        const axis2_env_t *env);
-                        
-axis2_status_t AXIS2_CALL
-sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
-                        sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx);
-
-void * AXIS2_THREAD_FUNC
-sandesha2_in_order_invoker_worker_func(axis2_thread_t *thd, void *data);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_free(sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env);								
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_in_order_invoker_t* AXIS2_CALL
 sandesha2_in_order_invoker_create(const axis2_env_t *env)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
+    sandesha2_in_order_invoker_t *invoker = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    invoker_impl =  (sandesha2_in_order_invoker_impl_t *)AXIS2_MALLOC 
+    invoker =  (sandesha2_in_order_invoker_t *)AXIS2_MALLOC 
                         (env->allocator, 
-                        sizeof(sandesha2_in_order_invoker_impl_t));
+                        sizeof(sandesha2_in_order_invoker_t));
 	
-    if(NULL == invoker_impl)
+    if(NULL == invoker)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    invoker_impl->conf_ctx = NULL;
-    invoker_impl->run_invoker = AXIS2_FALSE;
-    invoker_impl->working_seqs = NULL;
-    invoker_impl->mutex = NULL;
-    invoker_impl->invoker.ops = NULL;
+    invoker->conf_ctx = NULL;
+    invoker->run_invoker = AXIS2_FALSE;
+    invoker->working_seqs = NULL;
+    invoker->mutex = NULL;
     
-    invoker_impl->invoker.ops = AXIS2_MALLOC(env->allocator,
-                        sizeof(sandesha2_in_order_invoker_ops_t));
-    if(NULL == invoker_impl->invoker.ops)
-	{
-		sandesha2_in_order_invoker_free(
-                        (sandesha2_in_order_invoker_t*)invoker_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    
-    invoker_impl->working_seqs = axis2_array_list_create(env, 
+    invoker->working_seqs = axis2_array_list_create(env, 
                         AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
-    invoker_impl->mutex = axis2_thread_mutex_create(env->allocator,
+    invoker->mutex = axis2_thread_mutex_create(env->allocator,
                         AXIS2_THREAD_MUTEX_DEFAULT);
                         
-    invoker_impl->invoker.ops->stop_invoker_for_seq = 
-                        sandesha2_in_order_invoker_stop_invoker_for_seq;
-    invoker_impl->invoker.ops->stop_invoking = 
-                        sandesha2_in_order_invoker_stop_invoking;
-    invoker_impl->invoker.ops->is_invoker_started = 
-                        sandesha2_in_order_invoker_is_invoker_started;
-    invoker_impl->invoker.ops->run_invoker_for_seq = 
-                        sandesha2_in_order_invoker_run_invoker_for_seq;
-    invoker_impl->invoker.ops->run = sandesha2_in_order_invoker_run;
-    invoker_impl->invoker.ops->free = sandesha2_in_order_invoker_free;
-                        
-	return &(invoker_impl->invoker);
+	return invoker;
 }
 
 axis2_status_t AXIS2_CALL
@@ -157,108 +91,95 @@ sandesha2_in_order_invoker_free_void_arg(
 }
 
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_free(sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env)
+sandesha2_in_order_invoker_free(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
     /* Do not free this */
-    invoker_impl->conf_ctx = NULL;
+    invoker->conf_ctx = NULL;
     
-    if(NULL != invoker_impl->mutex)
+    if(NULL != invoker->mutex)
     {
-        axis2_thread_mutex_destroy(invoker_impl->mutex);
-        invoker_impl->mutex = NULL;
+        axis2_thread_mutex_destroy(invoker->mutex);
+        invoker->mutex = NULL;
     }
-    if(NULL != invoker_impl->working_seqs)
+    if(NULL != invoker->working_seqs)
     {
-        AXIS2_ARRAY_LIST_FREE(invoker_impl->working_seqs, env);
-        invoker_impl->working_seqs = NULL;
+        AXIS2_ARRAY_LIST_FREE(invoker->working_seqs, env);
+        invoker->working_seqs = NULL;
     }
-    if(NULL != invoker->ops)
-    {
-        AXIS2_FREE(env->allocator, invoker->ops);
-        invoker->ops = NULL;
-    }
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(invoker));
+	AXIS2_FREE(env->allocator, invoker);
 	return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_stop_invoker_for_seq
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env, axis2_char_t *seq_id)
+sandesha2_in_order_invoker_stop_invoker_for_seq(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, axis2_char_t *seq_id)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     int i = 0;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env); i++)
+    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(invoker->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
-        tmp_id = AXIS2_ARRAY_LIST_GET(invoker_impl->working_seqs, env, i);
+        tmp_id = AXIS2_ARRAY_LIST_GET(invoker->working_seqs, env, i);
         if(0 == AXIS2_STRCMP(seq_id, tmp_id))
         {
-            AXIS2_ARRAY_LIST_REMOVE(invoker_impl->working_seqs, env, i);
+            AXIS2_ARRAY_LIST_REMOVE(invoker->working_seqs, env, i);
             break;
         }
     }
-    if(0 == AXIS2_ARRAY_LIST_SIZE(invoker_impl->working_seqs, env))
-        invoker_impl->run_invoker = AXIS2_FALSE;
+    if(0 == AXIS2_ARRAY_LIST_SIZE(invoker->working_seqs, env))
+        invoker->run_invoker = AXIS2_FALSE;
     return AXIS2_SUCCESS;
 }
             
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_stop_invoking (sandesha2_in_order_invoker_t *invoker,
-                        const axis2_env_t *env)
+sandesha2_in_order_invoker_stop_invoking (
+    sandesha2_in_order_invoker_t *invoker,
+    const axis2_env_t *env)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    SANDESHA2_INTF_TO_IMPL(invoker)->run_invoker = AXIS2_FALSE;
+    invoker->run_invoker = AXIS2_FALSE;
     return AXIS2_SUCCESS;
 }
             
 axis2_bool_t AXIS2_CALL 
-sandesha2_in_order_invoker_is_invoker_started 
-                        (sandesha2_in_order_invoker_t *invoker, 
-                        const axis2_env_t *env)
+sandesha2_in_order_invoker_is_invoker_started(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env)
 {
     axis2_bool_t started = AXIS2_FALSE;
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
      
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-    started = SANDESHA2_INTF_TO_IMPL(invoker)->run_invoker;
+    started = invoker->run_invoker;
     return started;    
 }
             
 axis2_status_t AXIS2_CALL 
-sandesha2_in_order_invoker_run_invoker_for_seq (
+sandesha2_in_order_invoker_run_for_seq (
     sandesha2_in_order_invoker_t *invoker, 
     const axis2_env_t *env, 
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
     if(!sandesha2_utils_array_list_contains(env, 
-                        invoker_impl->working_seqs, seq_id))
-        AXIS2_ARRAY_LIST_ADD(invoker_impl->working_seqs, env, seq_id);
-    if(!invoker_impl->run_invoker)
+                        invoker->working_seqs, seq_id))
+        AXIS2_ARRAY_LIST_ADD(invoker->working_seqs, env, seq_id);
+    if(!invoker->run_invoker)
     {
-        invoker_impl->conf_ctx = conf_ctx;
-        invoker_impl->run_invoker = AXIS2_TRUE;
+        invoker->conf_ctx = conf_ctx;
+        invoker->run_invoker = AXIS2_TRUE;
         sandesha2_in_order_invoker_run(invoker, env);
     }
     return AXIS2_SUCCESS;
@@ -269,16 +190,13 @@ sandesha2_in_order_invoker_run (
     sandesha2_in_order_invoker_t *invoker,
     const axis2_env_t *env)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     axis2_thread_t *worker_thread = NULL;
     sandesha2_in_order_invoker_args_t *args = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    invoker_impl = SANDESHA2_INTF_TO_IMPL(invoker);
-   
     args = AXIS2_MALLOC(env->allocator, sizeof(
                         sandesha2_in_order_invoker_args_t)); 
-    args->impl = invoker_impl;
+    args->impl = invoker;
     args->env = (axis2_env_t*)env;
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
                         sandesha2_in_order_invoker_worker_func, (void*)args);
@@ -326,17 +244,15 @@ sandesha2_in_order_invoker_worker_func(
     axis2_thread_t *thd, 
     void *data)
 {
-    sandesha2_in_order_invoker_impl_t *invoker_impl = NULL;
     sandesha2_in_order_invoker_t *invoker = NULL;
     sandesha2_in_order_invoker_args_t *args;
     axis2_env_t *env = NULL;
     
     args = (sandesha2_in_order_invoker_args_t*)data;
     env = args->env;
-    invoker_impl = args->impl;
-    invoker = (sandesha2_in_order_invoker_t*)invoker_impl;
+    invoker = args->impl;
     
-    while(invoker_impl->run_invoker)
+    while(invoker->run_invoker)
     {
         sandesha2_transaction_t *transaction = NULL;
         /* Use when transaction handling is done 
@@ -351,8 +267,8 @@ sandesha2_in_order_invoker_worker_func(
 
         AXIS2_SLEEP(1);
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
-                        invoker_impl->conf_ctx, 
-                        AXIS2_CONF_CTX_GET_CONF(invoker_impl->conf_ctx, env));
+                        invoker->conf_ctx, 
+                        AXIS2_CONF_CTX_GET_CONF(invoker->conf_ctx, env));
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
         storage_map_mgr = sandesha2_storage_mgr_get_storage_map_mgr
@@ -361,13 +277,13 @@ sandesha2_in_order_invoker_worker_func(
                         storage_mgr, env);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                         env);
-        all_seq_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
+        all_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
                         env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
                         SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
         if(!all_seq_bean)
             continue;
         all_seq_list = sandesha2_utils_get_array_list_from_string(env,
-                        SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(all_seq_bean, env));
+                        sandesha2_seq_property_bean_get_value(all_seq_bean, env));
         if(!all_seq_list)
             continue;
             
@@ -386,7 +302,7 @@ sandesha2_in_order_invoker_worker_func(
             SANDESHA2_TRANSACTION_COMMIT(transaction, env);
             transaction = sandesha2_storage_mgr_get_transaction(
                         storage_mgr, env);
-            next_msg_bean = SANDESHA2_NEXT_MSG_MGR_RETRIEVE(
+            next_msg_bean = sandesha2_next_msg_mgr_retrieve(
                         next_msg_mgr, env, seq_id);
             if(!next_msg_bean)
             {
@@ -400,13 +316,13 @@ sandesha2_in_order_invoker_worker_func(
                 i--;
                 str_list = sandesha2_utils_array_list_to_string(env, all_seq_list, 
                         SANDESHA2_ARRAY_LIST_STRING);
-                SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(all_seq_bean, env,
+                sandesha2_seq_property_bean_set_value(all_seq_bean, env,
                         str_list);
-                SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
+                sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
                         all_seq_bean);
                 continue;
             }
-            next_msg_no = SANDESHA2_NEXT_MSG_BEAN_GET_NEXT_MSG_NO_TO_PROCESS(
+            next_msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(
                         next_msg_bean, env);
             if(next_msg_no < 0)
             {
@@ -434,7 +350,7 @@ sandesha2_in_order_invoker_worker_func(
                 key = sandesha2_invoker_bean_get_msg_ctx_ref_key(st_map_bean,
                         env);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
-                        storage_mgr, env, key, invoker_impl->conf_ctx);
+                        storage_mgr, env, key, invoker->conf_ctx);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
@@ -457,7 +373,7 @@ sandesha2_in_order_invoker_worker_func(
                 if(post_failure_str && 0 == AXIS2_STRCMP(
                         post_failure_str, SANDESHA2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;
-                engine = axis2_engine_create(env, invoker_impl->conf_ctx);
+                engine = axis2_engine_create(env, invoker->conf_ctx);
                 if(AXIS2_TRUE == post_failure_invocation)
                 {
                     sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
@@ -474,20 +390,20 @@ sandesha2_in_order_invoker_worker_func(
                         storage_mgr, env);
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
                 msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
-                        storage_mgr, env, key, invoker_impl->conf_ctx);
+                        storage_mgr, env, key, invoker->conf_ctx);
                 if(msg_ctx)
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr,
                         env, key);
                 if(SANDESHA2_MSG_TYPE_APPLICATION == 
-                        SANDESHA2_MSG_CTX_GET_MSG_TYPE(rm_msg_ctx, env))
+                        sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env))
                 {
                     sandesha2_seq_t *seq = NULL;
-                    seq = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(
+                    seq = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(
                             rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
                     if(sandesha2_seq_get_last_msg(seq, env))
                     {
                         sandesha2_terminate_mgr_clean_recv_side_after_invocation(
-                            env, invoker_impl->conf_ctx, seq_id, 
+                            env, invoker->conf_ctx, seq_id, 
                             storage_mgr);
                         /* we are done with current seq */
                         continue_seq = AXIS2_FALSE;
@@ -502,9 +418,9 @@ sandesha2_in_order_invoker_worker_func(
             if(invoked)
             {
                 next_msg_no++;
-                SANDESHA2_NEXT_MSG_BEAN_SET_NEXT_MSG_NO_TO_PROCESS(next_msg_bean,
+                sandesha2_next_msg_bean_set_next_msg_no_to_process(next_msg_bean,
                         env, next_msg_no);
-                SANDESHA2_NEXT_MSG_MGR_UPDATE(next_msg_mgr, env, 
+                sandesha2_next_msg_mgr_update(next_msg_mgr, env, 
                         next_msg_bean);
             }
         }

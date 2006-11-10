@@ -39,27 +39,8 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_seq_fault_ops sandesha2_seq_fault_ops_t;
 typedef struct sandesha2_seq_fault sandesha2_seq_fault_t;
  
-/**
- * @brief Sequence Fault ops struct
- * Encapsulator struct for ops of sandesha2_seq_fault
- */
-AXIS2_DECLARE_DATA struct sandesha2_seq_fault_ops
-{
-    sandesha2_fault_code_t* (AXIS2_CALL *
-        get_fault_code)
-            (sandesha2_seq_fault_t *seq_fault,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_fault_code)
-            (sandesha2_seq_fault_t *seq_fault,
-            const axis2_env_t *env, 
-            sandesha2_fault_code_t *fault_code);
-};
-
 /**
  * @brief sandesha2_seq_fault
  *    sandesha2_seq_fault
@@ -67,20 +48,25 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_fault_ops
 AXIS2_DECLARE_DATA struct sandesha2_seq_fault
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_seq_fault_ops_t *ops;
 };
     
 AXIS2_EXTERN sandesha2_seq_fault_t* AXIS2_CALL
 sandesha2_seq_fault_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_SEQ_FAULT_SET_FAULT_CODE(seq_fault, env, fault_code) \
-    ((seq_fault)->ops->set_fault_code (seq_fault, env, fault_code))
-#define SANDESHA2_SEQ_FAULT_GET_FAULT_CODE(seq_fault, env) \
-    ((seq_fault)->ops->get_fault_code (seq_fault, env))
-/************************** End of function macros ****************************/
+sandesha2_fault_code_t * AXIS2_CALL
+sandesha2_seq_fault_get_fault_code(
+    sandesha2_seq_fault_t *seq_fault,
+    const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_seq_fault_set_fault_code(
+    sandesha2_seq_fault_t *seq_fault,
+    const axis2_env_t *env, 
+    sandesha2_fault_code_t *fault_code);
+
+
 
 /** @} */
 #ifdef __cplusplus

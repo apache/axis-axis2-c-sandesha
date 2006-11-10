@@ -38,9 +38,9 @@ extern "C"
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
-                        sandesha2_msg_ctx_t *ref_rm_msg,
-                        axis2_char_t *seq_id,
-                        sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_msg_ctx_t *ref_rm_msg,
+    axis2_char_t *seq_id,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /**
  * This is used to get the acked messages of a sequence. If this is an outgoing 
@@ -52,25 +52,27 @@ sandesha2_ack_mgr_generate_ack_msg(const axis2_env_t *env,
  */
 AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_ack_mgr_get_client_completed_msgs_list(
-        const axis2_env_t *env,
-        axis2_char_t *seq_id,
-        sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
  
 AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_ack_mgr_get_svr_completed_msgs_list(
-        const axis2_env_t *env,
-        axis2_char_t *seq_id,
-        sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_ack_mgr_verify_seq_completion(const axis2_env_t *env,
-        axis2_array_list_t *ack_ranges,
-        long last_msg_no);
+sandesha2_ack_mgr_verify_seq_completion(
+    const axis2_env_t *env,
+    axis2_array_list_t *ack_ranges,
+    long last_msg_no);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_ack_mgr_piggyback_acks_if_present(const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx,
-        sandesha2_storage_mgr_t *storage_mgr);
+sandesha2_ack_mgr_piggyback_acks_if_present(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

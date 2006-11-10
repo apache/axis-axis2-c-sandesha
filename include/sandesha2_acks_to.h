@@ -38,26 +38,7 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_acks_to_ops sandesha2_acks_to_ops_t;
 typedef struct sandesha2_acks_to sandesha2_acks_to_t;
-
-/**
- * @brief Acks To ops struct
- * Encapsulator struct for ops of sandesha2_acks_to
- */
-AXIS2_DECLARE_DATA struct sandesha2_acks_to_ops
-{
-    sandesha2_address_t * (AXIS2_CALL *
-        get_address)
-            (sandesha2_acks_to_t *acks_to,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_address)
-            (sandesha2_acks_to_t *acks_to,
-            const axis2_env_t *env, 
-            sandesha2_address_t *address);
-};
 
 /**
  * @brief sandesha2_acks_to
@@ -66,23 +47,26 @@ AXIS2_DECLARE_DATA struct sandesha2_acks_to_ops
 AXIS2_DECLARE_DATA struct sandesha2_acks_to
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_acks_to_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_acks_to_t * AXIS2_CALL
 sandesha2_acks_to_create(
-						const axis2_env_t *env, 
-                        sandesha2_address_t *address,
-					    axis2_char_t *rm_ns_value, 
-					    axis2_char_t *addr_ns_value);
+    const axis2_env_t *env, 
+    sandesha2_address_t *address,
+    axis2_char_t *rm_ns_value, 
+    axis2_char_t *addr_ns_value);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_ACKS_TO_GET_ADDRESS(acks_to, env)\
-    ((acks_to)->ops->get_address(acks_to, env))
-#define SANDESHA2_ACKS_TO_SET_ADDRESS(acks_to, env, str_id)\
-    ((acks_to)->ops->set_address(acks_to, env, address))
-/************************** End of function macros ****************************/
-
+sandesha2_address_t * AXIS2_CALL
+sandesha2_acks_to_get_address(
+    sandesha2_acks_to_t *acks_to,
+    const axis2_env_t *env);
+                    	
+axis2_status_t AXIS2_CALL 
+sandesha2_acks_to_set_address (
+    sandesha2_acks_to_t *acks_to, 
+    const axis2_env_t *env, 
+    sandesha2_address_t *address);								
+ 
 /** @} */
 #ifdef __cplusplus
 }

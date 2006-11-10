@@ -37,61 +37,11 @@ extern "C"
  * @{
  */
  
- typedef struct sandesha2_in_order_invoker_ops sandesha2_in_order_invoker_ops_t;
- typedef struct sandesha2_in_order_invoker sandesha2_in_order_invoker_t;
- /**
- * @brief Sandesha2 InOrder Invoker ops struct
- * Encapsulator struct for ops of sandesha2_in_order_invoker
- */
-AXIS2_DECLARE_DATA struct sandesha2_in_order_invoker_ops
-{
-    
-    axis2_status_t (AXIS2_CALL *
-        stop_invoker_for_seq) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env,
-            axis2_char_t *seq_id);
-            
-    axis2_status_t (AXIS2_CALL *
-        stop_invoking) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env);
-            
-    axis2_bool_t (AXIS2_CALL *
-        is_invoker_started) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env);
-            
-    axis2_status_t (AXIS2_CALL *
-        run_invoker_for_seq) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env,
-            axis2_conf_ctx_t *conf_ctx,
-            axis2_char_t *seq_id);
-            
-    axis2_status_t (AXIS2_CALL *
-        run) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env);
-    
-    axis2_status_t (AXIS2_CALL *
-        free) 
-            (sandesha2_in_order_invoker_t *invoker,
-            const axis2_env_t *env);
-};
-
-/**
- * @brief sandesha2_in_order_invoker_ops
- *    sandesha2_in_order_invoker_ops
- */
-AXIS2_DECLARE_DATA struct sandesha2_in_order_invoker
-{
-    sandesha2_in_order_invoker_ops_t *ops;
-};
+typedef struct sandesha2_in_order_invoker_t sandesha2_in_order_invoker_t;
 
 AXIS2_EXTERN sandesha2_in_order_invoker_t* AXIS2_CALL
 sandesha2_in_order_invoker_create(
-						const axis2_env_t *env);
+    const axis2_env_t *env);
  
 /**
  * Frees the in_order_invoker given as a void pointer. This method would cast the 
@@ -105,27 +55,46 @@ sandesha2_in_order_invoker_free_void_arg(
     void *invoker,
     const axis2_env_t *env);
 
-                       
-/************************** Start of function macros **************************/
-#define SANDESHA2_IN_ORDER_INVOKER_FREE(invoker, env) \
-    ((invoker)->ops->free (invoker, env))
-    
-#define SANDESHA2_IN_ORDER_INVOKER_STOP_FOR_SEQ(invoker, env, id) \
-    ((invoker)->ops->stop_invoker_for_seq(invoker, env, id))
-    
-#define SANDESHA2_IN_ORDER_INVOKER_STOP_INVOKING(invoker, env) \
-    ((invoker)->ops->stop_invoking(invoker, env))
-    
-#define SANDESHA2_IN_ORDER_INVOKER_IS_INVOKER_STARTED(invoker, env) \
-    ((invoker)->ops->is_invoker_started(invoker, env))
-    
-#define SANDESHA2_IN_ORDER_INVOKER_RUN_FOR_SEQ(invoker, env, \
-    conf_ctx, id) \
-    ((invoker)->ops->run_invoker_for_seq(invoker, env, conf_ctx, id))
+axis2_status_t AXIS2_CALL 
+sandesha2_in_order_invoker_stop_invoker_for_seq(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, axis2_char_t *seq_id);
+            
+axis2_status_t AXIS2_CALL 
+sandesha2_in_order_invoker_stop_invoking (
+    sandesha2_in_order_invoker_t *invoker,
+    const axis2_env_t *env);
+            
+axis2_bool_t AXIS2_CALL 
+sandesha2_in_order_invoker_is_invoker_started(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env);
+            
+axis2_status_t AXIS2_CALL 
+sandesha2_in_order_invoker_run_for_seq(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
+    axis2_char_t *seq_id);
+            
+axis2_status_t AXIS2_CALL 
+sandesha2_in_order_invoker_run (
+    sandesha2_in_order_invoker_t *invoker,
+    const axis2_env_t *env);
+                        
+axis2_status_t AXIS2_CALL
+sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx);
 
-#define SANDESHA2_IN_ORDER_INVOKER_RUN(invoker, env) \
-    ((invoker)->ops->run(invoker, env))
-/************************** End of function macros ****************************/
+void * AXIS2_THREAD_FUNC
+sandesha2_in_order_invoker_worker_func(
+    axis2_thread_t *thd, void *data);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_in_order_invoker_free(
+    sandesha2_in_order_invoker_t *invoker, 
+    const axis2_env_t *env);								
+
 
 /** @} */
 #ifdef __cplusplus

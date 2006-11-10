@@ -259,14 +259,14 @@ sandesha2_global_in_handler_drop_if_duplicate(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
-    if(SANDESHA2_MSG_TYPE_APPLICATION == SANDESHA2_MSG_CTX_GET_MSG_TYPE(
+    if(SANDESHA2_MSG_TYPE_APPLICATION == sandesha2_msg_ctx_get_msg_type(
                         rm_msg_ctx, env))
     {
         sandesha2_seq_t *sequence = NULL;
         long msg_no = -1;
         axis2_char_t *seq_id = NULL;
         
-        sequence = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
+        sequence = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
         if(sequence)
         {
@@ -282,7 +282,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
             
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
-            rcvd_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
+            rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
                         env, seq_id, 
                         SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
             if(rcvd_msgs_bean)
@@ -291,7 +291,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                 axis2_array_list_t *msg_no_list = NULL;
                 int i = 0, size = 0;
                 
-                rcvd_msgs_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                rcvd_msgs_str = sandesha2_seq_property_bean_get_value(
                         rcvd_msgs_bean, env);
                 msg_no_list = sandesha2_utils_get_array_list_from_string(env,
                         rcvd_msgs_str);
@@ -316,7 +316,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
             
             
                 soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(
-                        SANDESHA2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx, env), 
+                        sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env), 
                         env);
                 body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
                 body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
@@ -339,10 +339,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
                         rcvd_msgs_bean = sandesha2_seq_property_bean_create_with_data
                             (env, seq_id, 
                             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
-                        SANDESHA2_SEQ_PROPERTY_MGR_INSERT(seq_prop_mgr, env,
+                        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env,
                             rcvd_msgs_bean);
                     }
-                    rcvd_msgs_str1 = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+                    rcvd_msgs_str1 = sandesha2_seq_property_bean_get_value(
                             rcvd_msgs_bean, env);
                     sprintf(msg_no_str, "%ld", msg_no);
                     if(rcvd_msgs_str1 && 0 < AXIS2_STRLEN(rcvd_msgs_str1))
@@ -351,9 +351,9 @@ sandesha2_global_in_handler_drop_if_duplicate(
                     else
                         bean_value = AXIS2_STRDUP(msg_no_str, env);
                     
-                    SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(rcvd_msgs_bean, env,
+                    sandesha2_seq_property_bean_set_value(rcvd_msgs_bean, env,
                         bean_value);
-                    SANDESHA2_SEQ_PROPERTY_MGR_UPDATE(seq_prop_mgr, env, 
+                    sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
                         rcvd_msgs_bean);
                     app_msg_processor = sandesha2_app_msg_processor_create(env);
                     sandesha2_app_msg_processor_send_ack_if_reqd(env, 
@@ -361,14 +361,14 @@ sandesha2_global_in_handler_drop_if_duplicate(
                 }
             }
         }        
-    } else if(SANDESHA2_MSG_TYPE_UNKNOWN == SANDESHA2_MSG_CTX_GET_MSG_TYPE(
+    } else if(SANDESHA2_MSG_TYPE_UNKNOWN == sandesha2_msg_ctx_get_msg_type(
                         rm_msg_ctx, env))
     {
         axis2_relates_to_t *relates_to = NULL;
         axis2_conf_ctx_t *conf_ctx = NULL;
         
         
-        relates_to = SANDESHA2_MSG_CTX_GET_RELATES_TO(rm_msg_ctx, env);
+        relates_to = sandesha2_msg_ctx_get_relates_to(rm_msg_ctx, env);
         if(relates_to)
         {
             const axis2_char_t *relates_to_val = NULL;
@@ -376,10 +376,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
             axis2_op_ctx_t *op_ctx1 = NULL;
             
             relates_to_val = AXIS2_RELATES_TO_GET_VALUE(relates_to, env);
-            conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(SANDESHA2_MSG_CTX_GET_MSG_CTX(
+            conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(sandesha2_msg_ctx_get_msg_ctx(
                         rm_msg_ctx, env), env);
             op_ctx = AXIS2_CONF_CTX_GET_OP_CTX(conf_ctx, env, relates_to_val);
-            op_ctx1 = AXIS2_MSG_CTX_GET_OP_CTX(SANDESHA2_MSG_CTX_GET_MSG_CTX(
+            op_ctx1 = AXIS2_MSG_CTX_GET_OP_CTX(sandesha2_msg_ctx_get_msg_ctx(
                         rm_msg_ctx, env), env);
             if(!op_ctx && !op_ctx1)
             {
@@ -391,7 +391,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
     }
     if(drop)
     {
-        SANDESHA2_MSG_CTX_SET_PAUSED(rm_msg_ctx, env, AXIS2_TRUE);
+        sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         return AXIS2_TRUE;
     }
     return AXIS2_FALSE;
@@ -410,13 +410,13 @@ sandesha2_global_in_handler_process_dropped_msg(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
-    if(SANDESHA2_MSG_TYPE_APPLICATION == SANDESHA2_MSG_CTX_GET_MSG_TYPE(
+    if(SANDESHA2_MSG_TYPE_APPLICATION == sandesha2_msg_ctx_get_msg_type(
                         rm_msg_ctx, env))
     {
         sandesha2_seq_t *sequence = NULL;
         axis2_char_t *seq_id = NULL;
         
-        sequence = (sandesha2_seq_t*)SANDESHA2_MSG_CTX_GET_MSG_PART(rm_msg_ctx, 
+        sequence = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ);
         if(sequence)
             seq_id = sandesha2_identifier_get_identifier(
@@ -431,10 +431,10 @@ sandesha2_global_in_handler_process_dropped_msg(
             
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
-            rcvd_msgs_bean = SANDESHA2_SEQ_PROPERTY_MGR_RETRIEVE(seq_prop_mgr,
+            rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
                         env, seq_id, 
                         SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
-            rcvd_msgs_str = SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(
+            rcvd_msgs_str = sandesha2_seq_property_bean_get_value(
                         rcvd_msgs_bean, env);
             app_msg_processor = sandesha2_app_msg_processor_create(env);
             sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, 

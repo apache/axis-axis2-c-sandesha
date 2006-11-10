@@ -25,81 +25,59 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_seq_property_bean sandesha2_seq_property_bean_t ;
-typedef struct sandesha2_seq_property_bean_ops sandesha2_seq_property_bean_ops_t;
-
-AXIS2_DECLARE_DATA struct sandesha2_seq_property_bean_ops
-{
-	axis2_status_t (AXIS2_CALL *
-		free) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env);
-	
-	axis2_char_t *(AXIS2_CALL *
-		get_name) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env);
-
-	void (AXIS2_CALL *
-		set_name) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env,
-			axis2_char_t *name);
-
-	axis2_char_t *(AXIS2_CALL *
-		get_seq_id) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env);
-
-	void (AXIS2_CALL *
-		set_seq_id) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env,
-			axis2_char_t *seq_id);
-	
-	axis2_char_t *(AXIS2_CALL *
-		get_value) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env);
-
-	void (AXIS2_CALL *
-		set_value) (struct sandesha2_seq_property_bean *seq_property,
-			const axis2_env_t *env,
-			axis2_char_t *value);
-
-};
-
-AXIS2_DECLARE_DATA struct sandesha2_seq_property_bean{
-	sandesha2_seq_property_bean_ops_t *ops;
-};
+typedef struct sandesha2_seq_property_bean_t sandesha2_seq_property_bean_t ;
 
 /* constructors 
  */
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
-	sandesha2_seq_property_bean_create(const axis2_env_t *env);
+sandesha2_seq_property_bean_create(
+    const axis2_env_t *env);
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
-	sandesha2_seq_property_bean_create_with_data(const axis2_env_t *env,
-			axis2_char_t *seq_id,
-			axis2_char_t *prop_name,
-			axis2_char_t *value);
+sandesha2_seq_property_bean_create_with_data(
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *prop_name,
+    axis2_char_t *value);
 
+axis2_status_t AXIS2_CALL
+sandesha2_seq_property_bean_free (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_FREE(seq_prop_bean, env) \
-	((seq_prop_bean)->ops->free(seq_prop_bean, env))
+axis2_char_t *AXIS2_CALL
+sandesha2_seq_property_bean_get_name (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_GET_NAME(seq_prop_bean, env) \
-	((seq_prop_bean)->ops->get_name(seq_prop_bean, env))
+void AXIS2_CALL 
+sandesha2_seq_property_bean_set_name (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *name);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_SET_NAME(seq_prop_bean, env, name) \
-	((seq_prop_bean)->ops->set_name(seq_prop_bean, env, name))
+axis2_char_t *AXIS2_CALL
+sandesha2_seq_property_bean_get_seq_id (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_GET_SEQ_ID(seq_prop_bean, env) \
-	((seq_prop_bean)->ops->get_seq_id(seq_prop_bean, env))
+void AXIS2_CALL
+sandesha2_seq_property_bean_set_seq_id (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_SET_SEQ_ID(seq_prop_bean, env, seq_id) \
-	((seq_prop_bean)->ops->set_seq_id(seq_prop_bean, env, seq_id))
+axis2_char_t* AXIS2_CALL
+sandesha2_seq_property_bean_get_value (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env);
 
-#define SANDESHA2_SEQ_PROPERTY_BEAN_GET_VALUE(seq_prop_bean, env) \
-	((seq_prop_bean)->ops->get_value(seq_prop_bean, env))
-
-#define SANDESHA2_SEQ_PROPERTY_BEAN_SET_VALUE(seq_prop_bean, env, value) \
-	((seq_prop_bean)->ops->set_value(seq_prop_bean, env, value))
+void AXIS2_CALL
+sandesha2_seq_property_bean_set_value (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env,
+    axis2_char_t *value);
 
 #ifdef __cplusplus
 }

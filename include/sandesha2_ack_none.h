@@ -49,8 +49,8 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_none
 };    
 AXIS2_EXTERN sandesha2_ack_none_t * AXIS2_CALL
 sandesha2_ack_none_create(
-						const axis2_env_t *env, 
-					    axis2_char_t *ns_value);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value);
 /** @} */
 #ifdef __cplusplus
 }

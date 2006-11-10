@@ -25,11 +25,8 @@
  * @brief Msg Ctx struct impl
  *	Sandesha2 Message Context
  */
-typedef struct sandesha2_msg_ctx_impl sandesha2_msg_ctx_impl_t;  
-  
-struct sandesha2_msg_ctx_impl
+struct sandesha2_msg_ctx_t
 {
-    sandesha2_msg_ctx_t rm_msg_ctx;
     axis2_hash_t *msg_parts;
     int msg_type;
     axis2_char_t *rm_ns_val;
@@ -38,380 +35,112 @@ struct sandesha2_msg_ctx_impl
 	axis2_msg_ctx_t *msg_ctx;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(rm_msg_ctx) \
-                        ((sandesha2_msg_ctx_impl_t *)(rm_msg_ctx))
-
-/***************************** Function headers *******************************/
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_ctx(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
-    axis2_msg_ctx_t *msg_ctx);
-            
-static axis2_msg_ctx_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_ctx(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env);
-    
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_add_soap_envelope(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-        
-static int AXIS2_CALL
-sandesha2_msg_ctx_get_msg_type (
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-        
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_type (
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    int msg_type);
-            
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_part (
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    int part_id,
-    sandesha2_iom_rm_part_t *part);
-        
-static sandesha2_iom_rm_part_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_part(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    int part_id);
-    
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_from(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_from(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_endpoint_ref_t *from);
-    
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_to (
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
-    axis2_endpoint_ref_t *to);
-    
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_reply_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_reply_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_endpoint_ref_t *reply_to);
-    
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_fault_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_fault_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_endpoint_ref_t *fault_to);
-    
-static axis2_relates_to_t *AXIS2_CALL
-sandesha2_msg_ctx_get_relates_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_relates_to(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_relates_to_t *relates_to);
-    
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_id(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_id(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
-    axis2_char_t *msg_id);
-    
-static axiom_soap_envelope_t *AXIS2_CALL
-sandesha2_msg_ctx_get_soap_envelope(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_envelope(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axiom_soap_envelope_t *soap_envelope);
-            
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_wsa_action(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_wsa_action(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *action);
-            
-static void *AXIS2_CALL
-sandesha2_msg_ctx_get_property(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *key);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_property(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *key, 
-    void *val);
-    
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_action(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *soap_action);
-    
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_paused(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_bool_t paused);
-    
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_ns_val(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_rm_ns_val(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *ns_val);
-    
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_addr_ns_val(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_addr_ns_val(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_char_t *ns_val);
-            
-static int AXIS2_CALL
-sandesha2_msg_ctx_get_flow(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_flow(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    int flow);
-                        
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_spec_ver(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env);
-            
-static axis2_status_t AXIS2_CALL 
-sandesha2_msg_ctx_free(
-    sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env);								
-
-/***************************** End of function headers ************************/
-
 AXIS2_EXTERN sandesha2_msg_ctx_t* AXIS2_CALL
 sandesha2_msg_ctx_create(
     const axis2_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
+    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl =  (sandesha2_msg_ctx_impl_t *)AXIS2_MALLOC 
-                        (env->allocator, sizeof(sandesha2_msg_ctx_impl_t));
+    rm_msg_ctx =  (sandesha2_msg_ctx_t *)AXIS2_MALLOC 
+                        (env->allocator, sizeof(sandesha2_msg_ctx_t));
 	
-    if(NULL == msg_ctx_impl)
+    if(!rm_msg_ctx)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    msg_ctx_impl->rm_ns_val = NULL;
-    msg_ctx_impl->addr_ns_val = NULL;
-    msg_ctx_impl->msg_parts = NULL;
-    msg_ctx_impl->msg_ctx = NULL;
-    msg_ctx_impl->spec_ver = NULL;
-    msg_ctx_impl->rm_msg_ctx.ops = NULL;
+    rm_msg_ctx->rm_ns_val = NULL;
+    rm_msg_ctx->addr_ns_val = NULL;
+    rm_msg_ctx->msg_parts = NULL;
+    rm_msg_ctx->msg_ctx = NULL;
+    rm_msg_ctx->spec_ver = NULL;
     
-    msg_ctx_impl->rm_msg_ctx.ops = AXIS2_MALLOC(env->allocator,
-                        sizeof(sandesha2_msg_ctx_ops_t));
-    if(NULL == msg_ctx_impl->rm_msg_ctx.ops)
-	{
-		sandesha2_msg_ctx_free((sandesha2_msg_ctx_t*)msg_ctx_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    
-    msg_ctx_impl->msg_parts = axis2_hash_make(env);
-    msg_ctx_impl->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
-    msg_ctx_impl->msg_ctx = msg_ctx;
+    rm_msg_ctx->msg_parts = axis2_hash_make(env);
+    rm_msg_ctx->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
+    rm_msg_ctx->msg_ctx = msg_ctx;
 
-    
-    msg_ctx_impl->rm_msg_ctx.ops->set_msg_ctx = sandesha2_msg_ctx_set_msg_ctx;
-    msg_ctx_impl->rm_msg_ctx.ops->get_msg_ctx = sandesha2_msg_ctx_get_msg_ctx;
-    msg_ctx_impl->rm_msg_ctx.ops->add_soap_envelope = 
-                        sandesha2_msg_ctx_add_soap_envelope;
-    msg_ctx_impl->rm_msg_ctx.ops->get_msg_type = sandesha2_msg_ctx_get_msg_type;
-    msg_ctx_impl->rm_msg_ctx.ops->set_msg_type = sandesha2_msg_ctx_set_msg_type;
-    msg_ctx_impl->rm_msg_ctx.ops->set_msg_part = sandesha2_msg_ctx_set_msg_part;
-    msg_ctx_impl->rm_msg_ctx.ops->get_msg_part = sandesha2_msg_ctx_get_msg_part;
-    msg_ctx_impl->rm_msg_ctx.ops->get_from = sandesha2_msg_ctx_get_from;
-    msg_ctx_impl->rm_msg_ctx.ops->set_from = sandesha2_msg_ctx_set_from;
-    msg_ctx_impl->rm_msg_ctx.ops->get_to = sandesha2_msg_ctx_get_to;
-    msg_ctx_impl->rm_msg_ctx.ops->set_to = sandesha2_msg_ctx_set_to;
-    msg_ctx_impl->rm_msg_ctx.ops->get_reply_to = sandesha2_msg_ctx_get_reply_to;
-    msg_ctx_impl->rm_msg_ctx.ops->set_reply_to = sandesha2_msg_ctx_set_reply_to;
-    msg_ctx_impl->rm_msg_ctx.ops->get_fault_to = sandesha2_msg_ctx_get_fault_to;
-    msg_ctx_impl->rm_msg_ctx.ops->set_fault_to = sandesha2_msg_ctx_set_fault_to;
-    msg_ctx_impl->rm_msg_ctx.ops->get_relates_to = 
-                        sandesha2_msg_ctx_get_relates_to;
-    msg_ctx_impl->rm_msg_ctx.ops->set_relates_to = 
-                        sandesha2_msg_ctx_set_relates_to;
-    msg_ctx_impl->rm_msg_ctx.ops->get_msg_id = sandesha2_msg_ctx_get_msg_id;
-    msg_ctx_impl->rm_msg_ctx.ops->set_msg_id = sandesha2_msg_ctx_set_msg_id;
-    msg_ctx_impl->rm_msg_ctx.ops->get_soap_envelope = 
-                        sandesha2_msg_ctx_get_soap_envelope;
-    msg_ctx_impl->rm_msg_ctx.ops->set_soap_envelope = 
-                        sandesha2_msg_ctx_set_soap_envelope;
-    msg_ctx_impl->rm_msg_ctx.ops->get_wsa_action = 
-                        sandesha2_msg_ctx_get_wsa_action;
-    msg_ctx_impl->rm_msg_ctx.ops->set_wsa_action = 
-                        sandesha2_msg_ctx_set_wsa_action;
-    msg_ctx_impl->rm_msg_ctx.ops->get_property = sandesha2_msg_ctx_get_property;
-    msg_ctx_impl->rm_msg_ctx.ops->set_property = sandesha2_msg_ctx_set_property;
-    msg_ctx_impl->rm_msg_ctx.ops->set_soap_action = 
-                        sandesha2_msg_ctx_set_soap_action;
-    msg_ctx_impl->rm_msg_ctx.ops->set_paused = sandesha2_msg_ctx_set_paused;
-    msg_ctx_impl->rm_msg_ctx.ops->get_rm_ns_val = 
-                        sandesha2_msg_ctx_get_rm_ns_val;
-    msg_ctx_impl->rm_msg_ctx.ops->set_rm_ns_val = 
-                        sandesha2_msg_ctx_set_rm_ns_val;
-    msg_ctx_impl->rm_msg_ctx.ops->get_addr_ns_val = 
-                        sandesha2_msg_ctx_get_addr_ns_val;
-    msg_ctx_impl->rm_msg_ctx.ops->set_addr_ns_val = 
-                        sandesha2_msg_ctx_set_addr_ns_val;
-    msg_ctx_impl->rm_msg_ctx.ops->get_flow = sandesha2_msg_ctx_get_flow;
-    msg_ctx_impl->rm_msg_ctx.ops->set_flow = sandesha2_msg_ctx_set_flow;
-    msg_ctx_impl->rm_msg_ctx.ops->get_rm_spec_ver = 
-                        sandesha2_msg_ctx_get_rm_spec_ver;
-    msg_ctx_impl->rm_msg_ctx.ops->free = sandesha2_msg_ctx_free;
-                        
-	return &(msg_ctx_impl->rm_msg_ctx);
+	return rm_msg_ctx;
 }
 
 
-static axis2_status_t AXIS2_CALL 
-sandesha2_msg_ctx_free(sandesha2_msg_ctx_t *rm_msg_ctx, const axis2_env_t *env)
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_ctx_free(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     
-    if(NULL != msg_ctx_impl->addr_ns_val)
+    if(rm_msg_ctx->addr_ns_val)
     {
-        AXIS2_FREE(env->allocator, msg_ctx_impl->addr_ns_val);
-        msg_ctx_impl->addr_ns_val = NULL;
+        AXIS2_FREE(env->allocator, rm_msg_ctx->addr_ns_val);
+        rm_msg_ctx->addr_ns_val = NULL;
     }
-    if(NULL != msg_ctx_impl->rm_ns_val)
+    if(rm_msg_ctx->rm_ns_val)
     {
-        AXIS2_FREE(env->allocator, msg_ctx_impl->rm_ns_val);
-        msg_ctx_impl->rm_ns_val = NULL;
+        AXIS2_FREE(env->allocator, rm_msg_ctx->rm_ns_val);
+        rm_msg_ctx->rm_ns_val = NULL;
     }
-    if(NULL != msg_ctx_impl->spec_ver)
+    if(rm_msg_ctx->spec_ver)
     {
-        AXIS2_FREE(env->allocator, msg_ctx_impl->spec_ver);
-        msg_ctx_impl->spec_ver = NULL;
+        AXIS2_FREE(env->allocator, rm_msg_ctx->spec_ver);
+        rm_msg_ctx->spec_ver = NULL;
     }
-    if(NULL != msg_ctx_impl->msg_parts)
+    if(rm_msg_ctx->msg_parts)
     {
-        axis2_hash_free(msg_ctx_impl->msg_parts, env);
-        msg_ctx_impl->msg_parts = NULL;
+        axis2_hash_free(rm_msg_ctx->msg_parts, env);
+        rm_msg_ctx->msg_parts = NULL;
     }
-    if(NULL != rm_msg_ctx->ops)
-    {
-        AXIS2_FREE(env->allocator, rm_msg_ctx->ops);
-        rm_msg_ctx->ops = NULL;
-    }
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(rm_msg_ctx));
+	AXIS2_FREE(env->allocator, rm_msg_ctx);
 	return AXIS2_SUCCESS;
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_ctx(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_ctx(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    msg_ctx_impl->msg_ctx = msg_ctx;
+    rm_msg_ctx->msg_ctx = msg_ctx;
     return AXIS2_SUCCESS;
 }
             
-static axis2_msg_ctx_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_ctx(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env)
+axis2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_ctx_get_msg_ctx(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->msg_ctx;
+    return rm_msg_ctx->msg_ctx;
 }
     
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_add_soap_envelope(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env)
 {
     int soap_ver = AXIOM_SOAP11;
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     axis2_hash_index_t *hi = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     
-    if(AXIS2_FALSE == AXIS2_MSG_CTX_GET_IS_SOAP_11(msg_ctx_impl->msg_ctx, env))
+    if(AXIS2_FALSE == AXIS2_MSG_CTX_GET_IS_SOAP_11(rm_msg_ctx->msg_ctx, env))
         soap_ver = AXIOM_SOAP12;
-    soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx_impl->msg_ctx, env);
+    soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env);
     if(NULL == soap_envelope)
     {
         soap_envelope = axiom_soap_envelope_create_default_soap_envelope(env,
                         soap_ver);
-        AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx_impl->msg_ctx, env, 
+        AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env, 
                         soap_envelope);
     }
     
-    for(hi = axis2_hash_first(msg_ctx_impl->msg_parts, env); NULL != hi;
+    for(hi = axis2_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
                         hi = axis2_hash_next(env, hi))
     {
         sandesha2_iom_rm_part_t *part = NULL;
@@ -424,403 +153,374 @@ sandesha2_msg_ctx_add_soap_envelope(
     return AXIS2_SUCCESS;
 }
             
-static int AXIS2_CALL
-sandesha2_msg_ctx_get_msg_type (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+int AXIS2_CALL
+sandesha2_msg_ctx_get_msg_type (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, -1);
-    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->msg_type;
+    return rm_msg_ctx->msg_type;
 }
             
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_type (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int msg_type)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_type (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, int msg_type)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    msg_ctx_impl->msg_type = msg_type;
+    rm_msg_ctx->msg_type = msg_type;
     return AXIS2_SUCCESS;
 }
             
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_part (sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int part_id,
-                        sandesha2_iom_rm_part_t *part)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_part (
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, int part_id,
+    sandesha2_iom_rm_part_t *part)
 {
     axis2_char_t *part_id_str = NULL;
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, part, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     part_id_str = AXIS2_MALLOC(env->allocator, 32 * sizeof(axis2_char_t));
     sprintf(part_id_str, "%d", part_id);
-    axis2_hash_set(msg_ctx_impl->msg_parts, part_id_str, AXIS2_HASH_KEY_STRING,
+    axis2_hash_set(rm_msg_ctx->msg_parts, part_id_str, AXIS2_HASH_KEY_STRING,
                         (const void*)part);
     return AXIS2_SUCCESS;
 }
             
-static sandesha2_iom_rm_part_t *AXIS2_CALL
+sandesha2_iom_rm_part_t *AXIS2_CALL
 sandesha2_msg_ctx_get_msg_part(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env, 
     int part_id)
 {
     axis2_char_t part_id_str[32];
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     sprintf(part_id_str, "%d", part_id);
-    return axis2_hash_get(msg_ctx_impl->msg_parts, part_id_str, 
+    return axis2_hash_get(rm_msg_ctx->msg_parts, part_id_str, 
                         AXIS2_HASH_KEY_STRING);
 }
     
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_from(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_msg_ctx_get_from(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_FROM(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_FROM(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_from(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *from)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_from(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *from)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, from, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_TO(msg_ctx_impl->msg_ctx, env, from);;
+    return AXIS2_MSG_CTX_SET_TO(rm_msg_ctx->msg_ctx, env, from);;
 }
     
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_to (sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env)
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_msg_ctx_get_to (
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_TO(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_TO(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_to(sandesha2_msg_ctx_t *rm_msg_ctx, 
-                        const axis2_env_t *env, axis2_endpoint_ref_t *to)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    const axis2_env_t *env, 
+    axis2_endpoint_ref_t *to)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, to, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_TO(msg_ctx_impl->msg_ctx, env, to);
+    return AXIS2_MSG_CTX_SET_TO(rm_msg_ctx->msg_ctx, env, to);
 }
     
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_reply_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_msg_ctx_get_reply_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_REPLY_TO(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_REPLY_TO(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_reply_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *reply_to)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_reply_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_endpoint_ref_t *reply_to)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, reply_to, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_REPLY_TO(msg_ctx_impl->msg_ctx, env, reply_to);
+    return AXIS2_MSG_CTX_SET_REPLY_TO(rm_msg_ctx->msg_ctx, env, reply_to);
 }
     
-static axis2_endpoint_ref_t *AXIS2_CALL
-sandesha2_msg_ctx_get_fault_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_msg_ctx_get_fault_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_FAULT_TO(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_FAULT_TO(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_fault_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_endpoint_ref_t *fault_to)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_fault_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_endpoint_ref_t *fault_to)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, fault_to, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_FAULT_TO(msg_ctx_impl->msg_ctx, env, fault_to);
+    return AXIS2_MSG_CTX_SET_FAULT_TO(rm_msg_ctx->msg_ctx, env, fault_to);
 }
     
-static axis2_relates_to_t *AXIS2_CALL
-sandesha2_msg_ctx_get_relates_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_relates_to_t *AXIS2_CALL
+sandesha2_msg_ctx_get_relates_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_RELATES_TO(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_RELATES_TO(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_relates_to(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_relates_to_t *relates_to)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_relates_to(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_relates_to_t *relates_to)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, relates_to, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_RELATES_TO(msg_ctx_impl->msg_ctx, env, relates_to);
+    return AXIS2_MSG_CTX_SET_RELATES_TO(rm_msg_ctx->msg_ctx, env, relates_to);
 }
     
-static axis2_char_t *AXIS2_CALL
+axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_msg_id(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
     const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
     return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(
-                        msg_ctx_impl->msg_ctx, env);
+                        rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_id(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
     const axis2_env_t *env, 
     axis2_char_t *msg_id)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_MESSAGE_ID(msg_ctx_impl->msg_ctx, env, msg_id);
+    return AXIS2_MSG_CTX_SET_MESSAGE_ID(rm_msg_ctx->msg_ctx, env, msg_id);
 }
     
-static axiom_soap_envelope_t *AXIS2_CALL
-sandesha2_msg_ctx_get_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axiom_soap_envelope_t *AXIS2_CALL
+sandesha2_msg_ctx_get_soap_envelope(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx_impl->msg_ctx, env);
+    return AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_envelope(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, 
-                        axiom_soap_envelope_t *soap_envelope)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_soap_envelope(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, 
+    axiom_soap_envelope_t *soap_envelope)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx_impl->msg_ctx, env, 
+    return AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env, 
                         soap_envelope);
 }
             
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_wsa_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_wsa_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
         
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    
-    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx_impl->msg_ctx, env);
+    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(rm_msg_ctx->msg_ctx, env);
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_wsa_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *action)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_wsa_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_char_t *action)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    
-    return AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx_impl->msg_ctx, env, action);
+    return AXIS2_MSG_CTX_SET_WSA_ACTION(rm_msg_ctx->msg_ctx, env, action);
 }
             
-static void *AXIS2_CALL
-sandesha2_msg_ctx_get_property(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *key)
+void *AXIS2_CALL
+sandesha2_msg_ctx_get_property(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_char_t *key)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx_impl->msg_ctx, env, key,
+    return AXIS2_MSG_CTX_GET_PROPERTY(rm_msg_ctx->msg_ctx, env, key,
                         AXIS2_FALSE);
 }
 
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_property(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env, 
     axis2_char_t *key, 
     void *val)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    return AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx_impl->msg_ctx, env, key, val,
+    return AXIS2_MSG_CTX_SET_PROPERTY(rm_msg_ctx->msg_ctx, env, key, val,
                         AXIS2_FALSE);
 }
     
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_soap_action(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *soap_action)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_soap_action(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_char_t *soap_action)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_action, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL == msg_ctx_impl->msg_ctx)
+    if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
     
-    return AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx_impl->msg_ctx, env, 
+    return AXIS2_MSG_CTX_SET_SOAP_ACTION(rm_msg_ctx->msg_ctx, env, 
                         soap_action);
 }
     
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_paused(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env, 
     axis2_bool_t paused)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL == msg_ctx_impl->msg_ctx)
+    if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
-    return AXIS2_MSG_CTX_SET_PAUSED(msg_ctx_impl->msg_ctx, env, paused);    
+    return AXIS2_MSG_CTX_SET_PAUSED(rm_msg_ctx->msg_ctx, env, paused);    
 }
     
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_rm_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->rm_ns_val;
+    return rm_msg_ctx->rm_ns_val;
 }
 
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_rm_ns_val(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env, 
     axis2_char_t *ns_val)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, ns_val, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL != msg_ctx_impl->rm_ns_val)
+    if(NULL != rm_msg_ctx->rm_ns_val)
     {
-        AXIS2_FREE(env->allocator, msg_ctx_impl->rm_ns_val);
-        msg_ctx_impl->rm_ns_val = NULL;
+        AXIS2_FREE(env->allocator, rm_msg_ctx->rm_ns_val);
+        rm_msg_ctx->rm_ns_val = NULL;
     }
-    msg_ctx_impl->rm_ns_val = AXIS2_STRDUP(ns_val, env);
+    rm_msg_ctx->rm_ns_val = AXIS2_STRDUP(ns_val, env);
     if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
-        msg_ctx_impl->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env);
+        rm_msg_ctx->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env);
     if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_10_NS_URI))
-        msg_ctx_impl->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_1, env);
+        rm_msg_ctx->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_1, env);
         
     return AXIS2_SUCCESS;
 }
     
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_addr_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_addr_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->addr_ns_val;
+    return rm_msg_ctx->addr_ns_val;
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_addr_ns_val(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, axis2_char_t *ns_val)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_addr_ns_val(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, axis2_char_t *ns_val)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, ns_val, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL != msg_ctx_impl->addr_ns_val)
+    if(NULL != rm_msg_ctx->addr_ns_val)
     {
-        AXIS2_FREE(env->allocator, msg_ctx_impl->addr_ns_val);
-        msg_ctx_impl->addr_ns_val = NULL;
+        AXIS2_FREE(env->allocator, rm_msg_ctx->addr_ns_val);
+        rm_msg_ctx->addr_ns_val = NULL;
     }
-    msg_ctx_impl->addr_ns_val = AXIS2_STRDUP(ns_val, env);
+    rm_msg_ctx->addr_ns_val = AXIS2_STRDUP(ns_val, env);
     return AXIS2_SUCCESS;
 }
             
-static int AXIS2_CALL
-sandesha2_msg_ctx_get_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+int AXIS2_CALL
+sandesha2_msg_ctx_get_flow(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, -1);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL == msg_ctx_impl->msg_ctx)
+    if(NULL == rm_msg_ctx->msg_ctx)
         return -1;
-    return AXIS2_MSG_CTX_GET_FLOW(msg_ctx_impl->msg_ctx, env);     
+    return AXIS2_MSG_CTX_GET_FLOW(rm_msg_ctx->msg_ctx, env);     
 }
 
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_flow(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env, int flow)
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_flow(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env, int flow)
 {
-    sandesha2_msg_ctx_impl_t *msg_ctx_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    msg_ctx_impl = SANDESHA2_INTF_TO_IMPL(rm_msg_ctx);
-    if(NULL == msg_ctx_impl->msg_ctx)
+    if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
         
-    return AXIS2_MSG_CTX_SET_FLOW(msg_ctx_impl->msg_ctx, env, flow); 
+    return AXIS2_MSG_CTX_SET_FLOW(rm_msg_ctx->msg_ctx, env, flow); 
 }
 
-static axis2_char_t *AXIS2_CALL
-sandesha2_msg_ctx_get_rm_spec_ver(sandesha2_msg_ctx_t *rm_msg_ctx,
-                        const axis2_env_t *env)
+axis2_char_t *AXIS2_CALL
+sandesha2_msg_ctx_get_rm_spec_ver(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return SANDESHA2_INTF_TO_IMPL(rm_msg_ctx)->spec_ver;
+    return rm_msg_ctx->spec_ver;
 }
 
