@@ -104,7 +104,7 @@ sandesha2_create_seq_res_msg_processor_create(
                         (env->allocator, 
                         sizeof(sandesha2_create_seq_res_msg_processor_impl_t));
 	
-    if(NULL == msg_proc_impl)
+    if(!msg_proc_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
@@ -112,7 +112,7 @@ sandesha2_create_seq_res_msg_processor_create(
     
     msg_proc_impl->msg_processor.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_msg_processor_ops_t));
-    if(NULL == msg_proc_impl->msg_processor.ops)
+    if(!msg_proc_impl->msg_processor.ops)
 	{
 		sandesha2_create_seq_res_msg_processor_free((sandesha2_msg_processor_t*)
                          msg_proc_impl, env);
@@ -140,7 +140,7 @@ sandesha2_create_seq_res_msg_processor_free (
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_proc_impl = SANDESHA2_INTF_TO_IMPL(msg_processor);
     
-    if(NULL != msg_processor->ops)
+    if(msg_processor->ops)
         AXIS2_FREE(env->allocator, msg_processor->ops);
     
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(msg_processor));
@@ -192,15 +192,15 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                         
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-    if(NULL != seq_ack)
+    if(seq_ack)
     {
         sandesha2_msg_processor_t *ack_processor = NULL;
         ack_processor = sandesha2_ack_msg_processor_create(env);
-        SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(ack_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_process_in_msg(ack_processor, env, rm_msg_ctx);
     }
     csr_part = (sandesha2_create_seq_res_t*)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
-    if(NULL == csr_part)
+    if(!csr_part)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Create Sequence"
                         " Response part is null");
@@ -211,7 +211,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     new_out_seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_create_seq_res_get_identifier(csr_part, env),
                         env);
-    if(NULL == new_out_seq_id)
+    if(!new_out_seq_id)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] new sequence id"
                         " is null");
@@ -220,7 +220,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     relates_to = AXIS2_MSG_CTX_GET_RELATES_TO(msg_ctx, env);
-    if(NULL == relates_to)
+    if(!relates_to)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] invalid create"
                         " sequence message. relates_to part is not available");
@@ -233,7 +233,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
     create_seq_bean = SANDESHA2_CREATE_SEQ_MGR_RETRIEVE(create_seq_mgr, env,
                         create_seq_msg_id);
-    if(NULL == create_seq_bean)
+    if(!create_seq_bean)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Create Sequence "
                         "entry is not found");
@@ -241,7 +241,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     }
     int_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(create_seq_bean,
                         env);
-    if(NULL == int_seq_id)
+    if(!int_seq_id)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] temp_sequence_id"
                         " has is not set");
@@ -254,7 +254,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     
     create_seq_sender_bean = sandesha2_sender_mgr_retrieve(retrans_mgr,
                         env, create_seq_msg_id);
-    if(NULL == create_seq_sender_bean)
+    if(!create_seq_sender_bean)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Create sequence"
                         " entry is not found");
@@ -277,7 +277,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, int_seq_bean);
     
     accept = sandesha2_create_seq_res_get_accept(csr_part, env);
-    if(NULL != accept)
+    if(accept)
     {
         sandesha2_seq_property_bean_t *offerd_seq_bean = NULL;
         axis2_char_t *offered_seq_id = NULL;
@@ -294,7 +294,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         offerd_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         int_seq_id, SANDESHA2_SEQ_PROP_OFFERED_SEQ);
-        if(NULL == offerd_seq_bean)
+        if(!offerd_seq_bean)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] No offered"
                         " sequence entry. But an accept was received");
@@ -369,14 +369,14 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         key = sandesha2_sender_bean_get_msg_ctx_ref_key(tmp_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
                         key, conf_ctx);
-        if(NULL == app_msg_ctx)
+        if(!app_msg_ctx)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Unavailable"
                         " application message");
             return AXIS2_FAILURE;
         }
         rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_mgr);
-        if(NULL == rm_ver)
+        if(!rm_ver)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cant find the"
                         " rm_ver of the given message");
@@ -387,7 +387,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         app_rm_msg = sandesha2_msg_init_init_msg(env, app_msg_ctx);
         seq_part = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(
                         app_rm_msg, env, SANDESHA2_MSG_PART_SEQ);
-        if(NULL == seq_part)
+        if(!seq_part)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sequence part"
                         " is null");
@@ -399,7 +399,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         ack_req_part = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
                         app_rm_msg, env, SANDESHA2_MSG_PART_ACK_REQUEST);
-        if(NULL != ack_req_part)
+        if(ack_req_part)
         {
             sandesha2_identifier_t *ident1 = NULL;
             ident1 = sandesha2_identifier_create(env, assumed_rm_ns);
@@ -421,6 +421,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] Exit: sandesha2_create_seq_res_msg_processor_process_in_msg");
+    printf("[sandesha2] Exit: sandesha2_create_seq_res_msg_processor_process_in_msg\n");
     return AXIS2_SUCCESS;
     
 }

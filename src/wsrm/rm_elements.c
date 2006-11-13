@@ -278,8 +278,9 @@ sandesha2_rm_elements_create(const axis2_env_t *env,
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_rm_elements_free(sandesha2_rm_elements_t *elements, 
-                        const axis2_env_t *env)
+sandesha2_rm_elements_free(
+    sandesha2_rm_elements_t *elements, 
+    const axis2_env_t *env)
 {
     sandesha2_rm_elements_impl_t *elements_impl = NULL;
     
@@ -302,11 +303,11 @@ sandesha2_rm_elements_free(sandesha2_rm_elements_t *elements,
 }
 
 axis2_status_t AXIS2_CALL 
-sandesha2_rm_elements_from_soap_envelope
-            (sandesha2_rm_elements_t *rm_elements,
-            const axis2_env_t *env,
-            axiom_soap_envelope_t *soap_envelope,
-            axis2_char_t *action)
+sandesha2_rm_elements_from_soap_envelope(
+    sandesha2_rm_elements_t *rm_elements,
+    const axis2_env_t *env,
+    axiom_soap_envelope_t *soap_envelope,
+    axis2_char_t *action)
 {
     int soap_version = -1;
     sandesha2_rm_elements_impl_t *elements_impl = NULL;
@@ -349,18 +350,17 @@ sandesha2_rm_elements_from_soap_envelope
     elements_impl->rm_ns_val = sandesha2_rm_elements_get_rm_ns_val(rm_elements,
                         env, soap_envelope, action);
                         
-    if(NULL == elements_impl->rm_ns_val)
+    if(!elements_impl->rm_ns_val)
         return AXIS2_SUCCESS;
         
     elements_impl->addr_ns_val =  
             sandesha2_rm_elements_get_addr_ns_val_from_env(
                         rm_elements, env, soap_envelope, action);
-    if(NULL == elements_impl->addr_ns_val)
+    if(!elements_impl->addr_ns_val)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the"
                         " addressing version");
-        /*return AXIS2_FAILURE;*/
-        elements_impl->addr_ns_val = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE ,env);
+        return AXIS2_FAILURE;
     }
     soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);    
     header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
@@ -376,11 +376,11 @@ sandesha2_rm_elements_from_soap_envelope
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, rm_ns_val, NULL);
     seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, env,
                         qname, header_node, &seq_node);
-    if(NULL != seq_node)
+    if(seq_node)
     {
         elements_impl->seq = sandesha2_seq_create(env, rm_ns_val);
-        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)elements_impl->seq, env, 
-                        header_node);
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+                elements_impl->seq, env, header_node);
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
                         NULL);

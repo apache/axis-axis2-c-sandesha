@@ -45,8 +45,8 @@
  */
 sandesha2_msg_processor_t *AXIS2_CALL   
 sandesha2_msg_processor_create_msg_processor(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx)
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     int msg_type = -1;
 
@@ -54,24 +54,53 @@ sandesha2_msg_processor_create_msg_processor(
     switch(msg_type)
     {
         case SANDESHA2_MSG_TYPE_CREATE_SEQ:
-            return (sandesha2_msg_processor_t *) sandesha2_create_seq_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_create_seq_msg_processor_create(env);
         case SANDESHA2_MSG_TYPE_TERMINATE_SEQ:
-            return (sandesha2_msg_processor_t *) sandesha2_terminate_seq_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_terminate_seq_msg_processor_create(env);
         case SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE:
-            return (sandesha2_msg_processor_t *) sandesha2_terminate_seq_res_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_terminate_seq_res_msg_processor_create(env);
         case SANDESHA2_MSG_TYPE_APPLICATION:
-            return (sandesha2_msg_processor_t *) sandesha2_app_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_app_msg_processor_create(env);
         case SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE:
-            return (sandesha2_msg_processor_t *) sandesha2_create_seq_res_msg_processor_create(env);
-        case SANDESHA2_MSG_TYPE_ACK:
-            return (sandesha2_msg_processor_t *) sandesha2_ack_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_create_seq_res_msg_processor_create(env);
         case SANDESHA2_MSG_TYPE_CLOSE_SEQ:
-            return (sandesha2_msg_processor_t *) sandesha2_close_seq_msg_processor_create(env);
-        case SANDESHA2_MSG_TYPE_ACK_REQUEST:
-            return (sandesha2_msg_processor_t *) sandesha2_ack_req_msg_processor_create(env);
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_close_seq_msg_processor_create(env);
         default :
             return NULL;
     }
     return NULL;
 }
+                        
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_free (
+    sandesha2_msg_processor_t *msg_processor, 
+    const axis2_env_t *env)
+{
+    return msg_processor->ops->free (msg_processor, env);
+}
+
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_process_in_msg (
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    return msg_processor->ops->process_in_msg(msg_processor, env, rm_msg_ctx);
+}
+    
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_process_out_msg(
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    return msg_processor->ops->process_out_msg(msg_processor, env, rm_msg_ctx);
+}
+
 

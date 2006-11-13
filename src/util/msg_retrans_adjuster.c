@@ -68,7 +68,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
     stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(retrans_bean, env);
-    if(NULL == stored_key)
+    if(!stored_key)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Stored Key not"
                         " present in the retransmittable message");
@@ -76,7 +76,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     }
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
                         stored_key, conf_ctx);
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    if(msg_ctx)
+        rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     int_seq_id = sandesha2_sender_bean_get_internal_seq_id(retrans_bean, env);
     seq_id = sandesha2_sender_bean_get_seq_id(retrans_bean, env);
     
@@ -93,13 +94,14 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     if(max_attempts > 0 && sandesha2_sender_bean_get_sent_count(retrans_bean, 
                         env) > max_attempts)
         timeout_seq = AXIS2_TRUE;
-    seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 
+    if(rm_msg_ctx)
+        seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 
                         rm_msg_ctx, storage_mgr);
     
     if(AXIS2_TRUE == seq_timed_out)
         timeout_seq = AXIS2_TRUE;
         
-    if(AXIS2_TRUE == timeout_seq)
+    if(timeout_seq)
     {
         sandesha2_sender_bean_set_send(retrans_bean, env, AXIS2_FALSE);
         sandesha2_msg_retrans_adjuster_finalize_timedout_seq(env, int_seq_id,

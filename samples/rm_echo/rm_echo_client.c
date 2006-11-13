@@ -24,6 +24,7 @@
 #include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
+#include <sandesha2_client_constants.h>
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -58,6 +59,10 @@ fill_soap_envelope(
     axis2_options_t *options,
     const axiom_node_t *payload);
 
+void 
+usage(
+    axis2_char_t *prog_name);
+
 int main(int argc, char** argv)
 {
     const axis2_env_t *env = NULL;
@@ -73,6 +78,9 @@ int main(int argc, char** argv)
     axis2_callback_t *callback3 = NULL;
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
+    axis2_char_t *offered_seq_id = NULL;
+    axis2_bool_t offer = AXIS2_FALSE;
+    int c;
    
     /* Set up the environment */
     env = axis2_env_create_all("echo_non_blocking_dual.log", 
@@ -81,11 +89,32 @@ int main(int argc, char** argv)
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
-    if (argc > 1 )
-        address = argv[1];
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:")) != -1)
+    {
+
+        switch (c)
+        {
+            case 'a':
+                address = optarg;
+                break;
+            case 'o':
+                offer = AXIS2_ATOI(optarg);
+                break;
+            case ':':
+                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
+                usage(argv[0]);
+                return -1;
+            case '?':
+                if (isprint(optopt))
+                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
+                usage(argv[0]);
+                return -1;
+        }
+    }
+    printf("offer:%d\n", offer);
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
-        printf("Usage : %s [endpoint_url]\n", argv[0]);
+        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
         return 0;
     }
@@ -145,7 +174,18 @@ int main(int argc, char** argv)
     {
         return AXIS2_FAILURE;
     }
-
+    /* Offer sequence */
+    if(offer)
+    {
+        offered_seq_id = axis2_uuid_gen(env);
+        property = axis2_property_create(env);
+        if(property)
+        {
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
+            AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
+                property);
+        }
+    }
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
@@ -244,8 +284,8 @@ rm_echo_callback_on_error(
 }
 
 void wait_on_callback(
-        const axis2_env_t *env,
-        axis2_callback_t *callback)
+    const axis2_env_t *env,
+    axis2_callback_t *callback)
 {
     /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
@@ -368,4 +408,20 @@ fill_soap_envelope(
 
     return AXIS2_TRUE;
 }
+
+void 
+usage(
+    axis2_char_t *prog_name)
+{
+    fprintf(stdout, "\n Usage : %s", prog_name);
+    fprintf(stdout, " [-o ADDRESS]");
+    fprintf(stdout, " [-o OFFER]");
+    fprintf(stdout, " Options :\n");
+    fprintf(stdout, "\t-o OFFER \t seq offer value.. The"
+            " default offer value is 0(false) ../\n");
+    fprintf(stdout, "\t-o ADDRESS \t endpoint address.. The"
+            " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
+    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
+}
+
 

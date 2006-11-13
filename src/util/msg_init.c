@@ -137,7 +137,10 @@ populate_rm_msg_ctx(
     {
         addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
     }
-    elements = sandesha2_rm_elements_create(env, addressing_ns);
+    if(addressing_ns)
+        elements = sandesha2_rm_elements_create(env, addressing_ns);
+    if(!elements)
+        return AXIS2_FAILURE;
     envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     action = (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
     SANDESHA2_RM_ELEMENTS_FROM_SOAP_ENVELOPE(elements, env, envelope, action);

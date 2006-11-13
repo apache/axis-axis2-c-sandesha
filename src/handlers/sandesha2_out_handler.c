@@ -108,7 +108,6 @@ sandesha2_out_handler_invoke(
     svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
     if(!svc)
     {
-        printf("came1 .........\n");
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -125,7 +124,6 @@ sandesha2_out_handler_invoke(
                     Processing Done");
         return AXIS2_SUCCESS; 
     }
-    printf("came2 .........\n");
     temp_prop = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(temp_prop, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
@@ -155,7 +153,6 @@ sandesha2_out_handler_invoke(
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
-    printf("came3 .........\n");
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
@@ -204,7 +201,7 @@ sandesha2_out_handler_invoke(
     }
     if(msg_processor)
     {
-        SANDESHA2_MSG_PROCESSOR_PROCESS_OUT_MSG(msg_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_process_out_msg(msg_processor, env, rm_msg_ctx);
     }
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {

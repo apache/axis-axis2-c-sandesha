@@ -187,7 +187,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     {
         sandesha2_msg_processor_t *ack_processor = NULL;
         ack_processor = sandesha2_ack_msg_processor_create(env);
-        SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(ack_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_process_in_msg(ack_processor, env, rm_msg_ctx);
     }
     term_seq = (sandesha2_terminate_seq_t*)sandesha2_msg_ctx_get_msg_part(
                     rm_msg_ctx, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);

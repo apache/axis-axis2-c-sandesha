@@ -1,4 +1,4 @@
 datadir=$(prefix)/sandesha2
 SUBDIRS = src
-data_DATA = LICENSE config/module.xml
+data_DATA = LICENSE config/module.xml src/client/sandesha2_client_constants.h
 

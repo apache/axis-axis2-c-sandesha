@@ -78,16 +78,26 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_processor
  */
 sandesha2_msg_processor_t *AXIS2_CALL   
 sandesha2_msg_processor_create_msg_processor(
-        const axis2_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx);
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx);
+                        
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_free (
+    sandesha2_msg_processor_t *msg_processor, 
+    const axis2_env_t *env);
 
-#define SANDESHA2_MSG_PROCESSOR_FREE(proc, env) \
-    ((proc)->ops->free (proc, env))
-#define SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(proc, env, rm_msg_ctx) \
-    ((proc)->ops->process_in_msg(proc, env, rm_msg_ctx))
-#define SANDESHA2_MSG_PROCESSOR_PROCESS_OUT_MSG(proc, env, rm_msg_ctx) \
-    ((proc)->ops->process_out_msg(proc, env, rm_msg_ctx))
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_process_in_msg (
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx);
     
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_processor_process_out_msg(
+    sandesha2_msg_processor_t *msg_processor,
+    const axis2_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
+
 /** @} */
 #ifdef __cplusplus
 }

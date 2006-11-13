@@ -109,14 +109,14 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_acks_to_t *temp_acks_to = NULL;
 
     application_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(application_rm_msg, env);
-    if(application_msg_ctx == NULL)
+    if(!application_msg_ctx)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_APPLICATION_MSG_NULL, 
                 AXIS2_FAILURE);
         return NULL;
     }
     ctx = AXIS2_MSG_CTX_GET_CONF_CTX(application_msg_ctx, env);
-    if(ctx == NULL)
+    if(!ctx)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return NULL;
@@ -166,7 +166,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     AXIS2_MSG_CTX_SET_REPLY_TO(create_seq_msg_ctx, env, temp_reply_to);
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
-    if(rm_version == NULL)
+    if(!rm_version)
     {
         AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, AXIS2_FAILURE);
@@ -188,7 +188,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         ctx = AXIS2_MSG_CTX_GET_BASE(application_msg_ctx, env);
         property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, AXIS2_FALSE);
-        if(NULL != property)
+        if(property)
             offered_seq = AXIS2_PROPERTY_GET_VALUE(property, env);
         if(offered_seq && 0 != AXIS2_STRCMP("", offered_seq))
         {
@@ -207,7 +207,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
     temp_value = sandesha2_seq_property_bean_get_value(to_bean, env);
-    if(to_bean == NULL || NULL == temp_value)
+    if(!to_bean || !temp_value)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
         return NULL;
@@ -215,7 +215,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     to_epr = axis2_endpoint_ref_create(env, temp_value);
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, 
             addressing_ns_value);
-    if(acks_to == NULL || 0 == AXIS2_STRCMP("", acks_to))
+    if(!acks_to || 0 == AXIS2_STRCMP("", acks_to))
     {
         acks_to = AXIS2_STRDUP(anonymous_uri, env);
     }
@@ -226,7 +226,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
     }
     temp_to = sandesha2_msg_ctx_get_to(create_seq_rm_msg, env);
-    if(temp_to == NULL)
+    if(!temp_to)
         sandesha2_msg_ctx_set_to(create_seq_rm_msg, env, to_epr);
     /* ReplyTo will be set only if not NULL */
     if(reply_to_epr)
@@ -294,7 +294,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             create_seq_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     cs = (sandesha2_create_seq_t *) msg_part;
     rm_version = sandesha2_utils_get_rm_version(env, new_seq_id, storage_mgr);
-    if(rm_version == NULL)
+    if(!rm_version)
     {
         AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
@@ -339,8 +339,8 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
     temp_soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
     temp_om_node = AXIOM_SOAP_BODY_GET_BASE_NODE(temp_soap_body, env);
-    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)(sandesha2_iom_rm_element_t *) response, 
-            env, temp_om_node);
+    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)(
+                sandesha2_iom_rm_element_t *) response, env, temp_om_node);
     temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(
             env, rm_version);
     AXIS2_MSG_CTX_SET_WSA_ACTION(out_msg, env, temp_action);
@@ -469,6 +469,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_identifier_t *identifier = NULL;
 
     ref_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env);
+    AXIS2_MSG_CTX_SET_KEEP_ALIVE(ref_msg_ctx, env, AXIS2_TRUE);
     if(!ref_msg_ctx)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX,

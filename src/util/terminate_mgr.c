@@ -514,7 +514,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         "invalid value");
         return AXIS2_FAILURE;
     }
-    sandesha2_msg_ctx_set_to(rm_msg_ctx, env, to_epr);
+    /*sandesha2_msg_ctx_set_to(rm_msg_ctx, env, to_epr);*/
     sandesha2_msg_ctx_set_to(terminate_rm_msg, env, to_epr);
     rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_man);
     if(!rm_ver)

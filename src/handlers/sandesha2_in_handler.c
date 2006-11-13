@@ -24,16 +24,20 @@
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_transaction.h>
 #include <sandesha2_msg_processor.h>
+#include <sandesha2_ack_msg_processor.h>
+#include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
-/*
-static axis2_qname_t *AXIS2_CALL
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_ack_requested.h>
+
+static const axis2_qname_t *AXIS2_CALL
 sandesha2_in_handler_get_qname(
-    struct axis2_handler *handler, 
+    const struct axis2_handler *handler, 
     const axis2_env_t *env);
-*/
+
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
     struct axis2_handler *handler, 
@@ -62,6 +66,8 @@ sandesha2_in_handler_create(
     /* set the base struct's invoke op */
     if (handler->ops) 
         handler->ops->invoke = sandesha2_in_handler_invoke;
+    if (handler->ops) 
+        handler->ops->get_qname = sandesha2_in_handler_get_qname;
 
     return handler;
 }
@@ -87,6 +93,8 @@ sandesha2_in_handler_invoke(
     sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
+    sandesha2_seq_ack_t *seq_ack = NULL;
+    sandesha2_ack_requested_t *ack_requested = NULL;
 
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -109,7 +117,12 @@ sandesha2_in_handler_invoke(
     if(temp_prop)
         str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
     if(str_done && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_done))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Exit: sandesha2_in_handler::invoke, Application " \
+             "processing done");
         return AXIS2_SUCCESS;
+    }
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
             AXIS2_FALSE);
     if(temp_prop)
@@ -197,13 +210,31 @@ sandesha2_in_handler_invoke(
      * TODO Validate the message
      * SANDESHA2_MSG_VALIDATOR_VALIDATE(env, rm_msg_ctx, storage_mgr);
      */
+    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
+                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    if(seq_ack)
+    {
+        sandesha2_msg_processor_t *ack_proc = NULL;
+        ack_proc = sandesha2_ack_msg_processor_create(env);
+        sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
+    } 
+    ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
+                        rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
+    if(ack_requested)
+    {
+        sandesha2_ack_requested_set_must_understand(ack_requested, env, 
+                        AXIS2_FALSE);
+        sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
+    }
     msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
             rm_msg_ctx);
     if(msg_processor)
-        SANDESHA2_MSG_PROCESSOR_PROCESS_IN_MSG(msg_processor, env, rm_msg_ctx);
-    if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
-        /* Message should not be sent in an exception situation */
+        sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
+    }
+    /*if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
+    {
+        // Message should not be sent in an exception situation
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
         if(!within_transaction)
         {
@@ -235,7 +266,7 @@ sandesha2_in_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
-    }
+    }*/
     if(!within_transaction && !rolled_back)
     {
         axis2_property_t *prop = NULL;
@@ -251,14 +282,13 @@ sandesha2_in_handler_invoke(
     
     return AXIS2_SUCCESS;
 }
-/*
-static axis2_qname_t *AXIS2_CALL
+
+static const axis2_qname_t *AXIS2_CALL
 sandesha2_in_handler_get_qname(
-    struct axis2_handler *handler, 
+    const struct axis2_handler *handler, 
     const axis2_env_t *env)
 {
     return (axis2_qname_t *) axis2_qname_create(env, SANDESHA2_IN_HANDLER_NAME, 
             NULL, NULL);
 }
-*/
 
