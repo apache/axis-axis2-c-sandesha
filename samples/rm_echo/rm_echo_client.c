@@ -136,9 +136,6 @@ int main(int argc, char** argv)
                 "__OPERATION_OUT_IN__");
 
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -207,6 +204,9 @@ int main(int argc, char** argv)
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
+    property = axis2_property_create(env);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     send_non_blocking(env, svc_client, options, NULL, callback3, payload, 

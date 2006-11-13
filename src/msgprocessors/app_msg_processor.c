@@ -607,6 +607,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         SANDESHA2_CLIENT_LAST_MESSAGE, AXIS2_FALSE);
         if(property)
             last_app_msg = AXIS2_PROPERTY_GET_VALUE(property, env);
+        printf("last_app_msg:%s######################################\n", last_app_msg);
         if(last_app_msg && 0 == AXIS2_STRCMP(last_app_msg, 
                         SANDESHA2_VALUE_TRUE))
             last_msg = AXIS2_TRUE;            
@@ -660,6 +661,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         msg_number_str);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
                         res_highest_msg_bean);
+    printf("last_msg:%d########################################\n", last_msg);
     if(last_msg)
     {
         sandesha2_seq_property_bean_t *res_highest_msg_key_bean = NULL;
@@ -669,6 +671,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         env, internal_seq_id, 
                         SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY,
                         storage_key);
+        printf("internal_seq_id########################################:%s\n", internal_seq_id);
         res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(
                         env, internal_seq_id, 
                         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO,
@@ -678,7 +681,6 @@ sandesha2_app_msg_processor_process_out_msg(
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env,
                         res_last_msg_key_bean);
     }
-    printf("internal_seq_id:%s###################################33\n", internal_seq_id);
     out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                         internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
     if(is_svr_side)
@@ -743,7 +745,6 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     if(send_create_seq)
     {
-        printf("came1################################################\n");
         sandesha2_seq_property_bean_t *res_create_seq_added = NULL;
         axis2_char_t *addr_ns_uri = NULL;
         axis2_char_t *anon_uri = NULL;
@@ -757,7 +758,6 @@ sandesha2_app_msg_processor_process_out_msg(
         anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
         if(!res_create_seq_added)
         {
-            printf("came2################################################\n");
             axis2_char_t *acks_to = NULL;
             
             res_create_seq_added = sandesha2_seq_property_bean_create_with_data(
@@ -1161,7 +1161,6 @@ sandesha2_app_msg_processor_process_response_msg(
                         env, AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
         if(req_msg)
         {
-            printf("******************************found req_msg********************************\n");
             reply_to = AXIS2_MSG_CTX_GET_REPLY_TO(req_msg, env);
         }
         if(reply_to)

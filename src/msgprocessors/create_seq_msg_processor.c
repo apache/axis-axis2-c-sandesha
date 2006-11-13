@@ -278,7 +278,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, 
                         offer_seq_id);
             
-            printf("int_seq_id:%s###################################33\n", int_seq_id);
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
                         out_seq_bean);
         }
