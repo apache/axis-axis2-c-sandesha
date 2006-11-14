@@ -119,8 +119,10 @@ AC_SUBST(DICLIENT_DIR)
 
 AC_CONFIG_FILES([Makefile \
     RMSampleService/Makefile \
-    rm_echo/Makefile
-    rm_ping/Makefile
+    rm_echo/Makefile \
+    rm_ping/Makefile \
+    rm_mtom/Makefile \
+    resources/Makefile
     ])
     
 AC_OUTPUT

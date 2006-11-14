@@ -20,34 +20,40 @@
 #include <axiom_element.h>
 
 int AXIS2_CALL
-rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,
-            const axis2_env_t *env);
+rm_sample_svc_free(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
-rm_sample_svc_free_void_arg(void *svc_skeleton,
-                    const axis2_env_t *env);
+rm_sample_svc_free_void_arg(
+    void *svc_skeleton,
+    const axis2_env_t *env);
 
 /*
  * This method invokes the right service method 
  */
 axiom_node_t* AXIS2_CALL 
-rm_sample_svc_invoke(axis2_svc_skeleton_t *svc_skeleton,
-            const axis2_env_t *env,
-            axiom_node_t *node,
-            axis2_msg_ctx_t *msg_ctx);
+rm_sample_svc_invoke(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axis2_env_t *env,
+    axiom_node_t *node,
+    axis2_msg_ctx_t *msg_ctx);
             
 
 int AXIS2_CALL 
-rm_sample_svc_init(axis2_svc_skeleton_t *svc_skeleton,
-          const axis2_env_t *env);
+rm_sample_svc_init(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axis2_env_t *env);
 
 axiom_node_t* AXIS2_CALL
-rm_sample_svc_on_fault(axis2_svc_skeleton_t *svc_skeli, 
-              const axis2_env_t *env, axiom_node_t *node);
+rm_sample_svc_on_fault(
+    axis2_svc_skeleton_t *svc_skeli, 
+    const axis2_env_t *env, axiom_node_t *node);
 
 /*Create function */
 axis2_svc_skeleton_t *
-rm_sample_svc_create(const axis2_env_t *env)
+rm_sample_svc_create(
+    const axis2_env_t *env)
 {
     axis2_svc_skeleton_t *svc_skeleton = NULL;
     /* Allocate memory for the structs */
@@ -79,6 +85,7 @@ rm_sample_svc_init(
      */
     AXIS2_ARRAY_LIST_ADD(svc_skeleton->func_array, env, "echoString");
     AXIS2_ARRAY_LIST_ADD(svc_skeleton->func_array, env, "ping");
+    AXIS2_ARRAY_LIST_ADD(svc_skeleton->func_array, env, "mtomSample");
     /* Any initialization stuff of echo service should go here */
     return AXIS2_SUCCESS;
 }
@@ -112,6 +119,8 @@ rm_sample_svc_invoke(
                 rm_sample_svc_ping(env, node);
                 return NULL;
             }
+            if (AXIS2_STRCMP(op_name, "mtomSample") == 0)
+                return rm_sample_svc_mtom(env, node);
         }
     }
     return NULL;
