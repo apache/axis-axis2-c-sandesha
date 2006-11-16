@@ -964,7 +964,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     sandesha2_msg_ctx_t *create_seq_rm_msg = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_create_seq_mgr_t *create_seq_man = NULL;
-    sandesha2_sender_mgr_t *retransmitter_man = NULL;
+    sandesha2_sender_mgr_t *retrans_mgr = NULL;
     sandesha2_seq_offer_t *seq_offer = NULL;
     axis2_msg_ctx_t *create_seq_msg = NULL;
     sandesha2_create_seq_bean_t *create_seq_bean = NULL;
@@ -997,8 +997,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
                         mgr, env);
     create_seq_man = sandesha2_storage_mgr_get_create_seq_mgr(
                         mgr, env);
-    retransmitter_man = sandesha2_storage_mgr_get_retrans_mgr
-                        (mgr, env);
+    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(mgr, env);
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, env);
     if(NULL != seq_offer)
     {
@@ -1056,8 +1055,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
                         AXIS2_FALSE);
     sandesha2_sender_bean_set_msg_type(create_seq_entry, env, 
                         SANDESHA2_MSG_TYPE_CREATE_SEQ);
-    sandesha2_sender_mgr_insert(retransmitter_man, env, 
-                        create_seq_entry);
+    sandesha2_sender_mgr_insert(retrans_mgr, env, create_seq_entry);
     sandesha2_storage_mgr_store_msg_ctx(mgr, env, str_key, create_seq_msg);
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
@@ -1100,7 +1098,7 @@ sandesha2_app_msg_processor_process_response_msg(
 {
     axis2_msg_ctx_t *app_msg_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    sandesha2_sender_mgr_t *retransmitter_man = NULL;
+    sandesha2_sender_mgr_t *retrans_mgr = NULL;
     sandesha2_seq_property_bean_t *to_bean = NULL;
     sandesha2_seq_property_bean_t *reply_to_bean = NULL;
     sandesha2_seq_property_bean_t *out_seq_bean = NULL;
@@ -1132,7 +1130,7 @@ sandesha2_app_msg_processor_process_response_msg(
     
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         mgr, env);
-    retransmitter_man = sandesha2_storage_mgr_get_retrans_mgr
+    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr
                         (mgr, env);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                         internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
@@ -1281,7 +1279,7 @@ sandesha2_app_msg_processor_process_response_msg(
     }
     sandesha2_sender_bean_set_internal_seq_id(app_msg_entry, env, internal_seq_id);
     sandesha2_storage_mgr_store_msg_ctx(mgr, env, storage_key, app_msg_ctx);
-    sandesha2_sender_mgr_insert(retransmitter_man, env, app_msg_entry);
+    sandesha2_sender_mgr_insert(retrans_mgr, env, app_msg_entry);
     
     property = axis2_property_create(env);
     AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);

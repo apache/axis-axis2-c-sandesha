@@ -158,6 +158,17 @@ sandesha2_sender_bean_set_seq_id (
     const axis2_env_t *env,
     axis2_char_t *seq_id);
 
+axis2_char_t* AXIS2_CALL
+sandesha2_sender_bean_get_wsrm_anon_uri(
+    sandesha2_sender_bean_t *sender,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_wsrm_anon_uri (
+    sandesha2_sender_bean_t *sender,
+    const axis2_env_t *env,
+    axis2_char_t *anon_uri);
+
 
 #ifdef __cplusplus
 }

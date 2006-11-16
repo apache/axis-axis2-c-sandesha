@@ -398,7 +398,7 @@ sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_SENDER, property, AXIS2_FALSE);
     }
-    SANDESHA2_SENDER_RUN_FOR_SEQ(sender, env, conf_ctx, seq_id);
+    sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id);
     return AXIS2_SUCCESS;
 }
                

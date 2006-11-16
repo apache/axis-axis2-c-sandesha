@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef SANDESHA2_SENDER_H
-#define SANDESHA2_SENDER_H
+#ifndef SANDESHA2_SENDER_WORKER_H
+#define SANDESHA2_SENDER_WORKER_H
 
 /**
- * @file sandesha2_sender.h
+ * @file sandesha2_sender_worker.h
  * @brief Sandesha Sender Interface
  */
 
@@ -34,59 +34,66 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_sender_t sandesha2_sender_t;
+typedef struct sandesha2_sender_worker_t sandesha2_sender_worker_t;
 
-AXIS2_EXTERN sandesha2_sender_t * AXIS2_CALL
-sandesha2_sender_create(
-    const axis2_env_t *env);
+AXIS2_EXTERN sandesha2_sender_worker_t* AXIS2_CALL
+sandesha2_sender_worker_create(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *msg_id);
  
 /**
- * Frees the sender given as a void pointer. This method would cast the 
- * void parameter to an sender pointer and then call free method.
- * @param sender pointer to sender as a void pointer
+ * Frees the sender_worker given as a void pointer. This method would cast the 
+ * void parameter to an sender_worker pointer and then call free method.
+ * @param sender_worker pointer to sender_worker as a void pointer
  * @param env pointer to environment struct
  * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_sender_free_void_arg(
-    void *sender,
+sandesha2_sender_worker_free_void_arg(
+    void *sender_worker,
     const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_free(
-    sandesha2_sender_t *sender, 
+sandesha2_sender_worker_free(
+    sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_stop_sender_for_seq(
-    sandesha2_sender_t *sender, 
+sandesha2_sender_worker_stop_sender_worker_for_seq(
+    sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env, 
     axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_stop_sending (
-    sandesha2_sender_t *sender,
+sandesha2_sender_worker_stop_sending (
+    sandesha2_sender_worker_t *sender_worker,
     const axis2_env_t *env);
             
 axis2_bool_t AXIS2_CALL 
-sandesha2_sender_is_sender_started( 
-    sandesha2_sender_t *sender, 
+sandesha2_sender_worker_is_sender_worker_started( 
+    sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_run_for_seq 
-    (sandesha2_sender_t *sender, 
+sandesha2_sender_worker_run_for_seq 
+    (sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env, 
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_run (
-    sandesha2_sender_t *sender,
+sandesha2_sender_worker_run (
+    sandesha2_sender_worker_t *sender_worker,
     const axis2_env_t *env);
+
+void sandesha2_sender_worker_set_out_transport(
+    sandesha2_sender_worker_t *sender_worker,
+    const axis2_env_t *env,
+    axis2_transport_out_desc_t *transport_out);
                         
 /** @} */
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_SENDER_H */
+#endif /* SANDESHA2_SENDER_WORKER_H */
