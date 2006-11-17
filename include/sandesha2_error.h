@@ -190,6 +190,14 @@ extern "C"
             SANDESHA_ERROR_LAST is used to track the number of error codes present
             for the purpose of sizing the error message array.
           */
+        /* MessagePending header must have an attribute named 'pending'" */
+        SANDESHA2_ERROR_PENDING_HEADER_MUST_HAVE_ATTRIBUTE_PENDING,
+        /* Attribute 'pending' must have value 'true' or 'false' */
+        SANDESHA2_ERROR_ATTRIBUTE_PENDING_MUST_HAVE_VALUE_TRUE_OR_FALSE,
+        /* MakeConnection element should have at lease one of Address and Identifier subelements */
+        SANDESHA2_ERROR_MAKE_CONNECTION_ELEMENT_SHOULD_HAVE_AT_LEAST_ADDRESS_OR_IDENTIFIER,
+        /* Invalid MakeConnection object. Both Identifier and Address are null */
+        SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL,
         SANDESHA2_ERROR_LAST
     };
         

@@ -271,7 +271,7 @@ sandesha2_terminate_seq_res_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     terminate_seq_res_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq_res);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_10_NS_URI))
+    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

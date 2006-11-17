@@ -171,7 +171,7 @@ sandesha2_seq_mgr_setup_new_seq(
     {
         spec_version = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env);
     }
-    else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_2005_10_NS_URI, msg_rm_ns))
+    else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
     {
         spec_version = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_1, env);
     }

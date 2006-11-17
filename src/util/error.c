@@ -172,6 +172,16 @@ sandesha2_error_init()
         "Error in processing the message";
     sandesha2_error_messages[SANDESHA2_ERROR_INVALID_STRING_ARRAY]=
         "String array is invalid";
+    sandesha2_error_messages[SANDESHA2_ERROR_PENDING_HEADER_MUST_HAVE_ATTRIBUTE_PENDING]=
+        "MessagePending header must have an attribute named 'pending'";
+    sandesha2_error_messages[SANDESHA2_ERROR_ATTRIBUTE_PENDING_MUST_HAVE_VALUE_TRUE_OR_FALSE]=
+        "Attribute 'pending' must have value 'true' or 'false'";
+    sandesha2_error_messages[SANDESHA2_ERROR_MAKE_CONNECTION_ELEMENT_SHOULD_HAVE_AT_LEAST_ADDRESS_OR_IDENTIFIER]=
+        "MakeConnection element should have at lease one of Address and Identifier subelements";
+    /* Invalid MakeConnection object. Both Identifier and Address are null */
+    sandesha2_error_messages[SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL]=
+        "Invalid MakeConnection object. Both Identifier and Address are null";
+
     return AXIS2_SUCCESS;
 }
 

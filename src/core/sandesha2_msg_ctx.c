@@ -458,7 +458,7 @@ sandesha2_msg_ctx_set_rm_ns_val(
     rm_msg_ctx->rm_ns_val = AXIS2_STRDUP(ns_val, env);
     if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
         rm_msg_ctx->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_0, env);
-    if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_10_NS_URI))
+    if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2006_08_NS_URI))
         rm_msg_ctx->spec_ver = AXIS2_STRDUP(SANDESHA2_SPEC_VERSION_1_1, env);
         
     return AXIS2_SUCCESS;

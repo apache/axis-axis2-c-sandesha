@@ -32,7 +32,7 @@ sandesha2_spec_specific_consts_get_spec_ver_str(
     {
         return SANDESHA2_SPEC_VERSION_1_0;
     }
-    else if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2005_10_NS_URI))
+    else if(0 == AXIS2_STRCMP(ns_val, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return SANDESHA2_SPEC_VERSION_1_1;
     }
@@ -57,7 +57,7 @@ sandesha2_spec_specific_consts_get_rm_ns_val(const axis2_env_t *env,
     }
     if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_ver))
     {
-        return SANDESHA2_SPEC_2005_10_NS_URI;
+        return SANDESHA2_SPEC_2006_08_NS_URI;
     }
     return NULL;
 }

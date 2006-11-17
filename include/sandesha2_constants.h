@@ -31,7 +31,7 @@ extern "C"
 	 * WSRM Spec versions
 	 */
 	#define SANDESHA2_SPEC_VERSION_1_0 "Spec_2005_02"
-	#define SANDESHA2_SPEC_VERSION_1_1 "Spec_2005_10"
+	#define SANDESHA2_SPEC_VERSION_1_1 "Spec_2006_08"
 	
 	/**
 	 * Spec 2005-02
@@ -58,37 +58,37 @@ extern "C"
 	 * Spec 2005-10
 	 */
 			
-	#define SANDESHA2_SPEC_2005_10_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200602"
+	#define SANDESHA2_SPEC_2006_08_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200602"
 		
-	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
+	#define SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
+	#define SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
+	#define SANDESHA2_SPEC_2006_08_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
+	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse"
+	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200602/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/TerminateSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
 			
-	#define SANDESHA2_SPEC_2005_10_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
+	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
 
 	/**
 	 * WSRM Common constants
@@ -144,6 +144,10 @@ extern "C"
 		
 	#define SANDESHA2_WSRM_COMMON_FINAL  "Final"
 
+    #define SANDESHA2_WSRM_COMMON_MESSAGE_PENDING "MessagePending"
+    #define SANDESHA2_WSRM_COMMON_PENDING "pending"
+    #define SANDESHA2_WSRM_COMMON_MAKE_CONNECTION "MakeConnection"
+    
 	/**
 	 * WS Addressing constants
 	 */

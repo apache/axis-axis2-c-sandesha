@@ -87,7 +87,7 @@ sandesha2_sender_worker_run (
     sandesha2_sender_worker_t *sender_worker,
     const axis2_env_t *env);
 
-void sandesha2_sender_worker_set_out_transport(
+void sandesha2_sender_worker_set_transport_out(
     sandesha2_sender_worker_t *sender_worker,
     const axis2_env_t *env,
     axis2_transport_out_desc_t *transport_out);

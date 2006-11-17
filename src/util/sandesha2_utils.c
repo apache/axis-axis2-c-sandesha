@@ -833,7 +833,7 @@ sandesha2_utils_is_rm_global_msg(
         if(NULL == seq_element)
         {
             qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
-                        SANDESHA2_SPEC_2005_10_NS_URI, NULL);
+                        SANDESHA2_SPEC_2006_08_NS_URI, NULL);
             seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
                         header_element, env, qname, header_node, &seq_node);
         }

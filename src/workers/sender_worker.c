@@ -87,7 +87,7 @@ sandesha2_sender_worker_check_for_sync_res(
     const axis2_env_t *env, 
     axis2_msg_ctx_t *msg_ctx);
 
-axis2_bool_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_sender_worker_is_fault_envelope(
     sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env, 
@@ -533,7 +533,7 @@ sandesha2_sender_worker_check_for_sync_res(
     return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_sender_worker_is_fault_envelope(
     sandesha2_sender_worker_t *sender_worker, 
     const axis2_env_t *env, 
@@ -549,6 +549,14 @@ sandesha2_sender_worker_is_fault_envelope(
         return AXIS2_TRUE;
         
     return AXIS2_FALSE;
+}
+
+void sandesha2_sender_worker_set_transport_out(
+    sandesha2_sender_worker_t *sender_worker,
+    const axis2_env_t *env,
+    axis2_transport_out_desc_t *transport_out)
+{
+    sender_worker->transport_out = transport_out;
 }
 
 
