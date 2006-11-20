@@ -35,6 +35,7 @@
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_terminate_seq.h>
 #include <sandesha2_identifier.h>
+#include <sandesha2_make_connection.h>
 #include "../client/sandesha2_client_constants.h"
 
 #include <axis2_conf_ctx.h>
@@ -328,7 +329,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
             address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
             acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
-            SANDESHA2_ADDRESS_SET_EPR(address, env, acks_to_epr);
+            sandesha2_address_set_epr(address, env, acks_to_epr);
             sandesha2_acks_to_set_address(acks_to, env, address);
             sandesha2_accept_set_acks_to(accept, env, acks_to);
             sandesha2_create_seq_res_set_accept(response, env, accept);
@@ -905,4 +906,82 @@ sandesha2_msg_creator_add_ack_msg(
     return AXIS2_SUCCESS;
         
 }
-    
+
+sandesha2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_creator_create_make_connection_msg(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg_ctx, 
+    axis2_char_t *make_conn_seq_id,
+    axis2_char_t *make_conn_anon_uri,
+    sandesha2_storage_mgr_t *storage_mgr)
+{
+    axis2_msg_ctx_t *ref_msg_ctx = NULL;
+    axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
+    axis2_char_t *rm_ns_value = NULL;
+    axis2_char_t *rm_version = NULL;
+    axis2_op_t *make_conn_op = NULL;
+    axis2_char_t *wsa_action = NULL;
+    sandesha2_make_connection_t *make_conn = NULL;
+    sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
+   
+    if(ref_rm_msg_ctx)
+    {
+        ref_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg_ctx, env);
+        rm_ns_value = sandesha2_msg_ctx_get_rm_ns_val(ref_rm_msg_ctx, env);
+        rm_version = sandesha2_msg_ctx_get_rm_spec_ver(ref_rm_msg_ctx, env);
+    }
+    make_conn_op = axis2_op_create(env);
+    if(make_conn_op)
+        AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(make_conn_op, env, 
+            AXIS2_MEP_URI_OUT_IN);
+    make_conn_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
+        ref_rm_msg_ctx, make_conn_op);
+    if(make_conn_msg_ctx)
+        make_conn_rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
+            make_conn_msg_ctx);
+    make_conn = sandesha2_make_connection_create(env, rm_ns_value);
+    if(make_conn_seq_id)
+    {
+        sandesha2_identifier_t *identifier = sandesha2_identifier_create(env, 
+            rm_ns_value);
+        if(identifier)
+            sandesha2_identifier_set_identifier(identifier, env, 
+                make_conn_seq_id);
+        if(make_conn)
+            sandesha2_make_connection_set_identifier(make_conn, env, identifier);
+    }
+    if(make_conn_anon_uri)
+    {
+        sandesha2_address_t *address = sandesha2_address_create(env, 
+            rm_ns_value, NULL);
+        axis2_endpoint_ref_t *epr = axis2_endpoint_ref_create(env, 
+            make_conn_anon_uri);  
+        if(address)
+            sandesha2_address_set_epr(address, env, epr);
+        if(make_conn)
+            sandesha2_make_connection_set_address(make_conn, env, address);
+    }
+    if(make_conn_msg_ctx)
+    {
+        axis2_endpoint_ref_t *to = NULL;
+        axis2_char_t *address = NULL;
+        /* Setting the addressing properties */
+        to = AXIS2_MSG_CTX_GET_TO(ref_msg_ctx, env);
+        address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(
+            (const axis2_endpoint_ref_t *) to, env);
+        to = axis2_endpoint_ref_create(env, address);
+        AXIS2_MSG_CTX_SET_TO(make_conn_msg_ctx, env, to);
+        wsa_action = sandesha2_spec_specific_consts_get_make_connection_action(
+            env, rm_version);
+        axis2_msg_ctx_set_wsa_action(make_conn_msg_ctx, env, wsa_action);
+        AXIS2_MSG_CTX_SET_MSG_ID(make_conn_msg_ctx, env, axis2_uuid_gen(env));
+        sandesha2_msg_ctx_set_msg_part(make_conn_rm_msg_ctx, env, 
+            SANDESHA2_MSG_PART_MAKE_CONNECTION, 
+            (sandesha2_iom_rm_part_t *) make_conn);
+       /* Generating the soap envelope */
+        sandesha2_msg_ctx_add_soap_envelope(make_conn_rm_msg_ctx, env);
+        return make_conn_rm_msg_ctx;
+    }
+    return NULL;
+}
+

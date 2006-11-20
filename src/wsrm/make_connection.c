@@ -17,6 +17,7 @@
 #include <sandesha2_make_connection.h>
 #include <sandesha2_constants.h>
 #include <axiom_soap_header.h>
+#include <axiom_soap_body.h>
 #include <axiom_soap_header_block.h>
 
 /** 
@@ -218,7 +219,7 @@ sandesha2_make_connection_from_om_node(
     {
         return NULL;
     }
-    address_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ADDRESS,
+    address_qname = axis2_qname_create(env, SANDESHA2_WSA_ADDRESS,
                         make_conn_impl->ns_val, NULL);
     if(!address_qname)
     {
@@ -231,7 +232,7 @@ sandesha2_make_connection_from_om_node(
     if(!identifier_element && !address_element)
     {
         AXIS2_ERROR_SET(env->error, 
-            ANDESHA2_ERROR_MAKE_CONNECTION_ELEMENT_SHOULD_HAVE_AT_LEAST_ADDRESS_OR_IDENTIFIER, 
+            SANDESHA2_ERROR_MAKE_CONNECTION_ELEMENT_SHOULD_HAVE_AT_LEAST_ADDRESS_OR_IDENTIFIER, 
             AXIS2_FAILURE);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "MakeConnection element " \
             "should have at lease one of Address and Identifier subelements");
@@ -251,7 +252,7 @@ sandesha2_make_connection_from_om_node(
     if(address_element)
     {
         make_conn_impl->address = sandesha2_address_create(env, 
-                        make_conn_impl->ns_val);
+                        make_conn_impl->ns_val, NULL);
         if(!make_conn_impl->address)
         {
             return NULL;
@@ -308,7 +309,7 @@ sandesha2_make_connection_to_om_node(
         sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)
             make_conn_impl->address, env, make_conn_node);
     AXIOM_SOAP_BODY_ADD_CHILD(soap_body, env, make_conn_node);
-    return body;
+    return AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
 }
 
 static axis2_bool_t AXIS2_CALL 
@@ -413,7 +414,7 @@ sandesha2_make_connection_to_soap_envelope(
     }
     if(body_element)
         element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element, env,
-            make_conn_qname, om_node, &node);
+            make_conn_qname, body_node, &node);
     /**
      * Detach if already exists
      */

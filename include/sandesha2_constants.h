@@ -75,7 +75,8 @@ extern "C"
 	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
 			
 	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequenceResponse"
-			
+	#define SANDESHA2_SPEC_2006_08_ACTION_MAKE_CONNECTION "http://docs.oasisopen.org/ws-rx/wsrm/200608/MakeConnection"
+
 	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequence"
 
 	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CreateSequenceResponse"
@@ -89,7 +90,8 @@ extern "C"
 	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200602/AckRequested"
 			
 	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200602/CloseSequence"
-
+     
+    #define SANDESHA2_SPEC_2006_08_SOAP_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection"
 	/**
 	 * WSRM Common constants
 	 */
@@ -148,6 +150,12 @@ extern "C"
     #define SANDESHA2_WSRM_COMMON_PENDING "pending"
     #define SANDESHA2_WSRM_COMMON_MAKE_CONNECTION "MakeConnection"
     
+    /* Message Context Properties */
+    #define SANDESHA2_MSG_CTX_PROP_INTERNAL_SEQUENCE_ID "Sandesha2InternalSequenceId"
+    #define SANDESHA2_MSG_CTX_PROP_SEQUENCE_ID "WSRMSequenceId"
+    #define SANDESHA2_MSG_CTX_PROP_MESSAGE_NUMBER "WSRMMessageNumber"
+    #define SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY "SequencePropertyKey"
+
 	/**
 	 * WS Addressing constants
 	 */
@@ -170,7 +178,8 @@ extern "C"
 		SANDESHA2_MSG_TYPE_ACK_REQUEST,
 		SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE,
 		SANDESHA2_MSG_TYPE_FAULT_MSG,
-		SANDESHA2_MSG_TYPE_MAX_MESSAGE_TYPE
+		SANDESHA2_MSG_TYPE_MAX_MESSAGE_TYPE,
+        SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG
 	};
 
 	enum sandesha2_message_parts 
@@ -186,6 +195,9 @@ extern "C"
 		SANDESHA2_MSG_PART_CLOSE_SEQ_RESPONSE,
 		SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE,
 		SANDESHA2_MSG_PART_ACK_REQUEST,
+        SANDESHA2_MSG_PART_USES_SEQ_STR,
+		SANDESHA2_MSG_PART_MAKE_CONNECTION,
+		SANDESHA2_MSG_PART_MESSAGE_PENDING,
 		SANDESHA2_MSG_PART_MAX_MSG_PART_ID
 	};
 
@@ -463,6 +475,8 @@ extern "C"
 	#define SANDESHA2_REINJECTED_MESSAGE  "ReinjectedMessage"
 	
 	#define SANDESHA2_MODULE_CLASS_LOADER  "Sandesha2ModuleClassLoader"
+
+    #define SANDESHA2_WSRM_ANON_URI_PREFIX "http://docs.oasis-open.org/ws-rx/wsrm/200608/anonymous"
     
     /**
      * Message context values

@@ -38,26 +38,7 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_address_ops sandesha2_address_ops_t;
 typedef struct sandesha2_address sandesha2_address_t;
-
-/**
- * @brief Address ops struct
- * Encapsulator struct for ops of sandesha2_address
- */
-AXIS2_DECLARE_DATA struct sandesha2_address_ops
-{
-    axis2_endpoint_ref_t * (AXIS2_CALL *
-        get_epr)
-            (sandesha2_address_t *address,
-            const axis2_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_epr)
-            (sandesha2_address_t *address,
-            const axis2_env_t *env, 
-            axis2_endpoint_ref_t *epr);
-};
 
 /**
  * @brief sandesha2_address
@@ -66,21 +47,30 @@ AXIS2_DECLARE_DATA struct sandesha2_address_ops
 AXIS2_DECLARE_DATA struct sandesha2_address
 {
     sandesha2_iom_rm_element_t element;
-    sandesha2_address_ops_t *ops;
 };
     
 AXIS2_EXTERN sandesha2_address_t* AXIS2_CALL
 sandesha2_address_create(
-						const axis2_env_t *env, 
-                        axis2_char_t *ns_value,
-                        axis2_endpoint_ref_t *epr);
+    const axis2_env_t *env, 
+    axis2_char_t *ns_value,
+    axis2_endpoint_ref_t *epr);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_ADDRESS_GET_EPR(address, env)\
-    ((address)->ops->get_epr(address, env))
-#define SANDESHA2_ADDRESS_SET_EPR(address, env, epr)\
-    ((address)->ops->set_epr(address, env, epr))
-/************************** End of function macros ****************************/
+axis2_endpoint_ref_t * AXIS2_CALL                    	
+sandesha2_address_get_epr(
+    sandesha2_address_t *address,
+   	const axis2_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_address_set_epr(
+    sandesha2_address_t *address,
+   	const axis2_env_t *env, 
+    axis2_endpoint_ref_t *epr);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_address_free (
+    sandesha2_iom_rm_element_t *address, 
+    const axis2_env_t *env);								
+
 
 /** @} */
 #ifdef __cplusplus

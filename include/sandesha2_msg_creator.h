@@ -118,6 +118,14 @@ sandesha2_msg_creator_add_ack_msg(
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_mgr);
 
+sandesha2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_creator_create_make_connection_msg(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg_ctx, 
+    axis2_char_t *make_conn_seq_id,
+    axis2_char_t *make_conn_anon_uri,
+    sandesha2_storage_mgr_t *storage_mgr);
+
 /** @} */
 #ifdef __cplusplus
 }

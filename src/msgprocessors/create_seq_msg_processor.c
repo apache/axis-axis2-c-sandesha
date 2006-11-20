@@ -287,7 +287,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_msg_ctx_add_soap_envelope(create_seq_res_msg, env);
         }
     }
-    acks_to = SANDESHA2_ADDRESS_GET_EPR(sandesha2_acks_to_get_address(
+    acks_to = sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                     sandesha2_create_seq_get_acks_to(create_seq_part, env), 
                     env), env);
     if(!acks_to || !AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, 

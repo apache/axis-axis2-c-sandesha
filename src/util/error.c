@@ -181,6 +181,8 @@ sandesha2_error_init()
     /* Invalid MakeConnection object. Both Identifier and Address are null */
     sandesha2_error_messages[SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL]=
         "Invalid MakeConnection object. Both Identifier and Address are null";
+    sandesha2_error_messages[SANDESHA2_ERROR_MAKE_CONNECTION_IS_NOT_SUPPORTED_IN_THIS_RM_VERSION]=
+        "MakeConnection is not supported in this RM version";
 
     return AXIS2_SUCCESS;
 }

@@ -46,7 +46,11 @@ extern "C"
  * Encapsulator struct for ops of sandesha2_iom_rm_element
  */
 AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element_ops
-{
+{	
+    axis2_status_t (AXIS2_CALL *free)
+        (sandesha2_iom_rm_element_t *element,
+        const axis2_env_t *env);
+
     axis2_char_t* (AXIS2_CALL *get_namespace_value) 
         (sandesha2_iom_rm_element_t *element,
         const axis2_env_t *env);
@@ -63,10 +67,6 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element_ops
 	axis2_bool_t (AXIS2_CALL *is_namespace_supported) 
         (sandesha2_iom_rm_element_t *element,
         const axis2_env_t *env, axis2_char_t *ns);
-                    	
-    axis2_status_t (AXIS2_CALL *free)
-        (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env);
 };
 
 /**

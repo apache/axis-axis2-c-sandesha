@@ -302,7 +302,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         }
         offered_seq_id = sandesha2_seq_property_bean_get_value(offerd_seq_bean,
                         env);
-        acks_to_epr = SANDESHA2_ADDRESS_GET_EPR(sandesha2_acks_to_get_address(
+        acks_to_epr = sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                         sandesha2_accept_get_acks_to(accept, env), env), env);
         acks_to_bean = sandesha2_seq_property_bean_create(env);
         sandesha2_seq_property_bean_set_name(acks_to_bean, env, 

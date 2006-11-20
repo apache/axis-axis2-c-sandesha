@@ -198,6 +198,8 @@ extern "C"
         SANDESHA2_ERROR_MAKE_CONNECTION_ELEMENT_SHOULD_HAVE_AT_LEAST_ADDRESS_OR_IDENTIFIER,
         /* Invalid MakeConnection object. Both Identifier and Address are null */
         SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL,
+        /* MakeConnection is not supported in this RM version */
+        SANDESHA2_ERROR_MAKE_CONNECTION_IS_NOT_SUPPORTED_IN_THIS_RM_VERSION,
         SANDESHA2_ERROR_LAST
     };
         

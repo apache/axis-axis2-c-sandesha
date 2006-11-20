@@ -124,7 +124,7 @@ sandesha2_spec_specific_consts_get_terminate_seq_action(
     if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
         return SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ;
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ;
+        return SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -141,7 +141,7 @@ sandesha2_spec_specific_consts_get_create_seq_action(
         return SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ;
+        return SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -158,7 +158,7 @@ sandesha2_spec_specific_consts_get_create_seq_res_action(
         return SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ_RESPONSE;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_CREATE_SEQ_RESPONSE;
+        return SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -177,7 +177,7 @@ sandesha2_spec_specific_consts_get_close_seq_action(
         return NULL;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ;
+        return SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -196,7 +196,7 @@ sandesha2_spec_specific_consts_get_close_seq_res_action(
         return NULL;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_CLOSE_SEQ_RESPONSE;
+        return SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -217,7 +217,7 @@ sandesha2_spec_specific_consts_get_ack_req_action(
         return NULL;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_ACK_REQUEST;
+        return SANDESHA2_SPEC_2006_08_ACTION_ACK_REQUEST;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -267,7 +267,7 @@ sandesha2_spec_specific_consts_get_terminate_seq_soap_action(
     if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
         return SANDESHA2_SPEC_2005_02_SOAP_ACTION_TERMINATE_SEQ;
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_TERMINATE_SEQ;
+        return SANDESHA2_SPEC_2006_08_SOAP_ACTION_TERMINATE_SEQ;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -288,7 +288,7 @@ sandesha2_spec_specific_consts_get_ack_req_soap_action(
     }
     else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version))
     {
-        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_ACK_REQUEST;
+        return SANDESHA2_SPEC_2006_08_SOAP_ACTION_ACK_REQUEST;
     }
     else
     {
@@ -326,7 +326,7 @@ sandesha2_spec_specific_consts_get_teminate_seq_res_action(
     AXIS2_PARAM_CHECK(env->error, spec_version, NULL);
     
     if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_TERMINATE_SEQ_RESPONSE;
+        return SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ_RESPONSE;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -344,7 +344,7 @@ sandesha2_spec_specific_consts_get_seq_ack_action(
         return SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT;
     }
     else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
-        return SANDESHA2_SPEC_2005_10_ACTION_SEQ_ACKNOWLEDGEMENT;
+        return SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT;
     else
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
                 AXIS2_FAILURE);
@@ -353,8 +353,8 @@ sandesha2_spec_specific_consts_get_seq_ack_action(
 	
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_spec_specific_consts_get_seq_ack_soap_action(
-        const axis2_env_t *env,
-        axis2_char_t *spec_version)
+    const axis2_env_t *env,
+    axis2_char_t *spec_version)
 {
     if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version))
     {
@@ -362,7 +362,7 @@ sandesha2_spec_specific_consts_get_seq_ack_soap_action(
     }
     else if(0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version))
     {
-        return SANDESHA2_SPEC_2005_10_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT;
+        return SANDESHA2_SPEC_2006_08_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT;
     }
     else
     {
@@ -370,6 +370,25 @@ sandesha2_spec_specific_consts_get_seq_ack_soap_action(
                 AXIS2_FAILURE);
         return NULL;
     }
+}
+
+axis2_char_t *AXIS2_CALL
+sandesha2_spec_specific_consts_get_make_connection_action(
+    const axis2_env_t *env,
+    axis2_char_t *spec_version)
+{
+    if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, spec_version)) 
+    {
+        AXIS2_ERROR_SET(env->error, 
+            SANDESHA2_ERROR_MAKE_CONNECTION_IS_NOT_SUPPORTED_IN_THIS_RM_VERSION, 
+                AXIS2_FAILURE);
+    }
+    else if (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 
+        return SANDESHA2_SPEC_2006_08_ACTION_MAKE_CONNECTION;
+    else
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_SPEC_ERROR_MESSAGE, 
+                AXIS2_FAILURE);
+    return NULL;
 }
 
 axis2_bool_t AXIS2_CALL

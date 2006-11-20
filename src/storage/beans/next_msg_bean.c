@@ -23,6 +23,8 @@
 struct sandesha2_next_msg_bean_t
 {
 	axis2_char_t *seq_id;
+    axis2_char_t *ref_msg_key;
+    axis2_bool_t polling_mode;
 	long msg_no;
 };
 
@@ -43,7 +45,9 @@ sandesha2_next_msg_bean_create(const axis2_env_t *env)
 
 	/* init the properties. */
 	bean->seq_id = NULL;
+    bean->ref_msg_key = NULL;
 	bean->msg_no = -1;
+    bean->polling_mode = AXIS2_FALSE;
 
 	return bean;
 }
@@ -68,7 +72,9 @@ sandesha2_next_msg_bean_create_with_data(
 
 	/* init the properties. */
 	bean->seq_id = (axis2_char_t*)AXIS2_STRDUP(seq_id, env);
+    bean->ref_msg_key = NULL;
 	bean->msg_no = msg_no;
+    bean->polling_mode = AXIS2_FALSE;
 
 	return bean;
 }
@@ -82,6 +88,11 @@ sandesha2_next_msg_bean_free (
 	{
 		AXIS2_FREE(env->allocator, next_msg_bean->seq_id);
 		next_msg_bean->seq_id= NULL;
+	}
+	if(next_msg_bean->ref_msg_key)
+	{
+		AXIS2_FREE(env->allocator, next_msg_bean->ref_msg_key);
+		next_msg_bean->ref_msg_key= NULL;
 	}
     return AXIS2_SUCCESS;
 }
@@ -129,5 +140,38 @@ sandesha2_next_msg_bean_set_next_msg_no_to_process(
 	next_msg_bean->msg_no = next_msg_no;
 }
 
+axis2_bool_t AXIS2_CALL
+sandesha2_next_msg_bean_is_polling_mode(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env) 
+{
+    return next_msg_bean->polling_mode;
+}
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_polling_mode(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env,
+    axis2_bool_t polling_mode) 
+{
+    next_msg_bean->polling_mode = polling_mode;
+}
+
+axis2_char_t *AXIS2_CALL
+sandesha2_next_msg_bean_get_ref_msg_key(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env) 
+{
+    return next_msg_bean->ref_msg_key;
+}
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_ref_msg_key(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env,
+    axis2_char_t *ref_msg_key) 
+{
+    next_msg_bean->ref_msg_key = ref_msg_key;
+}
 
 

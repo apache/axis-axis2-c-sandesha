@@ -63,6 +63,28 @@ sandesha2_next_msg_bean_set_next_msg_no_to_process(
     sandesha2_next_msg_bean_t *next_msg_bean,
     const axis2_env_t *env, long next_msg_no);
 
+axis2_bool_t AXIS2_CALL
+sandesha2_next_msg_bean_is_polling_mode(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_polling_mode(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env,
+    axis2_bool_t polling_mode); 
+
+axis2_char_t *AXIS2_CALL
+sandesha2_next_msg_bean_get_ref_msg_key(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_ref_msg_key(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axis2_env_t *env,
+    axis2_char_t *ref_msg_key); 
+
 #ifdef __cplusplus
 }
 

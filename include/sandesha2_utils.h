@@ -210,6 +210,22 @@ sandesha2_utils_is_all_msgs_acked_upto(
     axis2_char_t *internal_seq_id,
     sandesha2_storage_mgr_t *storage_mgr);
 
+axis2_status_t AXIS2_CALL
+sandesha2_utils_execute_and_store(
+    const axis2_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    axis2_char_t *storage_key);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_wsrm_anon_reply_to(
+    const axis2_env_t *env,
+    axis2_char_t *reply_to);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_anon_uri(
+    const axis2_env_t *env,
+    axis2_char_t *address);
+
 /** @} */
 #ifdef __cplusplus
 }

@@ -57,28 +57,28 @@ sandesha2_make_connection_create(
 
 axis2_status_t AXIS2_CALL
 sandesha2_make_connection_free_void_arg(
-    void *make_connection,
+    void *make_conn,
     const axis2_env_t *env);
                     	
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_make_connection_get_identifier(
-    sandesha2_make_connection_t *make_connection,
+    sandesha2_make_connection_t *make_conn,
     const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_make_connection_set_identifier(
-    sandesha2_make_connection_t *make_connection,
+    sandesha2_make_connection_t *make_conn,
     const axis2_env_t *env, 
     sandesha2_identifier_t *identifier);
                     	
 sandesha2_address_t * AXIS2_CALL
 sandesha2_make_connection_get_address(
-    sandesha2_make_connection_t *make_connection,
+    sandesha2_make_connection_t *make_conn,
     const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_make_connection_set_address(
-    sandesha2_make_connection_t *make_connection,
+    sandesha2_make_connection_t *make_conn,
     const axis2_env_t *env, 
     sandesha2_address_t *address);
                     	

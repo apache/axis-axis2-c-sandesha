@@ -439,7 +439,7 @@ sandesha2_fault_mgr_get_fault(
         
         create_seq = (sandesha2_create_seq_t *)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
-        epr =  SANDESHA2_ADDRESS_GET_EPR(sandesha2_acks_to_get_address(
+        epr =  sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                         sandesha2_create_seq_get_acks_to(create_seq, env), 
                         env), env);
         acks_to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(epr, env);

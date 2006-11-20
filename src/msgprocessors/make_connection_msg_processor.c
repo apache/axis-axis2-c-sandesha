@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <sandesha2_make_connection_msg_processor.h>
+#include <sandesha2_make_connection.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_storage_mgr.h>
@@ -26,6 +27,7 @@
 #include <sandesha2_identifier.h>
 #include <sandesha2_sender_worker.h>
 #include <sandesha2_msg_pending.h>
+#include <sandesha2_msg_init.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -37,6 +39,7 @@
 #include <axis2_endpoint_ref.h>
 #include <axis2_op_ctx.h>
 #include <axis2_transport_out_desc.h>
+#include <axis2_http_transport.h>
 
 /** 
  * @brief Make Connection Message Processor struct impl
@@ -168,7 +171,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
             "processor_process_in_msg .........");
     printf("sandesha2_make_connnection_msg_processor_process_in_msg\n");
 
-    make_conn = (sandesha2_make_connnection_t*)
+    make_conn = (sandesha2_make_connection_t*)
         sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_MAKE_CONNECTION);
     if(!make_conn)
@@ -180,8 +183,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
         return AXIS2_FAILURE;        
     }
     address = sandesha2_make_connection_get_address(make_conn, env);
-    identifier = sandesha2_seq_make_connnection_get_identifier(
-            seq_make_connnection, env);
+    identifier = sandesha2_make_connection_get_identifier(make_conn, env);
     if(identifier)
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
@@ -199,10 +201,11 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
     if(address)
     {
         axis2_endpoint_ref_t *epr = NULL;
-        const axis2_char_t *epr_address = NULL;
+        axis2_char_t *epr_address = NULL;
         epr = sandesha2_address_get_epr(address, env);
         if(epr)
-            epr_address = sandesha2_endpoint_ref_get_address(epr, env);
+            epr_address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(epr, 
+                env);
         if(epr_address)
             sandesha2_sender_bean_set_wsrm_anon_uri(find_sender_bean, env, 
                 epr_address);
@@ -213,15 +216,15 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
     if(find_sender_bean)
     {
         int i = 0, size = 0;
-        retrans_list = axis2_array_list_create(env);
+        retrans_list = axis2_array_list_create(env, 0);
         if(!retrans_list)
             return AXIS2_FAILURE;
         axis2_array_list_t *retrans_list1 = NULL, *retrans_list2 = NULL;
         sandesha2_sender_bean_set_resend(find_sender_bean, env, AXIS2_TRUE);
-        retrans_list1 = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, 
+        retrans_list1 = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
                 env, find_sender_bean);
         sandesha2_sender_bean_set_resend(find_sender_bean, env, AXIS2_FALSE);
-        retrans_list2 = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, 
+        retrans_list2 = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
                 env, find_sender_bean);
         if(retrans_list1)
             size = AXIS2_ARRAY_LIST_SIZE(retrans_list1, env);
@@ -253,7 +256,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
                                using the makeConnection. So the MessagePending 
                                header should have value true;*/
 
-    for(itemp = 0; item < size; item++)
+    for(item = 0; item < size; item++)
     {
         sender_bean = (sandesha2_sender_bean_t *) AXIS2_ARRAY_LIST_GET(
                 retrans_list, env, item);
@@ -281,7 +284,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
     if(op_ctx)
     {
-        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
+        axis2_ctx_t *ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
         if (ctx)
         {
             axis2_char_t *value = NULL;
@@ -308,6 +311,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
         sandesha2_sender_worker_set_transport_out(sender_worker, env, transport_out); 
         sandesha2_sender_worker_run(sender_worker, env);
     }
+    return AXIS2_SUCCESS;
 }
 
 static void 
@@ -320,7 +324,7 @@ add_msg_pending_header(
             return_msg_ctx, env);
     axis2_char_t *rm_ns = sandesha2_msg_ctx_get_rm_ns_val(return_msg_ctx, env);
     sandesha2_msg_pending_t *msg_pending = sandesha2_msg_pending_create(env, 
-            rn_ns);
+            rm_ns);
     sandesha2_msg_pending_set_pending(msg_pending, env, pending);
     sandesha2_msg_pending_to_soap_envelope(msg_pending, env, soap_env);
 }
@@ -332,11 +336,11 @@ set_transport_properties(
     sandesha2_msg_ctx_t *make_conn_msg_ctx)
 {
     axis2_property_t *property = NULL;
-    property = sandesha2_msg_ctx_get_property(make_conn_ctx, env, 
+    property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_TRANSPORT_OUT);
     AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
             property, AXIS2_FALSE);
-    property = sandesha2_msg_ctx_get_property(make_conn_ctx, env, 
+    property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_HTTP_OUT_TRANSPORT_INFO);
     AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, 
             AXIS2_HTTP_OUT_TRANSPORT_INFO, property, AXIS2_FALSE);

@@ -102,7 +102,7 @@ sandesha2_seq_mgr_setup_new_seq(
     }
     temp_acks_to = sandesha2_create_seq_get_acks_to(create_seq, env);
     temp_address = sandesha2_acks_to_get_address(temp_acks_to, env);
-    acks_to = SANDESHA2_ADDRESS_GET_EPR(temp_address, env);
+    acks_to = sandesha2_address_get_epr(temp_address, env);
     if(!acks_to)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Acks To is NULL");
