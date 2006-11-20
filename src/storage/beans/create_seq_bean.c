@@ -34,7 +34,21 @@ struct sandesha2_create_seq_bean_t
 
 	/*  This is the actual Sequence ID of the seq.*/
 	axis2_char_t *seq_id;
+    /**
+     * The key that is used to store the CreateSequence message in the Message 
+     * Storage.This is stored here, so that the CreateSequence message can be 
+     * used as a reference when Sandesha2 want to generate new messages. 
+     * (e.g. MakeConnection)
+     */
+    axis2_char_t *create_seq_msg_store_key;
 
+    /**
+     * This is stored here, so that the message pointed by this can be used as a 
+     * reference when Sandesha2 want to generate new messages. 
+     * (e.g. MakeConnection). Create sequence message could not be used
+     * here since it may be subjected to things like encryption.
+     */
+    axis2_char_t *ref_msg_store_key;
 };
 
 /* FUNCTION prototypes */
@@ -170,5 +184,38 @@ sandesha2_create_seq_bean_set_internal_seq_id(
 	const axis2_env_t *env, axis2_char_t *int_seq_id)
 {
 	create_seq->internal_seq_id = AXIS2_STRDUP(int_seq_id, env);
+}
+
+axis2_char_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_create_seq_msg_store_key(
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env)
+{
+	return create_seq->create_seq_msg_store_key;
+}
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_create_seq_msg_store_key(
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env, axis2_char_t *create_seq_msg_store_key)
+{
+    create_seq->create_seq_msg_store_key = AXIS2_STRDUP(create_seq_msg_store_key, 
+        env);
+}
+
+axis2_char_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_ref_msg_store_key( 
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env)
+{
+	return create_seq->ref_msg_store_key;
+}
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_ref_msg_store_key( 
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env, axis2_char_t *ref_msg_store_key)
+{
+    create_seq->ref_msg_store_key = AXIS2_STRDUP(ref_msg_store_key, env);
 }
 

@@ -78,6 +78,26 @@ sandesha2_create_seq_bean_set_internal_seq_id (
     sandesha2_create_seq_bean_t *create_seq,
     const axis2_env_t *env, axis2_char_t* int_seq_id);
 
+axis2_char_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_create_seq_msg_store_key(
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_create_seq_msg_store_key(
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env, axis2_char_t *create_seq_msg_store_key);
+
+axis2_char_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_ref_msg_store_key( 
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_ref_msg_store_key( 
+    sandesha2_create_seq_bean_t *create_seq,
+	const axis2_env_t *env, axis2_char_t *ref_msg_store_key);
+
 
 
 #ifdef __cplusplus
