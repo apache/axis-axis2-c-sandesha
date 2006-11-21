@@ -730,7 +730,7 @@ sandesha2_app_msg_processor_process_out_msg(
     else
     {
         property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
-                        SANDESHA2_CLIENT_RM_SPEC_VERSION, AXIS2_FALSE);
+            SANDESHA2_CLIENT_RM_SPEC_VERSION, AXIS2_FALSE);
         if(property)
             spec_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
     }
