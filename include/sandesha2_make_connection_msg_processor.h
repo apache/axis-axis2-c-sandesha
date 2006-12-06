@@ -18,7 +18,7 @@
 #define SANDESHA2_MAKE_CONNECTION_MSG_PROCESSOR_H
 
 /**
-  * @file sandesha2_make_connnection_msg_processor.h
+  * @file sandesha2_make_connection_msg_processor.h
   * @brief 
   * This struct is responsible for processing MakeConnection request messages 
   * that come to the system. MakeConnection is only supported by WSRM 1.1
@@ -36,13 +36,13 @@ extern "C"
 {
 #endif
 
-/** @defgroup sandesha2_make_connnection_msg_processor
+/** @defgroup sandesha2_make_connection_msg_processor
  * @ingroup sandesha2_msgprocessors
  * @{
  */
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_make_connnection_msg_processor_create(
+sandesha2_make_connection_msg_processor_create(
     const axis2_env_t *env);
 /** @} */
 #ifdef __cplusplus

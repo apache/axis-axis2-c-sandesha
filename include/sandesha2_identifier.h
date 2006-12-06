@@ -62,7 +62,8 @@ sandesha2_identifier_get_identifier(
 axis2_status_t AXIS2_CALL                 
 sandesha2_identifier_set_identifier(
     sandesha2_identifier_t *identifier,
-    const axis2_env_t *env, axis2_char_t *str_id);
+    const axis2_env_t *env, 
+    axis2_char_t *str_id);
 
 
 /** @} */

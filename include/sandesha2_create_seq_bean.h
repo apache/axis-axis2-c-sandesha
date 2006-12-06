@@ -21,7 +21,6 @@
 #include <axis2_env.h>
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
-#include <string.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -29,6 +28,7 @@ extern "C"
 #endif
 
 typedef struct sandesha2_create_seq_bean_t sandesha2_create_seq_bean_t;
+struct sandesha2_rm_bean_t;
 
 /* constructors 
  */
@@ -48,6 +48,17 @@ sandesha2_create_seq_bean_free  (
     sandesha2_create_seq_bean_t *create_seq,
     const axis2_env_t *env);
 
+struct sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_base( 
+    sandesha2_create_seq_bean_t* create_seq,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_base (
+    sandesha2_create_seq_bean_t *create_seq,
+    const axis2_env_t *env, 
+    struct sandesha2_rm_bean_t* rm_bean);
+
 axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_bean_get_create_seq_msg_id  (
     sandesha2_create_seq_bean_t *create_seq,
@@ -56,7 +67,8 @@ sandesha2_create_seq_bean_get_create_seq_msg_id  (
 void AXIS2_CALL 
 sandesha2_create_seq_bean_set_create_seq_msg_id (
     sandesha2_create_seq_bean_t *create_seq,
-    const axis2_env_t *env, axis2_char_t* seq_msg_id) ;
+    const axis2_env_t *env, 
+    axis2_char_t* seq_msg_id) ;
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_bean_get_seq_id (
@@ -66,7 +78,8 @@ sandesha2_create_seq_bean_get_seq_id (
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_seq_id (
     sandesha2_create_seq_bean_t *create_seq,
-    const axis2_env_t *env, axis2_char_t* seq_id) ;
+    const axis2_env_t *env, 
+    axis2_char_t* seq_id) ;
 
 axis2_char_t* AXIS2_CALL
 sandesha2_create_seq_bean_get_internal_seq_id (
@@ -76,7 +89,8 @@ sandesha2_create_seq_bean_get_internal_seq_id (
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_internal_seq_id (
     sandesha2_create_seq_bean_t *create_seq,
-    const axis2_env_t *env, axis2_char_t* int_seq_id);
+    const axis2_env_t *env, 
+    axis2_char_t* int_seq_id);
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_store_key(
@@ -86,7 +100,8 @@ sandesha2_create_seq_bean_get_create_seq_msg_store_key(
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_create_seq_msg_store_key(
     sandesha2_create_seq_bean_t *create_seq,
-	const axis2_env_t *env, axis2_char_t *create_seq_msg_store_key);
+	const axis2_env_t *env, 
+    axis2_char_t *create_seq_msg_store_key);
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_ref_msg_store_key( 
@@ -96,7 +111,8 @@ sandesha2_create_seq_bean_get_ref_msg_store_key(
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_ref_msg_store_key( 
     sandesha2_create_seq_bean_t *create_seq,
-	const axis2_env_t *env, axis2_char_t *ref_msg_store_key);
+	const axis2_env_t *env, 
+    axis2_char_t *ref_msg_store_key);
 
 
 

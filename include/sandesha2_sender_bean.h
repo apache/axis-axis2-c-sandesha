@@ -26,6 +26,7 @@ extern "C"
 #endif
 
 typedef struct sandesha2_sender_bean_t sandesha2_sender_bean_t;
+struct sandesha2_rm_bean_t;
 
 /* constructors 
  */
@@ -47,6 +48,17 @@ axis2_status_t AXIS2_CALL
 sandesha2_sender_bean_free (
     sandesha2_sender_bean_t *sender,
     const axis2_env_t *env);
+
+struct sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_sender_bean_get_base( 
+    sandesha2_sender_bean_t* sender,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_base (
+    sandesha2_sender_bean_t *sender,
+    const axis2_env_t *env, 
+    struct sandesha2_rm_bean_t* rm_bean);
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_ctx_ref_key (
@@ -169,6 +181,16 @@ sandesha2_sender_bean_set_wsrm_anon_uri (
     const axis2_env_t *env,
     axis2_char_t *anon_uri);
 
+void AXIS2_CALL
+sandesha2_sender_bean_set_to_address (
+    sandesha2_sender_bean_t *sender,
+    const axis2_env_t *env,
+    axis2_char_t *to_address);
+
+axis2_char_t* AXIS2_CALL
+sandesha2_sender_bean_get_to_address(
+    sandesha2_sender_bean_t *sender,
+	const axis2_env_t *env);
 
 #ifdef __cplusplus
 }

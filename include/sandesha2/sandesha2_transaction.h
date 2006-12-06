@@ -76,13 +76,13 @@ sandesha2_transaction_create(
 						const axis2_env_t *env);
                         
 /************************** Start of function macros **************************/
-#define SANDESHA2_TRANSACTION_FREE(transaction, env) \
+#define sandesha2_transaction_free(transaction, env) \
     ((transaction)->ops->free (transaction, env))
     
-#define SANDESHA2_TRANSACTION_COMMIT(transaction, env) \
+#define sandesha2_transaction_commit(transaction, env) \
     ((transaction)->ops->commit(transaction, env))
     
-#define SANDESHA2_TRANSACTION_ROLLBACK(transaction, env) \
+#define sandesha2_transaction_rollback(transaction, env) \
     ((transaction)->ops->rollback(transaction, env))
 /************************** End of function macros ****************************/
 

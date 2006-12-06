@@ -31,6 +31,8 @@
 #include <axis2_uri.h>
 #include <axis2_array_list.h>
 #include <axis2_svc_client.h>
+#include <axis2_callback.h>
+#include <axis2_listener_manager.h>
 
 #include <sandesha2_seq_report.h>
 #include <sandesha2_report.h>
@@ -46,21 +48,21 @@ extern "C"
   */
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client);
 
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_seq_key(
-        const axis2_env_t *env,
-        axis2_char_t *to,
-        axis2_char_t *seq_key,
-        axis2_conf_ctx_t *conf_ctx);
+    const axis2_env_t *env,
+    axis2_char_t *to,
+    axis2_char_t *seq_key,
+    axis2_conf_ctx_t *conf_ctx);
 
 sandesha2_seq_report_t *AXIS2_CALL
 sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
-        const axis2_env_t *env,
-        axis2_char_t *internal_seq_id,
-        axis2_conf_ctx_t *conf_ctx);
+    const axis2_env_t *env,
+    axis2_char_t *internal_seq_id,
+    axis2_conf_ctx_t *conf_ctx);
 
 /**
  * Users can get a list of seq_reports each describing a incoming
@@ -72,8 +74,8 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
  */
 axis2_array_list_t *AXIS2_CALL
 sandesha2_client_get_incoming_seq_reports(
-        axis2_env_t *env,
-        axis2_conf_ctx_t *conf_ctx);
+    axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
 
 /**
  * sandesha2_report gives the details of all incoming and outgoing sequences.
@@ -85,21 +87,21 @@ sandesha2_client_get_incoming_seq_reports(
  */
 sandesha2_report_t *AXIS2_CALL
 sandesha2_client_get_report(
-        const axis2_env_t *env,
-        axis2_conf_ctx_t *conf_ctx);
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_create_seq_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_bool_t offer);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_bool_t offer);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_create_seq_with_svc_client_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_bool_t offer,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_bool_t offer,
+    axis2_char_t *seq_key);
 
 /**
  * User can terminate the sequence defined by the passed svc_client.
@@ -108,14 +110,16 @@ sandesha2_client_create_seq_with_svc_client_and_seq_key(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_callback_t *callback,
+    axis2_listener_manager_t *listener_manager);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_char_t *seq_key);
 
 /**
  * User can close the seq defined by the passed svc_client.
@@ -124,14 +128,14 @@ sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_char_t *seq_key);
 
 /**
  * This blocks the system until the messages sent have been completed.
@@ -140,14 +144,14 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_client_wait_until_seq_completed_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_wait_until_seq_completed_with_svc_client_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_char_t *seq_key);
 
 /**
  * This blocks the system until the messages sent have been completed
@@ -158,35 +162,55 @@ sandesha2_client_wait_until_seq_completed_with_svc_client_and_seq_key(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_client_wait_until_seq_completed_with_svc_client_and_max_waiting_time(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        long max_waiting_time);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    long max_waiting_time);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_wait_until_seq_completed_with_svc_client_and_max_waiting_time_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        long max_waiting_time,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    long max_waiting_time,
+    axis2_char_t *seq_key);
 
 /* 
  * gives the out seqID if CS/CSR exchange is done. Otherwise an error
  */
 axis2_char_t *AXIS2_CALL
 sandesha2_client_get_seq_id(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_send_ack_request_with_svc_client(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client);
 
 axis2_status_t AXIS2_CALL
 sandesha2_client_send_ack_request_with_svc_client_and_seq_key(
-        const axis2_env_t *env,
-        axis2_svc_client_t *svc_client,
-        axis2_char_t *seq_key);
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_char_t *seq_key);
+
+axis2_status_t AXIS2_CALL
+sandesha2_client_send_non_blocking(
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_options_t *options,
+    axis2_qname_t *op_qname,
+    axis2_callback_t *callback,
+    axiom_node_t *payload,
+    axis2_listener_manager_t *listener_manager);
+
+void AXIS2_CALL
+sandesha2_client_fire_and_forget(
+    const axis2_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_options_t *options,
+    axis2_qname_t *op_qname,
+    axis2_callback_t *callback,
+    axiom_node_t *payload,
+    axis2_listener_manager_t *listener_manager);
 
 #ifdef __cplusplus
 }

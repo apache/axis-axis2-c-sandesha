@@ -35,6 +35,8 @@ extern "C"
 
 typedef struct sandesha2_transaction sandesha2_transaction_t;
 typedef struct sandesha2_transaction_ops sandesha2_transaction_ops_t;
+struct sandesha2_storage_mgr;
+struct sandesha2_rm_bean_t;
 
 /** @defgroup sandesha2_transaction In Memory Transaction 
   * @ingroup sandesha2
@@ -48,19 +50,30 @@ struct sandesha2_transaction_ops
      * @return status code
      */
     axis2_status_t (AXIS2_CALL *
-    free) (
-            void *transaction,
-            const axis2_env_t *env);
-     
-    axis2_status_t (AXIS2_CALL *
-    commit) (
-            sandesha2_transaction_t *transaction,
-            const axis2_env_t *env);
+            free) (
+                sandesha2_transaction_t *transaction,
+                const axis2_env_t *env);
 
-    axis2_status_t (AXIS2_CALL *
-    rollback) (
-            sandesha2_transaction_t *transaction,
-            const axis2_env_t *env);
+    axis2_bool_t (AXIS2_CALL *
+            is_active)(
+                sandesha2_transaction_t *transaction,
+                const axis2_env_t *env);
+     
+    void (AXIS2_CALL *
+            commit) (
+                sandesha2_transaction_t *transaction,
+                const axis2_env_t *env);
+
+    void (AXIS2_CALL *
+            rollback) (
+                sandesha2_transaction_t *transaction,
+                const axis2_env_t *env);
+
+    void (AXIS2_CALL *
+            enlist)(
+                sandesha2_transaction_t *trans,
+                const axis2_env_t *env,
+                struct sandesha2_rm_bean_t *rm_bean);
 };
 
 struct sandesha2_transaction
@@ -68,20 +81,36 @@ struct sandesha2_transaction
     sandesha2_transaction_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_transaction_t * AXIS2_CALL
+AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL
 sandesha2_transaction_create(
-        const axis2_env_t *env);
+    const axis2_env_t *env,
+    struct sandesha2_storage_mgr *storage_mgr);
 
-#define SANDESHA2_TRANSACTION_FREE(transaction, env) \
-      (((sandesha2_transaction_t *) transaction)->ops->free (transaction, env))
+axis2_status_t AXIS2_CALL 
+sandesha2_transaction_free(
+    sandesha2_transaction_t *transaction,
+    const axis2_env_t *env);
 
-#define SANDESHA2_TRANSACTION_COMMIT(transaction, env) \
-      (((sandesha2_transaction_t *) transaction)->ops->\
-       commit (transaction, env))
+axis2_bool_t AXIS2_CALL
+sandesha2_transaction_is_active(
+    sandesha2_transaction_t *transaction,
+    const axis2_env_t *env);
 
-#define SANDESHA2_TRANSACTION_ROLLBACK(transaction, env) \
-      (((sandesha2_transaction_t *) transaction)->ops->\
-       rollback (transaction, env))
+void AXIS2_CALL
+sandesha2_transaction_commit(
+    sandesha2_transaction_t *transaction,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_transaction_rollback(
+    sandesha2_transaction_t *transaction,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_transaction_enlist(
+    sandesha2_transaction_t *trans,
+    const axis2_env_t *env,
+    struct sandesha2_rm_bean_t *rm_bean);
 
 /** @} */
 #ifdef __cplusplus

@@ -18,6 +18,7 @@
 #define SANDESHA2_NEXT_MSG_BEAN_H
 
 #include <axis2_utils_defines.h>
+struct sandesha2_rm_bean_t;
 #include <axis2_env.h>
 
 #ifdef __cplusplus
@@ -42,6 +43,17 @@ axis2_status_t AXIS2_CALL
 sandesha2_next_msg_bean_free (
      sandesha2_next_msg_bean_t *next_msg_bean,
      const axis2_env_t *env);
+
+struct sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_next_msg_bean_get_base( 
+    sandesha2_next_msg_bean_t* next_msg,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_base (
+    sandesha2_next_msg_bean_t *next_msg,
+    const axis2_env_t *env, 
+    struct sandesha2_rm_bean_t* rm_bean);
 
 axis2_char_t* AXIS2_CALL
 sandesha2_next_msg_bean_get_seq_id(

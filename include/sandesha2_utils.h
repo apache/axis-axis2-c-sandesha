@@ -115,6 +115,11 @@ sandesha2_utils_start_sender_for_seq(
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
+sandesha2_utils_start_polling_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_outgoing_internal_seq_id(
@@ -225,6 +230,21 @@ axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_anon_uri(
     const axis2_env_t *env,
     axis2_char_t *address);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_utils_stop_invoker(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_utils_stop_sender(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
+sandesha2_utils_stop_polling_mgr(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
 
 /** @} */
 #ifdef __cplusplus

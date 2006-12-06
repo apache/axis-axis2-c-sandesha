@@ -101,35 +101,49 @@ struct sandesha2_create_seq_mgr
 
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL
 sandesha2_create_seq_mgr_create(
-        const axis2_env_t *env,
-        axis2_ctx_t *ctx);
+    const axis2_env_t *env,
+    axis2_ctx_t *ctx);
 
-#define SANDESHA2_CREATE_SEQ_MGR_FREE(seq_mgr, env) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->free (seq_mgr, env))
+axis2_status_t AXIS2_CALL 
+sandesha2_create_seq_mgr_free(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env);
 
-#define SANDESHA2_CREATE_SEQ_MGR_INSERT(seq_mgr, env, bean) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       insert (seq_mgr, env, bean))
+axis2_bool_t AXIS2_CALL
+sandesha2_create_seq_mgr_insert(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    sandesha2_create_seq_bean_t *bean);
 
-#define SANDESHA2_CREATE_SEQ_MGR_REMOVE(seq_mgr, env, msg_id) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       remove (seq_mgr, env, msg_id))
+axis2_bool_t AXIS2_CALL
+sandesha2_create_seq_mgr_remove(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *msg_id);
 
-#define SANDESHA2_CREATE_SEQ_MGR_RETRIEVE(seq_mgr, env, msg_id) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       retrieve (seq_mgr, env, msg_id))
+sandesha2_create_seq_bean_t *AXIS2_CALL
+sandesha2_create_seq_mgr_retrieve(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    const axis2_char_t *msg_id);
 
-#define SANDESHA2_CREATE_SEQ_MGR_UPDATE(seq_mgr, env, bean) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       update (seq_mgr, env, bean))
+axis2_bool_t AXIS2_CALL
+sandesha2_create_seq_mgr_update(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    sandesha2_create_seq_bean_t *bean);
 
-#define SANDESHA2_CREATE_SEQ_MGR_FIND(seq_mgr, env, bean) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       find (seq_mgr, env, bean))
+axis2_array_list_t *AXIS2_CALL
+sandesha2_create_seq_mgr_find(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    sandesha2_create_seq_bean_t *bean);
 
-#define SANDESHA2_CREATE_SEQ_MGR_FIND_UNIQUE(seq_mgr, env, bean) \
-      (((sandesha2_create_seq_mgr_t *) seq_mgr)->ops->\
-       find_unique (seq_mgr, env, bean))
+sandesha2_create_seq_bean_t *AXIS2_CALL
+sandesha2_create_seq_mgr_find_unique(
+    sandesha2_create_seq_mgr_t *seq_mgr,
+    const axis2_env_t *env,
+    sandesha2_create_seq_bean_t *bean);
 
 
 /** @} */

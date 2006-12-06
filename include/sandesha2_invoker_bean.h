@@ -27,6 +27,7 @@ extern "C"
 #endif
 
 typedef struct sandesha2_invoker_bean_t sandesha2_invoker_bean_t;
+struct sandesha2_rm_bean_t;
 
 /* constructors 
  */
@@ -45,6 +46,17 @@ axis2_status_t AXIS2_CALL
 sandesha2_invoker_bean_free  (
     sandesha2_invoker_bean_t *invoker,
     const axis2_env_t *env);
+
+struct sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_invoker_bean_get_base( 
+    sandesha2_invoker_bean_t* invoker,
+    const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_invoker_bean_set_base (
+    sandesha2_invoker_bean_t *invoker,
+    const axis2_env_t *env, 
+    struct sandesha2_rm_bean_t* rm_bean);
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(
