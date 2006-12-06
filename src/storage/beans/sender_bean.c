@@ -15,6 +15,7 @@
  */
 
 #include <sandesha2_sender_bean.h>
+#include <sandesha2_rm_bean.h>
 #include <string.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
@@ -23,6 +24,7 @@
 /*sender_bean struct */
 struct sandesha2_sender_bean_t
 {
+    sandesha2_rm_bean_t *rm_bean;
 	axis2_char_t *msg_context_ref_key;
 	axis2_char_t *msg_id;
 	axis2_char_t *internal_seq_id;
@@ -34,6 +36,7 @@ struct sandesha2_sender_bean_t
 	int msg_type;
 	axis2_char_t *seq_id;
 	axis2_char_t *wsrm_anon_uri;
+	axis2_char_t *to_address;
 
 };
 	
@@ -64,6 +67,8 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 	sender->msg_type = 0;
 	sender->seq_id = NULL;
 	sender->wsrm_anon_uri = NULL;
+	sender->to_address = NULL;
+    sender->rm_bean = NULL;
 
 	return sender;
 }
@@ -104,6 +109,7 @@ sandesha2_sender_bean_create_with_data(
 	sender->msg_type = 0;
 	sender->seq_id = NULL;
 	sender->wsrm_anon_uri = NULL;
+    sender->rm_bean = NULL;
 
 	return sender;
 }
@@ -113,6 +119,11 @@ sandesha2_sender_bean_free (
     sandesha2_sender_bean_t *sender,
 	const axis2_env_t *env)
 {
+	if(sender->rm_bean)
+	{
+		sandesha2_rm_bean_free(sender->rm_bean, env);
+		sender->rm_bean= NULL;
+	}
 	if(sender->msg_context_ref_key)
 	{
 		AXIS2_FREE(env->allocator, sender->msg_context_ref_key);
@@ -140,6 +151,23 @@ sandesha2_sender_bean_free (
 	}
     return AXIS2_SUCCESS;
 
+}
+
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_sender_bean_get_base( 
+    sandesha2_sender_bean_t* sender,
+    const axis2_env_t *env)
+{
+	return sender->rm_bean;
+}	
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_base (
+    sandesha2_sender_bean_t *sender,
+    const axis2_env_t *env, 
+    sandesha2_rm_bean_t* rm_bean)
+{
+	sender->rm_bean = rm_bean;
 }
 
 axis2_char_t* AXIS2_CALL
@@ -370,4 +398,28 @@ sandesha2_sender_bean_set_wsrm_anon_uri (
 
 	sender->wsrm_anon_uri = (axis2_char_t *)AXIS2_STRDUP(anon_uri, env);
 }
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_to_address (
+    sandesha2_sender_bean_t *sender,
+    const axis2_env_t *env,
+    axis2_char_t *to_address)
+{
+	if(sender->to_address)
+	{
+		AXIS2_FREE(env->allocator, sender->to_address);
+		sender->to_address = NULL;
+	}
+
+	sender->to_address = (axis2_char_t *)AXIS2_STRDUP(to_address, env);
+}
+
+axis2_char_t* AXIS2_CALL
+sandesha2_sender_bean_get_to_address(
+    sandesha2_sender_bean_t *sender,
+	const axis2_env_t *env)
+{
+	return sender->to_address;
+}
+
 

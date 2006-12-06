@@ -15,6 +15,7 @@
  */
 
 #include <sandesha2_create_seq_bean.h>
+#include <sandesha2_rm_bean.h>
 #include <axis2_env.h>
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
@@ -26,6 +27,7 @@
 
 struct sandesha2_create_seq_bean_t
 {
+    sandesha2_rm_bean_t *rm_bean;
 	/*  a unique identifier that can be used to identify the messages of a certain seq */
 	axis2_char_t *internal_seq_id;
 
@@ -74,12 +76,13 @@ sandesha2_create_seq_bean_create(
 	bean->internal_seq_id = NULL;
 	bean->create_seq_msg_id = NULL;
 	bean->seq_id = NULL;
+    bean->create_seq_msg_store_key = NULL;
+    bean->ref_msg_store_key = NULL;
+    bean->rm_bean = NULL;
 
 	return bean;
 }
 	
-
-
 AXIS2_EXTERN sandesha2_create_seq_bean_t* AXIS2_CALL 
 sandesha2_create_seq_bean_create_with_data(
     const axis2_env_t *env,
@@ -104,6 +107,7 @@ sandesha2_create_seq_bean_create_with_data(
 	bean->internal_seq_id = internal_seq_id;
 	bean->create_seq_msg_id = create_seq_msg_id;
 	bean->seq_id = seq_id;
+	bean->rm_bean = NULL;
 
 	return bean;
 }
@@ -114,6 +118,11 @@ sandesha2_create_seq_bean_free  (
     sandesha2_create_seq_bean_t *create_seq,
     const axis2_env_t *env)
 {
+	if(create_seq->rm_bean)
+	{
+		sandesha2_rm_bean_free(create_seq->rm_bean, env);
+		create_seq->rm_bean= NULL;
+	}
 	if(create_seq->internal_seq_id)
 	{
 		AXIS2_FREE(env->allocator, create_seq->internal_seq_id);
@@ -134,6 +143,26 @@ sandesha2_create_seq_bean_free  (
     return AXIS2_SUCCESS;
 }
 
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_create_seq_bean_get_base( 
+    sandesha2_create_seq_bean_t* create_seq,
+    const axis2_env_t *env)
+{
+	return create_seq->rm_bean;
+
+}	
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_base (
+    sandesha2_create_seq_bean_t *create_seq,
+    const axis2_env_t *env, 
+    sandesha2_rm_bean_t* rm_bean)
+
+{
+	create_seq->rm_bean = rm_bean;
+}
+
+
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_id( 
     sandesha2_create_seq_bean_t* create_seq,
@@ -141,8 +170,7 @@ sandesha2_create_seq_bean_get_create_seq_msg_id(
 {
 	return create_seq->create_seq_msg_id;
 
-}
-	
+}	
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_create_seq_msg_id (

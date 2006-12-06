@@ -15,13 +15,15 @@
  */
 
 #include <sandesha2_next_msg_bean.h>
+#include <sandesha2_rm_bean.h>
 #include <string.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
 
-/* invoker_bean struct */
+/* next_msg_bean struct */
 struct sandesha2_next_msg_bean_t
 {
+    sandesha2_rm_bean_t *rm_bean;
 	axis2_char_t *seq_id;
     axis2_char_t *ref_msg_key;
     axis2_bool_t polling_mode;
@@ -48,6 +50,7 @@ sandesha2_next_msg_bean_create(const axis2_env_t *env)
     bean->ref_msg_key = NULL;
 	bean->msg_no = -1;
     bean->polling_mode = AXIS2_FALSE;
+    bean->rm_bean = NULL;
 
 	return bean;
 }
@@ -75,6 +78,7 @@ sandesha2_next_msg_bean_create_with_data(
     bean->ref_msg_key = NULL;
 	bean->msg_no = msg_no;
     bean->polling_mode = AXIS2_FALSE;
+    bean->rm_bean = NULL;
 
 	return bean;
 }
@@ -84,6 +88,11 @@ sandesha2_next_msg_bean_free (
     sandesha2_next_msg_bean_t *next_msg_bean,
 	const axis2_env_t *env)
 {
+	if(next_msg_bean->rm_bean)
+	{
+		sandesha2_rm_bean_free(next_msg_bean->rm_bean, env);
+		next_msg_bean->rm_bean= NULL;
+	}
 	if(next_msg_bean->seq_id)
 	{
 		AXIS2_FREE(env->allocator, next_msg_bean->seq_id);
@@ -97,6 +106,24 @@ sandesha2_next_msg_bean_free (
     return AXIS2_SUCCESS;
 }
 
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_next_msg_bean_get_base( 
+    sandesha2_next_msg_bean_t* next_msg,
+    const axis2_env_t *env)
+{
+	return next_msg->rm_bean;
+
+}	
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_base (
+    sandesha2_next_msg_bean_t *next_msg,
+    const axis2_env_t *env, 
+    sandesha2_rm_bean_t* rm_bean)
+
+{
+	next_msg->rm_bean = rm_bean;
+}
 
 axis2_char_t* AXIS2_CALL
 sandesha2_next_msg_bean_get_seq_id(

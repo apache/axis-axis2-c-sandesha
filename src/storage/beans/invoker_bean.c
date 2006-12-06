@@ -15,12 +15,14 @@
  */
 
 #include <sandesha2_invoker_bean.h>
+#include <sandesha2_rm_bean.h>
 #include <string.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
 
 struct sandesha2_invoker_bean_t
 {
+    sandesha2_rm_bean_t *rm_bean;
 	/*  This is the messageContextRefKey that is obtained after saving a message context in a storage. */
 	axis2_char_t *msg_context_ref_key;
 
@@ -56,6 +58,7 @@ sandesha2_invoker_bean_create(
 	bean->msg_no = -1;
 	bean->seq_id = NULL;	
 	bean->invoked = AXIS2_FALSE;
+    bean->rm_bean = NULL;
 
 	return bean;
 }
@@ -93,16 +96,21 @@ sandesha2_invoker_bean_create_with_data(
 
 	bean->msg_no = msg_no;
 	bean->invoked = invoked;
+    bean->rm_bean = NULL;
 
 	return bean;
 }
-
 
 axis2_status_t AXIS2_CALL
 sandesha2_invoker_bean_free(
     sandesha2_invoker_bean_t *invoker,
     const axis2_env_t *env)
 {
+	if(invoker->rm_bean)
+	{
+		sandesha2_rm_bean_free(invoker->rm_bean, env);
+		invoker->rm_bean= NULL;
+	}
 	if(invoker->msg_context_ref_key)
 	{
 		AXIS2_FREE(env->allocator, invoker->msg_context_ref_key);
@@ -117,6 +125,23 @@ sandesha2_invoker_bean_free(
     return AXIS2_SUCCESS;
 }
 
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_invoker_bean_get_base( 
+    sandesha2_invoker_bean_t* invoker,
+    const axis2_env_t *env)
+{
+	return invoker->rm_bean;
+
+}	
+
+void AXIS2_CALL
+sandesha2_invoker_bean_set_base (
+    sandesha2_invoker_bean_t *invoker,
+    const axis2_env_t *env, 
+    sandesha2_rm_bean_t* rm_bean)
+{
+	invoker->rm_bean = rm_bean;
+}
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(

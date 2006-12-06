@@ -15,6 +15,7 @@
  */
 
 #include <sandesha2_seq_property_bean.h>
+#include <sandesha2_rm_bean.h>
 #include <string.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
@@ -23,6 +24,7 @@
 /*seq_property_bean struct */
 struct sandesha2_seq_property_bean_t
 {
+    sandesha2_rm_bean_t *rm_bean;
 	axis2_char_t *seq_id;
 	axis2_char_t *name;
 	axis2_char_t *value;
@@ -48,6 +50,7 @@ sandesha2_seq_property_bean_create(
 	seq_property->seq_id = NULL;
 	seq_property->name = NULL;
 	seq_property->value = NULL;
+    seq_property->rm_bean = NULL;
 
 	return seq_property;
 }
@@ -76,6 +79,7 @@ sandesha2_seq_property_bean_create_with_data(
 	seq_property->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
 	seq_property->name = (axis2_char_t *)AXIS2_STRDUP(prop_name, env);
 	seq_property->value = (axis2_char_t *)AXIS2_STRDUP(value, env);
+    seq_property->rm_bean = NULL;
 
 	return seq_property;
 }
@@ -86,6 +90,11 @@ sandesha2_seq_property_bean_free (
     sandesha2_seq_property_bean_t *seq_property,
     const axis2_env_t *env)
 {
+	if(seq_property->rm_bean)
+	{
+		sandesha2_rm_bean_free(seq_property->rm_bean, env);
+		seq_property->rm_bean= NULL;
+	}
 	if(seq_property->seq_id)
 	{
 		AXIS2_FREE(env->allocator, seq_property->seq_id);
@@ -104,6 +113,23 @@ sandesha2_seq_property_bean_free (
 		seq_property->value = NULL;
 	}
     return AXIS2_SUCCESS;
+}
+
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_seq_property_bean_get_base( 
+    sandesha2_seq_property_bean_t* seq_property,
+    const axis2_env_t *env)
+{
+	return seq_property->rm_bean;
+}	
+
+void AXIS2_CALL
+sandesha2_seq_property_bean_set_base (
+    sandesha2_seq_property_bean_t *seq_property,
+    const axis2_env_t *env, 
+    sandesha2_rm_bean_t* rm_bean)
+{
+	seq_property->rm_bean = rm_bean;
 }
 
 axis2_char_t *AXIS2_CALL
