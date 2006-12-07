@@ -21,6 +21,9 @@
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_ack_range.h>
 #include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_sender_bean.h>
 #include <axis2_string.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_addr.h>
@@ -80,18 +83,21 @@ sandesha2_ack_mgr_generate_ack_msg(
     ref_op = AXIS2_MSG_CTX_GET_OP(ref_msg, env);
     if(ref_op)
     {
-        axis2_array_list_t *out_flows = NULL;
-        axis2_array_list_t *out_fault_flows = NULL;
-        out_flows = AXIS2_OP_GET_OUT_FLOW(ref_op, env);
-        out_fault_flows = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_op, env);
-        if(out_flows)
-        {
-            AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flows);
-            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, out_fault_flows);
-        }
+        axis2_array_list_t *out_flow = NULL;
+        axis2_array_list_t *out_fault_flow = NULL;
+        axis2_array_list_t *new_out_flow = NULL;
+        axis2_array_list_t *new_out_fault_flow = NULL;
+        out_flow = AXIS2_OP_GET_OUT_FLOW(ref_op, env);
+        new_out_flow = axis2_phases_info_copy_flow(env, out_flow);
+        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_op, env);
+        new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
+        if(new_out_flow)
+            AXIS2_OP_SET_OUT_FLOW(ack_op, env, new_out_flow);
+        if(new_out_fault_flow)
+            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, new_out_fault_flow);
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg,
-                        ack_op);
+        ack_op);
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION, 
                         AXIS2_FALSE);
     if(property)
@@ -130,14 +136,19 @@ sandesha2_ack_mgr_generate_ack_msg(
                         storage_mgr);
     if(addr_ns_uri)
     {
-        property = axis2_property_create(env);
+        property = AXIS2_MSG_CTX_GET_PROPERTY(ack_msg_ctx, env, AXIS2_WSA_VERSION, 
+                AXIS2_FALSE);
         if(property)
         {
-            AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ns_uri, env));
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ns_uri, 
+                env));
+        }
+        else
+        {
+            property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+                AXIS2_STRDUP(addr_ns_uri, env));
             AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, AXIS2_WSA_VERSION, property, 
                 AXIS2_FALSE);
-            property = NULL;
         }
     }
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
@@ -268,7 +279,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         
         ret_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);
-        AXIS2_MSG_CTX_SET_PAUSED(ref_msg, env, AXIS2_TRUE);
+        /*AXIS2_MSG_CTX_SET_PAUSED(ref_msg, env, AXIS2_TRUE);*/
         return ret_rm_msg;
     }
     return NULL;

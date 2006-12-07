@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 #include <sandesha2_fault_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_constants.h>
 #include <axis2_hash.h>
 #include <axis2_core_utils.h>
@@ -182,10 +185,9 @@ sandesha2_fault_mgr_check_for_unknown_seq(
     {
         sandesha2_create_seq_bean_t *find_bean = NULL;
         axis2_array_list_t *list = NULL;
-        AXIS2_LOG_INFO(env->log, "[sandesha2] came10 .........");
         find_bean = sandesha2_create_seq_bean_create(env);
         sandesha2_create_seq_bean_set_seq_id(find_bean, env, seq_id);
-        list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, 
+        list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
                         find_bean);
         if(list)
         {
@@ -251,7 +253,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         detail_ele = axiom_element_create_with_qname(env, NULL, qname, 
                         &detail_node);
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
-        sandesha2_fault_data_set_reason(fault_data, env, "A sequence with the"
+        sandesha2_fault_data_set_reason(fault_data, env, "A sequence with the" \
                         " given sequenceID has NOT been established");
         return sandesha2_fault_mgr_get_fault(env, rm_msg_ctx,
                         fault_data, sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx,

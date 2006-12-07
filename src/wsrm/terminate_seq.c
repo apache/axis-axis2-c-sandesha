@@ -83,7 +83,7 @@ sandesha2_terminate_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     terminate_seq_impl =  (sandesha2_terminate_seq_impl_t *)AXIS2_MALLOC 
                         (env->allocator, sizeof(sandesha2_terminate_seq_impl_t));
 	
-    if(NULL == terminate_seq_impl)
+    if(!terminate_seq_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
@@ -95,7 +95,7 @@ sandesha2_terminate_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
     
     terminate_seq_impl->terminate_seq.part.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_part_ops_t));
-    if(NULL == terminate_seq_impl->terminate_seq.part.ops)
+    if(!terminate_seq_impl->terminate_seq.part.ops)
 	{
 		sandesha2_terminate_seq_free((sandesha2_iom_rm_element_t*)
                          terminate_seq_impl, env);
@@ -104,7 +104,7 @@ sandesha2_terminate_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 	}
     terminate_seq_impl->terminate_seq.part.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
-    if(NULL == terminate_seq_impl->terminate_seq.part.element.ops)
+    if(!terminate_seq_impl->terminate_seq.part.element.ops)
 	{
 		sandesha2_terminate_seq_free((sandesha2_iom_rm_element_t*)
                          terminate_seq_impl, env);
@@ -138,13 +138,13 @@ sandesha2_terminate_seq_free (sandesha2_iom_rm_element_t *terminate_seq,
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     terminate_seq_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq);
     
-    if(NULL != terminate_seq_impl->ns_val)
+    if(terminate_seq_impl->ns_val)
     {
         AXIS2_FREE(env->allocator, terminate_seq_impl->ns_val);
         terminate_seq_impl->ns_val = NULL;
     }
     terminate_seq_impl->identifier = NULL;
-    if(NULL != terminate_seq_impl->terminate_seq.part.ops)
+    if(terminate_seq_impl->terminate_seq.part.ops)
     {
         AXIS2_FREE(env->allocator, terminate_seq_impl->terminate_seq.part.ops);
         terminate_seq_impl->terminate_seq.part.ops = NULL;
@@ -167,48 +167,33 @@ sandesha2_terminate_seq_get_namespace_value (
 
 
 void* AXIS2_CALL 
-sandesha2_terminate_seq_from_om_node(sandesha2_iom_rm_element_t *terminate_seq,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+sandesha2_terminate_seq_from_om_node(
+    sandesha2_iom_rm_element_t *terminate_seq,
+    const axis2_env_t *env, 
+    axiom_node_t *ts_node)
 {
 	sandesha2_terminate_seq_impl_t *terminate_seq_impl = NULL;
-    axiom_element_t *om_element = NULL;
     axiom_element_t *ts_part = NULL; 
-    axiom_node_t *ts_node = NULL;
-    axis2_qname_t *ts_qname = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, om_node, NULL);
+    AXIS2_PARAM_CHECK(env->error, ts_node, NULL);
     
     terminate_seq_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
-    if(NULL == om_element)
+    ts_part = AXIOM_NODE_GET_DATA_ELEMENT(ts_node, env);
+    if(!ts_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
-        return NULL;
-    }
-    ts_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ,
-                        terminate_seq_impl->ns_val, NULL);
-    if(NULL == ts_qname)
-    {
-        return NULL;
-    }
-    ts_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
-                        ts_qname, om_node, &ts_node); 
-    if(NULL == ts_part)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     terminate_seq_impl->identifier = sandesha2_identifier_create(env, 
-                        terminate_seq_impl->ns_val);
-    if(NULL == terminate_seq_impl->identifier)
+        terminate_seq_impl->ns_val);
+    if(!terminate_seq_impl->identifier)
     {
         return NULL;
     }
-    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)terminate_seq_impl->identifier, env,
-                        ts_node);
+    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+        terminate_seq_impl->identifier, env, ts_node);
     return terminate_seq;
 }
 
@@ -226,7 +211,7 @@ sandesha2_terminate_seq_to_om_node(sandesha2_iom_rm_element_t *terminate_seq,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     terminate_seq_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq);
-    if(NULL == terminate_seq_impl->identifier)
+    if(!terminate_seq_impl->identifier)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
                         AXIS2_FAILURE);
@@ -234,14 +219,14 @@ sandesha2_terminate_seq_to_om_node(sandesha2_iom_rm_element_t *terminate_seq,
     }
     rm_ns = axiom_namespace_create(env, terminate_seq_impl->ns_val,
                         SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-    if(NULL == rm_ns)
+    if(!rm_ns)
     {
         return NULL;
     }
     ts_element = axiom_element_create(env, NULL, 
                         SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, rm_ns, 
                         &ts_node);
-    if(NULL == ts_element)
+    if(!ts_element)
     {
         return NULL;
     }
@@ -294,7 +279,7 @@ sandesha2_terminate_seq_set_identifier(
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	
 	terminate_seq_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq);
- 	if(NULL != terminate_seq_impl->identifier)
+ 	if(terminate_seq_impl->identifier)
 	{
 /*		SANDESHA2_IDENTIFIER_FREE(terminate_seq_impl->identifier, env); 
 		terminate_seq_impl->identifier = NULL;  */
@@ -321,7 +306,7 @@ sandesha2_terminate_seq_to_soap_env(sandesha2_iom_rm_part_t *terminate_seq,
     ts_qname = axis2_qname_create(env, 
                         SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
                         terminate_seq_impl->ns_val, NULL);
-    if(NULL == ts_qname)
+    if(!ts_qname)
     {
         return AXIS2_FAILURE;
     }

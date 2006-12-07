@@ -287,13 +287,14 @@ sandesha2_identifier_get_identifier(
 axis2_status_t AXIS2_CALL                 
 sandesha2_identifier_set_identifier(
     sandesha2_identifier_t *identifier,
-    const axis2_env_t *env, axis2_char_t *str_id)
+    const axis2_env_t *env, 
+    axis2_char_t *str_id)
 {
 	sandesha2_identifier_impl_t *identifier_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	
 	identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
- 	if(NULL != identifier_impl->str_id)
+ 	if(identifier_impl->str_id)
 	{
 		AXIS2_FREE(env->allocator, identifier_impl->str_id);
 		identifier_impl->str_id = NULL;

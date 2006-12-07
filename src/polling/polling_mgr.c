@@ -25,6 +25,9 @@
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
+#include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_sender_bean.h>
+#include <sandesha2_sender_mgr.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <axis2_uuid_gen.h>
@@ -37,7 +40,6 @@
  *	Sandesha2 Polling Manager
  */
 typedef struct sandesha2_polling_mgr_args sandesha2_polling_mgr_args_t;
-#define SANDESHA2_POLLING_MANAGER_WAIT_TIME 5000
 
 struct sandesha2_polling_mgr_t
 {
@@ -152,17 +154,22 @@ sandesha2_polling_mgr_start (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
+    axis2_thread_mutex_lock(polling_mgr->mutex);
     polling_mgr->conf_ctx = conf_ctx;
     polling_mgr->scheduled_polling_reqs = axis2_array_list_create(env, 
         AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
 
     if(!polling_mgr->conf_ctx || !polling_mgr->conf_ctx->ops)
+    {
+        axis2_thread_mutex_unlock(polling_mgr->mutex);
         return AXIS2_FAILURE;
+    }
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         polling_mgr->conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(polling_mgr->conf_ctx, env));
-    set_poll(AXIS2_TRUE);
+    sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
+    axis2_thread_mutex_unlock(polling_mgr->mutex);
     return AXIS2_SUCCESS;
 }
             
@@ -212,9 +219,8 @@ sandesha2_polling_mgr_worker_func(
     polling_mgr = args->impl;
     storage_mgr = args->storage_mgr;
 
-    while(sandesha2_polling_mgr_is_poll(polling_mgr, env))
+    while(polling_mgr->poll)
     {
-        sandesha2_storage_mgr_t *storage_mgr = NULL;
         sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
         sandesha2_next_msg_bean_t *next_msg_bean = NULL;
         sandesha2_msg_ctx_t *ref_rm_msg_ctx = NULL;
@@ -267,7 +273,8 @@ sandesha2_polling_mgr_worker_func(
                 {
                     unsigned int rand_var = 
                         axis2_rand_get_seed_value_based_on_time(env);
-                    int item = axis2_rand_with_range(&rand_var, 1, size);
+                    int item = axis2_rand_with_range(&rand_var, 0, size);
+                    item--;
                     next_msg_bean = (sandesha2_next_msg_bean_t *) 
                         AXIS2_ARRAY_LIST_GET(results, env, item);
                 }
@@ -296,7 +303,7 @@ sandesha2_polling_mgr_worker_func(
         seq_prop_key = seq_id;
         reply_to = sandesha2_utils_get_seq_property(env, seq_prop_key, 
             SANDESHA2_SEQ_PROP_REPLY_TO_EPR, storage_mgr);
-        if(sandesha2_util_is_wsrm_anon_reply_to(env, reply_to))
+        if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
             wsrm_anon_reply_to_uri = reply_to;
         ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
             ref_msg_key, polling_mgr->conf_ctx);
@@ -315,8 +322,8 @@ sandesha2_polling_mgr_worker_func(
         /* Storing the MakeConnection message */
         make_conn_msg_store_key = axis2_uuid_gen(env);
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(seq_prop_key, env));
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_SESSION);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, seq_prop_key);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY, property); 
         make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, 
@@ -329,6 +336,10 @@ sandesha2_polling_mgr_worker_func(
         make_conn_sender_bean = sandesha2_sender_bean_create(env);
         if(make_conn_sender_bean)
         {
+            long millisecs = 0;
+            millisecs = sandesha2_utils_get_current_time_in_millis(env);
+            sandesha2_sender_bean_set_time_to_send(make_conn_sender_bean, env, 
+                millisecs);
             sandesha2_sender_bean_set_msg_ctx_ref_key(make_conn_sender_bean, env, 
                 make_conn_msg_store_key);
             msg_id = sandesha2_msg_ctx_get_msg_id(make_conn_rm_msg_ctx, env);
@@ -354,15 +365,14 @@ sandesha2_polling_mgr_worker_func(
          * it is sent through the sandesha2_transport_sender
          */
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_VALUE(property, env, 
-            AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, env));
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_SESSION);
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
         if(sender_bean_mgr)
             sandesha2_sender_mgr_insert(sender_bean_mgr, env, 
                 make_conn_sender_bean);
-        sandesha2_util_execute_and_store(env, make_conn_rm_msg_ctx, 
+        sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);
     }
     return NULL;
@@ -391,7 +401,7 @@ sandesha2_polling_mgr_schedule_polling_request(
     const axis2_env_t *env,
     axis2_char_t *internal_seq_id)
 {
-    if(AXIS2_ARRAY_LIST_CONTAINS(polling_mgr->scheduled_polling_reqs, env, 
+    if(!AXIS2_ARRAY_LIST_CONTAINS(polling_mgr->scheduled_polling_reqs, env, 
         internal_seq_id))
     {
         AXIS2_ARRAY_LIST_ADD(polling_mgr->scheduled_polling_reqs, env, 

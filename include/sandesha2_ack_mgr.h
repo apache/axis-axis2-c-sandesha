@@ -31,6 +31,7 @@ extern "C"
 {
 #endif
 
+struct sandesha2_seq_property_mgr;
 /** @defgroup sandesha2_ack_mgr
  * @ingroup sandesha2_util
  * @{
@@ -54,13 +55,13 @@ AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_ack_mgr_get_client_completed_msgs_list(
     const axis2_env_t *env,
     axis2_char_t *seq_id,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
  
 AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
 sandesha2_ack_mgr_get_svr_completed_msgs_list(
     const axis2_env_t *env,
     axis2_char_t *seq_id,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_ack_mgr_verify_seq_completion(

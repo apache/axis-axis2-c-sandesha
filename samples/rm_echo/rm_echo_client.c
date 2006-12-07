@@ -26,6 +26,9 @@
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_client.h>
+
+#define MAX_COUNT  20
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -42,25 +45,7 @@ void wait_on_callback(
         const axis2_env_t *env,
         axis2_callback_t *callback);
 
-static axis2_status_t
-send_non_blocking(
-    const axis2_env_t *env,
-    axis2_svc_client_t *svc_client,
-    axis2_options_t *options,
-    axis2_qname_t *op_qname,
-    axis2_callback_t *callback,
-    axiom_node_t *payload,
-    axis2_listener_manager_t *listner_manager);
-
-static axis2_bool_t
-fill_soap_envelope(
-    const axis2_env_t *env,
-    axis2_svc_client_t *svc_client,
-    axis2_msg_ctx_t *msg_ctx,
-    axis2_options_t *options,
-    const axiom_node_t *payload);
-
-void 
+static void 
 usage(
     axis2_char_t *prog_name);
 
@@ -68,7 +53,9 @@ int main(int argc, char** argv)
 {
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
+    const axis2_char_t *to = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
+    axis2_endpoint_ref_t* target_epr = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
@@ -81,7 +68,7 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_FALSE;
-    int version = 0;
+    int version = 1;
     int c;
    
     /* Set up the environment */
@@ -90,7 +77,8 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
-    address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
+    to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:o:v:")) != -1)
     {
 
@@ -126,11 +114,21 @@ int main(int argc, char** argv)
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    endpoint_ref = axis2_endpoint_ref_create(env, address);
+    if(to)
+        endpoint_ref = axis2_endpoint_ref_create(env, to);
+    if(address)
+        target_epr = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
-    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+    if(endpoint_ref)
+        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+    if(target_epr)
+    {
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
+    }
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
@@ -204,7 +202,7 @@ int main(int argc, char** argv)
     callback = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
-    send_non_blocking(env, svc_client, options, NULL, callback, payload, 
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback, payload, 
             listener_manager);
 
     wait_on_callback(env, callback);
@@ -213,7 +211,7 @@ int main(int argc, char** argv)
     callback2 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback2, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
-    send_non_blocking(env, svc_client, options, NULL, callback2, payload, 
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback2, payload, 
             listener_manager);
     wait_on_callback(env, callback2);    
 
@@ -226,10 +224,10 @@ int main(int argc, char** argv)
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
-    send_non_blocking(env, svc_client, options, NULL, callback3, payload, 
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback3, payload, 
             listener_manager);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(10); 
+    AXIS2_SLEEP(MAX_COUNT); 
     if (svc_client)
     {
         AXIS2_SVC_CLIENT_FREE(svc_client, env);
@@ -317,115 +315,7 @@ void wait_on_callback(
     return;
 }
 
-static axis2_status_t
-send_non_blocking(
-    const axis2_env_t *env,
-    axis2_svc_client_t *svc_client,
-    axis2_options_t *options,
-    axis2_qname_t *op_qname,
-    axis2_callback_t *callback,
-    axiom_node_t *payload,
-    axis2_listener_manager_t *listener_manager)
-{
-    axis2_op_client_t *op_client = NULL;
-    axis2_svc_ctx_t *svc_ctx = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_svc_t *svc = NULL;
-    axis2_op_t *op = NULL;
-    axis2_callback_recv_t *callback_recv = NULL;
-    const axis2_char_t *transport_in_protocol = NULL;
-
-    if(!op_qname)
-        op_qname = axis2_qname_create(env, AXIS2_ANON_OUT_IN_OP, NULL, NULL);
-    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
-    msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
-    svc = AXIS2_SVC_CLIENT_GET_AXIS_SERVICE(svc_client, env);
-    op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env,
-            op_qname);
-    op_client = axis2_op_client_create(env, op, svc_ctx, options);
-    if (!op_client)
-    {
-        return AXIS2_FAILURE;
-    }
-    if (!fill_soap_envelope(env, svc_client, msg_ctx, options, payload))
-        return AXIS2_FAILURE;
-    AXIS2_OP_CLIENT_SET_CALLBACK(op_client, env, callback);
-    AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);
-    transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(
-                options, env);
-    if (!transport_in_protocol)
-        transport_in_protocol = AXIS2_TRANSPORT_HTTP;
-    AXIS2_LISTNER_MANAGER_MAKE_SURE_STARTED(listener_manager, env, 
-            transport_in_protocol, conf_ctx);
-    callback_recv = axis2_callback_recv_create(env);
-    if (!(callback_recv))
-    {
-        AXIS2_SVC_CLIENT_FREE(svc_client, env);
-        return AXIS2_FAILURE;
-    }
-
-    AXIS2_OP_SET_MSG_RECV(op, env,
-            AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, env));
-    AXIS2_OP_CLIENT_SET_CALLBACK_RECV(op_client, env, callback_recv);
-    return AXIS2_OP_CLIENT_EXECUTE(op_client, env, AXIS2_FALSE);
-}
-
-static axis2_bool_t
-fill_soap_envelope(
-    const axis2_env_t *env,
-    axis2_svc_client_t *svc_client,
-    axis2_msg_ctx_t *msg_ctx,
-    axis2_options_t *options,
-    const axiom_node_t *payload)
-{
-    const axis2_char_t *soap_version_uri;
-    int soap_version;
-    axiom_soap_envelope_t *envelope = NULL;
-
-    soap_version_uri = AXIS2_OPTIONS_GET_SOAP_VERSION_URI(options, env);
-
-    if (!soap_version_uri)
-    {
-        return AXIS2_FALSE;
-    }
-
-    if (AXIS2_STRCMP(soap_version_uri,
-            AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI) == 0)
-        soap_version = AXIOM_SOAP11;
-    else
-        soap_version = AXIOM_SOAP12;
-
-
-    envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
-            soap_version);
-    if (!envelope)
-    {
-        return AXIS2_FALSE;
-    }
-
-    if (payload)
-    {
-        axiom_soap_body_t *soap_body = NULL;
-        soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
-        if (soap_body)
-        {
-            axiom_node_t *node = NULL;
-            node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
-            if (node)
-            {
-                AXIOM_NODE_ADD_CHILD(node, env, (axiom_node_t *)payload);
-            }
-        }
-    }
-
-    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, envelope);
-
-    return AXIS2_TRUE;
-}
-
-void 
+static void 
 usage(
     axis2_char_t *prog_name)
 {

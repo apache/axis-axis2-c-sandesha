@@ -39,7 +39,7 @@ extern "C"
 typedef struct sandesha2_next_msg_mgr sandesha2_next_msg_mgr_t;
 typedef struct sandesha2_next_msg_mgr_ops sandesha2_next_msg_mgr_ops_t;
 
-struct sandesha2_next_msg_mgr_ops
+AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -90,11 +90,11 @@ struct sandesha2_next_msg_mgr_ops
         retrieve_all)(
             sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env);
-}
+};
 
-struct sandesha2_next_msg_mgr
+AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr
 {
-    sandesha2_next_msg_mgr_ops_t *ops;
+    const sandesha2_next_msg_mgr_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_next_msg_mgr_t * AXIS2_CALL

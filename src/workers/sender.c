@@ -21,6 +21,7 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_sender_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_sender_worker.h>
@@ -44,7 +45,6 @@
  *	Sandesha2 Sender Invoker
  */
 typedef struct sandesha2_sender_args sandesha2_sender_args_t;
-#define SENDER_SLEEP_TIME 1
 
 struct sandesha2_sender_t
 {
@@ -173,19 +173,20 @@ sandesha2_sender_is_sender_started(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    
     return sender->run_sender;
 }
             
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_run_for_seq(
     sandesha2_sender_t *sender, 
-    const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
+    const axis2_env_t *env, 
+    axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id)
 {
+    axis2_thread_mutex_lock(sender->mutex);
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-    
+   
     if(seq_id && !sandesha2_utils_array_list_contains(env, 
                         sender->working_seqs, seq_id))
         AXIS2_ARRAY_LIST_ADD(sender->working_seqs, env, seq_id);
@@ -195,6 +196,7 @@ sandesha2_sender_run_for_seq(
         sender->run_sender = AXIS2_TRUE;
         sandesha2_sender_run(sender, env);
     }
+    axis2_thread_mutex_unlock(sender->mutex);
     return AXIS2_SUCCESS;
 }
             
@@ -257,7 +259,7 @@ sandesha2_sender_worker_func(
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
    
-        AXIS2_SLEEP(SENDER_SLEEP_TIME); 
+        AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                         env);
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);

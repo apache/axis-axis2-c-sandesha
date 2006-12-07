@@ -16,6 +16,9 @@ rm_echo_LDADD   =  \
                     -laxis2_http_receiver \
 					-lwoden \
 					-laxis2_xml_schema \
+                    -L$(AXIS2C_HOME)/modules/sandesha2 \
+					-lsandesha2_client \
+					-lsandesha2 \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

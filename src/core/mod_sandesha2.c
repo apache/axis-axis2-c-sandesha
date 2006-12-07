@@ -22,23 +22,26 @@
 
 /******************************************************************************/
 axis2_status_t AXIS2_CALL
-mod_sandesha2_shutdown(axis2_module_t *module,
-                        const axis2_env_t *env);
+mod_sandesha2_shutdown(
+    axis2_module_t *module,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_init(
-        axis2_module_t *module,
-        const axis2_env_t *env,
-        axis2_conf_ctx_t *conf_ctx,
-        axis2_module_desc_t *module_desc);
+    axis2_module_t *module,
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_module_desc_t *module_desc);
 
 axis2_status_t AXIS2_CALL
-mod_sandesha2_fill_handler_create_func_map(axis2_module_t *module,
-                                            const axis2_env_t *env);
+mod_sandesha2_fill_handler_create_func_map(
+    axis2_module_t *module,
+    const axis2_env_t *env);
 /******************************************************************************/
 
 AXIS2_EXTERN axis2_module_t * AXIS2_CALL
-mod_sandesha2_create(const axis2_env_t *env)
+mod_sandesha2_create(
+    const axis2_env_t *env)
 {
     axis2_module_t *module = NULL;
     module = AXIS2_MALLOC(env->allocator, 
@@ -58,10 +61,10 @@ mod_sandesha2_create(const axis2_env_t *env)
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_init(
-        axis2_module_t *module,
-        const axis2_env_t *env,
-        axis2_conf_ctx_t *conf_ctx,
-        axis2_module_desc_t *module_desc)
+    axis2_module_t *module,
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_module_desc_t *module_desc)
 {
     sandesha2_property_bean_t *const_property_bean = NULL;
     sandesha2_property_bean_t *property_bean = NULL;

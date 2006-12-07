@@ -156,8 +156,10 @@ sandesha2_accept_get_namespace_value (sandesha2_iom_rm_element_t *accept,
 
 
 void* AXIS2_CALL 
-sandesha2_accept_from_om_node(sandesha2_iom_rm_element_t *accept,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+sandesha2_accept_from_om_node(
+    sandesha2_iom_rm_element_t *accept,
+    const axis2_env_t *env, 
+    axiom_node_t *om_node)
 {
 	sandesha2_accept_impl_t *accept_impl = NULL;
     axis2_qname_t *accept_qname = NULL;

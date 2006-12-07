@@ -58,12 +58,6 @@ sandesha2_msg_pending_is_namespace_supported(
     sandesha2_iom_rm_element_t *msg_pending,
     const axis2_env_t *env, 
     axis2_char_t *namespace);
-
-static axis2_status_t AXIS2_CALL
-sandesha2_msg_pending_to_soap_envelope(
-    sandesha2_iom_rm_part_t *msg_pending,
-    const axis2_env_t *env, 
-    axiom_soap_envelope_t *envelope);
                     	                    	
 static axis2_status_t AXIS2_CALL 
 sandesha2_msg_pending_free (
@@ -79,7 +73,6 @@ sandesha2_msg_pending_create(
 {
     sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
     if(AXIS2_FALSE == sandesha2_msg_pending_is_namespace_supported(
             (sandesha2_iom_rm_element_t*)msg_pending_impl, env, 
@@ -208,17 +201,18 @@ sandesha2_msg_pending_from_om_node(
         return NULL;
     }
     pending_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_PENDING,
-                        msg_pending_impl->ns_val, NULL);
+        NULL, NULL);
     if(!pending_qname)
     {
         return NULL;
     }
-    pending_attr = AXIOM_ELEMENT_GET_ATTRIBUTE(msg_pending_element, env, pending_qname);
+    pending_attr = AXIOM_ELEMENT_GET_ATTRIBUTE(msg_pending_element, env, 
+        pending_qname);
     if(!pending_attr)
     {
-        AXIS2_ERROR_LOG(env->log, AXIS2_LOG_SI, "MessagePending header must" \
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "MessagePending header must" \
                 "have an attribute named 'pending'");
-        SANDESHA2_ERROR_SET(env->error, 
+        AXIS2_ERROR_SET(env->error, 
             SANDESHA2_ERROR_PENDING_HEADER_MUST_HAVE_ATTRIBUTE_PENDING, 
             AXIS2_FAILURE);
     }
@@ -229,9 +223,9 @@ sandesha2_msg_pending_from_om_node(
         pending = AXIS2_FALSE;
     else
     {
-        AXIS2_ERROR_LOG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "Attribute 'pending' must have value 'true' or 'false'");
-        SANDESHA2_ERROR_SET(env->error, 
+        AXIS2_ERROR_SET(env->error, 
             SANDESHA2_ERROR_ATTRIBUTE_PENDING_MUST_HAVE_VALUE_TRUE_OR_FALSE, 
             AXIS2_FAILURE);
         
@@ -250,6 +244,8 @@ sandesha2_msg_pending_to_om_node(
     axiom_soap_header_t *soap_header = NULL;
     axiom_soap_header_block_t *msg_pending_block = NULL;
     axiom_node_t *msg_pending_node = NULL;
+    axiom_element_t *msg_pending_element = NULL;
+    axiom_attribute_t *pending_attr = NULL;
     axis2_char_t *attr_value = NULL;
     axis2_bool_t pending = AXIS2_FALSE;
     
@@ -259,7 +255,7 @@ sandesha2_msg_pending_to_om_node(
     msg_pending_impl = SANDESHA2_INTF_TO_IMPL(msg_pending);
     soap_header = (axiom_soap_header_t*)header_node;
     rm_ns = axiom_namespace_create(env, msg_pending_impl->ns_val,
-                        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
     if(!rm_ns)
     {
         return NULL;
@@ -270,13 +266,17 @@ sandesha2_msg_pending_to_om_node(
     {
         return NULL;
     }
-    msg_pending_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(msg_pending_block, env);
+    msg_pending_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(msg_pending_block, 
+        env);
+    msg_pending_element = AXIOM_NODE_GET_DATA_ELEMENT(msg_pending_node, env);
     if(pending)
         attr_value = SANDESHA2_VALUE_TRUE;
     else if(!pending)
         attr_value = SANDESHA2_VALUE_FALSE;
-    AXIOM_SOAP_HEADER_BLOCK_SET_ATTRIBUTE(msg_pending_block, env, 
-            SANDESHA2_WSRM_COMMON_MESSAGE_PENDING, attr_value, NULL); 
+    pending_attr = axiom_attribute_create(env, 
+        SANDESHA2_WSRM_COMMON_PENDING, attr_value, NULL);
+    AXIOM_ELEMENT_ADD_ATTRIBUTE(msg_pending_element, env, pending_attr, 
+        msg_pending_node);
     return header_node;
 }
 
@@ -325,7 +325,7 @@ sandesha2_msg_pending_set_pending(
  	return AXIS2_SUCCESS;
 }
 
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_to_soap_envelope(
     sandesha2_iom_rm_part_t *msg_pending,
     const axis2_env_t *env, 

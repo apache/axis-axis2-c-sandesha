@@ -43,7 +43,7 @@ struct sandesha2_rm_bean_t;
   * @{
   */
 
-struct sandesha2_transaction_ops
+AXIS2_DECLARE_DATA struct sandesha2_transaction_ops
 {
    /** 
      * Deallocate memory
@@ -76,9 +76,9 @@ struct sandesha2_transaction_ops
                 struct sandesha2_rm_bean_t *rm_bean);
 };
 
-struct sandesha2_transaction
+AXIS2_DECLARE_DATA struct sandesha2_transaction
 {
-    sandesha2_transaction_ops_t *ops;
+    const sandesha2_transaction_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL

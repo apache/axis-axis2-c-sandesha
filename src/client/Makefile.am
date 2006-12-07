@@ -1,6 +1,7 @@
-noinst_LTLIBRARIES = libsandesha_client.la
+prglibdir=$(prefix)/sandesha2
+prglib_LTLIBRARIES = libsandesha2_client.la
 
-libsandesha_client_la_SOURCES = \
+libsandesha2_client_la_SOURCES = \
 							sequence_report.c \
 							report.c \
 							client.c

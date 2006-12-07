@@ -34,13 +34,14 @@ extern "C"
 #endif
 
 struct axis2_ctx;
+struct sandesha2_sender_mgr;
 
 /** @defgroup sandesha2_inmemory_sender_mgr In Memory Sender Manager
   * @ingroup sandesha2
   * @{
   */
 
-AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
+AXIS2_EXTERN struct sandesha2_sender_mgr * AXIS2_CALL
 sandesha2_inmemory_sender_mgr_create(
     const axis2_env_t *env,
     struct axis2_ctx *ctx);

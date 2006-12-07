@@ -114,7 +114,6 @@ sandesha2_global_in_handler_invoke(
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
    
-    printf("Starting sandesha2 global in handler**********************************************\n");
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Starting sandesha2 global in handler ......");
 
@@ -171,7 +170,7 @@ sandesha2_global_in_handler_invoke(
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, env));
+        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -226,14 +225,15 @@ sandesha2_global_in_handler_invoke(
     /*Process if global processing possible. - Currently none*/
     if(!within_transaction)
     {
-        SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+        sandesha2_transaction_commit(transaction, env);
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_FALSE, env));
+        AXIS2_PROPERTY_SET_VALUE(property, env,  SANDESHA2_VALUE_FALSE);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
                         property, AXIS2_FALSE);
     }
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit sandesha2 global in handler ......");
        
     return AXIS2_SUCCESS;
 }

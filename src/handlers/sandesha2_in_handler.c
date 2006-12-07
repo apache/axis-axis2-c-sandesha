@@ -100,7 +100,6 @@ sandesha2_in_handler_invoke(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
-    printf("Starting Sandesha2 in handler\n");
 
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
@@ -155,8 +154,7 @@ sandesha2_in_handler_invoke(
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                    env));
+        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -178,11 +176,10 @@ sandesha2_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            SANDESHA2_TRANSACTION_ROLLBACK(transaction, env);
+            sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_FALSE, env));
+            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -192,11 +189,10 @@ sandesha2_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+            sandesha2_transaction_commit(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_FALSE, env));
+            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
         }
@@ -217,7 +213,7 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_t *ack_proc = NULL;
         ack_proc = sandesha2_ack_msg_processor_create(env);
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
-    } 
+    }
     ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
     if(ack_requested)
@@ -240,11 +236,10 @@ sandesha2_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            SANDESHA2_TRANSACTION_ROLLBACK(transaction, env);
+            sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_FALSE, env));
+            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -253,11 +248,10 @@ sandesha2_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+            sandesha2_transaction_commit(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_FALSE, env));
+            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
         }
@@ -271,10 +265,10 @@ sandesha2_in_handler_invoke(
     {
         axis2_property_t *prop = NULL;
 
-        SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+        sandesha2_transaction_commit(transaction, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, env));
+        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
     }

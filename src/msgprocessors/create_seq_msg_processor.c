@@ -173,7 +173,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] sandesha2_create_seq_msg_processor_process_in_msg .........");
-    printf("sandesha2_create_seq_msg_processor_process_in_msg\n");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     create_seq_part = (sandesha2_create_seq_t*)sandesha2_msg_ctx_get_msg_part(
@@ -252,6 +251,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             axis2_char_t *int_seq_id = NULL;
             sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
             sandesha2_seq_property_bean_t *out_seq_bean = NULL;
+    
+            AXIS2_LOG_INFO(env->log, "[sandesha2] Offer Accepted .........");
             
             create_seq_bean = sandesha2_create_seq_bean_create(env);
             sandesha2_create_seq_bean_set_seq_id(create_seq_bean, env, 
@@ -376,7 +377,7 @@ sandesha2_create_seq_msg_processor_offer_accepted(
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
     find_bean = sandesha2_create_seq_bean_create_with_data(env, NULL, NULL, 
                         seq_id);
-    list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, find_bean);
+    list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, find_bean);
     /* Single char offerings are not accepted */
     if(1 >= AXIS2_STRLEN(seq_id))
         return AXIS2_FALSE;

@@ -54,7 +54,6 @@ rm_sample_svc_echo (
     if (!node) /* 'echoString' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
-        printf("Echo client ERROR: input parameter NULL\n");
         return NULL;
     }
     else
@@ -69,7 +68,6 @@ rm_sample_svc_echo (
 
         AXIOM_NODE_SERIALIZE (node, env, om_output);
         buffer = AXIOM_XML_WRITER_GET_XML(writer, env);
-        printf("buffer = %s \n", buffer);
     }
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
@@ -80,7 +78,6 @@ rm_sample_svc_echo (
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
     
@@ -88,7 +85,6 @@ rm_sample_svc_echo (
     if (!text_node) /* actual text to echo */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
     
@@ -98,14 +94,12 @@ rm_sample_svc_echo (
         if( text && AXIOM_TEXT_GET_VALUE(text , env))
         {
             axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
-            printf("Echoing text value  %s \n", text_str);
             ret_node = build_echo_om(env, text_str);
         }
     }
     else
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
    
@@ -163,7 +157,6 @@ rm_sample_svc_ping (
     if (!node) /* 'echoString' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
-        printf("Echo client ERROR: input parameter NULL\n");
         return;
     }
     else
@@ -178,7 +171,6 @@ rm_sample_svc_ping (
 
         AXIOM_NODE_SERIALIZE (node, env, om_output);
         buffer = AXIOM_XML_WRITER_GET_XML(writer, env);
-        printf("buffer = %s \n", buffer);
     }
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
@@ -189,7 +181,6 @@ rm_sample_svc_ping (
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return;
     }
     
@@ -197,7 +188,6 @@ rm_sample_svc_ping (
     if (!text_node) /* actual text to echo */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return;
     }
     
@@ -207,13 +197,11 @@ rm_sample_svc_ping (
         if( text && AXIOM_TEXT_GET_VALUE(text , env))
         {
             axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
-            printf("Echoing text value  %s \n", text_str);
         }
     }
     else
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return;
     }
    
@@ -242,7 +230,6 @@ rm_sample_svc_mtom(
     if (!node) /* 'mtomSample' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
-        printf("Echo client ERROR: input parameter NULL\n");
         return NULL;
     }
 
@@ -250,7 +237,6 @@ rm_sample_svc_mtom(
     if (!file_name_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
 
@@ -258,7 +244,6 @@ rm_sample_svc_mtom(
     if (!file_text_node) /* actual text to mtom */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
 
@@ -269,7 +254,6 @@ rm_sample_svc_mtom(
         {
             axiom_node_t *image_node = NULL;
             axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
-            printf("File Name  %s \n", text_str);
 
             image_node = AXIOM_NODE_GET_NEXT_SIBLING(file_name_node, env);
             if (image_node)
@@ -301,7 +285,6 @@ rm_sample_svc_mtom(
     else
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
-        printf("Echo client ERROR: invalid XML in request\n");
         return NULL;
     }
 

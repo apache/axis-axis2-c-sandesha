@@ -19,13 +19,19 @@
 #include <axis2_util.h>
 #include <axiom_soap.h>
 #include <axis2_client.h>
+#include <sandesha2_client_constants.h>
+#include <sandesha2_constants.h>
 
-#define MAX_COUNT  10
+#define MAX_COUNT  60
 
 axiom_node_t *
 build_om_programatically(
     const axis2_env_t *env,
     axis2_char_t *text);
+
+static void 
+usage(
+    axis2_char_t *prog_name);
 
 int main(int argc, char** argv)
 {
@@ -41,6 +47,8 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     axis2_property_t *property = NULL;
     int count = 0;
+    int version = 1;
+    int c;
    
     /* Set up the environment */
     env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
@@ -49,29 +57,48 @@ int main(int argc, char** argv)
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
     /*to = "http://127.0.0.1:8080/axis2/services/RMSampleService";*/
-    to = "http://127.0.0.1:9090/axis2/services/RMSampleService";
-    if (argc > 1 )
+    to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:v:")) != -1)
     {
-        address = argv[1];
+
+        switch (c)
+        {
+            case 'a':
+                address = optarg;
+                break;
+            case 'v': /* RM Version */
+                version = AXIS2_ATOI(optarg);
+                break;
+            case ':':
+                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
+                usage(argv[0]);
+                return -1;
+            case '?':
+                if (isprint(optopt))
+                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
+                usage(argv[0]);
+                return -1;
+        }
     }
-    if (AXIS2_STRCMP(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
-    }
+
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    endpoint_ref = axis2_endpoint_ref_create(env, to);
-    target_epr = axis2_endpoint_ref_create(env, address);
+    if(to)
+        endpoint_ref = axis2_endpoint_ref_create(env, to);
+    if(address)
+        target_epr = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
-    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
-    AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
+    if(endpoint_ref)
+        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+    if(target_epr)
+    {
+        property = axis2_property_create(env);
+        AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
+    }
     /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:Ping");*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -104,7 +131,18 @@ int main(int argc, char** argv)
     
     /* Build the SOAP request message payload using OM API.*/
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
-    
+    /* RM Version 1.1 */
+    if(version == 1)
+    {
+        property = axis2_property_create(env);
+        if(property)
+        {
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
+                SANDESHA2_SPEC_VERSION_1_1, env));
+            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+                SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+        }
+    }
     /* Send request */
     payload = build_om_programatically(env, "ping1");
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
@@ -119,7 +157,6 @@ int main(int argc, char** argv)
     payload = NULL;
 
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
@@ -163,4 +200,20 @@ build_om_programatically(
 
     return ping_om_node;
 }
+
+static void 
+usage(
+    axis2_char_t *prog_name)
+{
+    fprintf(stdout, "\n Usage : %s", prog_name);
+    fprintf(stdout, " [-a ADDRESS]");
+    fprintf(stdout, " [-v RM VERSION]");
+    fprintf(stdout, " Options :\n");
+    fprintf(stdout, "\t-v RM VERSION \t rm version.. The"
+            " default rm version is 1.0 ../\n");
+    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
+            " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
+    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
+}
+
 

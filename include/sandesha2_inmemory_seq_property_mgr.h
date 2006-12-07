@@ -41,7 +41,7 @@ struct axis2_ctx;
   * @{
   */
 
-AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
+AXIS2_EXTERN struct sandesha2_seq_property_mgr * AXIS2_CALL
 sandesha2_inmemory_seq_property_mgr_create(
     const axis2_env_t *env,
     struct axis2_ctx *ctx);

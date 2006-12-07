@@ -39,7 +39,7 @@ extern "C"
 typedef struct sandesha2_seq_property_mgr sandesha2_seq_property_mgr_t;
 typedef struct sandesha2_seq_property_mgr_ops sandesha2_seq_property_mgr_ops_t;
 
-struct sandesha2_seq_property_mgr_ops
+AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -99,11 +99,11 @@ struct sandesha2_seq_property_mgr_ops
                 const axis2_env_t *env,
                 sandesha2_seq_property_bean_t *bean);
 
-}
+};
 
-struct sandesha2_seq_property_mgr
+AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr
 {
-    sandesha2_seq_property_mgr_ops_t *ops;
+    const sandesha2_seq_property_mgr_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL

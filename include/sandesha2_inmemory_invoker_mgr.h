@@ -40,7 +40,7 @@ struct axis2_ctx;
   * @{
   */
 
-AXIS2_EXTERN sandesha2_invoker_mgr_t * AXIS2_CALL
+AXIS2_EXTERN struct sandesha2_invoker_mgr * AXIS2_CALL
 sandesha2_inmemory_invoker_mgr_create(
     const axis2_env_t *env,
     struct axis2_ctx *ctx);

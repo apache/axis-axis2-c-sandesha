@@ -34,21 +34,21 @@
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_out_handler_get_qname(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env);
+    struct axis2_handler *handler, 
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_out_handler_invoke(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx);
-                                             
+    struct axis2_handler *handler, 
+    const axis2_env_t *env,
+    struct axis2_msg_ctx *msg_ctx);
+                                         
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 sandesha2_out_handler_create(
-        const axis2_env_t *env, 
-        axis2_qname_t *qname) 
+    const axis2_env_t *env, 
+    axis2_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
     
@@ -97,7 +97,6 @@ sandesha2_out_handler_invoke(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
-    printf("[sandesha2] Starting out handler .........\n");
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -149,7 +148,7 @@ sandesha2_out_handler_invoke(
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, env));
+        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -184,8 +183,7 @@ sandesha2_out_handler_invoke(
             if(seq_part)
             {
                 msg_processor = (sandesha2_msg_processor_t *) 
-                sandesha2_app_msg_processor_create(env); /* rm 
-                                                                intended msg */
+                sandesha2_app_msg_processor_create(env); /* rm intended msg */
             }
         }
         else if(!AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
@@ -197,7 +195,7 @@ sandesha2_out_handler_invoke(
     else
     {
         msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
-        rm_msg_ctx);
+            rm_msg_ctx);
     }
     if(msg_processor)
     {
@@ -212,10 +210,10 @@ sandesha2_out_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            SANDESHA2_TRANSACTION_ROLLBACK(transaction, env);
+            sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, env));
+            AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -227,29 +225,29 @@ sandesha2_out_handler_invoke(
     }
     if(!within_transaction && !rolled_back)
     {
-        axis2_property_t *prop = NULL;
+        /*axis2_property_t *prop = NULL;*/
 
-        SANDESHA2_TRANSACTION_COMMIT(transaction, env);
-        prop = axis2_property_create(env);
+        sandesha2_transaction_commit(transaction, env);
+        /*prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, env));
+        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_FALSE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-                prop, AXIS2_FALSE);
+                prop, AXIS2_FALSE);*/
     }
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
     
     temp_prop = AXIS2_CTX_GET_PROPERTY(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
-    if(NULL != temp_prop)
-    AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(
-                    SANDESHA2_VALUE_FALSE, env));
+    if(temp_prop)
+        AXIS2_PROPERTY_SET_VALUE(temp_prop, env, AXIS2_STRDUP(
+            SANDESHA2_VALUE_FALSE, env));
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
     return AXIS2_SUCCESS;
 }
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_out_handler_get_qname(
-        struct axis2_handler *handler, 
-        const axis2_env_t *env)
+    struct axis2_handler *handler, 
+    const axis2_env_t *env)
 {
     return (axis2_qname_t *) axis2_qname_create(env, SANDESHA2_OUT_HANDLER_NAME, 
             NULL, NULL);

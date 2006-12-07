@@ -28,6 +28,8 @@
 #include <sandesha2_sender_worker.h>
 #include <sandesha2_msg_pending.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_sender_bean.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -45,20 +47,20 @@
  * @brief Make Connection Message Processor struct impl
  *	Sandesha2 Make Connection Msg Processor
  */
-typedef struct sandesha2_make_connnection_msg_processor_impl 
-                        sandesha2_make_connnection_msg_processor_impl_t;  
+typedef struct sandesha2_make_connection_msg_processor_impl 
+                        sandesha2_make_connection_msg_processor_impl_t;  
   
-struct sandesha2_make_connnection_msg_processor_impl
+struct sandesha2_make_connection_msg_processor_impl
 {
 	sandesha2_msg_processor_t msg_processor;
 };
 
 #define SANDESHA2_INTF_TO_IMPL(msg_proc) \
-    ((sandesha2_make_connnection_msg_processor_impl_t *)(msg_proc))
+    ((sandesha2_make_connection_msg_processor_impl_t *)(msg_proc))
 
 /***************************** Function headers *******************************/
 static axis2_status_t AXIS2_CALL 
-sandesha2_make_connnection_msg_processor_process_in_msg (
+sandesha2_make_connection_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
     const axis2_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
@@ -76,22 +78,22 @@ set_transport_properties(
     sandesha2_msg_ctx_t *make_conn_msg_ctx);
 
 static axis2_status_t AXIS2_CALL 
-sandesha2_make_connnection_msg_processor_free (
+sandesha2_make_connection_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
 	const axis2_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_make_connnection_msg_processor_create(
+sandesha2_make_connection_msg_processor_create(
     const axis2_env_t *env)
 {
-    sandesha2_make_connnection_msg_processor_impl_t *msg_proc_impl = NULL;
+    sandesha2_make_connection_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
               
-    msg_proc_impl =  (sandesha2_make_connnection_msg_processor_impl_t *)AXIS2_MALLOC 
+    msg_proc_impl =  (sandesha2_make_connection_msg_processor_impl_t *)AXIS2_MALLOC 
                         (env->allocator, 
-                        sizeof(sandesha2_make_connnection_msg_processor_impl_t));
+                        sizeof(sandesha2_make_connection_msg_processor_impl_t));
 	
     if(!msg_proc_impl)
 	{
@@ -103,26 +105,26 @@ sandesha2_make_connnection_msg_processor_create(
         sizeof(sandesha2_msg_processor_ops_t));
     if(!msg_proc_impl->msg_processor.ops)
 	{
-		sandesha2_make_connnection_msg_processor_free((sandesha2_msg_processor_t*)
+		sandesha2_make_connection_msg_processor_free((sandesha2_msg_processor_t*)
                          msg_proc_impl, env);
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
     
     msg_proc_impl->msg_processor.ops->process_in_msg = 
-                        sandesha2_make_connnection_msg_processor_process_in_msg;
-    msg_proc_impl->msg_processor.ops->free = sandesha2_make_connnection_msg_processor_free;
+                        sandesha2_make_connection_msg_processor_process_in_msg;
+    msg_proc_impl->msg_processor.ops->free = sandesha2_make_connection_msg_processor_free;
                         
 	return &(msg_proc_impl->msg_processor);
 }
 
 
 static axis2_status_t AXIS2_CALL 
-sandesha2_make_connnection_msg_processor_free (
+sandesha2_make_connection_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
 	const axis2_env_t *env)
 {
-    sandesha2_make_connnection_msg_processor_impl_t *msg_proc_impl = NULL;
+    sandesha2_make_connection_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_proc_impl = SANDESHA2_INTF_TO_IMPL(msg_processor);
     
@@ -139,7 +141,7 @@ sandesha2_make_connnection_msg_processor_free (
  * This is processed using a SenderWorker.
  */
 static axis2_status_t AXIS2_CALL 
-sandesha2_make_connnection_msg_processor_process_in_msg (
+sandesha2_make_connection_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
     const axis2_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
@@ -167,9 +169,8 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_INFO(env->log, "[sandesha2] sandesha2_make_connnection_msg_" \
+    AXIS2_LOG_INFO(env->log, "[sandesha2] sandesha2_make_connection_msg_" \
             "processor_process_in_msg .........");
-    printf("sandesha2_make_connnection_msg_processor_process_in_msg\n");
 
     make_conn = (sandesha2_make_connection_t*)
         sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
@@ -177,7 +178,7 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
     if(!make_conn)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]"
-            " make_connnection part is null");
+            " make_connection part is null");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING,
                         AXIS2_FAILURE);
         return AXIS2_FAILURE;        
@@ -249,7 +250,8 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
     if(size > 0)
     {
        unsigned int rand_var = axis2_rand_get_seed_value_based_on_time(env);
-       item_to_pick = axis2_rand_with_range(&rand_var, 1, size);
+       item_to_pick = axis2_rand_with_range(&rand_var, 0, size);
+       item_to_pick--;
     }
     if(size > 1)
         pending = AXIS2_TRUE; /*There are more than one message to be delivered 
@@ -264,10 +266,14 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
             break;
     }
     if(!sender_bean)
+    {
         return AXIS2_SUCCESS;
+    }
     transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
     if(!transport_out)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]"
+            " Cannot infer transport for the make connection request");
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_CANNOT_INFER_TRANSPORT, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -287,11 +293,9 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
         axis2_ctx_t *ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
         if (ctx)
         {
-            axis2_char_t *value = NULL;
-            value = AXIS2_STRDUP("TRUE", env);
             property = axis2_property_create(env);
-            AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-            AXIS2_PROPERTY_SET_VALUE(property, env, value);
+            AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+            AXIS2_PROPERTY_SET_VALUE(property, env, "TRUE");
             AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN,
                                         property, AXIS2_FALSE);
         }
@@ -311,6 +315,8 @@ sandesha2_make_connnection_msg_processor_process_in_msg (
         sandesha2_sender_worker_set_transport_out(sender_worker, env, transport_out); 
         sandesha2_sender_worker_run(sender_worker, env);
     }
+    AXIS2_LOG_INFO(env->log, "[sandesha2] EXIT sandesha2_make_connection_msg_" \
+            "processor_process_in_msg .........");
     return AXIS2_SUCCESS;
 }
 
@@ -320,13 +326,22 @@ add_msg_pending_header(
     sandesha2_msg_ctx_t *return_msg_ctx,
     axis2_bool_t pending)
 {
-    axiom_soap_envelope_t *soap_env = sandesha2_msg_ctx_get_soap_envelope(
+    axis2_char_t *rm_ns = NULL;
+    sandesha2_msg_pending_t *msg_pending = NULL; 
+    axiom_soap_envelope_t *soap_env = NULL; 
+    if(return_msg_ctx)
+    {
+        soap_env = sandesha2_msg_ctx_get_soap_envelope(
             return_msg_ctx, env);
-    axis2_char_t *rm_ns = sandesha2_msg_ctx_get_rm_ns_val(return_msg_ctx, env);
-    sandesha2_msg_pending_t *msg_pending = sandesha2_msg_pending_create(env, 
-            rm_ns);
-    sandesha2_msg_pending_set_pending(msg_pending, env, pending);
-    sandesha2_msg_pending_to_soap_envelope(msg_pending, env, soap_env);
+        rm_ns = sandesha2_msg_ctx_get_rm_ns_val(return_msg_ctx, env);
+        msg_pending = sandesha2_msg_pending_create(env, rm_ns);
+    }
+    if(msg_pending)
+    {
+        sandesha2_msg_pending_set_pending(msg_pending, env, pending);
+        sandesha2_msg_pending_to_soap_envelope((sandesha2_iom_rm_part_t *)
+            msg_pending, env, soap_env);
+    }
 }
 
 static void
@@ -336,13 +351,18 @@ set_transport_properties(
     sandesha2_msg_ctx_t *make_conn_msg_ctx)
 {
     axis2_property_t *property = NULL;
-    property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
+    if(make_conn_msg_ctx && return_msg_ctx)
+    {
+        property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_TRANSPORT_OUT);
-    AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
-            property, AXIS2_FALSE);
-    property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
+            AXIS2_PROPERTY_CLONE(property, env), AXIS2_FALSE);
+        property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_HTTP_OUT_TRANSPORT_INFO);
-    AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, 
-            AXIS2_HTTP_OUT_TRANSPORT_INFO, property, AXIS2_FALSE);
+        AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, 
+            AXIS2_HTTP_OUT_TRANSPORT_INFO, AXIS2_PROPERTY_CLONE(property, env), 
+            AXIS2_FALSE);
+    }
 }
 

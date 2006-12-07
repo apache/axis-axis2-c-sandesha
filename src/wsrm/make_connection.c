@@ -19,6 +19,7 @@
 #include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <axiom_soap_header_block.h>
+#include <stdio.h>
 
 /** 
  * @brief Make Connection struct impl
@@ -75,7 +76,9 @@ sandesha2_make_connection_free (
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_make_connection_t* AXIS2_CALL
-sandesha2_make_connection_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_make_connection_create(
+    const axis2_env_t *env,  
+    axis2_char_t *ns_val)
 {
     sandesha2_make_connection_impl_t *make_conn_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -247,7 +250,7 @@ sandesha2_make_connection_from_om_node(
             return NULL;
         }
         sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
-                make_conn_impl->identifier, env, identifier_node);
+                make_conn_impl->identifier, env, om_node);
     }
     if(address_element)
     {
@@ -258,7 +261,7 @@ sandesha2_make_connection_from_om_node(
             return NULL;
         }
         sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
-                make_conn_impl->address, env, address_node);
+                make_conn_impl->address, env, om_node);
     }
     return make_conn;
 }

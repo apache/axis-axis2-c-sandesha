@@ -20,5 +20,6 @@ rm_ping_LDADD   =  \
                     $(LIBXML2_LIBS)
 
 INCLUDES = -I$(AXIS2C_HOME)/include \
+			-I$(AXIS2C_HOME)/modules/sandesha2 \
 			@UTILINC@ \
 			@AXIOMINC@

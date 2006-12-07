@@ -201,15 +201,12 @@ static void* AXIS2_CALL
 sandesha2_seq_ack_from_om_node(
     sandesha2_iom_rm_element_t *seq_ack,
     const axis2_env_t *env, 
-    axiom_node_t *om_node)
+    axiom_node_t *sa_node)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-    axiom_element_t *om_element = NULL;
     axiom_element_t *sa_part = NULL;
-    axiom_node_t *sa_node = NULL;
     axiom_children_qname_iterator_t *ack_iter = NULL;
     axiom_children_qname_iterator_t *nack_iter= NULL;
-    axis2_qname_t *sa_qname = NULL;
     axis2_qname_t *ack_range_qname = NULL;
     axis2_qname_t *nack_qname = NULL;
     axis2_char_t *rm_spec_ver = NULL;
@@ -217,28 +214,14 @@ sandesha2_seq_ack_from_om_node(
     axis2_char_t *prefix = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, om_node, NULL);
+    AXIS2_PARAM_CHECK(env->error, sa_node, NULL);
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
-    if(!om_element)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
-        return NULL;
-    }
-    sa_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK,
-                        seq_ack_impl->ns_val, NULL);
-    if(!sa_qname)
-    {
-        return NULL;
-    }
-    sa_part =  AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
-                        sa_qname, om_node, &sa_node);
+    sa_part = AXIOM_NODE_GET_DATA_ELEMENT(sa_node, env);
     if(!sa_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     rm_ns = AXIOM_ELEMENT_GET_NAMESPACE(sa_part, env, sa_node);
@@ -249,51 +232,52 @@ sandesha2_seq_ack_from_om_node(
     {
         return NULL;
     }
-    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_ack_impl->identifier, 
-                        env, sa_node);
+    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+        seq_ack_impl->identifier, env, sa_node);
     ack_range_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_RANGE,
-                        seq_ack_impl->ns_val, prefix);
+        seq_ack_impl->ns_val, prefix);
     if(!ack_range_qname)
     {
         return NULL;
     }
     ack_iter = AXIOM_ELEMENT_GET_CHILDREN_WITH_QNAME(sa_part, env, 
-                        ack_range_qname, sa_node);
+        ack_range_qname, sa_node);
     if(!ack_iter)
     {
         return NULL;
     }
-    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(ack_iter, 
-                        env))
+    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(ack_iter, env))
     {
         axiom_node_t *ack_node = NULL;
         sandesha2_ack_range_t *ack_range = NULL;
         ack_node = AXIOM_CHILDREN_QNAME_ITERATOR_NEXT(ack_iter, env);
         if(ack_node)
         {
-            ack_range = sandesha2_ack_range_create(env, seq_ack_impl->ns_val, prefix);
+            ack_range = sandesha2_ack_range_create(env, seq_ack_impl->ns_val, 
+                prefix);
             if(!ack_range)
             {
                 return NULL;
             } 
-            if(sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)ack_range, env, ack_node))
-                AXIS2_ARRAY_LIST_ADD(seq_ack_impl->ack_range_list, env, ack_range);
+            if(sandesha2_iom_rm_element_from_om_node
+                ((sandesha2_iom_rm_element_t *)ack_range, env, ack_node))
+                AXIS2_ARRAY_LIST_ADD(seq_ack_impl->ack_range_list, env, 
+                    ack_range);
         }
     }
     nack_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_NACK, 
-                        seq_ack_impl->ns_val, NULL);
+        seq_ack_impl->ns_val, NULL);
     if(!nack_qname)
     {
         return NULL;
     }
-    nack_iter = AXIOM_ELEMENT_GET_CHILDREN_WITH_QNAME(sa_part, env,
-                        nack_qname, sa_node);
+    nack_iter = AXIOM_ELEMENT_GET_CHILDREN_WITH_QNAME(sa_part, env, nack_qname, 
+        sa_node);
     if(!nack_iter)
     {
         return NULL;
     } 
-    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(nack_iter,
-                        env))
+    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(nack_iter, env))
     {
         axiom_node_t *nack_node = NULL;
         sandesha2_nack_t *nack = NULL;
@@ -305,50 +289,49 @@ sandesha2_seq_ack_from_om_node(
             {
                 return NULL;
             }
-            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)nack, env, nack_node);
+            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+                nack, env, nack_node);
             AXIS2_ARRAY_LIST_ADD(seq_ack_impl->nack_list, env, nack);
         }
     }
-    rm_spec_ver = sandesha2_spec_specific_consts_get_spec_ver_str(env,
-                        seq_ack_impl->ns_val);
-    if(sandesha2_spec_specific_consts_is_ack_final_allowed(env, 
-                        rm_spec_ver))
+    rm_spec_ver = sandesha2_spec_specific_consts_get_spec_ver_str(env, 
+        seq_ack_impl->ns_val);
+    if(sandesha2_spec_specific_consts_is_ack_final_allowed(env, rm_spec_ver))
     {
         axiom_element_t *af_part = NULL;
         axiom_node_t *af_node = NULL;
         axis2_qname_t *af_qname = NULL;
        
         af_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_FINAL, 
-                        seq_ack_impl->ns_val, NULL); 
+            seq_ack_impl->ns_val, NULL); 
         if(!af_qname)
         {
             return NULL;
         }
         af_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(sa_part, env, 
-                        af_qname, sa_node, &af_node);
+            af_qname, sa_node, &af_node);
         if(af_part)
         {
             seq_ack_impl->ack_final = sandesha2_ack_final_create(env, 
-                        seq_ack_impl->ns_val);
+                seq_ack_impl->ns_val);
             if(!seq_ack_impl->ack_final)
             {
                 return NULL;
             }
-            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_ack_impl->ack_final, env,
-                        sa_node);
+            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+                seq_ack_impl->ack_final, env, sa_node);
         }
     }
-    if(sandesha2_spec_specific_consts_is_ack_none_allowed(env,
-                        rm_spec_ver))
+    if(sandesha2_spec_specific_consts_is_ack_none_allowed(env, rm_spec_ver))
     {
         axiom_element_t *an_part = NULL;
         axiom_node_t *an_node = NULL;
         axis2_qname_t *an_qname = NULL;
 
         an_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_NONE,
-                        seq_ack_impl->ns_val, NULL);
+            seq_ack_impl->ns_val, NULL);
         an_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(sa_part, env,
-                        an_qname, sa_node, &an_node);
+            an_qname, sa_node, &an_node);
         if(an_part)
         {
             if(!an_qname)
@@ -356,13 +339,13 @@ sandesha2_seq_ack_from_om_node(
                 return NULL;
             }
             seq_ack_impl->ack_none = sandesha2_ack_none_create(env, 
-                        seq_ack_impl->ns_val);
+                seq_ack_impl->ns_val);
             if(!seq_ack_impl->ack_none)
             {
                 return NULL;
             }
-            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_ack_impl->ack_none, env, 
-                        sa_node);
+            sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+                seq_ack_impl->ack_none, env, sa_node);
         }
     }
     return seq_ack;

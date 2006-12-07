@@ -41,6 +41,9 @@ extern "C"
 {
 #endif
 
+struct sandesha2_seq_property_mgr;
+struct sandesha2_seq_property_bean_t;
+
 /** @defgroup sandesha2_terminate_mgr
  * @ingroup sandesha2_util
  * @{
@@ -88,8 +91,8 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_do_updates_if_needed(
     const axis2_env_t *env,
     axis2_char_t *seq_id,
-    sandesha2_seq_property_bean_t *prop_bean,
-    sandesha2_seq_property_mgr_t *prop_mgr);
+    struct sandesha2_seq_property_bean_t *prop_bean,
+    struct sandesha2_seq_property_mgr *prop_mgr);
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_terminate_mgr_is_property_deletable(

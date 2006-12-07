@@ -21,6 +21,12 @@
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_ack_range.h>
 #include <sandesha2_spec_specific_consts.h>
+#include <sandesha2_invoker_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_sender_bean.h>
 #include <axis2_string.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_addr.h>
@@ -79,7 +85,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_man)
 {
-     sandesha2_invoker_mgr_t *invoker_mgr = NULL;
+    sandesha2_invoker_mgr_t *invoker_mgr = NULL;
     sandesha2_invoker_bean_t *find_bean = NULL;
     axis2_array_list_t *found_list = NULL;
     int i = 0;
@@ -405,7 +411,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     find_create_seq_bean = sandesha2_create_seq_bean_create(env);
     sandesha2_create_seq_bean_set_internal_seq_id(find_create_seq_bean, env,
                         seq_id);
-    found_list = SANDESHA2_CREATE_SEQ_MGR_FIND(create_seq_mgr, env, 
+    found_list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
                         find_create_seq_bean);
     if(NULL != found_list)
     {
@@ -533,11 +539,11 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         int_seq_id, SANDESHA2_SEQ_PROP_TRANSPORT_TO);
     if(transport_to_bean)
     {
+        axis2_char_t *value = sandesha2_seq_property_bean_get_value(
+            transport_to_bean, env);
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                        sandesha2_seq_property_bean_get_value(transport_to_bean,
-                        env), env));
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, value);
         sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 
                             AXIS2_TRANSPORT_URL, property);
     }

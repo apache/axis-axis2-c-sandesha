@@ -46,8 +46,9 @@ sandesha2_spec_specific_consts_get_spec_ver_str(
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_spec_specific_consts_get_rm_ns_val(const axis2_env_t *env,
-                        axis2_char_t *spec_ver)
+sandesha2_spec_specific_consts_get_rm_ns_val(
+    const axis2_env_t *env,
+    axis2_char_t *spec_ver)
 {
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, spec_ver, NULL);

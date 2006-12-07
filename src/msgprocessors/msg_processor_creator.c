@@ -37,6 +37,7 @@
 #include <sandesha2_close_seq_msg_processor.h>
 #include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_app_msg_processor.h>
+#include <sandesha2_make_connection_msg_processor.h>
 #include <axis2_string.h>
 #include <stdio.h>
 /** 
@@ -71,6 +72,9 @@ sandesha2_msg_processor_create_msg_processor(
         case SANDESHA2_MSG_TYPE_CLOSE_SEQ:
             return (sandesha2_msg_processor_t *) 
                 sandesha2_close_seq_msg_processor_create(env);
+        case SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG:
+            return (sandesha2_msg_processor_t *) 
+                sandesha2_make_connection_msg_processor_create(env);
         default :
             return NULL;
     }

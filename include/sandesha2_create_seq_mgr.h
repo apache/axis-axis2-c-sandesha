@@ -44,59 +44,57 @@ typedef struct sandesha2_create_seq_mgr_ops sandesha2_create_seq_mgr_ops_t;
   * @{
   */
 
-struct sandesha2_create_seq_mgr_ops
+AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr_ops
 {
    /** 
      * Deallocate memory
      * @return status code
      */
     axis2_status_t (AXIS2_CALL *
-    free) (
-            void *seq_mgr,
-            const axis2_env_t *env);
+        free) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env);
      
     axis2_bool_t (AXIS2_CALL *
-    insert) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            sandesha2_create_seq_bean_t *bean);
+        insert) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                sandesha2_create_seq_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
-    remove) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            axis2_char_t *msg_id);
+        remove) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                axis2_char_t *msg_id);
 
     sandesha2_create_seq_bean_t *(AXIS2_CALL *
-    retrieve) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            const axis2_char_t *msg_id);
+        retrieve) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                const axis2_char_t *msg_id);
 
     axis2_bool_t (AXIS2_CALL *
-    update) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            sandesha2_create_seq_bean_t *bean);
+        update) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                sandesha2_create_seq_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
-    find) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            sandesha2_create_seq_bean_t *bean);
+        find) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                sandesha2_create_seq_bean_t *bean);
 
     sandesha2_create_seq_bean_t *(AXIS2_CALL *
-    find_unique) (
-            sandesha2_create_seq_mgr_t *seq_mgr,
-            const axis2_env_t *env,
-            sandesha2_create_seq_bean_t *bean);
-
-
+        find_unique) (
+                sandesha2_create_seq_mgr_t *seq_mgr,
+                const axis2_env_t *env,
+                sandesha2_create_seq_bean_t *bean);
 };
 
-struct sandesha2_create_seq_mgr
+AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr
 {
-    sandesha2_create_seq_mgr_ops_t *ops;
+    const sandesha2_create_seq_mgr_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL

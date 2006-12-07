@@ -21,6 +21,8 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_msg_ctx.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_sender_bean.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -199,12 +201,17 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     if(NULL != rm_msg_op)
     {
         axis2_array_list_t *out_flow = NULL;
+        axis2_array_list_t *new_out_flow = NULL;
+        axis2_array_list_t *out_fault_flow = NULL;
+        axis2_array_list_t *new_out_fault_flow = NULL;
         out_flow = AXIS2_OP_GET_OUT_FLOW(rm_msg_op, env);
-        if(NULL != out_flow)
-        {
-            AXIS2_OP_SET_OUT_FLOW(ack_op, env, out_flow);
-            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, out_flow);
-        }
+        new_out_flow = axis2_phases_info_copy_flow(env, out_flow);
+        out_fault_flow = AXIS2_OP_GET_OUT_FLOW(rm_msg_op, env);
+        new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
+        if(new_out_flow)
+            AXIS2_OP_SET_OUT_FLOW(ack_op, env, new_out_flow);
+        if(new_out_fault_flow)
+            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, new_out_fault_flow);
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, rm_msg_ctx, 
                         ack_op);

@@ -21,6 +21,8 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_msg_ctx.h>
+#include <sandesha2_sender_bean.h>
+#include <sandesha2_sender_mgr.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -169,7 +171,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] sandesha2_ack_msg_processor_process_in_msg .........");
-    printf("sandesha2_ack_msg_processor_process_in_msg\n");
 
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
@@ -326,21 +327,17 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);
     sandesha2_seq_property_mgr_update(seq_prop_mgr, env, completed_bean);
     
-    printf("int_seq_id:%s###################################33\n", int_seq_id);
     last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
                         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, storage_mgr);
     if(last_out_msg_no_str)
     {
-        printf("last_out_msg_no_str:%s############################\n", last_out_msg_no_str);
         long highest_out_msg_no = 0;
         highest_out_msg_no = atol(last_out_msg_no_str);
         if(highest_out_msg_no > 0)
         {
-            printf("highest_out_msg_no:%ld############################\n", highest_out_msg_no);
             axis2_bool_t completed = AXIS2_FALSE;
             completed = sandesha2_ack_mgr_verify_seq_completion(env, 
                         ack_range_list, highest_out_msg_no);
-            printf("completed:%d############################\n", completed);
             if(completed)
                 sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx,
                         out_seq_id, int_seq_id, storage_mgr);
@@ -355,7 +352,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] Exit: sandesha2_ack_msg_processor_process_in_msg");
-    printf("[sandesha2] Exit: sandesha2_ack_msg_processor_process_in_msg\n");
     return AXIS2_SUCCESS;
 }
     

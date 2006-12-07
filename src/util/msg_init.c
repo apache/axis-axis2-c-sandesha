@@ -204,6 +204,7 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) terminate_seq_res);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) terminate_seq_res, env);
+        add_op_if_null(env, msg_ctx);
     }
     ack_request = sandesha2_rm_elements_get_ack_requested(rm_elements, env);
     if(ack_request)
@@ -213,6 +214,7 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) ack_request);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) ack_request, env);
+        add_op_if_null(env, msg_ctx);
     }
     close_seq = sandesha2_rm_elements_get_close_seq(rm_elements, env);
     if(close_seq)
@@ -222,6 +224,7 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) close_seq);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) close_seq, env);
+        add_op_if_null(env, msg_ctx);
     }
     close_seq_res = sandesha2_rm_elements_get_close_seq_res(rm_elements, env);
     if(close_seq_res)
@@ -231,6 +234,7 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) close_seq_res);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) close_seq_res, env);
+        add_op_if_null(env, msg_ctx);
     }
     make_conn = sandesha2_rm_elements_get_make_connection(rm_elements, env);
     if(make_conn)
@@ -238,6 +242,9 @@ populate_rm_msg_ctx(
         sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_MAKE_CONNECTION, 
                 (sandesha2_iom_rm_part_t *) make_conn);
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
+                (sandesha2_iom_rm_element_t *) make_conn, env);
+        add_op_if_null(env, msg_ctx);
     }
     msg_pending = sandesha2_rm_elements_get_msg_pending(rm_elements, env);
     if(msg_pending)
@@ -245,6 +252,9 @@ populate_rm_msg_ctx(
         sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
                 SANDESHA2_MSG_PART_MESSAGE_PENDING, 
                 (sandesha2_iom_rm_part_t *) msg_pending);
+        rm_ns = sandesha2_iom_rm_element_get_namespace_value(
+                (sandesha2_iom_rm_element_t *) msg_pending, env);
+        add_op_if_null(env, msg_ctx);
     }
     sandesha2_msg_ctx_set_rm_ns_val(rm_msg_ctx, env, rm_ns);
     addressing_ns_value = sandesha2_rm_elements_get_addr_ns_val(
@@ -390,21 +400,22 @@ static axis2_bool_t validate_msg(
         idf = sandesha2_make_connection_get_identifier(make_conn, env);
         address = sandesha2_make_connection_get_address(make_conn, env);
         if(idf)
+        {
             seq_id = sandesha2_identifier_get_identifier(idf, env);
+        }
         else if(address)
         {
             /* TODO Get seq_id based on the anonymous address */
         }
         else
         {
-            SANDESHA2_ERROR_SET(env->error, 
+            AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_MSG, AXIS2_FAILURE);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                 " Invalid MakeConnection message. Either Address or Identifier" \
                 " must be present");
             return AXIS2_FALSE;
-        }
-        
+        } 
     }
     else
     {

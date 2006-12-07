@@ -113,9 +113,11 @@ sandesha2_seq_report_create(
     report_impl = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_seq_report_impl_t));
 
-    report_impl->completed_msgs = NULL;
     report_impl->seq_status = SANDESHA2_SEQ_STATUS_UNKNOWN;
     report_impl->seq_direction = SANDESHA2_SEQ_DIRECTION_UNKNOWN;
+    report_impl->completed_msgs = NULL;
+    report_impl->internal_seq_id = NULL;
+    report_impl->seq_id = NULL;
 
     report_impl->report.ops = AXIS2_MALLOC(env->allocator, 
                     sizeof(sandesha2_seq_report_ops_t)); 

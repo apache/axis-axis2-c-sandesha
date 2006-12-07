@@ -39,7 +39,7 @@ extern "C"
 typedef struct sandesha2_invoker_mgr sandesha2_invoker_mgr_t;
 typedef struct sandesha2_invoker_mgr_ops sandesha2_invoker_mgr_ops_t;
 
-struct sandesha2_sender_mgr_ops
+AXIS2_DECLARE_DATA struct sandesha2_invoker_mgr_ops
 {
    /** 
      * Deallocate memory
@@ -88,9 +88,9 @@ struct sandesha2_sender_mgr_ops
 
 };
 
-struct sandesha2_invoker_mgr
+AXIS2_DECLARE_DATA struct sandesha2_invoker_mgr
 {
-    sandesha2_invoker_mgr_ops_t *ops;
+    const sandesha2_invoker_mgr_ops_t *ops;
 };
 
 AXIS2_EXTERN sandesha2_invoker_mgr_t * AXIS2_CALL

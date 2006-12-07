@@ -196,75 +196,57 @@ static void* AXIS2_CALL
 sandesha2_seq_from_om_node(
     sandesha2_iom_rm_element_t *seq,
     const axis2_env_t *env, 
-    axiom_node_t *om_node)
+    axiom_node_t *seq_node)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
-    axiom_element_t *om_element = NULL;
     axiom_element_t *seq_part = NULL;
     axiom_element_t *lm_part = NULL;
-    axiom_node_t *seq_node = NULL;
     axiom_node_t *lm_node = NULL;
-    axis2_qname_t *seq_qname = NULL; 
     axis2_qname_t *lm_qname = NULL; 
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, om_node, NULL);
+    AXIS2_PARAM_CHECK(env->error, seq_node, NULL);
     
     seq_impl = SANDESHA2_INTF_TO_IMPL(seq);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
-    if(!om_element)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
-        return NULL;
-    }
-    seq_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
-                        seq_impl->ns_val, NULL);
-    if(!seq_qname)
-    {
-        return NULL;
-    }
-    seq_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
-                        seq_qname, om_node, &seq_node);
+    seq_part = AXIOM_NODE_GET_DATA_ELEMENT(seq_node, env);
     if(!seq_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
-    seq_impl->identifier = sandesha2_identifier_create(env, 
-                        seq_impl->ns_val);
+    seq_impl->identifier = sandesha2_identifier_create(env, seq_impl->ns_val);
     if(!seq_impl->identifier)
     {
         return NULL;
     }
-    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_impl->identifier, env, 
-                        seq_node);
-    seq_impl->msg_num= sandesha2_msg_number_create(env, 
-                        seq_impl->ns_val);
+    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+        seq_impl->identifier, env, seq_node);
+    seq_impl->msg_num= sandesha2_msg_number_create(env, seq_impl->ns_val);
     if(!seq_impl->msg_num)
     {
         return NULL;
     }
-    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_impl->msg_num, env, seq_node);
+    sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+        seq_impl->msg_num, env, seq_node);
     lm_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG,
-                        seq_impl->ns_val, NULL);
+        seq_impl->ns_val, NULL);
     if(!lm_qname)
     {
         return NULL;
     }
     lm_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
-                        lm_qname, seq_node, &lm_node);
+        lm_qname, seq_node, &lm_node);
     if(lm_part)
     {
         seq_impl->last_msg = sandesha2_last_msg_create(env, 
-                        seq_impl->ns_val);
+            seq_impl->ns_val);
         if(!seq_impl->last_msg)
         {
             return NULL;
         }
-        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)seq_impl->last_msg, env, 
-                        lm_node);
+        sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
+            seq_impl->last_msg, env, lm_node);
     }
     return seq;
 }

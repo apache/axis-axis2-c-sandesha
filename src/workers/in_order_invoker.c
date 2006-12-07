@@ -21,6 +21,8 @@
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_invoker_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_init.h>
@@ -155,9 +157,7 @@ sandesha2_in_order_invoker_is_invoker_started(
     const axis2_env_t *env)
 {
     axis2_bool_t started = AXIS2_FALSE;
-     
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    
     started = invoker->run_invoker;
     return started;    
 }
@@ -169,6 +169,7 @@ sandesha2_in_order_invoker_run_for_seq (
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id)
 {
+    axis2_thread_mutex_lock(invoker->mutex);
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
@@ -182,6 +183,7 @@ sandesha2_in_order_invoker_run_for_seq (
         invoker->run_invoker = AXIS2_TRUE;
         sandesha2_in_order_invoker_run(invoker, env);
     }
+    axis2_thread_mutex_unlock(invoker->mutex);
     return AXIS2_SUCCESS;
 }
             
@@ -265,7 +267,7 @@ sandesha2_in_order_invoker_worker_func(
         axis2_array_list_t *all_seq_list = NULL;
         int i = 0;
 
-        AXIS2_SLEEP(1);
+        AXIS2_SLEEP(SANDESHA2_INVOKER_SLEEP_TIME);
         if(!invoker->conf_ctx || !invoker->conf_ctx->ops)
             return NULL;
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
@@ -301,7 +303,7 @@ sandesha2_in_order_invoker_worker_func(
             axis2_bool_t continue_seq = AXIS2_TRUE;
             
             seq_id = AXIS2_ARRAY_LIST_GET(all_seq_list, env, i);
-            SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+            sandesha2_transaction_commit(transaction, env);
             transaction = sandesha2_storage_mgr_get_transaction(
                         storage_mgr, env);
             next_msg_bean = sandesha2_next_msg_mgr_retrieve(
@@ -360,11 +362,10 @@ sandesha2_in_order_invoker_worker_func(
                 /* have to commit the transaction before invoking. This may get 
                  * changed when WS-AT is available.
                  */
-                SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+                sandesha2_transaction_commit(transaction, env);
                 property = axis2_property_create(env);
-                AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-                AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                        SANDESHA2_VALUE_TRUE, env));
+                AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+                AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
                 AXIS2_MSG_CTX_SET_PROPERTY(msg_to_invoke, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
                         
@@ -426,7 +427,7 @@ sandesha2_in_order_invoker_worker_func(
                         next_msg_bean);
             }
         }
-        SANDESHA2_TRANSACTION_COMMIT(transaction, env);
+        sandesha2_transaction_commit(transaction, env);
         
         /* TODO make transaction handling effective */
     }
