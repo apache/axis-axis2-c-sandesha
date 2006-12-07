@@ -16,6 +16,7 @@
  
 #include <sandesha2_inmemory_create_seq_mgr.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_error.h>
 #include <axis2_log.h>
 #include <axis2_hash.h>
@@ -23,13 +24,12 @@
 #include <axis2_property.h>
 
 /** 
- * @brief Sandesha Sequence Report Struct Impl
- *   Sandesha Sequence Report 
+ * @brief Sandesha2 Inmemory Create Sequence Manager Struct Impl
+ *   Sandesha2 Inmemory Create Sequence Manager
  */ 
-struct sandesha2_inmemory_create_seq_mgr
+typedef struct sandesha2_inmemory_create_seq_mgr
 {
     sandesha2_create_seq_mgr_t seq_mgr;
-	
     axis2_hash_t *table;
     axis2_thread_mutex_t *mutex;
 
@@ -105,9 +105,6 @@ sandesha2_inmemory_create_seq_mgr_create(
     seq_mgr_impl->table = NULL;
     seq_mgr_impl->mutex = NULL;
 
-    seq_mgr_impl->seq_mgr.ops = AXIS2_MALLOC(env->allocator, 
-                    sizeof(sandesha2_inmemory_create_seq_mgr_ops_t)); 
-    
     seq_mgr_impl->mutex = axis2_thread_mutex_create(env->allocator, 
             AXIS2_THREAD_MUTEX_DEFAULT);
     if(!seq_mgr_impl->mutex) 
@@ -143,7 +140,7 @@ sandesha2_inmemory_create_seq_mgr_create(
 
 static axis2_status_t AXIS2_CALL
 sandesha2_inmemory_create_seq_mgr_free(
-    void *seq_mgr,
+    sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env)
 {
     sandesha2_inmemory_create_seq_mgr_t *seq_mgr_impl = NULL;
@@ -161,13 +158,6 @@ sandesha2_inmemory_create_seq_mgr_free(
         axis2_hash_free(seq_mgr_impl->table, env);
         seq_mgr_impl->table = NULL;
     }
-
-    if((&(seq_mgr_impl->seq_mgr))->ops)
-    {
-        AXIS2_FREE(env->allocator, (&(seq_mgr_impl->seq_mgr))->ops);
-        (&(seq_mgr_impl->seq_mgr))->ops = NULL;
-    }
-
     if(seq_mgr_impl)
     {
         AXIS2_FREE(env->allocator, seq_mgr_impl);

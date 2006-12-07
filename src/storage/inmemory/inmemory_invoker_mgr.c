@@ -15,6 +15,7 @@
  */
  
 #include <sandesha2_inmemory_invoker_mgr.h>
+#include <sandesha2_invoker_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <axis2_log.h>
@@ -26,7 +27,7 @@
  * @brief Sandesha2 Inmemory Invoker Manager Struct Impl
  *   Sandesha2 Inmemory Invoker Manager 
  */ 
-struct sandesha2_inmemory_invoker_mgr
+typedef struct sandesha2_inmemory_invoker_mgr
 {
     sandesha2_invoker_mgr_t invoker_mgr;
     axis2_hash_t *table;
@@ -35,6 +36,47 @@ struct sandesha2_inmemory_invoker_mgr
 
 #define SANDESHA2_INTF_TO_IMPL(invoker_mgr) \
     ((sandesha2_inmemory_invoker_mgr_t *) invoker_mgr)
+
+axis2_status_t AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_free(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_insert(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_remove(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key);
+
+sandesha2_invoker_bean_t *AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_retrieve(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_update(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
+
+axis2_array_list_t *AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_find(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
+
+sandesha2_invoker_bean_t *AXIS2_CALL
+sandesha2_inmemory_invoker_mgr_find_unique(
+    sandesha2_invoker_mgr_t *invoker_mgr,
+    const axis2_env_t *env,
+    sandesha2_invoker_bean_t *bean);
 
 static const sandesha2_invoker_mgr_ops_t invoker_mgr_ops = 
 {
@@ -66,7 +108,8 @@ sandesha2_inmemory_invoker_mgr_create(
             AXIS2_THREAD_MUTEX_DEFAULT);
     if(!invoker_mgr_impl->mutex) 
     {
-        sandesha2_inmemory_invoker_mgr_free(invoker, env);
+        sandesha2_inmemory_invoker_mgr_free(&(invoker_mgr_impl->invoker_mgr), 
+            env);
         return NULL;
     }
 
@@ -92,7 +135,7 @@ sandesha2_inmemory_invoker_mgr_create(
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_BEAN_MAP_STORAGE_MAP, 
                 property, AXIS2_FALSE);
     }
-    invoker_mgr_impl->invoker_mgr->ops = &invoker_mgr_ops;
+    invoker_mgr_impl->invoker_mgr.ops = &invoker_mgr_ops;
 
     return &(invoker_mgr_impl->invoker_mgr);
 }
@@ -104,23 +147,23 @@ sandesha2_inmemory_invoker_mgr_free(
 {
     sandesha2_inmemory_invoker_mgr_t *invoker_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     if(invoker_mgr_impl->mutex)
     {
         axis2_thread_mutex_destroy(invoker_mgr_impl->mutex);
-        invoker_mgr->mutex = NULL;
+        invoker_mgr_impl->mutex = NULL;
     }
     if(invoker_mgr_impl->table)
     {
         axis2_hash_free(invoker_mgr_impl->table, env);
-        invoker_mgr->table = NULL;
+        invoker_mgr_impl->table = NULL;
     }
 
     if(invoker_mgr_impl)
     {
         AXIS2_FREE(env->allocator, invoker_mgr_impl);
-        invoker_mgr = NULL;
+        invoker_mgr_impl = NULL;
     }
     return AXIS2_SUCCESS;
 }
@@ -133,7 +176,7 @@ sandesha2_inmemory_invoker_mgr_insert(
 {
     axis2_char_t *ref_key = NULL;
     sandesha2_inmemory_invoker_mgr_t *invoker_mgr_impl = NULL;
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -155,7 +198,7 @@ sandesha2_inmemory_invoker_mgr_remove(
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     axis2_hash_set(invoker_mgr_impl->table, key, AXIS2_HASH_KEY_STRING, NULL);
 
@@ -171,7 +214,7 @@ sandesha2_inmemory_invoker_mgr_retrieve(
 {
     sandesha2_invoker_bean_t *bean = NULL;
     sandesha2_inmemory_invoker_mgr_t *invoker_mgr_impl = NULL;
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
@@ -193,7 +236,7 @@ sandesha2_inmemory_invoker_mgr_update(
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(bean, env);
     if(!ref_key)
@@ -218,7 +261,7 @@ sandesha2_inmemory_invoker_mgr_find(
     sandesha2_inmemory_invoker_mgr_t *invoker_mgr_impl = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
     beans = axis2_array_list_create(env, 0);
     if(!beans)
@@ -291,7 +334,7 @@ sandesha2_inmemory_invoker_mgr_find_unique(
     sandesha2_inmemory_invoker_mgr_t *invoker_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    invoker_mgr_impl = AXIS2_INTF_TO_IMPL(invoker_mgr);
+    invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
     
     beans = sandesha2_inmemory_invoker_mgr_find(invoker_mgr, env, bean);
     if(beans)

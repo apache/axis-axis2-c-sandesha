@@ -100,9 +100,6 @@ sandesha2_inmemory_transaction_create(
     trans_impl->enlisted_beans = NULL;
     trans_impl->mutex = axis2_thread_mutex_create(env->allocator,
         AXIS2_THREAD_MUTEX_DEFAULT);
-    trans_impl->trans.ops = AXIS2_MALLOC(env->allocator, 
-        sizeof(sandesha2_transaction_ops_t)); 
-    
     trans_impl->trans.ops = &transaction_ops;
 
     return &(trans_impl->trans);
@@ -123,11 +120,6 @@ sandesha2_inmemory_transaction_free(
         axis2_thread_mutex_destroy(trans_impl->mutex);
         trans_impl->mutex = NULL;
     } 
-    if((&(trans_impl->trans))->ops)
-    {
-        AXIS2_FREE(env->allocator, (&(trans_impl->trans))->ops);
-        (&(trans_impl->trans))->ops = NULL;
-    }
     if(trans_impl->enlisted_beans)
     {
         AXIS2_ARRAY_LIST_FREE(trans_impl->enlisted_beans, env);
