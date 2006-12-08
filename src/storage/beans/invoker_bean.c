@@ -15,14 +15,15 @@
  */
 
 #include <sandesha2_invoker_bean.h>
+#include <sandesha2_transaction.h>
 #include <sandesha2_rm_bean.h>
-#include <string.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
 
-struct sandesha2_invoker_bean_t
+typedef struct sandesha2_invoker_bean_impl
 {
-    sandesha2_rm_bean_t *rm_bean;
+    sandesha2_invoker_bean_t invoker_bean;
+    sandesha2_rm_bean_t *rm_bean_impl;
 	/*  This is the messageContextRefKey that is obtained after saving a message context in a storage. */
 	axis2_char_t *msg_context_ref_key;
 
@@ -35,32 +36,45 @@ struct sandesha2_invoker_bean_t
 	/* Weather the message has been invoked by the invoker.*/
 	axis2_bool_t invoked;
 
+}sandesha2_invoker_bean_impl_t;
+
+#define SANDESHA2_INTF_TO_IMPL(invoker_bean) \
+        ((sandesha2_invoker_bean_impl_t *) invoker_bean)
+
+static const sandesha2_rm_bean_ops_t rm_bean_ops =
+{
+    sandesha2_invoker_bean_free,
+    sandesha2_invoker_bean_set_id,
+    sandesha2_invoker_bean_get_id,
+    sandesha2_invoker_bean_set_transaction,
+    sandesha2_invoker_bean_get_transaction
 };
 
 AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
 sandesha2_invoker_bean_create(
     const axis2_env_t *env )
 {
-	sandesha2_invoker_bean_t *bean = NULL;
+	sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
 
-	bean = (sandesha2_invoker_bean_t *) AXIS2_MALLOC( env->allocator, 
-				sizeof(sandesha2_invoker_bean_t) );
+	invoker_bean_impl = (sandesha2_invoker_bean_impl_t *) AXIS2_MALLOC(
+        env->allocator, sizeof(sandesha2_invoker_bean_impl_t) );
 
-	if (!bean)
+	if (!invoker_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
 
 	/* init the properties. */
-	bean->msg_context_ref_key = NULL;
-	bean->msg_no = -1;
-	bean->seq_id = NULL;	
-	bean->invoked = AXIS2_FALSE;
-    bean->rm_bean = NULL;
+	invoker_bean_impl->msg_context_ref_key = NULL;
+	invoker_bean_impl->msg_no = -1;
+	invoker_bean_impl->seq_id = NULL;	
+	invoker_bean_impl->invoked = AXIS2_FALSE;
+    invoker_bean_impl->rm_bean = sandesha2_rm_bean_create(env);
+    invoker_bean_impl->invoker_bean.rm_bean.ops = &rm_bean_ops;
 
-	return bean;
+	return &(invoker_bean_impl->bean);
 }
 
 AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
@@ -71,148 +85,218 @@ sandesha2_invoker_bean_create_with_data(
     axis2_char_t *seq_id,
     axis2_bool_t invoked)
 {
-	sandesha2_invoker_bean_t *bean = NULL;
+	sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
+    
+    invoker_bean_impl = (sandesha2_invoker_bean_impl_t *) AXIS2_MALLOC(
+        env->allocator, sizeof(sandesha2_invoker_bean_impl_t) );
 
-	bean = (sandesha2_invoker_bean_t *) AXIS2_MALLOC( env->allocator, 
-				sizeof(sandesha2_invoker_bean_t) );
-
-	if (!bean)
+	if (!invoker_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
-
 	/* init the properties. */
 	if(!ref_key)
-		bean->msg_context_ref_key = NULL;
+		invoker_bean_impl->msg_context_ref_key = NULL;
 	else
-		bean->msg_context_ref_key = (axis2_char_t*)AXIS2_STRDUP(ref_key, env);
+		invoker_bean_impl->msg_context_ref_key = (axis2_char_t*)AXIS2_STRDUP(
+            ref_key, env);
 
 	if(!seq_id)
-		bean->seq_id = NULL;	
+		invoker_bean_impl->seq_id = NULL;	
 	else
-		bean->seq_id = (axis2_char_t*)AXIS2_STRDUP(seq_id, env);
+		invoker_bean_impl->seq_id = (axis2_char_t*)AXIS2_STRDUP(seq_id, env);
 
-	bean->msg_no = msg_no;
-	bean->invoked = invoked;
-    bean->rm_bean = NULL;
+	invoker_bean_impl->msg_no = msg_no;
+	invoker_bean_impl->invoked = invoked;
+    invoker_bean_impl->rm_bean = sandesha2_rm_bean_create(env);
+    invoker_bean_impl->invoker_bean.rm_bean.ops = &rm_bean_ops;
 
-	return bean;
+	return &(invoker_bean_impl->bean);
 }
 
 axis2_status_t AXIS2_CALL
 sandesha2_invoker_bean_free(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
-	if(invoker->rm_bean)
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	if(invoker_bean_impl->rm_bean)
 	{
-		sandesha2_rm_bean_free(invoker->rm_bean, env);
-		invoker->rm_bean= NULL;
+		sandesha2_rm_bean_free(invoker_bean_impl->rm_bean, env);
+		invoker_bean_impl->rm_bean= NULL;
 	}
-	if(invoker->msg_context_ref_key)
+	if(invoker_bean_impl->msg_context_ref_key)
 	{
-		AXIS2_FREE(env->allocator, invoker->msg_context_ref_key);
-		invoker->msg_context_ref_key= NULL;
+		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_context_ref_key);
+		invoker_bean_impl->msg_context_ref_key= NULL;
 	}
 		
-	if(!invoker->seq_id)
+	if(!invoker_bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, invoker->seq_id);
-		invoker->seq_id= NULL;
+		AXIS2_FREE(env->allocator, invoker_bean_impl->seq_id);
+		invoker_bean_impl->seq_id= NULL;
 	}
+    if(invoker_bean_impl)
+    {
+        AXIS2_FREE(env->allocator, invoker_bean_impl->seq_id);
+        invoker_bean_impl = NULL;
+    }
     return AXIS2_SUCCESS;
 }
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_invoker_bean_get_base( 
-    sandesha2_invoker_bean_t* invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
-	return invoker->rm_bean;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	return invoker_bean_impl->rm_bean;
 
 }	
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_base (
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env, 
     sandesha2_rm_bean_t* rm_bean)
 {
-	invoker->rm_bean = rm_bean;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	invoker_bean_impl->rm_bean = rm_bean;
 }
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(
-        sandesha2_invoker_bean_t *invoker,
+        sandesha2_invoker_bean_t *invoker_bean,
 		const axis2_env_t *env)
 {
-	return invoker->msg_context_ref_key;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	return invoker_bean_impl->msg_context_ref_key;
 }
 
 void AXIS2_CALL 
 sandesha2_invoker_bean_set_msg_context_ref_key(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env, axis2_char_t* context_ref_id)
 {
-	if(invoker->msg_context_ref_key)
-		AXIS2_FREE(env->allocator, invoker->msg_context_ref_key);
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	if(invoker_bean_impl->msg_context_ref_key)
+		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_context_ref_key);
 
-	invoker->msg_context_ref_key = 
+	invoker_bean_impl->msg_context_ref_key = 
         (axis2_char_t*)AXIS2_STRDUP(context_ref_id, env);
 }
 	
 
 long AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_no(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
-	return invoker->msg_no;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	return invoker_bean_impl->msg_no;
 }
 	
 void AXIS2_CALL
 sandesha2_invoker_bean_set_msg_no(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env, long msgno)
 {
-	invoker->msg_no = msgno;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	invoker_bean_impl->msg_no = msgno;
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_invoker_bean_get_seq_id(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
-	return invoker->seq_id;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	return invoker_bean_impl->seq_id;
 }
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_seq_id(
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env, axis2_char_t* int_seq_id)
 {
-	invoker->seq_id = (axis2_char_t*)AXIS2_STRDUP(int_seq_id, env);
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	invoker_bean_impl->seq_id = (axis2_char_t*)AXIS2_STRDUP(int_seq_id, env);
 
 }
 
-
-
 axis2_bool_t AXIS2_CALL
 sandesha2_invoker_bean_is_invoked (
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
-	return invoker->invoked;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	return invoker_bean_impl->invoked;
 }
 
 void AXIS2_CALL 
 sandesha2_invoker_bean_set_invoked( 
-    sandesha2_invoker_bean_t *invoker,
+    sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env,
     axis2_bool_t invoked)
 {
-	invoker->invoked = invoked;
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+	invoker_bean_impl->invoked = invoked;
+}
+
+void AXIS2_CALL
+sandesha2_invoker_bean_set_id( 
+    sandesha2_rm_bean_t *invoker_bean,
+	const axis2_env_t *env, 
+    long id)
+{
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+    sandesha2_rm_bean_set_id(invoker_bean_impl->rm_bean_impl, env, id);
+}
+
+long AXIS2_CALL
+sandesha2_invoker_bean_get_id( 
+    sandesha2_rm_bean_t *invoker_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+    return sandesha2_rm_bean_get_id(invoker_bean_impl->rm_bean_impl, env);
+}
+
+void AXIS2_CALL
+sandesha2_invoker_bean_set_transaction( 
+    sandesha2_rm_bean_t *invoker_bean,
+	const axis2_env_t *env, 
+    sandesha2_transaction_t *transaction)
+{
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+    sandesha2_rm_bean_set_transaction(invoker_bean_impl->rm_bean_impl, env, 
+        transaction);
+}
+
+sandesha2_transaction_t *AXIS2_CALL
+sandesha2_invoker_bean_get_transaction( 
+    sandesha2_rm_bean_t *invoker_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
+    invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
+    return sandesha2_rm_bean_get_transaction(invoker_bean_impl->rm_bean_impl, 
+        env);
 }
 
