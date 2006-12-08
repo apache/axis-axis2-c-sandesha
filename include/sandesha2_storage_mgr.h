@@ -41,7 +41,7 @@ extern "C"
  
 typedef struct sandesha2_storage_mgr sandesha2_storage_mgr_t;
 typedef struct sandesha2_storage_mgr_ops sandesha2_storage_mgr_ops_t;
-struct sandesha2_rm_bean_t;
+struct sandesha2_rm_bean;
 struct sandesha2_sender_mgr;
 struct sandesha2_create_seq_mgr;
 struct sandesha2_invoker_mgr;
@@ -73,7 +73,7 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
             enlist_bean)(
                 sandesha2_storage_mgr_t *storage_mgr,
                 const axis2_env_t *env,
-                struct sandesha2_rm_bean_t *rm_bean);
+                struct sandesha2_rm_bean *rm_bean);
 
     struct sandesha2_create_seq_mgr *(AXIS2_CALL *
             get_create_seq_mgr)(
@@ -200,7 +200,7 @@ void AXIS2_CALL
 sandesha2_storage_mgr_enlist_bean(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env,
-    struct sandesha2_rm_bean_t *rm_bean);
+    struct sandesha2_rm_bean *rm_bean);
 
 struct sandesha2_create_seq_mgr *AXIS2_CALL
 sandesha2_storage_mgr_get_create_seq_mgr(

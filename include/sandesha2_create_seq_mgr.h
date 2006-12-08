@@ -71,7 +71,7 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr_ops
         retrieve) (
                 sandesha2_create_seq_mgr_t *seq_mgr,
                 const axis2_env_t *env,
-                const axis2_char_t *msg_id);
+                axis2_char_t *msg_id);
 
     axis2_bool_t (AXIS2_CALL *
         update) (
@@ -94,7 +94,7 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr_ops
 
 AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr
 {
-    const sandesha2_create_seq_mgr_ops_t *ops;
+    sandesha2_create_seq_mgr_ops_t ops;
 };
 
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL
@@ -123,7 +123,7 @@ sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_create_seq_mgr_retrieve(
     sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env,
-    const axis2_char_t *msg_id);
+    axis2_char_t *msg_id);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_create_seq_mgr_update(

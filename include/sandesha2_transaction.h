@@ -36,7 +36,7 @@ extern "C"
 typedef struct sandesha2_transaction sandesha2_transaction_t;
 typedef struct sandesha2_transaction_ops sandesha2_transaction_ops_t;
 struct sandesha2_storage_mgr;
-struct sandesha2_rm_bean_t;
+struct sandesha2_rm_bean;
 
 /** @defgroup sandesha2_transaction In Memory Transaction 
   * @ingroup sandesha2
@@ -73,7 +73,7 @@ AXIS2_DECLARE_DATA struct sandesha2_transaction_ops
             enlist)(
                 sandesha2_transaction_t *trans,
                 const axis2_env_t *env,
-                struct sandesha2_rm_bean_t *rm_bean);
+                struct sandesha2_rm_bean *rm_bean);
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_transaction
@@ -110,7 +110,7 @@ void AXIS2_CALL
 sandesha2_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,
-    struct sandesha2_rm_bean_t *rm_bean);
+    struct sandesha2_rm_bean *rm_bean);
 
 /** @} */
 #ifdef __cplusplus

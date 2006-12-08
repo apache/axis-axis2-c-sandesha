@@ -21,14 +21,20 @@
 #include <axis2_env.h>
 #include <axis2_utils.h>
 #include <axis2_utils_defines.h>
+#include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_create_seq_bean_t sandesha2_create_seq_bean_t;
-struct sandesha2_rm_bean_t;
+typedef struct sandesha2_create_seq_bean sandesha2_create_seq_bean_t;
+struct sandesha2_transaction;
+
+struct sandesha2_create_seq_bean
+{
+    sandesha2_rm_bean_t rm_bean;
+};
 
 /* constructors 
  */
@@ -43,78 +49,98 @@ sandesha2_create_seq_bean_create_with_data(
     axis2_char_t *create_seq_msg_id, 
     axis2_char_t *seq_id);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_create_seq_bean_free  (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_rm_bean_t *create_seq_bean,
     const axis2_env_t *env);
 
-struct sandesha2_rm_bean_t * AXIS2_CALL
+struct sandesha2_rm_bean * AXIS2_CALL
 sandesha2_create_seq_bean_get_base( 
     sandesha2_create_seq_bean_t* create_seq,
     const axis2_env_t *env);
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_base (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
-    struct sandesha2_rm_bean_t* rm_bean);
+    struct sandesha2_rm_bean* rm_bean);
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_bean_get_create_seq_msg_id  (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env);
 
 void AXIS2_CALL 
 sandesha2_create_seq_bean_set_create_seq_msg_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
     axis2_char_t* seq_msg_id) ;
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_bean_get_seq_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env);
 	
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_seq_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
     axis2_char_t* seq_id) ;
 
 axis2_char_t* AXIS2_CALL
 sandesha2_create_seq_bean_get_internal_seq_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env);
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_internal_seq_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
     axis2_char_t* int_seq_id);
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_store_key(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env);
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_create_seq_msg_store_key(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, 
     axis2_char_t *create_seq_msg_store_key);
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_ref_msg_store_key( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env);
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_ref_msg_store_key( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, 
     axis2_char_t *ref_msg_store_key);
 
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_id( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env, 
+    long id);
 
+long AXIS2_CALL
+sandesha2_create_seq_bean_get_id( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_transaction( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env, 
+    struct sandesha2_transaction *transaction);
+
+struct sandesha2_transaction *AXIS2_CALL
+sandesha2_create_seq_bean_get_transaction( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env);
 
 #ifdef __cplusplus
 }

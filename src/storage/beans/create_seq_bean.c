@@ -15,6 +15,7 @@
  */
 
 #include <sandesha2_create_seq_bean.h>
+#include <sandesha2_transaction.h>
 #include <sandesha2_rm_bean.h>
 #include <axis2_env.h>
 #include <axis2_utils.h>
@@ -25,9 +26,10 @@
 
 /*create_seq_bean struct */
 
-struct sandesha2_create_seq_bean_t
+typedef struct sandesha2_create_seq_bean_impl
 {
-    sandesha2_rm_bean_t *rm_bean;
+    sandesha2_create_seq_bean_t create_seq_bean;
+    sandesha2_rm_bean_t *rm_bean_impl;
 	/*  a unique identifier that can be used to identify the messages of a certain seq */
 	axis2_char_t *internal_seq_id;
 
@@ -51,36 +53,45 @@ struct sandesha2_create_seq_bean_t
      * here since it may be subjected to things like encryption.
      */
     axis2_char_t *ref_msg_store_key;
+} sandesha2_create_seq_bean_impl_t;
+
+#define SANDESHA2_INTF_TO_IMPL(create_seq_bean) \
+    ((sandesha2_create_seq_bean_impl_t *) create_seq_bean)
+
+static const sandesha2_rm_bean_ops_t rm_bean_ops = 
+{
+    sandesha2_create_seq_bean_free,
+    sandesha2_create_seq_bean_set_id,
+    sandesha2_create_seq_bean_get_id,
+    sandesha2_create_seq_bean_set_transaction,
+    sandesha2_create_seq_bean_get_transaction
 };
-
-/* FUNCTION prototypes */
-
 
 AXIS2_EXTERN sandesha2_create_seq_bean_t * AXIS2_CALL
 sandesha2_create_seq_bean_create(
     const axis2_env_t *env )
 {
-	sandesha2_create_seq_bean_t *bean = NULL;
+	sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
 
-	bean = (sandesha2_create_seq_bean_t *) AXIS2_MALLOC(env->allocator, 
-				sizeof(sandesha2_create_seq_bean_t) );
+	create_seq_bean_impl = (sandesha2_create_seq_bean_impl_t *) AXIS2_MALLOC(
+        env->allocator, sizeof(sandesha2_create_seq_bean_impl_t) );
 
-	if (!bean)
+	if (!create_seq_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
-
 	/* init the properties. */
-	bean->internal_seq_id = NULL;
-	bean->create_seq_msg_id = NULL;
-	bean->seq_id = NULL;
-    bean->create_seq_msg_store_key = NULL;
-    bean->ref_msg_store_key = NULL;
-    bean->rm_bean = NULL;
+	create_seq_bean_impl->internal_seq_id = NULL;
+	create_seq_bean_impl->create_seq_msg_id = NULL;
+	create_seq_bean_impl->seq_id = NULL;
+    create_seq_bean_impl->create_seq_msg_store_key = NULL;
+    create_seq_bean_impl->ref_msg_store_key = NULL;
+    create_seq_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
+    create_seq_bean_impl->create_seq_bean.rm_bean.ops = &rm_bean_ops;
 
-	return bean;
+	return &(create_seq_bean_impl->create_seq_bean);
 }
 	
 AXIS2_EXTERN sandesha2_create_seq_bean_t* AXIS2_CALL 
@@ -90,160 +101,236 @@ sandesha2_create_seq_bean_create_with_data(
     axis2_char_t *create_seq_msg_id,
     axis2_char_t *seq_id)
 {
-	sandesha2_create_seq_bean_t *bean = NULL;
+	sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
 
 	AXIS2_ENV_CHECK(env, NULL);
 
-	bean = (sandesha2_create_seq_bean_t*) AXIS2_MALLOC(env->allocator, 
-				sizeof(sandesha2_create_seq_bean_t));
+	create_seq_bean_impl = (sandesha2_create_seq_bean_impl_t*) AXIS2_MALLOC(
+        env->allocator, sizeof(sandesha2_create_seq_bean_impl_t));
 
-	if (!bean)
+	if (!create_seq_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
 
 	/* init the properties. */
-	bean->internal_seq_id = internal_seq_id;
-	bean->create_seq_msg_id = create_seq_msg_id;
-	bean->seq_id = seq_id;
-	bean->rm_bean = NULL;
+	create_seq_bean_impl->internal_seq_id = internal_seq_id;
+	create_seq_bean_impl->create_seq_msg_id = create_seq_msg_id;
+	create_seq_bean_impl->seq_id = seq_id;
+    create_seq_bean_impl->create_seq_msg_store_key = NULL;
+    create_seq_bean_impl->ref_msg_store_key = NULL;
+    create_seq_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
+    create_seq_bean_impl->create_seq_bean.rm_bean.ops = &rm_bean_ops;
 
-	return bean;
+	return &(create_seq_bean_impl->create_seq_bean);
 }
 
-
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_create_seq_bean_free  (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_rm_bean_t *create_seq_bean,
     const axis2_env_t *env)
 {
-	if(create_seq->rm_bean)
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	if(create_seq_bean_impl->rm_bean_impl)
 	{
-		sandesha2_rm_bean_free(create_seq->rm_bean, env);
-		create_seq->rm_bean= NULL;
+		sandesha2_rm_bean_free(create_seq_bean_impl->rm_bean_impl, env);
+		create_seq_bean_impl->rm_bean_impl= NULL;
 	}
-	if(create_seq->internal_seq_id)
+	if(create_seq_bean_impl->internal_seq_id)
 	{
-		AXIS2_FREE(env->allocator, create_seq->internal_seq_id);
-		create_seq->internal_seq_id = NULL;
+		AXIS2_FREE(env->allocator, create_seq_bean_impl->internal_seq_id);
+		create_seq_bean_impl->internal_seq_id = NULL;
 	}
 		
-	if(create_seq->create_seq_msg_id)
+	if(create_seq_bean_impl->create_seq_msg_id)
 	{
-		AXIS2_FREE(env->allocator, create_seq->create_seq_msg_id);
-		create_seq->create_seq_msg_id= NULL;
+		AXIS2_FREE(env->allocator, create_seq_bean_impl->create_seq_msg_id);
+		create_seq_bean_impl->create_seq_msg_id= NULL;
 	}
 
-	if(create_seq->seq_id)
+	if(create_seq_bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, create_seq->seq_id);
-		create_seq->seq_id= NULL;
+		AXIS2_FREE(env->allocator, create_seq_bean_impl->seq_id);
+		create_seq_bean_impl->seq_id= NULL;
 	}
-    return AXIS2_SUCCESS;
+    if(create_seq_bean_impl)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean_impl);
+        create_seq_bean_impl = NULL;
+    }
 }
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_base( 
-    sandesha2_create_seq_bean_t* create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env)
 {
-	return create_seq->rm_bean;
-
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->rm_bean_impl;
 }	
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_base (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
     sandesha2_rm_bean_t* rm_bean)
 
 {
-	create_seq->rm_bean = rm_bean;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	create_seq_bean_impl->rm_bean_impl = rm_bean;
 }
 
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_id( 
-    sandesha2_create_seq_bean_t* create_seq,
+    sandesha2_create_seq_bean_t* create_seq_bean,
     const axis2_env_t *env)
 {
-	return create_seq->create_seq_msg_id;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->create_seq_msg_id;
 
 }	
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_create_seq_msg_id (
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axis2_env_t *env, 
     axis2_char_t* seq_msg_id)
 
 {
-	create_seq->create_seq_msg_id = AXIS2_STRDUP(seq_msg_id, env);
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	create_seq_bean_impl->create_seq_msg_id = AXIS2_STRDUP(seq_msg_id, env);
 }
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_seq_id(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env)
 {
-	return create_seq->seq_id;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->seq_id;
 }
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_seq_id(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, axis2_char_t *seq_id)
 {
-	create_seq->seq_id = AXIS2_STRDUP(seq_id, env);
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	create_seq_bean_impl->seq_id = AXIS2_STRDUP(seq_id, env);
 }
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_internal_seq_id( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env)
 {
-	return create_seq->internal_seq_id;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->internal_seq_id;
 }
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_internal_seq_id( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, axis2_char_t *int_seq_id)
 {
-	create_seq->internal_seq_id = AXIS2_STRDUP(int_seq_id, env);
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	create_seq_bean_impl->internal_seq_id = AXIS2_STRDUP(int_seq_id, env);
 }
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_store_key(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env)
 {
-	return create_seq->create_seq_msg_store_key;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->create_seq_msg_store_key;
 }
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_create_seq_msg_store_key(
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, axis2_char_t *create_seq_msg_store_key)
 {
-    create_seq->create_seq_msg_store_key = AXIS2_STRDUP(create_seq_msg_store_key, 
-        env);
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    create_seq_bean_impl->create_seq_msg_store_key = AXIS2_STRDUP(
+        create_seq_msg_store_key, env);
 }
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_ref_msg_store_key( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env)
 {
-	return create_seq->ref_msg_store_key;
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+	return create_seq_bean_impl->ref_msg_store_key;
 }
 
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_ref_msg_store_key( 
-    sandesha2_create_seq_bean_t *create_seq,
+    sandesha2_create_seq_bean_t *create_seq_bean,
 	const axis2_env_t *env, axis2_char_t *ref_msg_store_key)
 {
-    create_seq->ref_msg_store_key = AXIS2_STRDUP(ref_msg_store_key, env);
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    create_seq_bean_impl->ref_msg_store_key = AXIS2_STRDUP(ref_msg_store_key, 
+        env);
+}
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_id( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env, 
+    long id)
+{
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    sandesha2_rm_bean_set_id(create_seq_bean_impl->rm_bean_impl, env, id);
+}
+
+long AXIS2_CALL
+sandesha2_create_seq_bean_get_id( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    return sandesha2_rm_bean_get_id(create_seq_bean_impl->rm_bean_impl, env);
+}
+
+void AXIS2_CALL
+sandesha2_create_seq_bean_set_transaction( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env, 
+    sandesha2_transaction_t *transaction)
+{
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    sandesha2_rm_bean_set_transaction(create_seq_bean_impl->rm_bean_impl, env, 
+        transaction);
+}
+
+sandesha2_transaction_t *AXIS2_CALL
+sandesha2_create_seq_bean_get_transaction( 
+    sandesha2_rm_bean_t *create_seq_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;
+    create_seq_bean_impl = SANDESHA2_INTF_TO_IMPL(create_seq_bean);
+    return sandesha2_rm_bean_get_transaction(create_seq_bean_impl->rm_bean_impl, 
+        env);
 }
 
