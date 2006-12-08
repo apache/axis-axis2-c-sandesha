@@ -33,6 +33,7 @@ extern "C"
 {
 #endif
 
+struct sandesha2_storage_mgr;
 struct axis2_ctx;
 
 /** @defgroup sandesha2_inmemory_invoker_mgr In Memory Invoker Manager
@@ -43,6 +44,7 @@ struct axis2_ctx;
 AXIS2_EXTERN struct sandesha2_invoker_mgr * AXIS2_CALL
 sandesha2_inmemory_invoker_mgr_create(
     const axis2_env_t *env,
+    struct sandesha2_storage_mgr *storage_mgr,
     struct axis2_ctx *ctx);
 
 /** @} */

@@ -90,7 +90,7 @@ AXIS2_DECLARE_DATA struct sandesha2_invoker_mgr_ops
 
 AXIS2_DECLARE_DATA struct sandesha2_invoker_mgr
 {
-    const sandesha2_invoker_mgr_ops_t *ops;
+    sandesha2_invoker_mgr_ops_t ops;
 };
 
 AXIS2_EXTERN sandesha2_invoker_mgr_t * AXIS2_CALL

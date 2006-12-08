@@ -31,7 +31,7 @@ extern "C"
 typedef struct sandesha2_create_seq_bean sandesha2_create_seq_bean_t;
 struct sandesha2_transaction;
 
-struct sandesha2_create_seq_bean
+AXIS2_DECLARE_DATA struct sandesha2_create_seq_bean
 {
     sandesha2_rm_bean_t rm_bean;
 };
