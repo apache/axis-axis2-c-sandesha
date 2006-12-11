@@ -39,13 +39,17 @@ extern "C"
 typedef struct sandesha2_seq_property_mgr sandesha2_seq_property_mgr_t;
 typedef struct sandesha2_seq_property_mgr_ops sandesha2_seq_property_mgr_ops_t;
 
+/** @defgroup sandesha2_seq_property_mgr In Memory Sequence Property Manager
+  * @ingroup sandesha2
+  * @{
+  */
 AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr_ops
 {
    /** 
      * Deallocate memory
      * @return status code
      */
-    axis2_status_t (AXIS2_CALL * 
+    void (AXIS2_CALL * 
             free)(
                 sandesha2_seq_property_mgr_t *seq_property,
                 const axis2_env_t *envv);
@@ -93,17 +97,11 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr_ops
                 sandesha2_seq_property_mgr_t *seq_property,
                 const axis2_env_t *env);
 
-    axis2_bool_t (AXIS2_CALL *
-            update_or_insert)(
-                sandesha2_seq_property_mgr_t *seq_property,
-                const axis2_env_t *env,
-                sandesha2_seq_property_bean_t *bean);
-
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr
 {
-    const sandesha2_seq_property_mgr_ops_t *ops;
+    sandesha2_seq_property_mgr_ops_t ops;
 };
 
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
@@ -111,7 +109,7 @@ sandesha2_seq_property_mgr_create(
     const axis2_env_t *env,
     axis2_ctx_t *ctx);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_seq_property_mgr_free(
     sandesha2_seq_property_mgr_t *seq_property,
     const axis2_env_t *envv);
@@ -158,13 +156,6 @@ axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve_all(
     sandesha2_seq_property_mgr_t *seq_property,
     const axis2_env_t *env);
-
-axis2_bool_t AXIS2_CALL
-sandesha2_seq_property_mgr_update_or_insert(
-    sandesha2_seq_property_mgr_t *seq_property,
-    const axis2_env_t *env,
-    sandesha2_seq_property_bean_t *bean);
-
 
 /** @} */
 #ifdef __cplusplus

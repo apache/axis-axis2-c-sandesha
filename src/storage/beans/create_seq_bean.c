@@ -60,6 +60,7 @@ typedef struct sandesha2_create_seq_bean_impl
 static const sandesha2_rm_bean_ops_t rm_bean_ops = 
 {
     sandesha2_create_seq_bean_free,
+    sandesha2_create_seq_bean_get_base,
     sandesha2_create_seq_bean_set_id,
     sandesha2_create_seq_bean_get_id,
     sandesha2_create_seq_bean_set_transaction,
@@ -88,7 +89,7 @@ sandesha2_create_seq_bean_create(
     create_seq_bean_impl->create_seq_msg_store_key = NULL;
     create_seq_bean_impl->ref_msg_store_key = NULL;
     create_seq_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
-    create_seq_bean_impl->create_seq_bean.rm_bean.ops = &rm_bean_ops;
+    create_seq_bean_impl->create_seq_bean.rm_bean.ops = rm_bean_ops;
 
 	return &(create_seq_bean_impl->create_seq_bean);
 }
@@ -120,7 +121,7 @@ sandesha2_create_seq_bean_create_with_data(
     create_seq_bean_impl->create_seq_msg_store_key = NULL;
     create_seq_bean_impl->ref_msg_store_key = NULL;
     create_seq_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
-    create_seq_bean_impl->create_seq_bean.rm_bean.ops = &rm_bean_ops;
+    create_seq_bean_impl->create_seq_bean.rm_bean.ops = rm_bean_ops;
 
 	return &(create_seq_bean_impl->create_seq_bean);
 }
@@ -163,7 +164,7 @@ sandesha2_create_seq_bean_free  (
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_base( 
-    sandesha2_create_seq_bean_t *create_seq_bean,
+    sandesha2_rm_bean_t *create_seq_bean,
     const axis2_env_t *env)
 {
     sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;

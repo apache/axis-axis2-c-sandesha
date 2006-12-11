@@ -23,12 +23,12 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_seq_property_mgr_free(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axis2_env_t *env)
 {
-    return seq_prop_mgr->ops->free(seq_prop_mgr, env);
+    return seq_prop_mgr->ops.free(seq_prop_mgr, env);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -37,7 +37,7 @@ sandesha2_seq_property_mgr_insert(
     const axis2_env_t *env,
     sandesha2_seq_property_bean_t *bean)
 {
-    return seq_prop_mgr->ops->insert(seq_prop_mgr, env, bean);
+    return seq_prop_mgr->ops.insert(seq_prop_mgr, env, bean);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -47,7 +47,7 @@ sandesha2_seq_property_mgr_remove(
         axis2_char_t *seq_id,
         axis2_char_t *name)
 {
-    return seq_prop_mgr->ops->remove(seq_prop_mgr, env, seq_id, name);
+    return seq_prop_mgr->ops.remove(seq_prop_mgr, env, seq_id, name);
 }
 
 sandesha2_seq_property_bean_t *AXIS2_CALL
@@ -57,7 +57,7 @@ sandesha2_seq_property_mgr_retrieve(
     axis2_char_t *seq_id,
     axis2_char_t *name)
 {
-    return seq_prop_mgr->ops->retrieve(seq_prop_mgr, env, seq_id, name);
+    return seq_prop_mgr->ops.retrieve(seq_prop_mgr, env, seq_id, name);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -66,7 +66,7 @@ sandesha2_seq_property_mgr_update(
     const axis2_env_t *env,
     sandesha2_seq_property_bean_t *bean)
 {
-    return seq_prop_mgr->ops->update(seq_prop_mgr, env, bean);
+    return seq_prop_mgr->ops.update(seq_prop_mgr, env, bean);
 }
 
 axis2_array_list_t *AXIS2_CALL
@@ -75,7 +75,7 @@ sandesha2_seq_property_mgr_find(
     const axis2_env_t *env,
     sandesha2_seq_property_bean_t *bean)
 {
-    return seq_prop_mgr->ops->find(seq_prop_mgr, env, bean);
+    return seq_prop_mgr->ops.find(seq_prop_mgr, env, bean);
 }
 
 sandesha2_seq_property_bean_t *AXIS2_CALL
@@ -84,7 +84,7 @@ sandesha2_seq_property_mgr_find_unique(
     const axis2_env_t *env,
     sandesha2_seq_property_bean_t *bean)
 {
-    return seq_prop_mgr->ops->find_unique(seq_prop_mgr, env, bean);
+    return seq_prop_mgr->ops.find_unique(seq_prop_mgr, env, bean);
 }
 
 axis2_array_list_t *AXIS2_CALL
@@ -92,15 +92,6 @@ sandesha2_seq_property_mgr_retrieve_all(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axis2_env_t *env)
 {
-    return seq_prop_mgr->ops->retrieve_all(seq_prop_mgr, env);
-}
-
-axis2_bool_t AXIS2_CALL
-sandesha2_seq_property_mgr_update_or_insert(
-    sandesha2_seq_property_mgr_t *seq_prop_mgr,
-    const axis2_env_t *env,
-    sandesha2_seq_property_bean_t *bean)
-{
-    return seq_prop_mgr->ops->update_or_insert(seq_prop_mgr, env, bean);
+    return seq_prop_mgr->ops.retrieve_all(seq_prop_mgr, env);
 }
 

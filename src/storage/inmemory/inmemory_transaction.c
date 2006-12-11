@@ -97,7 +97,7 @@ sandesha2_inmemory_transaction_create(
         (env->allocator, sizeof(sandesha2_inmemory_transaction_impl_t));
 
     trans_impl->storage_mgr = storage_mgr;
-    trans_impl->enlisted_beans = NULL;
+    trans_impl->enlisted_beans = axis2_array_list_create(env, 0);
     trans_impl->mutex = axis2_thread_mutex_create(env->allocator,
         AXIS2_THREAD_MUTEX_DEFAULT);
     trans_impl->trans.ops = &transaction_ops;
@@ -173,16 +173,16 @@ sandesha2_inmemory_transaction_release_locks(
     sandesha2_inmemory_transaction_impl_t *trans_impl = NULL;
     int i = 0, size = 0;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
-    sandesha2_storage_mgr_remove_inmemory_transaction(trans_impl->storage_mgr, 
-        env, trans);
     if(trans_impl->enlisted_beans)
         size = AXIS2_ARRAY_LIST_SIZE(trans_impl->enlisted_beans, env);
     for(i = 0; i < size; i++)
     {
+        sandesha2_rm_bean_t *rm_bean_l = NULL;
         sandesha2_rm_bean_t *rm_bean = (sandesha2_rm_bean_t *) 
             AXIS2_ARRAY_LIST_GET(trans_impl->enlisted_beans, env, i);
+        rm_bean_l = sandesha2_rm_bean_get_base(rm_bean, env);
         axis2_thread_mutex_lock(trans_impl->mutex);
-        sandesha2_rm_bean_set_transaction(rm_bean, env, NULL);
+        sandesha2_rm_bean_set_transaction(rm_bean_l, env, NULL);
         axis2_thread_mutex_unlock(trans_impl->mutex);
     }
     AXIS2_ARRAY_LIST_FREE(trans_impl->enlisted_beans, env);
@@ -195,33 +195,40 @@ sandesha2_inmemory_transaction_enlist(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
+    sandesha2_rm_bean_t *rm_bean_l = NULL;
     sandesha2_inmemory_transaction_impl_t *trans_impl = NULL;
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Start:sandesha2_inmemory_transaction_enlist");
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
+    rm_bean_l = sandesha2_rm_bean_get_base(rm_bean, env);
     if(rm_bean)
     {
         sandesha2_transaction_t *other = NULL;
         axis2_thread_mutex_lock(trans_impl->mutex);
-        other = sandesha2_rm_bean_get_transaction(rm_bean, env);
-        while(other && other != trans)
+        other = sandesha2_rm_bean_get_transaction(rm_bean_l, env);
+        /*while(other && other != trans)
         {
             int size = 0;
             if(trans_impl->enlisted_beans)
                 size = AXIS2_ARRAY_LIST_SIZE(trans_impl->enlisted_beans, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "size:%d", size);
             if(size > 0)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Possible deadlock");
                 AXIS2_ERROR_SET(env->error, AXIS2_ERROR_POSSIBLE_DEADLOCK, 
                     AXIS2_FAILURE);
-                AXIS2_SLEEP(6);
             }
-            other = sandesha2_rm_bean_get_transaction(rm_bean, env);
-        }
+            AXIS2_SLEEP(6);
+            other = sandesha2_rm_bean_get_transaction(rm_bean_l, env);
+        }*/
         if(!other)
         {
-            sandesha2_rm_bean_set_transaction(rm_bean, env, trans);
+            sandesha2_rm_bean_set_transaction(rm_bean_l, env, trans);
             AXIS2_ARRAY_LIST_ADD(trans_impl->enlisted_beans, env, rm_bean);
         }   
         axis2_thread_mutex_unlock(trans_impl->mutex);
     }    
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit:sandesha2_inmemory_transaction_enlist");
 }
 

@@ -421,7 +421,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             sandesha2_create_seq_bean_t *create_seq_bean = NULL;
             
             create_seq_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
-            SANDESHA2_CREATE_SEQ_MGR_REMOVE(create_seq_mgr, env,
+            sandesha2_create_seq_mgr_remove(create_seq_mgr, env,
                         sandesha2_create_seq_bean_get_create_seq_msg_id(
                         create_seq_bean, env));
         }

@@ -24,12 +24,12 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_sender_mgr_free(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env)
 {
-    return sender->ops->free(sender, env);
+    return sender->ops.free(sender, env);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -38,7 +38,7 @@ sandesha2_sender_mgr_insert(
     const axis2_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    return sender->ops->insert(sender, env, bean);
+    return sender->ops.insert(sender, env, bean);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -47,7 +47,7 @@ sandesha2_sender_mgr_remove(
     const axis2_env_t *env,
     axis2_char_t *msg_id)
 {
-    return sender->ops->remove(sender, env, msg_id);
+    return sender->ops.remove(sender, env, msg_id);
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
@@ -56,7 +56,7 @@ sandesha2_sender_mgr_retrieve(
     const axis2_env_t *env,
     axis2_char_t *msg_id)
 {
-    return sender->ops->retrieve(sender, env, msg_id);
+    return sender->ops.retrieve(sender, env, msg_id);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -65,7 +65,7 @@ sandesha2_sender_mgr_update(
     const axis2_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    return sender->ops->update(sender, env, bean);
+    return sender->ops.update(sender, env, bean);
 }
 
 axis2_array_list_t *AXIS2_CALL
@@ -74,7 +74,7 @@ sandesha2_sender_mgr_find_by_internal_seq_id(
     const axis2_env_t *env,
     axis2_char_t *internal_seq_id)
 {
-    return sender->ops->find_by_internal_seq_id(sender, env, internal_seq_id);
+    return sender->ops.find_by_internal_seq_id(sender, env, internal_seq_id);
 }
 
 axis2_array_list_t *AXIS2_CALL
@@ -83,7 +83,7 @@ sandesha2_sender_mgr_find_by_sender_bean(
     const axis2_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    return sender->ops->find_by_sender_bean(sender, env, bean);
+    return sender->ops.find_by_sender_bean(sender, env, bean);
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
@@ -92,7 +92,7 @@ sandesha2_sender_mgr_find_unique(
     const axis2_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    return sender->ops->find_unique(sender, env, bean);
+    return sender->ops.find_unique(sender, env, bean);
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
@@ -100,18 +100,6 @@ sandesha2_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env)
 {
-    return sender->ops->get_next_msg_to_send(sender, env);
+    return sender->ops.get_next_msg_to_send(sender, env);
 }
-
-sandesha2_sender_bean_t *AXIS2_CALL
-sandesha2_sender_mgr_retrieve_from_msg_ref_key(
-    sandesha2_sender_mgr_t *sender,
-    const axis2_env_t *env,
-    axis2_char_t *msg_ctx_ref_key)
-{
-    return sender->ops->retrieve_from_msg_ref_key(sender, env, msg_ctx_ref_key);
-}
-
-
-
 

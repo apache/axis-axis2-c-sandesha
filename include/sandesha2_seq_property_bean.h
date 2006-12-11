@@ -19,18 +19,23 @@
 
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
+#include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_seq_property_bean_t sandesha2_seq_property_bean_t ;
-struct sandesha2_rm_bean;
+typedef struct sandesha2_seq_property_bean sandesha2_seq_property_bean_t ;
+struct sandesha2_transaction;
+
+AXIS2_DECLARE_DATA struct sandesha2_seq_property_bean
+{
+    sandesha2_rm_bean_t rm_bean;
+};
 
 /* constructors 
  */
-
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 sandesha2_seq_property_bean_create(
     const axis2_env_t *env);
@@ -42,14 +47,14 @@ sandesha2_seq_property_bean_create_with_data(
     axis2_char_t *prop_name,
     axis2_char_t *value);
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_seq_property_bean_free (
-    sandesha2_seq_property_bean_t *seq_property,
+    sandesha2_rm_bean_t *seq_property,
     const axis2_env_t *env);
 
 struct sandesha2_rm_bean * AXIS2_CALL
 sandesha2_seq_property_bean_get_base( 
-    sandesha2_seq_property_bean_t* seq_property,
+    sandesha2_rm_bean_t* seq_property,
     const axis2_env_t *env);
 
 void AXIS2_CALL
@@ -90,6 +95,28 @@ sandesha2_seq_property_bean_set_value (
     sandesha2_seq_property_bean_t *seq_property,
     const axis2_env_t *env,
     axis2_char_t *value);
+
+void AXIS2_CALL
+sandesha2_seq_property_bean_set_id( 
+    sandesha2_rm_bean_t *seq_property_bean,
+	const axis2_env_t *env, 
+    long id);
+
+long AXIS2_CALL
+sandesha2_seq_property_bean_get_id( 
+    sandesha2_rm_bean_t *seq_property_bean,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_seq_property_bean_set_transaction( 
+    sandesha2_rm_bean_t *seq_property_bean,
+	const axis2_env_t *env, 
+    struct sandesha2_transaction *transaction);
+
+struct sandesha2_transaction *AXIS2_CALL
+sandesha2_seq_property_bean_get_transaction( 
+    sandesha2_rm_bean_t *seq_property_bean,
+	const axis2_env_t *env);
 
 #ifdef __cplusplus
 }

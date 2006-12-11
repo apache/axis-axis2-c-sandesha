@@ -22,7 +22,7 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env)

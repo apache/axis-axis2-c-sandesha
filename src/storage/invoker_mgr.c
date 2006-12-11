@@ -22,7 +22,7 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_invoker_mgr_free(
     sandesha2_invoker_mgr_t *invoker,
     const axis2_env_t *env)

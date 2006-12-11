@@ -185,7 +185,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] sandesha2_create_seq_res_msg_processor_process_in_msg .........");
+        "[sandesha2] Entry:sandesha2_create_seq_res_msg_processor_process_in_msg");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
@@ -253,7 +253,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     sandesha2_create_seq_bean_set_seq_id(create_seq_bean, env, new_out_seq_id);
-    SANDESHA2_CREATE_SEQ_MGR_UPDATE(create_seq_mgr, env, create_seq_bean);
+    sandesha2_create_seq_mgr_update(create_seq_mgr, env, create_seq_bean);
     
     create_seq_sender_bean = sandesha2_sender_mgr_retrieve(retrans_mgr,
                         env, create_seq_msg_id);

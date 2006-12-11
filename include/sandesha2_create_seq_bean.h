@@ -56,7 +56,7 @@ sandesha2_create_seq_bean_free  (
 
 struct sandesha2_rm_bean * AXIS2_CALL
 sandesha2_create_seq_bean_get_base( 
-    sandesha2_create_seq_bean_t* create_seq,
+    sandesha2_rm_bean_t* create_seq,
     const axis2_env_t *env);
 
 void AXIS2_CALL

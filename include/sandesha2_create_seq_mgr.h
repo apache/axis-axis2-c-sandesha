@@ -50,7 +50,7 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq_mgr_ops
      * Deallocate memory
      * @return status code
      */
-    axis2_status_t (AXIS2_CALL *
+    void (AXIS2_CALL *
         free) (
                 sandesha2_create_seq_mgr_t *seq_mgr,
                 const axis2_env_t *env);
@@ -102,7 +102,7 @@ sandesha2_create_seq_mgr_create(
     const axis2_env_t *env,
     axis2_ctx_t *ctx);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env);
@@ -142,7 +142,6 @@ sandesha2_create_seq_mgr_find_unique(
     sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env,
     sandesha2_create_seq_bean_t *bean);
-
 
 /** @} */
 #ifdef __cplusplus

@@ -16,11 +16,17 @@
  
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_inmemory_create_seq_mgr.h>
 #include <sandesha2_invoker_mgr.h>
+#include <sandesha2_inmemory_invoker_mgr.h>
 #include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_inmemory_next_msg_mgr.h>
 #include <sandesha2_sender_mgr.h>
+#include <sandesha2_inmemory_sender_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_inmemory_seq_property_mgr.h>
 #include <sandesha2_transaction.h>
+#include <sandesha2_inmemory_transaction.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
@@ -200,13 +206,17 @@ sandesha2_inmemory_storage_mgr_create(
         env);
     storage_mgr_impl->conf_ctx = conf_ctx;
     ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    storage_mgr_impl->create_seq_mgr = sandesha2_create_seq_mgr_create(env, 
-        ctx);
-    storage_mgr_impl->next_msg_mgr = sandesha2_next_msg_mgr_create(env, ctx);
-    storage_mgr_impl->seq_property_mgr = sandesha2_seq_property_mgr_create(env, 
-        ctx);
-    storage_mgr_impl->sender_mgr = sandesha2_sender_mgr_create(env, ctx);
-    storage_mgr_impl->invoker_mgr = sandesha2_invoker_mgr_create(env, ctx);
+    storage_mgr_impl->create_seq_mgr = sandesha2_inmemory_create_seq_mgr_create(
+        env, &(storage_mgr_impl->storage_mgr), ctx);
+    storage_mgr_impl->next_msg_mgr = sandesha2_inmemory_next_msg_mgr_create(
+        env, &(storage_mgr_impl->storage_mgr), ctx);
+    storage_mgr_impl->seq_property_mgr = 
+        sandesha2_inmemory_seq_property_mgr_create(env, 
+            &(storage_mgr_impl->storage_mgr), ctx);
+    storage_mgr_impl->sender_mgr = sandesha2_inmemory_sender_mgr_create(env, 
+        &(storage_mgr_impl->storage_mgr), ctx);
+    storage_mgr_impl->invoker_mgr = sandesha2_inmemory_invoker_mgr_create(env, 
+        &(storage_mgr_impl->storage_mgr), ctx);
 
     storage_mgr_impl->storage_mgr.ops = &storage_mgr_ops;
 
@@ -232,7 +242,7 @@ sandesha2_inmemory_storage_mgr_free(
 
     if(storage_mgr_impl->create_seq_mgr)
     {
-        SANDESHA2_CREATE_SEQ_MGR_FREE(storage_mgr_impl->create_seq_mgr, env);
+        sandesha2_create_seq_mgr_free(storage_mgr_impl->create_seq_mgr, env);
         storage_mgr_impl->create_seq_mgr = NULL;
     }
     if(storage_mgr_impl->next_msg_mgr)
@@ -275,7 +285,7 @@ sandesha2_inmemory_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env)
 {
-    return sandesha2_transaction_create(env, storage_mgr);
+    return sandesha2_inmemory_transaction_create(env, storage_mgr);
 }
 
 void AXIS2_CALL

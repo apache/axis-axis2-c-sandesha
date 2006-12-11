@@ -29,6 +29,7 @@
 #include <axis2_utils.h>
 #include <axis2_ctx.h>
 #include <axis2_array_list.h>
+#include <sandesha2_sender_bean.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -37,15 +38,18 @@ extern "C"
 
 typedef struct sandesha2_sender_mgr sandesha2_sender_mgr_t;
 typedef struct sandesha2_sender_mgr_ops sandesha2_sender_mgr_ops_t;
-struct sandesha2_sender_bean_t;
 
+/** @defgroup sandesha2_sender_mgr In Memory Sender Manager
+  * @ingroup sandesha2
+  * @{
+  */
 AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
 {
    /** 
      * Deallocate memory
      * @return status code
      */
-    axis2_status_t (AXIS2_CALL * 
+    void (AXIS2_CALL * 
             free)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env);
@@ -54,7 +58,7 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
             insert)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env,
-                struct sandesha2_sender_bean_t *bean);
+                sandesha2_sender_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
             remove)(
@@ -62,7 +66,7 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
                 const axis2_env_t *env,
                 axis2_char_t *msg_id);
 
-    struct sandesha2_sender_bean_t *(AXIS2_CALL *
+    sandesha2_sender_bean_t *(AXIS2_CALL *
             retrieve)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env,
@@ -72,7 +76,7 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
             update)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env,
-                struct sandesha2_sender_bean_t *bean);
+                sandesha2_sender_bean_t *bean);
 
     axis2_array_list_t *(AXIS2_CALL *
             find_by_internal_seq_id)(
@@ -84,29 +88,23 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
             find_by_sender_bean)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env,
-                struct sandesha2_sender_bean_t *bean);
+                sandesha2_sender_bean_t *bean);
 
-    struct sandesha2_sender_bean_t *(AXIS2_CALL *
+    sandesha2_sender_bean_t *(AXIS2_CALL *
             find_unique)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env,
-                struct sandesha2_sender_bean_t *bean);
+                sandesha2_sender_bean_t *bean);
 
-    struct sandesha2_sender_bean_t *(AXIS2_CALL *
+    sandesha2_sender_bean_t *(AXIS2_CALL *
             get_next_msg_to_send)(
                 sandesha2_sender_mgr_t *sender,
                 const axis2_env_t *env);
-
-    struct sandesha2_sender_bean_t *(AXIS2_CALL *
-            retrieve_from_msg_ref_key)(
-                sandesha2_sender_mgr_t *sender,
-                const axis2_env_t *env,
-                axis2_char_t *msg_ctx_ref_key);
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_sender_mgr
 {
-    const sandesha2_sender_mgr_ops_t *ops;
+    sandesha2_sender_mgr_ops_t ops;
 };
 
 AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
@@ -114,7 +112,7 @@ sandesha2_sender_mgr_create(
     const axis2_env_t *env,
     axis2_ctx_t *ctx);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_sender_mgr_free(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *envv);
@@ -123,7 +121,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_sender_mgr_insert(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env,
-    struct sandesha2_sender_bean_t *bean);
+    sandesha2_sender_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_sender_mgr_remove(
@@ -131,7 +129,7 @@ sandesha2_sender_mgr_remove(
     const axis2_env_t *env,
     axis2_char_t *msg_id);
 
-struct sandesha2_sender_bean_t *AXIS2_CALL
+sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_retrieve(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env,
@@ -141,7 +139,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_sender_mgr_update(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env,
-    struct sandesha2_sender_bean_t *bean);
+    sandesha2_sender_bean_t *bean);
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_sender_mgr_find_by_internal_seq_id(
@@ -153,34 +151,18 @@ axis2_array_list_t *AXIS2_CALL
 sandesha2_sender_mgr_find_by_sender_bean(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env,
-    struct sandesha2_sender_bean_t *bean);
+    sandesha2_sender_bean_t *bean);
 
-struct sandesha2_sender_bean_t *AXIS2_CALL
+sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_find_unique(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env,
-    struct sandesha2_sender_bean_t *bean);
+    sandesha2_sender_bean_t *bean);
 
-struct sandesha2_sender_bean_t *AXIS2_CALL
+sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env);
-
-struct sandesha2_sender_bean_t *AXIS2_CALL
-sandesha2_sender_mgr_retrieve_from_msg_ref_key(
-    sandesha2_sender_mgr_t *sender,
-    const axis2_env_t *env,
-    axis2_char_t *msg_ctx_ref_key);
-
-/*
-static axis2_array_list_t *
-sandesha2_sender_mgr_find_beans_with_msg_no(
-    sandesha2_sender_mgr_t *sender,
-    const axis2_env_t *env,
-    axis2_array_list_t *list,
-    long msg_no);
-*/
-
 
 /** @} */
 #ifdef __cplusplus

@@ -112,7 +112,7 @@ sandesha2_terminate_seq_msg_processor_create(
                         (env->allocator, 
                         sizeof( sandesha2_terminate_seq_msg_processor_impl_t));
 	
-    if(NULL == msg_proc_impl)
+    if(!msg_proc_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
@@ -120,7 +120,7 @@ sandesha2_terminate_seq_msg_processor_create(
     
     msg_proc_impl->msg_processor.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_msg_processor_ops_t));
-    if(NULL == msg_proc_impl->msg_processor.ops)
+    if(!msg_proc_impl->msg_processor.ops)
 	{
         sandesha2_terminate_seq_msg_processor_free((sandesha2_msg_processor_t*)
                          msg_proc_impl, env);
@@ -148,7 +148,7 @@ sandesha2_terminate_seq_msg_processor_free (
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_proc_impl = SANDESHA2_INTF_TO_IMPL(msg_processor);
     
-    if(NULL != msg_processor->ops)
+    if(msg_processor->ops)
         AXIS2_FREE(env->allocator, msg_processor->ops);
     
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(msg_processor));
@@ -184,7 +184,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     
-    if(NULL != seq_ack)
+    if(seq_ack)
     {
         sandesha2_msg_processor_t *ack_processor = NULL;
         ack_processor = sandesha2_ack_msg_processor_create(env);
@@ -192,7 +192,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
     term_seq = (sandesha2_terminate_seq_t*)sandesha2_msg_ctx_get_msg_part(
                     rm_msg_ctx, env, SANDESHA2_MSG_PART_TERMINATE_SEQ);
-    if(NULL == term_seq)
+    if(!term_seq)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate "
                     "Sequence part is not available");
@@ -202,7 +202,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
     seq_id = sandesha2_identifier_get_identifier(
                     sandesha2_terminate_seq_get_identifier(term_seq, env), env);
-    if(NULL == seq_id || 0 == AXIS2_STRLEN(seq_id))
+    if(!seq_id || 0 == AXIS2_STRLEN(seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
                     "sequence id");
@@ -283,9 +283,9 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
                         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, storage_man);
     highest_msg_key = sandesha2_utils_get_seq_property(env, seq_id,
                         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, storage_man);
-    if(NULL != highest_msg_num_str)
+    if(highest_msg_num_str)
     {
-        if(NULL == highest_msg_key)
+        if(!highest_msg_key)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Key of the "
                         "highest message number has not been stored");
@@ -315,7 +315,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         if(op_ctx)
             highest_out_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
                 AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
-        if(NULL != highest_out_msg)
+        if(highest_out_msg)
         {
             sandesha2_msg_ctx_t *highest_out_rm_msg = NULL;
             sandesha2_seq_t *seq_of_out_msg = NULL;
@@ -324,7 +324,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
             seq_of_out_msg = (sandesha2_seq_t*)
                         sandesha2_msg_ctx_get_msg_part(highest_out_rm_msg, env,
                         SANDESHA2_MSG_PART_SEQ);
-            if(NULL != seq_of_out_msg)
+            if(seq_of_out_msg)
             {
                 axis2_char_t long_str[32];
                 sandesha2_seq_property_bean_t *highest_out_msg_bean = NULL;
@@ -345,7 +345,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     out_seq_id = sandesha2_utils_get_seq_property(env, res_side_int_seq_id,
                         SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_man);
     if(AXIS2_TRUE == add_res_side_term && highest_out_msg_num > 0 &&
-                NULL != res_side_int_seq_id && NULL != out_seq_id)
+                res_side_int_seq_id && out_seq_id)
     {
         axis2_bool_t all_acked = AXIS2_FALSE;
         all_acked = sandesha2_utils_is_all_msgs_acked_upto(env, 
@@ -526,7 +526,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     int_seq_id = sandesha2_utils_get_internal_seq_id(env, to_address, seq_key);
     out_seq_id = sandesha2_utils_get_seq_property(env, int_seq_id, 
                         SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_man);
-    if(NULL == out_seq_id)
+    if(!out_seq_id)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] seq_id was not"
                         " found. Cannot send the terminate message");
@@ -549,7 +549,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     AXIS2_CONF_CTX_REGISTER_OP_CTX(conf_ctx, env, sandesha2_msg_ctx_get_msg_id(
                         rm_msg_ctx, env), op_ctx);
     
-    if(NULL != terminated && 0 == AXIS2_STRCMP(terminated, SANDESHA2_VALUE_TRUE))
+    if(terminated && 0 == AXIS2_STRCMP(terminated, SANDESHA2_VALUE_TRUE))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate was "
                         "added previously");
@@ -569,7 +569,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
                         AXIS2_FALSE);
     AXIS2_MSG_CTX_SET_TO(msg_ctx, env, axis2_endpoint_ref_create(env, to_address));
     rm_version = sandesha2_utils_get_rm_version(env, int_seq_id, storage_man);
-    if(NULL == rm_version)
+    if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cant find the"
                         " rm_version of the given message");
@@ -584,7 +584,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     transport_to = sandesha2_utils_get_seq_property(env, int_seq_id, 
                         SANDESHA2_SEQ_PROP_TRANSPORT_TO, storage_man);
 
-    if(NULL != transport_to)
+    if(transport_to)
     {
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);

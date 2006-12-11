@@ -37,6 +37,11 @@ AXIS2_DECLARE_DATA struct sandesha2_rm_bean_ops
             free) ( 
                 sandesha2_rm_bean_t *rm_bean,
                 const axis2_env_t *env);
+
+    sandesha2_rm_bean_t * (AXIS2_CALL *
+            get_base) ( 
+                sandesha2_rm_bean_t *rm_bean,
+                const axis2_env_t *env);
     
     void (AXIS2_CALL *
             set_id) ( 
@@ -63,7 +68,7 @@ AXIS2_DECLARE_DATA struct sandesha2_rm_bean_ops
 
 AXIS2_DECLARE_DATA struct sandesha2_rm_bean
 {
-    const sandesha2_rm_bean_ops_t *ops;
+    sandesha2_rm_bean_ops_t ops;
 };
 
 /* constructors 
@@ -76,6 +81,11 @@ void AXIS2_CALL
 sandesha2_rm_bean_free( 
     sandesha2_rm_bean_t *rm_bean,
 	const axis2_env_t *env);
+
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_rm_bean_get_base( 
+    sandesha2_rm_bean_t *rm_bean,
+    const axis2_env_t *env);
 
 void AXIS2_CALL
 sandesha2_rm_bean_set_id( 

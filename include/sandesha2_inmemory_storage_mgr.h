@@ -13,42 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#ifndef SANDESHA2_INMEMORY_NEXT_MSG_MGR_H
-#define SANDESHA2_INMEMORY_NEXT_MSG_MGR_H
+ 
+#ifndef SANDESHA2_INMEMORY_STORAGE_MGR_H
+#define SANDESHA2_INMEMORY_STORAGE_MGR_H
 
 /**
- * @file sandesha2_inmemory_next_msg_mgr.h
- * @brief Sandesha In Memory Next Message Manager Interface
- */
+  * @file sandesha2_inmemory_storage_mgr.h
+  * @brief 
+  */
 
-#include <axis2_allocator.h>
+#include <axis2_utils_defines.h>
 #include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axis2_conf_ctx.h>
+
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-struct sandesha2_storage_mgr;
-struct axis2_ctx;
+/** 
+ * @ingroup sandesha2_storage
+ * @{
+ */
 
-/** @defgroup sandesha2_inmemory_next_msg_mgr In Memory Next Message Manager
-  * @ingroup sandesha2
-  * @{
-  */
-
-AXIS2_EXTERN struct sandesha2_next_msg_mgr * AXIS2_CALL
-sandesha2_inmemory_next_msg_mgr_create(
-    const axis2_env_t *env,
-    struct sandesha2_storage_mgr *storage_mgr,
-    struct axis2_ctx *ctx);
-
+AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
+sandesha2_inmemory_storage_mgr_create(
+    const axis2_env_t *env, 
+    axis2_conf_ctx_t *conf_ctx);
+ 
 /** @} */
 #ifdef __cplusplus
 }
 #endif
-#endif /* SANDESHA2_INMEMORY_NEXT_MSG_MGR_H */
+
+#endif /*SANDESHA2_INMEMORY_STORAGE_MGR_H*/

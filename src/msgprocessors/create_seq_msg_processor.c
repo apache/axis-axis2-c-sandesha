@@ -265,7 +265,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         axis2_uuid_gen(env));
             create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(
                         storage_mgr, env);
-            SANDESHA2_CREATE_SEQ_MGR_INSERT(create_seq_mgr, env, create_seq_bean);
+            sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
             
             out_seq_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(out_seq_bean, env, 

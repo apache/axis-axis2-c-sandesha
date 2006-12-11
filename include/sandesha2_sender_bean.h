@@ -19,14 +19,20 @@
 
 #include <axis2_utils_defines.h>
 #include <axis2_env.h>
+#include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_sender_bean_t sandesha2_sender_bean_t;
-struct sandesha2_rm_bean;
+typedef struct sandesha2_sender_bean sandesha2_sender_bean_t;
+struct sandesha2_transaction;
+
+AXIS2_DECLARE_DATA struct sandesha2_sender_bean
+{
+    sandesha2_rm_bean_t rm_bean;
+};
 
 /* constructors 
  */
@@ -44,14 +50,14 @@ sandesha2_sender_bean_create_with_data(
     axis2_char_t *int_seq_id,
     long msg_no);
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_sender_bean_free (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_rm_bean_t *sender,
     const axis2_env_t *env);
 
 struct sandesha2_rm_bean * AXIS2_CALL
 sandesha2_sender_bean_get_base( 
-    sandesha2_sender_bean_t* sender,
+    sandesha2_rm_bean_t* sender,
     const axis2_env_t *env);
 
 void AXIS2_CALL
@@ -190,6 +196,28 @@ sandesha2_sender_bean_set_to_address (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_to_address(
     sandesha2_sender_bean_t *sender,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_id( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env, 
+    long id);
+
+long AXIS2_CALL
+sandesha2_sender_bean_get_id( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env);
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_transaction( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env, 
+    struct sandesha2_transaction *transaction);
+
+struct sandesha2_transaction *AXIS2_CALL
+sandesha2_sender_bean_get_transaction( 
+    sandesha2_rm_bean_t *sender_bean,
 	const axis2_env_t *env);
 
 #ifdef __cplusplus

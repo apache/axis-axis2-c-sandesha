@@ -172,6 +172,7 @@ sandesha2_sender_worker_run (
     axis2_thread_t *worker_thread = NULL;
     sandesha2_sender_worker_args_t *args = NULL;
 
+    AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_worker_run");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_worker_args_t)); 
@@ -187,6 +188,7 @@ sandesha2_sender_worker_run (
         return AXIS2_FAILURE;
     }
     AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread); 
+    AXIS2_LOG_INFO(env->log, "Exit:sandesha2_sender_worker_run");
     return AXIS2_SUCCESS;
 }
 
@@ -226,7 +228,7 @@ sandesha2_sender_worker_worker_func(
     msg_id = sender_worker->msg_id;
     transport_out = sender_worker->transport_out;
     
-    AXIS2_LOG_INFO(env->log, "[Sandesha2] Start:Sender Worker Worker function\n");        
+    AXIS2_LOG_INFO(env->log, "[Sandesha2] Entry:sandesha2_sender_worker_worker_func\n");        
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
@@ -264,6 +266,8 @@ sandesha2_sender_worker_worker_func(
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
     if(!continue_sending)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Do not continue sending the message");
         return NULL;
     }
     
@@ -274,7 +278,11 @@ sandesha2_sender_worker_worker_func(
         
     if(qualified_for_sending && 0 != AXIS2_STRCMP(
         qualified_for_sending, SANDESHA2_VALUE_TRUE))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Message is not qualified for sending sending");
             return NULL;
+    }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
     prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
@@ -300,7 +308,11 @@ sandesha2_sender_worker_worker_func(
                 continue_sending = AXIS2_TRUE;
         }
         if(continue_sending)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
+                "Sending is true. So returning from Sender Worker");
             return NULL;
+        }
     }
     /* 
      *   This method is not implemented yet
@@ -441,7 +453,7 @@ sandesha2_sender_worker_worker_func(
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif
-    AXIS2_LOG_INFO(env->log, "[Sandesha2] Exit:Sender Worker Workder function\n");        
+    AXIS2_LOG_INFO(env->log, "[Sandesha2] Exit:sandesha2_sender_worker_worker_func\n");        
     return NULL;
 }
 

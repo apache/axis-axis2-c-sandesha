@@ -332,7 +332,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
     axis2_endpoint_ref_t *reply_to_epr = NULL;
     axis2_char_t *addr = NULL;
     axis2_endpoint_ref_t *epr = NULL;
-    
+   
+    AXIS2_LOG_INFO(env->log, "Start:sandesha2_seq_mgr_setup_new_client_seq");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, first_app_msg, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
@@ -491,6 +492,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, int_seq_id);
     sandesha2_seq_mgr_update_client_side_listener_if_needed(env, first_app_msg,
         anon_uri);
+    AXIS2_LOG_INFO(env->log, "Exit:sandesha2_seq_mgr_setup_new_client_seq");
     return AXIS2_SUCCESS;
 }
 

@@ -308,7 +308,7 @@ extern "C"
 	/**
 	 * Bean Maps
 	 */
-	#define SANDESHA2_BEAN_MAP_CREATE_SEQUECE  "CreateSequenceBeanMap"
+	#define SANDESHA2_BEAN_MAP_CREATE_SEQUENCE  "CreateSequenceBeanMap"
 
 	#define SANDESHA2_BEAN_MAP_RETRANSMITTER  "RetransmitterBeanMap"
 

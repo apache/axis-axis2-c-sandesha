@@ -183,6 +183,7 @@ sandesha2_sender_run_for_seq(
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id)
 {
+    AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_run_for_seq");
     axis2_thread_mutex_lock(sender->mutex);
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -197,6 +198,7 @@ sandesha2_sender_run_for_seq(
         sandesha2_sender_run(sender, env);
     }
     axis2_thread_mutex_unlock(sender->mutex);
+    AXIS2_LOG_INFO(env->log, "Exit:sandesha2_sender_run_for_seq");
     return AXIS2_SUCCESS;
 }
             
@@ -208,6 +210,7 @@ sandesha2_sender_run (
     axis2_thread_t *worker_thread = NULL;
     sandesha2_sender_args_t *args = NULL;
 
+    AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_run");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t)); 
@@ -222,8 +225,8 @@ sandesha2_sender_run (
                         "failed sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
-    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread); 
-        
+    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread);     
+    AXIS2_LOG_INFO(env->log, "End:sandesha2_sender_run");
     return AXIS2_SUCCESS;
 }
 
@@ -246,6 +249,7 @@ sandesha2_sender_worker_func(
     sender = args->impl;
     sender = (sandesha2_sender_t*)sender;
     
+    AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_worker_func");
     storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(sender->conf_ctx, env));
                         
@@ -268,9 +272,12 @@ sandesha2_sender_worker_func(
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env);
         if(!sender_bean)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Sender Bean is NULL. "\
+                "So continue");
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
+        sandesha2_transaction_commit(transaction, env);
         if(msg_id)
         {
         /* Start a sender worker which will work on this message */
@@ -282,6 +289,7 @@ sandesha2_sender_worker_func(
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif
+    AXIS2_LOG_INFO(env->log, "Exit:sandesha2_sender_worker_func");
     return NULL;
 }
    

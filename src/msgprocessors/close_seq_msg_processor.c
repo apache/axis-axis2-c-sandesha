@@ -85,7 +85,7 @@ sandesha2_close_seq_msg_processor_create(const axis2_env_t *env)
                         (env->allocator, 
                         sizeof(sandesha2_close_seq_msg_processor_impl_t));
 	
-    if(NULL == msg_proc_impl)
+    if(!msg_proc_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
@@ -93,7 +93,7 @@ sandesha2_close_seq_msg_processor_create(const axis2_env_t *env)
     
     msg_proc_impl->msg_processor.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_msg_processor_ops_t));
-    if(NULL == msg_proc_impl->msg_processor.ops)
+    if(!msg_proc_impl->msg_processor.ops)
 	{
 		sandesha2_close_seq_msg_processor_free((sandesha2_msg_processor_t*)
                          msg_proc_impl, env);
@@ -119,7 +119,7 @@ sandesha2_close_seq_msg_processor_free (sandesha2_msg_processor_t *msg_processor
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_proc_impl = SANDESHA2_INTF_TO_IMPL(msg_processor);
     
-    if(NULL != msg_processor->ops)
+    if(msg_processor->ops)
         AXIS2_FREE(env->allocator, msg_processor->ops);
     
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(msg_processor));
@@ -167,7 +167,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env,
                         rm_msg_ctx, seq_id, storage_mgr);
-    if(NULL != fault_rm_msg_ctx)
+    if(fault_rm_msg_ctx)
     {
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND(engine, env, sandesha2_msg_ctx_get_msg_ctx(

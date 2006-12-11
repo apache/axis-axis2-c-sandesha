@@ -67,7 +67,8 @@
 
     </operation>
 
-
+   <!-- General Properties -->
+    <parameter name="" locked="false"></parameter>
    <!-- Database connection parameters -->
     <parameter name="sandesha2.db.conn.id" locked="false">jdbc:derby:SANDESHA2DB;create=true</parameter>
     <parameter name="sandesha2.db.driver" locked="false">org.apache.derby.jdbc.EmbeddedDriver</parameter>

@@ -15,6 +15,7 @@
  */
 
 #include <sandesha2_sender_bean.h>
+#include <sandesha2_transaction.h>
 #include <sandesha2_rm_bean.h>
 #include <string.h>
 #include <axis2_string.h>
@@ -22,9 +23,10 @@
 
 
 /*sender_bean struct */
-struct sandesha2_sender_bean_t
+typedef struct sandesha2_sender_bean_impl
 {
-    sandesha2_rm_bean_t *rm_bean;
+    sandesha2_sender_bean_t sender_bean;
+    sandesha2_rm_bean_t *rm_bean_impl;
 	axis2_char_t *msg_context_ref_key;
 	axis2_char_t *msg_id;
 	axis2_char_t *internal_seq_id;
@@ -37,40 +39,55 @@ struct sandesha2_sender_bean_t
 	axis2_char_t *seq_id;
 	axis2_char_t *wsrm_anon_uri;
 	axis2_char_t *to_address;
+} sandesha2_sender_bean_impl_t;
 
+#define SANDESHA2_INTF_TO_IMPL(sender_bean) \
+    ((sandesha2_sender_bean_impl_t *) sender_bean)
+
+static const sandesha2_rm_bean_ops_t rm_bean_ops =
+{
+    sandesha2_sender_bean_free,
+    sandesha2_sender_bean_get_base,
+    sandesha2_sender_bean_set_id,
+    sandesha2_sender_bean_get_id,
+    sandesha2_sender_bean_set_transaction,
+    sandesha2_sender_bean_get_transaction
 };
-	
+
 AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
 sandesha2_sender_bean_create(const axis2_env_t *env)
 {
-	sandesha2_sender_bean_t *sender = NULL;
+	sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
 
-	sender = (sandesha2_sender_bean_t*) AXIS2_MALLOC(env->allocator,
-				sizeof(sandesha2_sender_bean_t));
+	sender_bean_impl = (sandesha2_sender_bean_impl_t*) AXIS2_MALLOC(env->allocator,
+				sizeof(sandesha2_sender_bean_impl_t));
 
-	if(!sender)
+	if(!sender_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
 
 	/* init properties */
-	sender->msg_context_ref_key = NULL;
-	sender->msg_id = NULL;
-	sender->internal_seq_id = NULL;
-	sender->sent_count = -1;
-	sender->msg_no = -1;
-	sender->send = AXIS2_FALSE;
-	sender->resend = AXIS2_TRUE;
-	sender->time_to_send = -1;
-	sender->msg_type = 0;
-	sender->seq_id = NULL;
-	sender->wsrm_anon_uri = NULL;
-	sender->to_address = NULL;
-    sender->rm_bean = NULL;
+	sender_bean_impl->msg_context_ref_key = NULL;
+	sender_bean_impl->msg_id = NULL;
+	sender_bean_impl->internal_seq_id = NULL;
+	sender_bean_impl->sent_count = -1;
+	sender_bean_impl->msg_no = -1;
+	sender_bean_impl->send = AXIS2_FALSE;
+	sender_bean_impl->resend = AXIS2_TRUE;
+	sender_bean_impl->time_to_send = -1;
+	sender_bean_impl->msg_type = 0;
+	sender_bean_impl->seq_id = NULL;
+	sender_bean_impl->wsrm_anon_uri = NULL;
+	sender_bean_impl->to_address = NULL;
+    sender_bean_impl->rm_bean_impl = NULL;
 
-	return sender;
+    sender_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
+    sender_bean_impl->sender_bean.rm_bean.ops = rm_bean_ops;
+
+    return &(sender_bean_impl->sender_bean);
 }
 
 
@@ -85,341 +102,431 @@ sandesha2_sender_bean_create_with_data(
     long msg_no)
 
 {
-	sandesha2_sender_bean_t *sender = NULL;
+	sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
 
-	sender = (sandesha2_sender_bean_t*) AXIS2_MALLOC(env->allocator,
-				sizeof(sandesha2_sender_bean_t));
+	sender_bean_impl = (sandesha2_sender_bean_impl_t*) AXIS2_MALLOC(env->allocator,
+				sizeof(sandesha2_sender_bean_impl_t));
 
-	if(!sender)
+	if(!sender_bean_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
 		return NULL;
 	}
 
 	/* init properties */
-	sender->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
-	sender->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
-	sender->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
-	sender->sent_count = -1;
-	sender->msg_no = msg_no;
-	sender->send = send; 
-	sender->resend = AXIS2_TRUE;
-	sender->time_to_send = time_to_send;
-	sender->msg_type = 0;
-	sender->seq_id = NULL;
-	sender->wsrm_anon_uri = NULL;
-    sender->rm_bean = NULL;
+	sender_bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
+	sender_bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
+	sender_bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
+	sender_bean_impl->sent_count = -1;
+	sender_bean_impl->msg_no = msg_no;
+	sender_bean_impl->send = send; 
+	sender_bean_impl->resend = AXIS2_TRUE;
+	sender_bean_impl->time_to_send = time_to_send;
+	sender_bean_impl->msg_type = 0;
+	sender_bean_impl->seq_id = NULL;
+	sender_bean_impl->wsrm_anon_uri = NULL;
+    sender_bean_impl->rm_bean_impl = NULL;
+    sender_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
+    sender_bean_impl->sender_bean.rm_bean.ops = rm_bean_ops;
 
-	return sender;
+    return &(sender_bean_impl->sender_bean);
 }
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_sender_bean_free (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_rm_bean_t *sender_bean,
 	const axis2_env_t *env)
 {
-	if(sender->rm_bean)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->rm_bean_impl)
 	{
-		sandesha2_rm_bean_free(sender->rm_bean, env);
-		sender->rm_bean= NULL;
+		sandesha2_rm_bean_free(sender_bean_impl->rm_bean_impl, env);
+		sender_bean_impl->rm_bean_impl = NULL;
 	}
-	if(sender->msg_context_ref_key)
+	if(sender_bean_impl->msg_context_ref_key)
 	{
-		AXIS2_FREE(env->allocator, sender->msg_context_ref_key);
-		sender->msg_context_ref_key = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->msg_context_ref_key);
+		sender_bean_impl->msg_context_ref_key = NULL;
 	}
-	if(sender->msg_id)
+	if(sender_bean_impl->msg_id)
 	{
-		AXIS2_FREE(env->allocator, sender->msg_id);
-		sender->msg_id = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->msg_id);
+		sender_bean_impl->msg_id = NULL;
 	}
-	if(sender->internal_seq_id)
+	if(sender_bean_impl->internal_seq_id)
 	{
-		AXIS2_FREE(env->allocator, sender->internal_seq_id);
-		sender->internal_seq_id = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->internal_seq_id);
+		sender_bean_impl->internal_seq_id = NULL;
 	}
-	if(sender->seq_id)
+	if(sender_bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, sender->seq_id);
-		sender->seq_id = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->seq_id);
+		sender_bean_impl->seq_id = NULL;
 	}
-	if(sender->wsrm_anon_uri)
+	if(sender_bean_impl->wsrm_anon_uri)
 	{
-		AXIS2_FREE(env->allocator, sender->wsrm_anon_uri);
-		sender->wsrm_anon_uri = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->wsrm_anon_uri);
+		sender_bean_impl->wsrm_anon_uri = NULL;
 	}
-    return AXIS2_SUCCESS;
-
+    if(sender_bean_impl)
+    {
+        AXIS2_FREE(env->allocator, sender_bean_impl);
+        sender_bean_impl = NULL;
+    }
 }
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_sender_bean_get_base( 
-    sandesha2_sender_bean_t* sender,
+    sandesha2_rm_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->rm_bean;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->rm_bean_impl;
 }	
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_base (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env, 
     sandesha2_rm_bean_t* rm_bean)
 {
-	sender->rm_bean = rm_bean;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->rm_bean_impl = rm_bean;
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_ctx_ref_key (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->msg_context_ref_key;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->msg_context_ref_key;
 }
-
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_ctx_ref_key (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *ref_key)
 {
-	if(sender->msg_context_ref_key)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->msg_context_ref_key)
 	{
-		AXIS2_FREE(env->allocator, sender->msg_context_ref_key);
-		sender->msg_context_ref_key = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->msg_context_ref_key);
+		sender_bean_impl->msg_context_ref_key = NULL;
 	}
-
-	sender->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key, env);
-
+	sender_bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key, env);
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->msg_id;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->msg_id;
 }
 
 void AXIS2_CALL 
 sandesha2_sender_bean_set_msg_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *msg_id)
 {
-	if(sender->msg_id)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->msg_id)
 	{
 		AXIS2_FREE(env->allocator, msg_id);
-		sender->msg_id = NULL;
+		sender_bean_impl->msg_id = NULL;
 	}
-
-	sender->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
+	sender_bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
 }
-
 
 axis2_bool_t AXIS2_CALL
 sandesha2_sender_bean_is_send (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->send;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->send;
 }
-
-
 
 void AXIS2_CALL 
 sandesha2_sender_bean_set_send (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_bool_t send)
 {
-	sender->send = send;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->send = send;
 }
-
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_internal_seq_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->internal_seq_id;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->internal_seq_id;
 }
 
 void AXIS2_CALL 
 sandesha2_sender_bean_set_internal_seq_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *int_seq_id)
 {
-	if(sender->internal_seq_id)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->internal_seq_id)
 	{
 		AXIS2_FREE(env->allocator, int_seq_id);
-		sender->internal_seq_id = NULL;
+		sender_bean_impl->internal_seq_id = NULL;
 	}
 
-	sender->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
+	sender_bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
 }
 
 int AXIS2_CALL 
 sandesha2_sender_bean_get_sent_count (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->sent_count;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->sent_count;
 }
-
 
 void AXIS2_CALL 
 sandesha2_sender_bean_set_sent_count (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     int sent_count)
 {
-	sender->sent_count = sent_count;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->sent_count = sent_count;
 }
-
 
 long AXIS2_CALL
 sandesha2_sender_bean_get_msg_no (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->msg_no;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->msg_no;
 }
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_no (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     long msg_no)
 {
-	sender->msg_no = msg_no;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->msg_no = msg_no;
 }
-
 
 axis2_bool_t AXIS2_CALL
 sandesha2_sender_bean_is_resend (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->resend;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->resend;
 }
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_resend (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_bool_t resend)
 {
-	sender->resend = resend;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->resend = resend;
 }
 
 long AXIS2_CALL
 sandesha2_sender_bean_get_time_to_send (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->time_to_send;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->time_to_send;
 }
 
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_time_to_send (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     long time_to_send)
 {
-	sender->time_to_send = time_to_send;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->time_to_send = time_to_send;
 }
 
 int AXIS2_CALL
 sandesha2_sender_bean_get_msg_type (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->msg_type;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->msg_type;
 }
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_type (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     int msg_type)
 {
-	sender->msg_type = msg_type;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	sender_bean_impl->msg_type = msg_type;
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_seq_id(
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env)
 {
-	return sender->seq_id;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->seq_id;
 }
 
 
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_seq_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *seq_id)
 {
-	if(sender->seq_id)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->seq_id)
 	{
-		AXIS2_FREE(env->allocator, sender->seq_id);
-		sender->seq_id = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->seq_id);
+		sender_bean_impl->seq_id = NULL;
 	}
 
-	sender->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
+	sender_bean_impl->seq_id = (axis2_char_t *)AXIS2_STRDUP(seq_id, env);
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_wsrm_anon_uri(
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
 	const axis2_env_t *env)
 {
-	return sender->wsrm_anon_uri;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->wsrm_anon_uri;
 }
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_wsrm_anon_uri (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *anon_uri)
 {
-	if(sender->wsrm_anon_uri)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->wsrm_anon_uri)
 	{
-		AXIS2_FREE(env->allocator, sender->wsrm_anon_uri);
-		sender->wsrm_anon_uri = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->wsrm_anon_uri);
+		sender_bean_impl->wsrm_anon_uri = NULL;
 	}
 
-	sender->wsrm_anon_uri = (axis2_char_t *)AXIS2_STRDUP(anon_uri, env);
+	sender_bean_impl->wsrm_anon_uri = (axis2_char_t *)AXIS2_STRDUP(anon_uri, env);
 }
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_to_address (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
     const axis2_env_t *env,
     axis2_char_t *to_address)
 {
-	if(sender->to_address)
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	if(sender_bean_impl->to_address)
 	{
-		AXIS2_FREE(env->allocator, sender->to_address);
-		sender->to_address = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->to_address);
+		sender_bean_impl->to_address = NULL;
 	}
 
-	sender->to_address = (axis2_char_t *)AXIS2_STRDUP(to_address, env);
+	sender_bean_impl->to_address = (axis2_char_t *)AXIS2_STRDUP(to_address, env);
 }
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_to_address(
-    sandesha2_sender_bean_t *sender,
+    sandesha2_sender_bean_t *sender_bean,
 	const axis2_env_t *env)
 {
-	return sender->to_address;
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+	return sender_bean_impl->to_address;
 }
 
+void AXIS2_CALL
+sandesha2_sender_bean_set_id( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env, 
+    long id)
+{
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+    sandesha2_rm_bean_set_id(sender_bean_impl->rm_bean_impl, env, id);
+}
 
+long AXIS2_CALL
+sandesha2_sender_bean_get_id( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+    return sandesha2_rm_bean_get_id(sender_bean_impl->rm_bean_impl, env);
+}
+
+void AXIS2_CALL
+sandesha2_sender_bean_set_transaction( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env, 
+    sandesha2_transaction_t *transaction)
+{
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+    sandesha2_rm_bean_set_transaction(sender_bean_impl->rm_bean_impl, env, 
+        transaction);
+}
+
+sandesha2_transaction_t *AXIS2_CALL
+sandesha2_sender_bean_get_transaction( 
+    sandesha2_rm_bean_t *sender_bean,
+	const axis2_env_t *env)
+{
+    sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
+    sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
+    return sandesha2_rm_bean_get_transaction(sender_bean_impl->rm_bean_impl, 
+        env);
+}

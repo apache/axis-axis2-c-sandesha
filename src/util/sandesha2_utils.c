@@ -27,6 +27,7 @@
 #include <sandesha2_close_seq.h>
 #include <sandesha2_close_seq_res.h>
 #include <sandesha2_polling_mgr.h>
+#include <sandesha2_inmemory_storage_mgr.h>
 #include <axis2_string.h>
 #include <axis2_conf.h>
 #include <axis2_property.h>
@@ -482,7 +483,7 @@ sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
     {
         /* TODO we need to class load the proper storage mgr */
         sandesha2_storage_mgr_t *storage_mgr = 
-                        sandesha2_storage_mgr_create(env, conf_ctx);
+                        sandesha2_inmemory_storage_mgr_create(env, conf_ctx);
         property = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_mgr);

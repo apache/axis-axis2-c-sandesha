@@ -39,13 +39,18 @@ extern "C"
 typedef struct sandesha2_next_msg_mgr sandesha2_next_msg_mgr_t;
 typedef struct sandesha2_next_msg_mgr_ops sandesha2_next_msg_mgr_ops_t;
 
+/** @defgroup sandesha2_next_msg_mgr In Memory Next Message Manager
+  * @ingroup sandesha2
+  * @{
+  */
+
 AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr_ops
 {
    /** 
      * Deallocate memory
      * @return status code
      */
-    axis2_status_t (AXIS2_CALL * 
+    void (AXIS2_CALL * 
         free)(
             sandesha2_next_msg_mgr_t *next_msg,
             const axis2_env_t *env);
@@ -94,7 +99,7 @@ AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr_ops
 
 AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr
 {
-    const sandesha2_next_msg_mgr_ops_t *ops;
+    sandesha2_next_msg_mgr_ops_t ops;
 };
 
 AXIS2_EXTERN sandesha2_next_msg_mgr_t * AXIS2_CALL
@@ -102,7 +107,7 @@ sandesha2_next_msg_mgr_create(
     const axis2_env_t *env,
     axis2_ctx_t *ctx);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_next_msg_mgr_free(
     sandesha2_next_msg_mgr_t *next_msg,
     const axis2_env_t *env);

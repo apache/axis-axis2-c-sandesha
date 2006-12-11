@@ -55,7 +55,7 @@ sandesha2_invoker_bean_free  (
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_invoker_bean_get_base( 
-    sandesha2_invoker_bean_t* invoker,
+    sandesha2_rm_bean_t* invoker,
     const axis2_env_t *env);
 
 void AXIS2_CALL

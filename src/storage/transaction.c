@@ -63,6 +63,6 @@ sandesha2_transaction_enlist(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
-    trans->ops->rollback(trans, env);
+    trans->ops->enlist(trans, env, rm_bean);
 }
 

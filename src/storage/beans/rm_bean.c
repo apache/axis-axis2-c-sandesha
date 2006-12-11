@@ -32,6 +32,7 @@ typedef struct sandesha2_rm_bean_impl
 static const sandesha2_rm_bean_ops_t rm_bean_ops =
 {
     sandesha2_rm_bean_free,
+    NULL,
     sandesha2_rm_bean_set_id,
     sandesha2_rm_bean_get_id,
     sandesha2_rm_bean_set_transaction,
@@ -53,7 +54,7 @@ sandesha2_rm_bean_create(const axis2_env_t *env)
 	/* init the properties. */
 	rm_bean_impl->id = -1;
     rm_bean_impl->transaction = NULL;
-    rm_bean_impl->rm_bean.ops = &rm_bean_ops;
+    rm_bean_impl->rm_bean.ops = rm_bean_ops;
 	return &(rm_bean_impl->rm_bean);
 }
 
@@ -62,6 +63,14 @@ sandesha2_rm_bean_free (
     sandesha2_rm_bean_t *rm_bean,
 	const axis2_env_t *env)
 {
+}
+
+sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_rm_bean_get_base( 
+    sandesha2_rm_bean_t *rm_bean,
+    const axis2_env_t *env)
+{
+    return rm_bean->ops.get_base(rm_bean, env);
 }
 
 void AXIS2_CALL

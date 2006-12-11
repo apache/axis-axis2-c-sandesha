@@ -36,7 +36,7 @@ typedef struct sandesha2_invoker_bean_impl
 	/* Weather the message has been invoked by the invoker.*/
 	axis2_bool_t invoked;
 
-}sandesha2_invoker_bean_impl_t;
+} sandesha2_invoker_bean_impl_t;
 
 #define SANDESHA2_INTF_TO_IMPL(invoker_bean) \
         ((sandesha2_invoker_bean_impl_t *) invoker_bean)
@@ -44,6 +44,7 @@ typedef struct sandesha2_invoker_bean_impl
 static const sandesha2_rm_bean_ops_t rm_bean_ops =
 {
     sandesha2_invoker_bean_free,
+    sandesha2_invoker_bean_get_base,
     sandesha2_invoker_bean_set_id,
     sandesha2_invoker_bean_get_id,
     sandesha2_invoker_bean_set_transaction,
@@ -72,7 +73,7 @@ sandesha2_invoker_bean_create(
 	invoker_bean_impl->seq_id = NULL;	
 	invoker_bean_impl->invoked = AXIS2_FALSE;
     invoker_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
-    invoker_bean_impl->invoker_bean.rm_bean.ops = &rm_bean_ops;
+    invoker_bean_impl->invoker_bean.rm_bean.ops = rm_bean_ops;
 
 	return &(invoker_bean_impl->invoker_bean);
 }
@@ -111,7 +112,7 @@ sandesha2_invoker_bean_create_with_data(
 	invoker_bean_impl->msg_no = msg_no;
 	invoker_bean_impl->invoked = invoked;
     invoker_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
-    invoker_bean_impl->invoker_bean.rm_bean.ops = &rm_bean_ops;
+    invoker_bean_impl->invoker_bean.rm_bean.ops = rm_bean_ops;
 
 	return &(invoker_bean_impl->invoker_bean);
 }
@@ -148,7 +149,7 @@ sandesha2_invoker_bean_free(
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_invoker_bean_get_base( 
-    sandesha2_invoker_bean_t *invoker_bean,
+    sandesha2_rm_bean_t *invoker_bean,
     const axis2_env_t *env)
 {
     sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;

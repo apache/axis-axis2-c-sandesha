@@ -42,7 +42,7 @@ struct axis2_ctx;
 
 AXIS2_DECLARE_DATA struct sandesha2_inmemory_bean_mgr_ops
 {
-    axis2_status_t (AXIS2_CALL *
+    void (AXIS2_CALL *
             free) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
                 const axis2_env_t *env);
@@ -106,7 +106,7 @@ sandesha2_inmemory_bean_mgr_create(
     struct axis2_ctx *ctx,
     axis2_char_t *key);
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_inmemory_bean_mgr_free(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
     const axis2_env_t *envv);
