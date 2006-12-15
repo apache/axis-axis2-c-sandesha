@@ -185,7 +185,7 @@ AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_create(
     const axis2_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
-    axis2_ctx_t *ctx)
+    axis2_conf_ctx_t *ctx)
 {
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);

@@ -196,7 +196,6 @@ sandesha2_permanent_storage_mgr_create(
     axis2_conf_ctx_t *conf_ctx)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    axis2_ctx_t *ctx = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
@@ -205,18 +204,17 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = AXIS2_STRDUP("Sandesha2MessageMap", 
         env);
     storage_mgr_impl->conf_ctx = conf_ctx;
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
     storage_mgr_impl->create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(
-        env, &(storage_mgr_impl->storage_mgr), ctx);
+        env, &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(
-        env, &(storage_mgr_impl->storage_mgr), ctx);
+        env, &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->seq_property_mgr = 
         sandesha2_permanent_seq_property_mgr_create(env, 
-            &(storage_mgr_impl->storage_mgr), ctx);
+            &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->sender_mgr = sandesha2_permanent_sender_mgr_create(env, 
-        &(storage_mgr_impl->storage_mgr), ctx);
+        &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->invoker_mgr = sandesha2_permanent_invoker_mgr_create(env, 
-        &(storage_mgr_impl->storage_mgr), ctx);
+        &(storage_mgr_impl->storage_mgr), conf_ctx);
 
     storage_mgr_impl->storage_mgr.ops = &storage_mgr_ops;
 

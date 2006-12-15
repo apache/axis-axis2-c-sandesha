@@ -39,7 +39,7 @@ typedef struct sandesha2_bean_mgr_args sandesha2_bean_mgr_args_t;
 typedef struct sandesha2_permanent_bean_mgr sandesha2_permanent_bean_mgr_t;
 typedef struct sandesha2_permanent_bean_mgr_ops sandesha2_permanent_bean_mgr_ops_t;
 struct sandesha2_storage_mgr;
-struct axis2_ctx;
+struct axis2_conf_ctx;
 
 AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr_ops
 {
@@ -66,7 +66,7 @@ AXIS2_EXTERN sandesha2_permanent_bean_mgr_t * AXIS2_CALL
 sandesha2_permanent_bean_mgr_create(
     const axis2_env_t *env,
     struct sandesha2_storage_mgr *storage_mgr,
-    struct axis2_ctx *ctx,
+    struct axis2_conf_ctx *conf_ctx,
     axis2_char_t *key);
 
 void AXIS2_CALL

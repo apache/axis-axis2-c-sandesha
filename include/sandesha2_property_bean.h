@@ -157,8 +157,7 @@ sandesha2_property_bean_set_max_retrans_count(
 axis2_char_t *AXIS2_CALL
 sandesha2_property_bean_get_db_path(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env,
-    axis2_char_t *db_path);
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_db_path(

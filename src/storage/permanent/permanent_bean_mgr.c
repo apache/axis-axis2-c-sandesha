@@ -19,13 +19,15 @@
 #include <sandesha2_permanent_bean_mgr.h>
 #include <sandesha2_error.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_property_bean.h>
+#include <sandesha2_utils.h>
 #include <axis2_log.h>
 #include <axis2_hash.h>
 #include <axis2_thread.h>
 #include <axis2_property.h>
+#include <axis2_conf_ctx.h>
 #include <sqlite3.h>
 
-#define DB_NAME "sandesha2"
 /** 
  * @brief Sandesha2 Permanent Bean Manager Struct Impl
  *   Sandesha2 Permanent Bean Manager
@@ -35,6 +37,7 @@ typedef struct sandesha2_permanent_bean_mgr_impl
     sandesha2_permanent_bean_mgr_t bean_mgr;
     sandesha2_storage_mgr_t *storage_mgr;
     axis2_thread_mutex_t *mutex;
+    axis2_char_t *db_name;
     sqlite3 *db;
 
 }sandesha2_permanent_bean_mgr_impl_t;
@@ -56,10 +59,12 @@ AXIS2_EXTERN sandesha2_permanent_bean_mgr_t * AXIS2_CALL
 sandesha2_permanent_bean_mgr_create(
     const axis2_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
-    axis2_ctx_t *ctx,
+    axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *key)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+    sandesha2_property_bean_t *prop_bean = NULL;
+    axis2_conf_t *conf = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     bean_mgr_impl = AXIS2_MALLOC(env->allocator, 
@@ -68,7 +73,12 @@ sandesha2_permanent_bean_mgr_create(
     bean_mgr_impl->storage_mgr = storage_mgr;
     bean_mgr_impl->mutex = NULL;
     bean_mgr_impl->db = NULL;
+    bean_mgr_impl->db_name = NULL;
 
+    conf = AXIS2_CONF_CTX_GET_CONF((const axis2_conf_ctx_t *) conf_ctx, env);
+    prop_bean = sandesha2_utils_get_property_bean(env, conf);
+    bean_mgr_impl->db_name = sandesha2_property_bean_get_db_path(prop_bean, 
+        env); 
     bean_mgr_impl->mutex = axis2_thread_mutex_create(env->allocator, 
         AXIS2_THREAD_MUTEX_DEFAULT);
     if(!bean_mgr_impl->mutex) 
@@ -94,6 +104,11 @@ sandesha2_permanent_bean_mgr_free(
         axis2_thread_mutex_destroy(bean_mgr_impl->mutex);
         bean_mgr_impl->mutex = NULL;
     }
+    if(bean_mgr_impl->db_name)
+    {
+        AXIS2_FREE(env->allocator, bean_mgr_impl->db_name);
+        bean_mgr_impl->db_name = NULL;
+    }
     if(bean_mgr_impl)
     {
         AXIS2_FREE(env->allocator, bean_mgr_impl);
@@ -116,6 +131,16 @@ sandesha2_permanent_bean_mgr_insert(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     /*sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);*/
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    rc = sqlite3_open(bean_mgr_impl->db_name, &(bean_mgr_impl->db));
+    if(rc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
+            sqlite3_errmsg(bean_mgr_impl->db));
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
+            AXIS2_FAILURE);
+        sqlite3_close(bean_mgr_impl->db);
+        return AXIS2_FALSE;
+    }   
     rc = sqlite3_exec(bean_mgr_impl->db, sql_stmt_insert, 0, 0, &error_msg);
     if( rc!=SQLITE_OK )
     {
@@ -147,6 +172,16 @@ sandesha2_permanent_bean_mgr_remove(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    rc = sqlite3_open(bean_mgr_impl->db_name, &(bean_mgr_impl->db));
+    if(rc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
+            sqlite3_errmsg(bean_mgr_impl->db));
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
+            AXIS2_FAILURE);
+        sqlite3_close(bean_mgr_impl->db);
+        return AXIS2_FALSE;
+    }   
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
     args->env = env;
     args->data = bean;
@@ -195,7 +230,7 @@ sandesha2_permanent_bean_mgr_retrieve(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    rc = sqlite3_open(DB_NAME, &(bean_mgr_impl->db));
+    rc = sqlite3_open(bean_mgr_impl->db_name, &(bean_mgr_impl->db));
     if(rc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
@@ -261,7 +296,7 @@ sandesha2_permanent_bean_mgr_update(
     /*if(bean)
         sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);*/
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    rc = sqlite3_open(DB_NAME, &(bean_mgr_impl->db));
+    rc = sqlite3_open(bean_mgr_impl->db_name, &(bean_mgr_impl->db));
     if(rc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
@@ -332,7 +367,7 @@ sandesha2_permanent_bean_mgr_find(
         return NULL;
     }
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    rc = sqlite3_open(DB_NAME, &(bean_mgr_impl->db));
+    rc = sqlite3_open(bean_mgr_impl->db_name, &(bean_mgr_impl->db));
     if(rc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 

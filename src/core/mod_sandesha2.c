@@ -91,7 +91,8 @@ mod_sandesha2_init(
     
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     AXIS2_CONF_ADD_PARAM(conf, env, param);
-    repo_path = AXIS2_CONF_GET_REPO(conf, env);
+    repo_path = (axis2_char_t *) AXIS2_CONF_GET_REPO(
+        (const axis2_conf_t *) conf, env);
     sandesha2_property_bean_set_db_path(property_bean, env, repo_path);
     ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 

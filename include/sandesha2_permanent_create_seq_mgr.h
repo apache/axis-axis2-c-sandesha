@@ -34,7 +34,7 @@ extern "C"
 #endif
 
 struct sandesha2_storage_mgr;
-struct axis2_ctx;
+struct axis2_conf_ctx;
 
 /** @defgroup sandesha2_permanent_create_seq_mgr Permanat Create Sequence Manager
   * @ingroup sandesha2
@@ -45,7 +45,7 @@ AXIS2_EXTERN struct sandesha2_create_seq_mgr * AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_create(
     const axis2_env_t *env,
     struct sandesha2_storage_mgr *storage_mgr,
-    struct axis2_ctx *ctx);
+    struct axis2_conf_ctx *ctx);
 
 /** @} */
 #ifdef __cplusplus

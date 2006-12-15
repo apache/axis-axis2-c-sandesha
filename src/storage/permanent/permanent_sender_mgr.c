@@ -222,7 +222,7 @@ AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
 sandesha2_permanent_sender_mgr_create(
     const axis2_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
-    axis2_ctx_t *ctx)
+    axis2_conf_ctx_t *ctx)
 {
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     
