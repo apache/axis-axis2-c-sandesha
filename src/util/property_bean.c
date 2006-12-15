@@ -34,6 +34,7 @@ struct sandesha2_property_bean_t
     axis2_bool_t is_in_order;
     axis2_array_list_t *msg_types_to_drop;
     int max_retrans_count;
+    axis2_char_t *db_path;
 };
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
@@ -60,6 +61,7 @@ sandesha2_property_bean_create(
     bean->is_in_order = AXIS2_FALSE;
     bean->msg_types_to_drop = NULL;
     bean->max_retrans_count = 0;
+    bean->db_path = NULL;
     
 	return bean;
 }
@@ -85,6 +87,11 @@ sandesha2_property_bean_free(
                 AXIS2_FREE(env->allocator, msg_type);
         }
         AXIS2_ARRAY_LIST_FREE(bean->msg_types_to_drop, env);
+    }
+    if(bean->db_path)
+    {
+        AXIS2_FREE(env->allocator, bean->db_path);
+        bean->db_path = NULL;
     }
     if(bean->in_mem_storage_mgr)
     {
@@ -319,3 +326,22 @@ sandesha2_property_bean_set_max_retrans_count(
     bean->max_retrans_count = count;
     return AXIS2_SUCCESS;
 }
+
+axis2_char_t *AXIS2_CALL
+sandesha2_property_bean_get_db_path(
+    sandesha2_property_bean_t *bean,
+    const axis2_env_t *env,
+    axis2_char_t *db_path)
+{
+    return bean->db_path;
+}
+axis2_status_t AXIS2_CALL
+sandesha2_property_bean_set_db_path(
+    sandesha2_property_bean_t *bean,
+    const axis2_env_t *env,
+    axis2_char_t *db_path)
+{
+    bean->db_path = AXIS2_STRDUP(db_path, env);
+    return AXIS2_SUCCESS;
+}
+
