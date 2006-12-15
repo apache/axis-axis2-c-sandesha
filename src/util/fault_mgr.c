@@ -216,7 +216,8 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 axis2_char_t *tmp_id = NULL;
                 
                 next_bean = AXIS2_ARRAY_LIST_GET(list, env, i);
-                tmp_id = sandesha2_next_msg_bean_get_seq_id(next_bean, env);
+                tmp_id = sandesha2_next_msg_bean_get_seq_id(
+                    (sandesha2_rm_bean_t *) next_bean, env);
                 if(0 == AXIS2_STRCMP(seq_id, tmp_id))
                 {
                     contains = AXIS2_TRUE;

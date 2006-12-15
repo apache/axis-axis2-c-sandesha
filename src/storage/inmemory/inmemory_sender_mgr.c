@@ -167,7 +167,8 @@ sandesha2_inmemory_sender_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
 
-    msg_id = sandesha2_sender_bean_get_msg_id(bean, env);
+    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
+        env);
     if(!msg_id)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_KEY_IS_NULL, AXIS2_FAILURE);
@@ -221,8 +222,8 @@ sandesha2_inmemory_sender_mgr_update(
     const axis2_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    axis2_char_t *msg_id = NULL;
-    axis2_bool_t ret = AXIS2_FALSE;
+    /*axis2_char_t *msg_id = NULL;
+    axis2_bool_t ret = AXIS2_FALSE;*/
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
 
     AXIS2_LOG_INFO(env->log, 
@@ -231,16 +232,8 @@ sandesha2_inmemory_sender_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
 
-    msg_id = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
-    if(!msg_id)
-    {
-        return AXIS2_FALSE;
-    }
-    ret = sandesha2_inmemory_bean_mgr_update(sender_mgr_impl->bean_mgr, env,
-        msg_id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_update:return:%d", ret);
-    return ret;
+    /* No need to update. Being a reference does the job. */
+    return AXIS2_SUCCESS;
 }
 
 axis2_array_list_t *AXIS2_CALL
@@ -323,8 +316,6 @@ sandesha2_inmemory_sender_mgr_match(
     int temp_msg_type = 0;
     axis2_bool_t is_send = AXIS2_FALSE;
     axis2_bool_t temp_is_send = AXIS2_FALSE;
-    axis2_bool_t is_resend = AXIS2_FALSE;
-    axis2_bool_t temp_is_resend = AXIS2_FALSE;
     
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_match");
@@ -340,14 +331,15 @@ sandesha2_inmemory_sender_mgr_match(
         (sandesha2_sender_bean_t *) bean, env);
     temp_time_to_send = sandesha2_sender_bean_get_time_to_send(
         (sandesha2_sender_bean_t *) candidate, env);
-    if(time_to_send > 0 && (time_to_send < temp_time_to_send))
+    /*if(time_to_send > 0 && (time_to_send < temp_time_to_send))*/
+    if(time_to_send > 0 && (time_to_send != temp_time_to_send))
     {
         add = AXIS2_FALSE;
     }
     msg_id = sandesha2_sender_bean_get_msg_id(
-        (sandesha2_sender_bean_t *) bean, env);
+        (sandesha2_rm_bean_t *) bean, env);
     temp_msg_id = sandesha2_sender_bean_get_msg_id(
-        (sandesha2_sender_bean_t *) candidate, env);
+        (sandesha2_rm_bean_t *) candidate, env);
     if(msg_id && temp_msg_id && 0 != AXIS2_STRCMP(msg_id, temp_msg_id))
     {
         add = AXIS2_FALSE;
@@ -386,14 +378,16 @@ sandesha2_inmemory_sender_mgr_match(
     {
         add = AXIS2_FALSE;
     }
-    is_resend = sandesha2_sender_bean_is_resend(
+    /* Do not use the is_resend flag to match messages, as it can stop us from
+     * detecting RM messages during 'get_next_msg_to_send'*/
+    /*is_resend = sandesha2_sender_bean_is_resend(
         (sandesha2_sender_bean_t *) bean, env);
     temp_is_resend = sandesha2_sender_bean_is_resend(
         (sandesha2_sender_bean_t *) candidate, env);
     if(is_resend != temp_is_resend)
     {
         add = AXIS2_FALSE;
-    }
+    }*/
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_match:add:%d", 
             add);

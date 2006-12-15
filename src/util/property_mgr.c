@@ -106,7 +106,7 @@ sandesha2_property_mgr_load_properties_from_def_values(
     /* will be useful when we are loading libraries */
     sandesha2_property_bean_set_in_mem_storage_mgr(property_bean, env,
         SANDESHA2_DEF_VAL_IN_MEMORY_STORAGE_MGR);
-    sandesha2_property_bean_set_permanant_storage_mgr(property_bean, env,
+    sandesha2_property_bean_set_permanent_storage_mgr(property_bean, env,
         SANDESHA2_DEF_VAL_PERM_STORAGE_MGR);
     sandesha2_property_bean_set_max_retrans_count(property_bean, env,
         SANDESHA2_DEF_VAL_MAX_RETR_COUNT);
@@ -332,7 +332,7 @@ sandesha2_property_mgr_load_perm_storage_mgr(
     AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
     
-    sandesha2_property_bean_set_permanant_storage_mgr(property_bean, env, 
+    sandesha2_property_bean_set_permanent_storage_mgr(property_bean, env, 
         value);
     
     return AXIS2_SUCCESS;

@@ -78,6 +78,7 @@ AC_CONFIG_FILES([Makefile \
     src/storage/Makefile\
     src/storage/beans/Makefile\
     src/storage/inmemory/Makefile\
+    src/storage/permanent/Makefile\
     src/client/Makefile \
     src/core/Makefile \
     src/polling/Makefile 

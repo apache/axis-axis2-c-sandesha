@@ -36,7 +36,8 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
     sandesha2_rm_bean_set_id,
     sandesha2_rm_bean_get_id,
     sandesha2_rm_bean_set_transaction,
-    sandesha2_rm_bean_get_transaction
+    sandesha2_rm_bean_get_transaction,
+    NULL
 };
 
 AXIS2_EXTERN sandesha2_rm_bean_t* AXIS2_CALL
@@ -71,6 +72,14 @@ sandesha2_rm_bean_get_base(
     const axis2_env_t *env)
 {
     return rm_bean->ops.get_base(rm_bean, env);
+}
+
+axis2_char_t *AXIS2_CALL
+sandesha2_rm_bean_get_key(
+    sandesha2_rm_bean_t *rm_bean,
+    const axis2_env_t *env)
+{
+    return rm_bean->ops.get_key(rm_bean, env);
 }
 
 void AXIS2_CALL

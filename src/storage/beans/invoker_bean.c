@@ -48,7 +48,8 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
     sandesha2_invoker_bean_set_id,
     sandesha2_invoker_bean_get_id,
     sandesha2_invoker_bean_set_transaction,
-    sandesha2_invoker_bean_get_transaction
+    sandesha2_invoker_bean_get_transaction,
+    sandesha2_invoker_bean_get_msg_ctx_ref_key
 };
 
 AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
@@ -171,7 +172,7 @@ sandesha2_invoker_bean_set_base (
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(
-        sandesha2_invoker_bean_t *invoker_bean,
+        sandesha2_rm_bean_t *invoker_bean,
 		const axis2_env_t *env)
 {
     sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
@@ -180,7 +181,7 @@ sandesha2_invoker_bean_get_msg_ctx_ref_key(
 }
 
 void AXIS2_CALL 
-sandesha2_invoker_bean_set_msg_context_ref_key(
+sandesha2_invoker_bean_set_msg_ctx_ref_key(
     sandesha2_invoker_bean_t *invoker_bean,
     const axis2_env_t *env, axis2_char_t* context_ref_id)
 {

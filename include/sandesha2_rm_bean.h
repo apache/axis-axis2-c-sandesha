@@ -64,6 +64,11 @@ AXIS2_DECLARE_DATA struct sandesha2_rm_bean_ops
             get_transaction) ( 
                 sandesha2_rm_bean_t *rm_bean,
                 const axis2_env_t *env);
+    
+    axis2_char_t *(AXIS2_CALL *
+            get_key) ( 
+                sandesha2_rm_bean_t *rm_bean,
+                const axis2_env_t *env);
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_rm_bean
@@ -106,6 +111,11 @@ sandesha2_rm_bean_set_transaction(
 
 struct sandesha2_transaction *AXIS2_CALL
 sandesha2_rm_bean_get_transaction( 
+    sandesha2_rm_bean_t *rm_bean,
+	const axis2_env_t *env);
+
+axis2_char_t *AXIS2_CALL
+sandesha2_rm_bean_get_key( 
     sandesha2_rm_bean_t *rm_bean,
 	const axis2_env_t *env);
 

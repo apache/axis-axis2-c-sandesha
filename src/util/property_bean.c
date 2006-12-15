@@ -30,7 +30,7 @@ struct sandesha2_property_bean_t
     long retrans_interval;
     axis2_bool_t is_exp_backoff;
     axis2_char_t *in_mem_storage_mgr;
-    axis2_char_t *permanant_storage_mgr;
+    axis2_char_t *permanent_storage_mgr;
     axis2_bool_t is_in_order;
     axis2_array_list_t *msg_types_to_drop;
     int max_retrans_count;
@@ -56,7 +56,7 @@ sandesha2_property_bean_create(
     bean->retrans_interval = 0;
     bean->is_exp_backoff = 0;
     bean->in_mem_storage_mgr = NULL;
-    bean->permanant_storage_mgr= NULL;
+    bean->permanent_storage_mgr= NULL;
     bean->is_in_order = AXIS2_FALSE;
     bean->msg_types_to_drop = NULL;
     bean->max_retrans_count = 0;
@@ -91,10 +91,10 @@ sandesha2_property_bean_free(
         AXIS2_FREE(env->allocator, bean->in_mem_storage_mgr);
         bean->in_mem_storage_mgr = NULL;
     }
-    if(bean->permanant_storage_mgr)
+    if(bean->permanent_storage_mgr)
     {
-        AXIS2_FREE(env->allocator, bean->permanant_storage_mgr);
-        bean->permanant_storage_mgr = NULL;
+        AXIS2_FREE(env->allocator, bean->permanent_storage_mgr);
+        bean->permanent_storage_mgr = NULL;
     }
 	AXIS2_FREE(env->allocator, bean);
 	return AXIS2_SUCCESS;
@@ -225,22 +225,22 @@ sandesha2_property_bean_set_in_mem_storage_mgr(
 }
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_permanant_storage_mgr(
+sandesha2_property_bean_get_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-    return bean->permanant_storage_mgr;
+    return bean->permanent_storage_mgr;
 }
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_permanant_storage_mgr(
+sandesha2_property_bean_set_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
     const axis2_env_t *env, axis2_char_t *manager)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->permanant_storage_mgr = AXIS2_STRDUP(
+    bean->permanent_storage_mgr = AXIS2_STRDUP(
                         manager, env);
     return AXIS2_SUCCESS;
 }

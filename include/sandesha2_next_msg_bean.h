@@ -66,7 +66,7 @@ sandesha2_next_msg_bean_set_base (
 
 axis2_char_t* AXIS2_CALL
 sandesha2_next_msg_bean_get_seq_id(
-    sandesha2_next_msg_bean_t *next_msg_bean,
+    sandesha2_rm_bean_t *next_msg_bean,
     const axis2_env_t *env);
 
 void AXIS2_CALL

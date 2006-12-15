@@ -1,4 +1,4 @@
-SUBDIRS = beans inmemory
+SUBDIRS = beans inmemory permanent
 noinst_LTLIBRARIES = libsandesha2_storage.la
 
 libsandesha2_storage_la_SOURCES = \

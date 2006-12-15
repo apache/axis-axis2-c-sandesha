@@ -185,6 +185,10 @@ sandesha2_error_init()
         "MakeConnection is not supported in this RM version";
     sandesha2_error_messages[SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_MSG]=
         "Invalid MakeConnection message. Either Address or Identifier must be present";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_OPEN_DATABASE]=
+        "Database cannot be opened";
+    sandesha2_error_messages[SANDESHA2_ERROR_SQL_ERROR]=
+        "There is an sql error. Please refer logs";
 
     return AXIS2_SUCCESS;
 }

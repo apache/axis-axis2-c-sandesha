@@ -351,10 +351,10 @@ sandesha2_in_order_invoker_worker_func(
                 axis2_engine_t *engine = NULL;
                 
                 st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
-                key = sandesha2_invoker_bean_get_msg_ctx_ref_key(st_map_bean,
-                        env);
+                key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
+                    (sandesha2_rm_bean_t *) st_map_bean, env);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
-                        storage_mgr, env, key, invoker->conf_ctx);
+                    storage_mgr, env, key, invoker->conf_ctx);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);

@@ -79,7 +79,7 @@ sandesha2_sender_bean_set_msg_ctx_ref_key (
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_id (
-    sandesha2_sender_bean_t *sender,
+    sandesha2_rm_bean_t *sender,
     const axis2_env_t *env);
 
 void AXIS2_CALL 

@@ -254,18 +254,13 @@ sandesha2_inmemory_bean_mgr_insert_impl(
     sandesha2_rm_bean_t *bean)
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_insert_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean); 
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, "came1*************************************");
     axis2_hash_set(bean_mgr_impl->table, key, AXIS2_HASH_KEY_STRING, bean);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_insert_impl");
     return AXIS2_TRUE;
 }
 
@@ -277,8 +272,6 @@ sandesha2_inmemory_bean_mgr_remove_impl(
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
     sandesha2_rm_bean_t *bean = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_remove_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
@@ -291,8 +284,6 @@ sandesha2_inmemory_bean_mgr_remove_impl(
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
     axis2_hash_set(bean_mgr_impl->table, key, AXIS2_HASH_KEY_STRING, NULL);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_remove_impl");
     return AXIS2_TRUE;
 }
 
@@ -304,8 +295,6 @@ sandesha2_inmemory_bean_mgr_retrieve_impl(
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
     sandesha2_rm_bean_t *bean = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_retrieve_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
@@ -319,8 +308,6 @@ sandesha2_inmemory_bean_mgr_retrieve_impl(
     bean = (sandesha2_rm_bean_t *) axis2_hash_get(bean_mgr_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_retrieve_impl");
     return bean;
 }
 
@@ -333,8 +320,6 @@ sandesha2_inmemory_bean_mgr_update_impl(
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
     sandesha2_rm_bean_t *old_bean = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_update_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
@@ -348,8 +333,6 @@ sandesha2_inmemory_bean_mgr_update_impl(
     if(!old_bean)
         return AXIS2_FALSE;
     sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, old_bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_update_impl");
     return AXIS2_TRUE;
 }
 
@@ -362,11 +345,7 @@ sandesha2_inmemory_bean_mgr_find_impl(
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
     axis2_array_list_t *beans = NULL;
     axis2_hash_index_t *index = NULL;
-    void *v = NULL;
     int i = 0, size = 0;
-    axis2_bool_t remove = AXIS2_TRUE;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_find_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     beans = axis2_array_list_create(env, 0);
@@ -379,12 +358,14 @@ sandesha2_inmemory_bean_mgr_find_impl(
     for (index = axis2_hash_first (bean_mgr_impl->table, env); index; 
             index = axis2_hash_next (env, index))
     {
+        void *v = NULL;
+        const void *key = NULL;
         sandesha2_rm_bean_t *candidate = NULL;
-        axis2_hash_this (index, NULL, NULL, &v);
+        axis2_hash_this (index, &key, NULL, &v);
         candidate = (sandesha2_rm_bean_t *) v;
+        if(!candidate)
+            continue;
     
-        if(bean && bean == candidate)
-            remove = AXIS2_FALSE;
         if(bean && sandesha2_inmemory_bean_mgr_match(bean_mgr, env, bean, 
             candidate))
         {
@@ -396,22 +377,38 @@ sandesha2_inmemory_bean_mgr_find_impl(
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
     /* Now we have a point-in-time view of the beans, lock them all.*/
     size = AXIS2_ARRAY_LIST_SIZE(beans, env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "size:%d", size);
     for(i = 0; i < size; i++)
     {
         sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
-        sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, temp);
-                
+        if(temp)
+            sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, 
+                temp);
     }
     /* Finally remove any beans that are no longer in the table */
-    if(remove && size > 0)
+    axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+    for(i = 0; i < size; i++)
     {
-        int idx = AXIS2_ARRAY_LIST_INDEX_OF(beans, env, bean);
-        if(idx != -1)
-            AXIS2_ARRAY_LIST_REMOVE(beans, env, idx);
+        sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        if(temp)
+        {
+            axis2_char_t *key = sandesha2_rm_bean_get_key(temp, env);
+            if(axis2_hash_contains_key(bean_mgr_impl->table, env, key))
+            {
+                void *value = axis2_hash_get(bean_mgr_impl->table, key, 
+                    AXIS2_HASH_KEY_STRING);
+                if(!value)
+                {
+                    AXIS2_ARRAY_LIST_REMOVE(beans, env, i);
+                }
+            }
+            else
+            {
+                AXIS2_ARRAY_LIST_REMOVE(beans, env, i);
+            }
+        }
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_find_impl");
+    axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
     return beans;
 }
 
@@ -423,10 +420,8 @@ sandesha2_inmemory_bean_mgr_find_unique_impl(
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
     axis2_array_list_t *beans = NULL;
-    int i = 0, size = 0;
+    int size = 0;
     sandesha2_rm_bean_t *ret = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_inmemory_bean_mgr_find_unique_impl");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
@@ -439,13 +434,8 @@ sandesha2_inmemory_bean_mgr_find_unique_impl(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, AXIS2_FAILURE);
         return NULL;
     }
-    for(i = 0; i < size; i++)
-    {
-       ret = AXIS2_ARRAY_LIST_GET(beans, env, i);
-       break;
-    }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_find_unique_impl");
+    if(size == 1)
+       ret = AXIS2_ARRAY_LIST_GET(beans, env, 0);
     return ret;
 }
 

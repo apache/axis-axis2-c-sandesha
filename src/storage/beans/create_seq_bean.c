@@ -64,7 +64,8 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
     sandesha2_create_seq_bean_set_id,
     sandesha2_create_seq_bean_get_id,
     sandesha2_create_seq_bean_set_transaction,
-    sandesha2_create_seq_bean_get_transaction
+    sandesha2_create_seq_bean_get_transaction,
+    sandesha2_create_seq_bean_get_create_seq_msg_id
 };
 
 AXIS2_EXTERN sandesha2_create_seq_bean_t * AXIS2_CALL
@@ -187,7 +188,7 @@ sandesha2_create_seq_bean_set_base (
 
 axis2_char_t * AXIS2_CALL
 sandesha2_create_seq_bean_get_create_seq_msg_id( 
-    sandesha2_create_seq_bean_t* create_seq_bean,
+    sandesha2_rm_bean_t* create_seq_bean,
     const axis2_env_t *env)
 {
     sandesha2_create_seq_bean_impl_t *create_seq_bean_impl = NULL;

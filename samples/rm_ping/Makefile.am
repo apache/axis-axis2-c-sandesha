@@ -16,6 +16,7 @@ rm_ping_LDADD   =  \
                     -laxis2_http_receiver \
 					-lwoden \
 					-laxis2_xml_schema \
+					-lsqlite \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

@@ -216,11 +216,14 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     /* Find the beans that go with the criteria of the passed sender bean */
     if(find_sender_bean)
     {
-        int i = 0, size = 0;
         retrans_list = axis2_array_list_create(env, 0);
         if(!retrans_list)
             return AXIS2_FAILURE;
-        axis2_array_list_t *retrans_list1 = NULL, *retrans_list2 = NULL;
+        /* Following code is obsolete, since in inmemory_sender_mgr_match 
+         * function we donot consider resend. Instead we can directly assign
+         * to retrans_list as follows the commented lines.
+         */
+        /*axis2_array_list_t *retrans_list1 = NULL, *retrans_list2 = NULL;
         sandesha2_sender_bean_set_resend(find_sender_bean, env, AXIS2_TRUE);
         retrans_list1 = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
                 env, find_sender_bean);
@@ -242,7 +245,9 @@ sandesha2_make_connection_msg_processor_process_in_msg (
             sandesha2_sender_bean_t *temp_bean = NULL;
             temp_bean = AXIS2_ARRAY_LIST_GET(retrans_list2, env, i);
             AXIS2_ARRAY_LIST_ADD(retrans_list, env, temp_bean);
-        }
+        }*/
+        retrans_list = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
+                env, find_sender_bean);
     }
     /* Selecting a bean to send randomly. TODO - Should use a better mechanism */
     if(retrans_list)
@@ -306,7 +311,8 @@ sandesha2_make_connection_msg_processor_process_in_msg (
      * 1. A message being sent by the Sender thread.
      * 2. A message being sent as a reply to an make_connection.
      */
-    msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
+    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+        sender_bean, env);
     if(msg_id)
     {
         sandesha2_sender_worker_t *sender_worker = NULL;

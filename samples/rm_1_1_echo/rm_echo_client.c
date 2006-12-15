@@ -27,23 +27,24 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
-
-#define SANDESHA2_MAX_COUNT 30
+#include <axis2_addr.h>
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
-rm_echo_callback_on_complete(struct axis2_callback *callback,
+rm_echo_callback_on_complete(
+    struct axis2_callback *callback,
     const axis2_env_t *env);
 
 /* on_error callback function */
 axis2_status_t AXIS2_CALL
-rm_echo_callback_on_error(struct axis2_callback *callback,
+rm_echo_callback_on_error(
+    struct axis2_callback *callback,
     const axis2_env_t *env,
     int exception);
 
 void wait_on_callback(
-        const axis2_env_t *env,
-        axis2_callback_t *callback);
+    const axis2_env_t *env,
+    axis2_callback_t *callback);
 
 static void 
 usage(
@@ -53,9 +54,7 @@ int main(int argc, char** argv)
 {
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
-    const axis2_char_t *to = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
-    axis2_endpoint_ref_t* target_epr = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
@@ -69,19 +68,20 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_FALSE;
-    int version = 1;
+    axis2_bool_t single_channel = AXIS2_TRUE;
     int c;
    
     /* Set up the environment */
     /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_TRACE);*/
+            AXIS2_LOG_LEVEL_DEBUG);*/
+    /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
+            AXIS2_LOG_LEVEL_ERROR);*/
     env = axis2_env_create_all("echo_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
-    /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
-    to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:o:v:")) != -1)
     {
 
@@ -93,8 +93,8 @@ int main(int argc, char** argv)
             case 'o': /* Sequence Offer */
                 offer = AXIS2_ATOI(optarg);
                 break;
-            case 'v': /* RM Version */
-                version = AXIS2_ATOI(optarg);
+            case 'm': /* RM Version */
+                single_channel = AXIS2_ATOI(optarg);
                 break;
             case ':':
                 fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
@@ -117,30 +117,24 @@ int main(int argc, char** argv)
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    if(to)
-        endpoint_ref = axis2_endpoint_ref_create(env, to);
-    if(address)
-        target_epr = axis2_endpoint_ref_create(env, address);
+    endpoint_ref = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
-    if(endpoint_ref)
-        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
-    if(target_epr)
-    {
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
-    }
+    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
-    /*AXIS2_OPTIONS_SET_ACTION(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
+    AXIS2_OPTIONS_SET_ACTION(options, env,
+        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
     reply_to = axis2_endpoint_ref_create(env, 
             "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
                 "__OPERATION_OUT_IN__");
-
+    if(single_channel)
+    {
+        reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
+        offer = AXIS2_TRUE;
+    }
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -184,35 +178,33 @@ int main(int argc, char** argv)
         property = axis2_property_create(env);
         if(property)
         {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-                property);
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, 
+                env));
+            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+                SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }
     }
     /* RM Version 1.1 */
-    if(version == 1)
+    property = axis2_property_create_with_args(env, 3, 0, 
+        SANDESHA2_SPEC_VERSION_1_1);
+    if(property)
     {
-        property = axis2_property_create(env);
-        if(property)
-        {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                SANDESHA2_SPEC_VERSION_1_1, env));
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
-                SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-        }
-        property = axis2_property_create_with_args(env, 3, 0, "sequence1");
-        if(property)
-        {
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY,
-                property);
-        }
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
+    property = axis2_property_create_with_args(env, 3, 0, "sequence1");
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
+            property);
+    }
+    
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback, payload, 
-            listener_manager);
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
+        callback, payload, listener_manager);
 
     wait_on_callback(env, callback);
 
@@ -220,36 +212,24 @@ int main(int argc, char** argv)
     callback2 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback2, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback2, payload, 
-            listener_manager);
-    wait_on_callback(env, callback2);    
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
+        callback2, payload, listener_manager);
+    wait_on_callback(env, callback2);
 
+    payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     callback3 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
-    payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
-    if(version == 0)
-    {
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
-            property);
-    }
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback3, payload, 
-            listener_manager);
+    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
+        callback3, payload, listener_manager);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    /* RM Version 1.1 */
-    if(version == 1)
-    {
-        callback4 = axis2_callback_create(env);
-        AXIS2_CALLBACK_SET_ON_COMPLETE(callback4, rm_echo_callback_on_complete);
-        AXIS2_CALLBACK_SET_ON_ERROR(callback4, rm_echo_callback_on_error);
-        sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4,
-            listener_manager);
-        AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
-    }
+    AXIS2_SLEEP(2 * SANDESHA2_CLIENT_SLEEP_TIME); 
+    callback4 = axis2_callback_create(env);
+    AXIS2_CALLBACK_SET_ON_COMPLETE(callback4, rm_echo_callback_on_complete);
+    AXIS2_CALLBACK_SET_ON_ERROR(callback4, rm_echo_callback_on_error);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
+        listener_manager);
+    AXIS2_SLEEP(SANDESHA2_CLIENT_SLEEP_TIME); 
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
@@ -269,9 +249,7 @@ rm_echo_callback_on_complete(
    
    axiom_soap_envelope_t *soap_envelope = NULL;
    axiom_node_t *ret_node = NULL;
-    axis2_status_t status = AXIS2_SUCCESS;
-   
-   printf("inside on_complete_callback function\n");
+   axis2_status_t status = AXIS2_SUCCESS;
    
    soap_envelope = AXIS2_CALLBACK_GET_ENVELOPE(callback, env);
    
@@ -344,12 +322,12 @@ usage(
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " [-o OFFER]");
-    fprintf(stdout, " [-v RM VERSION]");
+    fprintf(stdout, " [-m SINGLE CHANNEL]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-v RM VERSION \t rm version.. Type 0 for version 1.0, " \
-        "1 for version 1.1. The default rm version is 1.1 \n");
+    fprintf(stdout, "\t-v SINGLE CHANNEL \t single channel.. The" \
+        " default behaviour is single channel \n");
     fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
-        "feature. The default is no offer \n");
+        "feature. The default behaviour is no offer. \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
         " default is http://127.0.0.1:5555/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");

@@ -35,6 +35,11 @@ typedef struct sandesha2_seq_property_bean_impl
 #define SANDESHA2_INTF_TO_IMPL(seq_property_bean) \
     ((sandesha2_seq_property_bean_impl_t *) seq_property_bean)
 
+static axis2_char_t *
+sandesha2_inmemory_seq_property_mgr_get_key(
+    sandesha2_rm_bean_t *seq_property_bean,
+    const axis2_env_t *env);
+
 static const sandesha2_rm_bean_ops_t rm_bean_ops =
 {
     sandesha2_seq_property_bean_free,
@@ -42,7 +47,8 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
     sandesha2_seq_property_bean_set_id,
     sandesha2_seq_property_bean_get_id,
     sandesha2_seq_property_bean_set_transaction,
-    sandesha2_seq_property_bean_get_transaction
+    sandesha2_seq_property_bean_get_transaction,
+    sandesha2_inmemory_seq_property_mgr_get_key
 };
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
@@ -279,5 +285,23 @@ sandesha2_seq_property_bean_get_transaction(
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
     return sandesha2_rm_bean_get_transaction(seq_property_bean_impl->rm_bean_impl,
         env);
+}
+
+static axis2_char_t *
+sandesha2_inmemory_seq_property_mgr_get_key(
+    sandesha2_rm_bean_t *seq_property_bean,
+    const axis2_env_t *env)
+{
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t *name = NULL;
+    axis2_char_t *id = NULL;
+
+    seq_id = sandesha2_seq_property_bean_get_seq_id(
+        (sandesha2_seq_property_bean_t *) seq_property_bean, env);
+    name = sandesha2_seq_property_bean_get_name(
+        (sandesha2_seq_property_bean_t *) seq_property_bean, env);
+    id = axis2_strcat(env, seq_id, ":", name, NULL);
+
+    return id;
 }
 

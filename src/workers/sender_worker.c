@@ -280,7 +280,7 @@ sandesha2_sender_worker_worker_func(
         qualified_for_sending, SANDESHA2_VALUE_TRUE))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Message is not qualified for sending sending");
+            "[sandesha2] Message is not qualified for sending");
             return NULL;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
@@ -379,7 +379,8 @@ sandesha2_sender_worker_worker_func(
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
     }
-    msg_id = sandesha2_sender_bean_get_msg_id(sender_worker_bean, env);
+    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+        sender_worker_bean, env);
     bean1 = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(bean1)
     {
@@ -398,7 +399,8 @@ sandesha2_sender_worker_worker_func(
         {
             axis2_char_t *msg_stored_key = NULL;
             
-            msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 
+            msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+                bean1, env); 
             sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
             /* Removing the message from the storage */
             msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(

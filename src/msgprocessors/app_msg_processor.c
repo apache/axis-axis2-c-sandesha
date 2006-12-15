@@ -757,7 +757,6 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     if(send_create_seq)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came10****************************************");
         sandesha2_seq_property_bean_t *res_create_seq_added = NULL;
         axis2_char_t *addr_ns_uri = NULL;
         axis2_char_t *anon_uri = NULL;
@@ -771,7 +770,6 @@ sandesha2_app_msg_processor_process_out_msg(
         anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
         if(!res_create_seq_added)
         {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came11****************************************");
             axis2_char_t *acks_to = NULL;
             
             res_create_seq_added = sandesha2_seq_property_bean_create_with_data(

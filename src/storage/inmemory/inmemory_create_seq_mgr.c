@@ -153,7 +153,8 @@ sandesha2_inmemory_create_seq_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
-    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
+    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
+        (sandesha2_rm_bean_t *) bean, env);
     ret = sandesha2_inmemory_bean_mgr_insert(seq_mgr_impl->bean_mgr, env, 
         msg_id, (sandesha2_rm_bean_t *) bean);
     AXIS2_LOG_INFO(env->log, 
@@ -206,7 +207,8 @@ sandesha2_inmemory_create_seq_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
-    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
+    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
+        (sandesha2_rm_bean_t *) bean, env);
     if(!msg_id)
     {
         return AXIS2_FALSE;
@@ -270,10 +272,9 @@ sandesha2_inmemory_create_seq_mgr_match(
     axis2_char_t *temp_internal_seq_id = NULL;
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_inmemory_create_seq_mgr_match");
-    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-        (sandesha2_create_seq_bean_t *) bean, env);
-    temp_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-        (sandesha2_create_seq_bean_t *) candidate, env);
+    msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
+    temp_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(candidate, 
+        env);
     if(msg_id && temp_msg_id && 0 != AXIS2_STRCMP(msg_id, temp_msg_id))
     {
         equal = AXIS2_FALSE;

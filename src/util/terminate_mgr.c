@@ -114,24 +114,24 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
         axis2_char_t *msg_store_key = NULL;
         
         map_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
-        msg_store_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(map_bean, 
-                        env);
+        msg_store_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
+            (sandesha2_rm_bean_t *) map_bean, env);
         sandesha2_storage_mgr_remove_msg_ctx(storage_man, env, msg_store_key);
         sandesha2_invoker_mgr_remove(invoker_mgr, env, 
-                        sandesha2_invoker_bean_get_msg_ctx_ref_key(map_bean, 
-                        env));
+            sandesha2_invoker_bean_get_msg_ctx_ref_key((sandesha2_rm_bean_t *) 
+                map_bean, env));
     }
     clean_status = axis2_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
-                    seq_id, AXIS2_HASH_KEY_STRING);
+        seq_id, AXIS2_HASH_KEY_STRING);
                     
     if(NULL != clean_status && 0 == AXIS2_STRCMP(clean_status, 
-                    SANDESHA2_CLEANED_ON_TERMINATE_MSG))
+        SANDESHA2_CLEANED_ON_TERMINATE_MSG))
         sandesha2_terminate_mgr_complete_term_on_recv_side(env, conf_ctx, seq_id,
                     storage_man);
     else
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-                    AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
-                    SANDESHA2_CLEANED_AFTER_INVOCATION, env));
+            AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
+                SANDESHA2_CLEANED_AFTER_INVOCATION, env));
 
     
     return AXIS2_SUCCESS;
@@ -422,8 +422,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             
             create_seq_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
             sandesha2_create_seq_mgr_remove(create_seq_mgr, env,
-                        sandesha2_create_seq_bean_get_create_seq_msg_id(
-                        create_seq_bean, env));
+                sandesha2_create_seq_bean_get_create_seq_msg_id(
+                    (sandesha2_rm_bean_t *) create_seq_bean, env));
         }
     }
     

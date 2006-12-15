@@ -297,7 +297,8 @@ sandesha2_polling_mgr_worker_func(
         /* If no valid entry is found, try again later */
         if(!next_msg_bean)
             continue;
-        seq_id = sandesha2_next_msg_bean_get_seq_id(next_msg_bean, env);
+        seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
+            next_msg_bean, env);
         /* Create a MakeConnection message */
         ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(next_msg_bean, env);
         seq_prop_key = seq_id;
@@ -350,7 +351,7 @@ sandesha2_polling_mgr_worker_func(
             sandesha2_sender_bean_set_send(make_conn_sender_bean, env, AXIS2_TRUE);
             sandesha2_sender_bean_set_seq_id(make_conn_sender_bean, env, seq_id);
             to = sandesha2_msg_ctx_get_to(make_conn_rm_msg_ctx, env);
-            if(!to)
+            if(to)
             {
                 axis2_char_t *address = (axis2_char_t *) 
                     AXIS2_ENDPOINT_REF_GET_ADDRESS(
@@ -370,8 +371,10 @@ sandesha2_polling_mgr_worker_func(
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
         if(sender_bean_mgr)
+        {
             sandesha2_sender_mgr_insert(sender_bean_mgr, env, 
                 make_conn_sender_bean);
+        }
         sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);
     }

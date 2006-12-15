@@ -51,7 +51,8 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
     sandesha2_sender_bean_set_id,
     sandesha2_sender_bean_get_id,
     sandesha2_sender_bean_set_transaction,
-    sandesha2_sender_bean_get_transaction
+    sandesha2_sender_bean_get_transaction,
+    sandesha2_sender_bean_get_msg_id
 };
 
 AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
@@ -226,7 +227,7 @@ sandesha2_sender_bean_set_msg_ctx_ref_key (
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_id (
-    sandesha2_sender_bean_t *sender_bean,
+    sandesha2_rm_bean_t *sender_bean,
     const axis2_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -413,8 +414,6 @@ sandesha2_sender_bean_get_seq_id(
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
 	return sender_bean_impl->seq_id;
 }
-
-
 
 void AXIS2_CALL
 sandesha2_sender_bean_set_seq_id (

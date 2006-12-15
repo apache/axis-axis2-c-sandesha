@@ -202,6 +202,10 @@ extern "C"
         SANDESHA2_ERROR_MAKE_CONNECTION_IS_NOT_SUPPORTED_IN_THIS_RM_VERSION,
         /* Invalid MakeConnection message. Either Address or Identifier must be present */
         SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_MSG,
+        /* Database cannot be opened */
+        SANDESHA2_ERROR_CANNOT_OPEN_DATABASE,
+        /* There is an sql error. Please refer logs */
+        SANDESHA2_ERROR_SQL_ERROR,
         SANDESHA2_ERROR_LAST
     };
         

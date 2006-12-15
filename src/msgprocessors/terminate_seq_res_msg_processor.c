@@ -115,7 +115,6 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    
     return AXIS2_SUCCESS;
 }
 

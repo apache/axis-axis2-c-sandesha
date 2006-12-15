@@ -133,7 +133,7 @@ sandesha2_inmemory_seq_property_mgr_create(
 
     seq_prop_mgr_impl->values = NULL;
     seq_prop_mgr_impl->bean_mgr = sandesha2_inmemory_bean_mgr_create(env,
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_CREATE_SEQUENCE);
+        storage_mgr, ctx, SANDESHA2_BEAN_MAP_SEQ_PROPERTY);
     seq_prop_mgr_impl->bean_mgr->ops.match = sandesha2_inmemory_seq_property_mgr_match;
     seq_prop_mgr_impl->seq_prop_mgr.ops = seq_property_mgr_ops;
     return &(seq_prop_mgr_impl->seq_prop_mgr);
@@ -239,9 +239,6 @@ sandesha2_inmemory_seq_property_mgr_retrieve(
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]key:%s", key);
     ret = (sandesha2_seq_property_bean_t *) sandesha2_inmemory_bean_mgr_retrieve(
         seq_prop_mgr_impl->bean_mgr, env, key);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came30********************************");
-    if(ret)
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came31********************************");
     AXIS2_FREE(env->allocator, key);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_inmemory_seq_property_mgr_retrieve");

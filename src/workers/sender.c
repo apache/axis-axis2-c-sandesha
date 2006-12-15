@@ -265,10 +265,10 @@ sandesha2_sender_worker_func(
    
         AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
-                        env);
+            env);
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-                        storage_mgr, env);
+            storage_mgr, env);
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env);
         if(!sender_bean)
         {
@@ -276,7 +276,8 @@ sandesha2_sender_worker_func(
                 "So continue");
             continue;
         }
-        msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
+        msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+            sender_bean, env);
         sandesha2_transaction_commit(transaction, env);
         if(msg_id)
         {

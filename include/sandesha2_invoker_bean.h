@@ -66,11 +66,11 @@ sandesha2_invoker_bean_set_base (
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(
-    sandesha2_invoker_bean_t *invoker_bean,
+    sandesha2_rm_bean_t *invoker_bean,
     const axis2_env_t *env);
 
 void AXIS2_CALL 
-sandesha2_invoker_bean_set_msg_context_ref_key(
+sandesha2_invoker_bean_set_msg_ctx_ref_key(
     sandesha2_invoker_bean_t *invoker_bean,
 	const axis2_env_t *env, axis2_char_t* context_ref_id) ;
 

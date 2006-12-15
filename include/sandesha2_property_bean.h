@@ -105,12 +105,12 @@ sandesha2_property_bean_set_in_mem_storage_mgr(
     axis2_char_t *manager);
             
 axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_permanant_storage_mgr( 
+sandesha2_property_bean_get_permanent_storage_mgr( 
     sandesha2_property_bean_t *bean,
     const axis2_env_t *env);
             
 axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_permanant_storage_mgr(
+sandesha2_property_bean_set_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
     const axis2_env_t *env, 
     axis2_char_t *manager);

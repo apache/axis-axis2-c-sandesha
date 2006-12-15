@@ -1,10 +1,10 @@
 prgbindir=$(prefix)/bin/samples
-prgbin_PROGRAMS = rm_mtom
-samplesdir=$(prefix)/samples/client/rm_mtom
-samples_DATA=rm_mtom_client.c Makefile.am Makefile.in
-rm_mtom_SOURCES = rm_mtom_client.c mtom_util.c
+prgbin_PROGRAMS = rm_1_1_echo
+samplesdir=$(prefix)/samples/client/rm_1_1_echo
+samples_DATA=rm_echo_client.c Makefile.am Makefile.in
+rm_1_1_echo_SOURCES = rm_echo_client.c echo_util.c
 
-rm_mtom_LDADD   =  \
+rm_1_1_echo_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
 					-laxis2_util \
                     -laxis2_axiom \
@@ -15,8 +15,11 @@ rm_mtom_LDADD   =  \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
 					-lwoden \
-					-lsqlite \
 					-laxis2_xml_schema \
+                    -L$(AXIS2C_HOME)/modules/sandesha2 \
+					-lsandesha2_client \
+					-lsandesha2 \
+					-lsqlite \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

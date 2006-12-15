@@ -51,7 +51,8 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
+    /*env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
+    env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
@@ -209,8 +210,8 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " [-v RM VERSION]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-v RM VERSION \t rm version.. The"
-            " default rm version is 1.0 ../\n");
+    fprintf(stdout, "\t-v RM VERSION \t rm version.. Type 0 for version 1.0, " \
+        "1 for version 1.1. The default rm version is 1.1 \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
             " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
