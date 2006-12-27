@@ -22,7 +22,7 @@
 
   Acknowledgments
   ----------------
-  Apache Sandesha2C relies heavily on the use of autoconf and libtool to i
+  Apache Sandesha2C relies heavily on the use of autoconf and libtool to
   provide a build environment.
 
   Installation
