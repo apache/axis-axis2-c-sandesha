@@ -173,7 +173,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *term_rcvd_bean = NULL;
     sandesha2_seq_property_bean_t *transmit_bean = NULL;
     axis2_char_t *spec_version = NULL;
-    
+   
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
@@ -421,6 +421,10 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     term_res_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(term_res_bean, env, key);
     /*AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);*/
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+        key);
+    AXIS2_MSG_CTX_SET_PROPERTY(out_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, 
+        property, AXIS2_FALSE);
     sandesha2_storage_mgr_store_msg_ctx(storage_man, env, key, out_msg_ctx);
 
     /* TODO: refine the terminate delay */
@@ -432,7 +436,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     sandesha2_sender_bean_set_send(term_res_bean, env, AXIS2_TRUE);
 
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
         property, AXIS2_FALSE);
@@ -441,15 +445,6 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     sandesha2_sender_mgr_insert(retrans_mgr, env, term_res_bean);
 
     /* end test code */
-
-
-
-
-
-
-
-
-
     
     engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env));
     AXIS2_ENGINE_SEND(engine, env, out_msg_ctx);
@@ -462,12 +457,12 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     
     ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
     
     if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env)))
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("TRUE", env));
+        AXIS2_PROPERTY_SET_VALUE(property, env, "TRUE");
     else
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("FALSE", env));
+        AXIS2_PROPERTY_SET_VALUE(property, env, "FALSE");
         
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property,
                         AXIS2_FALSE);

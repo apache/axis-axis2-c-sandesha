@@ -350,6 +350,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             int i = 0;
             for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)
             {
+                axis2_char_t *msg_stored_key = NULL;
                 sandesha2_sender_bean_t *old_ack_bean = NULL;
                 old_ack_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
                 time_to_send = sandesha2_sender_bean_get_time_to_send(
@@ -357,6 +358,11 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 sandesha2_sender_mgr_remove(retrans_mgr, env, 
                     sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                         old_ack_bean, env));
+                /* Removing the message from the storage */
+                msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
+                    old_ack_bean, env);
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                    msg_stored_key);
             }
         }
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, time_to_send); 

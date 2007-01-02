@@ -189,6 +189,12 @@ sandesha2_error_init()
         "Database cannot be opened";
     sandesha2_error_messages[SANDESHA2_ERROR_SQL_ERROR]=
         "There is an sql error. Please refer logs";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_BUILD_MSG_CTX_WHEN_SVC_NOT_PRESENT]=
+        "Cannot build message context since service is not present";
+    sandesha2_error_messages[SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG]=
+        "Cannot find a operation for generated message";
+    sandesha2_error_messages[SANDESHA2_ERROR_INVALID_PERSISTENCE_PROPERTY_STRING]=
+        "Invalid persistence property string";
 
     return AXIS2_SUCCESS;
 }

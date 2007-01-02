@@ -443,6 +443,7 @@ static axis2_bool_t validate_msg(
     {
         axis2_char_t *spec_version = NULL;
         axis2_char_t *seq_rm_ns = NULL;
+        AXIS2_LOG_INFO(env->log, "prop_key:%s\n", prop_key);
         
         spec_version = sandesha2_utils_get_rm_version(env, prop_key, storage_mgr);
         if(spec_version)

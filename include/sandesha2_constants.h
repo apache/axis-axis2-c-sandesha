@@ -389,7 +389,7 @@ extern "C"
 			
 	#define SANDESHA2_DEF_VAL_PERM_STORAGE_MGR  "InMemoryStorageManager"
 			
-	#define SANDESHA2_DEF_VAL_INORDER_INVOCATION  AXIS2_TRUE
+	#define SANDESHA2_DEF_VAL_INORDER_INVOCATION  AXIS2_FALSE
 			
 	#define SANDESHA2_DEF_VAL_MSG_TYPES_TO_DROP  "none"
 			
@@ -407,15 +407,15 @@ extern "C"
 
 	#define SANDESHA2_ACK_WRITTEN  "AckWritten"
 
-	#define SANDESHA2_INVOKER_SLEEP_TIME  6 /* 2 */
+	#define SANDESHA2_INVOKER_SLEEP_TIME  6  /*6 2 */
 
-	#define SANDESHA2_SENDER_SLEEP_TIME  6 /* 4 */
+	#define SANDESHA2_SENDER_SLEEP_TIME  6  /*6 4 */
 
-    #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 12 /* 4 */
+    #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 12 /* 12 4 */
 
-	#define SANDESHA2_CLIENT_SLEEP_TIME  64 /* 32 */
+	#define SANDESHA2_CLIENT_SLEEP_TIME  32 /* 32 16 */
 
-	#define SANDESHA2_TERMINATE_DELAY  100 /* 100 */
+	#define SANDESHA2_TERMINATE_DELAY  32 /* 100 32 */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
@@ -462,7 +462,7 @@ extern "C"
 	
 	#define SANDESHA2_PERMANENT_STORAGE_MGR  "persistent"
 	
-	#define SANDESHA2_DEFAULT_STORAGE_MGR "inmemory"
+	#define SANDESHA2_DEFAULT_STORAGE_MGR "persistent"
 	
 	#define SANDESHA2_SENDER  "Sender"
 	
@@ -489,7 +489,11 @@ extern "C"
     #define SANDESHA2_MSG_CTX_IN_FAULT_FLOW 2
     #define SANDESHA2_MSG_CTX_OUT_FLOW 3
     #define SANDESHA2_MSG_CTX_OUT_FAULT_FLOW 4
-	 
+	
+
+    #define SANDESHA2_IN_MESSAGE_STORAGE_KEY "InMsgStoreKey"
+    #define SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR ",,,"
+    #define SANDESHA2_BUSY_WAIT_TIME 8
 /** @} */
 #ifdef __cplusplus
 }

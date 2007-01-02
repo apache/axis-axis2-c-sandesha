@@ -206,6 +206,12 @@ extern "C"
         SANDESHA2_ERROR_CANNOT_OPEN_DATABASE,
         /* There is an sql error. Please refer logs */
         SANDESHA2_ERROR_SQL_ERROR,
+        /* Cannot build message context since service is not present */
+        SANDESHA2_ERROR_CANNOT_BUILD_MSG_CTX_WHEN_SVC_NOT_PRESENT,
+        /* Cannot find a operation for generated message */
+        SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG,
+        /* Invalid persistence property string */
+        SANDESHA2_ERROR_INVALID_PERSISTENCE_PROPERTY_STRING,
         SANDESHA2_ERROR_LAST
     };
         

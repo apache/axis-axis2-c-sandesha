@@ -262,7 +262,7 @@ sandesha2_sender_worker_func(
         sandesha2_sender_bean_t *sender_bean = NULL;
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
-   
+        printf("in sender\n");   
         AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
@@ -272,6 +272,8 @@ sandesha2_sender_worker_func(
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env);
         if(!sender_bean)
         {
+            printf("sender_bean is null\n");
+            sandesha2_transaction_commit(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Sender Bean is NULL. "\
                 "So continue");
             continue;
@@ -281,7 +283,7 @@ sandesha2_sender_worker_func(
         sandesha2_transaction_commit(transaction, env);
         if(msg_id)
         {
-        /* Start a sender worker which will work on this message */
+            /* Start a sender worker which will work on this message */
             sender_worker = sandesha2_sender_worker_create(env, sender->conf_ctx, 
                 msg_id);
             sandesha2_sender_worker_run(sender_worker, env);

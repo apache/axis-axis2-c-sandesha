@@ -259,8 +259,10 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         within_transaction = AXIS2_TRUE;
     }
     if(!within_transaction)
+    {
         report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
             env);
+    }
     SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
     sandesha2_create_seq_bean_set_internal_seq_id(create_seq_find_bean, 
@@ -315,7 +317,8 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         SANDESHA2_SEQ_STATUS_ESTABLISHED);
     sandesha2_client_fill_outgoing_seq_info(env, seq_report, out_seq_id, 
         seq_prop_mgr);
-   
+    if(report_transaction)
+         sandesha2_transaction_commit(report_transaction, env);
     return seq_report;
 }
 
@@ -424,6 +427,7 @@ sandesha2_client_get_report(
     {
         if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
         {
+            printf("rollback11\n");
             sandesha2_transaction_rollback(report_transaction, env);
             rolled_back = AXIS2_TRUE;
         }
@@ -474,6 +478,7 @@ sandesha2_client_get_report(
     {
         if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
         {
+            printf("rollback12\n");
             sandesha2_transaction_rollback(report_transaction, env);
             rolled_back = AXIS2_TRUE;
         }

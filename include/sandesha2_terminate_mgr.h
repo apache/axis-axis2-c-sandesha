@@ -66,20 +66,6 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     sandesha2_storage_mgr_t *storage_man);
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_terminate_mgr_complete_term_on_recv_side(
-    const axis2_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
-                        
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_terminate_mgr_remove_recv_side_propertis(
-    const axis2_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
-                        
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
@@ -94,21 +80,8 @@ sandesha2_terminate_mgr_do_updates_if_needed(
     sandesha2_seq_property_bean_t *prop_bean,
     struct sandesha2_seq_property_mgr *prop_mgr);
 
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_terminate_mgr_is_property_deletable(
-    const axis2_env_t *env,
-    axis2_char_t *name);
-
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_time_out_sending_side_seq(
-    const axis2_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id,
-    axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_man);
-
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_terminate_mgr_clean_sending_side_data(
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,

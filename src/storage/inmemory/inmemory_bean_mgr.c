@@ -196,8 +196,10 @@ sandesha2_inmemory_bean_mgr_create(
     }
     property = AXIS2_CTX_GET_PROPERTY(ctx, env, key, AXIS2_FALSE);
     if(property)
+    {
         bean_mgr_impl->table = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(
             property, env);
+    }
     if(!bean_mgr_impl->table)
     {
         axis2_property_t *property = NULL;
@@ -257,7 +259,7 @@ sandesha2_inmemory_bean_mgr_insert_impl(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean); 
+    /*sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);*/
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
     axis2_hash_set(bean_mgr_impl->table, key, AXIS2_HASH_KEY_STRING, bean);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -279,8 +281,8 @@ sandesha2_inmemory_bean_mgr_remove_impl(
     bean = (sandesha2_rm_bean_t *) axis2_hash_get(bean_mgr_impl->table, key,
         AXIS2_HASH_KEY_STRING);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
-    if(bean)
-        sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);
+    /*if(bean)
+        sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);*/
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
     axis2_hash_set(bean_mgr_impl->table, key, AXIS2_HASH_KEY_STRING, NULL);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -299,15 +301,16 @@ sandesha2_inmemory_bean_mgr_retrieve_impl(
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    AXIS2_LOG_INFO(env->log, "%s\n", key);
     bean = (sandesha2_rm_bean_t *) axis2_hash_get(bean_mgr_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
-    if(bean)
+    /*if(bean)
         sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
     bean = (sandesha2_rm_bean_t *) axis2_hash_get(bean_mgr_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
-    axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+    axis2_thread_mutex_unlock(bean_mgr_impl->mutex);*/
     return bean;
 }
 
@@ -323,8 +326,8 @@ sandesha2_inmemory_bean_mgr_update_impl(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    if(bean)
-        sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);
+    /*if(bean)
+        sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);*/
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
     old_bean = (sandesha2_rm_bean_t *) axis2_hash_get(bean_mgr_impl->table, key, 
         AXIS2_HASH_KEY_STRING); 
@@ -332,7 +335,7 @@ sandesha2_inmemory_bean_mgr_update_impl(
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
     if(!old_bean)
         return AXIS2_FALSE;
-    sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, old_bean);
+    /*sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, old_bean);*/
     return AXIS2_TRUE;
 }
 
@@ -379,10 +382,10 @@ sandesha2_inmemory_bean_mgr_find_impl(
     size = AXIS2_ARRAY_LIST_SIZE(beans, env);
     for(i = 0; i < size; i++)
     {
-        sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        /*sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
         if(temp)
             sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, 
-                temp);
+                temp);*/
     }
     /* Finally remove any beans that are no longer in the table */
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);

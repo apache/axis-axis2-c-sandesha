@@ -48,27 +48,37 @@ sandesha2_next_msg_find_callback(
     char **argv, 
     char **col_name)
 {
-    int i;
+    int i = 0;
+    sandesha2_next_msg_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
     const axis2_env_t *env = args->env;
+    axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
+    if(argc < 1)
+    {
+        args->data = NULL;
+        return 0;
+    }
+    if(!data_list)
+    {
+        data_list = axis2_array_list_create(env, 0);
+        args->data = data_list;
+    }
+    bean = sandesha2_next_msg_bean_create(env);
     for(i = 0; i < argc; i++)
     {
-        sandesha2_next_msg_bean_t *bean = NULL;
         if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
-            sandesha2_next_msg_bean_set_seq_id(bean, env, 
-                argv[i] ? argv[i] : "NULL");
+            sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
         if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_key"))
-            sandesha2_next_msg_bean_set_ref_msg_key(bean, env, 
-                argv[i] ? argv[i] : "NULL");
+            if(argv[i])
+                sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
         if(0 == AXIS2_STRCMP(col_name[i], "polling_mode"))
             sandesha2_next_msg_bean_set_polling_mode(bean, env, 
-                argv[i] ? AXIS2_ATOI(argv[i]) : 0);
+                AXIS2_ATOI(argv[i]));
         if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
             sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-                argv[i] ? atol(argv[i]) : 0);
-        axis2_array_list_add(data_list, env, bean);
+                atol(argv[i]));
     }
+    axis2_array_list_add(data_list, env, bean);
     return 0;
 }
 
@@ -79,17 +89,36 @@ sandesha2_next_msg_retrieve_callback(
     char **argv, 
     char **col_name)
 {
+    int i = 0;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
     const axis2_env_t *env = args->env;
     sandesha2_next_msg_bean_t *bean = (sandesha2_next_msg_bean_t *) args->data;
-    sandesha2_next_msg_bean_set_seq_id(bean, env, 
-        argv[0] ? argv[0] : "NULL");
-    sandesha2_next_msg_bean_set_ref_msg_key(bean, env, 
-        argv[0] ? argv[0] : "NULL");
-    sandesha2_next_msg_bean_set_polling_mode(bean, env, 
-        argv[0] ? AXIS2_ATOI(argv[0]) : 0);
-    sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-        argv[0] ? atol(argv[0]) : 0);
+    if(argc < 1)
+    {
+        args->data = NULL;
+        return 0;
+    }
+    if(!bean)
+    {
+        bean = sandesha2_next_msg_bean_create(env);
+        args->data = bean;
+    }
+    for(i = 0; i < argc; i++)
+    {
+        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+            sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
+        if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_key"))
+            if(argv[i])
+                sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
+        if(0 == AXIS2_STRCMP(col_name[i], "polling_mode"))
+        {
+            sandesha2_next_msg_bean_set_polling_mode(bean, env, 
+                AXIS2_ATOI(argv[i]));
+        }
+        if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
+            sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
+                atol(argv[i]));
+    }
     return 0;
 }
 
@@ -226,27 +255,43 @@ sandesha2_permanent_next_msg_mgr_insert(
     const axis2_env_t *env,
     sandesha2_next_msg_bean_t *bean)
 {
-    axis2_char_t *insert_sql = NULL;
-    axis2_char_t *seq_id = NULL;
-    axis2_char_t *ref_msg_key = NULL;
-    axis2_bool_t polling_mode = AXIS2_FALSE;
-    long msg_no = -1;
+    axis2_char_t *sql_insert = NULL;
+    axis2_char_t *sql_retrieve = NULL;
+    axis2_char_t *sql_update = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
+
+    axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
+        env);
+    axis2_char_t str_seq_id[AXIS2_STRLEN(seq_id)];
+    axis2_char_t *ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+    axis2_char_t str_ref_msg_key[ref_msg_key?AXIS2_STRLEN(ref_msg_key):8];
+    axis2_bool_t polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
+    axis2_char_t str_polling_mode[32];
+    long msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
+    axis2_char_t str_msg_no[32];
+
+    sprintf(str_seq_id, "'%s'", seq_id);
+    sprintf(str_ref_msg_key, ref_msg_key?"'%s'":"NULL", ref_msg_key);
+    sprintf(str_polling_mode, "%d", polling_mode);  
+    sprintf(str_msg_no, "%ld", msg_no);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
 
-    seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
-        env);
-    ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
-    msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
-    insert_sql = axis2_strcat(env, "insert into next_msg(seq_id, "\
-        "ref_msg_key, polling_mode, msg_no) values('", seq_id, 
-        "','", ref_msg_key, "','", polling_mode, "','", msg_no, "');", NULL);
+    sql_retrieve = axis2_strcat(env, "select seq_id, ref_msg_key, "\
+        "polling_mode, msg_no from next_msg "\
+        "where seq_id='", seq_id, "';", NULL);
+    sql_update = axis2_strcat(env, "update next_msg set ref_msg_key=", 
+        str_ref_msg_key, ", polling_mode=", str_polling_mode, 
+        ", msg_no=", str_msg_no, " where seq_id=", str_seq_id, ";", NULL);
+    sql_insert = axis2_strcat(env, "insert into next_msg(seq_id, "\
+        "ref_msg_key, polling_mode, msg_no) values(", str_seq_id, 
+        ",", str_ref_msg_key, ",", str_polling_mode, ",", 
+        str_msg_no, ");", NULL);
     return sandesha2_permanent_bean_mgr_insert(next_msg_mgr_impl->bean_mgr, env,
-        insert_sql);
+        (sandesha2_rm_bean_t *) bean, sandesha2_next_msg_retrieve_callback, 
+        sql_retrieve, sql_update, sql_insert);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -257,7 +302,6 @@ sandesha2_permanent_next_msg_mgr_remove(
 {
     axis2_char_t *sql_remove = NULL;
     axis2_char_t *sql_retrieve = NULL;
-    sandesha2_next_msg_bean_t *bean = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
@@ -267,10 +311,8 @@ sandesha2_permanent_next_msg_mgr_remove(
     sql_retrieve = axis2_strcat(env, "select seq_id, ref_msg_key, "\
         "polling_mode, msg_no from next_msg "\
         "where seq_id='", seq_id, "';", NULL);
-    bean = sandesha2_next_msg_bean_create(env);
     return sandesha2_permanent_bean_mgr_remove(next_msg_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_next_msg_retrieve_callback, 
-            sql_retrieve, sql_remove);
+        sandesha2_next_msg_retrieve_callback, sql_retrieve, sql_remove);
 }
 
 sandesha2_next_msg_bean_t *AXIS2_CALL
@@ -289,10 +331,9 @@ sandesha2_permanent_next_msg_mgr_retrieve(
     sql_retrieve = axis2_strcat(env, "select seq_id, ref_msg_key, "\
         "polling_mode, msg_no from next_msg "\
         "where seq_id='", seq_id, "';", NULL);
-    bean = sandesha2_next_msg_bean_create(env);
-    sandesha2_permanent_bean_mgr_retrieve(
-        next_msg_mgr_impl->bean_mgr, env, (sandesha2_rm_bean_t *) bean,
-        sandesha2_next_msg_retrieve_callback, sql_retrieve);
+    bean = (sandesha2_next_msg_bean_t *) sandesha2_permanent_bean_mgr_retrieve(
+        next_msg_mgr_impl->bean_mgr, env, sandesha2_next_msg_retrieve_callback, 
+        sql_retrieve);
     return bean;
 }
 
@@ -304,31 +345,36 @@ sandesha2_permanent_next_msg_mgr_update(
 {
     axis2_char_t *sql_update = NULL;
     axis2_char_t *sql_retrieve = NULL;
-    axis2_char_t *seq_id = NULL;
-    axis2_char_t *ref_msg_key = NULL;
-    axis2_bool_t polling_mode = AXIS2_FALSE;
-    long msg_no = -1;
     axis2_bool_t ret = AXIS2_FALSE;
-    sandesha2_next_msg_bean_t *old_bean = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
+
+    axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
+        env);
+    axis2_char_t str_seq_id[AXIS2_STRLEN(seq_id)];
+    axis2_char_t *ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+    axis2_char_t str_ref_msg_key[ref_msg_key?AXIS2_STRLEN(ref_msg_key):8];
+    axis2_bool_t polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
+    axis2_char_t str_polling_mode[32];
+    long msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
+    axis2_char_t str_msg_no[32];
+
+    sprintf(str_seq_id, "'%s'", seq_id);
+    sprintf(str_ref_msg_key, ref_msg_key?"'%s'":"NULL", ref_msg_key);
+    sprintf(str_polling_mode, "%d", polling_mode);  
+    sprintf(str_msg_no, "%ld", msg_no);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
-    seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
-        env);
-    ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
-    msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
+
     sql_retrieve = axis2_strcat(env, "select seq_id, ref_msg_key, "\
         "polling_mode, msg_no from next_msg "\
-        "where seq_id='", seq_id, "';", NULL);
-    sql_update = axis2_strcat(env, "update next_msg set ref_msg_key='", 
-        ref_msg_key, "', polling_mode='", polling_mode, "', msg_no='", 
-            msg_no, "' where seq_id='", seq_id, "';", NULL);
-    old_bean = sandesha2_next_msg_bean_create(env);
+        "where seq_id=", str_seq_id, ";", NULL);
+    sql_update = axis2_strcat(env, "update next_msg set ref_msg_key=", 
+        str_ref_msg_key, ", polling_mode=", str_polling_mode, 
+        ", msg_no=", str_msg_no, " where seq_id=", str_seq_id, ";", NULL);
     ret = sandesha2_permanent_bean_mgr_update(next_msg_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) old_bean, sandesha2_next_msg_retrieve_callback, 
+        (sandesha2_rm_bean_t *) bean, sandesha2_next_msg_retrieve_callback, 
         sql_retrieve, sql_update);
     return ret;
 }

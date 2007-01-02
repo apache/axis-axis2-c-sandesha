@@ -246,6 +246,12 @@ sandesha2_utils_stop_polling_mgr(
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
 
+axis2_array_list_t *AXIS2_CALL
+sandesha2_utils_split(
+    const axis2_env_t *env,
+    axis2_char_t *str,
+    axis2_char_t *pattern);
+
 /** @} */
 #ifdef __cplusplus
 }

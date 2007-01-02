@@ -251,7 +251,7 @@ sandesha2_in_order_invoker_worker_func(
     axis2_env_t *env = NULL;
     
     args = (sandesha2_in_order_invoker_args_t*)data;
-    env = args->env;
+    env = axis2_init_thread_env(args->env);
     invoker = args->impl;
     
     while(invoker->run_invoker)
@@ -299,7 +299,7 @@ sandesha2_in_order_invoker_worker_func(
             axis2_array_list_t *st_map_list = NULL;
             sandesha2_invoker_bean_t *find_bean = NULL;
             axis2_bool_t invoked = AXIS2_FALSE;
-            int j = 0;
+            int j = 0, size = 0;
             axis2_bool_t continue_seq = AXIS2_TRUE;
             
             seq_id = AXIS2_ARRAY_LIST_GET(all_seq_list, env, i);
@@ -338,7 +338,8 @@ sandesha2_in_order_invoker_worker_func(
                         next_msg_no, seq_id, AXIS2_FALSE);
             st_map_list = sandesha2_invoker_mgr_find(storage_map_mgr,
                         env, find_bean);
-            for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(st_map_list, env); j++)
+            size = AXIS2_ARRAY_LIST_SIZE(st_map_list, env);
+            for(j = 0; j < size; j++)
             {
                 sandesha2_invoker_bean_t *st_map_bean = NULL;
                 axis2_char_t *key = NULL;
@@ -353,8 +354,10 @@ sandesha2_in_order_invoker_worker_func(
                 st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
                 key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
                     (sandesha2_rm_bean_t *) st_map_bean, env);
+                printf("msg_ref_key:%s\n", key);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx);
+                printf("msg_to_invoke:%ld\n", msg_to_invoke);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
@@ -385,8 +388,11 @@ sandesha2_in_order_invoker_worker_func(
                 }
                 else
                 {
+                    axis2_status_t status = AXIS2_FAILURE;
                     AXIS2_MSG_CTX_SET_PAUSED(msg_to_invoke, env, AXIS2_FALSE);
-                    AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
+                    status = AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
+                    if(!status)
+                        return status;
                 }
                 invoked = AXIS2_TRUE;
                 transaction = sandesha2_storage_mgr_get_transaction(

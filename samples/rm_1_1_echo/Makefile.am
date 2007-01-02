@@ -19,7 +19,7 @@ rm_1_1_echo_LDADD   =  \
                     -L$(AXIS2C_HOME)/modules/sandesha2 \
 					-lsandesha2_client \
 					-lsandesha2 \
-					-lsqlite \
+					-lsqlite3 \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

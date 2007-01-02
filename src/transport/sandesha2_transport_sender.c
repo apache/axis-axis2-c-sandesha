@@ -183,9 +183,8 @@ sandesha2_transport_sender_invoke (
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                        env));
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
                         property, AXIS2_FALSE);
     sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);

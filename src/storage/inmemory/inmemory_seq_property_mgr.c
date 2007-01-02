@@ -212,7 +212,7 @@ sandesha2_inmemory_seq_property_mgr_remove(
         seq_id, name);
     status = sandesha2_inmemory_bean_mgr_remove(seq_prop_mgr_impl->bean_mgr, env,
         key);
-    AXIS2_FREE(env->allocator, key);
+    /*AXIS2_FREE(env->allocator, key);*/
     return status;
 }
 
@@ -236,10 +236,9 @@ sandesha2_inmemory_seq_property_mgr_retrieve(
     
     key = sandesha2_inmemory_seq_property_mgr_get_id_with_seq_id_and_name(env, 
         seq_id, name); 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]key:%s", key);
     ret = (sandesha2_seq_property_bean_t *) sandesha2_inmemory_bean_mgr_retrieve(
         seq_prop_mgr_impl->bean_mgr, env, key);
-    AXIS2_FREE(env->allocator, key);
+    /*AXIS2_FREE(env->allocator, key);*/
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_inmemory_seq_property_mgr_retrieve");
     return ret;

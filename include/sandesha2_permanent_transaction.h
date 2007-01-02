@@ -27,6 +27,7 @@
 #include <axis2_error.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
+#include <sqlite3.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -39,7 +40,18 @@ struct sandesha2_transaction;
 AXIS2_EXTERN struct sandesha2_transaction* AXIS2_CALL
 sandesha2_permanent_transaction_create(
     const axis2_env_t *env,
-    struct sandesha2_storage_mgr *storage_mgr);
+    struct sandesha2_storage_mgr *storage_mgr,
+    unsigned long *thread_id);
+
+sqlite3 * AXIS2_CALL
+sandesha2_permanent_transaction_get_dbconn(
+    struct sandesha2_transaction *transaction,
+    const axis2_env_t *env);
+
+unsigned long *AXIS2_CALL
+sandesha2_permanent_transaction_get_thread_id(
+    struct sandesha2_transaction *transaction,
+    const axis2_env_t *env);
 
 /** @} */
 #ifdef __cplusplus

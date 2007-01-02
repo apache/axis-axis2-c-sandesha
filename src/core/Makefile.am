@@ -18,5 +18,7 @@ libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../util/libsandesha_util.la\
                         ../workers/libsandesha2_workers.la\
                         ../wsrm/libsandesha2_wsrm.la \
-                        ../polling/libsandesha2_polling.la
+                        ../polling/libsandesha2_polling.la \
+						./libsqlite3.a
+
 

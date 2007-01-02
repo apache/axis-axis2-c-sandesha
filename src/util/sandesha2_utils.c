@@ -509,34 +509,32 @@ sandesha2_utils_get_permanent_storage_mgr(
 {
     axis2_property_t *property = NULL;
     axis2_ctx_t *ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    /*axis2_array_list_t *storage_mgr_list = axis2_array_list_create(env, 0);*/
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
-    
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
+   
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR,
         AXIS2_FALSE);
-
-    if(property && AXIS2_PROPERTY_GET_VALUE(property, env))
-    {
-        sandesha2_storage_mgr_t *storage_mgr = NULL;
-        storage_mgr = (sandesha2_storage_mgr_t*)AXIS2_PROPERTY_GET_VALUE(
-            property, env);
-        return storage_mgr;
-    }
+    if(property)
+        storage_mgr = AXIS2_PROPERTY_GET_VALUE(property, env);
     else
-    {
-        sandesha2_storage_mgr_t *storage_mgr = 
-            sandesha2_permanent_storage_mgr_create(env, conf_ctx);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, storage_mgr);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            sandesha2_storage_mgr_free_void_arg);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
-            property, AXIS2_FALSE);
-        return storage_mgr;
-    }
-    return NULL;    
+        storage_mgr = sandesha2_permanent_storage_mgr_create(env, conf_ctx);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+        storage_mgr);
+    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
+        property, AXIS2_FALSE);
+    /*if(property)
+        storage_mgr_list = AXIS2_PROPERTY_GET_VALUE(property, env);
+    sandesha2_storage_mgr_t *storage_mgr = 
+        sandesha2_permanent_storage_mgr_create(env, conf_ctx);
+    AXIS2_ARRAY_LIST_ADD(storage_mgr_list, env, storage_mgr);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+        storage_mgr_list);
+    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
+        property, AXIS2_FALSE);*/
+    return storage_mgr;
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
@@ -1307,5 +1305,29 @@ sandesha2_utils_is_anon_uri(
         return AXIS2_TRUE;
 
     return AXIS2_FALSE;
+}
+
+axis2_array_list_t *AXIS2_CALL
+sandesha2_utils_split(
+    const axis2_env_t *env,
+    axis2_char_t *str,
+    axis2_char_t *pattern)
+{
+    axis2_array_list_t *list = axis2_array_list_create(env, 0);
+    axis2_char_t *ptr = NULL;
+    axis2_char_t *value = NULL;
+    ptr = AXIS2_STRSTR(str, pattern);
+    while(ptr)
+    {
+        ptr[0] = AXIS2_EOLN;
+        value = AXIS2_STRDUP(str, env);
+        AXIS2_ARRAY_LIST_ADD(list, env, value);
+        str = ptr + 3;
+        ptr = AXIS2_STRSTR(str, pattern);
+    }
+    value = AXIS2_STRDUP(str, env);
+    AXIS2_ARRAY_LIST_ADD(list, env, value);
+
+    return list;
 }
 

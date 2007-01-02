@@ -27,7 +27,7 @@ typedef struct sandesha2_sender_bean_impl
 {
     sandesha2_sender_bean_t sender_bean;
     sandesha2_rm_bean_t *rm_bean_impl;
-	axis2_char_t *msg_context_ref_key;
+	axis2_char_t *msg_ctx_ref_key;
 	axis2_char_t *msg_id;
 	axis2_char_t *internal_seq_id;
 	int sent_count;
@@ -71,7 +71,7 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 	}
 
 	/* init properties */
-	sender_bean_impl->msg_context_ref_key = NULL;
+	sender_bean_impl->msg_ctx_ref_key = NULL;
 	sender_bean_impl->msg_id = NULL;
 	sender_bean_impl->internal_seq_id = NULL;
 	sender_bean_impl->sent_count = -1;
@@ -116,7 +116,7 @@ sandesha2_sender_bean_create_with_data(
 	}
 
 	/* init properties */
-	sender_bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
+	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)AXIS2_STRDUP(key, env);
 	sender_bean_impl->msg_id = (axis2_char_t *)AXIS2_STRDUP(msg_id, env);
 	sender_bean_impl->internal_seq_id = (axis2_char_t *)AXIS2_STRDUP(int_seq_id, env);
 	sender_bean_impl->sent_count = -1;
@@ -146,10 +146,10 @@ sandesha2_sender_bean_free (
 		sandesha2_rm_bean_free(sender_bean_impl->rm_bean_impl, env);
 		sender_bean_impl->rm_bean_impl = NULL;
 	}
-	if(sender_bean_impl->msg_context_ref_key)
+	if(sender_bean_impl->msg_ctx_ref_key)
 	{
-		AXIS2_FREE(env->allocator, sender_bean_impl->msg_context_ref_key);
-		sender_bean_impl->msg_context_ref_key = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->msg_ctx_ref_key);
+		sender_bean_impl->msg_ctx_ref_key = NULL;
 	}
 	if(sender_bean_impl->msg_id)
 	{
@@ -206,7 +206,7 @@ sandesha2_sender_bean_get_msg_ctx_ref_key (
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
-	return sender_bean_impl->msg_context_ref_key;
+	return sender_bean_impl->msg_ctx_ref_key;
 }
 
 void AXIS2_CALL
@@ -217,12 +217,12 @@ sandesha2_sender_bean_set_msg_ctx_ref_key (
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
-	if(sender_bean_impl->msg_context_ref_key)
+	if(sender_bean_impl->msg_ctx_ref_key)
 	{
-		AXIS2_FREE(env->allocator, sender_bean_impl->msg_context_ref_key);
-		sender_bean_impl->msg_context_ref_key = NULL;
+		AXIS2_FREE(env->allocator, sender_bean_impl->msg_ctx_ref_key);
+		sender_bean_impl->msg_ctx_ref_key = NULL;
 	}
-	sender_bean_impl->msg_context_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key, env);
+	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)AXIS2_STRDUP(ref_key, env);
 }
 
 axis2_char_t* AXIS2_CALL

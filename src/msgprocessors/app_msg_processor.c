@@ -369,6 +369,7 @@ sandesha2_app_msg_processor_process_in_msg (
     else
     {
         msgs_bean = sandesha2_seq_property_bean_create(env);
+        printf("str_seq_id:%s\n", str_seq_id);
         sandesha2_seq_property_bean_set_seq_id(msgs_bean, env, str_seq_id);
         sandesha2_seq_property_bean_set_name(msgs_bean, env, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
@@ -481,6 +482,7 @@ sandesha2_app_msg_processor_process_in_msg (
     {
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_FALSE);
     }*/
+    /*AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);*/
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
@@ -632,7 +634,7 @@ sandesha2_app_msg_processor_process_out_msg(
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-    }    
+    }
     system_msg_num = sandesha2_app_msg_processor_get_prev_msg_no(env, 
             internal_seq_id, storage_mgr);
     if(msg_num_lng > 0 && msg_num_lng <= system_msg_num)
@@ -649,7 +651,6 @@ sandesha2_app_msg_processor_process_out_msg(
         msg_number = system_msg_num + 1;
     else
         msg_number = 1;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_number:%d", msg_number);
     
     /* A dummy message is a one which will not be processed as a actual 
      * application message. The RM handlers will simply let these go.
@@ -666,12 +667,10 @@ sandesha2_app_msg_processor_process_out_msg(
             msg_number, storage_mgr);
     
     sprintf(msg_number_str, "%ld", msg_number); 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_number_str:%s", msg_number_str);
     res_highest_msg_bean = sandesha2_seq_property_bean_create_with_data(env,
         internal_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER, 
             msg_number_str);
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
-        res_highest_msg_bean);
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_highest_msg_bean);
     if(last_msg)
     {
         sandesha2_seq_property_bean_t *res_highest_msg_key_bean = NULL;
@@ -925,7 +924,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     axis2_engine_t *engine = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_msg_ctx_t *temp_msg_ctx = NULL;
     
     AXIS2_LOG_INFO(env->log,  
         "[Sandesha2] sandesha2_app_msg_processor_send_ack_if_reqd");
@@ -933,7 +931,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_str, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, mgr, AXIS2_FAILURE);
-    temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env); 
     seq = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
         SANDESHA2_MSG_PART_SEQ);
     seq_id = sandesha2_identifier_get_identifier(
@@ -1042,6 +1039,11 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     }
     create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
     AXIS2_MSG_CTX_SET_RELATES_TO(create_seq_msg, env, NULL);
+    /* Set that the create sequence message is part of a transaction. */
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+        SANDESHA2_VALUE_TRUE);
+    AXIS2_MSG_CTX_SET_PROPERTY(create_seq_msg, env, SANDESHA2_WITHIN_TRANSACTION, 
+        property, AXIS2_FALSE);
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, 
         internal_seq_id, (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(
         create_seq_msg, env), NULL);
@@ -1075,9 +1077,8 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         internal_seq_id);
     sandesha2_sender_bean_set_send(create_seq_entry, env, AXIS2_TRUE);
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_FALSE, 
-        env));
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
     AXIS2_MSG_CTX_SET_PROPERTY(create_seq_msg, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING, property, AXIS2_FALSE);
     sandesha2_sender_bean_set_msg_type(create_seq_entry, env, 
@@ -1085,8 +1086,8 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     sandesha2_sender_mgr_insert(retrans_mgr, env, create_seq_entry);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, create_seq_msg);
     property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(str_key, env));
+    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+    AXIS2_PROPERTY_SET_VALUE(property, env, str_key);
     AXIS2_MSG_CTX_SET_PROPERTY(create_seq_msg, env, SANDESHA2_MESSAGE_STORE_KEY,
         property, AXIS2_FALSE);
     orig_trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(create_seq_msg, env);
@@ -1319,8 +1320,8 @@ sandesha2_app_msg_processor_process_response_msg(
         axis2_transport_out_desc_t *trans_out = NULL;
 
         property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(storage_key, env));
+        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        AXIS2_PROPERTY_SET_VALUE(property, env, storage_key);
         AXIS2_MSG_CTX_SET_PROPERTY(app_msg_ctx, env, 
             SANDESHA2_MESSAGE_STORE_KEY, property, AXIS2_FALSE);
                         

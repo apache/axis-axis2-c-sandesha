@@ -29,6 +29,7 @@
 #include <axis2_utils.h>
 #include <axis2_array_list.h>
 #include <sandesha2_rm_bean.h>
+#include <sandesha2_msg_store_bean.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -78,13 +79,16 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
+    sandesha2_rm_bean_t *bean,
+    int (*retrieve_func)(void *, int, char **, char **),
+    axis2_char_t *sql_stmt_retrieve,
+    axis2_char_t *sql_stmt_update,
     axis2_char_t *sql_stmt_insert);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_remove(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
-    sandesha2_rm_bean_t *bean,
     int (*retrieve_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_remove);
@@ -93,7 +97,6 @@ sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
-    sandesha2_rm_bean_t *bean,
     int (*retrieve_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_retrieve);
 
@@ -101,7 +104,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_update(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
-    sandesha2_rm_bean_t *old_bean,
+    sandesha2_rm_bean_t *bean,
     int (*update_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_retrieve_old_bean,
     axis2_char_t *sql_stmt_update);
@@ -132,6 +135,26 @@ sandesha2_permanent_bean_mgr_match(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate);
+
+sandesha2_msg_store_bean_t *AXIS2_CALL
+sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_insert_msg_store_bean(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key,
+    sandesha2_msg_store_bean_t *bean);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_remove_msg_store_bean(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key);
+
 
 /** @} */
 #ifdef __cplusplus

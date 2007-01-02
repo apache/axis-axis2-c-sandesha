@@ -34,6 +34,7 @@
 #include <axiom_soap_body.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_msg_retrans_adjuster.h>
 #include <platforms/axis2_platform_auto_sense.h>
@@ -233,12 +234,13 @@ sandesha2_sender_worker_worker_func(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(sender_worker->conf_ctx, env));
-                        
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
+        printf("rollback6\n");
+        sandesha2_transaction_rollback(transaction, env);
         return NULL;
     }
 
@@ -247,6 +249,8 @@ sandesha2_sender_worker_worker_func(
                     sender_worker->conf_ctx);
     if(!msg_ctx)
     {
+        printf("rollback7\n");
+        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
         return NULL;
@@ -266,6 +270,8 @@ sandesha2_sender_worker_worker_func(
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
     if(!continue_sending)
     {
+        printf("rollback8\n");
+        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
         return NULL;
@@ -275,13 +281,14 @@ sandesha2_sender_worker_worker_func(
         SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
     if(property)
         qualified_for_sending = AXIS2_PROPERTY_GET_VALUE(property, env);
-        
     if(qualified_for_sending && 0 != AXIS2_STRCMP(
         qualified_for_sending, SANDESHA2_VALUE_TRUE))
     {
+        printf("rollback9\n");
+        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
-            return NULL;
+        return NULL;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
@@ -309,6 +316,8 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
+            printf("rollback10\n");
+            sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
             return NULL;
@@ -345,6 +354,7 @@ sandesha2_sender_worker_worker_func(
     transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
     if(transport_sender)
     {
+        printf("came5\n");
         sandesha2_transaction_commit(transaction, env);
         property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
@@ -366,6 +376,7 @@ sandesha2_sender_worker_worker_func(
         sleep(300000);*/
                     
     }
+    printf("came13\n");                    
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                     env);
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
@@ -415,8 +426,8 @@ sandesha2_sender_worker_worker_func(
             sandesha2_sender_worker_check_for_sync_res(sender_worker, env, 
                 msg_ctx);
     }
-    if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == sandesha2_msg_ctx_get_msg_type(
-                    rm_msg_ctx, env))
+    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
+    if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
     {
         sandesha2_terminate_seq_t *terminate_seq = NULL;
         axis2_char_t *seq_id = NULL;
@@ -436,6 +447,24 @@ sandesha2_sender_worker_worker_func(
                     int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
                     storage_mgr);
     }
+    else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
+    {
+        sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
+        axis2_char_t *seq_id = NULL;
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_char_t *int_seq_id = NULL;
+        
+        terminate_seq_res = (sandesha2_terminate_seq_res_t*)
+            sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
+            SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
+        seq_id = sandesha2_identifier_get_identifier(
+            sandesha2_terminate_seq_res_get_identifier(terminate_seq_res, 
+            env), env);
+        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
+            seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
+            storage_mgr);
+    }
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
@@ -450,6 +479,7 @@ sandesha2_sender_worker_worker_func(
     /* TODO make transaction handling effective */
     if(transaction)
     {
+        printf("came6\n");
         sandesha2_transaction_commit(transaction, env);
     }
     #ifdef AXIS2_SVR_MULTI_THREADED

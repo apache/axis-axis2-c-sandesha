@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <sqlite3.h>
 #include <axis2_handler_desc.h>
 #include <axis2_array_list.h>
 #include <axis2_svc.h>
@@ -110,6 +111,7 @@ sandesha2_global_in_handler_invoke(
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_transaction_t *transaction = NULL;
     axis2_property_t *property = NULL;
+    axis2_bool_t rolled_back = AXIS2_FALSE;
     
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -117,11 +119,32 @@ sandesha2_global_in_handler_invoke(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Starting sandesha2 global in handler ......");
 
+    /*axis2_char_t *error_msg = NULL;
+    axis2_char_t *insert_sql = "insert into seq_property(id, seq_id, name, value) values('5643d0cc-974f-1db1-210b-001125b4c0fc:ReplyToEPR','5643d0cc-974f-1db1-210b-001125b4c0fc','ReplyToEPR','http://127.0.0.1:5555/axis2/services/RMSampleService');";
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open("/usr/local/apache2/htdocs/sandesha2", &db);
+    if(rc != SQLITE_OK)
+    {
+        AXIS2_LOG_INFO(env->log, "cannot open database");
+    }
+    rc = sqlite3_exec(db, "select * from seq_property;", 0, 0, &error_msg);
+    if(rc != SQLITE_OK)
+    {
+        AXIS2_LOG_INFO(env->log, "my error_msg1:%s", error_msg);
+    }
+    rc = sqlite3_exec(db, insert_sql, 0, 0, &error_msg);
+    if(rc != SQLITE_OK)
+    {
+        AXIS2_LOG_INFO(env->log, "my error_msg2:%s", error_msg);
+    }
+    else
+        AXIS2_LOG_INFO(env->log, "sql_stmt OK");
+    sqlite3_close(db);*/
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration"
-                        " Context is NULL");
+            " Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -153,13 +176,13 @@ sandesha2_global_in_handler_invoke(
                         "storage manager");
         return AXIS2_FAILURE;
     }
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
-                        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+        AXIS2_FALSE);
     if(property)
         within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
-                        property, env);
+            property, env);
     if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
-                within_transaction_str))
+        within_transaction_str))
     {
         within_transaction = AXIS2_TRUE;
     }
@@ -168,9 +191,8 @@ sandesha2_global_in_handler_invoke(
         axis2_property_t *prop = NULL;
         
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(prop, env, SANDESHA2_VALUE_TRUE);
+        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
+            SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -179,7 +201,18 @@ sandesha2_global_in_handler_invoke(
     if(fault_part)
     {
         axis2_relates_to_t *relates_to = NULL;
-        
+        if(!within_transaction)
+        {
+            axis2_property_t *prop = NULL;
+            printf("rollback1\n");
+            sandesha2_transaction_rollback(transaction, env);
+            prop = axis2_property_create_with_args(env, 
+                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                prop, AXIS2_FALSE);
+            rolled_back = AXIS2_TRUE;
+            
+        }
         relates_to = AXIS2_MSG_CTX_GET_RELATES_TO(msg_ctx, env);
         if(relates_to)
         {
@@ -209,6 +242,18 @@ sandesha2_global_in_handler_invoke(
     is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
     if(!is_rm_global_msg)
     {
+        if(!within_transaction)
+        {
+            axis2_property_t *prop = NULL;
+            printf("rollback2\n");
+            sandesha2_transaction_rollback(transaction, env);
+            prop = axis2_property_create_with_args(env, 
+                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                prop, AXIS2_FALSE);
+            rolled_back = AXIS2_TRUE;
+            
+        }
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
         return AXIS2_SUCCESS;
     }
@@ -217,20 +262,32 @@ sandesha2_global_in_handler_invoke(
                         rm_msg_ctx, storage_mgr);
     if(dropped)
     {
+        if(!within_transaction)
+        {
+            axis2_property_t *prop = NULL;
+            printf("rollback3\n");
+            sandesha2_transaction_rollback(transaction, env);
+            prop = axis2_property_create_with_args(env, 
+                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+                prop, AXIS2_FALSE);
+            rolled_back = AXIS2_TRUE;
+            
+        }
         sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx,
                         storage_mgr);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_ctx dropped");
         return AXIS2_SUCCESS;
     }
     /*Process if global processing possible. - Currently none*/
-    if(!within_transaction)
+    if(!within_transaction && !rolled_back)
     {
+        axis2_property_t *prop = NULL;
         sandesha2_transaction_commit(transaction, env);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-        AXIS2_PROPERTY_SET_VALUE(property, env,  SANDESHA2_VALUE_FALSE);
-        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
-                        property, AXIS2_FALSE);
+        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+            0, SANDESHA2_VALUE_FALSE);
+        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
+                AXIS2_FALSE);
     }
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit sandesha2 global in handler ......");

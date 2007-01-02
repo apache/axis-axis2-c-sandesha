@@ -25,7 +25,7 @@ typedef struct sandesha2_invoker_bean_impl
     sandesha2_invoker_bean_t invoker_bean;
     sandesha2_rm_bean_t *rm_bean_impl;
 	/*  This is the messageContextRefKey that is obtained after saving a message context in a storage. */
-	axis2_char_t *msg_context_ref_key;
+	axis2_char_t *msg_ctx_ref_key;
 
 	/* The message number of the message. */
 	long msg_no;
@@ -69,7 +69,7 @@ sandesha2_invoker_bean_create(
 	}
 
 	/* init the properties. */
-	invoker_bean_impl->msg_context_ref_key = NULL;
+	invoker_bean_impl->msg_ctx_ref_key = NULL;
 	invoker_bean_impl->msg_no = -1;
 	invoker_bean_impl->seq_id = NULL;	
 	invoker_bean_impl->invoked = AXIS2_FALSE;
@@ -100,9 +100,9 @@ sandesha2_invoker_bean_create_with_data(
 	}
 	/* init the properties. */
 	if(!ref_key)
-		invoker_bean_impl->msg_context_ref_key = NULL;
+		invoker_bean_impl->msg_ctx_ref_key = NULL;
 	else
-		invoker_bean_impl->msg_context_ref_key = (axis2_char_t*)AXIS2_STRDUP(
+		invoker_bean_impl->msg_ctx_ref_key = (axis2_char_t*)AXIS2_STRDUP(
             ref_key, env);
 
 	if(!seq_id)
@@ -130,10 +130,10 @@ sandesha2_invoker_bean_free(
 		sandesha2_rm_bean_free(invoker_bean_impl->rm_bean_impl, env);
 		invoker_bean_impl->rm_bean_impl= NULL;
 	}
-	if(invoker_bean_impl->msg_context_ref_key)
+	if(invoker_bean_impl->msg_ctx_ref_key)
 	{
-		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_context_ref_key);
-		invoker_bean_impl->msg_context_ref_key= NULL;
+		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_ctx_ref_key);
+		invoker_bean_impl->msg_ctx_ref_key= NULL;
 	}
 		
 	if(!invoker_bean_impl->seq_id)
@@ -177,7 +177,7 @@ sandesha2_invoker_bean_get_msg_ctx_ref_key(
 {
     sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
     invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
-	return invoker_bean_impl->msg_context_ref_key;
+	return invoker_bean_impl->msg_ctx_ref_key;
 }
 
 void AXIS2_CALL 
@@ -187,10 +187,10 @@ sandesha2_invoker_bean_set_msg_ctx_ref_key(
 {
     sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
     invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
-	if(invoker_bean_impl->msg_context_ref_key)
-		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_context_ref_key);
+	if(invoker_bean_impl->msg_ctx_ref_key)
+		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_ctx_ref_key);
 
-	invoker_bean_impl->msg_context_ref_key = 
+	invoker_bean_impl->msg_ctx_ref_key = 
         (axis2_char_t*)AXIS2_STRDUP(context_ref_id, env);
 }
 	

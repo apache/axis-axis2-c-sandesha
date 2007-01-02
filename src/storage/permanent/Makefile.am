@@ -8,7 +8,8 @@ libsandesha2_permanent_la_SOURCES = \
 								permanent_seq_property_mgr.c \
 								permanent_transaction.c \
 								permanent_storage_mgr.c \
-								permanent_bean_mgr.c
+								permanent_bean_mgr.c \
+								msg_store_bean.c
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \

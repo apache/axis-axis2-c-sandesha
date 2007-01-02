@@ -461,10 +461,12 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             axis2_char_t *to = NULL;
             sandesha2_msg_ctx_t *ack_rm_msg = NULL;
             sandesha2_iom_rm_part_t *seq_ack = NULL;
+            axis2_char_t *msg_ctx_ref_key = NULL;
             
+            msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
+                sender_bean, env);
             msg_ctx1 = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
-                        sandesha2_sender_bean_get_msg_ctx_ref_key(
-                        sender_bean, env), conf_ctx);
+                        msg_ctx_ref_key, conf_ctx);
             to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
                         AXIS2_MSG_CTX_GET_TO(msg_ctx1, env), env);
             if(0 == AXIS2_STRCMP(to, to_str))
@@ -472,6 +474,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             sandesha2_sender_mgr_remove(retrans_mgr, env, 
                 sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                     sender_bean, env));
+            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                msg_ctx_ref_key);
             ack_rm_msg = sandesha2_msg_init_init_msg(env, msg_ctx1);
             if(SANDESHA2_MSG_TYPE_ACK != sandesha2_msg_ctx_get_msg_type(ack_rm_msg, 
                         env))

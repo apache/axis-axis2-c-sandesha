@@ -331,8 +331,8 @@ sandesha2_inmemory_sender_mgr_match(
         (sandesha2_sender_bean_t *) bean, env);
     temp_time_to_send = sandesha2_sender_bean_get_time_to_send(
         (sandesha2_sender_bean_t *) candidate, env);
-    /*if(time_to_send > 0 && (time_to_send < temp_time_to_send))*/
-    if(time_to_send > 0 && (time_to_send != temp_time_to_send))
+    /*if(time_to_send > 0 && (time_to_send != temp_time_to_send))*/
+    if(time_to_send > 0 && (time_to_send < temp_time_to_send))
     {
         add = AXIS2_FALSE;
     }
