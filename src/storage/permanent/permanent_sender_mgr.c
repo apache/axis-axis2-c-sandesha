@@ -51,8 +51,6 @@ sandesha2_sender_retrieve_callback(
     axis2_array_list_t *data_list)
 {
     int rc = -1;
-    sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) 
-        sandesha2_sender_bean_create(env);
     axis2_char_t *msg_id = (axis2_char_t *) key;
     if(msg_id)
     {
@@ -71,6 +69,8 @@ sandesha2_sender_retrieve_callback(
     }
     while(rc == SQLITE_ROW)
     {
+        sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) 
+            sandesha2_sender_bean_create(env);
         sandesha2_sender_bean_set_msg_id(bean, env, 
             (axis2_char_t *) sqlite3_column_text(stmt, 0));
         sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env,
@@ -103,8 +103,8 @@ sandesha2_sender_retrieve_callback(
                 return AXIS2_FAILURE;
             }
         }
+        axis2_array_list_add(data_list, env, bean);
     }
-    axis2_array_list_add(data_list, env, bean);
     return AXIS2_SUCCESS;
 }
 

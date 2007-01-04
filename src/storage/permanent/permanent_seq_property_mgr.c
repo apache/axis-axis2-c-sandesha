@@ -57,8 +57,6 @@ sandesha2_seq_property_retrieve_callback(
     axis2_array_list_t *data_list)
 {
     int rc = -1;
-    sandesha2_seq_property_bean_t *bean = (sandesha2_seq_property_bean_t *) 
-        sandesha2_seq_property_bean_create(env);
     axis2_char_t *id = (axis2_char_t *) key;
     if(id)
     {
@@ -78,6 +76,8 @@ sandesha2_seq_property_retrieve_callback(
     }
     while(rc == SQLITE_ROW)
     {
+        sandesha2_seq_property_bean_t *bean = (sandesha2_seq_property_bean_t *) 
+            sandesha2_seq_property_bean_create(env);
         sandesha2_seq_property_bean_set_seq_id(bean, env, 
             (axis2_char_t *) sqlite3_column_text(stmt, 0));
         sandesha2_seq_property_bean_set_name(bean, env,
@@ -92,8 +92,8 @@ sandesha2_seq_property_retrieve_callback(
                 return AXIS2_FAILURE;
             }
         }
+        axis2_array_list_add(data_list, env, bean);
     }
-    axis2_array_list_add(data_list, env, bean);
     return AXIS2_SUCCESS;
 }
 
