@@ -993,7 +993,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     rc = sqlite3_step(stmt_remove);
     if (rc == SQLITE_BUSY)
     {
-        if(busy_handler(stmt_remove, rc) != SQLITE_OK)
+        if(sandesha2_permanent_bean_mgr_busy_handler(stmt_remove, rc) != 
+            SQLITE_OK)
         {
             axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
             sandesha2_permanent_bean_mgr_handle_sql_error(env, dbconn, 

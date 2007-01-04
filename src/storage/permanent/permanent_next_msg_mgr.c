@@ -77,7 +77,7 @@ sandesha2_next_msg_retrieve_callback(
             (axis2_char_t *) sqlite3_column_text(stmt, 1));
         sandesha2_next_msg_bean_set_polling_mode(bean, env,
             sqlite3_column_int(stmt, 2));
-        sandesha2_next_msg_bean_set_msg_no(bean, env,
+        sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env,
             sqlite3_column_int64(stmt, 3));
         rc = sqlite3_step(stmt);
         if(rc == SQLITE_BUSY)
