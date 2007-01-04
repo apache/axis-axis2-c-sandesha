@@ -30,6 +30,7 @@
 #include <axis2_array_list.h>
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_msg_store_bean.h>
+#include <sqlite3.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -79,8 +80,12 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
+    void *key,
     sandesha2_rm_bean_t *bean,
-    int (*retrieve_func)(void *, int, char **, char **),
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
+    axis2_status_t (*update_or_insert_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), sandesha2_rm_bean_t *),
     axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_update,
     axis2_char_t *sql_stmt_insert);
@@ -89,7 +94,11 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_remove(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
-    int (*retrieve_func)(void *, int, char **, char **),
+    void *key, 
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
+    axis2_status_t (*remove_callback)(sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *),
     axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_remove);
 
@@ -97,15 +106,21 @@ sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
-    int (*retrieve_func)(void *, int, char **, char **),
+    void *key,
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
     axis2_char_t *sql_stmt_retrieve);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_update(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
+    void *key,
     sandesha2_rm_bean_t *bean,
-    int (*update_func)(void *, int, char **, char **),
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
+    axis2_status_t (*update_or_insert_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), sandesha2_rm_bean_t *),
     axis2_char_t *sql_stmt_retrieve_old_bean,
     axis2_char_t *sql_stmt_update);
 
@@ -114,7 +129,8 @@ sandesha2_permanent_bean_mgr_find(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*find_func)(void *, int, char **, char **),
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *env, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
     int (*count_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find,
     axis2_char_t *sql_stmt_count);
@@ -124,7 +140,8 @@ sandesha2_permanent_bean_mgr_find_unique(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*find_func)(void *, int, char **, char **),
+    axis2_status_t (*retrieve_callback)(const axis2_env_t *, sqlite3_stmt *, int (*busy_handler)(
+        sqlite3_stmt*, int), void *, axis2_array_list_t *),
     int (*count_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find,
     axis2_char_t *sql_stmt_count);

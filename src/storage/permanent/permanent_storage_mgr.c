@@ -1139,3 +1139,17 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     return map;
 }
 
+sqlite3 * AXIS2_CALL
+sandesha2_permanent_storage_mgr_get_dbconn(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env)
+{
+    sqlite3* dbconn = NULL;
+    sandesha2_transaction_t *transaction = NULL;
+    transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
+        env);
+    if(transaction)
+        dbconn = (sqlite3 *) sandesha2_permanent_transaction_get_dbconn(transaction, env);
+    return dbconn;
+}
+

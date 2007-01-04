@@ -43,78 +43,133 @@ typedef struct sandesha2_permanent_seq_property_mgr
 #define SANDESHA2_INTF_TO_IMPL(seq_property_mgr) \
     ((sandesha2_permanent_seq_property_mgr_t *) seq_property_mgr)
 
-static int 
-sandesha2_seq_property_find_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+static axis2_char_t *
+sandesha2_permanent_seq_property_mgr_get_id_with_bean(
+    const axis2_env_t *env,
+    sandesha2_seq_property_bean_t *bean);
+
+axis2_status_t 
+sandesha2_seq_property_retrieve_callback(
+    const axis2_env_t *env,
+    sqlite3_stmt *stmt,
+    int (*busy_handler)(sqlite3_stmt* stmt, int rc),
+    void *key,
+    axis2_array_list_t *data_list)
 {
-    int i = 0;
-    sandesha2_seq_property_bean_t *bean = NULL; 
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
-    axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
-    if(argc < 1)
+    int rc = -1;
+    sandesha2_seq_property_bean_t *bean = (sandesha2_seq_property_bean_t *) 
+        sandesha2_seq_property_bean_create(env);
+    axis2_char_t *id = (axis2_char_t *) key;
+    if(id)
     {
-        args->data = NULL;
-        return 0;
+        if (sqlite3_bind_text(stmt, 1, id, 
+            axis2_strlen(id), SQLITE_STATIC))
+        {
+            return AXIS2_FAILURE;
+        }
     }
-    if(!data_list)
+    rc = sqlite3_step(stmt);
+    if(rc == SQLITE_BUSY)
     {
-        data_list = axis2_array_list_create(env, 0);
-        args->data = data_list;
+        if(busy_handler(stmt, rc) != SQLITE_OK)
+        {
+            return AXIS2_FAILURE;
+        }
     }
-    bean = sandesha2_seq_property_bean_create(env);
-    for(i = 0; i < argc; i++)
+    while(rc == SQLITE_ROW)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
-            sandesha2_seq_property_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "name"))
-            if(argv[i])
-                sandesha2_seq_property_bean_set_name(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "value"))
-            if(argv[i])
-                sandesha2_seq_property_bean_set_value(bean, env, argv[i]);
+        sandesha2_seq_property_bean_set_seq_id(bean, env, 
+            (axis2_char_t *) sqlite3_column_text(stmt, 0));
+        sandesha2_seq_property_bean_set_name(bean, env,
+            (axis2_char_t *) sqlite3_column_text(stmt, 1));
+        sandesha2_seq_property_bean_set_value(bean, env,
+            (axis2_char_t *) sqlite3_column_text(stmt, 2));
+        rc = sqlite3_step(stmt);
+        if(rc == SQLITE_BUSY)
+        {
+            if(busy_handler(stmt, rc) != SQLITE_OK)
+            {
+                return AXIS2_FAILURE;
+            }
+        }
     }
     axis2_array_list_add(data_list, env, bean);
-    return 0;
+    return AXIS2_SUCCESS;
 }
 
-static int 
-sandesha2_seq_property_retrieve_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+static axis2_status_t
+sandesha2_seq_property_remove_callback(
+    sqlite3_stmt *stmt,
+    int (*busy_handler)(sqlite3_stmt* stmt, int rc),
+    void *key)
 {
-    int i = 0;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
-    sandesha2_seq_property_bean_t *bean = NULL;
-    if(argc < 1)
+    int rc = -1;
+    axis2_char_t *id = (axis2_char_t *) key;
+    if (sqlite3_bind_text(stmt, 1, id, 
+        axis2_strlen(id), SQLITE_STATIC))
     {
-        args->data = NULL;
-        return 0;
+        return AXIS2_FAILURE;
     }
-    bean = (sandesha2_seq_property_bean_t *) args->data;
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_BUSY)
+    {
+        if(busy_handler(stmt, rc) != SQLITE_OK)
+        {
+            return AXIS2_FAILURE;
+        }
+    }
+    else if (rc == SQLITE_DONE)
+        return AXIS2_SUCCESS;
+    return AXIS2_FAILURE;
+}
+
+static axis2_status_t 
+sandesha2_seq_property_update_or_insert_callback(
+    const axis2_env_t *env,
+    sqlite3_stmt *stmt,
+    int (*busy_handler)(sqlite3_stmt* stmt, int rc),
+    sandesha2_rm_bean_t *seq_prop_bean)
+{
+    sandesha2_seq_property_bean_t *bean = (sandesha2_seq_property_bean_t *) 
+        seq_prop_bean;
     if(!bean)
+        return AXIS2_FAILURE;
     {
-        bean = sandesha2_seq_property_bean_create(env);
-        args->data = bean;
+        int rc = -1;
+        axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+        axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
+        axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
+        axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
+          
+        if (sqlite3_bind_text(stmt, 1, seq_id, axis2_strlen(
+            seq_id), SQLITE_STATIC))
+        {
+            return AXIS2_FAILURE;
+        }
+        if (sqlite3_bind_text(stmt, 2, name, axis2_strlen(name), SQLITE_STATIC))
+        {
+            return AXIS2_FAILURE;
+        }
+        if (sqlite3_bind_text(stmt, 3, value, axis2_strlen(value), SQLITE_STATIC))
+        {
+            return AXIS2_FAILURE;
+        }
+        if (sqlite3_bind_text(stmt, 4, id, axis2_strlen(id), SQLITE_STATIC))
+        {
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_step(stmt);
+        if (rc == SQLITE_BUSY)
+        {
+            if(busy_handler(stmt, rc) != SQLITE_OK)
+            {
+                return AXIS2_FAILURE;
+            }
+        }
+        else if (rc == SQLITE_DONE)
+            return AXIS2_SUCCESS;
     }
-    for(i = 0; i < argc; i++)
-    {
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
-            sandesha2_seq_property_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "name"))
-            if(argv[i])
-                sandesha2_seq_property_bean_set_name(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "value"))
-            if(argv[i])
-                sandesha2_seq_property_bean_set_value(bean, env, argv[i]);
-    }
-    return 0;
+    return AXIS2_FAILURE;
 }
 
 static int 
@@ -184,11 +239,6 @@ axis2_array_list_t *AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_retrieve_all(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axis2_env_t *env);
-
-static axis2_char_t *
-sandesha2_permanent_seq_property_mgr_get_id_with_bean(
-    const axis2_env_t *env,
-    sandesha2_seq_property_bean_t *bean);
 
 static axis2_char_t *
 sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(
@@ -262,21 +312,8 @@ sandesha2_permanent_seq_property_mgr_insert(
     axis2_char_t *sql_update = NULL;
     axis2_char_t *sql_retrieve = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
+    axis2_char_t *id = NULL; 
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
-
-    axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
-    axis2_char_t str_id[AXIS2_STRLEN(id)];
-    axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
-    axis2_char_t str_seq_id[seq_id?AXIS2_STRLEN(seq_id):8];
-    axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
-    axis2_char_t str_name[name?AXIS2_STRLEN(name):8];
-    axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
-    axis2_char_t str_value[value?AXIS2_STRLEN(value):8];
-
-    sprintf(str_id, "'%s'", id);
-    sprintf(str_seq_id, seq_id?"'%s'":"NULL", seq_id);
-    sprintf(str_name, name?"'%s'":"NULL", name);
-    sprintf(str_value, value?"'%s'":"NULL", value);
 
     AXIS2_LOG_INFO(env->log, 
         "Entry:[sandesha2]sandesha2_permanent_seq_property_mgr_insert");
@@ -284,16 +321,15 @@ sandesha2_permanent_seq_property_mgr_insert(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
 
-    sql_retrieve = axis2_strcat(env, "select seq_id, name, value from seq_property "\
-        "where id=", str_id, ";", NULL);
-    sql_update = axis2_strcat(env, "update seq_property set seq_id=", 
-        str_seq_id, ", name=", str_name, ", value=", str_value, 
-        " where id=", str_id, ";", NULL);
-    sql_insert = axis2_strcat(env, "insert into seq_property(id, seq_id, "\
-        "name, value) values(", str_id, ",", str_seq_id, ",", str_name, 
-        ",", str_value, ");", NULL);
+    id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+    sql_retrieve = "select seq_id, name, value from seq_property "\
+        "where id=?";
+    sql_update = "update seq_property set seq_id=?, name=?, value=? where id=?";
+    sql_insert = "insert into seq_property(seq_id, name, value, id) values(?,?,?,?)";
     ret = sandesha2_permanent_bean_mgr_insert(seq_prop_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean,  sandesha2_seq_property_retrieve_callback, 
+        (void *) id, (sandesha2_rm_bean_t *) bean,  
+        sandesha2_seq_property_retrieve_callback, 
+        sandesha2_seq_property_update_or_insert_callback, 
         sql_retrieve, sql_update, sql_insert);
     AXIS2_LOG_INFO(env->log, 
         "Exit:[sandesha2]sandesha2_permanent_seq_property_mgr_insert:return%d", 
@@ -320,12 +356,13 @@ sandesha2_permanent_seq_property_mgr_remove(
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     key = sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(env, 
         seq_id, name);
-    sql_remove = axis2_strcat(env, "delete from seq_property where id='",
-        key, "';", NULL);
-    sql_retrieve = axis2_strcat(env, "select seq_id, name, value from seq_property "\
-        "where id='", key, "';", NULL);
-    status = sandesha2_permanent_bean_mgr_remove(seq_prop_mgr_impl->bean_mgr, env, 
-        sandesha2_seq_property_retrieve_callback, sql_retrieve, sql_remove);
+    sql_remove = "delete from seq_property where id=?";
+    sql_retrieve = "select seq_id, name, value from seq_property "\
+        "where id=?";
+    status = sandesha2_permanent_bean_mgr_remove(seq_prop_mgr_impl->bean_mgr, 
+        env, (void *) key, sandesha2_seq_property_retrieve_callback, 
+        sandesha2_seq_property_remove_callback, 
+        sql_retrieve, sql_remove);
     AXIS2_FREE(env->allocator, key);
     return status;
 }
@@ -350,11 +387,11 @@ sandesha2_permanent_seq_property_mgr_retrieve(
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     key = sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(env, 
         seq_id, name);
-    sql_retrieve = axis2_strcat(env, "select seq_id, name, value from seq_property "\
-        "where id='", key, "';", NULL);
+    sql_retrieve = "select seq_id, name, value from seq_property "\
+        "where id=?";
     ret = (sandesha2_seq_property_bean_t *) sandesha2_permanent_bean_mgr_retrieve(
-        seq_prop_mgr_impl->bean_mgr, env, sandesha2_seq_property_retrieve_callback, 
-        sql_retrieve);
+        seq_prop_mgr_impl->bean_mgr, env, (void *) key, 
+        sandesha2_seq_property_retrieve_callback, sql_retrieve);
     AXIS2_FREE(env->allocator, key);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_retrieve");
@@ -373,18 +410,6 @@ sandesha2_permanent_seq_property_mgr_update(
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
     axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
-    axis2_char_t str_id[AXIS2_STRLEN(id)];
-    axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
-    axis2_char_t str_seq_id[seq_id?AXIS2_STRLEN(seq_id):8];
-    axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
-    axis2_char_t str_name[name?AXIS2_STRLEN(name):8];
-    axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
-    axis2_char_t str_value[value?AXIS2_STRLEN(value):8];
-
-    sprintf(str_id, "'%s'", id);
-    sprintf(str_seq_id, seq_id?"'%s'":"NULL", seq_id);
-    sprintf(str_name, name?"'%s'":"NULL", name);
-    sprintf(str_value, value?"'%s'":"NULL", value);
 
     AXIS2_LOG_INFO(env->log, 
         "Entry:[sandesha2]sandesha2_permanent_seq_property_mgr_update");
@@ -392,13 +417,12 @@ sandesha2_permanent_seq_property_mgr_update(
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
 
-    sql_retrieve = axis2_strcat(env, "select seq_id, name, value from "\
-        "seq_property where id=", str_id, ";", NULL);
-    sql_update = axis2_strcat(env, "update seq_property set seq_id=", 
-        str_seq_id, ", name=", str_name, ", value=", str_value, 
-        " where id=", str_id, ";", NULL);
+    sql_retrieve = "select seq_id, name, value from seq_property where id=?";
+    sql_update = "update seq_property set seq_id=?,name=?,value=? where id=?";
     ret = sandesha2_permanent_bean_mgr_update(seq_prop_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_retrieve_callback, 
+        (void *)id, (sandesha2_rm_bean_t *) bean, 
+        sandesha2_seq_property_retrieve_callback, 
+        sandesha2_seq_property_update_or_insert_callback, 
         sql_retrieve, sql_update);
     AXIS2_LOG_INFO(env->log, 
         "Exit:[sandesha2]sandesha2_permanent_seq_property_mgr_update:return:%d", ret);
@@ -419,11 +443,10 @@ sandesha2_permanent_seq_property_mgr_find(
         "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_find");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
-    sql_find = axis2_strcat(env, "select seq_id, name,value from seq_property;", 
-        NULL);
+    sql_find = "select seq_id, name,value from seq_property;";
     sql_count = "select count(*) as no_recs from seq_property;";
     ret = sandesha2_permanent_bean_mgr_find(seq_prop_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_find_callback,
+        (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_retrieve_callback,
         sandesha2_seq_property_count_callback, sql_find, sql_count);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_find");
@@ -442,12 +465,11 @@ sandesha2_permanent_seq_property_mgr_find_unique(
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
-    sql_find = axis2_strcat(env, "select seq_id, name,value from seq_property;", 
-        NULL);
+    sql_find = "select seq_id, name,value from seq_property;";
     sql_count = "select count(*) as no_recs from seq_property;";
     return (sandesha2_seq_property_bean_t *) 
         sandesha2_permanent_bean_mgr_find_unique(seq_prop_mgr_impl->bean_mgr, 
-        env, (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_find_callback,
+        env, (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_retrieve_callback,
         sandesha2_seq_property_count_callback, sql_find, sql_count);
 }
 

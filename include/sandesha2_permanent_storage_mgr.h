@@ -44,14 +44,9 @@ sandesha2_permanent_storage_mgr_create(
     const axis2_env_t *env, 
     axis2_conf_ctx_t *conf_ctx);
 
-/*sqlite3 * AXIS2_CALL
-sandesha2_permanent_storage_mgr_get_db(
-    struct sandesha2_storage_mgr *storage_mgr,
-    const axis2_env_t *env);*/
-
-unsigned long *AXIS2_CALL
-sandesha2_permanent_transaction_get_thread_id(
-    sandesha2_transaction_t *trans,
+sqlite3 * AXIS2_CALL
+sandesha2_permanent_storage_mgr_get_dbconn(
+    sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env);
 
 /** @} */
