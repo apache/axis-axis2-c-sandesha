@@ -376,8 +376,13 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     axis2_char_t *anon_uri = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_ctx_t *ctx = NULL;
+    sandesha2_sender_bean_t *term_res_bean = NULL;
+    axis2_char_t *key = NULL;
+	axis2_transport_out_desc_t *orig_trans_out = NULL;
+    axis2_transport_out_desc_t *trans_out = NULL;
+	sandesha2_sender_mgr_t *retrans_mgr = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_man, AXIS2_FAILURE);
@@ -405,8 +410,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(out_msg_ctx, env, AXIS2_TRUE);
     
     /* test code */
-    axis2_transport_out_desc_t *orig_trans_out = NULL;
-    axis2_transport_out_desc_t *trans_out = NULL;
+ 
     orig_trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(out_msg_ctx, env);
     property = axis2_property_create_with_args(env, 3, 0, orig_trans_out);
     AXIS2_MSG_CTX_SET_PROPERTY(out_msg_ctx, env,
@@ -414,9 +418,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     trans_out = sandesha2_utils_get_transport_out(env);
     AXIS2_MSG_CTX_SET_TRANSPORT_OUT_DESC(out_msg_ctx, env, trans_out);
 
-    sandesha2_sender_bean_t *term_res_bean = NULL;
-    axis2_char_t *key = NULL;
-    sandesha2_sender_mgr_t *retrans_mgr = NULL;
+ 
     key = axis2_uuid_gen(env);
     term_res_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(term_res_bean, env, key);

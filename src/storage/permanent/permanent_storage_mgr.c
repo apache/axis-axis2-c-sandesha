@@ -17,7 +17,7 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_permanent_storage_mgr.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_msg_store_bean.h>
 #include <sandesha2_permanent_create_seq_mgr.h>
 #include <sandesha2_invoker_mgr.h>
@@ -353,11 +353,14 @@ sandesha2_permanent_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env)
 {
+	int key_len = 0;
+	unsigned long *thread_id = 0;
+	sandesha2_transaction_t *transaction = NULL;
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    int key_len = 0;
-    unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
-    sandesha2_transaction_t *transaction = NULL;
+    
+	thread_id = (unsigned long *) axis2_os_thread_current();
+    
 
     axis2_thread_mutex_lock(storage_mgr_impl->mutex);
     key_len = sizeof(unsigned long);

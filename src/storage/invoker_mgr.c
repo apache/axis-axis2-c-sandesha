@@ -27,7 +27,7 @@ sandesha2_invoker_mgr_free(
     sandesha2_invoker_mgr_t *invoker,
     const axis2_env_t *env)
 {
-    return invoker->ops.free(invoker, env);
+    invoker->ops.free(invoker, env);
 }
 
 axis2_bool_t AXIS2_CALL

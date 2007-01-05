@@ -1062,7 +1062,7 @@ sandesha2_msg_creator_create_make_connection_msg(
         AXIS2_MSG_CTX_SET_REPLY_TO(make_conn_msg_ctx, env, reply_to);
         wsa_action = sandesha2_spec_specific_consts_get_make_connection_action(
             env, rm_version);
-        axis2_msg_ctx_set_wsa_action(make_conn_msg_ctx, env, wsa_action);
+		AXIS2_MSG_CTX_SET_WSA_ACTION(make_conn_msg_ctx, env, wsa_action);
         AXIS2_MSG_CTX_SET_MESSAGE_ID(make_conn_msg_ctx, env, axis2_uuid_gen(env));
         sandesha2_msg_ctx_set_msg_part(make_conn_rm_msg_ctx, env, 
             SANDESHA2_MSG_PART_MAKE_CONNECTION, 

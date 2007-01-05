@@ -35,7 +35,7 @@ typedef struct sandesha2_seq_property_bean_impl
 #define SANDESHA2_INTF_TO_IMPL(seq_property_bean) \
     ((sandesha2_seq_property_bean_impl_t *) seq_property_bean)
 
-static axis2_char_t *
+axis2_char_t* AXIS2_CALL
 sandesha2_inmemory_seq_property_mgr_get_key(
     sandesha2_rm_bean_t *seq_property_bean,
     const axis2_env_t *env);
@@ -292,7 +292,7 @@ sandesha2_seq_property_bean_get_transaction(
         env);
 }
 
-static axis2_char_t *
+axis2_char_t* AXIS2_CALL
 sandesha2_inmemory_seq_property_mgr_get_key(
     sandesha2_rm_bean_t *seq_property_bean,
     const axis2_env_t *env)

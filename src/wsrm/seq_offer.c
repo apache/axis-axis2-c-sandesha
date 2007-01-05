@@ -16,6 +16,7 @@
  
 #include <sandesha2_seq_offer.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_iom_rm_element.h>
 
 /** 
  * @brief SequenceOffer struct impl

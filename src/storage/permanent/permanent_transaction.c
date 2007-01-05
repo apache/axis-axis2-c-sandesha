@@ -21,6 +21,7 @@
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_property_bean.h>
+#include <sandesha2_permanent_storage_mgr.h>
 #include <axis2_log.h>
 #include <axis2_hash.h>
 #include <axis2_thread.h>
@@ -48,33 +49,33 @@ struct sandesha2_permanent_transaction_impl
 #define SANDESHA2_INTF_TO_IMPL(trans) \
     ((sandesha2_permanent_transaction_impl_t *) trans)
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_permanent_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static axis2_bool_t
+static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_transaction_is_active(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean);
 
-static void 
+static void AXIS2_CALL
 sandesha2_permanent_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
@@ -146,7 +147,7 @@ sandesha2_permanent_transaction_create(
     return &(trans_impl->trans);
 }
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_permanent_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -194,14 +195,15 @@ sandesha2_permanent_transaction_get_thread_id(
     return trans_impl->thread_id;
 }
 
-static axis2_bool_t
+static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_transaction_is_active(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
 {
+	 int size = 0;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
-    int size = 0;
+   
     if(trans_impl->enlisted_beans)
         size = AXIS2_ARRAY_LIST_SIZE(trans_impl->enlisted_beans, env);
     if(size > 0)
@@ -210,7 +212,7 @@ sandesha2_permanent_transaction_is_active(
         return AXIS2_FALSE;
 }
 
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -234,7 +236,7 @@ sandesha2_permanent_transaction_commit(
     sandesha2_permanent_transaction_release_locks(trans, env);
 }
 
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -259,7 +261,7 @@ sandesha2_permanent_transaction_rollback(
     sandesha2_permanent_transaction_release_locks(trans, env);
 }
 
-static void 
+static void AXIS2_CALL
 sandesha2_permanent_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -285,7 +287,7 @@ sandesha2_permanent_transaction_release_locks(
     trans_impl->enlisted_beans = NULL;*/
 }
    
-static void
+static void AXIS2_CALL
 sandesha2_permanent_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,

@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_inmemory_invoker_mgr.h>
-#include <sandesha2_inmemory_bean_mgr.h>
+#include "sandesha2_inmemory_bean_mgr.h"
 #include <sandesha2_invoker_mgr.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_constants.h>
