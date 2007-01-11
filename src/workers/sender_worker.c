@@ -239,7 +239,6 @@ sandesha2_sender_worker_worker_func(
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
-        printf("rollback6\n");
         sandesha2_transaction_rollback(transaction, env);
         return NULL;
     }
@@ -249,7 +248,6 @@ sandesha2_sender_worker_worker_func(
                     sender_worker->conf_ctx);
     if(!msg_ctx)
     {
-        printf("rollback7\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
@@ -270,7 +268,6 @@ sandesha2_sender_worker_worker_func(
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
     if(!continue_sending)
     {
-        printf("rollback8\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
@@ -284,7 +281,6 @@ sandesha2_sender_worker_worker_func(
     if(qualified_for_sending && 0 != AXIS2_STRCMP(
         qualified_for_sending, SANDESHA2_VALUE_TRUE))
     {
-        printf("rollback9\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
@@ -316,7 +312,6 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
-            printf("rollback10\n");
             sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
@@ -354,7 +349,6 @@ sandesha2_sender_worker_worker_func(
     transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
     if(transport_sender)
     {
-        printf("came5\n");
         sandesha2_transaction_commit(transaction, env);
         property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
@@ -376,7 +370,6 @@ sandesha2_sender_worker_worker_func(
         sleep(300000);*/
                     
     }
-    printf("came13\n");                    
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
                     env);
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
@@ -479,7 +472,6 @@ sandesha2_sender_worker_worker_func(
     /* TODO make transaction handling effective */
     if(transaction)
     {
-        printf("came6\n");
         sandesha2_transaction_commit(transaction, env);
     }
     #ifdef AXIS2_SVR_MULTI_THREADED

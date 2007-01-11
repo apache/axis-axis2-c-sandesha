@@ -28,7 +28,7 @@ sandesha2_next_msg_mgr_free(
     sandesha2_next_msg_mgr_t *next_msg,
     const axis2_env_t *env)
 {
-	next_msg->ops.free(next_msg, env);
+    return next_msg->ops.free(next_msg, env);
 }
 
 axis2_bool_t AXIS2_CALL

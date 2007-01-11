@@ -21,7 +21,6 @@
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_property_bean.h>
-#include <sandesha2_permanent_storage_mgr.h>
 #include <axis2_log.h>
 #include <axis2_hash.h>
 #include <axis2_thread.h>
@@ -43,39 +42,35 @@ struct sandesha2_permanent_transaction_impl
     axis2_array_list_t *enlisted_beans;
     axis2_thread_mutex_t *mutex;
     sqlite3 *dbconn;
+    axis2_bool_t is_active;
     unsigned long *thread_id;
 };
 
 #define SANDESHA2_INTF_TO_IMPL(trans) \
     ((sandesha2_permanent_transaction_impl_t *) trans)
 
-static axis2_status_t AXIS2_CALL
+static axis2_status_t
 sandesha2_permanent_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static axis2_bool_t AXIS2_CALL
-sandesha2_permanent_transaction_is_active(
-    sandesha2_transaction_t *trans,
-    const axis2_env_t *env);
-
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean);
 
-static void AXIS2_CALL
+static void 
 sandesha2_permanent_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
@@ -124,7 +119,6 @@ sandesha2_permanent_transaction_create(
     path = sandesha2_property_bean_get_db_path(prop_bean, env);
     db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, "sandesha2", NULL);
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
-    printf("came1\n");
     if(rc != SQLITE_OK)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
@@ -136,6 +130,7 @@ sandesha2_permanent_transaction_create(
     }
     rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
         &error_msg);
+    /*printf("came1:thread_id:%ld\n", thread_id);*/
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
@@ -143,11 +138,14 @@ sandesha2_permanent_transaction_create(
             error_msg);
         printf("transaction begin error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
+        sandesha2_transaction_free(&(trans_impl->trans), env);
+        return NULL;
     }
+    trans_impl->is_active = AXIS2_TRUE;
     return &(trans_impl->trans);
 }
 
-static axis2_status_t AXIS2_CALL
+static axis2_status_t
 sandesha2_permanent_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -195,24 +193,25 @@ sandesha2_permanent_transaction_get_thread_id(
     return trans_impl->thread_id;
 }
 
-static axis2_bool_t AXIS2_CALL
+axis2_bool_t
 sandesha2_permanent_transaction_is_active(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
 {
-	 int size = 0;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
-   
+    /*int size = 0;
     if(trans_impl->enlisted_beans)
         size = AXIS2_ARRAY_LIST_SIZE(trans_impl->enlisted_beans, env);
     if(size > 0)
         return AXIS2_TRUE;
     else
-        return AXIS2_FALSE;
+        return AXIS2_FALSE;*/
+    return trans_impl->is_active;
+
 }
 
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -223,7 +222,11 @@ sandesha2_permanent_transaction_commit(
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
 
     rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
-    printf("came2\n");
+    /*unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    printf("came2:thread_id:%ld\n", thread_id);*/
+    /*if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
+            "COMMIT TRANSACTION;", 0, 0, &error_msg, rc);*/
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
@@ -233,10 +236,11 @@ sandesha2_permanent_transaction_commit(
         sqlite3_free(error_msg);
     }
     sqlite3_close(trans_impl->dbconn);
+    trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
 }
 
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -247,7 +251,8 @@ sandesha2_permanent_transaction_rollback(
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     rc = sqlite3_exec(trans_impl->dbconn, "ROLLBACK TRANSACTION;", 0, 0,
         &error_msg);
-    printf("came3\n");
+    /*unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    printf("came3:thread_id:%ld\n", thread_id);*/
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
@@ -258,10 +263,11 @@ sandesha2_permanent_transaction_rollback(
         sqlite3_free(error_msg);
     }
     sqlite3_close(trans_impl->dbconn);
+    trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
 }
 
-static void AXIS2_CALL
+static void 
 sandesha2_permanent_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -287,7 +293,7 @@ sandesha2_permanent_transaction_release_locks(
     trans_impl->enlisted_beans = NULL;*/
 }
    
-static void AXIS2_CALL
+static void
 sandesha2_permanent_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,

@@ -53,6 +53,11 @@ sandesha2_permanent_transaction_get_thread_id(
     struct sandesha2_transaction *transaction,
     const axis2_env_t *env);
 
+axis2_bool_t
+sandesha2_permanent_transaction_is_active(
+    struct sandesha2_transaction *trans,
+    const axis2_env_t *env);
+
 /** @} */
 #ifdef __cplusplus
 }

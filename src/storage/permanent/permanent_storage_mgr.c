@@ -17,7 +17,7 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_permanent_storage_mgr.h>
-#include "sandesha2_permanent_bean_mgr.h"
+#include <sandesha2_permanent_bean_mgr.h>
 #include <sandesha2_msg_store_bean.h>
 #include <sandesha2_permanent_create_seq_mgr.h>
 #include <sandesha2_invoker_mgr.h>
@@ -353,17 +353,28 @@ sandesha2_permanent_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env)
 {
-	int key_len = 0;
-	unsigned long *thread_id = 0;
-	sandesha2_transaction_t *transaction = NULL;
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    
-	thread_id = (unsigned long *) axis2_os_thread_current();
-    
+    int key_len = sizeof(unsigned long);
+    unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    sandesha2_transaction_t *transaction = NULL;
+    axis2_hash_index_t *index = NULL;
 
     axis2_thread_mutex_lock(storage_mgr_impl->mutex);
-    key_len = sizeof(unsigned long);
+    for (index = axis2_hash_first(storage_mgr_impl->transactions , env); index; 
+        index = axis2_hash_next(env, index))
+    {
+        void *v = NULL;
+        sandesha2_transaction_t *temp = NULL;
+        axis2_hash_this(index, NULL, NULL, &v);
+        temp = (sandesha2_transaction_t *) v;
+        while(sandesha2_permanent_transaction_is_active(temp, env))
+        {
+            printf("sleeping \n");
+            AXIS2_SLEEP(1);
+        }
+
+    }
     transaction = (sandesha2_transaction_t *) axis2_hash_get(
         storage_mgr_impl->transactions, thread_id, key_len);
     if(!transaction)
@@ -401,12 +412,12 @@ sandesha2_permanent_storage_mgr_enlist_bean(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
-    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    /*sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     sandesha2_transaction_t *transaction = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
         env);
-    sandesha2_transaction_enlist(transaction, env, rm_bean);
+    sandesha2_transaction_enlist(transaction, env, rm_bean);*/
 }
 
 sandesha2_create_seq_mgr_t *AXIS2_CALL
@@ -1149,10 +1160,18 @@ sandesha2_permanent_storage_mgr_get_dbconn(
 {
     sqlite3* dbconn = NULL;
     sandesha2_transaction_t *transaction = NULL;
-    transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
-        env);
+    int key_len = sizeof(unsigned long);
+    unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
+    /*axis2_thread_mutex_lock(storage_mgr_impl->mutex);*/
+    transaction = (sandesha2_transaction_t *) axis2_hash_get(
+        storage_mgr_impl->transactions, thread_id, key_len);
+    /*transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
+        env);*/
     if(transaction)
         dbconn = (sqlite3 *) sandesha2_permanent_transaction_get_dbconn(transaction, env);
+    /*axis2_thread_mutex_unlock(storage_mgr_impl->mutex);*/
     return dbconn;
 }
 

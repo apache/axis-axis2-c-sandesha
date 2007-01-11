@@ -52,7 +52,7 @@ sandesha2_seq_property_bean_free (
     sandesha2_rm_bean_t *seq_property,
     const axis2_env_t *env);
 
-struct sandesha2_rm_bean* AXIS2_CALL
+struct sandesha2_rm_bean * AXIS2_CALL
 sandesha2_seq_property_bean_get_base( 
     sandesha2_rm_bean_t* seq_property,
     const axis2_env_t *env);
@@ -63,18 +63,18 @@ sandesha2_seq_property_bean_set_base (
     const axis2_env_t *env, 
     struct sandesha2_rm_bean* rm_bean);
 
-axis2_char_t* AXIS2_CALL
+axis2_char_t *AXIS2_CALL
 sandesha2_seq_property_bean_get_name (
     sandesha2_seq_property_bean_t *seq_property,
     const axis2_env_t *env);
 
-void AXIS2_CALL
+void AXIS2_CALL 
 sandesha2_seq_property_bean_set_name (
     sandesha2_seq_property_bean_t *seq_property,
     const axis2_env_t *env,
     axis2_char_t *name);
 
-axis2_char_t* AXIS2_CALL
+axis2_char_t *AXIS2_CALL
 sandesha2_seq_property_bean_get_seq_id (
     sandesha2_seq_property_bean_t *seq_property,
     const axis2_env_t *env);
@@ -113,7 +113,7 @@ sandesha2_seq_property_bean_set_transaction(
 	const axis2_env_t *env, 
     struct sandesha2_transaction *transaction);
 
-struct sandesha2_transaction* AXIS2_CALL
+struct sandesha2_transaction *AXIS2_CALL
 sandesha2_seq_property_bean_get_transaction( 
     sandesha2_rm_bean_t *seq_property_bean,
 	const axis2_env_t *env);

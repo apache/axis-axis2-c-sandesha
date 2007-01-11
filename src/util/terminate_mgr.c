@@ -91,14 +91,18 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                     conf_ctx, env));
     in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
     if(!in_order_invoke)
+    {
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
                     seq_id, storage_mgr);
+    }
     clean_status = axis2_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
                     seq_id, AXIS2_HASH_KEY_STRING);
     if(clean_status && 0 == AXIS2_STRCMP(clean_status, 
                     SANDESHA2_CLEANED_AFTER_INVOCATION))
+    {
         sandesha2_terminate_mgr_complete_termination_of_recv_side(env, conf_ctx, seq_id,
                     storage_mgr);
+    }
     else
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
                     AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(

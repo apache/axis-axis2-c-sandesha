@@ -427,7 +427,6 @@ sandesha2_client_get_report(
     {
         if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
         {
-            printf("rollback11\n");
             sandesha2_transaction_rollback(report_transaction, env);
             rolled_back = AXIS2_TRUE;
         }
@@ -478,7 +477,6 @@ sandesha2_client_get_report(
     {
         if(AXIS2_TRUE != within_transaction && report_transaction != NULL)
         {
-            printf("rollback12\n");
             sandesha2_transaction_rollback(report_transaction, env);
             rolled_back = AXIS2_TRUE;
         }
@@ -1663,17 +1661,25 @@ sandesha2_client_configure_terminate_seq(
         sandesha2_identifier_t *identifier = NULL;
         sandesha2_seq_property_bean_t *seq_id_bean = NULL;
         axis2_char_t *seq_id = NULL;
+        sandesha2_transaction_t *transaction = NULL;
 
         conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
         storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
         if(storage_mgr)
+        {
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                 storage_mgr, env);
+            transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
+                env);
+        }
         if(seq_prop_mgr)
             seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+        if(transaction)
+            sandesha2_transaction_commit(transaction, env);
         if(!seq_id_bean)
         {
+            printf("came52\n");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
                 AXIS2_FAILURE);
             return NULL;
@@ -1681,6 +1687,7 @@ sandesha2_client_configure_terminate_seq(
         seq_id = sandesha2_seq_property_bean_get_value(seq_id_bean, env);
         if(!seq_id)
         {
+            printf("came53\n");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID, 
                 AXIS2_FAILURE);
             return NULL;

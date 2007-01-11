@@ -144,7 +144,6 @@ sandesha2_out_handler_invoke(
     if(!within_transaction)
     {
         axis2_property_t *prop = NULL;
-       
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
@@ -209,7 +208,6 @@ sandesha2_out_handler_invoke(
         if(!within_transaction)
         {
             axis2_property_t *prop = NULL;
-            printf("rollback13\n");
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create(env);
             AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);
@@ -226,7 +224,6 @@ sandesha2_out_handler_invoke(
     if(!within_transaction && !rolled_back)
     {
         axis2_property_t *prop = NULL;
-
         sandesha2_transaction_commit(transaction, env);
         prop = axis2_property_create(env);
         AXIS2_PROPERTY_SET_SCOPE(prop, env, AXIS2_SCOPE_APPLICATION);

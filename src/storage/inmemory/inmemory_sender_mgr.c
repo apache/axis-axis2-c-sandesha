@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_inmemory_sender_mgr.h>
-#include "sandesha2_inmemory_bean_mgr.h"
+#include <sandesha2_inmemory_bean_mgr.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>

@@ -161,7 +161,6 @@ sandesha2_in_handler_invoke(
         if(!within_transaction)
         {
             axis2_property_t *prop = NULL;
-            printf("rollback4\n");
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, 
                 AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
@@ -184,7 +183,6 @@ sandesha2_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
 
-            printf("rollback5\n");
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, 
                 AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);

@@ -124,7 +124,7 @@ sandesha2_inmemory_bean_mgr_remove(
     const axis2_env_t *env,
     axis2_char_t *key);
 
-sandesha2_rm_bean_t* AXIS2_CALL
+sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_retrieve(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
@@ -137,13 +137,13 @@ sandesha2_inmemory_bean_mgr_update(
     axis2_char_t *key,
     sandesha2_rm_bean_t *bean);
 
-axis2_array_list_t* AXIS2_CALL
+axis2_array_list_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_find(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *bean);
 
-sandesha2_rm_bean_t * AXIS2_CALL
+sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_find_unique(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
