@@ -302,6 +302,8 @@ sandesha2_permanent_seq_property_mgr_remove(
     axis2_char_t sql_retrieve[256];
     axis2_status_t status = AXIS2_FAILURE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_remove");
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
@@ -315,6 +317,8 @@ sandesha2_permanent_seq_property_mgr_remove(
     status = sandesha2_permanent_bean_mgr_remove(seq_prop_mgr_impl->bean_mgr, env, 
         sandesha2_seq_property_retrieve_callback, sql_retrieve, sql_remove);
     AXIS2_FREE(env->allocator, key);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_remove");
     return status;
 }
 

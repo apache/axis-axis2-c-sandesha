@@ -378,8 +378,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     }
     else
     {
-        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
-            addressing_ns_value);
+        prop = axis2_property_create_with_args(env, 0, 0, 0, addressing_ns_value);
         AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_WSA_VERSION, prop, AXIS2_FALSE);
     }
     new_msg_id = axis2_uuid_gen(env);
@@ -564,7 +563,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
     if(!is_seq_res_reqd)
     {
-        AXIS2_CTX_SET_PROPERTY(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, 
+        AXIS2_MSG_CTX_SET_PROPERTY(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, 
                 NULL, AXIS2_FALSE);
     }
     terminate_rm_msg = sandesha2_msg_init_init_msg(env, terminate_seq_msg_ctx);
@@ -704,7 +703,7 @@ sandesha2_msg_creator_finalize_creation(
                 temp_name = AXIS2_PARAM_GET_NAME(next_param, env);
                 temp_value = AXIS2_PARAM_GET_VALUE(next_param, env);
                 new_param = axis2_param_create(env, temp_name, temp_value);
-                new_param->ops->value_free = next_param->ops->value_free;
+                /*new_param->ops->value_free = next_param->ops->value_free;*/
                 AXIS2_OP_ADD_PARAM(new_op, env, new_param); 
             }
         }
@@ -746,7 +745,7 @@ sandesha2_msg_creator_finalize_creation(
         }
     }
     /* Message Context properties */
-    if(related_msg && new_msg)
+    /*if(related_msg && new_msg)
     {
         axis2_hash_t *old_msg_ctx_props = NULL;
         axis2_ctx_t *ctx = NULL;
@@ -777,33 +776,40 @@ sandesha2_msg_creator_finalize_creation(
                     AXIS2_CTX_SET_PROPERTY(ctx, env, key, new_prop, AXIS2_FALSE);
             }
         }
-    }
+    }*/
     /* Setting options with properties copied from the old one */
 
-    related_ctx = AXIS2_MSG_CTX_GET_BASE(related_msg, env);
-    related_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(related_ctx, env);
-    new_ctx = AXIS2_MSG_CTX_GET_BASE(new_msg, env);
-    new_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(new_ctx, env);
-    if(!new_msg_props)
+    if(related_msg && new_msg)
     {
-        new_msg_props = axis2_hash_make(env);
-    }
-    if(related_msg_props)
-    {
-        axis2_hash_index_t *i = NULL;
-
-        for (i = axis2_hash_first (related_msg_props, env); i; i = 
-                axis2_hash_next (env, i))
+        related_ctx = AXIS2_MSG_CTX_GET_BASE(related_msg, env);
+        related_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(related_ctx, env);
+        new_ctx = AXIS2_MSG_CTX_GET_BASE(new_msg, env);
+        new_msg_props = AXIS2_CTX_GET_ALL_PROPERTIES(new_ctx, env);
+        /*if(!new_msg_props)
         {
-            void *v = NULL;
-            void *k = NULL;
-            axis2_char_t *key = NULL;
-            axis2_property_t *prop = NULL;
+            new_msg_props = axis2_hash_make(env);
+        }*/
+        if(related_msg_props)
+        {
+            axis2_hash_index_t *i = NULL;
 
-            axis2_hash_this (i, (const void **)&k, NULL, &v);
-            key = (axis2_char_t *) k;
-            prop = (axis2_property_t *) v;
-            axis2_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, prop);
+            for (i = axis2_hash_first (related_msg_props, env); i; i = 
+                    axis2_hash_next (env, i))
+            {
+                void *v = NULL;
+                void *k = NULL;
+                axis2_char_t *key = NULL;
+                axis2_property_t *prop = NULL;
+                axis2_property_t *new_prop = NULL;
+
+                axis2_hash_this (i, (const void **)&k, NULL, &v);
+                key = (axis2_char_t *) k;
+                prop = (axis2_property_t *) v;
+                if(prop)
+                    new_prop = AXIS2_PROPERTY_CLONE(prop, env);
+                if(new_prop)
+                axis2_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
+            }
         }
     }
     return AXIS2_SUCCESS;

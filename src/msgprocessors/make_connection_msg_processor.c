@@ -298,9 +298,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         axis2_ctx_t *ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
         if (ctx)
         {
-            property = axis2_property_create(env);
-            AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-            AXIS2_PROPERTY_SET_VALUE(property, env, "TRUE");
+            property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
             AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN,
                                         property, AXIS2_FALSE);
         }

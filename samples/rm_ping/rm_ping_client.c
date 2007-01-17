@@ -96,8 +96,7 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     if(target_epr)
     {
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
+        property = axis2_property_create_with_args(env, 0, 0, 0, target_epr);
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
     }
     /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:Ping");*/
@@ -135,11 +134,10 @@ int main(int argc, char** argv)
     /* RM Version 1.1 */
     if(version == 1)
     {
-        property = axis2_property_create(env);
+        property = axis2_property_create_with_args(env, 0, 0, 0, 
+            SANDESHA2_SPEC_VERSION_1_1);
         if(property)
         {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                SANDESHA2_SPEC_VERSION_1_1, env));
             AXIS2_OPTIONS_SET_PROPERTY(options, env, 
                 SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
         }
@@ -157,8 +155,7 @@ int main(int argc, char** argv)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
 
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     payload = build_om_programatically(env, "ping3");

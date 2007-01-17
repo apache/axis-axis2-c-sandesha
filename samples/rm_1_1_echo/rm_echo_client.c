@@ -185,14 +185,14 @@ int main(int argc, char** argv)
         }
     }
     /* RM Version 1.1 */
-    property = axis2_property_create_with_args(env, 3, 0, 
+    property = axis2_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    property = axis2_property_create_with_args(env, 3, 0, "sequence1");
+    property = axis2_property_create_with_args(env, 3, 0, 0, "sequence1");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 

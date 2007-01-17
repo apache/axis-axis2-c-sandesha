@@ -353,7 +353,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(first_app_msg, env);
         req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
-                        AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
+            AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg_ctx)
         {
             property = AXIS2_MSG_CTX_GET_PROPERTY(req_msg_ctx, env, 
@@ -395,7 +395,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(first_app_msg, env);
         req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
-                        AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
+            AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(!req_msg_ctx)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find"

@@ -119,27 +119,6 @@ sandesha2_global_in_handler_invoke(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Starting sandesha2 global in handler ......");
 
-    /*axis2_char_t *error_msg = NULL;
-    axis2_char_t *insert_sql = "insert into seq_property(id, seq_id, name, value) values('5643d0cc-974f-1db1-210b-001125b4c0fc:ReplyToEPR','5643d0cc-974f-1db1-210b-001125b4c0fc','ReplyToEPR','http://127.0.0.1:5555/axis2/services/RMSampleService');";
-    sqlite3 *db = NULL;
-    int rc = sqlite3_open("/usr/local/apache2/htdocs/sandesha2", &db);
-    if(rc != SQLITE_OK)
-    {
-        AXIS2_LOG_INFO(env->log, "cannot open database");
-    }
-    rc = sqlite3_exec(db, "select * from seq_property;", 0, 0, &error_msg);
-    if(rc != SQLITE_OK)
-    {
-        AXIS2_LOG_INFO(env->log, "my error_msg1:%s", error_msg);
-    }
-    rc = sqlite3_exec(db, insert_sql, 0, 0, &error_msg);
-    if(rc != SQLITE_OK)
-    {
-        AXIS2_LOG_INFO(env->log, "my error_msg2:%s", error_msg);
-    }
-    else
-        AXIS2_LOG_INFO(env->log, "sql_stmt OK");
-    sqlite3_close(db);*/
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -169,7 +148,9 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
+    axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     if(!storage_mgr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get the "
@@ -190,9 +171,11 @@ sandesha2_global_in_handler_invoke(
     {
         axis2_property_t *prop = NULL;
         
+        axis2_allocator_switch_to_global_pool(env->allocator);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
-            SANDESHA2_VALUE_TRUE);
+        axis2_allocator_switch_to_local_pool(env->allocator);
+        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+            AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -205,8 +188,8 @@ sandesha2_global_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, 
-                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -224,7 +207,7 @@ sandesha2_global_in_handler_invoke(
             {
                 axis2_msg_ctx_t *req_msg_ctx = NULL;
                 req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
-                        AXIS2_WSDL_MESSAGE_LABEL_OUT_VALUE);
+                    AXIS2_WSDL_MESSAGE_LABEL_OUT);
                 if(req_msg_ctx)
                 {
                     if(sandesha2_utils_is_retrievable_on_faults(env,
@@ -245,8 +228,8 @@ sandesha2_global_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, 
-                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -264,8 +247,8 @@ sandesha2_global_in_handler_invoke(
         {
             axis2_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, 
-                AXIS2_SCOPE_APPLICATION, 0, SANDESHA2_VALUE_FALSE);
+            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -281,8 +264,8 @@ sandesha2_global_in_handler_invoke(
     {
         axis2_property_t *prop = NULL;
         sandesha2_transaction_commit(transaction, env);
-        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-            0, SANDESHA2_VALUE_FALSE);
+        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+            AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -336,9 +319,9 @@ sandesha2_global_in_handler_drop_if_duplicate(
             
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
-            rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-                        env, seq_id, 
-                        SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+            if(seq_prop_mgr)
+                rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
+                    env, seq_id, SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
             if(rcvd_msgs_bean)
             {
                 axis2_char_t *rcvd_msgs_str = NULL;

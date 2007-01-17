@@ -229,10 +229,7 @@ sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
     AXIS2_MSG_CTX_SET_MESSAGE_ID(msg_ctx, env, NULL);
     AXIS2_MSG_CTX_SET_TO(msg_ctx, env, NULL);
     AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, NULL);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                        env));
+    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
                         property, AXIS2_FALSE);
     return AXIS2_SUCCESS;
@@ -268,7 +265,7 @@ sandesha2_in_order_invoker_worker_func(
         int i = 0;
 
         AXIS2_SLEEP(SANDESHA2_INVOKER_SLEEP_TIME);
-        if(!invoker->conf_ctx || !invoker->conf_ctx->ops)
+        if(!invoker->conf_ctx)
             return NULL;
         storage_mgr = sandesha2_utils_get_storage_mgr(env, 
                         invoker->conf_ctx, 
@@ -357,7 +354,6 @@ sandesha2_in_order_invoker_worker_func(
                 printf("msg_ref_key:%s\n", key);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx);
-                printf("msg_to_invoke:%ld\n", msg_to_invoke);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
@@ -366,9 +362,8 @@ sandesha2_in_order_invoker_worker_func(
                  * changed when WS-AT is available.
                  */
                 sandesha2_transaction_commit(transaction, env);
-                property = axis2_property_create(env);
-                AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-                AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
+                property = axis2_property_create_with_args(env, 0, 0, 0, 
+                    SANDESHA2_VALUE_TRUE);
                 AXIS2_MSG_CTX_SET_PROPERTY(msg_to_invoke, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
                         
@@ -392,7 +387,7 @@ sandesha2_in_order_invoker_worker_func(
                     AXIS2_MSG_CTX_SET_PAUSED(msg_to_invoke, env, AXIS2_FALSE);
                     status = AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
                     if(!status)
-                        return status;
+                        return NULL;
                 }
                 invoked = AXIS2_TRUE;
                 transaction = sandesha2_storage_mgr_get_transaction(

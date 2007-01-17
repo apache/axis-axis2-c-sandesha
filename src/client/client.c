@@ -674,7 +674,7 @@ sandesha2_client_terminate_seq_with_svc_client(
             rm_namespc_value, NULL);
     terminate_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, 
         env, qname, node, &terminate_body_node);
-    old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
+    old_action = AXIS2_STRDUP(AXIS2_OPTIONS_GET_ACTION(options, env), env);
     action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
             rm_spec_version);
     if(action)
@@ -690,6 +690,7 @@ sandesha2_client_terminate_seq_with_svc_client(
     }
     if(old_action)
         AXIS2_OPTIONS_SET_ACTION(options, env, old_action);
+    AXIS2_FREE(env->allocator, old_action);
     return AXIS2_SUCCESS;
 }
 
@@ -1679,7 +1680,6 @@ sandesha2_client_configure_terminate_seq(
             sandesha2_transaction_commit(transaction, env);
         if(!seq_id_bean)
         {
-            printf("came52\n");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
                 AXIS2_FAILURE);
             return NULL;
@@ -1687,7 +1687,6 @@ sandesha2_client_configure_terminate_seq(
         seq_id = sandesha2_seq_property_bean_get_value(seq_id_bean, env);
         if(!seq_id)
         {
-            printf("came53\n");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID, 
                 AXIS2_FAILURE);
             return NULL;

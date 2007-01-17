@@ -450,9 +450,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     }
     sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, storage_mgr);
     ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("TRUE", env));
+    property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
                         AXIS2_FALSE);
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);

@@ -348,6 +348,8 @@ sandesha2_permanent_sender_mgr_remove(
     axis2_char_t sql_retrieve[256];
     axis2_char_t sql_remove[256];
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_remove");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
@@ -356,6 +358,8 @@ sandesha2_permanent_sender_mgr_remove(
         "internal_seq_id, sent_count, msg_no, send, resend, time_to_send, "\
         "msg_type, seq_id, wsrm_anon_uri, to_address from sender "\
         "where msg_id='%s'", msg_id);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit:sandesha2_permanent_sender_mgr_remove");
     return sandesha2_permanent_bean_mgr_remove(sender_mgr_impl->bean_mgr, env,
         sandesha2_sender_retrieve_callback, sql_retrieve, sql_remove);
 }
@@ -414,11 +418,11 @@ sandesha2_permanent_sender_mgr_update(
     axis2_char_t *wsrm_anon_uri = sandesha2_sender_bean_get_wsrm_anon_uri(bean, env);
     axis2_char_t *to_address = sandesha2_sender_bean_get_to_address(bean, env);
 
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_update");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_update");
 
     sprintf(sql_retrieve, "select msg_id, msg_ctx_ref_key, "\
         "internal_seq_id, sent_count, msg_no, send, resend, time_to_send, "\

@@ -207,10 +207,8 @@ sandesha2_close_seq_msg_processor_process_in_msg (
                         SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT,
                         (sandesha2_iom_rm_part_t*)seq_ack);
     sandesha2_msg_ctx_set_flow(close_seq_res_rm_msg, env, AXIS2_OUT_FLOW);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                        env));
+    property = axis2_property_create_with_args(env, 0, 0, 0, 
+        SANDESHA2_VALUE_TRUE);
     sandesha2_msg_ctx_set_property(close_seq_res_rm_msg, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property);
     AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(close_seq_res_msg, env, AXIS2_TRUE);

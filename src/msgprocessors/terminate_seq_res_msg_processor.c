@@ -133,16 +133,6 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
-    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(
-                        rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-    
-    if(seq_ack)
-    {
-        sandesha2_msg_processor_t *ack_processor = NULL;
-        ack_processor = (sandesha2_msg_processor_t *) 
-            sandesha2_ack_msg_processor_create(env);
-        sandesha2_msg_processor_process_in_msg(ack_processor, env, rm_msg_ctx);
-    }
     term_seq_res = (sandesha2_terminate_seq_res_t*)sandesha2_msg_ctx_get_msg_part(
         rm_msg_ctx, env, SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
     if(!term_seq_res)
@@ -164,8 +154,10 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     storage_mgr = (sandesha2_storage_mgr_t *) sandesha2_utils_get_storage_mgr(
         env, conf_ctx, AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
-    sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx,
-        seq_id, storage_mgr);
+    /*sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx,
+        seq_id, storage_mgr);*/
+    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
+        AXIS2_FALSE, storage_mgr);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_terminate_seq_res_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;

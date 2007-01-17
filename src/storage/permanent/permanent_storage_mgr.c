@@ -42,6 +42,7 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_conf_ctx.h>
+#include <axis2_svc_ctx.h>
 #include <axis2_options.h>
 #include <axis2_addr.h>
 #include <axis2_http_transport.h>
@@ -691,9 +692,9 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
     if(transport_out_desc)
     {
-        const axis2_qname_t *qname = AXIS2_TRANSPORT_OUT_DESC_GET_QNAME(
+        axis2_qname_t *qname = (axis2_qname_t *) AXIS2_TRANSPORT_OUT_DESC_GET_QNAME(
             transport_out_desc, env);
-        axis2_char_t *str_qname = AXIS2_QNAME_TO_STRING(qname, env);
+        axis2_char_t *str_qname = axis2_qname_to_string(qname, env);
         sandesha2_msg_store_bean_set_transport_out(bean, env, str_qname);
     }
     if(svc_grp)
@@ -747,7 +748,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         transport_to = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
         sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
     }
-    options = (axis2_options_t *) AXIS2_MSG_CTX_GET_OPTIONS(msg_ctx, env);
+    options = (axis2_options_t *) axis2_msg_ctx_get_options(msg_ctx, env);
     action  = (axis2_char_t *) AXIS2_OPTIONS_GET_ACTION(options, env);
     sandesha2_msg_store_bean_set_action(bean, env, action);
     prop_str = sandesha2_permanent_storage_mgr_get_property_string(env, msg_ctx);
@@ -760,7 +761,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     {
         axis2_msg_ctx_t *in_msg_ctx = NULL;
         in_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
-            AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE); 
+            AXIS2_WSDL_MESSAGE_LABEL_IN); 
         if(in_msg_ctx)
         {
             axis2_char_t *in_msg_store_key = NULL;
@@ -822,10 +823,11 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
+    /*msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
         key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
-        return msg_ctx;
+        return msg_ctx;*/
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieved from database");
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         storage_mgr_impl->bean_mgr, env, key);
     if (!msg_store_bean) 
@@ -959,8 +961,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         axis2_svc_ctx_t *svc_ctx = axis2_svc_ctx_create(env, svc, svc_grp_ctx);
         if(svc_ctx)
         {
-            AXIS2_SVC_CTX_SET_PARENT(svc_ctx, env, svc_grp_ctx);
-            AXIS2_MSG_CTX_SET_SVC_CTX(msg_ctx, env, svc_ctx);
+            axis2_svc_ctx_set_parent(svc_ctx, env, svc_grp_ctx);
+            axis2_msg_ctx_set_svc_ctx(msg_ctx, env, svc_ctx);
         }
         
     }
@@ -985,10 +987,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         sandesha2_msg_store_bean_get_flow(msg_store_bean, env));
     transport_to_str = sandesha2_msg_store_bean_get_transport_to(msg_store_bean, 
         env);
-    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0,
-        transport_to_str);
-    AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_URL, property,
+    if(transport_to_str)
+    {
+        property = axis2_property_create_with_args(env, 0, 0, 0, transport_to_str);
+        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_URL, property,
         AXIS2_FALSE);
+    }
     to_url_str = sandesha2_msg_store_bean_get_to_url(msg_store_bean, env);
     if(to_url_str)
     {
@@ -1059,8 +1063,8 @@ sandesha2_permanent_storage_mgr_get_property_string(
     }
     else
     {
-        property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-            0, SANDESHA2_VALUE_FALSE);
+        property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
+            AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
             property, AXIS2_FALSE);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
@@ -1146,8 +1150,8 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     {
         axis2_char_t *key = AXIS2_ARRAY_LIST_GET(values, env, i);
         axis2_char_t *value = AXIS2_ARRAY_LIST_GET(values, env, i+1);
-        axis2_property_t *property = axis2_property_create_with_args(env,
-            AXIS2_SCOPE_APPLICATION, 0, value);
+        axis2_property_t *property = axis2_property_create_with_args(env, 0, 
+            0, 0, value);
         axis2_hash_set(map, key, AXIS2_HASH_KEY_STRING, property);
     }
     return map;

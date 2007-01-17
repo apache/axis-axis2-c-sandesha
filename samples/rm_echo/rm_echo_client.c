@@ -128,8 +128,7 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     if(target_epr)
     {
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_VALUE(property, env, target_epr);
+        property = axis2_property_create_with_args(env, 0, 0, 0, target_epr);
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
     }
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
@@ -182,33 +181,31 @@ int main(int argc, char** argv)
     if(offer)
     {
         offered_seq_id = axis2_uuid_gen(env);
-        property = axis2_property_create(env);
+        property = axis2_property_create_with_args(env, 0, 0, 0, offered_seq_id);
         if(property)
         {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-                property);
+            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+                SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }
     }
     /* RM Version 1.1 */
     if(version == 1)
     {
-        property = axis2_property_create(env);
+        property = axis2_property_create_with_args(env, 0, 0, 0, 
+            SANDESHA2_SPEC_VERSION_1_1);
         if(property)
         {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(
-                SANDESHA2_SPEC_VERSION_1_1, env));
             AXIS2_OPTIONS_SET_PROPERTY(options, env, 
                 SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
         }
-        property = axis2_property_create_with_args(env, 3, 0, "sequence1");
+        property = axis2_property_create_with_args(env, 3, 0, 0, "sequence1");
         if(property)
         {
             AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY,
                 property);
         }
     }
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
@@ -223,7 +220,7 @@ int main(int argc, char** argv)
     AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback2, payload, 
             listener_manager);
-    wait_on_callback(env, callback2);
+    wait_on_callback(env, callback2);*/
 
     callback3 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
@@ -231,9 +228,7 @@ int main(int argc, char** argv)
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     if(version == 0)
     {
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
+        property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
         AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
             property);
     }

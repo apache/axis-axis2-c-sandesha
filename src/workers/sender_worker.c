@@ -239,15 +239,19 @@ sandesha2_sender_worker_worker_func(
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
+        printf("sender_worker_bean is NULL\n");
         sandesha2_transaction_rollback(transaction, env);
         return NULL;
     }
 
     key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_worker_bean, env);
+    axis2_allocator_switch_to_global_pool(env->allocator);
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
                     sender_worker->conf_ctx);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     if(!msg_ctx)
     {
+        printf("msg_ctx is not present\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
@@ -259,7 +263,7 @@ sandesha2_sender_worker_worker_func(
         AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
     else
     {
-        property = axis2_property_create_with_args(env, 3, 0, 
+        property = axis2_property_create_with_args(env, 0, 0, 0, 
             SANDESHA2_VALUE_TRUE);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
             property, AXIS2_FALSE);
@@ -268,6 +272,7 @@ sandesha2_sender_worker_worker_func(
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
     if(!continue_sending)
     {
+        printf("do not continue\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
@@ -281,6 +286,7 @@ sandesha2_sender_worker_worker_func(
     if(qualified_for_sending && 0 != AXIS2_STRCMP(
         qualified_for_sending, SANDESHA2_VALUE_TRUE))
     {
+        printf("not qualified for sending\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
@@ -312,6 +318,7 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
+            printf("continue sending is true\n");
             sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
@@ -356,7 +363,7 @@ sandesha2_sender_worker_worker_func(
             AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
         else
         {
-            property = axis2_property_create_with_args(env, 3, 0,
+            property = axis2_property_create_with_args(env, 0, 0, 0,
                 SANDESHA2_VALUE_FALSE);
             AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                 SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
@@ -378,7 +385,7 @@ sandesha2_sender_worker_worker_func(
         AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
     else
     {
-        property = axis2_property_create_with_args(env, 3, 0,
+        property = axis2_property_create_with_args(env, 0, 0, 0,
             SANDESHA2_VALUE_TRUE);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
@@ -445,7 +452,6 @@ sandesha2_sender_worker_worker_func(
         sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
         axis2_char_t *seq_id = NULL;
         axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_char_t *int_seq_id = NULL;
         
         terminate_seq_res = (sandesha2_terminate_seq_res_t*)
             sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
@@ -464,7 +470,7 @@ sandesha2_sender_worker_worker_func(
         AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
     else
     {
-        property = axis2_property_create_with_args(env, 3, 0, 
+        property = axis2_property_create_with_args(env, 0, 0, 0, 
             SANDESHA2_VALUE_FALSE);
         AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
                     SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);

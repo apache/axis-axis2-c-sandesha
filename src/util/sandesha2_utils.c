@@ -362,11 +362,8 @@ sandesha2_utils_start_invoker_for_seq(
     if(!invoker)
     {
         invoker = sandesha2_in_order_invoker_create(env);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, invoker);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-                sandesha2_in_order_invoker_free_void_arg);
+        property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+            AXIS2_FALSE, sandesha2_in_order_invoker_free_void_arg, invoker);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_INVOKER, property, AXIS2_FALSE);
     }
@@ -394,11 +391,8 @@ sandesha2_utils_start_sender_for_seq(const axis2_env_t *env,
     if(!sender)
     {
         sender = sandesha2_sender_create(env);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, sender);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-                sandesha2_sender_free_void_arg);
+        property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+            AXIS2_FALSE, sandesha2_sender_free_void_arg, sender);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_SENDER, property, AXIS2_FALSE);
     }
@@ -428,7 +422,7 @@ sandesha2_utils_start_polling_mgr(
     if(!polling_mgr)
     {
         polling_mgr = sandesha2_polling_mgr_create(env);
-        property = axis2_property_create_with_args(env, 3, 
+        property = axis2_property_create_with_args(env, 3, AXIS2_FALSE,
             sandesha2_polling_mgr_free_void_arg, polling_mgr);
         AXIS2_CTX_SET_PROPERTY(AXIS2_CONF_CTX_GET_BASE(conf_ctx, env),
                         env, SANDESHA2_POLLING_MGR, property, AXIS2_FALSE);
@@ -490,11 +484,8 @@ sandesha2_utils_get_inmemory_storage_mgr(const axis2_env_t *env,
         /* TODO we need to class load the proper storage mgr */
         sandesha2_storage_mgr_t *storage_mgr = 
             sandesha2_inmemory_storage_mgr_create(env, conf_ctx);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, storage_mgr);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-            sandesha2_storage_mgr_free_void_arg);
+        property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+            AXIS2_FALSE, sandesha2_storage_mgr_free_void_arg, storage_mgr);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, 
             property, AXIS2_FALSE);
         return storage_mgr;
@@ -521,8 +512,8 @@ sandesha2_utils_get_permanent_storage_mgr(
         storage_mgr = AXIS2_PROPERTY_GET_VALUE(property, env);
     else
         storage_mgr = sandesha2_permanent_storage_mgr_create(env, conf_ctx);
-    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
-        storage_mgr);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+        AXIS2_FALSE, 0, storage_mgr);
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
         property, AXIS2_FALSE);
     /*if(property)
@@ -530,8 +521,8 @@ sandesha2_utils_get_permanent_storage_mgr(
     sandesha2_storage_mgr_t *storage_mgr = 
         sandesha2_permanent_storage_mgr_create(env, conf_ctx);
     AXIS2_ARRAY_LIST_ADD(storage_mgr_list, env, storage_mgr);
-    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 0, 
-        storage_mgr_list);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+        AXIS2_FALSE, 0, storage_mgr_list);
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
         property, AXIS2_FALSE);*/
     return storage_mgr;
@@ -734,10 +725,9 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(property)
     {
         axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, value);
-        AXIS2_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_URL, property,
+        property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+            AXIS2_FALSE, 0, value);
+        AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_URL, property,
                         AXIS2_FALSE);
     }
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION,
@@ -747,8 +737,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_msg_ctx_t *req_msg = NULL;
         axis2_op_ctx_t *op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(ref_msg, env);
         
-        req_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
-                        AXIS2_WSDL_MESSAGE_LABEL_IN_VALUE);
+        req_msg = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg)
         {
             property = AXIS2_MSG_CTX_GET_PROPERTY(req_msg, env, 
@@ -761,11 +750,9 @@ sandesha2_utils_create_new_related_msg_ctx(
     {
         addr_ver = AXIS2_PROPERTY_GET_VALUE(property, env);
     }
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(addr_ver, env));
-    AXIS2_CTX_SET_PROPERTY(new_msg, env, AXIS2_WSA_VERSION, property,
-                    AXIS2_FALSE);
+    property = axis2_property_create_with_args(env, 0, 0, 0, addr_ver);
+    AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_WSA_VERSION, property,
+        AXIS2_FALSE);
     
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_OUT, 
                         AXIS2_FALSE);
@@ -1237,24 +1224,19 @@ sandesha2_utils_execute_and_store(
     sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
         SANDESHA2_MSG_TYPE_CREATE_SEQ);
     /* Message will be stored in the sandesha2_transport_sender */
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(property, env, storage_key);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
+        AXIS2_FALSE, 0, storage_key);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, 
         property, AXIS2_FALSE);
     
     transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_FREE_FUNC(property, env, 
-        transport_out->ops->free_void_arg);
-    AXIS2_PROPERTY_SET_VALUE(property, env, transport_out);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+        AXIS2_FALSE, transport_out->ops->free_void_arg, transport_out);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
     
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
+    property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+        AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, 
         property, AXIS2_FALSE);
     sandesha2_transport_out = sandesha2_utils_get_transport_out(env);

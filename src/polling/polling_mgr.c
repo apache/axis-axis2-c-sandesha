@@ -159,7 +159,7 @@ sandesha2_polling_mgr_start (
     polling_mgr->scheduled_polling_reqs = axis2_array_list_create(env, 
         AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
 
-    if(!polling_mgr->conf_ctx || !polling_mgr->conf_ctx->ops)
+    if(!polling_mgr->conf_ctx)
     {
         axis2_thread_mutex_unlock(polling_mgr->mutex);
         return AXIS2_FAILURE;
@@ -322,9 +322,7 @@ sandesha2_polling_mgr_worker_func(
             AXIS2_TRANSPORT_IN, NULL);
         /* Storing the MakeConnection message */
         make_conn_msg_store_key = axis2_uuid_gen(env);
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, seq_prop_key);
+        property = axis2_property_create_with_args(env, 0, 0, 0, seq_prop_key);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY, property); 
         make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, 
@@ -365,9 +363,8 @@ sandesha2_polling_mgr_worker_func(
         /* This message should not be sent untils it is qualified. i.e. Till
          * it is sent through the sandesha2_transport_sender
          */
-        property = axis2_property_create(env);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
+        property = axis2_property_create_with_args(env, 0, 0, 0, 
+            SANDESHA2_VALUE_FALSE);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
         if(sender_bean_mgr)

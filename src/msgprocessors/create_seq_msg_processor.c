@@ -210,10 +210,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         rm_msg_ctx, out_msg_ctx, new_seq_id, storage_mgr);
     AXIS2_MSG_CTX_SET_FLOW(out_msg_ctx, env, AXIS2_OUT_FLOW);
     
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                        env));
+    property = axis2_property_create_with_args(env, 0, 0, 0, 
+        SANDESHA2_VALUE_TRUE);
     /* For making sure that this won't be processed again */
     sandesha2_msg_ctx_set_property(create_seq_res_msg, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property); 
@@ -324,13 +322,11 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
     ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
     if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
                     env)))
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("TRUE", env));
+        property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
     else
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP("FALSE", env));
+        property = axis2_property_create_with_args(env, 0, 0, 0, "FALSE");
     AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
                     AXIS2_FALSE);
     

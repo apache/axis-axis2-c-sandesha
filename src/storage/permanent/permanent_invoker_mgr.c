@@ -312,7 +312,7 @@ sandesha2_permanent_invoker_mgr_update(
     const axis2_env_t *env,
     sandesha2_invoker_bean_t *bean)
 {
-    axis2_char_t *ref_key = NULL;
+    /*axis2_char_t *ref_key = NULL;*/
     axis2_char_t *sql_update = NULL;
     axis2_char_t *sql_retrieve = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
@@ -321,7 +321,7 @@ sandesha2_permanent_invoker_mgr_update(
     axis2_char_t *msg_ctx_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
         (sandesha2_rm_bean_t *) bean, env);
     long msg_no = sandesha2_invoker_bean_get_msg_no(bean, env);
-    axis2_char_t seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
+    axis2_char_t *seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
     axis2_bool_t is_invoked = sandesha2_invoker_bean_is_invoked(bean, env);
 
     AXIS2_LOG_INFO(env->log, 

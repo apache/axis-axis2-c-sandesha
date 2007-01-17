@@ -227,12 +227,10 @@ sandesha2_ack_msg_processor_process_in_msg (
                         fault_msg_ctx, env));
         AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
     }
+    if(int_seq_id)
     sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
-                        storage_mgr);
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_REQUEST);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(SANDESHA2_VALUE_TRUE, 
-                        env));
+        storage_mgr);
+    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property,
                         AXIS2_FALSE);
                         
@@ -313,9 +311,9 @@ sandesha2_ack_msg_processor_process_in_msg (
                         no_of_msgs_acked_bean); 
     }
     completed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
-                        env, int_seq_id,
+                        env, out_seq_id,
                         SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES);
-    if(!completed_bean)
+    if(!completed_bean && int_seq_id)
     {
         completed_bean = sandesha2_seq_property_bean_create(env);
         sandesha2_seq_property_bean_set_seq_id(completed_bean, env, int_seq_id);
@@ -325,8 +323,11 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     str_list = sandesha2_utils_array_list_to_string(env, acked_list,
                         SANDESHA2_ARRAY_LIST_LONG);
-    sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);
-    sandesha2_seq_property_mgr_update(seq_prop_mgr, env, completed_bean);
+    if(completed_bean)
+    {
+        sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);
+        sandesha2_seq_property_mgr_update(seq_prop_mgr, env, completed_bean);
+    }
     
     last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
                         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, storage_mgr);
