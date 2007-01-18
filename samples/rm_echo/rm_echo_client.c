@@ -27,6 +27,7 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
+#include <platforms/axis2_platform_auto_sense.h>
 
 #define SANDESHA2_MAX_COUNT 10
 
