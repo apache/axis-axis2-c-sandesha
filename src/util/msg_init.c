@@ -37,7 +37,7 @@
 #include <sandesha2_make_connection.h>
 #include <sandesha2_msg_pending.h>
 #include <sandesha2_rm_elements.h>
-#include "../client/sandesha2_client_constants.h"
+#include <sandesha2_client_constants.h>
 
 #include <axis2_conf_ctx.h>
 #include <axis2_ctx.h>

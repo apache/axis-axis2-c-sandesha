@@ -42,7 +42,7 @@
 #include <axis2_engine.h>
 #include <axis2_uuid_gen.h>
 #include <axiom_soap_const.h>
-#include "../client/sandesha2_client_constants.h"
+#include <sandesha2_client_constants.h>
 #include <stdio.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_ack_mgr.h>

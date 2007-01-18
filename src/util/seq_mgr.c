@@ -36,7 +36,7 @@
 #include <axis2_uuid_gen.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_addr.h>
-#include "../client/sandesha2_client_constants.h"
+#include <sandesha2_client_constants.h>
 #include <axis2_options.h>
 #include <axis2_listener_manager.h>
 #include <axis2_ctx.h>

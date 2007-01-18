@@ -43,7 +43,7 @@
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_ack_msg_processor.h>
 #include <sandesha2_seq.h>
-#include "../client/sandesha2_client_constants.h"
+#include <sandesha2_client_constants.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
 #include <sandesha2_ack_mgr.h>

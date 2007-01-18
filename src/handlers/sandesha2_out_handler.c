@@ -30,7 +30,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_app_msg_processor.h>
-#include "../client/sandesha2_client_constants.h"
+#include <sandesha2_client_constants.h>
 
 axis2_qname_t *AXIS2_CALL
 sandesha2_out_handler_get_qname(
