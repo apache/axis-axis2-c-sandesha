@@ -70,7 +70,7 @@ sandesha2_inmemory_transaction_enlist(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean);
 
-void 
+static void 
 sandesha2_inmemory_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);

@@ -23,17 +23,16 @@
   */
 
 #include <axis2_utils_defines.h>
-#include <sandesha2_transaction.h>
 #include <axis2_env.h>
 #include <axis2_conf_ctx.h>
 #include <sqlite3.h>
+#include <sandesha2_storage_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_storage_mgr sandesha2_storage_mgr_t;
 
 /** 
  * @ingroup sandesha2_storage
@@ -74,7 +73,7 @@ void AXIS2_CALL
 sandesha2_permanent_storage_mgr_remove_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env,
-    sandesha2_transaction_t *transaction);
+    struct sandesha2_transaction *transaction);
 
 axis2_msg_ctx_t * AXIS2_CALL
 sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
