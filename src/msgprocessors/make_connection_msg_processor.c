@@ -42,6 +42,7 @@
 #include <axis2_op_ctx.h>
 #include <axis2_transport_out_desc.h>
 #include <axis2_http_transport.h>
+#include <axis2_rand.h>
 
 /** 
  * @brief Make Connection Message Processor struct impl

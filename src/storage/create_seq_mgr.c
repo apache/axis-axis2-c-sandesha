@@ -27,7 +27,7 @@ sandesha2_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
     const axis2_env_t *env)
 {
-    return seq_mgr->ops.free(seq_mgr, env);
+    seq_mgr->ops.free(seq_mgr, env);
 }
 
 axis2_bool_t AXIS2_CALL

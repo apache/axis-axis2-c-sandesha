@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_permanent_next_msg_mgr.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
@@ -26,7 +26,7 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 #include <axis2_types.h>
-
+#include <stdlib.h>
 /** 
  * @brief Sandesha2 Permanent Next Message Manager Struct Impl
  *   Sandesha Sequence2 Permanent Next Message Manager 
@@ -258,15 +258,19 @@ sandesha2_permanent_next_msg_mgr_insert(
     axis2_char_t sql_insert[1024];
     axis2_char_t sql_retrieve[256];
     axis2_char_t sql_update[1024];
-    sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *ref_msg_key = NULL;
+	axis2_bool_t polling_mode;
+	long msg_no;
+	sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
 
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_next_msg_mgr_insert");
-    axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
+	seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
-    axis2_char_t *ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    axis2_bool_t polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
-    long msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
+	ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+	polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
+    msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);

@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_inmemory_next_msg_mgr.h>
-#include <sandesha2_inmemory_bean_mgr.h>
+#include "sandesha2_inmemory_bean_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>

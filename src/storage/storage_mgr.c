@@ -64,7 +64,7 @@ sandesha2_storage_mgr_enlist_bean(
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
-     return storage_mgr->ops->enlist_bean(storage_mgr, env, rm_bean); 
+     storage_mgr->ops->enlist_bean(storage_mgr, env, rm_bean); 
 }
 
 sandesha2_create_seq_mgr_t *AXIS2_CALL

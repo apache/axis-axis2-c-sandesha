@@ -20,7 +20,8 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_constants.h>
 #include <axis2_conf_ctx.h>
-
+#include <sandesha2_utils.h>
+#include <sandesha2_terminate_mgr.h>
 
 /** 
  * @brief Terminate Sequence Response Message Processor struct impl

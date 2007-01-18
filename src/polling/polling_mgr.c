@@ -31,6 +31,7 @@
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <axis2_uuid_gen.h>
+#include <axis2_rand.h>
 #include <stdio.h>
 #include <platforms/axis2_platform_auto_sense.h>
 

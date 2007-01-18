@@ -14,9 +14,8 @@
  * limitations under the License.
  */
  
-#include <sandesha2_inmemory_bean_mgr.h>
 #include <sandesha2_constants.h>
-#include <sandesha2_inmemory_bean_mgr.h>
+#include "sandesha2_inmemory_bean_mgr.h"
 #include <sandesha2_error.h>
 #include <sandesha2_storage_mgr.h>
 #include <axis2_log.h>

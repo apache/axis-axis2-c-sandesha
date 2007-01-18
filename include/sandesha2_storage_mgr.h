@@ -59,7 +59,7 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 sandesha2_storage_mgr_t *storage_mgr,
                 const axis2_env_t *envv);
 
-    AXIS2_EXTERN axis2_status_t (AXIS2_CALL *
+    axis2_status_t (AXIS2_CALL *
             free_void_arg)(
                 void *storage_mgr,
                 const axis2_env_t *env);
@@ -162,6 +162,7 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 const axis2_env_t *env,
                 axiom_soap_envelope_t *soap_env,
                 axis2_char_t *key);
+	
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_storage_mgr

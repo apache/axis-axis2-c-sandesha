@@ -29,7 +29,7 @@ sandesha2_sender_mgr_free(
     sandesha2_sender_mgr_t *sender,
     const axis2_env_t *env)
 {
-    return sender->ops.free(sender, env);
+    sender->ops.free(sender, env);
 }
 
 axis2_bool_t AXIS2_CALL

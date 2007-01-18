@@ -14,9 +14,10 @@
  * limitations under the License.
  */
  
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
+#include <sandesha2_permanent_storage_mgr.h>
 #include <sandesha2_constants.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_error.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_property_bean.h>
@@ -718,37 +719,47 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     sqlite3 *dbconn = NULL;
     sandesha2_bean_mgr_args_t *args = NULL;
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
+	axis2_char_t *msg_id = NULL;
+	axis2_char_t *stored_key = NULL;
+	axis2_char_t *soap_env_str = NULL;
+	int soap_version;
+	axis2_char_t *svc_grp = NULL;
+	axis2_char_t *svc = NULL;
+	axis2_char_t *op  = NULL;
+	axis2_char_t *transport_out = NULL;
+	axis2_char_t *op_mep = NULL;
+	axis2_char_t *to_url = NULL;
+	axis2_char_t *reply_to = NULL;
+	axis2_char_t *transport_to = NULL;
+	axis2_char_t *execution_chain_str = NULL;
+	sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+	int flow;	
+	axis2_char_t *msg_recv_str = NULL;
+	axis2_bool_t svr_side = AXIS2_FALSE;
+	axis2_char_t *in_msg_store_key = NULL;
+	axis2_char_t *prop_str = NULL;
+	axis2_char_t *action = NULL;
 
-    sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = 
-        bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    
-    axis2_char_t *msg_id = sandesha2_msg_store_bean_get_msg_id(bean, env);
-    axis2_char_t *stored_key = sandesha2_msg_store_bean_get_stored_key(bean, env);
-    axis2_char_t *soap_env_str = 
-        sandesha2_msg_store_bean_get_soap_envelope_str(bean, env);
-    int soap_version = sandesha2_msg_store_bean_get_soap_version(
-        bean, env);
-    axis2_char_t *transport_out = sandesha2_msg_store_bean_get_transport_out(
-        bean, env);
-    axis2_char_t *op = sandesha2_msg_store_bean_get_op(bean, env);
-    axis2_char_t *svc = sandesha2_msg_store_bean_get_svc(bean, env);
-    axis2_char_t *svc_grp = sandesha2_msg_store_bean_get_svc_grp(bean, env);
-    axis2_char_t *op_mep = sandesha2_msg_store_bean_get_op_mep(bean, env);;
-    axis2_char_t *to_url = sandesha2_msg_store_bean_get_to_url(bean, env);
-    axis2_char_t *reply_to = sandesha2_msg_store_bean_get_reply_to(bean, env);
-    axis2_char_t *transport_to = sandesha2_msg_store_bean_get_transport_to(
-        bean, env);
-    axis2_char_t *execution_chain_str = 
-        sandesha2_msg_store_bean_get_execution_chain_str(bean, env);
-    int flow = sandesha2_msg_store_bean_get_flow(bean, env);
-    axis2_char_t *msg_recv_str = sandesha2_msg_store_bean_get_msg_recv_str(
-        bean, env);
-    axis2_bool_t svr_side = sandesha2_msg_store_bean_is_svr_side(bean, env);
-    axis2_char_t *in_msg_store_key = 
-        sandesha2_msg_store_bean_get_in_msg_store_key(bean, env);
-    axis2_char_t *prop_str = 
-        sandesha2_msg_store_bean_get_persistent_property_str(bean, env);
-    axis2_char_t *action = sandesha2_msg_store_bean_get_action(bean, env);
+	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+	msg_id = sandesha2_msg_store_bean_get_msg_id(bean, env);
+	stored_key = sandesha2_msg_store_bean_get_stored_key(bean, env);
+	soap_env_str =  sandesha2_msg_store_bean_get_soap_envelope_str(bean, env);
+	soap_version = sandesha2_msg_store_bean_get_soap_version(bean, env);
+	transport_out = sandesha2_msg_store_bean_get_transport_out(bean, env);
+	op = sandesha2_msg_store_bean_get_op(bean, env);
+    svc = sandesha2_msg_store_bean_get_svc(bean, env);
+	svc_grp = sandesha2_msg_store_bean_get_svc_grp(bean, env);
+    op_mep = sandesha2_msg_store_bean_get_op_mep(bean, env);;
+    to_url = sandesha2_msg_store_bean_get_to_url(bean, env);
+	reply_to = sandesha2_msg_store_bean_get_reply_to(bean, env);
+	transport_to = sandesha2_msg_store_bean_get_transport_to(bean, env);
+	execution_chain_str = sandesha2_msg_store_bean_get_execution_chain_str(bean, env);
+	flow = sandesha2_msg_store_bean_get_flow(bean, env);
+	msg_recv_str = sandesha2_msg_store_bean_get_msg_recv_str(bean, env);
+    svr_side = sandesha2_msg_store_bean_is_svr_side(bean, env);
+	in_msg_store_key = sandesha2_msg_store_bean_get_in_msg_store_key(bean, env);
+	prop_str = sandesha2_msg_store_bean_get_persistent_property_str(bean, env);
+	action = sandesha2_msg_store_bean_get_action(bean, env);
 
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_insert_msg_store_bean");

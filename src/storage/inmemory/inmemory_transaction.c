@@ -44,33 +44,33 @@ struct sandesha2_inmemory_transaction_impl
 #define SANDESHA2_INTF_TO_IMPL(trans) \
     ((sandesha2_inmemory_transaction_impl_t *) trans)
 
-static axis2_status_t
+axis2_status_t AXIS2_CALL
 sandesha2_inmemory_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static axis2_bool_t
+axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_transaction_is_active(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
 
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,
     sandesha2_rm_bean_t *rm_bean);
 
-static void 
+void 
 sandesha2_inmemory_transaction_release_locks(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env);
@@ -105,7 +105,7 @@ sandesha2_inmemory_transaction_create(
     return &(trans_impl->trans);
 }
 
-static axis2_status_t
+axis2_status_t AXIS2_CALL
 sandesha2_inmemory_transaction_free(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -133,14 +133,14 @@ sandesha2_inmemory_transaction_free(
     return AXIS2_SUCCESS;
 }
 
-static axis2_bool_t
+axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_transaction_is_active(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
 {
+    int size = 0;
     sandesha2_inmemory_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
-    int size = 0;
     if(trans_impl->enlisted_beans)
         size = AXIS2_ARRAY_LIST_SIZE(trans_impl->enlisted_beans, env);
     if(size > 0)
@@ -149,7 +149,7 @@ sandesha2_inmemory_transaction_is_active(
         return AXIS2_FALSE;
 }
 
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_commit(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -157,7 +157,7 @@ sandesha2_inmemory_transaction_commit(
     sandesha2_inmemory_transaction_release_locks(trans, env);
 }
 
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -189,7 +189,7 @@ sandesha2_inmemory_transaction_release_locks(
     trans_impl->enlisted_beans = NULL;
 }
    
-static void
+void AXIS2_CALL
 sandesha2_inmemory_transaction_enlist(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env,

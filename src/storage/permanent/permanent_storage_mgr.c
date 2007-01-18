@@ -14,10 +14,11 @@
  * limitations under the License.
  */
  
+#include <platforms/axis2_platform_auto_sense.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_permanent_storage_mgr.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_msg_store_bean.h>
 #include <sandesha2_permanent_create_seq_mgr.h>
 #include <sandesha2_invoker_mgr.h>
@@ -51,6 +52,7 @@
 #include <axiom_xml_reader.h>
 #include <axiom_stax_builder.h>
 #include <axiom_soap_builder.h>
+
 
 /** 
  * @brief Sandesha2 Permanent Storage Manager Struct Impl
@@ -354,12 +356,15 @@ sandesha2_permanent_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env)
 {
-    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    int key_len = sizeof(unsigned long);
-    unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
-    sandesha2_transaction_t *transaction = NULL;
+	sandesha2_transaction_t *transaction = NULL;
     axis2_hash_index_t *index = NULL;
+    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    unsigned long *thread_id;
+	int key_len = sizeof(unsigned long);
+
+	storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
+	thread_id = (unsigned long *) axis2_os_thread_current();
+
 
     axis2_thread_mutex_lock(storage_mgr_impl->mutex);
     for (index = axis2_hash_first(storage_mgr_impl->transactions , env); index; 

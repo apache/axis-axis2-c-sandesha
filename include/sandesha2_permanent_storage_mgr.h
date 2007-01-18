@@ -23,6 +23,7 @@
   */
 
 #include <axis2_utils_defines.h>
+#include <sandesha2_transaction.h>
 #include <axis2_env.h>
 #include <axis2_conf_ctx.h>
 #include <sqlite3.h>
@@ -32,7 +33,7 @@ extern "C"
 {
 #endif
 
-struct sandesha2_storage_mgr;
+typedef struct sandesha2_storage_mgr sandesha2_storage_mgr_t;
 
 /** 
  * @ingroup sandesha2_storage

@@ -28,7 +28,7 @@ sandesha2_seq_property_mgr_free(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axis2_env_t *env)
 {
-    return seq_prop_mgr->ops.free(seq_prop_mgr, env);
+    seq_prop_mgr->ops.free(seq_prop_mgr, env);
 }
 
 axis2_bool_t AXIS2_CALL

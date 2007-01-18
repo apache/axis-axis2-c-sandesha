@@ -15,13 +15,12 @@
  */
  
 #include <sandesha2_permanent_create_seq_mgr.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_constants.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_error.h>
 #include <sandesha2_rm_bean.h>
-#include <sandesha2_sqls.h>
 #include <axis2_log.h>
 #include <axis2_hash.h>
 #include <axis2_thread.h>
