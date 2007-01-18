@@ -431,42 +431,6 @@ sandesha2_permanent_storage_mgr_get_create_seq_mgr(
     return storage_mgr_impl->create_seq_mgr;
 }
 
-/*
-sqlite3 *AXIS2_CALL
-sandesha2_permanent_storage_mgr_get_db(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
-{
-    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    if(!storage_mgr_impl->db)
-    {
-        axis2_conf_t *conf = NULL;
-        sandesha2_property_bean_t *prop_bean = NULL;
-        axis2_char_t *path = NULL;
-        int rc = -1;
-        conf = AXIS2_CONF_CTX_GET_CONF((const axis2_conf_ctx_t *) 
-            storage_mgr_impl->conf_ctx, env);
-        prop_bean = sandesha2_utils_get_property_bean(env, conf);
-        path = sandesha2_property_bean_get_db_path(prop_bean, env);
-        storage_mgr_impl->db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
-            "sandesha2", NULL);
-        rc = sqlite3_open(storage_mgr_impl->db_name, 
-            &(storage_mgr_impl->db));
-        if(rc)
-        {
-            printf("cannot open database\n");
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
-                sqlite3_errmsg(storage_mgr_impl->db));
-            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
-                AXIS2_FAILURE);
-            sqlite3_close(storage_mgr_impl->db);
-            return NULL;
-        }
-    }
-    return storage_mgr_impl->db;
-}*/
-
 sandesha2_next_msg_mgr_t *AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_next_msg_mgr(
     sandesha2_storage_mgr_t *storage_mgr,

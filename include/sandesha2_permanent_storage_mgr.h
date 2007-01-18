@@ -49,6 +49,39 @@ sandesha2_permanent_storage_mgr_get_dbconn(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env);
 
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_init(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
+
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_store_msg_ctx(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key,
+    axis2_msg_ctx_t *msg_ctx);
+			
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_update_msg_ctx(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *key,
+    axis2_msg_ctx_t *msg_ctx);
+
+void AXIS2_CALL
+sandesha2_permanent_storage_mgr_remove_transaction(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_env_t *env,
+    sandesha2_transaction_t *transaction);
+
+axis2_msg_ctx_t * AXIS2_CALL
+sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env, 
+    axis2_char_t *key,
+    axis2_conf_ctx_t *conf_ctx);
+
 /** @} */
 #ifdef __cplusplus
 }
