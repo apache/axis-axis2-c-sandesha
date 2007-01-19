@@ -85,7 +85,9 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     
     if(!sandesha2_terminate_mgr_rcv_side_clean_map)
     {
+        axis2_allocator_switch_to_global_pool(env->allocator);
         sandesha2_terminate_mgr_rcv_side_clean_map = axis2_hash_make(env);
+        axis2_allocator_switch_to_local_pool(env->allocator);
     }
     
     prop_bean = sandesha2_utils_get_property_bean(env, AXIS2_CONF_CTX_GET_CONF(
@@ -93,17 +95,21 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
     if(!in_order_invoke)
     {
+        axis2_allocator_switch_to_global_pool(env->allocator);
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
             AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
                 SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
+        axis2_allocator_switch_to_local_pool(env->allocator);
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
                     seq_id, storage_mgr);
     }
     else
     {
+        axis2_allocator_switch_to_global_pool(env->allocator);
         axis2_char_t *clean_status = axis2_hash_get(
             sandesha2_terminate_mgr_rcv_side_clean_map, seq_id, 
             AXIS2_HASH_KEY_STRING);
+        axis2_allocator_switch_to_local_pool(env->allocator);
         if(clean_status && 0 == AXIS2_STRCMP(clean_status, 
                     SANDESHA2_CLEANED_AFTER_INVOCATION))
         {
@@ -111,9 +117,13 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                     storage_mgr);
         }
         else
+        {
+            axis2_allocator_switch_to_global_pool(env->allocator);
             axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
                     AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
                     SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
+            axis2_allocator_switch_to_local_pool(env->allocator);
+        }
     }
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg");
@@ -142,7 +152,9 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     
     if(!sandesha2_terminate_mgr_rcv_side_clean_map)
     {
+        axis2_allocator_switch_to_global_pool(env->allocator);
         sandesha2_terminate_mgr_rcv_side_clean_map = axis2_hash_make(env);
+        axis2_allocator_switch_to_local_pool(env->allocator);
     }
     
     invoker_mgr = sandesha2_storage_mgr_get_storage_map_mgr(storage_mgr, env);
@@ -165,8 +177,10 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
             sandesha2_invoker_bean_get_msg_ctx_ref_key((sandesha2_rm_bean_t *) 
                 map_bean, env));
     }
+    axis2_allocator_switch_to_global_pool(env->allocator);
     clean_status = axis2_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
         seq_id, AXIS2_HASH_KEY_STRING);
+    axis2_allocator_switch_to_local_pool(env->allocator);
                     
     if(clean_status && 0 == AXIS2_STRCMP(clean_status, 
         SANDESHA2_CLEANED_ON_TERMINATE_MSG))
@@ -175,9 +189,13 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
                     storage_mgr);
     }
     else
+    {
+        axis2_allocator_switch_to_global_pool(env->allocator);
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
             AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
                 SANDESHA2_CLEANED_AFTER_INVOCATION, env));
+        axis2_allocator_switch_to_local_pool(env->allocator);
+    }
 
     
     AXIS2_LOG_INFO(env->log, 

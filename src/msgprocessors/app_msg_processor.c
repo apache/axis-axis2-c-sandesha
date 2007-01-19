@@ -241,8 +241,10 @@ sandesha2_app_msg_processor_process_in_msg (
         }
     }
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+    axis2_allocator_switch_to_local_pool(env->allocator);
     fault_ctx = sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
         env, rm_msg_ctx, storage_mgr);
     if(fault_ctx)
@@ -526,9 +528,11 @@ sandesha2_app_msg_processor_process_out_msg(
     req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
         AXIS2_WSDL_MESSAGE_LABEL_IN);
     /* TODO setting up fault callback */
-    
+
+    axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx,
-                        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+    axis2_allocator_switch_to_local_pool(env->allocator);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
     if(!seq_prop_mgr)
