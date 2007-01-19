@@ -48,8 +48,8 @@ sandesha2_next_msg_find_callback(
     char **argv, 
     char **col_name)
 {
-    int i = 0;
     sandesha2_next_msg_bean_t *bean = NULL;
+    int i = 0;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
     const axis2_env_t *env = args->env;
     axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
@@ -63,14 +63,23 @@ sandesha2_next_msg_find_callback(
         data_list = axis2_array_list_create(env, 0);
         args->data = data_list;
     }
-    bean = sandesha2_next_msg_bean_create(env);
+    if(argc > 0)
+    {
+        bean = sandesha2_next_msg_bean_create(env);
+    }
     for(i = 0; i < argc; i++)
     {
         if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        {
             sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
+        }
         if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_key"))
-            if(argv[i])
+        {
+            if(argv[i] && 0 != axis2_strcmp("(null)", argv[i]))
+            {
                 sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
+            }
+        }
         if(0 == AXIS2_STRCMP(col_name[i], "polling_mode"))
             sandesha2_next_msg_bean_set_polling_mode(bean, env, 
                 AXIS2_ATOI(argv[i]));
@@ -78,7 +87,8 @@ sandesha2_next_msg_find_callback(
             sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
                 atol(argv[i]));
     }
-    axis2_array_list_add(data_list, env, bean);
+    if(bean)
+        axis2_array_list_add(data_list, env, bean);
     return 0;
 }
 
@@ -98,7 +108,7 @@ sandesha2_next_msg_retrieve_callback(
         args->data = NULL;
         return 0;
     }
-    if(!bean)
+    if(!bean && argc > 0)
     {
         bean = sandesha2_next_msg_bean_create(env);
         args->data = bean;
@@ -108,8 +118,10 @@ sandesha2_next_msg_retrieve_callback(
         if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
             sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
         if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_key"))
-            if(argv[i])
+            if(argv[i] && 0 != axis2_strcmp("(null)", argv[i]))
+            {
                 sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
+            }
         if(0 == AXIS2_STRCMP(col_name[i], "polling_mode"))
         {
             sandesha2_next_msg_bean_set_polling_mode(bean, env, 

@@ -350,6 +350,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         new_msg_store_key = axis2_uuid_gen(env);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
             new_msg_store_key, ref_msg_ctx);
+        printf("new_msg_store_key:%s\n", new_msg_store_key);
         sandesha2_next_msg_bean_set_ref_msg_key(next_bean, env, 
             new_msg_store_key);
         sandesha2_next_msg_bean_set_polling_mode(next_bean, env, polling_mode);

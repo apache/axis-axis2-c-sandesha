@@ -240,10 +240,13 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
             axis2_char_t *seq_id = NULL;
             key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
             if(key)
+            {
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+            }
             seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
                 bean, env);
-            sandesha2_next_msg_mgr_remove(next_mgr, env, seq_id);
+            if(seq_id)
+                sandesha2_next_msg_mgr_remove(next_mgr, env, seq_id);
         }
     }
     highest_in_msg_key = sandesha2_utils_get_seq_property(env, seq_id,

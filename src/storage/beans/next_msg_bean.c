@@ -235,7 +235,7 @@ sandesha2_next_msg_bean_set_ref_msg_key(
 {
     sandesha2_next_msg_bean_impl_t *next_msg_bean_impl = NULL;
     next_msg_bean_impl = SANDESHA2_INTF_TO_IMPL(next_msg_bean);
-    next_msg_bean_impl->ref_msg_key = ref_msg_key;
+    next_msg_bean_impl->ref_msg_key = AXIS2_STRDUP(ref_msg_key, env);
 }
 
 void AXIS2_CALL
