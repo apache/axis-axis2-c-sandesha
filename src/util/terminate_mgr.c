@@ -104,9 +104,9 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                     seq_id, storage_mgr);
     }
     else
-    {
+    {	axis2_char_t *clean_status = NULL;
         axis2_allocator_switch_to_global_pool(env->allocator);
-        axis2_char_t *clean_status = axis2_hash_get(
+        clean_status = axis2_hash_get(
             sandesha2_terminate_mgr_rcv_side_clean_map, seq_id, 
             AXIS2_HASH_KEY_STRING);
         axis2_allocator_switch_to_local_pool(env->allocator);
