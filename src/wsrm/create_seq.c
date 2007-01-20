@@ -237,10 +237,8 @@ sandesha2_create_seq_from_om_node(
     }
     offer_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
         offer_qname, seq_node, &offer_node);
-    printf("came1\n");
     if(offer_part)
     {
-        printf("came2\n");
         create_seq_impl->seq_offer = sandesha2_seq_offer_create(env, 
             create_seq_impl->rm_ns_val);  
         if(!create_seq_impl->seq_offer)

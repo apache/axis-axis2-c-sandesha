@@ -87,7 +87,6 @@ sandesha2_seq_offer_create(
     seq_offer_impl->identifier = NULL;
     seq_offer_impl->expires = NULL;
     seq_offer_impl->seq_offer.element.ops = NULL;
-    printf("ns_val:%s\n", seq_offer_impl->ns_val);
     seq_offer_impl->seq_offer.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
     if(NULL == seq_offer_impl->seq_offer.element.ops)
@@ -243,7 +242,6 @@ sandesha2_seq_offer_to_om_node(
     }
     rm_ns = axiom_namespace_create(env, seq_offer_impl->ns_val,
                         SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-    printf("seq_offer_impl->ns_val:%s\n", seq_offer_impl->ns_val);
     if(NULL == rm_ns)
     {
         return NULL;

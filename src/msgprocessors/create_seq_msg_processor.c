@@ -221,7 +221,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, 
                         env);
-    printf("seq_offer:%s\n", seq_offer);
     /* Offer processing */ 
     if(seq_offer)
     {
@@ -241,11 +240,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         }
         offer_seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_offer_get_identifier(seq_offer, env), env);
-        printf("offer_seq_id:%s\n", offer_seq_id);
         offer_accepted = sandesha2_create_seq_msg_processor_offer_accepted(
                         env, offer_seq_id, rm_msg_ctx, 
                         storage_mgr);
-        printf("offer_accepted:%d\n", offer_accepted);
         if(offer_accepted)
         {
             sandesha2_create_seq_bean_t *create_seq_bean = NULL;

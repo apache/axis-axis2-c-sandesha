@@ -16,6 +16,7 @@
  
 #include <sandesha2_address.h>
 #include <sandesha2_constants.h>
+#include <axis2_addr.h>
 /** 
  * @brief Address struct impl
  *	Sandesha2 IOM Address
@@ -214,7 +215,7 @@ sandesha2_address_to_om_node(
         return NULL;
     }
     rm_ns = axiom_namespace_create(env, address_impl->ns_val,
-            SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+        AXIS2_WSA_DEFAULT_PREFIX);
     if(!rm_ns)
     {
         return NULL;
