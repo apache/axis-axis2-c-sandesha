@@ -29,6 +29,8 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 
+#define SANDESHA2_MAX_COUNT 10
+
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
 rm_echo_callback_on_complete(
@@ -224,13 +226,13 @@ int main(int argc, char** argv)
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
         callback3, payload, listener_manager);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(2 * SANDESHA2_CLIENT_SLEEP_TIME); 
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback4 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback4, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback4, rm_echo_callback_on_error);
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
         listener_manager);
-    AXIS2_SLEEP(SANDESHA2_CLIENT_SLEEP_TIME); 
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/

@@ -507,7 +507,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             axis2_char_t *msg_id = NULL;
             
             retrans_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
-            msg_id = sandesha2_sender_bean_get_msg_id(retrans_bean, env);
+            msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+                retrans_bean, env);
             sandesha2_sender_mgr_remove(retrans_mgr, env, msg_id);
             msg_store_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                         retrans_bean, env);

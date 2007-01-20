@@ -121,7 +121,6 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
-    sandesha2_seq_ack_t *seq_ack = NULL;
     sandesha2_terminate_seq_res_t *term_seq_res = NULL;
     axis2_char_t *seq_id = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
