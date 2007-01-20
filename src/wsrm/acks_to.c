@@ -81,9 +81,9 @@ sandesha2_acks_to_create(const axis2_env_t *env, sandesha2_address_t *address,
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-	acks_to_impl->rm_ns_val = NULL;
-    acks_to_impl->addr_ns_val = NULL;
-    acks_to_impl->address = NULL;
+    acks_to_impl->rm_ns_val = (axis2_char_t *)AXIS2_STRDUP(rm_ns_val, env);
+    acks_to_impl->addr_ns_val = (axis2_char_t *)AXIS2_STRDUP(addr_ns_val, env);
+    acks_to_impl->address = address;
     
     acks_to_impl->acks_to.element.ops = AXIS2_MALLOC(env->allocator,
         sizeof(sandesha2_iom_rm_element_ops_t));
@@ -95,10 +95,6 @@ sandesha2_acks_to_create(const axis2_env_t *env, sandesha2_address_t *address,
         return NULL;
     }
   
-    acks_to_impl->rm_ns_val = (axis2_char_t *)AXIS2_STRDUP(rm_ns_val, env);
-    acks_to_impl->addr_ns_val = (axis2_char_t *)AXIS2_STRDUP(addr_ns_val, env);
-    acks_to_impl->address = address;
-    
     acks_to_impl->acks_to.element.ops->get_namespace_value = 
                         sandesha2_acks_to_get_namespace_value;
     acks_to_impl->acks_to.element.ops->from_om_node = 

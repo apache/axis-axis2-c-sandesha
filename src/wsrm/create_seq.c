@@ -94,8 +94,8 @@ sandesha2_create_seq_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    create_seq_impl->rm_ns_val = NULL;
-    create_seq_impl->addr_ns_val = NULL;
+    create_seq_impl->rm_ns_val = (axis2_char_t*)AXIS2_STRDUP(rm_ns_val, env);
+    create_seq_impl->addr_ns_val = (axis2_char_t*)AXIS2_STRDUP(addr_ns_val, env);
     create_seq_impl->acks_to = NULL;
     create_seq_impl->expires = NULL;
     create_seq_impl->seq_offer = NULL;
@@ -120,10 +120,7 @@ sandesha2_create_seq_create(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    
-    create_seq_impl->rm_ns_val = (axis2_char_t*)AXIS2_STRDUP(rm_ns_val, env);
-    create_seq_impl->addr_ns_val = (axis2_char_t*)AXIS2_STRDUP(addr_ns_val, env);
-    
+     
     create_seq_impl->create_seq.part.element.ops->get_namespace_value = 
                         sandesha2_create_seq_get_namespace_value;
     create_seq_impl->create_seq.part.element.ops->from_om_node = 
@@ -240,8 +237,10 @@ sandesha2_create_seq_from_om_node(
     }
     offer_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
         offer_qname, seq_node, &offer_node);
+    printf("came1\n");
     if(offer_part)
     {
+        printf("came2\n");
         create_seq_impl->seq_offer = sandesha2_seq_offer_create(env, 
             create_seq_impl->rm_ns_val);  
         if(!create_seq_impl->seq_offer)

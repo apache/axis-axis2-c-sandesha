@@ -710,8 +710,10 @@ sandesha2_utils_create_new_related_msg_ctx(
         AXIS2_OP_SET_PARENT(op, env, svc);
     }
     
+    axis2_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_op_ctx_create(env, op, AXIS2_MSG_CTX_GET_SVC_CTX(new_msg, 
-                        env));
+        env));
+    axis2_allocator_switch_to_local_pool(env->allocator);
     AXIS2_MSG_CTX_SET_OP_CTX(new_msg, env, op_ctx);
     AXIS2_OP_CTX_ADD_MSG_CTX(op_ctx, env, new_msg);
     

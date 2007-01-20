@@ -45,7 +45,7 @@ struct sandesha2_permanent_transaction_impl
     axis2_thread_mutex_t *mutex;
     sqlite3 *dbconn;
     axis2_bool_t is_active;
-    unsigned long *thread_id;
+    unsigned long int thread_id;
 };
 
 #define SANDESHA2_INTF_TO_IMPL(trans) \
@@ -90,7 +90,7 @@ AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL
 sandesha2_permanent_transaction_create(
     const axis2_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
-    unsigned long *thread_id)
+    unsigned long int thread_id)
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     axis2_char_t *error_msg = NULL;
@@ -201,7 +201,7 @@ sandesha2_permanent_transaction_get_dbconn(
     return trans_impl->dbconn;
 }
 
-unsigned long *AXIS2_CALL
+unsigned long int AXIS2_CALL
 sandesha2_permanent_transaction_get_thread_id(
     sandesha2_transaction_t *trans,
     const axis2_env_t *env)
@@ -240,7 +240,7 @@ sandesha2_permanent_transaction_commit(
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
 
     rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
-    /*unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    /*unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
     printf("came2:thread_id:%ld\n", thread_id);*/
     /*if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
@@ -269,7 +269,7 @@ sandesha2_permanent_transaction_rollback(
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     rc = sqlite3_exec(trans_impl->dbconn, "ROLLBACK TRANSACTION;", 0, 0,
         &error_msg);
-    /*unsigned long *thread_id = (unsigned long *) axis2_os_thread_current();
+    /*unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
     printf("came3:thread_id:%ld\n", thread_id);*/
     if(rc != SQLITE_OK )
     {
@@ -319,7 +319,7 @@ sandesha2_permanent_transaction_enlist(
     sandesha2_rm_bean_t *rm_bean)
 {
     sandesha2_rm_bean_t *rm_bean_l = NULL;
-    unsigned long *thread_id = NULL;
+    unsigned long int thread_id = -1;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Start:sandesha2_permanent_transaction_enlist");
@@ -329,13 +329,13 @@ sandesha2_permanent_transaction_enlist(
     if(rm_bean)
     {
         sandesha2_transaction_t *other = NULL;
-        unsigned long *other_thread_id = NULL;
+        unsigned long int other_thread_id = -1;
         axis2_thread_mutex_lock(trans_impl->mutex);
         other = sandesha2_rm_bean_get_transaction(rm_bean_l, env);
         if(other)
             other_thread_id = sandesha2_permanent_transaction_get_thread_id(other, 
                 env);
-        while(other && *other_thread_id != *thread_id)
+        while(other && other_thread_id != thread_id)
         {
             int size = 0;
             if(trans_impl->enlisted_beans)

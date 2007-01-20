@@ -539,10 +539,12 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     AXIS2_OP_SET_IN_FLOW(out_in_op, env, 
                         AXIS2_OP_GET_IN_FLOW(old_op, env));
 
+    axis2_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_op_ctx_create(env, out_in_op, NULL);
     AXIS2_OP_CTX_SET_PARENT(op_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(msg_ctx, env));
-    /*axis2_conf_ctx_register_op_ctx(conf_ctx, env, sandesha2_msg_ctx_get_msg_id(
-        rm_msg_ctx, env), op_ctx);*/
+    axis2_conf_ctx_register_op_ctx(conf_ctx, env, sandesha2_msg_ctx_get_msg_id(
+        rm_msg_ctx, env), op_ctx);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     
     if(terminated && 0 == AXIS2_STRCMP(terminated, SANDESHA2_VALUE_TRUE))
     {

@@ -138,8 +138,9 @@ sandesha2_msg_creator_create_create_seq_msg(
     create_seq_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(create_seq_msg_ctx, env);
     create_seq_msg_id = axis2_uuid_gen(env);
     AXIS2_MSG_CTX_SET_MESSAGE_ID(create_seq_msg_ctx, env, create_seq_msg_id);
-    AXIS2_CONF_CTX_REGISTER_OP_CTX(ctx, env, create_seq_msg_id, 
-            create_seq_op_ctx);
+    axis2_allocator_switch_to_global_pool(env->allocator);
+    axis2_conf_ctx_register_op_ctx(ctx, env, create_seq_msg_id, create_seq_op_ctx);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     app_msg_op_desc = AXIS2_MSG_CTX_GET_OP(application_msg_ctx, env);
     create_seq_op = AXIS2_MSG_CTX_GET_OP(create_seq_msg_ctx, env);
     if(app_msg_op_desc)
@@ -521,9 +522,11 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     terminate_seq_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(terminate_seq_msg_ctx, env);
     terminate_seq_msg_id = (axis2_char_t*)AXIS2_MSG_CTX_GET_MSG_ID(
                         terminate_seq_msg_ctx, env);
+    axis2_allocator_switch_to_global_pool(env->allocator);
     if(terminate_seq_msg_id)
-        AXIS2_CONF_CTX_REGISTER_OP_CTX(conf_ctx, env, terminate_seq_msg_id, 
+        axis2_conf_ctx_register_op_ctx(conf_ctx, env, terminate_seq_msg_id, 
             terminate_seq_op_ctx);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     ref_msg_op = AXIS2_MSG_CTX_GET_OP(ref_msg_ctx, env);
     terminate_seq_op = AXIS2_MSG_CTX_GET_OP(terminate_seq_msg_ctx, env);
     if(ref_msg_op)
