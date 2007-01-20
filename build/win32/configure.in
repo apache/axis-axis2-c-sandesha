@@ -1,8 +1,7 @@
-AXIOM_MAJOR_VERSION = M
-AXIOM_MINOR_VERSION = 9
-AXIOM_MICRO_VERSION = 3
-AXIS2_INSTALL_DIR = D:\axis2\build\deploy
-LIBXML2_INSTALL_DIR = D:\libxml2-2.6.23.win32
+SQLITE_BIN_DIR = E:\sqlite
+SQLITE_SRC_DIR = E:\sqlite
+AXIS2_INSTALL_DIR = E:\latest\build\axis2c-bin-0.96-win32
+LIBXML2_INSTALL_DIR = D:\libxml2-2.6.27.win32
 ICONV_INSTALL_DIR = D:\iconv-1.9.1.win32
 
 
