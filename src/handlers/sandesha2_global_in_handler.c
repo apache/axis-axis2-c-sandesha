@@ -128,6 +128,14 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_FAILURE;
     }
     ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
+    if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
+    {
+        axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
+        axis2_property_t *property = axis2_property_create_with_args(env, 0, 0, 
+            0, NULL);
+        AXIS2_CTX_SET_PROPERTY(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
+            property, AXIS2_FALSE);
+    }
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     
     soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);

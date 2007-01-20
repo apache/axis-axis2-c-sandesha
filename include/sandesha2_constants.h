@@ -494,6 +494,7 @@ extern "C"
     #define SANDESHA2_IN_MESSAGE_STORAGE_KEY "InMsgStoreKey"
     #define SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR ",,,"
     #define SANDESHA2_BUSY_WAIT_TIME 8
+    #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
 /** @} */
 #ifdef __cplusplus
 }

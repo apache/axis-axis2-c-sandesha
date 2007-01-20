@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:v:")) != -1)
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:m:")) != -1)
     {
 
         switch (c)
@@ -132,6 +132,7 @@ int main(int argc, char** argv)
                 "__OPERATION_OUT_IN__");
     if(single_channel)
     {
+        printf("camex\n");
         reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
         offer = AXIS2_TRUE;
     }
@@ -324,10 +325,10 @@ usage(
     fprintf(stdout, " [-o OFFER]");
     fprintf(stdout, " [-m SINGLE CHANNEL]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-v SINGLE CHANNEL \t single channel.. The" \
-        " default behaviour is single channel \n");
+    fprintf(stdout, "\t-m SINGLE CHANNEL \t single channel.. Type 0 for not to use single channel. The" \
+        " default behaviour is single channel(1) \n");
     fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
-        "feature. The default behaviour is no offer. \n");
+        "feature. The default behaviour is no offer(0). \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
         " default is http://127.0.0.1:5555/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");

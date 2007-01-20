@@ -119,8 +119,23 @@ sandesha2_permanent_transaction_create(
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
     path = sandesha2_property_bean_get_db_path(prop_bean, env);
-    db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, "sandesha2", NULL);
-    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "db_name %s", db_name);
+    if(conf_ctx)
+    {
+        axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
+        axis2_property_t *property = axis2_ctx_get_property(conf_ctx_base, env, 
+            SANDESHA2_IS_SVR_SIDE, AXIS2_FALSE);
+        if(!property)
+        {
+            db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+                "sandesha2_svr_db", NULL);
+        }
+        else
+        {
+            db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+                "sandesha2_client_db", NULL);
+        }
+    }
+    AXIS2_LOG_INFO(env->log, "db_name %s", db_name);
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
     if(rc != SQLITE_OK)
     {
