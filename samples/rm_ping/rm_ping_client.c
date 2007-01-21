@@ -165,7 +165,8 @@ int main(int argc, char** argv)
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
-    AXIS2_SLEEP(MAX_COUNT);
+    /*AXIS2_SLEEP(MAX_COUNT);*/
+    AXIS2_SLEEP(120);
    
     if (svc_client)
     {

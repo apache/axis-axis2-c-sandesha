@@ -242,7 +242,9 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = AXIS2_STRDUP("Sandesha2MessageMap", 
         env);
     storage_mgr_impl->conf_ctx = conf_ctx;
+    axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->transactions = axis2_hash_make(env);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     storage_mgr_impl->bean_mgr = NULL;
     storage_mgr_impl->mutex = axis2_thread_mutex_create(env->allocator,
         AXIS2_THREAD_MUTEX_DEFAULT);
@@ -351,6 +353,7 @@ sandesha2_permanent_storage_mgr_get_transaction(
 
 
     axis2_thread_mutex_lock(storage_mgr_impl->mutex);
+    axis2_allocator_switch_to_global_pool(env->allocator);
     for (index = axis2_hash_first(storage_mgr_impl->transactions , env); index; 
         index = axis2_hash_next(env, index))
     {
@@ -376,6 +379,7 @@ sandesha2_permanent_storage_mgr_get_transaction(
         axis2_hash_set(storage_mgr_impl->transactions, thread_id_key, 
             AXIS2_HASH_KEY_STRING, transaction);
     }
+    axis2_allocator_switch_to_local_pool(env->allocator);
     axis2_thread_mutex_unlock(storage_mgr_impl->mutex);
     return transaction;
 }
@@ -387,7 +391,7 @@ sandesha2_permanent_storage_mgr_remove_transaction(
     sandesha2_transaction_t *transaction)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    unsigned long int thread_id = NULL;
+    unsigned long int thread_id = -1;
     axis2_char_t *thread_id_key = AXIS2_MALLOC(env->allocator, 128);
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
@@ -395,8 +399,10 @@ sandesha2_permanent_storage_mgr_remove_transaction(
     thread_id = (unsigned long int) sandesha2_permanent_transaction_get_thread_id(
         transaction, env);
     sprintf(thread_id_key, "%lu", thread_id); 
+    axis2_allocator_switch_to_global_pool(env->allocator);
     axis2_hash_set(storage_mgr_impl->transactions, thread_id_key, 
         AXIS2_HASH_KEY_STRING, NULL);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     axis2_thread_mutex_unlock(storage_mgr_impl->mutex);
 }
 
@@ -818,8 +824,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         return NULL;
     }
     AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, soap_envelope);
-    AXIS2_MSG_CTX_SET_MSG_ID(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
-        msg_store_bean, env)); 
+    /* You cannot set the same message id to a new message context again. So generate
+     * a new message id and set it
+     * AXIS2_MSG_CTX_SET_MSG_ID(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
+        msg_store_bean, env));*/
+    axis2_msg_ctx_set_msg_id(msg_ctx, env, axis2_uuid_gen(env));
+
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     transport_out_str = sandesha2_msg_store_bean_get_transport_out(
         msg_store_bean, env);
@@ -940,7 +950,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             AXIS2_MSG_CTX_SET_OP_CTX(msg_ctx, env, op_ctx);
             /*AXIS2_OP_CTX_ADD_MSG_CTX(op_ctx, env, msg_ctx);*/
             msg_id = (axis2_char_t *) AXIS2_MSG_CTX_GET_MSG_ID(msg_ctx, env);
-            axis2_conf_ctx_register_op_ctx(conf_ctx, env, msg_id, op_ctx);
+            /*axis2_conf_ctx_register_op_ctx(conf_ctx, env, msg_id, op_ctx);*/
         }
         axis2_allocator_switch_to_local_pool(env->allocator);
     }
@@ -1133,8 +1143,10 @@ sandesha2_permanent_storage_mgr_get_dbconn(
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     /*axis2_thread_mutex_lock(storage_mgr_impl->mutex);*/
     sprintf(thread_id_key, "%lu", thread_id);
+    axis2_allocator_switch_to_global_pool(env->allocator);
     transaction = (sandesha2_transaction_t *) axis2_hash_get(
         storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
+    axis2_allocator_switch_to_local_pool(env->allocator);
     /*transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
         env);*/
     if(transaction)

@@ -236,7 +236,7 @@ int main(int argc, char** argv)
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback3, payload, 
             listener_manager);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     /* RM Version 1.1 */
     if(version == 1)
     {
