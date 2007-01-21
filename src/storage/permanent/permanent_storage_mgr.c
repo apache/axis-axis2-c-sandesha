@@ -790,10 +790,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    /*msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
+    msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
         key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
-        return msg_ctx;*/
+        return msg_ctx;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieved from database");
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         storage_mgr_impl->bean_mgr, env, key);
@@ -824,11 +824,11 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         return NULL;
     }
     AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, soap_envelope);
+    AXIS2_MSG_CTX_SET_MSG_ID(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
+        msg_store_bean, env));
     /* You cannot set the same message id to a new message context again. So generate
      * a new message id and set it
-     * AXIS2_MSG_CTX_SET_MSG_ID(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
-        msg_store_bean, env));*/
-    axis2_msg_ctx_set_msg_id(msg_ctx, env, axis2_uuid_gen(env));
+     * axis2_msg_ctx_set_msg_id(msg_ctx, env, axis2_uuid_gen(env));*/
 
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     transport_out_str = sandesha2_msg_store_bean_get_transport_out(
