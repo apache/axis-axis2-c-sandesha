@@ -10,3 +10,20 @@ SANDESHA2 INSTALL
         ./configure --prefix=<install_dir> --enable-static=no --with-axis2=<axis2_install_path>
     - Run make and make install
    
+Note: 1.
+        Sandesha2 has two main storage mechanisms call inmemory and persistent. 
+        By default sandesha2 use the sqlite as the persistent storage. You can
+        change this to inmemory by changing the entry in the sandesha2_constants.h
+        file.
+            #define SANDESHA2_DEFAULT_STORAGE_MGR "persistent"
+
+            You must have sqlite3.h in sandesha2 include directory.
+            When compiling it statically link with sqlite library. So make sure you have
+            src/core/libsqlite3.a.
+            Above configurations regarding sqlite may be refined before the release.
+        
+      2.
+       To run samples in persistent mode copy sandesha2c/config/sandesha2_schema.sh
+       to both axis2c client and server deploy directory and execute it to create the database schema.
+       
+                
