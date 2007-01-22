@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
-    address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
     /*to = "http://127.0.0.1:8080/axis2/services/RMSampleService";*/
     to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:v:")) != -1)

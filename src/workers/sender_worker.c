@@ -51,6 +51,7 @@ struct sandesha2_sender_worker_t
     axis2_thread_mutex_t *mutex;
     int counter;
     axis2_char_t *msg_id;
+    axis2_msg_ctx_t *msg_ctx;
     axis2_transport_out_desc_t *transport_out;
 };
 
@@ -122,6 +123,38 @@ sandesha2_sender_worker_create(
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
     sender_worker->msg_id = AXIS2_STRDUP(msg_id, env);
+    sender_worker->msg_ctx = NULL;
+    sender_worker->transport_out = NULL;
+    
+    sender_worker->mutex = axis2_thread_mutex_create(env->allocator,
+                        AXIS2_THREAD_MUTEX_DEFAULT);
+                        
+	return sender_worker;
+}
+
+AXIS2_EXTERN sandesha2_sender_worker_t* AXIS2_CALL
+sandesha2_sender_worker_create_with_msg_ctx(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *msg_id,
+    axis2_msg_ctx_t *msg_ctx)
+{
+    sandesha2_sender_worker_t *sender_worker = NULL;
+    AXIS2_ENV_CHECK(env, NULL);
+    
+    sender_worker =  (sandesha2_sender_worker_t *)AXIS2_MALLOC 
+        (env->allocator, sizeof(sandesha2_sender_worker_t));
+	
+    if(!sender_worker)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+	}
+    sender_worker->conf_ctx = conf_ctx;
+    sender_worker->mutex = NULL;
+    sender_worker->counter = 0;
+    sender_worker->msg_id = axis2_strdup(msg_id, env);
+    sender_worker->msg_ctx = msg_ctx;
     sender_worker->transport_out = NULL;
     
     sender_worker->mutex = axis2_thread_mutex_create(env->allocator,
@@ -227,6 +260,7 @@ sandesha2_sender_worker_worker_func(
     env = axis2_init_thread_env(args->env);
     sender_worker = args->impl;
     msg_id = sender_worker->msg_id;
+    msg_ctx = sender_worker->msg_ctx;
     transport_out = sender_worker->transport_out;
     
     AXIS2_LOG_INFO(env->log, "[Sandesha2] Entry:sandesha2_sender_worker_worker_func\n");        
@@ -234,9 +268,9 @@ sandesha2_sender_worker_worker_func(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(sender_worker->conf_ctx, env));
-    axis2_allocator_switch_to_global_pool(env->allocator);
+    /*axis2_allocator_switch_to_global_pool(env->allocator);*/
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
@@ -247,10 +281,13 @@ sandesha2_sender_worker_worker_func(
     }
 
     key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_worker_bean, env);
-    axis2_allocator_switch_to_global_pool(env->allocator);
-    msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
-                    sender_worker->conf_ctx);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    if(!msg_ctx)
+    {
+        axis2_allocator_switch_to_global_pool(env->allocator);
+        msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
+            sender_worker->conf_ctx);
+        axis2_allocator_switch_to_local_pool(env->allocator);
+    }
     if(!msg_ctx)
     {
         printf("msg_ctx is not present\n");
@@ -353,8 +390,8 @@ sandesha2_sender_worker_worker_func(
                     storage_mgr);
     }
     
-    
-    transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
+    if(!transport_out) 
+        transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
     transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
     if(transport_sender)
     {
@@ -379,9 +416,9 @@ sandesha2_sender_worker_worker_func(
         sleep(300000);*/
                     
     }
-    axis2_allocator_switch_to_global_pool(env->allocator);
+    /*axis2_allocator_switch_to_global_pool(env->allocator);*/
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE); 
     if(property)

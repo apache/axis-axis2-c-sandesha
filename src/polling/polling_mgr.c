@@ -240,13 +240,15 @@ sandesha2_polling_mgr_worker_func(
         axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
         axis2_endpoint_ref_t *to = NULL;
         axis2_property_t *property = NULL;
+        sandesha2_transaction_t *transaction = NULL;
 
-        printf("came11\n");
         AXIS2_SLEEP(SANDESHA2_POLLING_MANAGER_WAIT_TIME);
-        printf("came12\n");
+        /*axis2_allocator_switch_to_global_pool(env->allocator);*/
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
+        /*axis2_allocator_switch_to_local_pool(env->allocator);*/
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
-         /* Geting the sequences to be polled. if schedule contains any requests, 
+         /* Getting the sequences to be polled. if schedule contains any requests, 
           * do the earliest one. else pick one randomly.
           */
         if(polling_mgr->scheduled_polling_reqs)
@@ -260,7 +262,6 @@ sandesha2_polling_mgr_worker_func(
         }
         if(!seq_id)
         {
-            printf("came13\n");
             sandesha2_next_msg_bean_t *find_bean = 
                 sandesha2_next_msg_bean_create(env);
             int size = 0;
@@ -273,7 +274,6 @@ sandesha2_polling_mgr_worker_func(
                     find_bean);
                 if(results)
                     size = AXIS2_ARRAY_LIST_SIZE(results, env);
-                printf("size:%d\n", size);
                 if(size > 0)
                 {
                     unsigned int rand_var = 
@@ -288,7 +288,6 @@ sandesha2_polling_mgr_worker_func(
         }
         else
         {
-            printf("came14\n");
             sandesha2_next_msg_bean_t *find_bean = 
                 sandesha2_next_msg_bean_create(env);
             if(find_bean)
@@ -301,10 +300,11 @@ sandesha2_polling_mgr_worker_func(
             }
         }
         /* If no valid entry is found, try again later */
-        printf("came15\n");
         if(!next_msg_bean)
+        {
+            sandesha2_transaction_rollback(transaction, env);
             continue;
-        printf("came16\n");
+        }
         seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
             next_msg_bean, env);
         /* Create a MakeConnection message */
@@ -323,7 +323,7 @@ sandesha2_polling_mgr_worker_func(
             ref_rm_msg_ctx, seq_id, wsrm_anon_reply_to_uri, storage_mgr);
         if(!make_conn_rm_msg_ctx)
         {
-            printf("came12\n");
+            sandesha2_transaction_rollback(transaction, env);
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
         }
@@ -383,6 +383,10 @@ sandesha2_polling_mgr_worker_func(
         }
         sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);
+        if(transaction)
+        {
+            sandesha2_transaction_commit(transaction, env);
+        }
     }
     return NULL;
 }

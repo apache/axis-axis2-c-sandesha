@@ -534,7 +534,10 @@ sandesha2_permanent_bean_mgr_find(
     dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
+    {
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
+    }
     rc = sqlite3_exec(dbconn, sql_stmt_find, find_func, args, 
         &error_msg);
     if(rc == SQLITE_BUSY)

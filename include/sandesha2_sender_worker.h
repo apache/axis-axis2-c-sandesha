@@ -41,6 +41,13 @@ sandesha2_sender_worker_create(
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *msg_id);
+
+AXIS2_EXTERN sandesha2_sender_worker_t* AXIS2_CALL
+sandesha2_sender_worker_create_with_msg_ctx(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *msg_id,
+    axis2_msg_ctx_t *msg_ctx);
  
 /**
  * Frees the sender_worker given as a void pointer. This method would cast the 

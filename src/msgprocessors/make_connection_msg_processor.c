@@ -30,6 +30,9 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_sender_bean.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
+#include <sandesha2_seq.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -149,9 +152,10 @@ sandesha2_make_connection_msg_processor_process_in_msg (
 {
     sandesha2_make_connection_t *make_conn = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_sender_mgr_t *sender_bean_mgr = NULL;
+    sandesha2_sender_mgr_t *sender_mgr = NULL;
     sandesha2_sender_bean_t *find_sender_bean = NULL;
     sandesha2_sender_bean_t *sender_bean = NULL;
+    sandesha2_sender_bean_t *bean1 = NULL;
     sandesha2_address_t *address = NULL;
     sandesha2_identifier_t *identifier = NULL;
     sandesha2_msg_ctx_t *return_rm_msg_ctx = NULL;
@@ -166,7 +170,13 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     axis2_char_t *seq_id = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *msg_id = NULL;
+    axis2_transport_sender_t *transport_sender = NULL;
     int size = 0, item_to_pick = -1, item = 0;
+    int msg_type = -1;
+    axis2_bool_t continue_sending = AXIS2_TRUE;
+    axis2_char_t *qualified_for_sending = NULL;
+    sandesha2_property_bean_t *prop_bean = NULL;
+    axis2_array_list_t *msgs_not_to_send = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -195,7 +205,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
                         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     if(storage_mgr)
-        sender_bean_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
+        sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     /* Selecting the set of sender beans that suit the given criteria */
     find_sender_bean = sandesha2_sender_bean_create(env);
     if(find_sender_bean)
@@ -220,34 +230,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         retrans_list = axis2_array_list_create(env, 0);
         if(!retrans_list)
             return AXIS2_FAILURE;
-        /* Following code is obsolete, since in inmemory_sender_mgr_match 
-         * function we donot consider resend. Instead we can directly assign
-         * to retrans_list as follows the commented lines.
-         */
-        /*axis2_array_list_t *retrans_list1 = NULL, *retrans_list2 = NULL;
-        sandesha2_sender_bean_set_resend(find_sender_bean, env, AXIS2_TRUE);
-        retrans_list1 = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
-                env, find_sender_bean);
-        sandesha2_sender_bean_set_resend(find_sender_bean, env, AXIS2_FALSE);
-        retrans_list2 = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
-                env, find_sender_bean);
-        if(retrans_list1)
-            size = AXIS2_ARRAY_LIST_SIZE(retrans_list1, env);
-        for(i = 0; i < size; i++)
-        {
-            sandesha2_sender_bean_t *temp_bean = NULL;
-            temp_bean = AXIS2_ARRAY_LIST_GET(retrans_list1, env, i);
-            AXIS2_ARRAY_LIST_ADD(retrans_list, env, temp_bean);
-        }
-        if(retrans_list2)
-            size = AXIS2_ARRAY_LIST_SIZE(retrans_list2, env);
-        for(i = 0; i < size; i++)
-        {
-            sandesha2_sender_bean_t *temp_bean = NULL;
-            temp_bean = AXIS2_ARRAY_LIST_GET(retrans_list2, env, i);
-            AXIS2_ARRAY_LIST_ADD(retrans_list, env, temp_bean);
-        }*/
-        retrans_list = sandesha2_sender_mgr_find_by_sender_bean(sender_bean_mgr, 
+        retrans_list = sandesha2_sender_mgr_find_by_sender_bean(sender_mgr, 
                 env, find_sender_bean);
     }
     /* Selecting a bean to send randomly. TODO - Should use a better mechanism */
@@ -285,9 +268,9 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     msg_storage_key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, 
-            env);
+        env);
     return_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-            msg_storage_key, conf_ctx);
+        msg_storage_key, conf_ctx);
     return_rm_msg_ctx = sandesha2_msg_init_init_msg(env, return_msg_ctx);
     add_msg_pending_header(env, return_rm_msg_ctx, pending);
     set_transport_properties(env, return_msg_ctx, rm_msg_ctx);
@@ -306,20 +289,158 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     }
     /*
      *running the make_connection through a sender_worker.
-     *This will allow Sandesha2 to consider both of following senarios equally.
+     *This will allow Sandesha2 to consider both of following scenarios equally.
      * 1. A message being sent by the Sender thread.
      * 2. A message being sent as a reply to an make_connection.
      */
     msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
         sender_bean, env);
-    if(msg_id)
+    /*if(msg_id)
     {
         sandesha2_sender_worker_t *sender_worker = NULL;
-        /* Start a sender worker which will work on this message */
         sender_worker = sandesha2_sender_worker_create(env, conf_ctx, msg_id);
+        sender_worker = sandesha2_sender_worker_create_with_msg_ctx(env, 
+            conf_ctx, msg_id, return_msg_ctx);
         sandesha2_sender_worker_set_transport_out(sender_worker, env, transport_out); 
         sandesha2_sender_worker_run(sender_worker, env);
+    }*/
+    continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
+        sender_bean, conf_ctx, storage_mgr);
+    if(!continue_sending)
+    {
+        printf("do not continue\n");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Do not continue sending the message as response to"\
+                "MakeConnection message");
+        return AXIS2_SUCCESS;
     }
+    
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
+        SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
+    if(property)
+        qualified_for_sending = axis2_property_get_value(property, env);
+    if(qualified_for_sending && 0 != axis2_strcmp(
+        qualified_for_sending, SANDESHA2_VALUE_TRUE))
+    {
+        printf("not qualified for sending as reply ot MakeConnection\n");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Message is not qualified for sending as reply to "\
+                "MakeConnection message");
+        return AXIS2_SUCCESS;
+    }
+    
+    prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
+        axis2_msg_ctx_get_op(return_msg_ctx, env));
+    if(prop_bean)
+        msgs_not_to_send = sandesha2_property_bean_get_msg_types_to_drop(
+            prop_bean, env);
+    if(msgs_not_to_send)
+    {
+        int j = 0;
+        axis2_bool_t continue_sending = AXIS2_FALSE;
+
+        for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(msgs_not_to_send, env); j++)
+        {
+            axis2_char_t *value = NULL;
+            int int_val = -1;
+            int msg_type = -1;
+            
+            value = AXIS2_ARRAY_LIST_GET(msgs_not_to_send, env, j);
+            int_val = atoi(value);
+            msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
+            if(msg_type == int_val)
+                continue_sending = AXIS2_TRUE;
+        }
+        if(continue_sending)
+        {
+            printf("continue sending is true\n");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
+                "Sending is true. So returning from make_connection_msg_processor");
+            return AXIS2_SUCCESS;
+        }
+    }
+    msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
+    if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
+    {
+        sandesha2_seq_t *seq = NULL;
+        axis2_char_t *seq_id = NULL;
+        sandesha2_identifier_t *identifier = NULL;
+        
+        seq = (sandesha2_seq_t*) sandesha2_msg_ctx_get_msg_part(return_rm_msg_ctx, 
+            env, SANDESHA2_MSG_PART_SEQ);
+        identifier = sandesha2_seq_get_identifier(seq, env);
+        seq_id = sandesha2_identifier_get_identifier(identifier, env);
+    }
+
+    transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
+    AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, return_msg_ctx);
+    bean1 = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
+    if(bean1)
+    {
+        axis2_bool_t resend = AXIS2_FALSE;
+        
+        resend = sandesha2_sender_bean_is_resend(sender_bean, env);
+        if(resend)
+        {
+            sandesha2_sender_bean_set_sent_count(bean1, env, 
+                sandesha2_sender_bean_get_sent_count(sender_bean, env));
+            sandesha2_sender_bean_set_time_to_send(bean1, env, 
+                sandesha2_sender_bean_get_time_to_send(sender_bean, env));
+            sandesha2_sender_mgr_update(sender_mgr, env, bean1);
+        }
+        else
+        {
+            axis2_char_t *msg_stored_key = NULL;
+            
+            msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
+                bean1, env); 
+            sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
+            /* Removing the message from the storage */
+            msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
+                bean1, env);
+            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                msg_stored_key);
+        }
+    }
+    msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
+    if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
+    {
+        sandesha2_terminate_seq_t *terminate_seq = NULL;
+        axis2_char_t *seq_id = NULL;
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_char_t *int_seq_id = NULL;
+        
+        terminate_seq = (sandesha2_terminate_seq_t*)
+            sandesha2_msg_ctx_get_msg_part(return_rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ);
+        seq_id = sandesha2_identifier_get_identifier(
+            sandesha2_terminate_seq_get_identifier(terminate_seq, 
+                env), env);
+        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
+            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
+            int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
+                storage_mgr);
+    }
+    else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
+    {
+        sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
+        axis2_char_t *seq_id = NULL;
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        
+        terminate_seq_res = (sandesha2_terminate_seq_res_t*)
+            sandesha2_msg_ctx_get_msg_part(return_rm_msg_ctx, env, 
+            SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
+        seq_id = sandesha2_identifier_get_identifier(
+            sandesha2_terminate_seq_res_get_identifier(terminate_seq_res, 
+            env), env);
+        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
+            seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
+            storage_mgr);
+    }
+    axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, "[sandesha2] EXIT sandesha2_make_connection_msg_" \
             "processor_process_in_msg .........");
     return AXIS2_SUCCESS;
@@ -360,13 +481,14 @@ set_transport_properties(
     {
         property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_TRANSPORT_OUT);
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
-            AXIS2_PROPERTY_CLONE(property, env), AXIS2_FALSE);
+        axis2_property_set_own_value(property, env, AXIS2_FALSE);
+        axis2_msg_ctx_set_property(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
+            axis2_property_clone(property, env), AXIS2_FALSE);
         property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_HTTP_OUT_TRANSPORT_INFO);
-        AXIS2_MSG_CTX_SET_PROPERTY(return_msg_ctx, env, 
-            AXIS2_HTTP_OUT_TRANSPORT_INFO, AXIS2_PROPERTY_CLONE(property, env), 
+        axis2_property_set_own_value(property, env, AXIS2_FALSE);
+        axis2_msg_ctx_set_property(return_msg_ctx, env, 
+            AXIS2_HTTP_OUT_TRANSPORT_INFO, axis2_property_clone(property, env), 
             AXIS2_FALSE);
     }
 }

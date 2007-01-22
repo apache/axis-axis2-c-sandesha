@@ -29,7 +29,7 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 
-#define SANDESHA2_MAX_COUNT 10
+#define SANDESHA2_MAX_COUNT 40
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -134,7 +134,6 @@ int main(int argc, char** argv)
                 "__OPERATION_OUT_IN__");
     if(single_channel)
     {
-        printf("camex\n");
         reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
         offer = AXIS2_TRUE;
     }

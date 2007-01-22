@@ -1184,8 +1184,8 @@ sandesha2_app_msg_processor_process_response_msg(
     else
         sandesha2_msg_ctx_set_to(rm_msg_ctx, env, to_epr);
 
-    if(reply_to_epr)
-        sandesha2_msg_ctx_set_reply_to(rm_msg_ctx, env, reply_to_epr);
+    /*if(reply_to_epr)
+        sandesha2_msg_ctx_set_reply_to(rm_msg_ctx, env, reply_to_epr);*/
         
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, mgr);
     if(!rm_version)

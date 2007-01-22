@@ -49,10 +49,10 @@
 #include <axis2_http_transport.h>
 #include <axiom_soap_const.h>
 #include <axis2_transport_out_desc.h>
+#include <axis2_http_out_transport_info.h>
 #include <axiom_xml_reader.h>
 #include <axiom_stax_builder.h>
 #include <axiom_soap_builder.h>
-
 
 /** 
  * @brief Sandesha2 Permanent Storage Manager Struct Impl
@@ -790,10 +790,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
+    /*msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
         key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
-        return msg_ctx;
+        return msg_ctx;*/
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieved from database");
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         storage_mgr_impl->bean_mgr, env, key);
@@ -995,7 +995,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             sandesha2_permanent_storage_mgr_get_property_map_from_string(env, 
                 persistent_prop_str);
         axis2_hash_index_t *index = NULL;
-        /* Finding an operation using the MEP */
         for (index = axis2_hash_first(map, env); index; index = 
             axis2_hash_next(env, index))
         {
