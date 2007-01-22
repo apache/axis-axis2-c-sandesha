@@ -264,10 +264,10 @@ sandesha2_sender_worker_func(
         axis2_char_t *msg_id = NULL;
         printf("in sender\n");   
         AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
-        axis2_allocator_switch_to_global_pool(env->allocator);
+        /*axis2_allocator_switch_to_global_pool(env->allocator);*/
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
-        axis2_allocator_switch_to_local_pool(env->allocator);
+        /*axis2_allocator_switch_to_local_pool(env->allocator);*/
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
             storage_mgr, env);
