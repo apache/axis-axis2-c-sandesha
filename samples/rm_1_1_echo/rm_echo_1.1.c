@@ -74,17 +74,12 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_DEBUG);*/
-    /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_ERROR);*/
     env = axis2_env_create_all("echo_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:m:")) != -1)
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:")) != -1)
     {
 
         switch (c)
@@ -94,9 +89,6 @@ int main(int argc, char** argv)
                 break;
             case 'o': /* Sequence Offer */
                 offer = AXIS2_ATOI(optarg);
-                break;
-            case 'm': /* RM Version */
-                single_channel = AXIS2_ATOI(optarg);
                 break;
             case ':':
                 fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
@@ -109,7 +101,6 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    printf("offer:%d\n", offer);
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
@@ -132,11 +123,6 @@ int main(int argc, char** argv)
     reply_to = axis2_endpoint_ref_create(env, 
             "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
                 "__OPERATION_OUT_IN__");
-    if(single_channel)
-    {
-        reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
-        offer = AXIS2_TRUE;
-    }
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -270,9 +256,9 @@ rm_echo_callback_on_complete(
         if(!ret_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "Stub invoke FAILED: Error code:%d :: %s", 
-                    env->error->error_number, 
-                    AXIS2_ERROR_GET_MESSAGE(env->error));
+                "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, 
+                AXIS2_ERROR_GET_MESSAGE(env->error));
             printf("echo stub invoke FAILED!\n");
             status = AXIS2_FAILURE;
         }
@@ -294,10 +280,10 @@ rm_echo_callback_on_error(
     const axis2_env_t *env,
     int exception)
 {
-   /** take necessary action on error */
-   printf("\nEcho client invoke FAILED. Error code:%d ::%s", exception, 
-         AXIS2_ERROR_GET_MESSAGE(env->error));
-   return AXIS2_SUCCESS;
+    /** take necessary action on error */
+    printf("\nEcho client invoke FAILED. Error code:%d ::%s", exception, 
+        AXIS2_ERROR_GET_MESSAGE(env->error));
+    return AXIS2_SUCCESS;
 }
 
 void wait_on_callback(
@@ -324,10 +310,7 @@ usage(
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " [-o OFFER]");
-    fprintf(stdout, " [-m SINGLE CHANNEL]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-m SINGLE CHANNEL \t single channel.. Type 0 for not to use single channel. The" \
-        " default behaviour is single channel(1) \n");
     fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
         "feature. The default behaviour is no offer(0). \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
