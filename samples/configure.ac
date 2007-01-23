@@ -122,7 +122,8 @@ AC_CONFIG_FILES([Makefile \
     rm_echo/Makefile \
     rm_echo_1_1/Makefile \
     rm_echo_single/Makefile \
-    rm_ping/Makefile \
+    rm_ping_1_0/Makefile \
+    rm_ping_1_1/Makefile \
     rm_mtom/Makefile \
     resources/Makefile
     ])

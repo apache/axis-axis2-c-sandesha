@@ -1,10 +1,10 @@
 prgbindir=$(prefix)/bin/samples
-prgbin_PROGRAMS = rm_ping
-samplesdir=$(prefix)/samples/client/rm_ping
-samples_DATA=rm_ping_client.c Makefile.am Makefile.in
-rm_ping_SOURCES = rm_ping_client.c
+prgbin_PROGRAMS = rm_ping_1_1
+samplesdir=$(prefix)/samples/client/rm_ping_1_1
+samples_DATA=rm_ping_1_1.c Makefile.am Makefile.in
+rm_ping_1_1_SOURCES = rm_ping_1_1.c
 
-rm_ping_LDADD   =  \
+rm_ping_1_1_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
 					-laxis2_util \
                     -laxis2_axiom \
