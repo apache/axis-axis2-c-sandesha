@@ -188,7 +188,7 @@ int main(int argc, char** argv)
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
 
-    /*payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);*/
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
     sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
         "sequence1");
