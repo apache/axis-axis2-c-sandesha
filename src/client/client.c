@@ -262,10 +262,8 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     }
     if(!within_transaction)
     {
-        axis2_allocator_switch_to_global_pool(env->allocator);
         report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
             env);
-        axis2_allocator_switch_to_local_pool(env->allocator);
     }
     SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
@@ -421,9 +419,7 @@ sandesha2_client_get_report(
     }
     if(AXIS2_TRUE != within_transaction)
     {
-        axis2_allocator_switch_to_global_pool(env->allocator);
         report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        axis2_allocator_switch_to_local_pool(env->allocator);
     }
     if(internal_seq_find_bean) 
         sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
@@ -1595,10 +1591,8 @@ sandesha2_client_get_incoming_seq_report(
     }
     if(!within_transaction)
     {
-        axis2_allocator_switch_to_global_pool(env->allocator);
         report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
             env);
-        axis2_allocator_switch_to_local_pool(env->allocator);
     }
     seq_report = sandesha2_seq_report_create(env);
     completed_msg_list = sandesha2_ack_mgr_get_svr_completed_msgs_list(env, 
@@ -1697,10 +1691,8 @@ sandesha2_client_configure_terminate_seq(
         {
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                 storage_mgr, env);
-            axis2_allocator_switch_to_global_pool(env->allocator);
             transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
                 env);
-            axis2_allocator_switch_to_local_pool(env->allocator);
         }
         if(seq_prop_mgr)
             seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 

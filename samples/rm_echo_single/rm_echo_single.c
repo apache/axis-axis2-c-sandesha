@@ -66,6 +66,7 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    int c;
    
     /* Set up the environment */
     /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
@@ -78,6 +79,25 @@ int main(int argc, char** argv)
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    {
+
+        switch (c)
+        {
+            case 'a':
+                address = optarg;
+                break;
+            case ':':
+                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
+                usage(argv[0]);
+                return -1;
+            case '?':
+                if (isprint(optopt))
+                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
+                usage(argv[0]);
+                return -1;
+        }
+    }
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
@@ -278,13 +298,7 @@ usage(
 {
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " [-o OFFER]");
-    fprintf(stdout, " [-m SINGLE CHANNEL]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-m SINGLE CHANNEL \t single channel.. Type 0 for not to use single channel. The" \
-        " default behaviour is single channel(1) \n");
-    fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
-        "feature. The default behaviour is no offer(0). \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
         " default is http://127.0.0.1:5555/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");

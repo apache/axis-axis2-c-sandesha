@@ -47,7 +47,6 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     axis2_property_t *property = NULL;
     int count = 0;
-    int version = 1;
     int c;
    
     /* Set up the environment */
@@ -59,16 +58,13 @@ int main(int argc, char** argv)
     /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
     /*to = "http://127.0.0.1:8080/axis2/services/RMSampleService";*/
     to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:v:")) != -1)
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
         switch (c)
         {
             case 'a':
                 address = optarg;
-                break;
-            case 'v': /* RM Version */
-                version = AXIS2_ATOI(optarg);
                 break;
             case ':':
                 fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
@@ -131,16 +127,13 @@ int main(int argc, char** argv)
     
     /* Build the SOAP request message payload using OM API.*/
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
-    /* RM Version 1.1 */
-    if(version == 1)
+    /* RM Version 1.0 */
+    property = axis2_property_create_with_args(env, 0, 0, 0, 
+        SANDESHA2_SPEC_VERSION_1_0);
+    if(property)
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, 
-            SANDESHA2_SPEC_VERSION_1_1);
-        if(property)
-        {
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
-                SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-        }
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     /* Send request */
     payload = build_om_programatically(env, "ping1");
@@ -163,13 +156,10 @@ int main(int argc, char** argv)
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     
-    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
-        "sequence1");
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
-    /*AXIS2_SLEEP(MAX_COUNT);*/
-    AXIS2_SLEEP(120);
+    AXIS2_SLEEP(MAX_COUNT);
    
     if (svc_client)
     {
@@ -209,10 +199,7 @@ usage(
 {
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " [-v RM VERSION]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-v RM VERSION \t rm version.. Type 0 for version 1.0, " \
-        "1 for version 1.1. The default rm version is 1.1 \n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
             " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
