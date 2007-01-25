@@ -70,12 +70,8 @@
    <!-- General Properties -->
     <parameter name="" locked="false"></parameter>
    <!-- Database connection parameters -->
-    <parameter name="sandesha2.db.conn.id" locked="false">jdbc:derby:SANDESHA2DB;create=true</parameter>
-    <parameter name="sandesha2.db.driver" locked="false">org.apache.derby.jdbc.EmbeddedDriver</parameter>
-    <parameter name="sandesha2.db.sql.dialect" locked="false">org.hibernate.dialect.DerbyDialect</parameter>
-    <parameter name="sandesha2.db.username" locked="false"></parameter>
-    <parameter name="sandesha2.db.password" locked="false"></parameter>  
-    <parameter name="sandesha2.db.create.mode" locked="false">update</parameter> 
+    <parameter name="sandesah2_svr_db" locked="false">/axis2c/deploy/sandesha2_svr_db</parameter>
+    <parameter name="sandesha2_client_db" locked="false">/axis2c/deploy/sandesha2_client_db</parameter>
 
 
 </module>
