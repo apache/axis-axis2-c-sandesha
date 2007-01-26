@@ -46,6 +46,9 @@
 #include <axis2_transport_out_desc.h>
 #include <axis2_http_transport.h>
 #include <axis2_rand.h>
+#include <sandesha2_msg_retrans_adjuster.h>
+#include <sandesha2_terminate_mgr.h>
+
 
 /** 
  * @brief Make Connection Message Processor struct impl

@@ -368,7 +368,7 @@ sandesha2_permanent_storage_mgr_get_transaction(
         }
 
     }
-    thread_id_key = AXIS2_MALLOC(env->allocator, 128);
+    thread_id_key = AXIS2_MALLOC(env->allocator, sizeof(char)*128);
     sprintf(thread_id_key, "%lu", thread_id); 
     transaction = (sandesha2_transaction_t *) axis2_hash_get(
         storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
@@ -940,9 +940,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
     if(op)
     {
+		axis2_op_ctx_t *op_ctx = NULL;
         axis2_svc_ctx_t *svc_ctx = AXIS2_MSG_CTX_GET_SVC_CTX(msg_ctx, env);
         axis2_allocator_switch_to_global_pool(env->allocator);
-        axis2_op_ctx_t *op_ctx = axis2_op_ctx_create(env, op, svc_ctx);
+		op_ctx = axis2_op_ctx_create(env, op, svc_ctx);
         if(op_ctx)
         {
             axis2_char_t *msg_id = NULL;

@@ -17,16 +17,19 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(AXIS2C_HOME)\modules\sandesha2"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="copy .\..\..\..\config\axis2.xml  $(AXIS2C_HOME)"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				CommandLine="copy .\..\..\..\config\sandesha2_schema.bat $(AXIS2C_HOME)"
+				Outputs="$(AXIS2C_HOME)"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -58,14 +61,18 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axis2_util.lib axiom.lib axis2_engine.lib sqlite.lib"
+				LinkLibraryDependencies="false"
+				UseLibraryDependencyInputs="true"
+				AdditionalDependencies="axis2_util.lib axiom.lib axis2_engine.lib axis2_parser.lib sqlite.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="E:\sqlitedll"
-				ModuleDefinitionFile="sqlite3.def"
+				AdditionalLibraryDirectories=""
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
+				MapExports="false"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -74,6 +81,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				UseFAT32Workaround="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -92,6 +100,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy .\..\..\..\config\module.xml $(AXIS2C_HOME)\modules\sandesha2"
 			/>
 		</Configuration>
 		<Configuration
@@ -613,6 +622,10 @@
 					Name="client"
 					>
 					<File
+						RelativePath="..\..\..\src\client\client.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\client\report.c"
 						>
 					</File>
@@ -632,6 +645,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource1.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\include\sandesha2_accept.h"
 				>

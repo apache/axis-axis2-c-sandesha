@@ -37,7 +37,7 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nolog
 #linker options 
 LD = link.exe
 LDFLAGS = /nologo /LIBPATH:$(AXIS2_INSTALL_DIR)\lib /LIBPATH:$(SQLITE_SRC_DIR) /LIBPATH:$(SANDESHADISTDIR)\sandesha2
-LIBS = axis2_util.lib axiom.lib axis2_parser.lib axis2_engine.lib sqlite.lib axis2_http_receiver.lib axis2_http_sender.lib
+LIBS = axis2_util.lib axiom.lib axis2_parser.lib axis2_engine.lib sqlite3.lib axis2_http_receiver.lib axis2_http_sender.lib
 
 #debug symbols
 !if "$(DEBUG)" == "1"
@@ -74,11 +74,11 @@ copy_include:
 sandesha2:
 	$(CC) $(CFLAGS) $(SANDESHA2_CODE) /c
 	$(LD) $(LDFLAGS) $(LIBS) *.obj /DLL /OUT:$(SANDESHA_DLL).dll /IMPLIB:$(SANDESHA_DLL).lib
-	copy $(SANDESHA_DLL).dll $(SANDESHADISTDIR)\sandesha2
-	copy $(SANDESHA_DLL).lib $(SANDESHADISTDIR)\sandesha2
-	copy *.pdb $(SANDESHADISTDIR)\sandesha2
 
 	del *.obj
+	
+	copy $(SANDESHA_DLL).* $(SANDESHADISTDIR)\sandesha2
+
 	del *.dll
 	del *.exp
 	del *.lib
