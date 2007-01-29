@@ -13,6 +13,5 @@ libsandesha2_permanent_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
-			-I$(top_builddir)/include/sandesha2 \
 			@AXIS2INC@
 
