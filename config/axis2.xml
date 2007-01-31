@@ -6,29 +6,19 @@
     <parameter name="hotupdate" locked="false">false</parameter>
     <!--parameter name="enableMTOM" locked="false">true</parameter-->
     <!-- Uncomment this to enable REST support -->
-    <!--    <parameter name="enableREST" locked="false">true</parameter>-->
+    <parameter name="enableREST" locked="false">true</parameter>
 
 
     <parameter name="userName" locked="false">admin</parameter>
     <parameter name="password" locked="false">axis2</parameter>
 
     <parameter name="seralizeLocation" locked="false">.</parameter>
-    <hostConfiguration>
-        <ip>127.0.0.1</ip>
-        <port>5555</port>
-    </hostConfiguration>
-
 
     <!--if you want to extract the service archive file and work with that please uncomment this-->
     <!--else , it wont extract archive file or does not take into consideration if someone drop-->
     <!--exploded directory into /service directory-->
     <!--<parameter name="extractServiceArchive" locked="false">true</parameter>-->
 
-
-    <!--    The way of adding listener to the system-->
-    <!--    <listener class="org.apache.axis2.ObserverIMPL">-->
-    <!--        <parameter name="RSS_URL" locked="false">http://127.0.0.1/rss</parameter>-->
-    <!--    </listener>-->
 
     <!-- ================================================= -->
     <!-- Message Receivers -->
@@ -40,7 +30,7 @@
     <!-- Transport Ins -->
     <!-- ================================================= -->
     <transportReceiver name="http" class="axis2_http_receiver">
-        <parameter name="port" locked="false">6666</parameter>
+        <parameter name="port" locked="false">6060</parameter>
     </transportReceiver>
 
     <!-- Uncomment this one with the appropriate papameters to enable the SMTP transport Receiver
@@ -54,7 +44,7 @@
     
     <!--
     <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPServer">
-        <parameter name="port" locked="false">6666</parameter>
+        <parameter name="port" locked="false">6060</parameter>
     </transportReceiver>
     -->
     <!-- ================================================= -->
@@ -90,6 +80,7 @@
     <!-- Comment this to disable Addressing -->
     <module ref="addressing"/>
 
+
     <!--Configuring module , providing paramters for modules whether they refer or not-->
     <!--<moduleConfig name="addressing">-->
     <!--<parameter name="addressingPara" locked="false">N/A</parameter>-->
@@ -99,66 +90,34 @@
     <!-- Phases  -->
     <!-- ================================================= -->
     <phaseOrder type="inflow">
-        <!--  System pre defined phases       -->
-        <phase name="TransportIn"/>
+        <!-- System pre defined phases       -->
+        <phase name="Transport"/>
         <phase name="PreDispatch"/>
-        <phase name="Dispatch">
-            <handler name="AddressingBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="RequestURIBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="SOAPActionBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-        </phase>
-        <phase name="PostDispatch">
-             <handler name="DispatchPostConditionsEvaluator"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-            <handler name="InstanceDispatcher"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-            <handler name="SOAPProcessingModelChecker"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-        </phase>
-        <!--  System pre defined phases       -->
-        <!--   After Postdispatch phase module author or or service author can add any phase he want      -->
+        <phase name="Dispatch"/>
+        <phase name="PostDispatch"/>
+        <!-- System pre defined phases       -->
+        <!-- After PostDispatch phase, module or service author can add any phase as required  -->
         <!--phase name="userphase1"/-->
         <phase name="RMPhase"/>
     </phaseOrder>
     <phaseOrder type="outflow">
-        <!--      user can add his own phases to this area  -->
+        <!-- User defined phases could be added here -->
 	    <phase name="RMPhase"/>
+	    <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
         <!--system predefined phase-->
-        <!--these phase will run irrespective of the service-->
-        <!--phase name="PolicyDetermination"/-->
-        <!--phase name="MessageOut"/-->
+        <phase name="MessageOut"/>
     </phaseOrder>
     <phaseOrder type="INfaultflow">
-        <!--      user can add his own phases to this area  -->
+        <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
-	    <phase name="RMPhase"/>
+	    <!--phase name="RMPhase"/-->
     </phaseOrder>
     <phaseOrder type="Outfaultflow">
-        <!--      user can add his own phases to this area  -->
-        <phase name="RMPhase"/>
-        <phase name="MessageOut"/>
+        <!-- User defined phases could be added here -->
+        <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
-        <!--phase name="PolicyDetermination"/-->
+        <phase name="MessageOut"/>
     </phaseOrder>
 </axisconfig>
 
