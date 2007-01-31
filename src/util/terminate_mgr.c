@@ -606,6 +606,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_msg_ctx_t *msg_ctx1 = NULL;
     axis2_engine_t *engine = NULL;
+    axis2_char_t *temp_action = NULL;
+    axis2_string_t *soap_action = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -655,9 +657,10 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_msg_ctx_set_wsa_action(terminate_rm_msg, env, 
                         sandesha2_spec_specific_consts_get_terminate_seq_action(
                         env, rm_ver));
-    sandesha2_msg_ctx_set_soap_action(terminate_rm_msg, env,
-                        sandesha2_spec_specific_consts_get_terminate_seq_soap_action
-                        (env, rm_ver));
+    temp_action = sandesha2_spec_specific_consts_get_terminate_seq_soap_action
+        (env, rm_ver);
+    soap_action = axis2_string_create(env, temp_action);
+    sandesha2_msg_ctx_set_soap_action(terminate_rm_msg, env, soap_action);
     transport_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         int_seq_id, SANDESHA2_SEQ_PROP_TRANSPORT_TO);
     if(transport_to_bean)

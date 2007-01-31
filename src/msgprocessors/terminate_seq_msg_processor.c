@@ -499,6 +499,8 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     axis2_transport_out_desc_t *sandesha2_out_desc = NULL;
     axis2_engine_t *engine = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
+    axis2_char_t *temp_action = NULL;
+    axis2_string_t *soap_action = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -571,9 +573,10 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, 
                         sandesha2_spec_specific_consts_get_terminate_seq_action(
                         env, rm_version));
-    AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx, env,
-                        sandesha2_spec_specific_consts_get_terminate_seq_soap_action
-                        (env, rm_version));
+    temp_action = sandesha2_spec_specific_consts_get_terminate_seq_soap_action
+        (env, rm_version);
+    soap_action = axis2_string_create(env, temp_action);
+    axis2_msg_ctx_set_soap_action(msg_ctx, env, soap_action);
     transport_to = sandesha2_utils_get_seq_property(env, int_seq_id, 
                         SANDESHA2_SEQ_PROP_TRANSPORT_TO, storage_mgr);
 

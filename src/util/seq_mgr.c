@@ -324,7 +324,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     axis2_ctx_t *ctx = NULL;
     /*axis2_options_t *options = NULL;*/
-    axis2_char_t *transport_in_protocol = NULL;
+    AXIS2_TRANSPORT_ENUMS transport_in_protocol = -1;
     axis2_listener_manager_t *listener_manager = NULL;
     sandesha2_seq_property_bean_t *msgs_bean = NULL;
     axis2_char_t *transport_to = NULL;
@@ -447,8 +447,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
          */
         /*options = AXIS2_CTX_GET_OPTIONS(ctx, env);
         transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(options, env);*/
-        if (!transport_in_protocol)
-            transport_in_protocol = AXIS2_TRANSPORT_HTTP;
+        transport_in_protocol = AXIS2_TRANSPORT_ENUM_HTTP;
             
         AXIS2_LISTNER_MANAGER_MAKE_SURE_STARTED(listener_manager, env, 
                         transport_in_protocol, conf_ctx);

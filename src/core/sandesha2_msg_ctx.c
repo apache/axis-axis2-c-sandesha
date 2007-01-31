@@ -407,7 +407,8 @@ sandesha2_msg_ctx_set_property(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_soap_action(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_char_t *soap_action)
+    const axis2_env_t *env, 
+    axis2_string_t *soap_action)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_action, AXIS2_FAILURE);
@@ -415,8 +416,8 @@ sandesha2_msg_ctx_set_soap_action(
     if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
     
-    return AXIS2_MSG_CTX_SET_SOAP_ACTION(rm_msg_ctx->msg_ctx, env, 
-                        soap_action);
+    return axis2_msg_ctx_set_soap_action(rm_msg_ctx->msg_ctx, env, 
+        soap_action);
 }
     
 axis2_status_t AXIS2_CALL

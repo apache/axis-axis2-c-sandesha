@@ -33,8 +33,8 @@
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
 
-static const axis2_qname_t *AXIS2_CALL
-sandesha2_in_handler_get_qname(
+static const axis2_string_t *AXIS2_CALL
+sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
     const axis2_env_t *env);
 
@@ -67,7 +67,7 @@ sandesha2_in_handler_create(
     if (handler->ops) 
         handler->ops->invoke = sandesha2_in_handler_invoke;
     if (handler->ops) 
-        handler->ops->get_qname = sandesha2_in_handler_get_qname;
+        handler->ops->get_name = sandesha2_in_handler_get_name;
 
     return handler;
 }
@@ -246,12 +246,11 @@ sandesha2_in_handler_invoke(
     return AXIS2_SUCCESS;
 }
 
-static const axis2_qname_t *AXIS2_CALL
-sandesha2_in_handler_get_qname(
+static const axis2_string_t *AXIS2_CALL
+sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
     const axis2_env_t *env)
 {
-    return (axis2_qname_t *) axis2_qname_create(env, SANDESHA2_IN_HANDLER_NAME, 
-            NULL, NULL);
+    return axis2_string_create(env, SANDESHA2_IN_HANDLER_NAME);
 }
 

@@ -878,11 +878,14 @@ sandesha2_app_msg_processor_process_out_msg(
                         "/", op_name, NULL));*/
     if(!AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env))
         AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, to_addr);
-    /*if(!AXIS2_MSG_CTX_GET_SOAP_ACTION(msg_ctx, env))
-        AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx, env, axis2_strcat(env, "\"",
+    /*if(!axis2_msg_ctx_get_soap_action(msg_ctx, env))
+        axis2_msg_ctx_set_soap_action(msg_ctx, env, axis2_strcat(env, "\"",
                         to_addr, "/", op_name, "\"", NULL));*/
-    if(!AXIS2_MSG_CTX_GET_SOAP_ACTION(msg_ctx, env))
-        AXIS2_MSG_CTX_SET_SOAP_ACTION(msg_ctx, env, to_addr);
+    if(!axis2_msg_ctx_get_soap_action(msg_ctx, env))
+    {
+        axis2_string_t *soap_action = axis2_string_create(env, to_addr);
+        axis2_msg_ctx_set_soap_action(msg_ctx, env, soap_action);
+    }
     /* end test code */
     
     if(!dummy_msg)

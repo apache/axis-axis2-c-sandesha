@@ -193,7 +193,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_soap_action(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_env_t *env, 
-    axis2_char_t *soap_action);
+    axis2_string_t *soap_action);
     
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_paused(

@@ -43,6 +43,7 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_uuid_gen.h>
 #include <axis2_conf_ctx.h>
+#include <axis2_const.h>
 #include <axis2_svc_ctx.h>
 #include <axis2_options.h>
 #include <axis2_addr.h>
@@ -659,10 +660,9 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
     if(transport_out_desc)
     {
-        axis2_qname_t *qname = (axis2_qname_t *) AXIS2_TRANSPORT_OUT_DESC_GET_QNAME(
+        AXIS2_TRANSPORT_ENUMS transport_out = AXIS2_TRANSPORT_OUT_DESC_GET_ENUM(
             transport_out_desc, env);
-        axis2_char_t *str_qname = axis2_qname_to_string(qname, env);
-        sandesha2_msg_store_bean_set_transport_out(bean, env, str_qname);
+        sandesha2_msg_store_bean_set_transport_out(bean, env, transport_out);
     }
     if(svc_grp)
     {
@@ -768,7 +768,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_conf_t *conf = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
     axis2_svc_t *svc = NULL;
-    axis2_char_t *transport_out_str = NULL;
+    AXIS2_TRANSPORT_ENUMS transport_out = -1;
     axis2_char_t *soap_env_str = NULL;
     axis2_char_t *svc_grp_name_str = NULL;
     axis2_char_t *svc_name_str = NULL;
@@ -778,6 +778,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_char_t *reply_to_str = NULL;
     axis2_char_t *transport_to_str = NULL;
     axis2_char_t *persistent_prop_str = NULL;
+    axis2_transport_out_desc_t *transport_out_desc = NULL;
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_op_t *op = NULL;
     axis2_property_t *property = NULL;
@@ -831,16 +832,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
      * axis2_msg_ctx_set_msg_id(msg_ctx, env, axis2_uuid_gen(env));*/
 
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
-    transport_out_str = sandesha2_msg_store_bean_get_transport_out(
-        msg_store_bean, env);
-    if (transport_out_str != NULL) 
-    {
-        axis2_transport_out_desc_t *transport_out = NULL;
-        axis2_qname_t *transport_out_qname = axis2_qname_create_from_string(env, 
-            transport_out_str); 
-        transport_out = AXIS2_CONF_GET_TRANSPORT_OUT(conf, env, transport_out_qname);
-        AXIS2_MSG_CTX_SET_TRANSPORT_OUT_DESC(msg_ctx, env, transport_out);
-    }
+    transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, 
+        env);
+    transport_out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(conf, env, transport_out);
+    AXIS2_MSG_CTX_SET_TRANSPORT_OUT_DESC(msg_ctx, env, transport_out_desc);
     svc_grp_name_str = sandesha2_msg_store_bean_get_svc_grp(msg_store_bean, env);
     if(svc_grp_name_str)
     {

@@ -32,8 +32,8 @@
 #include <sandesha2_app_msg_processor.h>
 #include <sandesha2_client_constants.h>
 
-axis2_qname_t *AXIS2_CALL
-sandesha2_out_handler_get_qname(
+axis2_string_t *AXIS2_CALL
+sandesha2_out_handler_get_name(
     struct axis2_handler *handler, 
     const axis2_env_t *env);
 
@@ -241,12 +241,11 @@ sandesha2_out_handler_invoke(
     return AXIS2_SUCCESS;
 }
 
-axis2_qname_t *AXIS2_CALL
-sandesha2_out_handler_get_qname(
+axis2_string_t *AXIS2_CALL
+sandesha2_out_handler_get_name(
     struct axis2_handler *handler, 
     const axis2_env_t *env)
 {
-    return (axis2_qname_t *) axis2_qname_create(env, SANDESHA2_OUT_HANDLER_NAME, 
-            NULL, NULL);
+    return axis2_string_create(env, SANDESHA2_OUT_HANDLER_NAME);
 }
 

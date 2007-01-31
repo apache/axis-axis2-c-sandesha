@@ -18,6 +18,7 @@
 #define SANDESHA2_MSG_STORE_BEAN_H
 
 #include <axis2_utils_defines.h>
+#include <axis2_const.h>
 #include <axis2_env.h>
 
 #ifdef __cplusplus
@@ -83,7 +84,7 @@ sandesha2_msg_store_bean_set_soap_version(
     const axis2_env_t *env,
     int soap_version);
 
-axis2_char_t *AXIS2_CALL 
+AXIS2_TRANSPORT_ENUMS AXIS2_CALL 
 sandesha2_msg_store_bean_get_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
     const axis2_env_t *env);
@@ -92,7 +93,7 @@ void AXIS2_CALL
 sandesha2_msg_store_bean_set_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
     const axis2_env_t *env,
-    axis2_char_t * transport_sender);
+    AXIS2_TRANSPORT_ENUMS transport_sender);
 
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_op( 

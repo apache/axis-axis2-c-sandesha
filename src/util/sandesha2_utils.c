@@ -452,13 +452,11 @@ sandesha2_utils_get_transport_out(const axis2_env_t *env)
 {
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
-    axis2_qname_t *qname = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     
     transport_sender = sandesha2_transport_sender_create(env);
-    qname = axis2_qname_create(env, "Sandesha2TransportOutDesc", NULL, NULL);
-    out_desc = axis2_transport_out_desc_create_with_qname(env, qname);
+    out_desc = axis2_transport_out_desc_create(env, AXIS2_TRANSPORT_ENUM_HTTP);
     AXIS2_TRANSPORT_OUT_DESC_SET_SENDER(out_desc, env, transport_sender);
     return out_desc;
 }

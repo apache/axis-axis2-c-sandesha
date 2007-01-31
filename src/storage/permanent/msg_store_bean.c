@@ -17,6 +17,7 @@
 #include <sandesha2_msg_store_bean.h>
 #include <axis2_string.h>
 #include <axis2_utils.h>
+#include <axis2_const.h>
 
 /**
  * Defines a set of properties which extracted from a Message Context
@@ -34,7 +35,7 @@ struct sandesha2_msg_store_bean_t
 	
 	int soap_version;
 
-	axis2_char_t * transport_out;
+	AXIS2_TRANSPORT_ENUMS transport_out;
 	
     axis2_char_t * op;
 	
@@ -83,7 +84,7 @@ sandesha2_msg_store_bean_create(const axis2_env_t *env)
     msg_store_bean->msg_id = NULL;
     msg_store_bean->soap_env_str = NULL;
 	msg_store_bean->soap_version = -1;
-	msg_store_bean->transport_out = NULL;
+	msg_store_bean->transport_out = -1;
     msg_store_bean->op = NULL;
     msg_store_bean->svc = NULL;
 	msg_store_bean->svc_grp = NULL;
@@ -182,7 +183,7 @@ sandesha2_msg_store_bean_set_soap_version(
     msg_store_bean->soap_version = soap_version;
 }
 
-axis2_char_t *AXIS2_CALL 
+AXIS2_TRANSPORT_ENUMS AXIS2_CALL 
 sandesha2_msg_store_bean_get_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
     const axis2_env_t *env)
@@ -194,9 +195,9 @@ void AXIS2_CALL
 sandesha2_msg_store_bean_set_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
     const axis2_env_t *env,
-    axis2_char_t * transport_sender) 
+    AXIS2_TRANSPORT_ENUMS transport_sender) 
 {
-    msg_store_bean->transport_out = AXIS2_STRDUP(transport_sender, env);
+    msg_store_bean->transport_out = transport_sender;
 }
 
 axis2_char_t *AXIS2_CALL 

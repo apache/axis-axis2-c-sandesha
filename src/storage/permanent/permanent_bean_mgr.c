@@ -85,7 +85,7 @@ sandesha2_msg_store_bean_retrieve_callback(
                 sandesha2_msg_store_bean_set_soap_version(bean, env, AXIS2_ATOI(argv[i]));
         if(0 == AXIS2_STRCMP(col_name[i], "transport_out"))
             if(argv[i])
-                sandesha2_msg_store_bean_set_transport_out(bean, env, argv[i]);
+                sandesha2_msg_store_bean_set_transport_out(bean, env, AXIS2_ATOI(argv[i]));
         if(0 == AXIS2_STRCMP(col_name[i], "op"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_op(bean, env, argv[i]);
@@ -735,7 +735,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 	axis2_char_t *svc_grp = NULL;
 	axis2_char_t *svc = NULL;
 	axis2_char_t *op  = NULL;
-	axis2_char_t *transport_out = NULL;
+	AXIS2_TRANSPORT_ENUMS transport_out = -1;
 	axis2_char_t *op_mep = NULL;
 	axis2_char_t *to_url = NULL;
 	axis2_char_t *reply_to = NULL;
@@ -773,7 +773,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
     sql_size = AXIS2_STRLEN(msg_id) + AXIS2_STRLEN(stored_key) + 
-        AXIS2_STRLEN(soap_env_str) + sizeof(int) + AXIS2_STRLEN(transport_out) + 
+        AXIS2_STRLEN(soap_env_str) + sizeof(int) + sizeof(int) + 
         AXIS2_STRLEN(op) + AXIS2_STRLEN(svc) + AXIS2_STRLEN(svc_grp) + 
         AXIS2_STRLEN(op_mep) + AXIS2_STRLEN(to_url) + AXIS2_STRLEN(reply_to) +
         AXIS2_STRLEN(transport_to) + AXIS2_STRLEN(execution_chain_str) + sizeof(int) + 
@@ -818,7 +818,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     {
         sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
         sprintf(sql_stmt_update, "update msg set msg_id='%s',"\
-            "soap_env_str='%s', soap_version=%d, transport_out='%s', op='%s',"\
+            "soap_env_str='%s', soap_version=%d, transport_out='%d', op='%s',"\
             "svc='%s', svc_grp='%s', op_mep='%s', to_url='%s',"\
             "transport_to='%s', reply_to='%s', execution_chain_str='%s',"\
             "flow=%d, msg_recv_str='%s', svr_side='%d', in_msg_store_key='%s',"\
@@ -852,7 +852,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         "soap_env_str, soap_version, transport_out, op, svc, svc_grp, op_mep,"\
         "to_url, reply_to,transport_to, execution_chain_str, flow,"\
         "msg_recv_str, svr_side, in_msg_store_key, prop_str, action) "\
-        "values('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s',"\
+        "values('%s', '%s', '%s', %d, '%d', '%s', '%s', '%s', '%s', '%s',"\
         "'%s', '%s', '%s', %d, '%s', %d, '%s', '%s', '%s')", stored_key, msg_id, 
         soap_env_str, soap_version, transport_out, op, svc, svc_grp, op_mep, 
         to_url, reply_to, transport_to, execution_chain_str, flow, msg_recv_str, 

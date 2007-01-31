@@ -402,6 +402,7 @@ sandesha2_fault_mgr_get_fault(
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *acks_to_str = NULL;
     axis2_char_t *anon_uri = NULL;
+    axis2_string_t *grp_ctx_id = NULL;
     int soap_ver = -1;
     sandesha2_msg_ctx_t *fault_rm_msg = NULL;
     
@@ -424,8 +425,9 @@ sandesha2_fault_mgr_get_fault(
                         AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env));
     AXIS2_MSG_CTX_SET_SVC_CTX(fault_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(
                         ref_msg, env));
-    AXIS2_MSG_CTX_SET_SVC_GRP_CTX_ID(fault_msg_ctx, env, 
-                        AXIS2_MSG_CTX_GET_SVC_GRP_CTX_ID(ref_msg, env));
+    grp_ctx_id = (axis2_string_t *) axis2_msg_ctx_get_svc_grp_ctx_id(ref_msg, 
+        env);
+    axis2_msg_ctx_set_svc_grp_ctx_id(fault_msg_ctx, env, grp_ctx_id);
     AXIS2_MSG_CTX_SET_SVC_CTX_ID(fault_msg_ctx, env, 
                         AXIS2_MSG_CTX_GET_SVC_CTX_ID(ref_msg, env));
     op = axis2_op_create(env);
