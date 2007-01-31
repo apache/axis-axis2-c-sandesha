@@ -89,12 +89,21 @@ copy_xml:
 
 ### sample clients
 
-rm_ping_client:
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping\*.c /c
-	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_ping.exe 
-	if not exist $(SANDESHADISRDIR)\samples\rm_ping mkdir $(SANDESHADISTDIR)\samples\rm_ping
-	copy rm_ping.exe $(SANDESHADISTDIR)\samples\bin
-	copy $(SANDESHASRC)\samples\rm_ping\*.c $(SANDESHADISTDIR)\samples\rm_ping
+rm_ping_client_1_0:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_0\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_ping_1_0.exe 
+	if not exist $(SANDESHADISRDIR)\samples\rm_ping mkdir $(SANDESHADISTDIR)\samples\rm_ping_1_0
+	copy rm_ping_1_0.exe $(SANDESHADISTDIR)\samples\bin
+	copy $(SANDESHASRC)\samples\rm_ping_1_0\*.c $(SANDESHADISTDIR)\samples\rm_ping_1_0
+	del *.exe
+	del *.obj
+
+rm_ping_client_1_1:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_1\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_ping_1_1.exe 
+	if not exist $(SANDESHADISRDIR)\samples\rm_ping mkdir $(SANDESHADISTDIR)\samples\rm_ping_1_1
+	copy rm_ping_1_1.exe $(SANDESHADISTDIR)\samples\bin
+	copy $(SANDESHASRC)\samples\rm_ping_1_1\*.c $(SANDESHADISTDIR)\samples\rm_ping_1_1
 	del *.exe
 	del *.obj
 
@@ -122,19 +131,19 @@ rm_mtom_client:
 	del *.exe
 	del *.obj
 
-rm_1_1_echo_client:
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_1_1_echo\*.c /c
-	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_1_1_echo.exe 
-	if not exist $(SANDESHADISTDIR)\samples\rm_1_1_echo mkdir $(SANDESHADISTDIR)\samples\rm_1_1_echo
-	copy rm_1_1_echo.exe $(SANDESHADISTDIR)\samples\bin
-	copy $(SANDESHASRC)\samples\rm_1_1_echo\*.c $(SANDESHADISTDIR)\samples\rm_1_1_echo 
-	copy $(SANDESHASRC)\samples\rm_1_1_echo\*.h $(SANDESHADISTDIR)\samples\rm_1_1_echo
+rm_echo_client_1_1:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_1\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo_1_1.exe 
+	if not exist $(SANDESHADISTDIR)\samples\rm_echo_1_1 mkdir $(SANDESHADISTDIR)\samples\rm_echo_1_1
+	copy rm_echo_1_1.exe $(SANDESHADISTDIR)\samples\bin
+	copy $(SANDESHASRC)\samples\rm_echo_1_1\*.c $(SANDESHADISTDIR)\samples\rm_echo_1_1 
+	copy $(SANDESHASRC)\samples\rm_echo_1_1\*.h $(SANDESHADISTDIR)\samples\rm_echo_1_1
 
 
 	del *.exe
 	del *.obj
 
-all_clients: rm_ping_client rm_1_1_echo_client rm_echo_client rm_mtom_client
+all_clients: rm_ping_client_1_0 rm_ping_client_1_1 rm_echo_client_1_1 rm_echo_client rm_mtom_client
 
 
 #### services
