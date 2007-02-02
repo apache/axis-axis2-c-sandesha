@@ -8,15 +8,12 @@ rm_mtom_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
 					-laxis2_util \
                     -laxis2_axiom \
-                    -laxis2_wsdl \
                     -laxis2_engine \
                     -laxis2_parser \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-					-lwoden \
 					-lsqlite3 \
-					-laxis2_xml_schema \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

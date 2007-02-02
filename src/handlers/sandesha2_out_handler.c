@@ -20,7 +20,6 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_property.h>
 #include <axis2_conf_ctx.h>
-#include <axis2_wsdl.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_ctx.h>
