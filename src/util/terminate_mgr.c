@@ -669,7 +669,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             transport_to_bean, env);
         property = axis2_property_create_with_args(env, 0, 0, 0, value);
         sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 
-                            AXIS2_TRANSPORT_URL, property);
+            AXIS2_TRANSPORT_URL, property);
     }
     
     sandesha2_msg_ctx_add_soap_envelope(terminate_rm_msg, env);

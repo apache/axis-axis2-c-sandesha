@@ -243,6 +243,17 @@ axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_free(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
     const axis2_env_t *env);								
+    
+AXIS2_EXTERN axis2_stream_t *AXIS2_CALL
+sandesha2_msg_ctx_get_transport_out_stream(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_transport_out_stream(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env,
+    axis2_stream_t *stream);
 
 /** @} */
 #ifdef __cplusplus

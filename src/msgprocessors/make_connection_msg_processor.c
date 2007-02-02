@@ -480,13 +480,17 @@ set_transport_properties(
     sandesha2_msg_ctx_t *make_conn_msg_ctx)
 {
     axis2_property_t *property = NULL;
+    axis2_stream_t *out_stream = NULL;
     if(make_conn_msg_ctx && return_msg_ctx)
     {
-        property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
+        /*property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_TRANSPORT_OUT);
         axis2_property_set_own_value(property, env, AXIS2_FALSE);
         axis2_msg_ctx_set_property(return_msg_ctx, env, AXIS2_TRANSPORT_OUT, 
-            axis2_property_clone(property, env), AXIS2_FALSE);
+            axis2_property_clone(property, env), AXIS2_FALSE);*/
+        out_stream = sandesha2_msg_ctx_get_transport_out_stream(make_conn_msg_ctx, 
+            env);
+        axis2_msg_ctx_set_transport_out_stream(return_msg_ctx, env, out_stream);
         property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_HTTP_OUT_TRANSPORT_INFO);
         axis2_property_set_own_value(property, env, AXIS2_FALSE);

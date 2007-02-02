@@ -525,3 +525,25 @@ sandesha2_msg_ctx_get_rm_spec_ver(
     return rm_msg_ctx->spec_ver;
 }
 
+AXIS2_EXTERN axis2_stream_t *AXIS2_CALL
+sandesha2_msg_ctx_get_transport_out_stream(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env)
+{
+    if(!rm_msg_ctx->msg_ctx)
+        return NULL;
+    return axis2_msg_ctx_get_transport_out_stream(rm_msg_ctx->msg_ctx, env);
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_transport_out_stream(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env,
+    axis2_stream_t *stream)
+{
+    if(!rm_msg_ctx->msg_ctx)
+        return AXIS2_FAILURE;
+    return axis2_msg_ctx_set_transport_out_stream(rm_msg_ctx->msg_ctx, env, 
+        stream);
+}
+

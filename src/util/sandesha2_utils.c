@@ -622,6 +622,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_char_t *addr_ver = NULL;
     axis2_char_t *paused_phase_name = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
+    axis2_stream_t *out_stream = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -758,14 +759,17 @@ sandesha2_utils_create_new_related_msg_ctx(
     AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_WSA_VERSION, property,
         AXIS2_FALSE);
     
-    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_OUT, 
+    /*property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_OUT, 
                         AXIS2_FALSE);
     if(property)
     {
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_OUT, 
             AXIS2_PROPERTY_CLONE(property, env), AXIS2_FALSE);
-    }
+    }*/
+    out_stream = axis2_msg_ctx_get_transport_out_stream(ref_msg, 
+        env);
+    axis2_msg_ctx_set_transport_out_stream(new_msg, env, out_stream);
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, 
         AXIS2_TRANSPORT_IN, AXIS2_FALSE);
     if(property)
