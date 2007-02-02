@@ -69,10 +69,11 @@ mod_sandesha2_init(
     sandesha2_property_bean_t *const_property_bean = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
     axis2_param_t *param = NULL;
+    axis2_param_t *db_param = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    axis2_char_t *repo_path = NULL;
+    axis2_char_t *db_path = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -87,13 +88,17 @@ mod_sandesha2_init(
         property_bean = const_property_bean;
         
     param = axis2_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
-                        property_bean);
+        property_bean);
     
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
     AXIS2_CONF_ADD_PARAM(conf, env, param);
-    repo_path = (axis2_char_t *) AXIS2_CONF_GET_REPO(
-        (const axis2_conf_t *) conf, env);
-    sandesha2_property_bean_set_db_path(property_bean, env, repo_path);
+    db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, SANDESHA2_DB);
+    if(db_param)
+    {
+        db_path = (axis2_char_t *) axis2_param_get_value(db_param, env);
+        sandesha2_property_bean_set_db_path(property_bean, env, db_path);
+    }
+
     ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 
                         AXIS2_FALSE);

@@ -67,11 +67,8 @@
 
     </operation>
 
-   <!-- General Properties -->
-    <parameter name="" locked="false"></parameter>
    <!-- Database connection parameters -->
-    <parameter name="sandesah2_svr_db" locked="false">/axis2c/deploy/sandesha2_svr_db</parameter>
-    <parameter name="sandesha2_client_db" locked="false">/axis2c/deploy/sandesha2_client_db</parameter>
+    <parameter name="sandesha2_db" locked="false">/axis2c/deploy</parameter>
 
 
 </module>
