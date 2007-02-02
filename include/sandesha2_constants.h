@@ -495,6 +495,8 @@ extern "C"
     #define SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR ",,,"
     #define SANDESHA2_BUSY_WAIT_TIME 8
     #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
+    #define SANDESHA2_SVR_DB "sandesha2_svr_db" 
+    #define SANDESHA2_CLIENT_DB "sandesha2_client_db" 
 /** @} */
 #ifdef __cplusplus
 }

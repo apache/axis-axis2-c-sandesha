@@ -956,7 +956,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         sandesha2_msg_store_bean_get_flow(msg_store_bean, env));
     transport_to_str = sandesha2_msg_store_bean_get_transport_to(msg_store_bean, 
         env);
-    printf("transport_to_str:%s\n", transport_to_str);
     if(transport_to_str)
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, transport_to_str);
