@@ -268,9 +268,7 @@ sandesha2_sender_worker_worker_func(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(sender_worker->conf_ctx, env));
-    /*axis2_allocator_switch_to_global_pool(env->allocator);*/
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-    /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
@@ -333,8 +331,11 @@ sandesha2_sender_worker_worker_func(
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
-    prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
-                    AXIS2_MSG_CTX_GET_OP(msg_ctx, env));
+    /* Avoid retrieving property bean from operation until it is availbale */
+    /*prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
+        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));*/
+    prop_bean = sandesha2_utils_get_property_bean(env, 
+        axis2_conf_ctx_get_conf(sender_worker->conf_ctx, env));
     if(prop_bean)
         msgs_not_to_send = sandesha2_property_bean_get_msg_types_to_drop(
             prop_bean, env);
@@ -365,7 +366,7 @@ sandesha2_sender_worker_worker_func(
         }
     }
     /* 
-     *   This method is not implemented yet
+     *  This method is not implemented yet
      *  update_msg(sender_worker, env, msg_xtx);
      */
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
@@ -416,9 +417,7 @@ sandesha2_sender_worker_worker_func(
         sleep(300000);*/
                     
     }
-    /*axis2_allocator_switch_to_global_pool(env->allocator);*/
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-    /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE); 
     if(property)

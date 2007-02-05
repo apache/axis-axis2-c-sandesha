@@ -114,7 +114,25 @@ sandesha2_property_bean_set_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
     const axis2_env_t *env, 
     axis2_char_t *manager);
+
+/**
+ * return the storage manager to use. This could be either
+ * persistent or inmemory.
+ * @param property bean
+ * @env environment
+ * @return storage manager(persistent/inmemory)
+ */
+axis2_char_t* AXIS2_CALL
+sandesha2_property_bean_get_storage_mgr(
+    sandesha2_property_bean_t *bean,
+    const axis2_env_t *env);
             
+axis2_status_t AXIS2_CALL
+sandesha2_property_bean_set_storage_mgr(
+    sandesha2_property_bean_t *bean,
+    const axis2_env_t *env, 
+    axis2_char_t *manager);
+           
 axis2_bool_t AXIS2_CALL
 sandesha2_property_bean_is_in_order(
     sandesha2_property_bean_t *bean,

@@ -243,9 +243,7 @@ sandesha2_polling_mgr_worker_func(
         sandesha2_transaction_t *transaction = NULL;
 
         AXIS2_SLEEP(SANDESHA2_POLLING_MANAGER_WAIT_TIME);
-        /*axis2_allocator_switch_to_global_pool(env->allocator);*/
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        /*axis2_allocator_switch_to_local_pool(env->allocator);*/
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
          /* Getting the sequences to be polled. if schedule contains any requests, 

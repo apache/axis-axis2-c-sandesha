@@ -80,17 +80,16 @@ mod_sandesha2_init(
     AXIS2_PARAM_CHECK(env->error, module_desc, AXIS2_FAILURE);
     
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing ..");
-    const_property_bean = sandesha2_property_mgr_load_properties_from_def_values
-                        (env);
     property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
-                        module_desc);
-    /*if(NULL == property_bean) */
-        property_bean = const_property_bean;
+        module_desc);
+    if(!property_bean)
+        property_bean = sandesha2_property_mgr_load_properties_from_def_values
+            (env);
         
     param = axis2_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
         property_bean);
     
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     AXIS2_CONF_ADD_PARAM(conf, env, param);
     db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, SANDESHA2_DB);
     if(db_param)
@@ -99,11 +98,11 @@ mod_sandesha2_init(
         sandesha2_property_bean_set_db_path(property_bean, env, db_path);
     }
 
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 
-                        AXIS2_FALSE);
-    AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL, 
-                        AXIS2_FALSE);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 
+        AXIS2_FALSE);
+    axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL, 
+        AXIS2_FALSE);
     
     storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
     sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);

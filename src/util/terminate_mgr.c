@@ -433,11 +433,11 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
-                        SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT, SANDESHA2_VALUE_TRUE);
+        SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT, SANDESHA2_VALUE_TRUE);
     
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, seq_id,
-                        svr_side, storage_mgr);
+        svr_side, storage_mgr);
     return AXIS2_SUCCESS;
 }
 

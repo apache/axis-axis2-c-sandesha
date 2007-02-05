@@ -156,9 +156,7 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
-    /*axis2_allocator_switch_to_global_pool(env->allocator);*/
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     if(!storage_mgr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get the "
@@ -179,9 +177,7 @@ sandesha2_global_in_handler_invoke(
     {
         axis2_property_t *prop = NULL;
         
-        /*axis2_allocator_switch_to_global_pool(env->allocator);*/
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        /*axis2_allocator_switch_to_local_pool(env->allocator);*/
         prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 

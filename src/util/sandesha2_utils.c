@@ -149,18 +149,16 @@ sandesha2_utils_get_storage_mgr(
     axis2_param_t *parameter = NULL;
     axis2_char_t *value = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_property_bean_t *prop_bean = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
     axis2_allocator_switch_to_global_pool(env->allocator);
-    parameter = AXIS2_CONF_GET_PARAM(conf, env, 
-        SANDESHA2_STORAGE_MGR_PARAMETER);
-    if(!parameter)
-        parameter = axis2_param_create(env, SANDESHA2_STORAGE_MGR_PARAMETER,
-            SANDESHA2_DEFAULT_STORAGE_MGR);
-    value = AXIS2_PARAM_GET_VALUE(parameter, env);
+    prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
+        env, conf);
+    value = sandesha2_property_bean_get_storage_mgr(prop_bean, env);
     if(0 == AXIS2_STRCMP(value, SANDESHA2_INMEMORY_STORAGE_MGR))
         storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
     else if (0 == AXIS2_STRCMP(value, SANDESHA2_PERMANENT_STORAGE_MGR))
@@ -214,7 +212,7 @@ sandesha2_utils_get_property_bean(
     if(!param)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return (sandesha2_property_bean_t*)AXIS2_PARAM_GET_VALUE(param, env);
@@ -552,8 +550,9 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
 
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
-sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
-                        axis2_op_t *op)
+sandesha2_utils_get_property_bean_from_op(
+    const axis2_env_t *env,
+    axis2_op_t *op)
 {
         axis2_param_t *param = NULL;
     
@@ -564,7 +563,7 @@ sandesha2_utils_get_property_bean_from_op(const axis2_env_t *env,
     if(!param)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return (sandesha2_property_bean_t*)AXIS2_PARAM_GET_VALUE(param, env);

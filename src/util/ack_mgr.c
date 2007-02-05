@@ -211,8 +211,11 @@ sandesha2_ack_mgr_generate_ack_msg(
         sandesha2_sender_bean_set_msg_type(ack_bean, env, 
             SANDESHA2_MSG_TYPE_ACK);
 
-        ack_int_bean = sandesha2_utils_get_property_bean_from_op(env,
-            AXIS2_MSG_CTX_GET_OP(ref_msg, env));
+        /* Avoid retrieving property bean from operation until it is availbale */
+        /*ack_int_bean = sandesha2_utils_get_property_bean_from_op(env,
+            AXIS2_MSG_CTX_GET_OP(ref_msg, env));*/
+        ack_int_bean = sandesha2_utils_get_property_bean(env,
+            axis2_conf_ctx_get_conf(conf_ctx, env));
         ack_interval = sandesha2_property_bean_get_ack_interval(ack_int_bean, 
             env);
         time_to_send = sandesha2_utils_get_current_time_in_millis(env) + 

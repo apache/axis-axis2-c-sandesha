@@ -368,6 +368,8 @@ extern "C"
 	#define SANDESHA2_PROPERTIES_MSG_TYPES_TO_DROP  "MessageTypesToDrop"
 		
 	#define SANDESHA2_PROPERTIES_RETR_COUNT  "RetransmissionCount"
+    
+    #define SANDESHA2_PROPERTIES_MAX_RETRANS_COUNT "MaxRetransCount"
 	
 	/**
 	 * Default Values
@@ -409,13 +411,13 @@ extern "C"
 
 	#define SANDESHA2_INVOKER_SLEEP_TIME  6  /*6 2 */
 
-	#define SANDESHA2_SENDER_SLEEP_TIME  6  /*6 4 */
+	#define SANDESHA2_SENDER_SLEEP_TIME  1  /*6 4 */
 
-    #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 12 /* 12 4 */
+    #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 3 /* 12 4 */
 
-	#define SANDESHA2_CLIENT_SLEEP_TIME  32 /* 32 16 */
+	#define SANDESHA2_CLIENT_SLEEP_TIME  4 /* 32 16 */
 
-	#define SANDESHA2_TERMINATE_DELAY  32 /* 100 32 */
+	#define SANDESHA2_TERMINATE_DELAY  4 /* 100 32 */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
@@ -495,7 +497,7 @@ extern "C"
     #define SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR ",,,"
     #define SANDESHA2_BUSY_WAIT_TIME 8
     #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
-    #define SANDESHA2_DB "sandesha2_db" 
+    #define SANDESHA2_DB "sandesha2_db"
 /** @} */
 #ifdef __cplusplus
 }

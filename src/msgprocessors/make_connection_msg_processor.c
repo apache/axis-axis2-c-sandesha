@@ -332,8 +332,11 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     
+    /* Avoid retrieving property bean from operation until it is availbale */
+    /*prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
+        axis2_msg_ctx_get_op(return_msg_ctx, env));*/
     prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
-        axis2_msg_ctx_get_op(return_msg_ctx, env));
+        axis2_conf_ctx_get_conf(conf_ctx, env));
     if(prop_bean)
         msgs_not_to_send = sandesha2_property_bean_get_msg_types_to_drop(
             prop_bean, env);

@@ -25,31 +25,34 @@
 
 /******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL
-sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(const axis2_env_t *env, 
-                        sandesha2_sender_bean_t *retrans_bean, 
-                        sandesha2_property_bean_t *property_bean);
+sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
+    const axis2_env_t *env, 
+    sandesha2_sender_bean_t *retrans_bean, 
+    sandesha2_property_bean_t *property_bean);
 
 long AXIS2_CALL
-sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(const axis2_env_t *env,
-                        int count,
-                        long initial_interval);
+sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
+    const axis2_env_t *env,
+    int count,
+    long initial_interval);
                         
 axis2_status_t AXIS2_CALL
-sandesha2_msg_retrans_adjuster_finalize_timedout_seq(const axis2_env_t *env,
-                        axis2_char_t *int_seq_id,
-                        axis2_char_t *seq_id,
-                        axis2_msg_ctx_t *msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr);
+sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
+    const axis2_env_t *env,
+    axis2_char_t *int_seq_id,
+    axis2_char_t *seq_id,
+    axis2_msg_ctx_t *msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /******************************************************************************/
 
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_retrans(
-        const axis2_env_t *env,
-        sandesha2_sender_bean_t *retrans_bean,
-        axis2_conf_ctx_t *conf_ctx, 
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axis2_env_t *env,
+    sandesha2_sender_bean_t *retrans_bean,
+    axis2_conf_ctx_t *conf_ctx, 
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_char_t *stored_key = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -71,32 +74,35 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     if(!stored_key)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Stored Key not"
-                        " present in the retransmittable message");
+            " present in the retransmittable message");
         return AXIS2_FALSE;
     }
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-                        stored_key, conf_ctx);
+        stored_key, conf_ctx);
     if(msg_ctx)
         rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     int_seq_id = sandesha2_sender_bean_get_internal_seq_id(retrans_bean, env);
     seq_id = sandesha2_sender_bean_get_seq_id(retrans_bean, env);
-    
-    property_bean = sandesha2_utils_get_property_bean_from_op(env, 
-                        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));
+   
+    /* Avoid retrieving property bean from operation until it is availbale */
+    /*property_bean = sandesha2_utils_get_property_bean_from_op(env, 
+        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));*/
+    property_bean = sandesha2_utils_get_property_bean(env, 
+        axis2_conf_ctx_get_conf(conf_ctx, env));
     sandesha2_sender_bean_set_sent_count(retrans_bean, env, 
-                        sandesha2_sender_bean_get_sent_count(retrans_bean, 
-                        env) + 1);
+        sandesha2_sender_bean_get_sent_count(retrans_bean, 
+            env) + 1);
     sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(env, retrans_bean,
-                        property_bean);
+        property_bean);
     max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, 
-                        env);
+        env);
     
     if(max_attempts > 0 && sandesha2_sender_bean_get_sent_count(retrans_bean, 
-                        env) > max_attempts)
+        env) > max_attempts)
         timeout_seq = AXIS2_TRUE;
     if(rm_msg_ctx)
         seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 
-                        rm_msg_ctx, storage_mgr);
+            rm_msg_ctx, storage_mgr);
     
     if(AXIS2_TRUE == seq_timed_out)
         timeout_seq = AXIS2_TRUE;
@@ -105,16 +111,17 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     {
         sandesha2_sender_bean_set_send(retrans_bean, env, AXIS2_FALSE);
         sandesha2_msg_retrans_adjuster_finalize_timedout_seq(env, int_seq_id,
-                        seq_id, msg_ctx, storage_mgr);
+            seq_id, msg_ctx, storage_mgr);
         continue_sending = AXIS2_FALSE;
     }
     return continue_sending;
 }
 
 sandesha2_sender_bean_t * AXIS2_CALL
-sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(const axis2_env_t *env, 
-                        sandesha2_sender_bean_t *retrans_bean, 
-                        sandesha2_property_bean_t *property_bean)
+sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
+    const axis2_env_t *env, 
+    sandesha2_sender_bean_t *retrans_bean, 
+    sandesha2_property_bean_t *property_bean)
 {
     int count = -1;
     long base_interval = -1;
@@ -128,12 +135,12 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(const axis2_env_t *env,
     
     count = sandesha2_sender_bean_get_sent_count(retrans_bean, env);
     base_interval = sandesha2_property_bean_get_retrans_interval(property_bean,
-                        env);
+        env);
     new_interval = base_interval;
     if(AXIS2_TRUE == sandesha2_property_bean_is_exp_backoff(property_bean, env))
     {
         new_interval = sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(env,
-                        count, base_interval);
+            count, base_interval);
     }
     time_now = sandesha2_utils_get_current_time_in_millis(env);
     
@@ -145,23 +152,24 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(const axis2_env_t *env,
 
 
 long AXIS2_CALL
-sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(const axis2_env_t *env,
-                        int count,
-                        long initial_interval)
+sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
+    const axis2_env_t *env,
+    int count,
+    long initial_interval)
 {
     long interval = initial_interval;
-    AXIS2_ENV_CHECK(env, -1);
     
     interval = initial_interval * (2^count);
     return interval;
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_msg_retrans_adjuster_finalize_timedout_seq(const axis2_env_t *env,
-                        axis2_char_t *int_seq_id,
-                        axis2_char_t *seq_id,
-                        axis2_msg_ctx_t *msg_ctx,
-                        sandesha2_storage_mgr_t *storage_mgr)
+sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
+    const axis2_env_t *env,
+    axis2_char_t *int_seq_id,
+    axis2_char_t *seq_id,
+    axis2_msg_ctx_t *msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
@@ -175,19 +183,20 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
-    property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
-                        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
+        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        new_property = AXIS2_PROPERTY_CLONE(property, env);
+        new_property = axis2_property_clone(property, env);
     if(new_property)
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             new_property, AXIS2_FALSE);
     /* we have to callback listener here */
     sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
-                        AXIS2_FALSE, storage_mgr);
+        AXIS2_FALSE, storage_mgr);
  
     return AXIS2_SUCCESS;
 }
+
