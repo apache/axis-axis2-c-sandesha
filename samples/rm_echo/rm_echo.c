@@ -206,7 +206,7 @@ int main(int argc, char** argv)
                 property);
         }
     }
-    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
@@ -221,7 +221,7 @@ int main(int argc, char** argv)
     AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback2, payload, 
             listener_manager);
-    wait_on_callback(env, callback2);*/
+    wait_on_callback(env, callback2);
 
     callback3 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);

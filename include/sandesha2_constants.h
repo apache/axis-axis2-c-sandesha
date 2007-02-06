@@ -411,7 +411,7 @@ extern "C"
 
 	#define SANDESHA2_INVOKER_SLEEP_TIME  6  /*6 2 */
 
-	#define SANDESHA2_SENDER_SLEEP_TIME  1  /*6 4 */
+	#define SANDESHA2_SENDER_SLEEP_TIME  4  /*6 4 */
 
     #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 3 /* 12 4 */
 

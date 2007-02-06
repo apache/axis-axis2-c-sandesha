@@ -29,7 +29,7 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 
-#define SANDESHA2_MAX_COUNT 40
+#define SANDESHA2_MAX_COUNT 10
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL

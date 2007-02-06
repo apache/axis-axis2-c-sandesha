@@ -1,8 +1,8 @@
 prgbindir=$(prefix)/bin/samples
 prgbin_PROGRAMS = rm_echo
 samplesdir=$(prefix)/samples/client/rm_echo
-samples_DATA=rm_echo_client.c Makefile.am Makefile.in
-rm_echo_SOURCES = rm_echo_client.c echo_util.c
+samples_DATA=rm_echo.c Makefile.am Makefile.in
+rm_echo_SOURCES = rm_echo.c echo_util.c
 
 rm_echo_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
