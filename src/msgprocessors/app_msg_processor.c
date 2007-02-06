@@ -618,11 +618,9 @@ sandesha2_app_msg_processor_process_out_msg(
             axis2_char_t *spec_ver = NULL;
             spec_ver = sandesha2_utils_get_rm_version(env, internal_seq_id, 
                 storage_mgr);
-            printf("came1\n");
             if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                 (env, spec_ver))
             {
-                printf("came11\n");
                 last_msg = AXIS2_TRUE;
             }
         }
@@ -1246,11 +1244,9 @@ sandesha2_app_msg_processor_process_response_msg(
                 axis2_char_t *value = axis2_property_get_value(property, env);
                 if(value && 0 == axis2_strcmp(value, SANDESHA2_VALUE_TRUE))
                 {
-                    printf("came2\n");
                     if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                         (env, rm_version))
                     {
-                        printf("came22\n");
                         last_msg = AXIS2_TRUE;
                         sandesha2_seq_set_last_msg(seq, env, 
                             sandesha2_last_msg_create(env, rm_ns_val));

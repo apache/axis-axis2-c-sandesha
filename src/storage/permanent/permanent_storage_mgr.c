@@ -1005,7 +1005,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 AXIS2_FALSE);
         }
     }
-        
     return msg_ctx;
 }
 

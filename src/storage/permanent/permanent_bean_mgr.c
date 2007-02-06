@@ -72,7 +72,9 @@ sandesha2_msg_store_bean_retrieve_callback(
     {
         if(0 == AXIS2_STRCMP(col_name[i], "stored_key"))
             if(argv[i])
+            {
                 sandesha2_msg_store_bean_set_stored_key(bean, env, argv[i]);
+            }
         if(0 == AXIS2_STRCMP(col_name[i], "msg_id"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_msg_id(bean, env, argv[i]);

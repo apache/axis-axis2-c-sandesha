@@ -146,7 +146,6 @@ sandesha2_utils_get_storage_mgr(
     axis2_conf_ctx_t *conf_ctx,
     axis2_conf_t *conf)
 {
-    axis2_param_t *parameter = NULL;
     axis2_char_t *value = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_property_bean_t *prop_bean = NULL;

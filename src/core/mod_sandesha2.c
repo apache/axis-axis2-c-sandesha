@@ -66,7 +66,6 @@ mod_sandesha2_init(
     axis2_conf_ctx_t *conf_ctx,
     axis2_module_desc_t *module_desc)
 {
-    sandesha2_property_bean_t *const_property_bean = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
     axis2_param_t *param = NULL;
     axis2_param_t *db_param = NULL;
