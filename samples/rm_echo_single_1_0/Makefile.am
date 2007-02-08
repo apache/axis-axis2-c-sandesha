@@ -1,5 +1,5 @@
 prgbindir=$(prefix)/bin/samples
-prgbin_PROGRAMS = rm_echo_single
+prgbin_PROGRAMS = rm_echo_single_1_0
 samplesdir=$(prefix)/samples/client/rm_echo_single
 samples_DATA=rm_echo_single.c Makefile.am Makefile.in
 rm_echo_single_SOURCES = rm_echo_single.c echo_util.c
