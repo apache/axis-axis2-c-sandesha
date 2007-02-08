@@ -472,25 +472,21 @@ sandesha2_app_msg_processor_process_in_msg (
         /* Start the invoker if stopped */
         sandesha2_utils_start_invoker_for_seq(env, conf_ctx, str_seq_id);
     }
-
-    
-    
-    
-    
-    
-    internal_seq_id = sandesha2_utils_get_outgoing_internal_seq_id(env,
-        str_seq_id);
-    rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
+    printf("came11\n");
+    rm_version = sandesha2_utils_get_rm_version(env, str_seq_id, storage_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Unable to fine RM spec version");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Unable to find RM spec version");
         return AXIS2_FAILURE;
     }
+    printf("rm_version:%s\n", rm_version);
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
-    reply_to_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
+    if(reply_to_epr)
+        reply_to_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env) ||
        !sandesha2_utils_is_single_channel(env, rm_version, reply_to_addr))
     {
+        printf("came13\n");
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
     }
