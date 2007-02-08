@@ -1278,7 +1278,7 @@ sandesha2_utils_is_wsrm_anon_reply_to(
 axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_anon_uri(
     const axis2_env_t *env,
-    axis2_char_t *address)
+    const axis2_char_t *address)
 {
     axis2_char_t *address_l = NULL;
     if(!address)
@@ -1317,5 +1317,17 @@ sandesha2_utils_split(
     AXIS2_ARRAY_LIST_ADD(list, env, value);
 
     return list;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_single_channel(
+    const axis2_env_t *env,
+    const axis2_char_t *rm_version,
+    const axis2_char_t *reply_to_addr)
+{
+    if(sandesha2_utils_is_anon_uri(env, reply_to_addr) &&
+        (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
+        return AXIS2_TRUE;
+    else return AXIS2_FALSE;
 }
 

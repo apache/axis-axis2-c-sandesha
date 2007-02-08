@@ -388,7 +388,7 @@ sandesha2_sender_worker_worker_func(
                     rm_msg_ctx))
     {
         sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, 
-                    storage_mgr);
+            storage_mgr);
     }
     
     if(!transport_out) 

@@ -229,7 +229,7 @@ sandesha2_utils_is_wsrm_anon_reply_to(
 axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_anon_uri(
     const axis2_env_t *env,
-    axis2_char_t *address);
+    const axis2_char_t *address);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_stop_invoker(
@@ -251,6 +251,12 @@ sandesha2_utils_split(
     const axis2_env_t *env,
     axis2_char_t *str,
     axis2_char_t *pattern);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_utils_is_single_channel(
+    const axis2_env_t *env,
+    const axis2_char_t *rm_version,
+    const axis2_char_t *reply_to_addr);
 
 /** @} */
 #ifdef __cplusplus

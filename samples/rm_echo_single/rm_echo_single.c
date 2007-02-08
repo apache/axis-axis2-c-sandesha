@@ -168,7 +168,7 @@ int main(int argc, char** argv)
     }
     /* RM Version 1.1 */
     property = axis2_property_create_with_args(env, 3, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_1);
+        SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
@@ -195,6 +195,8 @@ int main(int argc, char** argv)
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
 
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status)
@@ -202,10 +204,6 @@ int main(int argc, char** argv)
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
-    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
-        "sequence1");
-    /*sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
-        listener_manager);*/
     AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
     if (svc_client)
     {

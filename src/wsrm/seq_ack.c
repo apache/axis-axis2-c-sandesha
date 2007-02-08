@@ -392,7 +392,6 @@ sandesha2_seq_ack_to_om_node(
                         seq_ack_impl->must_understand);
     sa_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(sa_block, env);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack_impl->identifier, env, sa_node);
-
     for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(seq_ack_impl->ack_range_list, env); i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;

@@ -915,7 +915,8 @@ sandesha2_msg_creator_add_ack_msg(
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
-    msg_no_list = (axis2_char_t *) sandesha2_seq_property_bean_get_value(
+    if(seq_bean)
+        msg_no_list = (axis2_char_t *) sandesha2_seq_property_bean_get_value(
             seq_bean, env); 
     ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
             rm_ns_value);
@@ -951,7 +952,6 @@ sandesha2_msg_creator_add_ack_msg(
             SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
             (sandesha2_iom_rm_part_t *) seq_ack);
     soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
-
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, soap_header);
 
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);

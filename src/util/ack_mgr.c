@@ -427,7 +427,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
     sandesha2_sender_bean_set_msg_type(find_bean, env, SANDESHA2_MSG_TYPE_ACK);
     sandesha2_sender_bean_set_send(find_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_resend(find_bean, env, AXIS2_FALSE);
-   
+
     to = sandesha2_msg_ctx_get_to(rm_msg_ctx, env);
     if(to)
         to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
@@ -438,7 +438,6 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
     {
         sandesha2_sender_bean_t *sender_bean = NULL;
         long timenow = 0;
-        
         
         timenow = sandesha2_utils_get_current_time_in_millis(env);
         sender_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
