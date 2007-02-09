@@ -1,10 +1,10 @@
 prgbindir=$(prefix)/bin/samples
 prgbin_PROGRAMS = rm_echo_single_1_0
-samplesdir=$(prefix)/samples/client/rm_echo_single
+samplesdir=$(prefix)/samples/client/rm_echo_single_1_0
 samples_DATA=rm_echo_single.c Makefile.am Makefile.in
-rm_echo_single_SOURCES = rm_echo_single.c echo_util.c
+rm_echo_single_1_0_SOURCES = rm_echo_single.c echo_util.c
 
-rm_echo_single_LDADD   =  \
+rm_echo_single_1_0_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
 					-laxis2_util \
                     -laxis2_axiom \
