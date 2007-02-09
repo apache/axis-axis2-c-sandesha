@@ -116,9 +116,6 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
-    /*reply_to = axis2_endpoint_ref_create(env, 
-            "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
-                "__OPERATION_OUT_IN__");*/
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
 
@@ -202,9 +199,8 @@ int main(int argc, char** argv)
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(3 * SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/

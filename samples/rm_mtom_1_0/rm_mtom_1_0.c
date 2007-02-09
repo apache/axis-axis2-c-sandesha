@@ -26,6 +26,7 @@
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
 
+#define SANDESHA2_SLEEP_TIME 2
 void 
 usage(
     axis2_char_t *prog_name);
@@ -43,6 +44,7 @@ int main(int argc, char** argv)
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
     int c;
     const axis2_char_t *image_name = "resources/axis2.jpg";
     axiom_node_t *ret_node = NULL;
@@ -87,16 +89,10 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
-    AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     AXIS2_OPTIONS_SET_ENABLE_MTOM(options, env, AXIS2_TRUE); 
     /* Seperate listner needs addressing, hence addressing stuff in options */
     /*AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
-    reply_to = axis2_endpoint_ref_create(env, 
-            "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
-                "__OPERATION_OUT_IN__");
-
-    AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -116,8 +112,8 @@ int main(int argc, char** argv)
     {
         printf("Error creating service client\n");
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-                  " %d :: %s", env->error->error_number,
-                        AXIS2_ERROR_GET_MESSAGE(env->error));
+            " %d :: %s", env->error->error_number,
+                AXIS2_ERROR_GET_MESSAGE(env->error));
         return -1;
     }
 
@@ -127,37 +123,35 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
 
-    listener_manager = axis2_listener_manager_create(env);
-    if (!listener_manager)
-    {
-        return AXIS2_FAILURE;
-    }
     /* Offer sequence */
     offered_seq_id = axis2_uuid_gen(env);
-    property = axis2_property_create(env);
+    property = axis2_property_create_with_args(env, 0, 0, 0, offered_seq_id);
     if(property)
-    {
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
             property);
-    }
     payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
-    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nmtom  invoke SUCCESSFUL!\n");
+    AXIS2_SLEEP(SANDESHA2_SLEEP_TIME); 
 
     payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
-    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nmtom  invoke SUCCESSFUL!\n");
+    AXIS2_SLEEP(SANDESHA2_SLEEP_TIME); 
 
     payload = build_om_payload_for_mtom(env, image_name, "test3.jpg");
-    property = axis2_property_create(env);
-    AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
-    AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
-            property);
-    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(10); 
+        property);
+    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    if(status)
+        printf("\nmtom  invoke SUCCESSFUL!\n");
+    AXIS2_SLEEP(3 * SANDESHA2_SLEEP_TIME); 
     if (svc_client)
     {
-        AXIS2_SVC_CLIENT_FREE(svc_client, env);
+        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
         svc_client = NULL;
     }
     
