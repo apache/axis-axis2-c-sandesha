@@ -1,10 +1,10 @@
 prgbindir=$(prefix)/bin/samples
-prgbin_PROGRAMS = rm_mtom
-samplesdir=$(prefix)/samples/client/rm_mtom
+prgbin_PROGRAMS = rm_mtom_1_0
+samplesdir=$(prefix)/samples/client/rm_mtom_1_0
 samples_DATA=rm_mtom_client.c Makefile.am Makefile.in
-rm_mtom_SOURCES = rm_mtom_client.c mtom_util.c
+rm_mtom_1_0_SOURCES = rm_mtom_client.c mtom_util.c
 
-rm_mtom_LDADD   =  \
+rm_mtom_1_0_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
 					-laxis2_util \
                     -laxis2_axiom \

@@ -43,7 +43,6 @@ int main(int argc, char** argv)
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    axis2_bool_t offer = AXIS2_FALSE;
     int c;
     const axis2_char_t *image_name = "resources/axis2.jpg";
     axiom_node_t *ret_node = NULL;
@@ -55,16 +54,13 @@ int main(int argc, char** argv)
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:")) != -1)
+    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
         switch (c)
         {
             case 'a':
                 address = optarg;
-                break;
-            case 'o':
-                offer = AXIS2_ATOI(optarg);
                 break;
             case ':':
                 fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
@@ -138,16 +134,13 @@ int main(int argc, char** argv)
         return AXIS2_FAILURE;
     }
     /* Offer sequence */
-    if(offer)
+    offered_seq_id = axis2_uuid_gen(env);
+    property = axis2_property_create(env);
+    if(property)
     {
-        offered_seq_id = axis2_uuid_gen(env);
-        property = axis2_property_create(env);
-        if(property)
-        {
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-                property);
-        }
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, env));
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
+            property);
     }
     /*payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
     ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
@@ -178,7 +171,6 @@ usage(
 {
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-o ADDRESS]");
-    fprintf(stdout, " [-o OFFER]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-o OFFER \t seq offer value.. The"
             " default offer value is 0(false) ../\n");
