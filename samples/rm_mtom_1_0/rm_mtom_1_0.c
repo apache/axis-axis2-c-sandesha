@@ -141,11 +141,11 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
             property);
     }
-    /*payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
+    payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
     ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
 
     payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
-    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);*/
+    ret_node = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
 
     payload = build_om_payload_for_mtom(env, image_name, "test3.jpg");
     property = axis2_property_create(env);
