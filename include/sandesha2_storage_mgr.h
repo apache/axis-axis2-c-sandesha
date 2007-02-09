@@ -192,6 +192,12 @@ sandesha2_storage_mgr_free(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *envv);
 
+/**
+ * get a new transaction for use
+ * @param storage_mgr
+ * @param env environment object
+ * @return newly created sandesha2_transaction object
+ */
 struct sandesha2_transaction *AXIS2_CALL
 sandesha2_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
@@ -244,14 +250,32 @@ sandesha2_storage_mgr_init(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
-	
+
+/**
+ * Retrieve the stored message context.
+ * @param storage_mgr
+ * @param env environment object
+ * @param key message storage key
+ * @param conf_ctx configuration context
+ * @return newly created axis2_msg_ctx object.
+ */
 axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axis2_env_t *env,
     axis2_char_t *key,
     axis2_conf_ctx_t *conf_ctx);
-		
+
+/**
+ * Store the application message context. When Sandesha2 handlers
+ * receive application messages it will be first stored in inmemory/persistent
+ * storage until it is later qualified for sending to the destination
+ * @param storage_mgr
+ * @param env environment object
+ * @param key message storage key.
+ * @param msg_ctx message context
+ * @return status of the operation
+ */
 axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_store_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,

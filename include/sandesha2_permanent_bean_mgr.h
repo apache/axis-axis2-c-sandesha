@@ -76,6 +76,17 @@ sandesha2_permanent_bean_mgr_free(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env);
 
+/**
+ * Database insert method. Storage managers use this function
+ * to store data to the database
+ * @param bean_mgr
+ * @param env
+ * @param bean
+ * @param retrieve_func retrieve callback function
+ * @param sql_stmt_retrieve
+ * @param sql_stmt_update
+ * @param sql_stmt_insert
+ */
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
