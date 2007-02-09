@@ -107,26 +107,26 @@ rm_ping_client_1_1:
 	del *.exe
 	del *.obj
 
-rm_echo_client:
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo\*.c /c
+rm_echo_1_0_client:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0\*.c /c
 	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo.exe 
-	if not exist $(SANDESHADISRDIR)\samples\rm_echo mkdir $(SANDESHADISTDIR)\samples\rm_echo
+	if not exist $(SANDESHADISRDIR)\samples\rm_echo_1_0 mkdir $(SANDESHADISTDIR)\samples\rm_echo_1_0
 	copy rm_echo.exe $(SANDESHADISTDIR)\samples\bin
-	copy $(SANDESHASRC)\samples\rm_echo\*.c \
-	$(SANDESHADISTDIR)\samples\rm_echo 
-	copy $(SANDESHASRC)\samples\rm_echo\*.h \
-	$(SANDESHADISTDIR)\samples\rm_echo\
+	copy $(SANDESHASRC)\samples\rm_echo_1_0\*.c \
+	$(SANDESHADISTDIR)\samples\rm_echo_1_0 
+	copy $(SANDESHASRC)\samples\rm_echo_1_0\*.h \
+	$(SANDESHADISTDIR)\samples\rm_echo_1_0\
 
 	del *.exe
 	del *.obj
 
-rm_mtom_client:
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_mtom\*.c /c
+rm_mtom_1_0_client:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_mtom_1_0\*.c /c
 	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_mtom.exe 
-	if not exist $(SANDESHADISTDIR)\samples\rm_mtom mkdir $(SANDESHADISTDIR)\samples\rm_mtom
+	if not exist $(SANDESHADISTDIR)\samples\rm_mtom_1_0 mkdir $(SANDESHADISTDIR)\samples\rm_mtom_1_0
 	copy rm_mtom.exe $(SANDESHADISTDIR)\samples\bin
-	copy $(SANDESHASRC)\samples\rm_mtom\*.c $(SANDESHADISTDIR)\samples\rm_mtom
-	copy $(SANDESHASRC)\samples\rm_mtom\*.h $(SANDESHADISTDIR)\samples\rm_mtom
+	copy $(SANDESHASRC)\samples\rm_mtom_1_0\*.c $(SANDESHADISTDIR)\samples\rm_mtom_1_0
+	copy $(SANDESHASRC)\samples\rm_mtom_1_0\*.h $(SANDESHADISTDIR)\samples\rm_mtom_1_0
 
 	del *.exe
 	del *.obj
@@ -143,7 +143,32 @@ rm_echo_client_1_1:
 	del *.exe
 	del *.obj
 
-all_clients: rm_ping_client_1_0 rm_ping_client_1_1 rm_echo_client_1_1 rm_echo_client rm_mtom_client
+rm_echo_singel_client_1_0:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo_single_1_1.exe 
+	if not exist $(SANDESHADISTDIR)\samples\rm_echo_single_1_0 mkdir $(SANDESHADISTDIR)\samples\rm_echo_single_1_0
+	copy rm_echo_single_1_0.exe $(SANDESHADISTDIR)\samples\bin
+	copy $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c $(SANDESHADISTDIR)\samples\rm_echo_single_1_0
+	copy $(SANDESHASRC)\samples\rm_echo_single_1_0\*.h $(SANDESHADISTDIR)\samples\rm_echo_single_1_0
+
+
+	del *.exe
+	del *.obj
+
+rm_echo_single_client_1_1:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo_single_1_1.exe 
+	if not exist $(SANDESHADISTDIR)\samples\rm_echo_single_1_1 mkdir $(SANDESHADISTDIR)\samples\rm_echo_single_1_1
+	copy rm_echo_single_1_1.exe $(SANDESHADISTDIR)\samples\bin
+	copy $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c $(SANDESHADISTDIR)\samples\rm_echo_single_1_1
+	copy $(SANDESHASRC)\samples\rm_echo_single_1_1\*.h $(SANDESHADISTDIR)\samples\rm_echo_single_1_1
+
+
+	del *.exe
+	del *.obj
+
+
+all_clients: rm_ping_client_1_0 rm_ping_client_1_1 rm_echo_client_1_1 rm_echo_1_0_client rm_mtom_1_0_client
 
 
 #### services

@@ -35,6 +35,8 @@ usage(
 
 int main(int argc, char** argv)
 {
+	int optopt;
+	char *optarg;
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     const axis2_char_t *to = NULL;

@@ -28,6 +28,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
+#include <platforms/axis2_platform_auto_sense.h>
 
 #define SANDESHA2_MAX_COUNT 10
 
@@ -54,6 +55,8 @@ usage(
 
 int main(int argc, char** argv)
 {
+	int optopt;
+	char *optarg;
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;

@@ -1,8 +1,8 @@
-SQLITE_BIN_DIR = E:\sqlite
-SQLITE_SRC_DIR = E:\sqlite
-AXIS2_INSTALL_DIR = E:\latest\build\axis2c-bin-0.96-win32
-LIBXML2_INSTALL_DIR = D:\libxml2-2.6.27.win32
-ICONV_INSTALL_DIR = D:\iconv-1.9.1.win32
+SQLITE_BIN_DIR = E:\sqlite-source-3_3_8
+SQLITE_SRC_DIR = E:\sqlite-source-3_3_8
+AXIS2_INSTALL_DIR = E:\axis2c\build\axis2c-bin-0.96-win32
+LIBXML2_INSTALL_DIR = E:\libxml2-2.6.27.win32
+ICONV_INSTALL_DIR = E:\iconv-1.9.1.win32
 
 
 
