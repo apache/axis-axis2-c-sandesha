@@ -73,10 +73,9 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    printf("offer:%d\n", offer);
     if (AXIS2_STRCMP(address, "-h") == 0)
     {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
+        printf("Usage : %s [endpoint_url]\n", argv[0]);
         printf("use -h for help\n");
         return 0;
     }
@@ -172,10 +171,8 @@ usage(
     fprintf(stdout, "\n Usage : %s", prog_name);
     fprintf(stdout, " [-o ADDRESS]");
     fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-o OFFER \t seq offer value.. The"
-            " default offer value is 0(false) ../\n");
     fprintf(stdout, "\t-o ADDRESS \t endpoint address.. The"
-            " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
+        " default is http://127.0.0.1:5555/axis2/services/RMSampleService ../\n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
