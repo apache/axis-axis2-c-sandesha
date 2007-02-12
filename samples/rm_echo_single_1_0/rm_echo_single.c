@@ -179,14 +179,14 @@ int main(int argc, char** argv)
     }
     
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
