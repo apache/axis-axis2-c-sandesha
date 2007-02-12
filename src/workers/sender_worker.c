@@ -471,7 +471,7 @@ sandesha2_sender_worker_worker_func(
         sandesha2_terminate_seq_t *terminate_seq = NULL;
         axis2_char_t *seq_id = NULL;
         axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_char_t *int_seq_id = NULL;
+        axis2_char_t *internal_seq_id = NULL;
         
         terminate_seq = (sandesha2_terminate_seq_t*)
                     sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
@@ -480,11 +480,11 @@ sandesha2_sender_worker_worker_func(
                     sandesha2_terminate_seq_get_identifier(terminate_seq, 
                     env), env);
         conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-        int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
+        internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
                     SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-                    int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
-                    storage_mgr);
+            internal_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
+                storage_mgr);
     }
     else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
     {

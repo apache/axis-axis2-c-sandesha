@@ -29,7 +29,7 @@
 #include <sandesha2_client.h>
 #include <platforms/axis2_platform_auto_sense.h>
 
-#define SANDESHA2_MAX_COUNT 20
+#define SANDESHA2_MAX_COUNT 40
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback3, 
         payload, listener_manager);
     wait_on_callback(env, callback3);
-
+    printf("came echo\n");
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     if (svc_client)
     {

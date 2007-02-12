@@ -16,6 +16,8 @@
 #include <sandesha2_ack_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_seq_property_bean.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_fault_mgr.h>
 #include <sandesha2_constants.h>
@@ -173,7 +175,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             "[sandesha2] Entry:sandesha2_ack_msg_processor_process_in_msg");
 
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     if(!seq_ack)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sequence"
@@ -341,8 +343,31 @@ sandesha2_ack_msg_processor_process_in_msg (
             completed = sandesha2_ack_mgr_verify_seq_completion(env, 
                         ack_range_list, highest_out_msg_no);
             if(completed)
+            {
+                axis2_char_t *rm_version = NULL;
+                const axis2_char_t *to_addr = NULL;
+                axis2_endpoint_ref_t *to_epr = NULL;
+                /*sandesha2_seq_t *seq = NULL;
+                axis2_char_t *incoming_seq_id = NULL;
+                seq = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(
+                    rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
+                if(seq)
+                    incoming_seq_id = sandesha2_identifier_get_identifier(
+                        sandesha2_seq_get_identifier(seq, env), env);
+                rm_version = sandesha2_utils_get_rm_version(env, int_seq_id, 
+                    storage_mgr);
+                to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+                if(to_epr)
+                    to_addr = axis2_endpoint_ref_get_address(to_epr, env);*/
                 sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx,
-                        out_seq_id, int_seq_id, storage_mgr);
+                    out_seq_id, int_seq_id, storage_mgr);
+                /*if(sandesha2_utils_is_single_channel(env, rm_version, to_addr))
+                {
+                    
+                    sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
+                        env, conf_ctx, incoming_seq_id, storage_mgr);
+                }*/
+            }
         }
     }
     action = AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);

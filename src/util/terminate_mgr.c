@@ -470,8 +470,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
     
     out_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-                        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_mgr);
-    if(AXIS2_TRUE == svr_side)
+        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_mgr);
+    if(!svr_side)
     {
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
         axis2_char_t *addr_ns_uri = NULL;
