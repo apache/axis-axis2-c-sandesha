@@ -224,7 +224,7 @@ sandesha2_utils_execute_and_store(
 axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_wsrm_anon_reply_to(
     const axis2_env_t *env,
-    axis2_char_t *reply_to);
+    const axis2_char_t *reply_to);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_anon_uri(
