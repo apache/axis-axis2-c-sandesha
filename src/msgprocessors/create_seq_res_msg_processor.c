@@ -361,8 +361,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_next_msg_mgr_insert(next_bean_mgr, env, next_bean);
         
         spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, 
-                        offered_seq_id, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION,
-                        rm_spec_ver);
+            offered_seq_id, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, rm_spec_ver);
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_ver_bean);
         
         rcvd_msg_bean = sandesha2_seq_property_bean_create_with_data(env, 

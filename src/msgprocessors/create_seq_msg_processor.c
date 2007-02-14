@@ -249,6 +249,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             axis2_char_t *int_seq_id = NULL;
             sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
             sandesha2_seq_property_bean_t *out_seq_bean = NULL;
+            sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     
             AXIS2_LOG_INFO(env->log, "[sandesha2] Offer Accepted .........");
             
@@ -267,18 +268,26 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             
             out_seq_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(out_seq_bean, env, 
-                        SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+                SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
             /*sandesha2_seq_property_bean_set_seq_id(out_seq_bean, env, 
                         offer_seq_id);
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, 
                         int_seq_id);*/
             sandesha2_seq_property_bean_set_seq_id(out_seq_bean, env, 
-                        int_seq_id);
+                int_seq_id);
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, 
-                        offer_seq_id);
-            
+                offer_seq_id);
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
-                        out_seq_bean);
+                out_seq_bean);
+            int_seq_bean = sandesha2_seq_property_bean_create(env);
+            sandesha2_seq_property_bean_set_name(int_seq_bean, env, 
+                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+            sandesha2_seq_property_bean_set_seq_id(int_seq_bean, env, 
+                offer_seq_id);
+            sandesha2_seq_property_bean_set_value(int_seq_bean, env, 
+                int_seq_id);
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
+                int_seq_bean);
         }
         else
         {

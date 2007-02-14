@@ -27,6 +27,7 @@
 #include <axis2_hash.h>
 #include <axis2_thread.h>
 #include <axis2_property.h>
+#include <axis2_module_desc.h>
 #include <platforms/axis2_platform_auto_sense.h>
 #include <sqlite3.h>
 
@@ -115,25 +116,41 @@ sandesha2_permanent_transaction_create(
     trans_impl->trans.ops = &transaction_ops;
 	conf_ctx = (axis2_conf_ctx_t *) sandesha2_storage_mgr_get_ctx(
         storage_mgr, env);
-    conf = AXIS2_CONF_CTX_GET_CONF((const axis2_conf_ctx_t *) conf_ctx, env);
+    if(conf_ctx)
+        conf = AXIS2_CONF_CTX_GET_CONF((const axis2_conf_ctx_t *) conf_ctx, env);
+    else
+        return NULL;
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
-    path = sandesha2_property_bean_get_db_path(prop_bean, env);
-    if(conf_ctx)
+    /*path = sandesha2_property_bean_get_db_path(prop_bean, env);*/
     {
-        axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-        axis2_property_t *property = axis2_ctx_get_property(conf_ctx_base, env, 
-            SANDESHA2_IS_SVR_SIDE, AXIS2_FALSE);
-        if(!property)
+        axis2_module_desc_t *module_desc = NULL;
+        axis2_qname_t *qname = NULL;
+        qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+        module_desc = AXIS2_CONF_GET_MODULE(conf, env, qname);
+        if(module_desc)
         {
-            db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
-                "sandesha2_svr_db", NULL);
+            axis2_param_t *db_param = NULL;
+            db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, SANDESHA2_DB);
+            if(db_param)
+            {
+                path = (axis2_char_t *) axis2_param_get_value(db_param, env);
+            }
         }
-        else
-        {
-            db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
-                "sandesha2_client_db", NULL);
-        }
+        axis2_qname_free(qname, env);
+    }
+    axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
+    axis2_property_t *property = axis2_ctx_get_property(conf_ctx_base, env, 
+        SANDESHA2_IS_SVR_SIDE, AXIS2_FALSE);
+    if(!property)
+    {
+        db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+            "sandesha2_svr_db", NULL);
+    }
+    else
+    {
+        db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+            "sandesha2_client_db", NULL);
     }
     AXIS2_LOG_INFO(env->log, "db_name %s", db_name);
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));

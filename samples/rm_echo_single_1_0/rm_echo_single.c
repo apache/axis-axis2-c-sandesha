@@ -29,7 +29,7 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 
-#define SANDESHA2_MAX_COUNT 2
+#define SANDESHA2_MAX_COUNT 4
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
             property);
     }
     
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-
+    */
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");

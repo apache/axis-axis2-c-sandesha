@@ -274,12 +274,18 @@ extern "C"
 	#define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY  "HighestInMsgKey"
 		
 	#define SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER  "HighestOutMsgNumber"
+
+    #define SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO "HighestOutRelatesTo"
 		
 	#define SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY  "HighestOutMsgKey"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO  "LastOutMessage"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_NO  "LastInMessage"
+	
+    #define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID  "LastInMessageId"
+
+    #define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID "HighestInMsgId"
 	
 	/**
 	 * SOAP Versions

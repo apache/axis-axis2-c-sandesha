@@ -131,10 +131,10 @@ sandesha2_utils_get_rm_version(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
     
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-                        storage_mgr, env);
+        storage_mgr, env);
     if(seq_prop_mgr)
         rm_version_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
-                        env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
+            env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
     if(!rm_version_bean)
         return NULL;
     return sandesha2_seq_property_bean_get_value(rm_version_bean, env);
@@ -189,9 +189,9 @@ sandesha2_utils_get_seq_property(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
     
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-                        storage_mgr, env);
+        storage_mgr, env);
     seq_prop_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-                        env, incoming_seq_id, name);
+        env, incoming_seq_id, name);
     if(!seq_prop_bean)
         return NULL;
     return  sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
@@ -435,7 +435,7 @@ sandesha2_utils_start_polling_mgr(
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_outgoing_internal_seq_id(const axis2_env_t *env,
-                        axis2_char_t *seq_id)
+    axis2_char_t *seq_id)
 {
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
@@ -1194,16 +1194,14 @@ sandesha2_utils_is_all_msgs_acked_upto(
         internal_seq_id, SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, 
         storage_mgr);
     acked_msgs_list = sandesha2_utils_get_array_list_from_string(env, 
-            client_completed_msgs);
+        client_completed_msgs);
     for(temp_msg_no = smallest_msg_no; temp_msg_no <= highest_in_msg_no; 
-            temp_msg_no++)
+        temp_msg_no++)
     {
-        axis2_char_t *str_msg_no = NULL;
-        
-        str_msg_no = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
+        axis2_char_t str_msg_no[32];
         sprintf(str_msg_no, "%ld", temp_msg_no);
         if(!AXIS2_ARRAY_LIST_CONTAINS(acked_msgs_list, env, 
-                    str_msg_no))
+            str_msg_no))
         {
             return AXIS2_FALSE;
         }
@@ -1289,7 +1287,7 @@ sandesha2_utils_is_anon_uri(
         return AXIS2_TRUE;
     if(0 == AXIS2_STRCMP(AXIS2_WSA_ANONYMOUS_URL_SUBMISSION, address_l))
         return AXIS2_TRUE;
-    else if (sandesha2_utils_is_wsrm_anon_reply_to(env, address))
+    else if (sandesha2_utils_is_wsrm_anon_reply_to(env, (axis2_char_t *) address))
         return AXIS2_TRUE;
 
     return AXIS2_FALSE;
