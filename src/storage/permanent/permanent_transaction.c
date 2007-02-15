@@ -101,7 +101,9 @@ sandesha2_permanent_transaction_create(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     sandesha2_property_bean_t *prop_bean = NULL;
-    
+    axis2_ctx_t *conf_ctx_base = NULL; 
+    axis2_property_t *property = NULL;
+
     AXIS2_ENV_CHECK(env, NULL);
     
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
@@ -139,8 +141,8 @@ sandesha2_permanent_transaction_create(
         }
         axis2_qname_free(qname, env);
     }
-    axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-    axis2_property_t *property = axis2_ctx_get_property(conf_ctx_base, env, 
+    conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(conf_ctx_base, env, 
         SANDESHA2_IS_SVR_SIDE, AXIS2_FALSE);
     if(!property)
     {
