@@ -688,12 +688,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         axis2_ctx_set_property(ctx, env, AXIS2_RESPONSE_WRITTEN, property,
             AXIS2_FALSE);
         engine = axis2_engine_create(env, conf_ctx);
-
-        /*property = axis2_property_create_with_args(env, 0, 0, 0, to_addr);
-        axis2_msg_ctx_set_property(msg_ctx1, env, AXIS2_TRANSPORT_URL, property, 
-            AXIS2_FALSE);
-        axis2_msg_ctx_set_to(msg_ctx1, env, to_epr);*/
-
         AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
         return AXIS2_SUCCESS;
     }

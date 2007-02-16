@@ -174,7 +174,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *transmit_bean = NULL;
     axis2_char_t *spec_version = NULL;
   
-    printf("came10\n");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
@@ -308,7 +307,6 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
             seq_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, highest_in_msg_id);
         if(last_in_msg_bean)
         {
-            printf("came20\n");
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, last_in_msg_bean);
         }
         /* If an outbound message has already gone out with that relatesTo, then 

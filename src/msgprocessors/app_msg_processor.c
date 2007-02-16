@@ -640,10 +640,8 @@ sandesha2_app_msg_processor_process_out_msg(
          */
         last_req_id = sandesha2_utils_get_seq_property(env, incoming_seq_id,
             SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, storage_mgr);
-        printf("last_req_id:%s\n", last_req_id);
         relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
         relates_to_value = axis2_relates_to_get_value(relates_to, env);
-        printf("relates_to_value:%s\n", relates_to_value);
         if(relates_to && last_req_id && 0 == axis2_strcmp(last_req_id, 
             relates_to_value))
         {
@@ -755,8 +753,6 @@ sandesha2_app_msg_processor_process_out_msg(
         res_highest_msg_key_bean = sandesha2_seq_property_bean_create_with_data(
             env, internal_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY,
             storage_key);
-        printf("internal_seq_id:%s\n", internal_seq_id);
-        printf("msg_number_str:%s\n", msg_number_str);
         res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(
             env, internal_seq_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO,
             msg_number_str);
