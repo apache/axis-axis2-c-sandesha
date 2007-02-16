@@ -201,7 +201,6 @@ int main(int argc, char** argv)
     payload = NULL;
 
     AXIS2_SLEEP(3 * SANDESHA2_MAX_COUNT);
-    sleep(30);
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/

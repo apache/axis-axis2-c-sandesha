@@ -208,7 +208,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         storage_mgr);
     create_seq_res_msg = sandesha2_msg_creator_create_create_seq_res_msg(env,
                         rm_msg_ctx, out_msg_ctx, new_seq_id, storage_mgr);
-    AXIS2_MSG_CTX_SET_FLOW(out_msg_ctx, env, AXIS2_OUT_FLOW);
+    axis2_msg_ctx_set_flow(out_msg_ctx, env, AXIS2_OUT_FLOW);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, 
         SANDESHA2_VALUE_TRUE);
@@ -311,7 +311,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     new_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR, 
                     (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env));
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
-    AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(out_msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_response_written(out_msg_ctx, env, AXIS2_TRUE);
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, 
                     storage_mgr);
     engine = axis2_engine_create(env, conf_ctx);

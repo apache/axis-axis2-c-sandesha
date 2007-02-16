@@ -343,13 +343,13 @@ sandesha2_ack_msg_processor_process_in_msg (
                 ack_range_list, highest_out_msg_no);
             if(completed)
             {
-                sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx,
-                    out_seq_id, int_seq_id, storage_mgr);
+                sandesha2_terminate_mgr_add_terminate_seq_msg(env, 
+                    rm_msg_ctx, out_seq_id, int_seq_id, storage_mgr);
             }
         }
     }
     action = AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
-    if(action && 0 == AXIS2_STRCMP(action, 
+    if(action && 0 == axis2_strcmp(action, 
         sandesha2_spec_specific_consts_get_ack_req_action(env, 
             sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env))))
     {

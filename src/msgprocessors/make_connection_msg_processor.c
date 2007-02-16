@@ -261,7 +261,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     {
         return AXIS2_SUCCESS;
     }
-    transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
+    transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
     if(!transport_out)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]"
