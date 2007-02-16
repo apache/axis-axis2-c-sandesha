@@ -429,7 +429,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
             int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
                 storage_mgr);
     }
-    else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
+    /*else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
     {
         sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
         axis2_char_t *seq_id = NULL;
@@ -445,7 +445,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
             storage_mgr);
-    }
+    }*/
     axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, "[sandesha2] EXIT sandesha2_make_connection_msg_" \
             "processor_process_in_msg .........");

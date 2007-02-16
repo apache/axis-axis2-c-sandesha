@@ -16,6 +16,7 @@
  
 #include <sandesha2_utils.h>
 #include <sandesha2_terminate_mgr.h>
+#include <sandesha2_terminate_seq.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_property_bean.h>
 #include <sandesha2_seq_property_bean.h>
@@ -689,6 +690,24 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             AXIS2_FALSE);
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
+        /* Clean sending side data */
+        {
+            sandesha2_terminate_seq_t *terminate_seq = NULL;
+            axis2_char_t *seq_id = NULL;
+            axis2_char_t *internal_seq_id = NULL;
+            
+            terminate_seq = (sandesha2_terminate_seq_t*)
+                sandesha2_msg_ctx_get_msg_part(terminate_rm_msg, env, 
+                SANDESHA2_MSG_PART_TERMINATE_SEQ);
+            seq_id = sandesha2_identifier_get_identifier(
+                sandesha2_terminate_seq_get_identifier(terminate_seq, 
+                env), env);
+            internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
+                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+            sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
+                internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx1, env), 
+                    storage_mgr);
+        }
         return AXIS2_SUCCESS;
     }
     key = axis2_uuid_gen(env);

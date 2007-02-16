@@ -1200,7 +1200,7 @@ sandesha2_utils_is_all_msgs_acked_upto(
     {
         axis2_char_t str_msg_no[32];
         sprintf(str_msg_no, "%ld", temp_msg_no);
-        if(!AXIS2_ARRAY_LIST_CONTAINS(acked_msgs_list, env, 
+        if(!sandesha2_utils_array_list_contains(env, acked_msgs_list, 
             str_msg_no))
         {
             return AXIS2_FALSE;

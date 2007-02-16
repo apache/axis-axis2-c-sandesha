@@ -483,7 +483,7 @@ sandesha2_sender_worker_worker_func(
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr);
     }
-    else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
+    /*else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
     {
         sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
         axis2_char_t *seq_id = NULL;
@@ -499,7 +499,7 @@ sandesha2_sender_worker_worker_func(
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
             storage_mgr);
-    }
+    }*/
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
