@@ -621,6 +621,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_char_t *paused_phase_name = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
     axis2_stream_t *out_stream = NULL;
+    axis2_char_t *transport_to = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
@@ -723,15 +724,10 @@ sandesha2_utils_create_new_related_msg_ctx(
                         AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(ref_msg, env)));
     AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(new_msg, env, soap_env);
     
-    property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_TRANSPORT_URL,
-                        AXIS2_FALSE);
-    if(property)
+    transport_to = axis2_msg_ctx_get_transport_url(ref_msg, env);
+    if(transport_to)
     {
-        axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
-        property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, value);
-        AXIS2_MSG_CTX_SET_PROPERTY(new_msg, env, AXIS2_TRANSPORT_URL, property,
-                        AXIS2_FALSE);
+        axis2_msg_ctx_set_transport_url(new_msg, env, transport_to);
     }
     property = AXIS2_MSG_CTX_GET_PROPERTY(ref_msg, env, AXIS2_WSA_VERSION,
                         AXIS2_FALSE);

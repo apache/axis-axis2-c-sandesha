@@ -279,16 +279,9 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     set_transport_properties(env, return_msg_ctx, rm_msg_ctx);
     /* Setting that the response gets written. This will be used by transports.*/
     if(msg_ctx)
-        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-    if(op_ctx)
     {
-        axis2_ctx_t *ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-        if (ctx)
-        {
-            property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
-            AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN,
-                                        property, AXIS2_FALSE);
-        }
+        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
     /*
      *running the make_connection through a sender_worker.

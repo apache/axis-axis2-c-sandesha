@@ -143,7 +143,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     if(0 == AXIS2_STRCMP(acks_to_str, anon_uri))
     {
-        axis2_ctx_t *ref_ctx = NULL;
         axis2_op_ctx_t *op_ctx = NULL;
 
         op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(ref_msg, env);
@@ -155,11 +154,7 @@ sandesha2_ack_mgr_generate_ack_msg(
             AXIS2_MSG_CTX_SET_OP(ref_msg, env, op);
             AXIS2_MSG_CTX_SET_OP_CTX(ref_msg, env, op_ctx);            
         }
-        ref_ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-        property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, "TRUE");
-        AXIS2_CTX_SET_PROPERTY(ref_ctx, env, AXIS2_RESPONSE_WRITTEN,
-            property, AXIS2_FALSE);
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
         
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);

@@ -183,7 +183,6 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_char_t *processed = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_property_t *property = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
@@ -235,17 +234,8 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     
-    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if (op_ctx)
-    {
-        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-        if (ctx)
-        {
-            property = axis2_property_create_with_args(env, 0, 0, 0, "FALSE");
-            AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN,
-                property, AXIS2_FALSE);
-        }
-    }
+    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
@@ -515,7 +505,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         sandesha2_last_msg_t *last_msg = sandesha2_seq_get_last_msg(seq, env);
-        axis2_char_t *msg_id = axis2_msg_ctx_get_msg_id(msg_ctx, env);
+        axis2_char_t *msg_id = (axis2_char_t *)axis2_msg_ctx_get_msg_id(msg_ctx, env);
         if(last_msg)
         {
             sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
@@ -641,7 +631,7 @@ sandesha2_app_msg_processor_process_out_msg(
         last_req_id = sandesha2_utils_get_seq_property(env, incoming_seq_id,
             SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, storage_mgr);
         relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
-        relates_to_value = axis2_relates_to_get_value(relates_to, env);
+        relates_to_value = (axis2_char_t *)axis2_relates_to_get_value(relates_to, env);
         if(relates_to && last_req_id && 0 == axis2_strcmp(last_req_id, 
             relates_to_value))
         {
@@ -920,17 +910,9 @@ sandesha2_app_msg_processor_process_out_msg(
             written = axis2_property_get_value(property, env);
         if(!written || 0 != axis2_strcmp(written, SANDESHA2_VALUE_TRUE))
         {
-            axis2_ctx_t *ctx = NULL;
             if (op_ctx)
             {
-                ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
-                if (ctx)
-                {
-                    property = axis2_property_create_with_args(env, 0, 0, 0, 
-                        "TRUE");
-                    AXIS2_CTX_SET_PROPERTY(ctx, env, 
-                        AXIS2_RESPONSE_WRITTEN, property, AXIS2_FALSE);
-                }
+                axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
             }
         }        
     }

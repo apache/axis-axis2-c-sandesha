@@ -167,7 +167,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     axis2_char_t *addr_ns_uri = NULL;
     axis2_char_t *anon_uri = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
-    axis2_ctx_t *ctx = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
      
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -311,7 +311,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     new_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR, 
                     (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env));
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
-    axis2_msg_ctx_set_response_written(out_msg_ctx, env, AXIS2_TRUE);
+    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, 
                     storage_mgr);
     engine = axis2_engine_create(env, conf_ctx);
@@ -330,14 +331,12 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     storage_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
-    ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
+    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
     if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
                     env)))
-        property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     else
-        property = axis2_property_create_with_args(env, 0, 0, 0, "FALSE");
-    AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
-                    AXIS2_FALSE);
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_FALSE);
     
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 

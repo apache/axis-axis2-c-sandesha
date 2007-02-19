@@ -621,6 +621,8 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     axis2_char_t *prop_str = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     sandesha2_msg_store_bean_t *bean = NULL;
+    axis2_char_t *transport_to = NULL;
+        
     envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     if (!envelope)
     {
@@ -707,14 +709,13 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to, env);
         sandesha2_msg_store_bean_set_reply_to(bean, env, address);
     }
-    property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_URL,
-        AXIS2_FALSE);
-    if(property)
+    
+    transport_to = axis2_msg_ctx_get_transport_url(msg_ctx, env);
+    if(transport_to)
     {
-        axis2_char_t *transport_to = NULL;
-        transport_to = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
         sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
     }
+
     options = (axis2_options_t *) axis2_msg_ctx_get_options(msg_ctx, env);
     action  = (axis2_char_t *) AXIS2_OPTIONS_GET_ACTION(options, env);
     sandesha2_msg_store_bean_set_action(bean, env, action);
@@ -781,7 +782,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_transport_out_desc_t *transport_out_desc = NULL;
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_op_t *op = NULL;
-    axis2_property_t *property = NULL;
     axis2_options_t *options = NULL;
     axiom_xml_reader_t *reader = NULL;
     int soap_version = -1;
@@ -958,9 +958,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         env);
     if(transport_to_str)
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, transport_to_str);
-        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_URL, property,
-        AXIS2_FALSE);
+        axis2_msg_ctx_set_transport_url(msg_ctx, env, transport_to_str);
     }
     to_url_str = sandesha2_msg_store_bean_get_to_url(msg_store_bean, env);
     if(to_url_str)

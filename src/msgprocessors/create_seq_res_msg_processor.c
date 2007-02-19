@@ -178,8 +178,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_sender_bean_t *target_bean = NULL;
     axis2_array_list_t *found_list = NULL;
     int i = 0, size = 0;
-    axis2_ctx_t *ctx = NULL;
-    axis2_property_t *property = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
     axis2_bool_t polling_mode = AXIS2_FALSE;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -448,10 +447,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_storage_mgr_update_msg_ctx(storage_mgr, env, key, app_msg_ctx);
     }
     sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, storage_mgr);
-    ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
-    property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
-    AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
-                        AXIS2_FALSE);
+    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 
             "[sandesha2] Exit: sandesha2_create_seq_res_msg_processor_process_in_msg");

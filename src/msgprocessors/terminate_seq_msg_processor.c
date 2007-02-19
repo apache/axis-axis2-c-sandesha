@@ -360,7 +360,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     axis2_char_t *addr_ns_uri = NULL;
     axis2_char_t *anon_uri = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
-    axis2_ctx_t *ctx = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
     axis2_transport_out_desc_t *orig_trans_out = NULL;
     axis2_transport_out_desc_t *trans_out = NULL;
     sandesha2_sender_bean_t *term_res_bean = NULL;
@@ -438,19 +438,16 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     to_epr = AXIS2_MSG_CTX_GET_TO(msg_ctx, env);
     
-    ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
-    
+    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
     if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env)))
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
     else
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, "FALSE");
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_FALSE);
     }
         
-    AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property,
-        AXIS2_FALSE);
     return AXIS2_SUCCESS;
 }
     
@@ -561,10 +558,9 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
 
     if(transport_to)
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, transport_to);
-        axis2_msg_ctx_set_property(msg_ctx, env, 
-                        AXIS2_TRANSPORT_URL, property, AXIS2_FALSE);
+        axis2_msg_ctx_set_transport_url(msg_ctx, env, transport_to);
     }
+
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     
     /*key = axis2_uuid_gen(env);

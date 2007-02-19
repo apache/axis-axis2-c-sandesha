@@ -471,10 +471,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
         
     
-    property = AXIS2_MSG_CTX_GET_PROPERTY(first_app_msg, env, AXIS2_TRANSPORT_URL,
-                        AXIS2_FALSE);
-    if(property)
-        transport_to = AXIS2_PROPERTY_GET_VALUE(property, env);
+    transport_to = axis2_msg_ctx_get_transport_url(first_app_msg, env);
     
     if(transport_to)
     {

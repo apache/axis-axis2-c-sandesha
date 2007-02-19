@@ -671,7 +671,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         axis2_char_t *value = sandesha2_seq_property_bean_get_value(
             transport_to_bean, env);
         property = axis2_property_create_with_args(env, 0, 0, 0, value);
-        sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 
+        sandesha2_msg_ctx_set_property(terminate_rm_msg, env,
             AXIS2_TRANSPORT_URL, property);
     }
     
@@ -680,14 +680,9 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
        sandesha2_utils_is_single_channel(env, rm_ver, to_addr))
     {
         axis2_msg_ctx_t *msg_ctx1 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
-        axis2_ctx_t *ctx = NULL;
-        axis2_property_t *property = NULL;
-        axis2_msg_ctx_set_response_written(msg_ctx1, env, AXIS2_TRUE);
+        axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx1, env), env, AXIS2_TRUE);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
-        ctx = axis2_op_ctx_get_base(axis2_msg_ctx_get_op_ctx(msg_ctx, env), env);
-        property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");    
-        axis2_ctx_set_property(ctx, env, AXIS2_RESPONSE_WRITTEN, property,
-            AXIS2_FALSE);
+        axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx, env), env, AXIS2_TRUE);
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
         /* Clean sending side data */

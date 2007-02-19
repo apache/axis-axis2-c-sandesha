@@ -251,7 +251,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     if(0 == AXIS2_STRCMP(anon_uri, acks_to_str))
     {
         axis2_engine_t *engine = NULL;
-        axis2_ctx_t *ctx = NULL;
+        axis2_op_ctx_t *op_ctx = NULL;
         
         if(!AXIS2_MSG_CTX_GET_OP(msg_ctx, env))
         {
@@ -265,11 +265,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             AXIS2_MSG_CTX_SET_OP(msg_ctx, env, operation);
             AXIS2_MSG_CTX_SET_OP_CTX(msg_ctx, env, op_ctx);            
         }
-        ctx = AXIS2_OP_CTX_GET_BASE(AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env), env);
-        
-        property = axis2_property_create_with_args(env, 0, 0, 0, "TRUE");
-        AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_WRITTEN, property, 
-            AXIS2_FALSE);
+        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+        axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
         
         property = axis2_property_create_with_args(env, 0, 0, 0, 
             SANDESHA2_VALUE_TRUE);
