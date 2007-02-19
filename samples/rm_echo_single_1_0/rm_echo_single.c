@@ -28,6 +28,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
+#include <ctype.h>
 
 #define SANDESHA2_MAX_COUNT 4
 
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
+    axiom_node_t *result = NULL;
     int c;
    
     /* Set up the environment */
@@ -195,8 +196,8 @@ int main(int argc, char** argv)
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    if(status)
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    if(result)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
 

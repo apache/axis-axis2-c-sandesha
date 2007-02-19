@@ -25,6 +25,7 @@
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
+#include <ctype.h>
 
 #define SANDESHA2_SLEEP_TIME 2
 void 
@@ -36,18 +37,15 @@ int main(int argc, char** argv)
     const axis2_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
-    axis2_endpoint_ref_t* reply_to = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_property_t *property = NULL;
-    axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     int c;
     const axis2_char_t *image_name = "resources/axis2.jpg";
-    axiom_node_t *ret_node = NULL;
    
     /* Set up the environment */
     env = axis2_env_create_all("echo_non_blocking_dual.log", 

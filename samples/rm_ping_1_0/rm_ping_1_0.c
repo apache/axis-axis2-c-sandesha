@@ -21,6 +21,7 @@
 #include <axis2_client.h>
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
+#include <ctype.h>
 
 #define MAX_COUNT 2
 
@@ -48,7 +49,6 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_property_t *property = NULL;
-    int count = 0;
     int c;
    
     /* Set up the environment */

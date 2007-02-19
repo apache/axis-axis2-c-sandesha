@@ -28,6 +28,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
+#include <ctype.h>
 
 #define SANDESHA2_MAX_COUNT 10
 

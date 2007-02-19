@@ -22,6 +22,7 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
+#include <ctype.h>
 
 #define MAX_COUNT 1
 
@@ -29,7 +30,7 @@ axiom_node_t *
 build_om_programatically(
     const axis2_env_t *env,
     axis2_char_t *text,
-    axis2_char_t *seq);
+    const axis2_char_t *seq);
 
 static void 
 usage(
@@ -51,7 +52,6 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_property_t *property = NULL;
-    int count = 0;
     int c;
    
     /* Set up the environment */
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     if(target_epr)
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, target_epr);
+        property = axis2_property_create_with_args(env, 0, 0, 0, (void*)target_epr);
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
     }
     /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:Ping");*/
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
     }
     if(seq_key)
     {
-        property = axis2_property_create_with_args(env, 3, 0, 0, seq_key);
+        property = axis2_property_create_with_args(env, 3, 0, 0, (void*)seq_key);
         if(property)
         {
             AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
@@ -192,7 +192,7 @@ axiom_node_t *
 build_om_programatically(
     const axis2_env_t *env,
     axis2_char_t *text,
-    axis2_char_t *seq_key)
+    const axis2_char_t *seq_key)
 {
     axiom_node_t *ping_om_node = NULL;
     axiom_element_t* ping_om_ele = NULL;

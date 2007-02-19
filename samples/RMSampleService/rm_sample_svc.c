@@ -142,7 +142,6 @@ rm_sample_svc_ping (
     axiom_node_t *text_parent_node = NULL;
     axiom_element_t *text_parent_element = NULL;
     axiom_node_t *text_node = NULL;
-    axiom_node_t *ret_node = NULL;
     axiom_element_t *element = NULL;
     axis2_char_t *ns = "http://tempuri.org/";
     axis2_qname_t *qname = NULL;
@@ -193,11 +192,11 @@ rm_sample_svc_ping (
     
     if (AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT)
     {
-        axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
+        /*axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
         if( text && AXIOM_TEXT_GET_VALUE(text , env))
         {
             axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
-        }
+        }*/
     }
     else
     {

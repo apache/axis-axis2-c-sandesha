@@ -34,4 +34,9 @@ rm_sample_svc_ping (
     const axis2_env_t *env, 
     axiom_node_t *node);
 
+axiom_node_t *
+rm_sample_svc_mtom(
+    const axis2_env_t *env, 
+    axiom_node_t *node);
+
 #endif /* CALC_H*/

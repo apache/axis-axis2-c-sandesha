@@ -28,6 +28,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <platforms/axis2_platform_auto_sense.h>
+#include <ctype.h>
 
 #define SANDESHA2_MAX_COUNT 40
 
@@ -67,7 +68,6 @@ int main(int argc, char** argv)
     axis2_callback_t *callback = NULL;
     axis2_callback_t *callback2 = NULL;
     axis2_callback_t *callback3 = NULL;
-    axis2_callback_t *callback4 = NULL;
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     int c;

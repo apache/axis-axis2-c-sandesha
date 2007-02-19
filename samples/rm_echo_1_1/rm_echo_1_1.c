@@ -29,6 +29,7 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 #include <platforms/axis2_platform_auto_sense.h>
+#include <ctype.h>
 
 #define SANDESHA2_MAX_COUNT 10
 
@@ -73,7 +74,6 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_FALSE;
-    axis2_bool_t single_channel = AXIS2_TRUE;
     int c;
    
     /* Set up the environment */
