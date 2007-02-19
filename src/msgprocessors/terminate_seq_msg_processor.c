@@ -393,7 +393,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
         SANDESHA2_VALUE_TRUE);
     axis2_msg_ctx_set_property(out_msg_ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE, property, AXIS2_FALSE);
-    AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(out_msg_ctx, env, AXIS2_TRUE);
+    /*AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(out_msg_ctx, env, AXIS2_TRUE);*/
     
     /* test code */
 

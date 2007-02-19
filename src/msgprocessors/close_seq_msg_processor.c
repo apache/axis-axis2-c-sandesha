@@ -211,7 +211,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
         SANDESHA2_VALUE_TRUE);
     sandesha2_msg_ctx_set_property(close_seq_res_rm_msg, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property);
-    AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(close_seq_res_msg, env, AXIS2_TRUE);
+    /*AXIS2_MSG_CTX_SET_RESPONSE_WRITTEN(close_seq_res_msg, env, AXIS2_TRUE);*/
     sandesha2_msg_ctx_add_soap_envelope(close_seq_res_rm_msg, env);
     
     engine = axis2_engine_create(env, conf_ctx);
