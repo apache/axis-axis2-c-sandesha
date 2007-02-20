@@ -621,7 +621,6 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     axis2_char_t *prop_str = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     sandesha2_msg_store_bean_t *bean = NULL;
-    axis2_char_t *transport_to = NULL;
         
     envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
     if (!envelope)
@@ -810,6 +809,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     }
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     soap_env_str = sandesha2_msg_store_bean_get_soap_envelope_str(msg_store_bean, env);
+    printf("soap_env_str = %s\n", soap_env_str);
     reader = axiom_xml_reader_create_for_memory(env, soap_env_str, AXIS2_STRLEN(
         soap_env_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     om_builder = axiom_stax_builder_create(env, reader);
@@ -1008,6 +1008,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axis2_hash_this(index, &k, NULL, &v);
             key = (axis2_char_t *) k;
             property = (axis2_property_t *) v;
+            printf("key = %s\n", key);
             AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, key, property, 
                 AXIS2_FALSE);
         }

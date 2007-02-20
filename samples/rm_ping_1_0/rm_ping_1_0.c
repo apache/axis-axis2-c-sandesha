@@ -53,7 +53,7 @@ int main(int argc, char** argv)
    
     /* Set up the environment */
     /*env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
-    env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
+    env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/

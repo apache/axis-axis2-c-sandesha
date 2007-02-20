@@ -255,6 +255,22 @@ sandesha2_msg_ctx_set_transport_out_stream(
     const axis2_env_t *env,
     axis2_stream_t *stream);
 
+AXIS2_EXTERN struct axis2_http_out_transport_info *AXIS2_CALL
+sandesha2_msg_ctx_get_http_out_transport_info(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_http_out_transport_info(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env,
+    struct axis2_http_out_transport_info *http_out_transport_info);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_reset_http_out_transport_info(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_env_t *env);
+
 /** @} */
 #ifdef __cplusplus
 }

@@ -45,6 +45,7 @@
 #include <axis2_op_ctx.h>
 #include <axis2_transport_out_desc.h>
 #include <axis2_http_transport.h>
+#include <axis2_http_out_transport_info.h>
 #include <axis2_rand.h>
 #include <sandesha2_msg_retrans_adjuster.h>
 #include <sandesha2_terminate_mgr.h>
@@ -458,10 +459,10 @@ set_transport_properties(
     axis2_msg_ctx_t *return_msg_ctx,
     sandesha2_msg_ctx_t *make_conn_msg_ctx)
 {
-    axis2_property_t *property = NULL;
     axis2_stream_t *out_stream = NULL;
     if(make_conn_msg_ctx && return_msg_ctx)
     {
+        axis2_http_out_transport_info_t *out_info = NULL;
         /*property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
             AXIS2_TRANSPORT_OUT);
         axis2_property_set_own_value(property, env, AXIS2_FALSE);
@@ -470,12 +471,9 @@ set_transport_properties(
         out_stream = sandesha2_msg_ctx_get_transport_out_stream(make_conn_msg_ctx, 
             env);
         axis2_msg_ctx_set_transport_out_stream(return_msg_ctx, env, out_stream);
-        property = sandesha2_msg_ctx_get_property(make_conn_msg_ctx, env, 
-            AXIS2_HTTP_OUT_TRANSPORT_INFO);
-        axis2_property_set_own_value(property, env, AXIS2_FALSE);
-        axis2_msg_ctx_set_property(return_msg_ctx, env, 
-            AXIS2_HTTP_OUT_TRANSPORT_INFO, axis2_property_clone(property, env), 
-            AXIS2_FALSE);
+        out_info = (axis2_http_out_transport_info_t *) 
+            sandesha2_msg_ctx_get_http_out_transport_info(make_conn_msg_ctx, env);
+        axis2_msg_ctx_set_http_out_transport_info(return_msg_ctx, env, out_info);
     }
 }
 

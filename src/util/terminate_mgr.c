@@ -216,7 +216,6 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     sandesha2_next_msg_bean_t *find_bean = NULL;
     axis2_array_list_t *found_list = NULL;
     axis2_char_t *highest_in_msg_key = NULL;
-    int i = 0, size = 0;
     
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_complete_termination_of_recv_side");

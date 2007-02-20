@@ -597,8 +597,6 @@ sandesha2_sender_worker_check_for_sync_res(
          AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
-    /*res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
-        soap_ns_uri);*/
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
     if(!res_envelope)
         res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,

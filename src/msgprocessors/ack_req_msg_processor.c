@@ -340,7 +340,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 old_ack_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
                 time_to_send = sandesha2_sender_bean_get_time_to_send(
                     old_ack_bean, env);
-                char *msg_id = sandesha2_sender_bean_get_msg_id(old_ack_bean, env);
+                /*char *msg_id = sandesha2_sender_bean_get_msg_id(old_ack_bean, env);*/
                 sandesha2_sender_mgr_remove(retrans_mgr, env, 
                     sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                         old_ack_bean, env));

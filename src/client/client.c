@@ -675,6 +675,8 @@ sandesha2_client_terminate_seq_with_svc_client(
     conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
     terminate_envelope = sandesha2_client_configure_terminate_seq(env, options, 
             conf_ctx);
+    if (!terminate_envelope)
+        return AXIS2_FAILURE;
     body = AXIOM_SOAP_ENVELOPE_GET_BODY(terminate_envelope, env);
     node = AXIOM_SOAP_BODY_GET_BASE_NODE(body, env);
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);

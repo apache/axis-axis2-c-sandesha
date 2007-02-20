@@ -262,7 +262,7 @@ sandesha2_sender_worker_func(
         sandesha2_sender_bean_t *sender_bean = NULL;
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
-        AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
+        AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME * 1); 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
