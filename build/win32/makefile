@@ -144,8 +144,8 @@ rm_echo_client_1_1:
 	del *.obj
 
 rm_echo_singel_client_1_0:
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /c
-	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo_single_1_1.exe 
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c /c
+	$(LD) $(LDFLAGS) $(LIBS) *.obj $(SANDESHA_DLL).lib /OUT:rm_echo_single_1_0.exe 
 	if not exist $(SANDESHADISTDIR)\samples\rm_echo_single_1_0 mkdir $(SANDESHADISTDIR)\samples\rm_echo_single_1_0
 	copy rm_echo_single_1_0.exe $(SANDESHADISTDIR)\samples\bin
 	copy $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c $(SANDESHADISTDIR)\samples\rm_echo_single_1_0
@@ -168,7 +168,7 @@ rm_echo_single_client_1_1:
 	del *.obj
 
 
-all_clients: rm_ping_client_1_0 rm_ping_client_1_1 rm_echo_client_1_1 rm_echo_1_0_client rm_mtom_1_0_client
+all_clients: rm_ping_client_1_0 rm_ping_client_1_1 rm_echo_client_1_1 rm_echo_1_0_client rm_mtom_1_0_client rm_echo_singel_client_1_0 rm_echo_single_client_1_1
 
 
 #### services
