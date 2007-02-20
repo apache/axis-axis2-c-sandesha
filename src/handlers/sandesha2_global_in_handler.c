@@ -71,7 +71,6 @@ sandesha2_global_in_handler_create(
     axis2_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
-    
     AXIS2_ENV_CHECK(env, NULL);
     
     handler = axis2_handler_create(env);

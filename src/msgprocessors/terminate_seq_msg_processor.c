@@ -375,7 +375,6 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
     out_rm_msg = sandesha2_msg_creator_create_terminate_seq_res_msg(env, 
         rm_msg_ctx, out_msg_ctx, storage_mgr);
-   
     ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id,
         storage_mgr);
     if(ack_rm_msg)
@@ -410,6 +409,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     property = axis2_property_create_with_args(env, 0, 0, 0, key);
     axis2_msg_ctx_set_property(out_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, 
         property, AXIS2_FALSE);
+    char *action = axis2_msg_ctx_get_wsa_action(out_msg_ctx, env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, out_msg_ctx);
 
     /* TODO: refine the terminate delay */

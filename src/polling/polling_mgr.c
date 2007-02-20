@@ -241,7 +241,6 @@ sandesha2_polling_mgr_worker_func(
         axis2_endpoint_ref_t *to = NULL;
         axis2_property_t *property = NULL;
         sandesha2_transaction_t *transaction = NULL;
-
         AXIS2_SLEEP(SANDESHA2_POLLING_MANAGER_WAIT_TIME);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(

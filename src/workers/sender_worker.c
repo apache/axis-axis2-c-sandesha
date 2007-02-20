@@ -483,23 +483,6 @@ sandesha2_sender_worker_worker_func(
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr);
     }
-    /*else if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == msg_type)
-    {
-        sandesha2_terminate_seq_res_t *terminate_seq_res = NULL;
-        axis2_char_t *seq_id = NULL;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        
-        terminate_seq_res = (sandesha2_terminate_seq_res_t*)
-            sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-            SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
-        seq_id = sandesha2_identifier_get_identifier(
-            sandesha2_terminate_seq_res_get_identifier(terminate_seq_res, 
-            env), env);
-        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-            seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
-            storage_mgr);
-    }*/
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
@@ -614,8 +597,12 @@ sandesha2_sender_worker_check_for_sync_res(
          AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
-    res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
-        soap_ns_uri);
+    /*res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
+        soap_ns_uri);*/
+    res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
+    if(!res_envelope)
+        res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
+            soap_ns_uri);
    
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);

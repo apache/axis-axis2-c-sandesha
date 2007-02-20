@@ -129,7 +129,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
-            "[sandesha2] sandesha2_terminate_msg_processor_process_in_msg .........");
+        "[sandesha2] sandesha2_terminate_msg_processor_process_in_msg .........");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
@@ -138,9 +138,9 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     if(!term_seq_res)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate "
-                    "Sequence part is not available");
+            "Sequence part is not available");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, 
-                    AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     seq_id = sandesha2_identifier_get_identifier(
@@ -154,8 +154,6 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     storage_mgr = (sandesha2_storage_mgr_t *) sandesha2_utils_get_storage_mgr(
         env, conf_ctx, AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
-    /*sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx,
-        seq_id, storage_mgr);*/
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
         AXIS2_FALSE, storage_mgr);
     AXIS2_LOG_INFO(env->log, 

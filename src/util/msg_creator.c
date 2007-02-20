@@ -653,13 +653,14 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     sandesha2_msg_ctx_set_msg_part(res_rm_msg, env, 
                         SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE,
                         (sandesha2_iom_rm_part_t*)terminate_seq_res);
-                        
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
-    axis2_msg_ctx_set_wsa_action(out_msg, env, 
-                        sandesha2_spec_specific_consts_get_teminate_seq_res_action(
-                        env, rm_version));
+    if(!rm_version)
+    {
+        rm_version = sandesha2_msg_ctx_get_rm_spec_ver(ref_rm_msg, env);
+    }
     temp_action = sandesha2_spec_specific_consts_get_teminate_seq_res_action(
         env, rm_version);
+    axis2_msg_ctx_set_wsa_action(out_msg, env, temp_action);
     soap_action = axis2_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action); 
     sandesha2_msg_creator_init_creation(env, sandesha2_msg_ctx_get_msg_ctx(

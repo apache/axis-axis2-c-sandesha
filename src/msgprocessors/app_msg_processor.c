@@ -663,9 +663,13 @@ sandesha2_app_msg_processor_process_out_msg(
             if(!spec_ver)
             {
                 axis2_property_t *spec_ver_prop = NULL;
+                /*sandesha2_seq_property_bean_t *spec_ver_bean = NULL;*/
                 spec_ver_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
                     SANDESHA2_CLIENT_RM_SPEC_VERSION, AXIS2_FALSE);
                 spec_ver = axis2_property_get_value(spec_ver_prop, env);
+                /*spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                    internal_seq_id, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, spec_ver);
+                sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_ver_bean);*/
             }
             if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                 (env, spec_ver))
