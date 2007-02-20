@@ -216,6 +216,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     sandesha2_next_msg_bean_t *find_bean = NULL;
     axis2_array_list_t *found_list = NULL;
     axis2_char_t *highest_in_msg_key = NULL;
+    int i = 0, size = 0;
     
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_complete_termination_of_recv_side");
@@ -229,7 +230,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
     
     found_list = sandesha2_next_msg_mgr_find(next_mgr, env, find_bean);
-    /*if(found_list)
+    if(found_list)
         size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
     for(i = 0; i < size; i++)
     {
@@ -249,7 +250,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
             if(seq_id)
                 sandesha2_next_msg_mgr_remove(next_mgr, env, seq_id);
         }
-    }*/
+    }
     highest_in_msg_key = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, storage_mgr);
     if(highest_in_msg_key)
