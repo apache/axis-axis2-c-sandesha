@@ -171,7 +171,7 @@ int main(int argc, char** argv)
     status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
-    AXIS2_SLEEP(2 * MAX_COUNT);
+    AXIS2_SLEEP(4 * MAX_COUNT);
     
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL, NULL);
      /** Wait till callback is complete. Simply keep the parent thread running
