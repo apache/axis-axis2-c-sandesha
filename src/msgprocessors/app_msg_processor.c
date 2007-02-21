@@ -490,13 +490,11 @@ sandesha2_app_msg_processor_process_in_msg (
     if(axis2_msg_ctx_get_to(msg_ctx, env) && 
         sandesha2_utils_is_single_channel(env, rm_version, reply_to_addr))
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*******************single channel1******************");
         /* Do nothing */
     } 
     else
         if(sandesha2_utils_is_single_channel(env, rm_version, to_addr))
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*******************single channel2******************");
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
     }
@@ -1274,7 +1272,7 @@ sandesha2_app_msg_processor_process_response_msg(
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Unable to fine RM spec version");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Unable to find RM spec version");
         return AXIS2_FAILURE;
     }
     rm_ns_val = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);

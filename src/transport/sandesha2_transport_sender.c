@@ -183,9 +183,8 @@ sandesha2_transport_sender_invoke (
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*****************qualified for sending *****************");
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
-                        property, AXIS2_FALSE);
+        property, AXIS2_FALSE);
     sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);
     return AXIS2_SUCCESS;
 }

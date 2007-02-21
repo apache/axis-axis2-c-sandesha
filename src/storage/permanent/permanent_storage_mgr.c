@@ -724,8 +724,9 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     action  = (axis2_char_t *) AXIS2_OPTIONS_GET_ACTION(options, env);
     sandesha2_msg_store_bean_set_action(bean, env, action);
     prop_str = sandesha2_permanent_storage_mgr_get_property_string(env, msg_ctx);
-    sandesha2_msg_store_bean_set_persistent_property_str(bean, env, 
-        prop_str);
+    if (prop_str)
+        sandesha2_msg_store_bean_set_persistent_property_str(bean, env, 
+            prop_str);
     
     /* setting the request message if this a response message.*/
     op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
@@ -989,13 +990,13 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     persistent_prop_str = 
         sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, 
             env);
-    if(persistent_prop_str && 0 != AXIS2_STRCMP("", AXIS2_STRTRIM(env, 
-        persistent_prop_str, NULL)))
+    if(persistent_prop_str && 0 != AXIS2_STRCMP("", persistent_prop_str))
     {
         axis2_hash_t *map = 
             sandesha2_permanent_storage_mgr_get_property_map_from_string(env, 
                 persistent_prop_str);
         axis2_hash_index_t *index = NULL;
+        if(map)
         for (index = axis2_hash_first(map, env); index; index = 
             axis2_hash_next(env, index))
         {
@@ -1018,7 +1019,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
     const axis2_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_char_t *prop_str = NULL;
+    axis2_char_t *prop_str = "";
     axis2_property_t *property = NULL;
     axis2_options_t *options = (axis2_options_t *) AXIS2_MSG_CTX_GET_OPTIONS(
         msg_ctx, env);
@@ -1030,11 +1031,10 @@ sandesha2_permanent_storage_mgr_get_property_string(
     if(property)
     {
         axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*************qualified for sending added value = %s", value);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
-    else
+    /*else
     {
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
             AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
@@ -1042,8 +1042,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
             property, AXIS2_FALSE);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, SANDESHA2_VALUE_FALSE, NULL);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*************qualified for sending added value = %s", SANDESHA2_VALUE_FALSE);
-    }
+    }*/
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(property)
@@ -1056,7 +1055,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
             prop_str = axis2_strcat(env, temp_str, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, AXIS2_WSA_VERSION, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
-            if(temp_str)
+            if(temp_str && 0 < axis2_strlen(temp_str))
                 AXIS2_FREE(env->allocator, temp_str);
         }
     }
@@ -1093,7 +1092,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, key, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, 
                 value, NULL);
-            if(temp_str)
+            if(temp_str && axis2_strlen(temp_str)> 0)
                 AXIS2_FREE(env->allocator, temp_str);
         }
     }

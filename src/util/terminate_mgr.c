@@ -640,15 +640,17 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, int_seq_id,
         SANDESHA2_SEQ_PROP_TO_EPR);
-    to_epr = axis2_endpoint_ref_create(env, 
-        sandesha2_seq_property_bean_get_value(to_bean, env));
-    if(!to_epr)
+    if(to_bean)
+        to_epr = axis2_endpoint_ref_create(env, 
+            sandesha2_seq_property_bean_get_value(to_bean, env));
+    /*if(!to_epr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] To EPR has an "
             "invalid value");
         return AXIS2_FAILURE;
-    }
-    to_addr = axis2_endpoint_ref_get_address(to_epr, env);
+    }*/
+    if(to_epr)
+        to_addr = axis2_endpoint_ref_get_address(to_epr, env);
     sandesha2_msg_ctx_set_to(terminate_rm_msg, env, to_epr);
     rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_mgr);
     if(!rm_ver)
@@ -757,13 +759,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     {                
         axis2_endpoint_ref_t *reply_to_epr = NULL;
         reply_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
-        if(!reply_to_epr)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Reply To EPR "
-                 "has an invalid value");
-            return AXIS2_FAILURE;
-        }
-        axis2_msg_ctx_set_reply_to(msg_ctx1, env, reply_to_epr);
+        if(reply_to_epr)
+            axis2_msg_ctx_set_reply_to(msg_ctx1, env, reply_to_epr);
     }
     engine = axis2_engine_create(env, conf_ctx);
     return AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
