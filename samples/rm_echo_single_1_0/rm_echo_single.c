@@ -118,7 +118,7 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
-    AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
+    /*AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.

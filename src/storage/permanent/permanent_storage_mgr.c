@@ -1030,6 +1030,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
     if(property)
     {
         axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*************qualified for sending added value = %s", value);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
@@ -1041,6 +1042,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
             property, AXIS2_FALSE);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, SANDESHA2_VALUE_FALSE, NULL);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "*************qualified for sending added value = %s", SANDESHA2_VALUE_FALSE);
     }
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         AXIS2_WSA_VERSION, AXIS2_FALSE);

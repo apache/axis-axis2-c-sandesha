@@ -179,11 +179,18 @@ sandesha2_msg_creator_create_create_seq_msg(
     if (!to_epr)
     {
         temp_to = sandesha2_msg_ctx_get_to(application_rm_msg, env); 
-        to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
-            temp_to, env));
+        if (temp_to)
+        {
+            to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                temp_to, env));
+        }
     }
-    AXIS2_MSG_CTX_SET_TO(create_seq_msg_ctx, env, to_epr);
-    to_epr = NULL;
+
+    if (to_epr)
+    {
+        AXIS2_MSG_CTX_SET_TO(create_seq_msg_ctx, env, to_epr);
+        to_epr = NULL;
+    }
     
     temp_reply_to = sandesha2_msg_ctx_get_reply_to(application_rm_msg, env); 
     AXIS2_MSG_CTX_SET_REPLY_TO(create_seq_msg_ctx, env, temp_reply_to);
@@ -229,13 +236,22 @@ sandesha2_msg_creator_create_create_seq_msg(
             internal_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
-    temp_value = sandesha2_seq_property_bean_get_value(to_bean, env);
-    if(!to_bean || !temp_value)
+    if (to_bean)
+    {
+        temp_value = sandesha2_seq_property_bean_get_value(to_bean, env);
+    }
+    
+    /*if(!to_bean || !temp_value)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
         return NULL;
+    }*/
+
+    if (temp_value)
+    {
+        to_epr = axis2_endpoint_ref_create(env, temp_value);
     }
-    to_epr = axis2_endpoint_ref_create(env, temp_value);
+
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, 
             addressing_ns_value);
     if(!acks_to || 0 == AXIS2_STRCMP("", acks_to))
@@ -243,13 +259,13 @@ sandesha2_msg_creator_create_create_seq_msg(
         acks_to = AXIS2_STRDUP(anonymous_uri, env);
     }
     acks_to_epr = axis2_endpoint_ref_create(env, acks_to);
-    if(reply_to_bean && temp_value)
+    if(reply_to_bean)
     {
         temp_value = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
         reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
     }
     temp_to = sandesha2_msg_ctx_get_to(create_seq_rm_msg, env);
-    if(!temp_to)
+    if(!temp_to && to_epr)
         sandesha2_msg_ctx_set_to(create_seq_rm_msg, env, to_epr);
     /* ReplyTo will be set only if not NULL */
     if(reply_to_epr)

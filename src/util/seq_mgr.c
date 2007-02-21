@@ -384,16 +384,19 @@ sandesha2_seq_mgr_setup_new_client_seq(
                         SANDESHA2_CLIENT_ACKS_TO, AXIS2_FALSE);
     if(property)
         acks_to_str = AXIS2_PROPERTY_GET_VALUE(property, env);
-    if(!to_epr)
+    /*if(!to_epr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] WSA To is NULL");
         return AXIS2_FAILURE;
-    }
-    
-    to_bean = sandesha2_seq_property_bean_create_with_data(env, int_seq_id,
+    }*/
+   
+    if (to_epr)
+    {
+        to_bean = sandesha2_seq_property_bean_create_with_data(env, int_seq_id,
                        SANDESHA2_SEQ_PROP_TO_EPR, 
                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
                        env));
+    }
     
     if(AXIS2_MSG_CTX_GET_SERVER_SIDE(first_app_msg, env))
     {
@@ -463,7 +466,10 @@ sandesha2_seq_mgr_setup_new_client_seq(
     msgs_bean = sandesha2_seq_property_bean_create_with_data(env, int_seq_id, 
                         SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, "");
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, msgs_bean);
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_bean);
+    if (to_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_bean);
+    }
     
     if(acks_to_bean)
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);

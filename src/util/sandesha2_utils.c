@@ -1278,7 +1278,7 @@ sandesha2_utils_is_anon_uri(
 {
     axis2_char_t *address_l = NULL;
     if(!address)
-        return AXIS2_FALSE;
+        return AXIS2_TRUE;
     address_l = AXIS2_STRTRIM(env, address, NULL);
 
     if(0 == AXIS2_STRCMP(AXIS2_WSA_ANONYMOUS_URL, address_l))
