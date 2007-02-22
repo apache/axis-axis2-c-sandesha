@@ -68,7 +68,7 @@
     </operation>
 
    <!-- Database connection parameters -->
-    <parameter name="sandesha2_db" locked="false">/axis2c/deploy</parameter>
+    <parameter name="sandesha2_db" locked="false">/tmp</parameter>
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_TRUE</parameter>
     <parameter name="RetransmissionInterval" locked="false">20000</parameter>

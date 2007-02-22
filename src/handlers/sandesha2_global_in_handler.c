@@ -230,7 +230,8 @@ sandesha2_global_in_handler_invoke(
         if(!within_transaction)
         {
             axis2_property_t *prop = NULL;
-            sandesha2_transaction_rollback(transaction, env);
+            if (transaction)
+                sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
                 AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
             AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
