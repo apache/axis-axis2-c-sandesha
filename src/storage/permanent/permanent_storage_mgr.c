@@ -997,19 +997,19 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 persistent_prop_str);
         axis2_hash_index_t *index = NULL;
         if(map)
-        for (index = axis2_hash_first(map, env); index; index = 
-            axis2_hash_next(env, index))
-        {
-            axis2_property_t *property = NULL;
-            void *v = NULL;
-            const void *k = NULL;
-            axis2_char_t *key = NULL;
-            axis2_hash_this(index, &k, NULL, &v);
-            key = (axis2_char_t *) k;
-            property = (axis2_property_t *) v;
-            AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, key, property, 
-                AXIS2_FALSE);
-        }
+            for (index = axis2_hash_first(map, env); index; index = 
+                axis2_hash_next(env, index))
+            {
+                axis2_property_t *property = NULL;
+                void *v = NULL;
+                const void *k = NULL;
+                axis2_char_t *key = NULL;
+                axis2_hash_this(index, &k, NULL, &v);
+                key = (axis2_char_t *) k;
+                property = (axis2_property_t *) v;
+                AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, key, property, 
+                    AXIS2_FALSE);
+            }
     }
     return msg_ctx;
 }
@@ -1034,15 +1034,6 @@ sandesha2_permanent_storage_mgr_get_property_string(
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
-    /*else
-    {
-        property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
-        AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
-            property, AXIS2_FALSE);
-        prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
-            SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, SANDESHA2_VALUE_FALSE, NULL);
-    }*/
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
         AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(property)

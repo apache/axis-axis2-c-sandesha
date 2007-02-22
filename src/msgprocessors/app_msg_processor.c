@@ -209,6 +209,13 @@ sandesha2_app_msg_processor_process_in_msg (
     const axis2_char_t *reply_to_addr = NULL;
     const axis2_char_t *to_addr = NULL;
     axis2_char_t *rm_version = NULL;
+    sandesha2_seq_property_bean_t *acks_to_bean = NULL;
+    sandesha2_seq_property_bean_t *to_bean = NULL;
+    axis2_char_t *acks_to_str = NULL;
+    axis2_endpoint_ref_t *acks_to = NULL;
+    axis2_bool_t back_channel_free = AXIS2_FALSE;
+    axis2_op_t *op = NULL;
+    int mep = -1;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -490,20 +497,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(to_epr)
         to_addr = axis2_endpoint_ref_get_address(to_epr, env);
 
-
-
-
-
-
-
-
-    sandesha2_seq_property_bean_t *acks_to_bean = NULL;
-    sandesha2_seq_property_bean_t *to_bean = NULL;
-    axis2_char_t *acks_to_str = NULL;
-    axis2_endpoint_ref_t *acks_to = NULL;
-    axis2_bool_t back_channel_free = AXIS2_FALSE;
-    axis2_op_t *op = axis2_op_ctx_get_op(op_ctx, env);
-    int mep = -1;
+    op = axis2_op_ctx_get_op(op_ctx, env);
     acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, str_seq_id,
         SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
     if(acks_to_bean)
@@ -518,51 +512,25 @@ sandesha2_app_msg_processor_process_in_msg (
     mep = AXIS2_OP_GET_AXIS_SPECIFIC_MEP_CONST(op, env);
     back_channel_free = (reply_to_addr && !sandesha2_utils_is_anon_uri(env, 
         reply_to_addr)) || AXIS2_MEP_CONSTANT_IN_ONLY == mep;
-    printf("came10\n");
     if(!reply_to_epr)
     {
-        printf("came11\n");
         to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, str_seq_id,
             SANDESHA2_SEQ_PROP_TO_EPR);
         if(to_bean)
             reply_to_addr = sandesha2_seq_property_bean_get_value(to_bean, env); 
     }
-    printf("reply_to_addr:%s\n", reply_to_addr);
-
-    if(sandesha2_utils_is_single_channel(env, rm_version, reply_to_addr))
-    {
-        printf("came13\n");
-        /* Do nothing */
-    } 
-    else
-        if(sandesha2_utils_is_single_channel(env, rm_version, to_addr))
-    {
-        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr);
-    }
-    else
-    {
-        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr);
-    }
-
-
-
-
-
-
-    /*if(back_channel_free)
+    if(back_channel_free)
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
     else if(sandesha2_utils_is_single_channel(env, rm_version, acks_to_str))
     {
-        // Do nothing
+        /* Do nothing */
     } 
     else
     {
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
-    }*/
+    }
     /* test code */
     if(axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
