@@ -117,7 +117,12 @@ sandesha2_global_in_handler_invoke(
    
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Starting sandesha2 global in handler ......");
-
+    is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
+    if(!is_rm_global_msg)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
+        return AXIS2_SUCCESS;
+    }
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -224,24 +229,7 @@ sandesha2_global_in_handler_invoke(
             }
         }
     }
-    is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
-    if(!is_rm_global_msg)
-    {
-        if(!within_transaction)
-        {
-            axis2_property_t *prop = NULL;
-            if (transaction)
-                sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
-            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-                prop, AXIS2_FALSE);
-            rolled_back = AXIS2_TRUE;
-            
-        }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
-        return AXIS2_SUCCESS;
-    }
+    
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
                         rm_msg_ctx, storage_mgr);
