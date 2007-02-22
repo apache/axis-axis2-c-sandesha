@@ -90,12 +90,6 @@ mod_sandesha2_init(
     
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     AXIS2_CONF_ADD_PARAM(conf, env, param);
-    db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, SANDESHA2_DB);
-    if(db_param)
-    {
-        db_path = (axis2_char_t *) axis2_param_get_value(db_param, env);
-        sandesha2_property_bean_set_db_path(property_bean, env, db_path);
-    }
 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 

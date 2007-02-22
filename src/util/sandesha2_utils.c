@@ -1319,9 +1319,9 @@ axis2_bool_t AXIS2_CALL
 sandesha2_utils_is_single_channel(
     const axis2_env_t *env,
     const axis2_char_t *rm_version,
-    const axis2_char_t *reply_to_addr)
+    const axis2_char_t *acks_to_addr)
 {
-    if(sandesha2_utils_is_anon_uri(env, reply_to_addr) &&
+    if(sandesha2_utils_is_anon_uri(env, acks_to_addr) &&
         (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
         return AXIS2_TRUE;
     else return AXIS2_FALSE;
