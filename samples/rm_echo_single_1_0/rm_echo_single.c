@@ -74,8 +74,8 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_DEBUG);*/
     /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_ERROR);*/
-    env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_CRITICAL);
+    env = axis2_env_create_all("rm_echo_single_1_0.log", 
+            AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
@@ -198,7 +198,13 @@ int main(int argc, char** argv)
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
     if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nSending OM : %s\n", om_str);
         printf("\necho client single channel invoke SUCCESSFUL!\n");
+    }
     payload = NULL;
 
     AXIS2_SLEEP(3 * SANDESHA2_MAX_COUNT);
