@@ -68,11 +68,9 @@ mod_sandesha2_init(
 {
     sandesha2_property_bean_t *property_bean = NULL;
     axis2_param_t *param = NULL;
-    axis2_param_t *db_param = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    axis2_char_t *db_path = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);

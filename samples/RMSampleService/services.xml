@@ -9,7 +9,7 @@
     <operation name="echoString">
             <parameter name="wsamapping" >http://tempuri.org/echoString</parameter>
     </operation>
-    <operation name="ping">
+    <operation name="ping" mep="http://www.w3.org/2004/08/wsdl/in-only">
             <parameter name="wsamapping" >http://tempuri.org/ping</parameter>
     </operation>
     <operation name="mtomSample">
