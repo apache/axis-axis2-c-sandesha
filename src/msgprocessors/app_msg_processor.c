@@ -243,9 +243,11 @@ sandesha2_app_msg_processor_process_in_msg (
         env, rm_msg_ctx, storage_mgr);
     if(fault_ctx)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha2_app_msg_processor_process_in_msg send Fault");
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
-        if(!AXIS2_ENGINE_SEND_FAULT(engine, env, 
+
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha2_app_msg_processor_process_in_msg send Fault");
+
+		if(!AXIS2_ENGINE_SEND_FAULT(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
