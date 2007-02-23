@@ -796,10 +796,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    /*msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
+    msg_ctx = (axis2_msg_ctx_t *) axis2_hash_get(storage_mgr_impl->msg_ctx_map,
         key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
-        return msg_ctx;*/
+        return msg_ctx;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieved from database");
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         storage_mgr_impl->bean_mgr, env, key);

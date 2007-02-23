@@ -180,16 +180,45 @@ int main(int argc, char** argv)
     }
     
     /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    if(status)
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
         printf("\necho client single channel invoke SUCCESSFUL!\n");
+    if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
-    status = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    if(status)
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    if(result)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
+    if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     */
@@ -202,8 +231,15 @@ int main(int argc, char** argv)
         axis2_char_t *om_str = NULL;
         om_str = AXIOM_NODE_TO_STRING(result, env);
         if (om_str)
-            printf("\nSending OM : %s\n", om_str);
-        printf("\necho client single channel invoke SUCCESSFUL!\n");
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
     }
     payload = NULL;
 
