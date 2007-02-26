@@ -24,10 +24,11 @@
 #include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
+#include <sandesha2_client.h>
 #include <sandesha2_client_constants.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP_TIME 2
+#define SANDESHA2_MAX_COUNT 4
 void 
 usage(
     axis2_char_t *prog_name);
@@ -39,11 +40,14 @@ int main(int argc, char** argv)
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axiom_soap_envelope_t *result = NULL;
     int c;
     const axis2_char_t *image_name = "resources/axis2.jpg";
    
@@ -127,26 +131,72 @@ int main(int argc, char** argv)
     if(property)
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
             property);
+    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+    conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    if(status)
-        printf("\nmtom  invoke SUCCESSFUL!\n");
-    AXIS2_SLEEP(SANDESHA2_SLEEP_TIME); 
+    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }*/
 
     payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    if(status)
-        printf("\nmtom  invoke SUCCESSFUL!\n");
-    AXIS2_SLEEP(SANDESHA2_SLEEP_TIME); 
+    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }*/
 
     payload = build_om_payload_for_mtom(env, image_name, "test3.jpg");
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
         property);
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
-    if(status)
-        printf("\nmtom  invoke SUCCESSFUL!\n");
-    AXIS2_SLEEP(3 * SANDESHA2_SLEEP_TIME); 
+    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    if(result)
+    {
+        axis2_char_t *om_str = NULL;
+        om_str = AXIOM_NODE_TO_STRING(result, env);
+        if (om_str)
+            printf("\nReceived OM : %s\n", om_str);
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+
+        AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }*/
+
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/

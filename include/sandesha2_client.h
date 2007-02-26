@@ -212,6 +212,22 @@ sandesha2_client_fire_and_forget(
     axiom_node_t *payload,
     axis2_listener_manager_t *listener_manager);
 
+/**
+ * In RM 1.0 two way single channel messaging user need
+ * to call for the response envelope.
+ *
+ * @param conf_ctx
+ * @param svc_client
+ * @param msg_no
+ * @return response soap envelope
+ */
+axiom_node_t *AXIS2_CALL
+sandesha2_client_get_response_envelope(
+    const axis2_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_svc_client_t *svc_client,
+    int msg_no);
+
 #ifdef __cplusplus
 }
 #endif

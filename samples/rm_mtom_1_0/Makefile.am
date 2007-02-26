@@ -13,6 +13,9 @@ rm_mtom_1_0_LDADD   =  \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
+                    -L$(AXIS2C_HOME)/modules/sandesha2 \
+					-lsandesha2_client \
+					-lsandesha2 \
 					-lsqlite3 \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)

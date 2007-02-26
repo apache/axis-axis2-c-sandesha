@@ -47,6 +47,54 @@ typedef struct sandesha2_permanent_bean_mgr_impl
     ((sandesha2_permanent_bean_mgr_impl_t *) bean_mgr)
 
 static int 
+sandesha2_permanent_bean_mgr_count_callback(
+    void *not_used, 
+    int argc, 
+    char **argv, 
+    char **col_name)
+{
+    int *count = (int *) not_used;
+    *count = AXIS2_ATOI(argv[0]);
+    return 0;
+}
+
+static int 
+sandesha2_permanent_bean_mgr_response_retrieve_callback(
+    void *not_used, 
+    int argc, 
+    char **argv, 
+    char **col_name)
+{
+    int i = 0;
+    sandesha2_response_t *response = NULL;
+    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
+    const axis2_env_t *env = args->env;
+    if(argc < 1)
+    {
+        args->data = NULL;
+        return 0;
+    }
+    response = (sandesha2_response_t *) args->data;
+    if(!response && argc > 0)
+    {
+        response = (sandesha2_response_t *) AXIS2_MALLOC(env->allocator, sizeof(
+            sandesha2_response_t));
+        args->data = response;
+    }
+    for(i = 0; i < argc; i++)
+    {
+        if(0 == AXIS2_STRCMP(col_name[i], "response_str"))
+            if(argv[i])
+                response->response_str = axis2_strdup(argv[i], env);
+        if(0 == AXIS2_STRCMP(col_name[i], "soap_version"))
+            if(argv[i])
+                response->soap_version = axis2_atoi(argv[i]);
+    }
+    return 0;
+}
+
+
+static int 
 sandesha2_msg_store_bean_retrieve_callback(
     void *not_used, 
     int argc, 
@@ -921,6 +969,200 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
     return AXIS2_TRUE;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_store_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *response,
+    int msg_no,
+    int soap_version)
+{
+    axis2_char_t sql_stmt_count[512];
+    axis2_char_t *sql_stmt_update;
+    axis2_char_t *sql_stmt_insert;
+    axis2_char_t *error_msg = NULL;
+    int rc = -1;
+    int sql_size = -1;
+    sqlite3 *dbconn = NULL;
+	sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+    int count = -1;
+
+	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Start:sandesha2_permanent_bean_mgr_store_response");
+    sql_size = AXIS2_STRLEN(seq_id) + AXIS2_STRLEN(response) + 
+        sizeof(int) + sizeof(int) + 512;
+    sprintf(sql_stmt_count, "select count(seq_id)"\
+        " from response where seq_id = '%s' and msg_no=%d", seq_id, msg_no);
+
+    axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
+        bean_mgr_impl->storage_mgr, env);
+    if(!dbconn)
+        return AXIS2_FALSE;
+    rc = sqlite3_exec(dbconn, sql_stmt_count, 
+        sandesha2_permanent_bean_mgr_count_callback, &count, &error_msg);
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(dbconn, sql_stmt_count, 
+            sandesha2_permanent_bean_mgr_count_callback, &count, &error_msg, rc);
+    if(rc != SQLITE_OK )
+    {
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
+            error_msg);
+        printf("sql_stmt_count:%s\n", sql_stmt_count);
+        printf("retrieve error_msg:%s\n", error_msg);
+        sqlite3_free(error_msg);
+        return AXIS2_FALSE;
+    }
+    if(count > 0)
+    {
+        sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
+        sprintf(sql_stmt_update, "update response set response_str='%s',"\
+            "soap_version=%d where seq_id='%s' and msg_no=%d", response, 
+            soap_version, seq_id, msg_no);
+        rc = sqlite3_exec(dbconn, sql_stmt_update, 0, 0, &error_msg);
+        if(rc == SQLITE_BUSY)
+            rc = sandesha2_permanent_bean_mgr_busy_handler(dbconn, sql_stmt_update, 
+                0, 0, &error_msg, rc);
+        if( rc != SQLITE_OK )
+        {
+            axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, 
+                AXIS2_FAILURE);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
+                error_msg);
+            printf("sql_stmt_update:%s\n", sql_stmt_update);
+            printf("update error_msg:%s\n", error_msg);
+            AXIS2_FREE(env->allocator, sql_stmt_update);
+            sqlite3_free(error_msg);
+            return AXIS2_FALSE;
+        }
+        AXIS2_FREE(env->allocator, sql_stmt_update);
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+        return AXIS2_TRUE;
+    }
+    else
+    {
+        sql_stmt_insert = AXIS2_MALLOC(env->allocator, sql_size);
+        sprintf(sql_stmt_insert, "insert into response(seq_id, response_str,"\
+            "msg_no, soap_version) values('%s', '%s', %d, %d)", seq_id, 
+            response, msg_no, soap_version);
+        rc = sqlite3_exec(dbconn, sql_stmt_insert, 0, 0, &error_msg);
+        if(rc == SQLITE_BUSY)
+            rc = sandesha2_permanent_bean_mgr_busy_handler(dbconn, sql_stmt_insert, 
+                0, 0, &error_msg, rc);
+        if( rc != SQLITE_OK )
+        {
+            axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
+            printf("sql_stmt_insert:%s\n", sql_stmt_insert);
+            printf("insert error_msg:%s\n", error_msg);
+            AXIS2_FREE(env->allocator, sql_stmt_insert);
+            sqlite3_free(error_msg);
+            return AXIS2_FALSE;
+        }
+        AXIS2_FREE(env->allocator, sql_stmt_insert);
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+    }
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_store_response");
+    return AXIS2_TRUE;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_remove_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    int msg_no)
+{
+    axis2_char_t sql_stmt_remove[256];
+    sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+    axis2_char_t *error_msg = NULL;
+    int rc = -1;
+    sqlite3 *dbconn = NULL;
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_remove_response");
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
+        bean_mgr_impl->storage_mgr, env);
+    if(!dbconn)
+        return AXIS2_FALSE;
+    sprintf(sql_stmt_remove, 
+        "delete from response where seq_id='%s' and msg_no=%d", seq_id, msg_no);
+    rc = sqlite3_exec(dbconn, sql_stmt_remove, 0, 0, &error_msg);
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(dbconn, sql_stmt_remove, 
+            0, 0, &error_msg, rc);
+    if(rc != SQLITE_OK )
+    {
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
+            error_msg);
+        printf("sql_stmt_remove:%s\n", sql_stmt_remove);
+        printf("remove error_msg:%s\n", error_msg);
+        sqlite3_free(error_msg);
+        return AXIS2_FALSE;
+    }
+    axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_remove_response");
+    return AXIS2_TRUE;
+}
+
+sandesha2_response_t *AXIS2_CALL
+sandesha2_permanent_bean_mgr_retrieve_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    int msg_no)
+{
+    sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+    sandesha2_bean_mgr_args_t *args = NULL;
+    axis2_char_t *error_msg = NULL;
+    int rc = -1;
+    sqlite3 *dbconn = NULL;
+    axis2_char_t sql_stmt_retrieve[512];
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    axis2_thread_mutex_lock(bean_mgr_impl->mutex);
+    dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
+        bean_mgr_impl->storage_mgr, env);
+    if(!dbconn)
+        return NULL;
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
+    args->env = (axis2_env_t*)env;
+    args->data = NULL;
+    sprintf(sql_stmt_retrieve, "select response_str, soap_version from response"\
+        " where seq_id='%s' and msg_no=%d", seq_id, msg_no);
+    rc = sqlite3_exec(dbconn, sql_stmt_retrieve, 
+        sandesha2_permanent_bean_mgr_response_retrieve_callback, args, &error_msg);
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(dbconn, sql_stmt_retrieve, 
+            sandesha2_permanent_bean_mgr_response_retrieve_callback, args, 
+            &error_msg, rc);
+    if(rc != SQLITE_OK )
+    {
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
+            error_msg);
+        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
+        printf("retrieve error_msg:%s\n", error_msg);
+        sqlite3_free(error_msg);
+        return AXIS2_FALSE;
+    }
+    axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
+    return (sandesha2_response_t *) args->data;
 }
 
 int

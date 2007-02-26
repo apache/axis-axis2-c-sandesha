@@ -95,7 +95,6 @@ sandesha2_in_handler_invoke(
     sandesha2_msg_processor_t *msg_processor = NULL;
     sandesha2_seq_ack_t *seq_ack = NULL;
     sandesha2_ack_requested_t *ack_requested = NULL;
-
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
@@ -210,7 +209,7 @@ sandesha2_in_handler_invoke(
      * SANDESHA2_MSG_VALIDATOR_VALIDATE(env, rm_msg_ctx, storage_mgr);
      */
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     if(seq_ack)
     {
         sandesha2_msg_processor_t *ack_proc = NULL;
@@ -218,15 +217,15 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
     }
     ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
-                        rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
+        rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
     if(ack_requested)
     {
         sandesha2_ack_requested_set_must_understand(ack_requested, env, 
-                        AXIS2_FALSE);
+            AXIS2_FALSE);
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
     msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
-            rm_msg_ctx);
+        rm_msg_ctx);
     if(msg_processor)
     {
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);

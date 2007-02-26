@@ -34,6 +34,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_create_seq_bean.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_sender_bean.h>
 
@@ -261,7 +262,7 @@ sandesha2_app_msg_processor_process_in_msg (
                 AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
@@ -283,7 +284,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     sandesha2_seq_set_must_understand(seq, env, AXIS2_FALSE);
@@ -300,7 +301,7 @@ sandesha2_app_msg_processor_process_in_msg (
                 AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     sandesha2_seq_mgr_update_last_activated_time(env, str_seq_id, 
@@ -337,6 +338,10 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_t *highest_msg_key_bean = NULL;
         sandesha2_seq_property_bean_t *highest_msg_id_bean = NULL;
         const axis2_char_t *msg_id = NULL;
+        axiom_soap_envelope_t *response_envelope = NULL;
+        int soap_version = -1;
+        axis2_property_t *property = NULL;
+        axis2_char_t *client_seq_key = NULL;
         
         highest_in_msg_no = msg_no;
         msg_id = axis2_msg_ctx_get_msg_id(msg_ctx, env);
@@ -353,6 +358,20 @@ sandesha2_app_msg_processor_process_in_msg (
             highest_in_msg_key_str);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
             highest_in_msg_key_str, msg_ctx);
+        response_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+        property = axis2_msg_ctx_get_property(msg_ctx, env, 
+            SANDESHA2_CLIENT_SEQ_KEY, AXIS2_FALSE);
+        if(property)
+            client_seq_key = axis2_property_get_value(property, env);
+        if(client_seq_key)
+        {
+            if(axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
+                soap_version = SANDESHA2_SOAP_VERSION_1_1;
+            else
+                soap_version = SANDESHA2_SOAP_VERSION_1_2;
+            sandesha2_storage_mgr_store_response(storage_mgr, env, client_seq_key, 
+                response_envelope, msg_no, soap_version);
+        }
         if(highest_in_msg_no_str)
         {
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
@@ -602,7 +621,7 @@ sandesha2_app_msg_processor_process_out_msg(
         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     /*axis2_allocator_switch_to_local_pool(env->allocator);*/
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-                        storage_mgr, env);
+        storage_mgr, env);
     if(!seq_prop_mgr)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "seq_prop_mgr is NULL");
@@ -973,7 +992,11 @@ sandesha2_app_msg_processor_process_out_msg(
     if(!dummy_msg)
         sandesha2_app_msg_processor_process_response_msg(env, rm_msg_ctx, 
                 internal_seq_id, msg_number, storage_key, storage_mgr);
-    AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);    
+    /*if(1 < msg_number && !axis2_msg_ctx_get_server_side(msg_ctx, env))
+    {
+        return AXIS2_SUCCESS;
+    }*/
+    axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);    
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_out_msg");
     return AXIS2_SUCCESS;
@@ -1371,6 +1394,10 @@ sandesha2_app_msg_processor_process_response_msg(
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     app_msg_entry = sandesha2_sender_bean_create(env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha to_addr = %s ", to_addr);
+    /*if(1 < msg_num && !axis2_msg_ctx_get_server_side(app_msg_ctx, env))
+    {
+        return AXIS2_SUCCESS;
+    }*/
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env) &&
        sandesha2_utils_is_single_channel(env, rm_version, to_addr))
     {

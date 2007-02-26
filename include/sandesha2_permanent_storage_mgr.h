@@ -33,6 +33,11 @@ extern "C"
 {
 #endif
 
+typedef struct sandesha2_response
+{
+    int soap_version;
+    axis2_char_t *response_str;
+} sandesha2_response_t;
 
 /** 
  * @ingroup sandesha2_storage

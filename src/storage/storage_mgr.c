@@ -200,3 +200,36 @@ sandesha2_storage_mgr_store_soap_envelope(
      return storage_mgr->ops->store_soap_envelope(storage_mgr, env, soap_env, key);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_storage_mgr_store_response(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axiom_soap_envelope_t *response,
+    int msg_no,
+    int soap_version)
+{
+     return storage_mgr->ops->store_response(storage_mgr, env, seq_id, response, 
+         msg_no, soap_version);
+}
+
+axiom_soap_envelope_t * AXIS2_CALL
+sandesha2_storage_mgr_retrieve_response(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id,
+    int msg_no)
+{
+     return storage_mgr->ops->retrieve_response(storage_mgr, env, seq_id, 
+         msg_no);
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_storage_mgr_remove_response(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id,
+    int msg_no)
+{
+     return storage_mgr->ops->remove_response(storage_mgr, env, seq_id, msg_no);
+}

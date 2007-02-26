@@ -24,6 +24,7 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
+#include <sandesha2_client_constants.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <stdlib.h>
@@ -599,9 +600,11 @@ sandesha2_sender_worker_check_for_sync_res(
 
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
     if(!res_envelope)
+    {
         res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
             soap_ns_uri);
-   
+        axis2_msg_ctx_set_response_soap_envelope(msg_ctx, env, res_envelope);
+    }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
@@ -609,6 +612,13 @@ sandesha2_sender_worker_check_for_sync_res(
     if(new_property)
         axis2_msg_ctx_set_property(res_msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, new_property, AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
+        SANDESHA2_CLIENT_SEQ_KEY, AXIS2_FALSE);
+    if(property)
+        new_property = axis2_property_clone(property, env);
+    if(new_property)
+        axis2_msg_ctx_set_property(res_msg_ctx, env, 
+            SANDESHA2_CLIENT_SEQ_KEY, new_property, AXIS2_FALSE);
     if(res_envelope)
     {
         axis2_engine_t *engine = NULL;

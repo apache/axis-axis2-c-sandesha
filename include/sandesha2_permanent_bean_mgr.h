@@ -42,6 +42,7 @@ typedef struct sandesha2_permanent_bean_mgr sandesha2_permanent_bean_mgr_t;
 typedef struct sandesha2_permanent_bean_mgr_ops sandesha2_permanent_bean_mgr_ops_t;
 struct sandesha2_storage_mgr;
 struct axis2_conf_ctx;
+struct sandesha2_response;
 
 AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr_ops
 {
@@ -166,6 +167,29 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axis2_env_t *env,
     axis2_char_t *key);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_store_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    axis2_char_t *response,
+    int msg_no,
+    int soap_version);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_remove_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    int msg_no);
+
+struct sandesha2_response *AXIS2_CALL
+sandesha2_permanent_bean_mgr_retrieve_response(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id,
+    int msg_no);
 
 int
 sandesha2_permanent_bean_mgr_busy_handler(
