@@ -38,6 +38,7 @@
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_sender_bean.h>
 
+#include <axis2_const.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_string.h>
 #include <axis2_engine.h>
@@ -243,6 +244,8 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     
     op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p", AXIS2_OP_CTX_GET_PARENT(op_ctx, env));
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
@@ -566,6 +569,14 @@ sandesha2_app_msg_processor_process_in_msg (
     /* end test code */
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
+
+    {
+        axis2_svc_ctx_t *svc_ctx = AXIS2_OP_CTX_GET_PARENT(op_ctx, env);
+        axis2_ctx_t *ctx = AXIS2_SVC_CTX_GET_BASE((const axis2_svc_ctx_t *)svc_ctx, env);
+        AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_SOAP_ENVELOPE, 
+            axis2_property_create_with_args(env, 0, 0, 0, 
+            (void*)axis2_msg_ctx_get_soap_envelope(msg_ctx, env)), AXIS2_FALSE);
+    }
     return AXIS2_SUCCESS;
     
 }
@@ -612,6 +623,8 @@ sandesha2_app_msg_processor_process_out_msg(
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p", AXIS2_OP_CTX_GET_PARENT(op_ctx, env));
     req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
         AXIS2_WSDL_MESSAGE_LABEL_IN);
     /* TODO setting up fault callback */

@@ -119,6 +119,27 @@ sandesha2_out_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+    else
+    {
+        axis2_qname_t *mod_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+        axis2_array_list_t *mod_qnames = AXIS2_SVC_GET_ALL_MODULE_QNAMES(svc, env);
+        int size = axis2_array_list_size(mod_qnames, env);
+        int i = 0;  
+        axis2_bool_t found = AXIS2_FALSE;
+        for (i = 0; i < size; i++)
+        {
+            axis2_qname_t *qname = NULL;
+            qname = AXIS2_ARRAY_LIST_GET(mod_qnames, env, i);
+            if (qname)
+            {
+                found = axis2_qname_equals(mod_qname, env, qname);
+                if (found)
+                    break;
+            }
+        }
+        if (!found)
+            return AXIS2_SUCCESS;
+    }
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(temp_prop)

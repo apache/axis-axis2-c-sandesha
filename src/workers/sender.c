@@ -243,6 +243,7 @@ sandesha2_sender_worker_func(
     axis2_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    int count = 0;
     
     args = (sandesha2_sender_args_t*)data;
     env = axis2_init_thread_env(args->env);
@@ -272,6 +273,9 @@ sandesha2_sender_worker_func(
         if(!sender_bean)
         {
             sandesha2_transaction_commit(transaction, env);
+            count++;
+            if (count > 5)
+                break;
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
