@@ -70,12 +70,9 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_DEBUG);*/
-    /*env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_ERROR);*/
-    env = axis2_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_CRITICAL);
+    env = axis2_env_create_all("rm_echo_single_1_1.log", 
+            AXIS2_LOG_LEVEL_DEBUG);
+ 
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
