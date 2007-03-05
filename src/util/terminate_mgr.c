@@ -327,7 +327,6 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
             seq_prop_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
             /*sandesha2_terminate_mgr_do_updates_if_needed(env, out_seq_id,
                 seq_prop_bean, seq_prop_mgr);*/
-            /* test comment */
             if(sandesha2_terminate_mgr_is_property_deletable(env,
                 sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))
             {
@@ -588,7 +587,6 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             seq_prop_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
             sandesha2_terminate_mgr_do_updates_if_needed(env, out_seq_id,
                 seq_prop_bean, seq_prop_mgr);
-            /* test comment */
             if(sandesha2_terminate_mgr_is_property_deletable(env,
                 sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))
             {

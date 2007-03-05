@@ -147,7 +147,7 @@ sandesha2_global_in_handler_invoke(
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
         axis2_property_t *property = axis2_property_create_with_args(env, 0, 0, 
             0, NULL);
-        AXIS2_CTX_SET_PROPERTY(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
+        axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property, AXIS2_FALSE);
     }
     conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
@@ -159,7 +159,7 @@ sandesha2_global_in_handler_invoke(
                         "is NULL");
         return AXIS2_FAILURE;
     }
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
+    property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
             AXIS2_FALSE);
     if(property)
         reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env); 
@@ -177,7 +177,7 @@ sandesha2_global_in_handler_invoke(
                         "storage manager");
         return AXIS2_FAILURE;
     }
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+    property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
         AXIS2_FALSE);
     if(property)
         within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
@@ -194,7 +194,7 @@ sandesha2_global_in_handler_invoke(
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
+        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
     fault_part = AXIOM_SOAP_BODY_GET_FAULT(AXIOM_SOAP_ENVELOPE_GET_BODY(
@@ -208,7 +208,7 @@ sandesha2_global_in_handler_invoke(
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
                 AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
-            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+            axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
             
@@ -251,7 +251,7 @@ sandesha2_global_in_handler_invoke(
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
                 AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
-            AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
+            axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
             
@@ -268,7 +268,7 @@ sandesha2_global_in_handler_invoke(
         sandesha2_transaction_commit(transaction, env);
         prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
+        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
     property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
