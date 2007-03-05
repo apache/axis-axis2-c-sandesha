@@ -133,10 +133,16 @@ int main(int argc, char** argv)
             property);
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
+    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+            property);
+    }
     payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
-    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -151,12 +157,17 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
+    }
 
+    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+            property);
+    }
     payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
-    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -171,15 +182,20 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
+    }
 
+    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+            property);
+    }
     payload = build_om_payload_for_mtom(env, image_name, "test3.jpg");
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
         property);
-    AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);
+    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -194,9 +210,9 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
+    }
 
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT); 
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/

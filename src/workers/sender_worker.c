@@ -53,6 +53,7 @@ struct sandesha2_sender_worker_t
     axis2_char_t *msg_id;
     axis2_msg_ctx_t *msg_ctx;
     axis2_transport_out_desc_t *transport_out;
+    axis2_status_t status;
 };
 
 struct sandesha2_sender_worker_args
@@ -60,6 +61,11 @@ struct sandesha2_sender_worker_args
     sandesha2_sender_worker_t *impl;
     axis2_env_t *env;
 };
+
+axis2_status_t AXIS2_CALL 
+sandesha2_sender_worker_get_status (
+    sandesha2_sender_worker_t *sender_worker,
+    const axis2_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_worker_run (
@@ -83,10 +89,10 @@ sandesha2_sender_worker_is_ack_already_piggybacked(
     const axis2_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
 
-/*axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_sender_worker_check_for_sync_res(
     const axis2_env_t *env, 
-    axis2_msg_ctx_t *msg_ctx);*/
+    axis2_msg_ctx_t *msg_ctx);
 
 static axis2_bool_t AXIS2_CALL
 sandesha2_sender_worker_is_fault_envelope(
@@ -123,6 +129,7 @@ sandesha2_sender_worker_create(
     sender_worker->msg_id = AXIS2_STRDUP(msg_id, env);
     sender_worker->msg_ctx = NULL;
     sender_worker->transport_out = NULL;
+    sender_worker->status = AXIS2_FAILURE;
     
     sender_worker->mutex = axis2_thread_mutex_create(env->allocator,
                         AXIS2_THREAD_MUTEX_DEFAULT);
@@ -154,6 +161,7 @@ sandesha2_sender_worker_create_with_msg_ctx(
     sender_worker->msg_id = axis2_strdup(msg_id, env);
     sender_worker->msg_ctx = msg_ctx;
     sender_worker->transport_out = NULL;
+    sender_worker->status = AXIS2_FAILURE;
     
     sender_worker->mutex = axis2_thread_mutex_create(env->allocator,
                         AXIS2_THREAD_MUTEX_DEFAULT);
@@ -207,12 +215,13 @@ sandesha2_sender_worker_run (
     AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_worker_run");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
+    sender_worker->status = AXIS2_TRUE;
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_worker_args_t)); 
     args->impl = sender_worker;
     args->env = (axis2_env_t*)env;
 
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
-                        sandesha2_sender_worker_worker_func, (void*)args);
+        sandesha2_sender_worker_worker_func, (void*)args);
     if(!worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Thread creation "
@@ -273,6 +282,9 @@ sandesha2_sender_worker_worker_func(
     {
         printf("sender_worker_bean is NULL\n");
         sandesha2_transaction_rollback(transaction, env);
+        #ifdef AXIS2_SVR_MULTI_THREADED
+            AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
+        #endif
         return NULL;
     }
 
@@ -290,6 +302,9 @@ sandesha2_sender_worker_worker_func(
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
+        #ifdef AXIS2_SVR_MULTI_THREADED
+            AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
+        #endif
         return NULL;
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -305,12 +320,19 @@ sandesha2_sender_worker_worker_func(
     }
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
+    sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
     if(!continue_sending)
     {
         printf("do not continue\n");
-        sandesha2_transaction_rollback(transaction, env);
+        sender_worker->status = AXIS2_FAILURE;
+        /* We commit here since we have cleaned the
+         * sending side data and that need to commited */
+        sandesha2_transaction_commit(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
+        #ifdef AXIS2_SVR_MULTI_THREADED
+            AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
+        #endif
         return NULL;
     }
     
@@ -325,6 +347,9 @@ sandesha2_sender_worker_worker_func(
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
+        #ifdef AXIS2_SVR_MULTI_THREADED
+            AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
+        #endif
         return NULL;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
@@ -360,6 +385,9 @@ sandesha2_sender_worker_worker_func(
             sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
+            #ifdef AXIS2_SVR_MULTI_THREADED
+                AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
+            #endif
             return NULL;
         }
     }
@@ -438,9 +466,9 @@ sandesha2_sender_worker_worker_func(
         if(resend)
         {
             sandesha2_sender_bean_set_sent_count(bean1, env, 
-                    sandesha2_sender_bean_get_sent_count(sender_worker_bean, env));
+                sandesha2_sender_bean_get_sent_count(sender_worker_bean, env));
             sandesha2_sender_bean_set_time_to_send(bean1, env, 
-                    sandesha2_sender_bean_get_time_to_send(sender_worker_bean, env));
+                sandesha2_sender_bean_get_time_to_send(sender_worker_bean, env));
             sandesha2_sender_mgr_update(sender_mgr, env, bean1);
         }
         else
@@ -536,7 +564,7 @@ sandesha2_sender_worker_is_ack_already_piggybacked(
     return AXIS2_FALSE;
 }
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_sender_worker_check_for_sync_res(
     const axis2_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
@@ -563,9 +591,14 @@ sandesha2_sender_worker_check_for_sync_res(
      * Message Receiver (may be callback MR).
      */
     AXIS2_MSG_CTX_SET_SERVER_SIDE(res_msg_ctx, env, AXIS2_TRUE);
-    axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN,
-        axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN,
-        AXIS2_FALSE), AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN, 
+        AXIS2_FALSE);
+    if(property)
+    {
+        axis2_property_t *temp_prop = axis2_property_clone(property, env);
+        axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
+            temp_prop, AXIS2_FALSE);
+    }
     AXIS2_MSG_CTX_SET_SVC_CTX(res_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(
         msg_ctx, env));
     AXIS2_MSG_CTX_SET_SVC_GRP_CTX(res_msg_ctx, env, 
@@ -598,10 +631,10 @@ sandesha2_sender_worker_check_for_sync_res(
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
-    /*if(!res_envelope)
+    if(!res_envelope)
         res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
             soap_ns_uri);
-    */
+    
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
@@ -613,7 +646,7 @@ sandesha2_sender_worker_check_for_sync_res(
     {
         axis2_engine_t *engine = NULL;
         AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(res_msg_ctx, env, res_envelope);
-        
+       
         engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, 
             env));
         if(AXIS2_TRUE == sandesha2_sender_worker_is_fault_envelope(env, 
@@ -650,6 +683,13 @@ void sandesha2_sender_worker_set_transport_out(
     sender_worker->transport_out = transport_out;
 }
 
+axis2_status_t AXIS2_CALL 
+sandesha2_sender_worker_get_status (
+    sandesha2_sender_worker_t *sender_worker,
+    const axis2_env_t *env)
+{
+    return sender_worker->status;
+}
 
 
 

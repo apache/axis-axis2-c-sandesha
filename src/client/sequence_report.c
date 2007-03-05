@@ -295,8 +295,8 @@ sandesha2_seq_report_set_seq_id(
 
 axis2_array_list_t *AXIS2_CALL
 sandesha2_seq_report_get_completed_msgs(
-        sandesha2_seq_report_t *report,
-        const axis2_env_t *env)
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env)
 {
     sandesha2_seq_report_impl_t *report_impl = NULL;
 
@@ -308,9 +308,9 @@ sandesha2_seq_report_get_completed_msgs(
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_add_completed_msg(
-        sandesha2_seq_report_t *report,
-        const axis2_env_t *env,
-        long *msg_no)
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    long *msg_no)
 {
     sandesha2_seq_report_impl_t *report_impl = NULL;
 

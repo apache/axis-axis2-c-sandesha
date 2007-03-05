@@ -358,7 +358,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         
         transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(ack_msg_ctx, env);
         property = axis2_property_create_with_args(env, 0, 0,
-            transport_out->ops->free_void_arg, transport_out);
+            axis2_transport_out_desc_free_void_arg, transport_out);
         AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, 
             AXIS2_FALSE);

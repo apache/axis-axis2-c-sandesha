@@ -167,7 +167,7 @@ int main(int argc, char** argv)
    
     if (svc_client)
     {
-        AXIS2_SVC_CLIENT_FREE(svc_client, env);
+        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
         svc_client = NULL;
     }
     return 0;

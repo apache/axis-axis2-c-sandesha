@@ -226,7 +226,8 @@ sandesha2_permanent_sender_mgr_match(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env);
+    const axis2_env_t *env,
+    const axis2_char_t *seq_id);
 
 static const sandesha2_sender_mgr_ops_t sender_mgr_ops = 
 {
@@ -628,7 +629,8 @@ sandesha2_permanent_sender_mgr_match(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env)
+    const axis2_env_t *env,
+    const axis2_char_t *seq_id)
 {
     axis2_char_t *sql_find = NULL;
     axis2_char_t *sql_count = NULL;
@@ -644,6 +646,8 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_bean_set_send(matcher, env, AXIS2_TRUE);
     time_now = sandesha2_utils_get_current_time_in_millis(env);
     sandesha2_sender_bean_set_time_to_send(matcher, env, time_now);
+    sandesha2_sender_bean_set_internal_seq_id(matcher, env, 
+        (axis2_char_t *) seq_id);
     sql_find = "select msg_id, msg_ctx_ref_key, "\
         "internal_seq_id, sent_count, msg_no, send, resend, "\
         "time_to_send, msg_type, seq_id, wsrm_anon_uri, "\

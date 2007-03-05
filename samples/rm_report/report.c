@@ -27,6 +27,7 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
+#include <sandesha2_report.h>
 #include <axis2_addr.h>
 #include <axis2_options.h>
 #include <ctype.h>
@@ -70,6 +71,7 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_soap_envelope_t *result = NULL;
+    sandesha2_seq_report_t *report = NULL;
     int c;
     int i = 0, size = 0;
    
@@ -121,12 +123,6 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
-    property = axis2_property_create_with_args(env, 3, 0, 0, "4");
-    if(property)
-    {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
-            property);
-    }
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     /*AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);*/
 
@@ -189,10 +185,15 @@ int main(int argc, char** argv)
             property);
     }
      
-    /*svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+    svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
-    result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
    
+    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+            property);
+    }
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
 
@@ -213,7 +214,40 @@ int main(int argc, char** argv)
         printf("\necho client two way single channel invoke FAILED!\n");
     }
     payload = NULL;
-
+    report = sandesha2_client_get_report(env, conf_ctx);
+    if(report)
+    {
+        int i = 0, size = 0;
+        axis2_array_list_t *incoming_seq_list = NULL;
+        axis2_array_list_t *outgoing_seq_list = NULL;
+        incoming_seq_list = SANDESHA2_REPORT_GET_INCOMING_SEQ_LIST(report, env);
+        if(incoming_seq_list)
+            size = axis2_array_list_size(incoming_seq_list, env);
+        for(i = 0; i < size; i++)
+        {
+            axis2_char_t *seq_id = axis2_array_list_get(incoming_seq_list, env, i);
+            if(seq_id)
+            {
+                printf("incoming seq_id %d:%s\n", i+1, seq_id);
+            }
+        }
+        size = 0;
+        outgoing_seq_list = SANDESHA2_REPORT_GET_OUTGOING_SEQ_LIST(report, env);
+        if(outgoing_seq_list)
+            size = axis2_array_list_size(outgoing_seq_list, env);
+        for(i = 0; i < size; i++)
+        {
+            axis2_char_t *seq_id = axis2_array_list_get(outgoing_seq_list, env, i);
+            if(seq_id)
+            {
+                long completed_msgs_count = -1; 
+                printf("outgoing seq_id %d:%s\n", i+1, seq_id);
+                completed_msgs_count = SANDESHA2_REPORT_GET_COMPLETED_MSGS_COUNT(
+                    report, env, seq_id);
+                printf("completed_msgs_count:%d\n", completed_msgs_count);
+            }
+        }
+    }
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");

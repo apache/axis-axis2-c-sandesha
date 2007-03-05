@@ -234,7 +234,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         orig_trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(ack_msg_ctx, 
             env);
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
-            AXIS2_FALSE, orig_trans_out->ops->free_void_arg, orig_trans_out);
+            AXIS2_FALSE, axis2_transport_out_desc_free_void_arg, orig_trans_out);
         axis2_msg_ctx_set_property(ack_msg_ctx, env,
             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property,
                 AXIS2_FALSE);
@@ -301,7 +301,7 @@ sandesha2_ack_mgr_get_client_completed_msgs_list(
     if(completed_msgs_bean != NULL)
     {
         axis2_char_t *value = sandesha2_seq_property_bean_get_value(
-                completed_msgs_bean, env);
+            completed_msgs_bean, env);
         completed_msg_list = sandesha2_utils_get_array_list_from_string(env, value);
     }
     else
@@ -323,18 +323,18 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
     axis2_array_list_t *completed_msg_list = NULL;
     
     completed_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
-            env, seq_id, 
-            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+        env, seq_id, 
+        SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
     if(completed_msgs_bean)
     {
         axis2_char_t *value = sandesha2_seq_property_bean_get_value(
-                completed_msgs_bean, env);
+            completed_msgs_bean, env);
         completed_msg_list = sandesha2_utils_get_array_list_from_string(env, value);
     }
     else
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL, 
-                AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return completed_msg_list;

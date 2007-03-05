@@ -218,7 +218,7 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_bool_t back_channel_free = AXIS2_FALSE;
     axis2_op_t *op = NULL;
     int mep = -1;
-    
+   
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
@@ -570,13 +570,13 @@ sandesha2_app_msg_processor_process_in_msg (
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
 
-    {
+    /*{
         axis2_svc_ctx_t *svc_ctx = AXIS2_OP_CTX_GET_PARENT(op_ctx, env);
         axis2_ctx_t *ctx = AXIS2_SVC_CTX_GET_BASE((const axis2_svc_ctx_t *)svc_ctx, env);
         AXIS2_CTX_SET_PROPERTY(ctx, env, AXIS2_RESPONSE_SOAP_ENVELOPE, 
             axis2_property_create_with_args(env, 0, 0, 0, 
             (void*)axis2_msg_ctx_get_soap_envelope(msg_ctx, env)), AXIS2_FALSE);
-    }
+    }*/
     return AXIS2_SUCCESS;
     
 }
@@ -777,8 +777,7 @@ sandesha2_app_msg_processor_process_out_msg(
         SANDESHA2_CLIENT_DUMMY_MESSAGE, AXIS2_FALSE);
     if(property)
         dummy_msg_str = axis2_property_get_value(property, env);
-    if(dummy_msg_str && 0 == axis2_strcmp(dummy_msg_str, 
-                        SANDESHA2_VALUE_TRUE))
+    if(dummy_msg_str && 0 == axis2_strcmp(dummy_msg_str, SANDESHA2_VALUE_TRUE))
         dummy_msg = AXIS2_TRUE;
     if(!dummy_msg)
         sandesha2_app_msg_processor_set_next_msg_no(env, internal_seq_id, 
@@ -1214,7 +1213,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         property, AXIS2_FALSE);
     orig_trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(create_seq_msg, env);
     property = axis2_property_create_with_args(env, 0, 0, 
-        orig_trans_out->ops->free_void_arg, orig_trans_out);
+        axis2_transport_out_desc_free_void_arg, orig_trans_out);
     axis2_msg_ctx_set_property(create_seq_msg, env, 
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
     trans_out = sandesha2_utils_get_transport_out(env);
@@ -1491,7 +1490,7 @@ sandesha2_app_msg_processor_process_response_msg(
                         
         trans_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(app_msg_ctx, env);
         property = axis2_property_create_with_args(env, 0, 0, 
-            trans_out->ops->free_void_arg, trans_out);
+            axis2_transport_out_desc_free_void_arg, trans_out);
         axis2_msg_ctx_set_property(app_msg_ctx, env, 
             SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
         AXIS2_MSG_CTX_SET_TRANSPORT_OUT_DESC(app_msg_ctx, env, 

@@ -154,7 +154,7 @@ sandesha2_permanent_transaction_create(
         db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_client_db", NULL);
     }
-    AXIS2_LOG_INFO(env->log, "db_name %s", db_name);
+    /*AXIS2_LOG_INFO(env->log, "db_name %s", db_name);*/
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
     if(rc != SQLITE_OK)
     {

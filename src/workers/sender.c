@@ -52,6 +52,7 @@ struct sandesha2_sender_t
     axis2_bool_t run_sender;
     axis2_array_list_t *working_seqs;
     axis2_thread_mutex_t *mutex;
+    int seq_index;
     int counter;
 };
 
@@ -88,6 +89,7 @@ sandesha2_sender_create(
     sender->working_seqs = NULL;
     sender->mutex = NULL;
     sender->counter = 0;
+    sender->seq_index = -1;
     
     sender->working_seqs = axis2_array_list_create(env, 
                         AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
@@ -135,7 +137,8 @@ sandesha2_sender_free(
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_stop_sender_for_seq(
     sandesha2_sender_t *sender, 
-    const axis2_env_t *env, axis2_char_t *seq_id)
+    const axis2_env_t *env, 
+    axis2_char_t *seq_id)
 {
     int i = 0;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -189,7 +192,7 @@ sandesha2_sender_run_for_seq(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
    
     if(seq_id && !sandesha2_utils_array_list_contains(env, 
-                        sender->working_seqs, seq_id))
+        sender->working_seqs, seq_id))
         AXIS2_ARRAY_LIST_ADD(sender->working_seqs, env, seq_id);
     if(!sender->run_sender)
     {
@@ -218,11 +221,11 @@ sandesha2_sender_run (
     args->env = (axis2_env_t*)env;
 
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
-                        sandesha2_sender_worker_func, (void*)args);
+        sandesha2_sender_worker_func, (void*)args);
     if(NULL == worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Thread creation "
-                        "failed sandesha2_sender_run");
+            "failed sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
     AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread);     
@@ -243,7 +246,7 @@ sandesha2_sender_worker_func(
     axis2_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    int count = 0;
+    axis2_bool_t do_sleep = AXIS2_FALSE;
     
     args = (sandesha2_sender_args_t*)data;
     env = axis2_init_thread_env(args->env);
@@ -263,19 +266,29 @@ sandesha2_sender_worker_func(
         sandesha2_sender_bean_t *sender_bean = NULL;
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
-        AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME * 1); 
+        axis2_char_t *seq_id = NULL;
+        int no_of_seqs = 0;
+        no_of_seqs = axis2_array_list_size(sender->working_seqs, env);
+        if(sender->seq_index >= no_of_seqs)
+        {
+            sender->seq_index = 0;
+            if(no_of_seqs == 0)
+            {
+                do_sleep = AXIS2_TRUE;
+                continue;
+            }
+        }
+        seq_id = axis2_array_list_get(sender->working_seqs, env, 
+            sender->seq_index++);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
             storage_mgr, env);
-        sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env);
+        sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env, seq_id);
         if(!sender_bean)
         {
             sandesha2_transaction_commit(transaction, env);
-            count++;
-            if (count > 5)
-                break;
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
@@ -283,10 +296,18 @@ sandesha2_sender_worker_func(
         sandesha2_transaction_commit(transaction, env);
         if(msg_id)
         {
+            axis2_bool_t status = AXIS2_TRUE;
             /* Start a sender worker which will work on this message */
             sender_worker = sandesha2_sender_worker_create(env, sender->conf_ctx, 
                 msg_id);
             sandesha2_sender_worker_run(sender_worker, env);
+            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME * 2); 
+            status = sandesha2_sender_worker_get_status(
+                sender_worker, env);
+            if(!status)
+            {
+                sandesha2_sender_stop_sender_for_seq(sender, env, seq_id);
+            }
         }
     }
     #ifdef AXIS2_SVR_MULTI_THREADED

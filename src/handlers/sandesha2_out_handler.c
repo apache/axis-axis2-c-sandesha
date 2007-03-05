@@ -87,12 +87,13 @@ sandesha2_out_handler_invoke(
     axis2_bool_t rolled_back = AXIS2_FALSE;
     axis2_bool_t dummy_msg = AXIS2_FALSE;
     axis2_svc_t *svc = NULL;
+    axis2_qname_t *module_qname = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     int msg_type = -1;
-    
+
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
@@ -104,6 +105,19 @@ sandesha2_out_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+    svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
+    if(!svc)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    module_qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
+    if(!AXIS2_SVC_IS_MODULE_ENGAGED(svc, env, module_qname))
+    {
+        return AXIS2_SUCCESS;
+    }
+    axis2_qname_free(module_qname, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -111,13 +125,6 @@ sandesha2_out_handler_invoke(
             0, NULL);
         AXIS2_CTX_SET_PROPERTY(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property, AXIS2_FALSE);
-    }
-    svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
-    if(!svc)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
     }
     else
     {

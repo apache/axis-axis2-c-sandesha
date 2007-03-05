@@ -278,8 +278,11 @@ sandesha2_utils_get_array_list_from_string(
     temp_str = strtok(dup_str, ",");
     while(temp_str)
     {
-        axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
-        AXIS2_ARRAY_LIST_ADD(ret, env, temp_element);
+        if(!sandesha2_utils_array_list_contains(env, ret, temp_str))
+        {
+            axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
+            AXIS2_ARRAY_LIST_ADD(ret, env, temp_element);
+        }
         temp_str = strtok(NULL, ",");
     }
     AXIS2_FREE(env->allocator, dup_str);
@@ -287,9 +290,10 @@ sandesha2_utils_get_array_list_from_string(
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-sandesha2_utils_array_list_contains(const axis2_env_t *env,
-                        axis2_array_list_t *list,
-                        axis2_char_t *str)
+sandesha2_utils_array_list_contains(
+    const axis2_env_t *env,
+    axis2_array_list_t *list,
+    axis2_char_t *str)
 {
     int i = 0;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -1232,8 +1236,8 @@ sandesha2_utils_execute_and_store(
         property, AXIS2_FALSE);
     
     transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
-    property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
-        AXIS2_FALSE, transport_out->ops->free_void_arg, transport_out);
+    property = axis2_property_create_with_args(env, 3, 0, 
+        axis2_transport_out_desc_free_void_arg, transport_out);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, 
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
     

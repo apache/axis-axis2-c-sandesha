@@ -63,10 +63,10 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_mgr);
 
-/*static axis2_bool_t
+static axis2_bool_t
 sandesha2_terminate_mgr_is_property_deletable(
     const axis2_env_t *env,
-    axis2_char_t *name);*/
+    axis2_char_t *name);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
@@ -93,7 +93,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     }
     
     prop_bean = sandesha2_utils_get_property_bean(env, AXIS2_CONF_CTX_GET_CONF(
-                    conf_ctx, env));
+        conf_ctx, env));
     in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
     if(!in_order_invoke)
     {
@@ -103,7 +103,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                 SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
         axis2_allocator_switch_to_local_pool(env->allocator);
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
-                    seq_id, storage_mgr);
+            seq_id, storage_mgr);
     }
     else
     {	axis2_char_t *clean_status = NULL;
@@ -113,17 +113,17 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
             AXIS2_HASH_KEY_STRING);
         axis2_allocator_switch_to_local_pool(env->allocator);
         if(clean_status && 0 == axis2_strcmp(clean_status, 
-                    SANDESHA2_CLEANED_AFTER_INVOCATION))
+            SANDESHA2_CLEANED_AFTER_INVOCATION))
         {
             sandesha2_terminate_mgr_complete_termination_of_recv_side(env, conf_ctx, seq_id,
-                    storage_mgr);
+                storage_mgr);
         }
         else
         {
             axis2_allocator_switch_to_global_pool(env->allocator);
             axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-                    AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
-                    SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
+                AXIS2_HASH_KEY_STRING, AXIS2_STRDUP(
+                SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
             axis2_allocator_switch_to_local_pool(env->allocator);
         }
     }
@@ -309,7 +309,7 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
             sandesha2_seq_property_bean_set_value(all_seq_bean, env, all_seq_str);
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, all_seq_bean);
         }
-    } 
+    }
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_remove_recv_side_properties");
     return AXIS2_SUCCESS;
@@ -388,35 +388,29 @@ sandesha2_terminate_mgr_do_updates_if_needed(
     return AXIS2_SUCCESS;
 }
 
-/*
+
 static axis2_bool_t
 sandesha2_terminate_mgr_is_property_deletable(
     const axis2_env_t *env,
     axis2_char_t *name)
 {
     axis2_bool_t deletable = AXIS2_TRUE;
-    axis2_char_t *name_l = NULL;
-    
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    AXIS2_PARAM_CHECK(env->error, name, AXIS2_FALSE);
-    name_l = axis2_strtrim(env, name, NULL);
         
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_TERMINATE_ADDED))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_TERMINATE_ADDED))
         deletable = AXIS2_FALSE;
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_NO_OF_OUTGOING_MSGS_ACKED))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_NO_OF_OUTGOING_MSGS_ACKED))
         deletable = AXIS2_FALSE;
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID))
         deletable = AXIS2_FALSE;
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_SEQ_TERMINATED))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_SEQ_TERMINATED))
         deletable = AXIS2_FALSE;
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_SEQ_CLOSED))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_SEQ_CLOSED))
         deletable = AXIS2_FALSE;
-    if(0 == axis2_strcasecmp(name_l, SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT))
+    if(0 == axis2_strcasecmp(name, SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT))
         deletable = AXIS2_FALSE;
-    AXIS2_FREE(env->allocator, name_l); 
     return deletable;
 }
-*/
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_time_out_sending_side_seq(
     const axis2_env_t *env,
@@ -558,8 +552,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             sandesha2_terminate_mgr_do_updates_if_needed(env, out_seq_id,
                 seq_prop_bean, seq_prop_mgr);
             /* test comment */
-            /*if(sandesha2_terminate_mgr_is_property_deletable(env,
-                sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))*/
+            if(sandesha2_terminate_mgr_is_property_deletable(env,
+                sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))
             {
                 axis2_char_t *highest_in_msg_key_str = NULL;
                 axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(
@@ -741,7 +735,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx1, env);
     
     property = axis2_property_create_with_args(env, 0, 0,
-        transport_out->ops->free_void_arg, transport_out);
+        axis2_transport_out_desc_free_void_arg, transport_out);
     axis2_msg_ctx_set_property(msg_ctx1, env, 
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
     

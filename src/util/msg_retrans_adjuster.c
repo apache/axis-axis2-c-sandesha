@@ -61,6 +61,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     axis2_char_t *seq_id = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
     int max_attempts = -1;
+    int sent_count = -1;
     axis2_bool_t timeout_seq = AXIS2_FALSE;
     axis2_bool_t seq_timed_out = AXIS2_FALSE;
     axis2_bool_t continue_sending = AXIS2_TRUE;
@@ -89,16 +90,13 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         AXIS2_MSG_CTX_GET_OP(msg_ctx, env));*/
     property_bean = sandesha2_utils_get_property_bean(env, 
         axis2_conf_ctx_get_conf(conf_ctx, env));
-    sandesha2_sender_bean_set_sent_count(retrans_bean, env, 
-        sandesha2_sender_bean_get_sent_count(retrans_bean, 
-            env) + 1);
+    sent_count = sandesha2_sender_bean_get_sent_count(retrans_bean, env) + 1;
+    sandesha2_sender_bean_set_sent_count(retrans_bean, env, sent_count);
     sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(env, retrans_bean,
         property_bean);
     max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, 
         env);
-    
-    if(max_attempts > 0 && sandesha2_sender_bean_get_sent_count(retrans_bean, 
-        env) > max_attempts)
+    if(max_attempts > 0 &&  sent_count > max_attempts)
         timeout_seq = AXIS2_TRUE;
     if(rm_msg_ctx)
         seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 

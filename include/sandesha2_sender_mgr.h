@@ -99,7 +99,8 @@ AXIS2_DECLARE_DATA struct sandesha2_sender_mgr_ops
     sandesha2_sender_bean_t *(AXIS2_CALL *
             get_next_msg_to_send)(
                 sandesha2_sender_mgr_t *sender,
-                const axis2_env_t *env);
+                const axis2_env_t *env,
+                const axis2_char_t *seq_id);
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_sender_mgr
@@ -162,7 +163,8 @@ sandesha2_sender_mgr_find_unique(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender,
-    const axis2_env_t *env);
+    const axis2_env_t *env,
+    const axis2_char_t *seq_id);
 
 /** @} */
 #ifdef __cplusplus

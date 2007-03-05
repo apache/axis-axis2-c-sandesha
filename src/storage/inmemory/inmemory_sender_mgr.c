@@ -97,7 +97,8 @@ sandesha2_inmemory_sender_mgr_match(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_inmemory_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env);
+    const axis2_env_t *env,
+    const axis2_char_t *seq_id);
 
 static const sandesha2_sender_mgr_ops_t sender_mgr_ops = 
 {
@@ -397,7 +398,8 @@ sandesha2_inmemory_sender_mgr_match(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_inmemory_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env)
+    const axis2_env_t *env,
+    const axis2_char_t *seq_id)
 {
     sandesha2_sender_bean_t *matcher = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_t *result = NULL;

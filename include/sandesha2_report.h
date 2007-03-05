@@ -51,69 +51,69 @@ struct sandesha2_report_ops
      */
     axis2_status_t (AXIS2_CALL *
     free) (
-            void *report,
-            const axis2_env_t *env);
+        void *report,
+        const axis2_env_t *env);
        
     long (AXIS2_CALL *
     get_completed_msgs_count) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *seq_id);
 
     axis2_array_list_t *(AXIS2_CALL *
     get_incoming_seq_list) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env);
+        sandesha2_report_t *report,
+        const axis2_env_t *env);
 
     axis2_array_list_t *(AXIS2_CALL *
     get_outgoing_seq_list) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env);
+        sandesha2_report_t *report,
+        const axis2_env_t *env);
 
     axis2_char_t (AXIS2_CALL *
     get_seq_status_map) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *seq_id);
 
     axis2_status_t (AXIS2_CALL *
     add_to_incoming_seq_list) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *incoming_seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *incoming_seq_id);
 
     axis2_status_t (AXIS2_CALL *
     add_to_outgoing_seq_list) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *out_seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *out_seq_id);
 
     axis2_status_t (AXIS2_CALL *
     add_to_no_of_completed_msgs_map) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *id,
-            long no_of_msgs);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *id,
+        long no_of_msgs);
         
     axis2_status_t (AXIS2_CALL *
     add_to_seq_status_map) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *id,
-            axis2_char_t status);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *id,
+        axis2_char_t status);
 
     axis2_char_t *(AXIS2_CALL *
     get_internal_seq_id_of_out_seq) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *out_seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *out_seq_id);
 
     axis2_status_t (AXIS2_CALL *
     add_to_outgoing_internal_seq_map) (
-            sandesha2_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *out_seq_id,
-            axis2_char_t *internal_seq_id);
+        sandesha2_report_t *report,
+        const axis2_env_t *env,
+        axis2_char_t *out_seq_id,
+        axis2_char_t *internal_seq_id);
 };
 
 struct sandesha2_report
