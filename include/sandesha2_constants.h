@@ -504,6 +504,7 @@ extern "C"
     #define SANDESHA2_BUSY_WAIT_TIME 8
     #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
     #define SANDESHA2_DB "sandesha2_db"
+    #define SANDESHA2_HANDLER_ALREADY_VISITED "sandesha2_visited"
 /** @} */
 #ifdef __cplusplus
 }

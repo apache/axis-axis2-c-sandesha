@@ -188,7 +188,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
         SANDESHA2_CLEANED_ON_TERMINATE_MSG))
     {
         sandesha2_terminate_mgr_complete_termination_of_recv_side(env, conf_ctx, seq_id,
-                    storage_mgr);
+            storage_mgr);
     }
     else
     {
@@ -274,6 +274,8 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *all_seq_bean = NULL;
+    axis2_array_list_t *found_list = NULL;
+    sandesha2_seq_property_bean_t *find_seq_prop_bean = NULL;
     
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_remove_recv_side_properties");
@@ -308,6 +310,41 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                 SANDESHA2_ARRAY_LIST_STRING);
             sandesha2_seq_property_bean_set_value(all_seq_bean, env, all_seq_str);
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, all_seq_bean);
+        }
+    }
+    find_seq_prop_bean = sandesha2_seq_property_bean_create(env);
+    sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, seq_id);
+    found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, 
+        find_seq_prop_bean);
+    if(found_list)
+    {
+        int i = 0, size = 0;
+        size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
+        for(i = 0; i < size; i++)
+        {
+            sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
+            
+            seq_prop_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
+            /*sandesha2_terminate_mgr_do_updates_if_needed(env, out_seq_id,
+                seq_prop_bean, seq_prop_mgr);*/
+            /* test comment */
+            if(sandesha2_terminate_mgr_is_property_deletable(env,
+                sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))
+            {
+                axis2_char_t *highest_in_msg_key_str = NULL;
+                axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(
+                    seq_prop_bean, env);
+                axis2_char_t *name = sandesha2_seq_property_bean_get_name(
+                    seq_prop_bean, env);
+                if(axis2_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
+                {
+                    highest_in_msg_key_str = 
+                        sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
+                    sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                        highest_in_msg_key_str);
+                }
+                sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, seq_id, name);
+            }
         }
     }
     AXIS2_LOG_INFO(env->log, 

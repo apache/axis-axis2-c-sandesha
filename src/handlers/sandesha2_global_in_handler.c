@@ -123,6 +123,16 @@ sandesha2_global_in_handler_invoke(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
         return AXIS2_SUCCESS;
     }
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
+        SANDESHA2_HANDLER_ALREADY_VISITED, AXIS2_FALSE);
+    if(property)
+    {
+        axis2_char_t *value = axis2_property_get_value(property, env);
+        if(0 == axis2_strcmp(SANDESHA2_VALUE_TRUE, value))
+        {
+            return AXIS2_SUCCESS;
+        }
+    }
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -261,6 +271,9 @@ sandesha2_global_in_handler_invoke(
         AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
+    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_HANDLER_ALREADY_VISITED, 
+        property, AXIS2_FALSE);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit sandesha2 global in handler ......");
        
