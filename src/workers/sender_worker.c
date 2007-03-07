@@ -409,9 +409,9 @@ sandesha2_sender_worker_worker_func(
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     }
     if(sandesha2_sender_worker_is_piggybackable_msg_type(sender_worker, env,
-                    msg_type) && AXIS2_FALSE  == 
-                    sandesha2_sender_worker_is_ack_already_piggybacked(sender_worker, env,
-                    rm_msg_ctx))
+        msg_type) && AXIS2_FALSE  == 
+        sandesha2_sender_worker_is_ack_already_piggybacked(sender_worker, env,
+        rm_msg_ctx))
     {
         sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, 
             storage_mgr);
@@ -558,7 +558,7 @@ sandesha2_sender_worker_is_ack_already_piggybacked(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
     if(sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-                        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT))
+        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT))
         return AXIS2_TRUE;
     
     return AXIS2_FALSE;

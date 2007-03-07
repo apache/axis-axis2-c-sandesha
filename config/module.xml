@@ -73,11 +73,10 @@
     <parameter name="ExponentialBackoff" locked="false">AXIS2_TRUE</parameter>
     <parameter name="RetransmissionInterval" locked="false">4000</parameter>
     <parameter name="AcknowledgementInterval" locked="false">4000</parameter>
-    <!--parameter name="InactivityTimeout" locked="false">60000</parameter-->
-    <parameter name="InactivityTimeout" locked="false">100</parameter>
+    <parameter name="InactivityTimeout" locked="false">60000</parameter>
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
     <parameter name="MessageTypesToDrop" locked="false">none</parameter>
-    <parameter name="MaxRetransCount" locked="false">2</parameter>
+    <parameter name="MaxRetransCount" locked="false">10</parameter>
 
 </module>

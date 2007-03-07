@@ -191,7 +191,6 @@ int main(int argc, char** argv)
     }
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-
     /*svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
