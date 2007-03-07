@@ -360,7 +360,7 @@ sandesha2_fault_mgr_check_for_seq_closed(
                         storage_man, env);
     closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         seq_id, SANDESHA2_SEQ_PROP_SEQ_CLOSED);
-    if(closed_bean && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE,
+    if(closed_bean && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE,
                         sandesha2_seq_property_bean_get_value(closed_bean, env)))
     {
         seq_closed = AXIS2_TRUE;

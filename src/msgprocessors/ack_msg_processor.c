@@ -230,7 +230,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     if(int_seq_id)
         sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
             storage_mgr);
-    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property,
          AXIS2_FALSE);
                         

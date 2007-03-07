@@ -20,6 +20,7 @@
 #include <axis2_svc.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_property.h>
+#include <axis2_const.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
@@ -123,16 +124,6 @@ sandesha2_global_in_handler_invoke(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
         return AXIS2_SUCCESS;
     }
-    property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_HANDLER_ALREADY_VISITED, AXIS2_FALSE);
-    if(property)
-    {
-        axis2_char_t *value = axis2_property_get_value(property, env);
-        if(0 == axis2_strcmp(SANDESHA2_VALUE_TRUE, value))
-        {
-            return AXIS2_SUCCESS;
-        }
-    }
     conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -163,7 +154,7 @@ sandesha2_global_in_handler_invoke(
             AXIS2_FALSE);
     if(property)
         reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env); 
-    if(reinjected_msg && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, reinjected_msg))
+    if(reinjected_msg && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"
                         " reinjected_msg");
@@ -182,7 +173,7 @@ sandesha2_global_in_handler_invoke(
     if(property)
         within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
             property, env);
-    if(within_transaction_str && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, 
+    if(within_transaction_str && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE, 
         within_transaction_str))
     {
         within_transaction = AXIS2_TRUE;
@@ -193,7 +184,7 @@ sandesha2_global_in_handler_invoke(
         
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
+            AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
@@ -207,7 +198,7 @@ sandesha2_global_in_handler_invoke(
             axis2_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
+                AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -250,7 +241,7 @@ sandesha2_global_in_handler_invoke(
             axis2_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
             prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-                AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
+                AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop, AXIS2_FALSE);
             rolled_back = AXIS2_TRUE;
@@ -267,13 +258,10 @@ sandesha2_global_in_handler_invoke(
         axis2_property_t *prop = NULL;
         sandesha2_transaction_commit(transaction, env);
         prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
+            AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
-    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_HANDLER_ALREADY_VISITED, 
-        property, AXIS2_FALSE);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit sandesha2 global in handler ......");
        

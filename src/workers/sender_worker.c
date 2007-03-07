@@ -310,11 +310,11 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, 
-            SANDESHA2_VALUE_TRUE);
+            AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
             property, AXIS2_FALSE);
     }
@@ -341,7 +341,7 @@ sandesha2_sender_worker_worker_func(
     if(property)
         qualified_for_sending = AXIS2_PROPERTY_GET_VALUE(property, env);
     if(qualified_for_sending && 0 != AXIS2_STRCMP(
-        qualified_for_sending, SANDESHA2_VALUE_TRUE))
+        qualified_for_sending, AXIS2_VALUE_TRUE))
     {
         printf("not qualified for sending\n");
         sandesha2_transaction_rollback(transaction, env);
@@ -426,11 +426,11 @@ sandesha2_sender_worker_worker_func(
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
         if(property)
-            AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
+            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_FALSE);
         else
         {
             property = axis2_property_create_with_args(env, 0, 0, 0,
-                SANDESHA2_VALUE_FALSE);
+                AXIS2_VALUE_FALSE);
             axis2_msg_ctx_set_property(msg_ctx, env, 
                 SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
         }
@@ -447,11 +447,11 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE); 
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_TRUE);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0,
-            SANDESHA2_VALUE_TRUE);
+            AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
     }
@@ -514,11 +514,11 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, SANDESHA2_VALUE_FALSE);
+        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_FALSE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, 
-            SANDESHA2_VALUE_FALSE);
+            AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(msg_ctx, env, 
                     SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
     }
@@ -655,6 +655,10 @@ sandesha2_sender_worker_check_for_sync_res(
         else
             AXIS2_ENGINE_RECEIVE(engine, env, res_msg_ctx);        
     }
+    /* To avoid a second passing through incoming handlers at mep_client */
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
+        property, AXIS2_FALSE);
     return AXIS2_SUCCESS;
 }
 

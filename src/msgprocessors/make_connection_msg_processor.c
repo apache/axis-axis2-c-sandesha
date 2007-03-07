@@ -317,7 +317,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     if(property)
         qualified_for_sending = axis2_property_get_value(property, env);
     if(qualified_for_sending && 0 != axis2_strcmp(
-        qualified_for_sending, SANDESHA2_VALUE_TRUE))
+        qualified_for_sending, AXIS2_VALUE_TRUE))
     {
         printf("not qualified for sending as reply ot MakeConnection\n");
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 

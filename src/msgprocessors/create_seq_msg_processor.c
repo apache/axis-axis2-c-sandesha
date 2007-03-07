@@ -211,7 +211,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     axis2_msg_ctx_set_flow(out_msg_ctx, env, AXIS2_OUT_FLOW);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, 
-        SANDESHA2_VALUE_TRUE);
+        AXIS2_VALUE_TRUE);
     /* For making sure that this won't be processed again */
     sandesha2_msg_ctx_set_property(create_seq_res_msg, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property); 

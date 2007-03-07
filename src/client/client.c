@@ -265,7 +265,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
-            SANDESHA2_VALUE_TRUE))
+            AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
         }
@@ -435,7 +435,7 @@ sandesha2_client_get_report(
             within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
-            SANDESHA2_VALUE_TRUE))
+            AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
         }
@@ -582,10 +582,10 @@ sandesha2_client_create_seq_with_svc_client(
             property);
 	}
     AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
-            SANDESHA2_VALUE_TRUE);
+            AXIS2_VALUE_TRUE);
     AXIS2_SVC_CLIENT_FIRE_AND_FORGET(svc_client, env, NULL);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
-            SANDESHA2_VALUE_FALSE);
+            AXIS2_VALUE_FALSE);
 
     return AXIS2_SUCCESS;
 }
@@ -1360,7 +1360,7 @@ sandesha2_client_is_seq_terminated(
     seq_terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             out_seq_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED);
     value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
-    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(SANDESHA2_VALUE_TRUE, value))
+    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, value))
     {
         return AXIS2_TRUE;
     }
@@ -1402,7 +1402,7 @@ sandesha2_client_is_seq_timedout(
     seq_terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             out_seq_id, SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT);
     value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
-    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(SANDESHA2_VALUE_TRUE, value))
+    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, value))
     {
         return AXIS2_TRUE;
     }
@@ -1597,7 +1597,7 @@ sandesha2_client_get_incoming_seq_report(
             within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
-            SANDESHA2_VALUE_TRUE))
+            AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
         }
@@ -1983,7 +1983,7 @@ sandesha2_client_get_response_envelope(
         within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
             property, env);
     if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
-        SANDESHA2_VALUE_TRUE))
+        AXIS2_VALUE_TRUE))
     {
         within_transaction = AXIS2_TRUE;
     }

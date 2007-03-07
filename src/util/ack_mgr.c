@@ -101,7 +101,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         ack_op);
     
     property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-        AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
+        AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     if(property)
     {
         axis2_msg_ctx_set_property(ack_msg_ctx, env, 
@@ -157,7 +157,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
         
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
+            AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(ref_msg, env, SANDESHA2_ACK_WRITTEN, property,
             AXIS2_FALSE);
         axis2_msg_ctx_set_server_side(ack_msg_ctx, env, AXIS2_TRUE);
@@ -190,7 +190,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         sandesha2_sender_bean_set_send(ack_bean, env, AXIS2_TRUE);
         
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_FALSE);
+            AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(ack_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property, AXIS2_FALSE);
         sandesha2_sender_bean_set_msg_type(ack_bean, env, 
@@ -240,7 +240,7 @@ sandesha2_ack_mgr_generate_ack_msg(
                 AXIS2_FALSE);
         
         property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
+            AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(ack_msg_ctx, env, 
             SANDESHA2_SET_SEND_TO_TRUE, property, AXIS2_FALSE);
                         

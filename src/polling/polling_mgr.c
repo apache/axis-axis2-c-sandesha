@@ -370,7 +370,7 @@ sandesha2_polling_mgr_worker_func(
          * it is sent through the sandesha2_transport_sender
          */
         property = axis2_property_create_with_args(env, 0, 0, 0, 
-            SANDESHA2_VALUE_FALSE);
+            AXIS2_VALUE_FALSE);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
         if(sender_bean_mgr)

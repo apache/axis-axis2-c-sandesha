@@ -18,6 +18,7 @@
 #include <sandesha2_constants.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_header_block.h>
+#include <axis2_const.h>
 
 /** 
  * @brief Message Pending struct impl
@@ -217,9 +218,9 @@ sandesha2_msg_pending_from_om_node(
             AXIS2_FAILURE);
     }
     value = AXIOM_ATTRIBUTE_GET_VALUE(pending_attr, env);
-    if(0 == AXIS2_STRCMP(value, SANDESHA2_VALUE_TRUE))
+    if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_TRUE))
         pending = AXIS2_TRUE;
-    if(0 == AXIS2_STRCMP(value, SANDESHA2_VALUE_FALSE))
+    if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_FALSE))
         pending = AXIS2_FALSE;
     else
     {
@@ -270,9 +271,9 @@ sandesha2_msg_pending_to_om_node(
         env);
     msg_pending_element = AXIOM_NODE_GET_DATA_ELEMENT(msg_pending_node, env);
     if(pending)
-        attr_value = SANDESHA2_VALUE_TRUE;
+        attr_value = AXIS2_VALUE_TRUE;
     else if(!pending)
-        attr_value = SANDESHA2_VALUE_FALSE;
+        attr_value = AXIS2_VALUE_FALSE;
     pending_attr = axiom_attribute_create(env, 
         SANDESHA2_WSRM_COMMON_PENDING, attr_value, NULL);
     AXIOM_ELEMENT_ADD_ATTRIBUTE(msg_pending_element, env, pending_attr, 

@@ -950,7 +950,7 @@ sandesha2_msg_creator_add_ack_msg(
             SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(seq_closed_bean)
         str_value = sandesha2_seq_property_bean_get_value(seq_closed_bean, env);
-    if(seq_closed_bean && 0 == AXIS2_STRCMP(SANDESHA2_VALUE_TRUE, str_value))
+    if(seq_closed_bean && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE, str_value))
     {
         axis2_bool_t is_allowed = AXIS2_FALSE;
         

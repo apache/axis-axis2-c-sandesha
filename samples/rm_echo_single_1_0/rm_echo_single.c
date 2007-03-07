@@ -220,7 +220,6 @@ int main(int argc, char** argv)
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
 
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 2);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -248,7 +247,6 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 3);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;

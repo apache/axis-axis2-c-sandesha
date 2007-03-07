@@ -1242,7 +1242,7 @@ sandesha2_utils_execute_and_store(
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
     
     property = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-        AXIS2_FALSE, 0, SANDESHA2_VALUE_TRUE);
+        AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, 
         property, AXIS2_FALSE);
     sandesha2_transport_out = sandesha2_utils_get_transport_out(env);

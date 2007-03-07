@@ -229,7 +229,7 @@ sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
     AXIS2_MSG_CTX_SET_MESSAGE_ID(msg_ctx, env, NULL);
     AXIS2_MSG_CTX_SET_TO(msg_ctx, env, NULL);
     AXIS2_MSG_CTX_SET_WSA_ACTION(msg_ctx, env, NULL);
-    property = axis2_property_create_with_args(env, 0, 0, 0, SANDESHA2_VALUE_TRUE);
+    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
                         property, AXIS2_FALSE);
     return AXIS2_SUCCESS;
@@ -363,7 +363,7 @@ sandesha2_in_order_invoker_worker_func(
                  */
                 sandesha2_transaction_commit(transaction, env);
                 property = axis2_property_create_with_args(env, 0, 0, 0, 
-                    SANDESHA2_VALUE_TRUE);
+                    AXIS2_VALUE_TRUE);
                 AXIS2_MSG_CTX_SET_PROPERTY(msg_to_invoke, env, 
                         SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
                         
@@ -372,7 +372,7 @@ sandesha2_in_order_invoker_worker_func(
                 if(property)
                     post_failure_str = AXIS2_PROPERTY_GET_VALUE(property, env);
                 if(post_failure_str && 0 == AXIS2_STRCMP(
-                        post_failure_str, SANDESHA2_VALUE_TRUE))
+                        post_failure_str, AXIS2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;
                 engine = axis2_engine_create(env, invoker->conf_ctx);
                 if(AXIS2_TRUE == post_failure_invocation)

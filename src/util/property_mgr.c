@@ -254,7 +254,7 @@ sandesha2_property_mgr_load_exp_backoff(
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
     
     str = sandesha2_utils_trim_string(env, value);
-    if(0 == axis2_strcmp(str, SANDESHA2_VALUE_TRUE))
+    if(0 == axis2_strcmp(str, AXIS2_VALUE_TRUE))
         sandesha2_property_bean_set_exp_backoff(property_bean, env, AXIS2_TRUE);
     else
         sandesha2_property_bean_set_exp_backoff(property_bean, env, 
@@ -382,7 +382,7 @@ sandesha2_property_mgr_load_in_order_invocation(
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
     
     str = sandesha2_utils_trim_string(env, value);
-    if(0 == axis2_strcmp(str, SANDESHA2_VALUE_TRUE))
+    if(0 == axis2_strcmp(str, AXIS2_VALUE_TRUE))
         sandesha2_property_bean_set_in_order(property_bean, env, AXIS2_TRUE);
     else
         sandesha2_property_bean_set_in_order(property_bean, env, AXIS2_FALSE);
