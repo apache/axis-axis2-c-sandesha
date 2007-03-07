@@ -167,7 +167,7 @@ sandesha2_seq_report_free(
 
     if(report_impl->completed_msgs)
     {
-        AXIS2_ARRAY_LIST_FREE(report_impl->completed_msgs, env);
+        axis2_array_list_free(report_impl->completed_msgs, env);
         report_impl->completed_msgs = NULL;
     }
 
@@ -317,7 +317,7 @@ sandesha2_seq_report_add_completed_msg(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    AXIS2_ARRAY_LIST_ADD(report_impl->completed_msgs, env, msg_no);
+    axis2_array_list_add(report_impl->completed_msgs, env, msg_no);
     return AXIS2_SUCCESS;
 }
 
@@ -336,15 +336,15 @@ sandesha2_seq_report_set_completed_msgs(
     {
         int i = 0, size = 0;
         
-        size = AXIS2_ARRAY_LIST_SIZE(report_impl->completed_msgs, env);
+        size = axis2_array_list_size(report_impl->completed_msgs, env);
         for(i = 0; i < size; i++)
         {
             long *msg_no = NULL;
         
-            msg_no = AXIS2_ARRAY_LIST_GET(report_impl->completed_msgs, env, i);
+            msg_no = axis2_array_list_get(report_impl->completed_msgs, env, i);
             AXIS2_FREE(env->allocator, msg_no);
         }
-        AXIS2_ARRAY_LIST_FREE(report_impl->completed_msgs, env);
+        axis2_array_list_free(report_impl->completed_msgs, env);
         report_impl->completed_msgs = NULL;
     }
     report_impl->completed_msgs = completed_msgs;

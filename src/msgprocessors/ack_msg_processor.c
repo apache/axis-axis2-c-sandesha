@@ -255,7 +255,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         long upper = -1;
         long j = 0;
         
-        ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
+        ack_range = axis2_array_list_get(ack_range_list, env, i);
         lower = sandesha2_ack_range_get_lower_value(ack_range, env);
         upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         for(j = lower; j <= upper; j++)
@@ -276,13 +276,13 @@ sandesha2_ack_msg_processor_process_in_msg (
             }
             add_no = AXIS2_MALLOC(env->allocator, sizeof(long));
             *add_no = (long)j;
-            AXIS2_ARRAY_LIST_ADD(acked_list, env, add_no);
+            axis2_array_list_add(acked_list, env, add_no);
         }
     }
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(nack_list, env); i++)
+    for(i = 0; i < axis2_array_list_size(nack_list, env); i++)
     {
         sandesha2_nack_t *nack = NULL;
-        nack = AXIS2_ARRAY_LIST_GET(nack_list, env, i);
+        nack = axis2_array_list_get(nack_list, env, i);
         /* TODO processing nacks */
     }
     no_of_msgs_acked = sandesha2_ack_msg_processor_get_no_of_msgs_acked(
@@ -369,10 +369,10 @@ sandesha2_ack_msg_processor_get_retrans_entry(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(list, env); i++)
+    for(i = 0; i < axis2_array_list_size(list, env); i++)
     {
         sandesha2_sender_bean_t *bean = NULL;
-        bean = AXIS2_ARRAY_LIST_GET(list, env, i);
+        bean = axis2_array_list_get(list, env, i);
         if(sandesha2_sender_bean_get_msg_no(bean, env) == msg_no)
             return bean;
     }
@@ -390,14 +390,14 @@ sandesha2_ack_msg_processor_get_no_of_msgs_acked(
     AXIS2_ENV_CHECK(env, -1);
     AXIS2_PARAM_CHECK(env->error, list, -1);
     
-    for(i = 0; i <  AXIS2_ARRAY_LIST_SIZE(list, env); i++)
+    for(i = 0; i <  axis2_array_list_size(list, env); i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
         long upper = 0;
         long lower = 0;
         long diff = 0;
         
-        ack_range = AXIS2_ARRAY_LIST_GET(list, env, i);
+        ack_range = axis2_array_list_get(list, env, i);
         lower = sandesha2_ack_range_get_lower_value(ack_range, env);
         upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         

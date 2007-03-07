@@ -75,17 +75,17 @@ sandesha2_property_bean_free(
 {
     if(bean->msg_types_to_drop)
     {
-        int count = AXIS2_ARRAY_LIST_SIZE(bean->msg_types_to_drop,
+        int count = axis2_array_list_size(bean->msg_types_to_drop,
             env);
         int i = 0;
         for(i = 0; i < count; i++)
         {
-            int *msg_type = AXIS2_ARRAY_LIST_GET(
+            int *msg_type = axis2_array_list_get(
                 bean->msg_types_to_drop, env, i);
             if(NULL != msg_type)
                 AXIS2_FREE(env->allocator, msg_type);
         }
-        AXIS2_ARRAY_LIST_FREE(bean->msg_types_to_drop, env);
+        axis2_array_list_free(bean->msg_types_to_drop, env);
     }
     if(bean->db_path)
     {
@@ -301,7 +301,7 @@ sandesha2_property_bean_add_msg_type_to_drop(
     if(!bean->msg_types_to_drop)
         return AXIS2_FAILURE;
     _msg_type = AXIS2_MALLOC(env->allocator, sizeof(int));
-    AXIS2_ARRAY_LIST_ADD(bean->msg_types_to_drop, env, _msg_type);
+    axis2_array_list_add(bean->msg_types_to_drop, env, _msg_type);
     return AXIS2_SUCCESS;
 }
             

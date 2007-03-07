@@ -136,7 +136,7 @@ sandesha2_out_handler_invoke(
         for (i = 0; i < size; i++)
         {
             axis2_qname_t *qname = NULL;
-            qname = AXIS2_ARRAY_LIST_GET(mod_qnames, env, i);
+            qname = axis2_array_list_get(mod_qnames, env, i);
             if (qname)
             {
                 found = axis2_qname_equals(mod_qname, env, qname);

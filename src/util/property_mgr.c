@@ -413,10 +413,10 @@ sandesha2_property_mgr_load_msg_types_to_drop(
         if(list)
         {
             int i = 0;
-            for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(list, env); i++)
+            for(i = 0; i < axis2_array_list_size(list, env); i++)
             {
                 axis2_char_t *val = NULL;
-                val = AXIS2_ARRAY_LIST_GET(list, env, i);
+                val = axis2_array_list_get(list, env, i);
                 sandesha2_property_bean_add_msg_type_to_drop(property_bean, env,
                     atoi(val));
             }

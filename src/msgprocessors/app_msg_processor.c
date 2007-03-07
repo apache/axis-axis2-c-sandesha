@@ -481,7 +481,7 @@ sandesha2_app_msg_processor_process_in_msg (
                         incoming_seq_list, str_seq_id))
         {
             axis2_char_t *str_seq_list = NULL;
-            AXIS2_ARRAY_LIST_ADD(incoming_seq_list, env, str_seq_id);
+            axis2_array_list_add(incoming_seq_list, env, str_seq_id);
             str_seq_list = sandesha2_utils_array_list_to_string(env, 
                         incoming_seq_list, SANDESHA2_ARRAY_LIST_STRING);
             /* saving the property. */

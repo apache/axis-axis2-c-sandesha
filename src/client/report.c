@@ -178,13 +178,13 @@ sandesha2_report_free(
 
     if(report_impl->incoming_seq_list)
     {
-        AXIS2_ARRAY_LIST_FREE(report_impl->incoming_seq_list, env);
+        axis2_array_list_free(report_impl->incoming_seq_list, env);
         report_impl->incoming_seq_list = NULL;
     }
 
     if(report_impl->outgoing_seq_list)
     {
-        AXIS2_ARRAY_LIST_FREE(report_impl->outgoing_seq_list, env);
+        axis2_array_list_free(report_impl->outgoing_seq_list, env);
         report_impl->outgoing_seq_list = NULL;
     }
 
@@ -296,7 +296,7 @@ sandesha2_report_add_to_incoming_seq_list(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    AXIS2_ARRAY_LIST_ADD(report_impl->incoming_seq_list, env, incoming_seq_id);
+    axis2_array_list_add(report_impl->incoming_seq_list, env, incoming_seq_id);
     return AXIS2_SUCCESS;
 }
 
@@ -311,7 +311,7 @@ sandesha2_report_add_to_outgoing_seq_list(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     report_impl = SANDESHA2_INTF_TO_IMPL(report);
 
-    AXIS2_ARRAY_LIST_ADD(report_impl->outgoing_seq_list, env, out_seq_id);
+    axis2_array_list_add(report_impl->outgoing_seq_list, env, out_seq_id);
     return AXIS2_SUCCESS;
 }
 

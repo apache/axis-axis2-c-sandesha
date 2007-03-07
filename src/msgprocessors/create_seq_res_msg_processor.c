@@ -230,7 +230,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                         AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    create_seq_msg_id = (axis2_char_t *) AXIS2_RELATES_TO_GET_VALUE(relates_to, env);
+    create_seq_msg_id = (axis2_char_t *) axis2_relates_to_get_value(relates_to, env);
     retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
     create_seq_bean = sandesha2_create_seq_mgr_retrieve(create_seq_mgr, env,
@@ -387,7 +387,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     found_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
                         target_bean);
     if(found_list)
-        size = AXIS2_ARRAY_LIST_SIZE(found_list, env);
+        size = axis2_array_list_size(found_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *tmp_bean = NULL;
@@ -400,7 +400,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_identifier_t *ident = NULL;
         sandesha2_ack_requested_t *ack_req_part = NULL;
         
-        tmp_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
+        tmp_bean = axis2_array_list_get(found_list, env, i);
         key = sandesha2_sender_bean_get_msg_ctx_ref_key(tmp_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
                         key, conf_ctx);

@@ -371,27 +371,27 @@ sandesha2_inmemory_bean_mgr_find_impl(
         if(bean && sandesha2_inmemory_bean_mgr_match(bean_mgr, env, bean, 
             candidate))
         {
-            AXIS2_ARRAY_LIST_ADD(beans, env, candidate);
+            axis2_array_list_add(beans, env, candidate);
         }
         if(!bean)
-            AXIS2_ARRAY_LIST_ADD(beans, env, candidate);
+            axis2_array_list_add(beans, env, candidate);
     }
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
     /* Now we have a point-in-time view of the beans, lock them all.*/
-    size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+    size = axis2_array_list_size(beans, env);
     for(i = 0; i < size; i++)
     {
-        /*sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        /*sandesha2_rm_bean_t *temp = axis2_array_list_get(beans, env, i);
         if(temp)
             sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, 
                 temp);*/
     }
     /* Finally remove any beans that are no longer in the table */
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+    size = axis2_array_list_size(beans, env);
     for(i = 0; i < size; i++)
     {
-        sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        sandesha2_rm_bean_t *temp = axis2_array_list_get(beans, env, i);
         if(temp)
         {
             axis2_char_t *key = sandesha2_rm_bean_get_key(temp, env);
@@ -401,12 +401,12 @@ sandesha2_inmemory_bean_mgr_find_impl(
                     AXIS2_HASH_KEY_STRING);
                 if(!value)
                 {
-                    AXIS2_ARRAY_LIST_REMOVE(beans, env, i);
+                    axis2_array_list_remove(beans, env, i);
                 }
             }
             else
             {
-                AXIS2_ARRAY_LIST_REMOVE(beans, env, i);
+                axis2_array_list_remove(beans, env, i);
             }
         }
     }
@@ -429,7 +429,7 @@ sandesha2_inmemory_bean_mgr_find_unique_impl(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     beans = sandesha2_inmemory_bean_mgr_find(bean_mgr, env, bean);
     if(beans)
-        size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+        size = axis2_array_list_size(beans, env);
     if( size > 1)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Non-Unique result");
@@ -437,7 +437,7 @@ sandesha2_inmemory_bean_mgr_find_unique_impl(
         return NULL;
     }
     if(size == 1)
-       ret = AXIS2_ARRAY_LIST_GET(beans, env, 0);
+       ret = axis2_array_list_get(beans, env, 0);
     return ret;
 }
 

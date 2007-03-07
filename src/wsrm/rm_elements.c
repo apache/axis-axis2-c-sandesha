@@ -613,11 +613,11 @@ sandesha2_rm_elements_get_rm_ns_val(
         
         headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
             soap_header, env, SANDESHA2_SPEC_2005_02_NS_URI);
-        if(headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+        if(headers && 0 < axis2_array_list_size(headers, env))
             return SANDESHA2_SPEC_2005_02_NS_URI;
         headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
             soap_header, env, SANDESHA2_SPEC_2006_08_NS_URI);                
-        if(headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+        if(headers && 0 < axis2_array_list_size(headers, env))
             return SANDESHA2_SPEC_2006_08_NS_URI;
     }
     if(!action)
@@ -676,12 +676,12 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
  
         headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
                         soap_header, env, AXIS2_WSA_NAMESPACE);
-        if(headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+        if(headers && 0 < axis2_array_list_size(headers, env))
             return AXIS2_WSA_NAMESPACE;
             
         headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
                         soap_header, env, AXIS2_WSA_NAMESPACE_SUBMISSION); 
-        if(headers && 0 < AXIS2_ARRAY_LIST_SIZE(headers, env))
+        if(headers && 0 < axis2_array_list_size(headers, env))
             return AXIS2_WSA_NAMESPACE_SUBMISSION;
 
         soap_header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);

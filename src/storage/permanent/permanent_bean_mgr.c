@@ -599,7 +599,7 @@ sandesha2_permanent_bean_mgr_find(
     {
         axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
         if(data_array)
-            AXIS2_ARRAY_LIST_FREE(data_array, env);
+            axis2_array_list_free(data_array, env);
         if(args)
             AXIS2_FREE(env->allocator, args);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
@@ -611,42 +611,42 @@ sandesha2_permanent_bean_mgr_find(
         return NULL;
     }
     if(data_array)
-        size = AXIS2_ARRAY_LIST_SIZE(data_array, env);
+        size = axis2_array_list_size(data_array, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_rm_bean_t *candidate = NULL;
-        candidate = (sandesha2_rm_bean_t *) AXIS2_ARRAY_LIST_GET(data_array, 
+        candidate = (sandesha2_rm_bean_t *) axis2_array_list_get(data_array, 
             env, i);
          if(!candidate)
             continue;
         if(bean && sandesha2_permanent_bean_mgr_match(bean_mgr, env, bean,
             candidate))
         {
-            AXIS2_ARRAY_LIST_ADD(beans, env, candidate);
+            axis2_array_list_add(beans, env, candidate);
         }
         if(!bean)
-            AXIS2_ARRAY_LIST_ADD(beans, env, candidate);
+            axis2_array_list_add(beans, env, candidate);
     }
     if(data_array)
-        AXIS2_ARRAY_LIST_FREE(data_array, env);
+        axis2_array_list_free(data_array, env);
     if(args)
         AXIS2_FREE(env->allocator, args);
     axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
     /* Now we have a point-in-time view of the beans, lock them all.*/
-    size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+    size = axis2_array_list_size(beans, env);
     for(i = 0; i < size; i++)
     {
-        sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        sandesha2_rm_bean_t *temp = axis2_array_list_get(beans, env, i);
         if(temp)
             sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, 
                 temp);
     }
     /* Finally remove any beans that are no longer in the table */
     axis2_thread_mutex_lock(bean_mgr_impl->mutex);
-    size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+    size = axis2_array_list_size(beans, env);
     for(i = 0; i < size; i++)
     {
-        sandesha2_rm_bean_t *temp = AXIS2_ARRAY_LIST_GET(beans, env, i);
+        sandesha2_rm_bean_t *temp = axis2_array_list_get(beans, env, i);
         if(temp)
         {
             int count = -1;
@@ -669,7 +669,7 @@ sandesha2_permanent_bean_mgr_find(
             }
             if(count == 0)
             {
-                AXIS2_ARRAY_LIST_REMOVE(beans, env, i);
+                axis2_array_list_remove(beans, env, i);
             }
         }
     }
@@ -697,7 +697,7 @@ sandesha2_permanent_bean_mgr_find_unique(
     beans = sandesha2_permanent_bean_mgr_find(bean_mgr, env, bean, find_func, 
         count_func, sql_stmt_find, sql_stmt_count);
     if(beans)
-        size = AXIS2_ARRAY_LIST_SIZE(beans, env);
+        size = axis2_array_list_size(beans, env);
     if( size > 1)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Non-Unique result");
@@ -706,7 +706,7 @@ sandesha2_permanent_bean_mgr_find_unique(
         return NULL;
     }
     if(size == 1)
-       ret = AXIS2_ARRAY_LIST_GET(beans, env, 0);
+       ret = axis2_array_list_get(beans, env, 0);
     return ret;
 }
 

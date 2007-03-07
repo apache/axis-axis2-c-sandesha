@@ -127,7 +127,7 @@ sandesha2_polling_mgr_free(
     }
     if(polling_mgr->scheduled_polling_reqs)
     {
-        AXIS2_ARRAY_LIST_FREE(polling_mgr->scheduled_polling_reqs, env);
+        axis2_array_list_free(polling_mgr->scheduled_polling_reqs, env);
         polling_mgr->scheduled_polling_reqs = NULL;
     }
 	AXIS2_FREE(env->allocator, polling_mgr);
@@ -249,13 +249,13 @@ sandesha2_polling_mgr_worker_func(
           * do the earliest one. else pick one randomly.
           */
         if(polling_mgr->scheduled_polling_reqs)
-            size = AXIS2_ARRAY_LIST_SIZE(polling_mgr->scheduled_polling_reqs, 
+            size = axis2_array_list_size(polling_mgr->scheduled_polling_reqs, 
                 env);
         if(size > 0)
         {
-            seq_id = AXIS2_ARRAY_LIST_GET(polling_mgr->scheduled_polling_reqs, 
+            seq_id = axis2_array_list_get(polling_mgr->scheduled_polling_reqs, 
                 env, 0);
-            AXIS2_ARRAY_LIST_REMOVE(polling_mgr->scheduled_polling_reqs, env, 0);
+            axis2_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);
         }
         if(!seq_id)
         {
@@ -270,7 +270,7 @@ sandesha2_polling_mgr_worker_func(
                 results = sandesha2_next_msg_mgr_find(next_msg_mgr, env, 
                     find_bean);
                 if(results)
-                    size = AXIS2_ARRAY_LIST_SIZE(results, env);
+                    size = axis2_array_list_size(results, env);
                 if(size > 0)
                 {
                     unsigned int rand_var = 
@@ -278,7 +278,7 @@ sandesha2_polling_mgr_worker_func(
                     int item = axis2_rand_with_range(&rand_var, 0, size);
                     item--;
                     next_msg_bean = (sandesha2_next_msg_bean_t *) 
-                        AXIS2_ARRAY_LIST_GET(results, env, item);
+                        axis2_array_list_get(results, env, item);
                 }
 
             }
@@ -411,10 +411,10 @@ sandesha2_polling_mgr_schedule_polling_request(
     const axis2_env_t *env,
     axis2_char_t *internal_seq_id)
 {
-    if(!AXIS2_ARRAY_LIST_CONTAINS(polling_mgr->scheduled_polling_reqs, env, 
+    if(!axis2_array_list_contains(polling_mgr->scheduled_polling_reqs, env, 
         internal_seq_id))
     {
-        AXIS2_ARRAY_LIST_ADD(polling_mgr->scheduled_polling_reqs, env, 
+        axis2_array_list_add(polling_mgr->scheduled_polling_reqs, env, 
             internal_seq_id);
     }
 }

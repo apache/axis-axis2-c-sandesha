@@ -281,7 +281,7 @@ sandesha2_utils_get_array_list_from_string(
         if(!sandesha2_utils_array_list_contains(env, ret, temp_str))
         {
             axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
-            AXIS2_ARRAY_LIST_ADD(ret, env, temp_element);
+            axis2_array_list_add(ret, env, temp_element);
         }
         temp_str = strtok(NULL, ",");
     }
@@ -300,9 +300,9 @@ sandesha2_utils_array_list_contains(
     AXIS2_PARAM_CHECK(env->error, list, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, str, AXIS2_FALSE);
     
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(list, env); i++)
+    for(i = 0; i < axis2_array_list_size(list, env); i++)
     {
-        axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
+        axis2_char_t *element = axis2_array_list_get(list, env, i);
         if(element && 0 == AXIS2_STRCMP(element, str))
             return AXIS2_TRUE;
     }
@@ -322,19 +322,19 @@ sandesha2_utils_array_list_to_string(
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
     list_str = AXIS2_STRDUP("[", env);
-    size = AXIS2_ARRAY_LIST_SIZE(list, env);
+    size = axis2_array_list_size(list, env);
     for(i = 0; i < size; i++)
     {
         if(SANDESHA2_ARRAY_LIST_STRING == type)
         {
-            axis2_char_t *element = AXIS2_ARRAY_LIST_GET(list, env, i);
+            axis2_char_t *element = axis2_array_list_get(list, env, i);
             if(0 == i)
                 list_str = axis2_strcat(env, list_str, element, NULL);
             list_str = axis2_strcat(env, list_str, ",", element, NULL);
         }
         else if(SANDESHA2_ARRAY_LIST_LONG == type)
         {
-            long *element = AXIS2_ARRAY_LIST_GET(list, env, i);
+            long *element = axis2_array_list_get(list, env, i);
             axis2_char_t value[32];
             sprintf(value, "%ld", *element);
             if(0 == i)
@@ -523,7 +523,7 @@ sandesha2_utils_get_permanent_storage_mgr(
         storage_mgr_list = AXIS2_PROPERTY_GET_VALUE(property, env);
     sandesha2_storage_mgr_t *storage_mgr = 
         sandesha2_permanent_storage_mgr_create(env, conf_ctx);
-    AXIS2_ARRAY_LIST_ADD(storage_mgr_list, env, storage_mgr);
+    axis2_array_list_add(storage_mgr_list, env, storage_mgr);
     property = axis2_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
         AXIS2_FALSE, 0, storage_mgr_list);
     AXIS2_CTX_SET_PROPERTY(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
@@ -1065,10 +1065,10 @@ sandesha2_utils_get_ack_range_list(
     ack_ranges = axis2_array_list_create(env, 0);
     sorted_msg_no_list = get_sorted_msg_no_list(env, msg_no_str, ",");
     if(sorted_msg_no_list)
-        size = AXIS2_ARRAY_LIST_SIZE(sorted_msg_no_list, env);
+        size = axis2_array_list_size(sorted_msg_no_list, env);
     for(i = 0; i < size; i++)
     {
-        long *temp = AXIS2_ARRAY_LIST_GET(sorted_msg_no_list, env, i);
+        long *temp = axis2_array_list_get(sorted_msg_no_list, env, i);
         if(lower == 0)
         {
             lower = *temp;
@@ -1087,7 +1087,7 @@ sandesha2_utils_get_ack_range_list(
              ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
              sandesha2_ack_range_set_lower_value(ack_range, env, lower);
              sandesha2_ack_range_set_upper_value(ack_range, env, upper);
-             AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
+             axis2_array_list_add(ack_ranges, env, ack_range);
              lower = *temp;
              upper = *temp;
              completed = AXIS2_FALSE;
@@ -1100,10 +1100,10 @@ sandesha2_utils_get_ack_range_list(
          ack_range = sandesha2_ack_range_create(env, rm_ns_value, NULL);
          sandesha2_ack_range_set_lower_value(ack_range, env, lower);
          sandesha2_ack_range_set_upper_value(ack_range, env, upper);
-         AXIS2_ARRAY_LIST_ADD(ack_ranges, env, ack_range);
+         axis2_array_list_add(ack_ranges, env, ack_range);
          completed = AXIS2_TRUE;
     }
-    /*AXIS2_ARRAY_LIST_FREE(sorted_msg_no_list, env);*/
+    /*axis2_array_list_free(sorted_msg_no_list, env);*/
     return ack_ranges;
 }
 
@@ -1126,11 +1126,11 @@ get_sorted_msg_no_list(
         long *long_val = AXIS2_MALLOC(env->allocator, sizeof(long));
 
         *long_val = atol(temp_str);
-        AXIS2_ARRAY_LIST_ADD(msg_numbers, env, long_val);
+        axis2_array_list_add(msg_numbers, env, long_val);
         temp_str = strtok(NULL, delim);
     }
     sorted_msg_no_list = sandesha2_utils_sort(env, msg_numbers);
-    /*AXIS2_ARRAY_LIST_FREE(msg_numbers, env);*/
+    /*axis2_array_list_free(msg_numbers, env);*/
     AXIS2_FREE(env->allocator, dup_str);
     return sorted_msg_no_list;
 }
@@ -1147,12 +1147,12 @@ sandesha2_utils_sort(
     
     sorted_list = axis2_array_list_create(env, 0);
     if(list)
-        size = AXIS2_ARRAY_LIST_SIZE(list, env);
+        size = axis2_array_list_size(list, env);
     for(i = 0; i < size; i++)
     {
         long *temp_long = NULL;
 
-        temp_long = (long *) AXIS2_ARRAY_LIST_GET(list, env, i);
+        temp_long = (long *) axis2_array_list_get(list, env, i);
         if(*temp_long > max)
             max = *temp_long;
     }
@@ -1165,7 +1165,7 @@ sandesha2_utils_sort(
         for(i = 0; i < size; i++)
         {
             long *value = NULL;
-            value = AXIS2_ARRAY_LIST_GET(list, env, i);
+            value = axis2_array_list_get(list, env, i);
             if(*value == *temp)
             {
                 contains = AXIS2_TRUE;
@@ -1174,7 +1174,7 @@ sandesha2_utils_sort(
         }
         if(contains)
         {
-            AXIS2_ARRAY_LIST_ADD(sorted_list, env, temp);
+            axis2_array_list_add(sorted_list, env, temp);
         }
     }
     return sorted_list;    
@@ -1309,12 +1309,12 @@ sandesha2_utils_split(
     {
         ptr[0] = AXIS2_EOLN;
         value = AXIS2_STRDUP(str, env);
-        AXIS2_ARRAY_LIST_ADD(list, env, value);
+        axis2_array_list_add(list, env, value);
         str = ptr + 3;
         ptr = AXIS2_STRSTR(str, pattern);
     }
     value = AXIS2_STRDUP(str, env);
-    AXIS2_ARRAY_LIST_ADD(list, env, value);
+    axis2_array_list_add(list, env, value);
 
     return list;
 }

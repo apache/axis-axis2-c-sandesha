@@ -251,7 +251,7 @@ sandesha2_permanent_next_msg_mgr_free(
     }
     if(next_msg_mgr_impl->values)
     {
-        AXIS2_ARRAY_LIST_FREE(next_msg_mgr_impl->values, env);
+        axis2_array_list_free(next_msg_mgr_impl->values, env);
         next_msg_mgr_impl->values = NULL;
     }
     if(next_msg_mgr_impl)

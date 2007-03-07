@@ -149,7 +149,7 @@ sandesha2_inmemory_seq_property_mgr_free(
 
     if(seq_prop_mgr_impl->values)
     {
-        AXIS2_ARRAY_LIST_FREE(seq_prop_mgr_impl->values, env);
+        axis2_array_list_free(seq_prop_mgr_impl->values, env);
         seq_prop_mgr_impl->values = NULL;
     }
     if(seq_prop_mgr_impl->bean_mgr)

@@ -367,13 +367,13 @@ sandesha2_sender_worker_worker_func(
         int j = 0;
         axis2_bool_t continue_sending = AXIS2_FALSE;
 
-        for(j = 0; j < AXIS2_ARRAY_LIST_SIZE(msgs_not_to_send, env); j++)
+        for(j = 0; j < axis2_array_list_size(msgs_not_to_send, env); j++)
         {
             axis2_char_t *value = NULL;
             int int_val = -1;
             int msg_type = -1;
             
-            value = AXIS2_ARRAY_LIST_GET(msgs_not_to_send, env, j);
+            value = axis2_array_list_get(msgs_not_to_send, env, j);
             int_val = atoi(value);
             msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
             if(msg_type == int_val)

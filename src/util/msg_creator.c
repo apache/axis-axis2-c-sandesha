@@ -718,7 +718,7 @@ sandesha2_msg_creator_finalize_creation(
             int i = 0, size = 0;
 
             new_op = AXIS2_MSG_CTX_GET_OP(new_msg, env);
-            size = AXIS2_ARRAY_LIST_SIZE(op_params, env);
+            size = axis2_array_list_size(op_params, env);
             for(i = 0; i < size; i++)
             {
                 axis2_param_t *next_param = NULL;
@@ -726,7 +726,7 @@ sandesha2_msg_creator_finalize_creation(
                 axis2_char_t *temp_name = NULL;
                 void *temp_value = NULL;
 
-                next_param = (axis2_param_t *) AXIS2_ARRAY_LIST_GET(op_params, 
+                next_param = (axis2_param_t *) axis2_array_list_get(op_params, 
                         env, i);
                 temp_name = AXIS2_PARAM_GET_NAME(next_param, env);
                 temp_value = AXIS2_PARAM_GET_VALUE(next_param, env);
@@ -938,12 +938,12 @@ sandesha2_msg_creator_add_ack_msg(
     ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
             rm_ns_value);
     if(ack_range_list)
-        size = AXIS2_ARRAY_LIST_SIZE(ack_range_list, env);
+        size = axis2_array_list_size(ack_range_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
 
-        ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
+        ack_range = axis2_array_list_get(ack_range_list, env, i);
         sandesha2_seq_ack_add_ack_range(seq_ack, env, ack_range);
     }
     seq_closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
@@ -1028,34 +1028,34 @@ sandesha2_msg_creator_create_make_connection_msg(
         axis2_op_t *make_conn_op = AXIS2_MSG_CTX_GET_OP(make_conn_msg_ctx, env);
         axis2_array_list_t *out_flow = AXIS2_OP_GET_OUT_FLOW(op, env);
         axis2_array_list_t *in_flow = AXIS2_OP_GET_IN_FLOW(op, env);
-        int size = AXIS2_ARRAY_LIST_SIZE(out_flow, env);
+        int size = axis2_array_list_size(out_flow, env);
         if(size > 0)
         {
             int i = 0;
             axis2_array_list_t *new_flow = axis2_array_list_create(env, 0);
             for(i = 0; i < size; i++)
             {
-                const axis2_phase_t *phase = AXIS2_ARRAY_LIST_GET(out_flow, env, i);
+                const axis2_phase_t *phase = axis2_array_list_get(out_flow, env, i);
                 const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
                 if(0 == AXIS2_STRCMP(phase_name, AXIS2_PHASE_MESSAGE_OUT))
                 {
-                    AXIS2_ARRAY_LIST_ADD(new_flow, env, phase);
+                    axis2_array_list_add(new_flow, env, phase);
                 }
             }
             AXIS2_OP_SET_OUT_FLOW(make_conn_op, env, new_flow);
         }
-        size = AXIS2_ARRAY_LIST_SIZE(in_flow, env);
+        size = axis2_array_list_size(in_flow, env);
         if(size > 0)
         {
             int i = 0;
             axis2_array_list_t *new_flow = axis2_array_list_create(env, 0);
             for(i = 0; i < size; i++)
             {
-                const axis2_phase_t *phase = AXIS2_ARRAY_LIST_GET(in_flow, env, i);
+                const axis2_phase_t *phase = axis2_array_list_get(in_flow, env, i);
                 const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
                 if(0 == AXIS2_STRCMP(phase_name, "RMPhase"))
                 {
-                    AXIS2_ARRAY_LIST_ADD(new_flow, env, phase);
+                    axis2_array_list_add(new_flow, env, phase);
                 }
             }
             AXIS2_OP_SET_IN_FLOW(make_conn_op, env, new_flow);

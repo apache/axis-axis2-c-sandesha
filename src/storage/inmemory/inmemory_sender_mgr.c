@@ -424,12 +424,12 @@ sandesha2_inmemory_sender_mgr_get_next_msg_to_send(
      * message first then we are done.
      */
     if(match_list)
-        size = AXIS2_ARRAY_LIST_SIZE(match_list, env);
+        size = axis2_array_list_size(match_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *bean = NULL;
         int msg_type = -1;
-        bean = (sandesha2_sender_bean_t *) AXIS2_ARRAY_LIST_GET(match_list, 
+        bean = (sandesha2_sender_bean_t *) axis2_array_list_get(match_list, 
             env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
         if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)

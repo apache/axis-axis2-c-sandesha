@@ -213,10 +213,10 @@ sandesha2_ack_mgr_generate_ack_msg(
         bean_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
             find_bean);
         
-        for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(bean_list, env); i++)
+        for(i = 0; i < axis2_array_list_size(bean_list, env); i++)
         {
             sandesha2_sender_bean_t *old_ack_bean = NULL;
-            old_ack_bean = AXIS2_ARRAY_LIST_GET(bean_list, env, i);
+            old_ack_bean = axis2_array_list_get(bean_list, env, i);
             time_to_send = sandesha2_sender_bean_get_time_to_send(old_ack_bean,
                 env);
             /*axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((const sandesha2_sender_bean_t *)old_ack_bean, env);*/
@@ -356,11 +356,11 @@ sandesha2_ack_mgr_verify_seq_completion(
     AXIS2_PARAM_CHECK(env->error, ack_ranges, AXIS2_FALSE);
     
     hash = axis2_hash_make(env);
-    for(i  = 0; i< AXIS2_ARRAY_LIST_SIZE(ack_ranges, env); i++)
+    for(i  = 0; i< axis2_array_list_size(ack_ranges, env); i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
         
-        ack_range = AXIS2_ARRAY_LIST_GET(ack_ranges, env, i);
+        ack_range = axis2_array_list_get(ack_ranges, env, i);
         sprintf(tmp, "%ld", sandesha2_ack_range_get_lower_value(ack_range, env));
         axis2_hash_set(hash, tmp, AXIS2_HASH_KEY_STRING, ack_range);
     }
@@ -419,13 +419,13 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                         
     found_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
                         find_bean);
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)
+    for(i = 0; i < axis2_array_list_size(found_list, env); i++)
     {
         sandesha2_sender_bean_t *sender_bean = NULL;
         long timenow = 0;
         
         timenow = sandesha2_utils_get_current_time_in_millis(env);
-        sender_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
+        sender_bean = axis2_array_list_get(found_list, env, i);
         
         if(sandesha2_sender_bean_get_time_to_send(sender_bean, env) > timenow)
         {

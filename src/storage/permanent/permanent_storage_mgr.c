@@ -1126,9 +1126,9 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     axis2_array_list_t *values = sandesha2_utils_split(env, str, 
         SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
     if(values)
-        size = AXIS2_ARRAY_LIST_SIZE(values, env);
+        size = axis2_array_list_size(values, env);
     if((size % 2 != 0) || (size == 1 && 0 == AXIS2_STRCMP("", 
-        AXIS2_ARRAY_LIST_GET(values, env, 0))))
+        axis2_array_list_get(values, env, 0))))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "Invalid persistence property string");
@@ -1138,8 +1138,8 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     }
     for(i = 0; i < size; i=i+2)
     {
-        axis2_char_t *key = AXIS2_ARRAY_LIST_GET(values, env, i);
-        axis2_char_t *value = AXIS2_ARRAY_LIST_GET(values, env, i+1);
+        axis2_char_t *key = axis2_array_list_get(values, env, i);
+        axis2_char_t *value = axis2_array_list_get(values, env, i+1);
         axis2_property_t *property = axis2_property_create_with_args(env, 0, 
             0, 0, value);
         axis2_hash_set(map, key, AXIS2_HASH_KEY_STRING, property);

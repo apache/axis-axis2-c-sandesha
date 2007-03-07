@@ -333,11 +333,11 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         if(found_list)
         {
             int i = 0;
-            for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(found_list, env); i++)
+            for(i = 0; i < axis2_array_list_size(found_list, env); i++)
             {
                 axis2_char_t *msg_stored_key = NULL;
                 sandesha2_sender_bean_t *old_ack_bean = NULL;
-                old_ack_bean = AXIS2_ARRAY_LIST_GET(found_list, env, i);
+                old_ack_bean = axis2_array_list_get(found_list, env, i);
                 time_to_send = sandesha2_sender_bean_get_time_to_send(
                     old_ack_bean, env);
                 /*char *msg_id = sandesha2_sender_bean_get_msg_id(old_ack_bean, env);*/

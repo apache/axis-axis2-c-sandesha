@@ -386,7 +386,7 @@ sandesha2_create_seq_msg_processor_offer_accepted(
     if(1 >= AXIS2_STRLEN(seq_id))
         return AXIS2_FALSE;
         
-    if(NULL != list && 0 < AXIS2_ARRAY_LIST_SIZE(list, env))
+    if(NULL != list && 0 < axis2_array_list_size(list, env))
         return AXIS2_FALSE;
         
     return AXIS2_TRUE;

@@ -127,7 +127,7 @@ sandesha2_sender_free(
     }
     if(sender->working_seqs)
     {
-        AXIS2_ARRAY_LIST_FREE(sender->working_seqs, env);
+        axis2_array_list_free(sender->working_seqs, env);
         sender->working_seqs = NULL;
     }
 	AXIS2_FREE(env->allocator, sender);
@@ -144,17 +144,17 @@ sandesha2_sender_stop_sender_for_seq(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(sender->working_seqs, env); i++)
+    for(i = 0; i < axis2_array_list_size(sender->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
-        tmp_id = AXIS2_ARRAY_LIST_GET(sender->working_seqs, env, i);
+        tmp_id = axis2_array_list_get(sender->working_seqs, env, i);
         if(0 == AXIS2_STRCMP(seq_id, tmp_id))
         {
-            AXIS2_ARRAY_LIST_REMOVE(sender->working_seqs, env, i);
+            axis2_array_list_remove(sender->working_seqs, env, i);
             break;
         }
     }
-    if(0 == AXIS2_ARRAY_LIST_SIZE(sender->working_seqs, env))
+    if(0 == axis2_array_list_size(sender->working_seqs, env))
         sender->run_sender = AXIS2_FALSE;
     return AXIS2_SUCCESS;
 }
@@ -193,7 +193,7 @@ sandesha2_sender_run_for_seq(
    
     if(seq_id && !sandesha2_utils_array_list_contains(env, 
         sender->working_seqs, seq_id))
-        AXIS2_ARRAY_LIST_ADD(sender->working_seqs, env, seq_id);
+        axis2_array_list_add(sender->working_seqs, env, seq_id);
     if(!sender->run_sender)
     {
         sender->conf_ctx = conf_ctx;

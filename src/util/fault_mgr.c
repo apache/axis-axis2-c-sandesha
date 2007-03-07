@@ -191,7 +191,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                         find_bean);
         if(list)
         {
-            if(0 == AXIS2_ARRAY_LIST_SIZE(list, env))
+            if(0 == axis2_array_list_size(list, env))
                 valid_seq = AXIS2_FALSE;
         }
         else
@@ -208,14 +208,14 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         list = sandesha2_next_msg_mgr_retrieve_all(next_msg_mgr, env);
         if(list)
         {
-            int size = AXIS2_ARRAY_LIST_SIZE(list, env);
+            int size = axis2_array_list_size(list, env);
             int i = 0;
 			for(i = 0; i < size; i++)
             {
                 sandesha2_next_msg_bean_t *next_bean = NULL;
                 axis2_char_t *tmp_id = NULL;
                 
-                next_bean = AXIS2_ARRAY_LIST_GET(list, env, i);
+                next_bean = axis2_array_list_get(list, env, i);
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(
                     (sandesha2_rm_bean_t *) next_bean, env);
                 if(0 == AXIS2_STRCMP(seq_id, tmp_id))
@@ -286,12 +286,12 @@ sandesha2_fault_mgr_check_for_invalid_ack(
     if(ack_range_list)
     {
         int i = 0;
-        for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(ack_range_list, env); i++)
+        for(i = 0; i < axis2_array_list_size(ack_range_list, env); i++)
         {
             sandesha2_ack_range_t *ack_range = NULL;
             long upper = -1;
             long lower = -1;
-            ack_range = AXIS2_ARRAY_LIST_GET(ack_range_list, env, i);
+            ack_range = axis2_array_list_get(ack_range_list, env, i);
             lower = sandesha2_ack_range_get_lower_value(ack_range, env);
             upper = sandesha2_ack_range_get_upper_value(ack_range, env);
             if(lower > upper)

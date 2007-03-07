@@ -219,7 +219,7 @@ sandesha2_global_in_handler_invoke(
             const axis2_char_t *relates_to_val = NULL;
             axis2_op_ctx_t *op_ctx = NULL;
             
-            relates_to_val = AXIS2_RELATES_TO_GET_VALUE(relates_to, env);
+            relates_to_val = axis2_relates_to_get_value(relates_to, env);
             op_ctx = AXIS2_CONF_CTX_GET_OP_CTX(conf_ctx, env, relates_to_val);
             if(op_ctx)
             {
@@ -338,12 +338,12 @@ sandesha2_global_in_handler_drop_if_duplicate(
                 msg_no_list = sandesha2_utils_get_array_list_from_string(env,
                         rcvd_msgs_str);
                 if(msg_no_list)
-                    size = AXIS2_ARRAY_LIST_SIZE(msg_no_list, env);
+                    size = axis2_array_list_size(msg_no_list, env);
                 for(i = 0; i < size; i++)
                 {
                     axis2_char_t *temp = NULL;
                     
-                    temp = AXIS2_ARRAY_LIST_GET(msg_no_list, env, i);
+                    temp = axis2_array_list_get(msg_no_list, env, i);
                     if(atol(temp) == msg_no)
                         drop = AXIS2_TRUE;
                 }
@@ -417,7 +417,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
             axis2_op_ctx_t *op_ctx = NULL;
             axis2_op_ctx_t *op_ctx1 = NULL;
             
-            relates_to_val = AXIS2_RELATES_TO_GET_VALUE(relates_to, env);
+            relates_to_val = axis2_relates_to_get_value(relates_to, env);
             conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(sandesha2_msg_ctx_get_msg_ctx(
                         rm_msg_ctx, env), env);
             op_ctx = AXIS2_CONF_CTX_GET_OP_CTX(conf_ctx, env, relates_to_val);

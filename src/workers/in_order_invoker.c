@@ -108,7 +108,7 @@ sandesha2_in_order_invoker_free(
     }
     if(NULL != invoker->working_seqs)
     {
-        AXIS2_ARRAY_LIST_FREE(invoker->working_seqs, env);
+        axis2_array_list_free(invoker->working_seqs, env);
         invoker->working_seqs = NULL;
     }
 	AXIS2_FREE(env->allocator, invoker);
@@ -125,17 +125,17 @@ sandesha2_in_order_invoker_stop_invoker_for_seq(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(invoker->working_seqs, env); i++)
+    for(i = 0; i < axis2_array_list_size(invoker->working_seqs, env); i++)
     {
         axis2_char_t *tmp_id = NULL;
-        tmp_id = AXIS2_ARRAY_LIST_GET(invoker->working_seqs, env, i);
+        tmp_id = axis2_array_list_get(invoker->working_seqs, env, i);
         if(0 == AXIS2_STRCMP(seq_id, tmp_id))
         {
-            AXIS2_ARRAY_LIST_REMOVE(invoker->working_seqs, env, i);
+            axis2_array_list_remove(invoker->working_seqs, env, i);
             break;
         }
     }
-    if(0 == AXIS2_ARRAY_LIST_SIZE(invoker->working_seqs, env))
+    if(0 == axis2_array_list_size(invoker->working_seqs, env))
         invoker->run_invoker = AXIS2_FALSE;
     return AXIS2_SUCCESS;
 }
@@ -176,7 +176,7 @@ sandesha2_in_order_invoker_run_for_seq (
     
     if(!sandesha2_utils_array_list_contains(env, 
                         invoker->working_seqs, seq_id))
-        AXIS2_ARRAY_LIST_ADD(invoker->working_seqs, env, seq_id);
+        axis2_array_list_add(invoker->working_seqs, env, seq_id);
     if(!invoker->run_invoker)
     {
         invoker->conf_ctx = conf_ctx;
@@ -288,7 +288,7 @@ sandesha2_in_order_invoker_worker_func(
         if(!all_seq_list)
             continue;
             
-        for(i = 0; i < AXIS2_ARRAY_LIST_SIZE(all_seq_list, env); i++)
+        for(i = 0; i < axis2_array_list_size(all_seq_list, env); i++)
         {
             axis2_char_t *seq_id = NULL;
             long next_msg_no = -1;
@@ -299,7 +299,7 @@ sandesha2_in_order_invoker_worker_func(
             int j = 0, size = 0;
             axis2_bool_t continue_seq = AXIS2_TRUE;
             
-            seq_id = AXIS2_ARRAY_LIST_GET(all_seq_list, env, i);
+            seq_id = axis2_array_list_get(all_seq_list, env, i);
             sandesha2_transaction_commit(transaction, env);
             transaction = sandesha2_storage_mgr_get_transaction(
                         storage_mgr, env);
@@ -310,7 +310,7 @@ sandesha2_in_order_invoker_worker_func(
                 axis2_char_t *str_list = NULL;
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Next message not set" 
                         " correctly. Removing invalid entry.");
-                AXIS2_ARRAY_LIST_REMOVE(all_seq_list, env, i);
+                axis2_array_list_remove(all_seq_list, env, i);
                 /* We need to make sure we are not skipping element after 
                  * removing current element
                  */                 
@@ -335,7 +335,7 @@ sandesha2_in_order_invoker_worker_func(
                         next_msg_no, seq_id, AXIS2_FALSE);
             st_map_list = sandesha2_invoker_mgr_find(storage_map_mgr,
                         env, find_bean);
-            size = AXIS2_ARRAY_LIST_SIZE(st_map_list, env);
+            size = axis2_array_list_size(st_map_list, env);
             for(j = 0; j < size; j++)
             {
                 sandesha2_invoker_bean_t *st_map_bean = NULL;
@@ -348,7 +348,7 @@ sandesha2_in_order_invoker_worker_func(
                 axis2_msg_ctx_t *msg_ctx = NULL;
                 axis2_engine_t *engine = NULL;
                 
-                st_map_bean = AXIS2_ARRAY_LIST_GET(st_map_list, env, j);
+                st_map_bean = axis2_array_list_get(st_map_list, env, j);
                 key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
                     (sandesha2_rm_bean_t *) st_map_bean, env);
                 printf("msg_ref_key:%s\n", key);
