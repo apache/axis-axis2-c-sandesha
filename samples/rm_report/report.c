@@ -197,7 +197,6 @@ int main(int argc, char** argv)
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
 
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 2);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -220,7 +219,7 @@ int main(int argc, char** argv)
         int i = 0, size = 0;
         axis2_array_list_t *incoming_seq_list = NULL;
         axis2_array_list_t *outgoing_seq_list = NULL;
-        incoming_seq_list = SANDESHA2_REPORT_GET_INCOMING_SEQ_LIST(report, env);
+        incoming_seq_list = sandesha2_report_get_incoming_seq_list(report, env);
         if(incoming_seq_list)
             size = axis2_array_list_size(incoming_seq_list, env);
         for(i = 0; i < size; i++)
@@ -232,7 +231,7 @@ int main(int argc, char** argv)
             }
         }
         size = 0;
-        outgoing_seq_list = SANDESHA2_REPORT_GET_OUTGOING_SEQ_LIST(report, env);
+        outgoing_seq_list = sandesha2_report_get_outgoing_seq_list(report, env);
         if(outgoing_seq_list)
             size = axis2_array_list_size(outgoing_seq_list, env);
         for(i = 0; i < size; i++)
@@ -242,7 +241,7 @@ int main(int argc, char** argv)
             {
                 long completed_msgs_count = -1; 
                 printf("outgoing seq_id %d:%s\n", i+1, seq_id);
-                completed_msgs_count = SANDESHA2_REPORT_GET_COMPLETED_MSGS_COUNT(
+                completed_msgs_count = sandesha2_report_get_completed_msgs_count(
                     report, env, seq_id);
                 printf("completed_msgs_count:%d\n", completed_msgs_count);
             }
@@ -252,7 +251,6 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 3);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;

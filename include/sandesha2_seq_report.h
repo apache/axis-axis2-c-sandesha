@@ -37,7 +37,6 @@ extern "C"
 #endif
 
 typedef struct sandesha2_seq_report sandesha2_seq_report_t;
-typedef struct sandesha2_seq_report_ops sandesha2_seq_report_ops_t;
 
 #define SANDESHA2_SEQ_STATUS_UNKNOWN 0
 #define SANDESHA2_SEQ_STATUS_INITIAL 1
@@ -56,140 +55,75 @@ typedef struct sandesha2_seq_report_ops sandesha2_seq_report_ops_t;
   * @ingroup sandesha2
   * @{
   */
+axis2_status_t AXIS2_CALL 
+sandesha2_seq_report_free(
+    void *report,
+    const axis2_env_t *envv);
 
-struct sandesha2_seq_report_ops
-{
-   /** 
-     * Deallocate memory
-     * @return status code
-     */
-    axis2_status_t (AXIS2_CALL *
-    free) (
-            void *seq_report,
-            const axis2_env_t *env);
-     
-    axis2_status_t (AXIS2_CALL *
-    set_seq_status) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t seq_status);
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_set_seq_status(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    axis2_char_t seq_status);
 
-    axis2_status_t (AXIS2_CALL *
-    set_seq_direction) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t seq_direction);
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_set_seq_direction(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    axis2_char_t seq_direction);
 
-    axis2_char_t (AXIS2_CALL *
-    get_seq_status) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env);
+axis2_char_t AXIS2_CALL
+sandesha2_seq_report_get_seq_status(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env);
 
-    axis2_char_t (AXIS2_CALL *
-    get_seq_direction) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env);
+axis2_char_t AXIS2_CALL
+sandesha2_seq_report_get_seq_direction(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env);
 
-    axis2_char_t *(AXIS2_CALL *
-    get_seq_id) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env);
+axis2_char_t *AXIS2_CALL
+sandesha2_seq_report_get_seq_id(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env);
 
-    axis2_status_t (AXIS2_CALL *
-    set_seq_id) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *seq_id);
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_set_seq_id(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    axis2_char_t *seq_id);
 
-    axis2_array_list_t *(AXIS2_CALL *
-    get_completed_msgs) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env);
+axis2_array_list_t *AXIS2_CALL
+sandesha2_seq_report_get_completed_msgs(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env);
 
-    axis2_status_t (AXIS2_CALL *
-    add_completed_msg) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            long *msg_no);
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_add_completed_msg(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    long *msg_no);
 
-    axis2_status_t (AXIS2_CALL *
-    set_completed_msgs) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            axis2_array_list_t *completed_msgs);
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_set_completed_msgs(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    axis2_array_list_t *completed_msgs);
 
-    axis2_char_t *(AXIS2_CALL *
-    get_internal_seq_id) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            long *msg_no);
+axis2_char_t *AXIS2_CALL
+sandesha2_seq_report_get_internal_seq_id(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    long *msg_no);
 
-    axis2_status_t (AXIS2_CALL *
-    set_internal_seq_id) (
-            sandesha2_seq_report_t *report,
-            const axis2_env_t *env,
-            axis2_char_t *internal_seq_id);
-   
-};
-
-struct sandesha2_seq_report
-{
-    sandesha2_seq_report_ops_t *ops;
-};
+axis2_status_t AXIS2_CALL
+sandesha2_seq_report_set_internal_seq_id(
+    sandesha2_seq_report_t *report,
+    const axis2_env_t *env,
+    axis2_char_t *internal_seq_id);
 
 AXIS2_EXTERN sandesha2_seq_report_t * AXIS2_CALL
 sandesha2_seq_report_create(const axis2_env_t *env);
-
-#define SANDESHA2_SEQ_REPORT_FREE(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->free (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_SET_SEQ_STATUS(seq_report, env, \
-        seq_status) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      set_seq_status (seq_report, env, seq_status))
-
-#define SANDESHA2_SEQ_REPORT_SET_SEQ_DIRECTION(seq_report, env, \
-        seq_direction) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      set_seq_direction (seq_report, env, seq_direction))
-
-#define SANDESHA2_SEQ_REPORT_GET_SEQ_STATUS(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      get_seq_status (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_GET_SEQ_DIRECTION(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      get_seq_direction (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_GET_SEQ_ID(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      get_seq_id (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_SET_SEQ_ID(seq_report, env, seq_id) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      set_seq_id (seq_report, env, seq_id))
-
-#define SANDESHA2_SEQ_REPORT_GET_COMPLETED_MSGS(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      get_completed_msgs (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_ADD_COMPLETED_MSG(seq_report, env, msg_no) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      add_completed_msg (seq_report, env, msg_no))
-
-#define SANDESHA2_SEQ_REPORT_SET_COMPLETED_MSGS(seq_report, env, completed_msgs) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      set_completed_msgs (seq_report, env, completed_msgs))
-
-#define SANDESHA2_SEQ_REPORT_GET_INTERNAL_SEQ_ID(seq_report, env) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      get_internal_seq_id (seq_report, env))
-
-#define SANDESHA2_SEQ_REPORT_SET_INTERNAL_SEQ_ID(seq_report, env, \
-        seq_id) \
-      (((sandesha2_seq_report_t *) seq_report)->ops->\
-      set_internal_seq_id (seq_report, env, seq_id))
-
 
 /** @} */
 #ifdef __cplusplus
