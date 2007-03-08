@@ -133,7 +133,7 @@ sandesha2_permanent_transaction_create(
         if(module_desc)
         {
             axis2_param_t *db_param = NULL;
-            db_param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, SANDESHA2_DB);
+            db_param = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
             if(db_param)
             {
                 path = (axis2_char_t *) axis2_param_get_value(db_param, env);

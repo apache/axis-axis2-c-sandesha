@@ -134,7 +134,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
     
     property_bean = sandesha2_property_bean_create(env);
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_EXP_BACKOFF);
     if(param)
     {
@@ -143,7 +143,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_RETRANSMISSION_INTERVAL);
     if(param)
     {
@@ -152,7 +152,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
        SANDESHA2_PROPERTIES_ACK_INTERVAL);
     if(param)
     {
@@ -161,14 +161,14 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_INACTIVETIMEOUT);
     if(param)
     {
         axis2_char_t *inactive_to_measure_str = NULL;
         
         inactive_timeout_str = axis2_param_get_value(param, env);
-        param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+        param = axis2_module_desc_get_param(module_desc, env, 
             SANDESHA2_PROPERTIES_INACTIVETIMEOUT_MEASURE);
         if(param)
             inactive_to_measure_str = axis2_param_get_value(param, env);
@@ -179,7 +179,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             inactive_to_measure_str, property_bean);
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
        SANDESHA2_PROPERTIES_IN_MEMORY_STORAGE_MGR);
     if(param)
     {
@@ -188,7 +188,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);        
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_PERM_STORAGE_MGR);
     if(param)
     {
@@ -197,7 +197,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);        
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_INORDER_INVOCATION);
     if(param)
     {
@@ -206,7 +206,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             in_order_invoker_str, property_bean);        
     }
 
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_MSG_TYPES_TO_DROP);
     if(param)
     {
@@ -215,7 +215,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             property_bean);        
     }
     
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_STORAGE_MGR);
     if(param)
     {
@@ -224,7 +224,7 @@ sandesha2_property_mgr_load_properties_from_module_desc(
         sandesha2_property_bean_set_storage_mgr(property_bean, env, storage_mgr);        
     }
     
-    param = AXIS2_MODULE_DESC_GET_PARAM(module_desc, env, 
+    param = axis2_module_desc_get_param(module_desc, env, 
         SANDESHA2_PROPERTIES_MAX_RETRANS_COUNT);
     if(param)
     {

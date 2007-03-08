@@ -298,7 +298,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     acks_to = sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                     sandesha2_create_seq_get_acks_to(create_seq_part, env), 
                     env), env);
-    if(!acks_to || !AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, 
+    if(!acks_to || !axis2_endpoint_ref_get_address(acks_to, 
                     env))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Acks to is null"
@@ -309,7 +309,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     }
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, 
                     new_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR, 
-                    (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env));
+                    (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env));
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
     op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
@@ -332,7 +332,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
     op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-    if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
+    if(0 == AXIS2_STRCMP(anon_uri, axis2_endpoint_ref_get_address(to_epr, 
                     env)))
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     else

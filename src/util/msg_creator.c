@@ -173,7 +173,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     if(property)
     {
         temp_to = AXIS2_PROPERTY_GET_VALUE(property, env);
-        to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
+        to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(
             temp_to, env));
     }
     if (!to_epr)
@@ -181,7 +181,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         temp_to = sandesha2_msg_ctx_get_to(application_rm_msg, env); 
         if (temp_to)
         {
-            to_epr = axis2_endpoint_ref_create(env, AXIS2_ENDPOINT_REF_GET_ADDRESS(
+            to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(
                 temp_to, env));
         }
     }
@@ -1090,7 +1090,7 @@ sandesha2_msg_creator_create_make_connection_msg(
         axis2_char_t *address = NULL;
         /* Setting the addressing properties */
         to = AXIS2_MSG_CTX_GET_TO(ref_msg_ctx, env);
-        address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(
+        address = (axis2_char_t *) axis2_endpoint_ref_get_address(
             (const axis2_endpoint_ref_t *) to, env);
         to = axis2_endpoint_ref_create(env, address);
         AXIS2_MSG_CTX_SET_TO(make_conn_msg_ctx, env, to);

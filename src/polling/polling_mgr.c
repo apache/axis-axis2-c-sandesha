@@ -358,7 +358,7 @@ sandesha2_polling_mgr_worker_func(
             if(to)
             {
                 axis2_char_t *address = (axis2_char_t *) 
-                    AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                    axis2_endpoint_ref_get_address(
                     (const axis2_endpoint_ref_t *) to, env);
                 sandesha2_sender_bean_set_to_address(make_conn_sender_bean, env, 
                     address);

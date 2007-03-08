@@ -130,7 +130,7 @@ sandesha2_seq_mgr_setup_new_seq(
     /* If no replyTo value. Send responses as sync. */
     if(reply_to)
     {
-        reply_to_addr = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to, env);
+        reply_to_addr = (axis2_char_t*)axis2_endpoint_ref_get_address(reply_to, env);
         to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_TO_EPR, reply_to_addr);
     }
@@ -139,10 +139,10 @@ sandesha2_seq_mgr_setup_new_seq(
         to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_TO_EPR, anonymous_uri);
     }
-    address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
+    address = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
     reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_REPLY_TO_EPR, address);
-    address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
+    address = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
                 SANDESHA2_SEQ_PROP_ACKS_TO_EPR, address);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, received_msg_bean);
@@ -394,7 +394,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     {
         to_bean = sandesha2_seq_property_bean_create_with_data(env, int_seq_id,
                        SANDESHA2_SEQ_PROP_TO_EPR, 
-                       (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, 
+                       (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, 
                        env));
     }
     
@@ -420,7 +420,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         if(reply_to_epr)
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,
-                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        (axis2_char_t*)axis2_endpoint_ref_get_address(
                         reply_to_epr, env));
         else
         {
@@ -437,7 +437,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         {
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,
-                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        (axis2_char_t*)axis2_endpoint_ref_get_address(
                         reply_to_epr, env));
 
         } 
@@ -494,7 +494,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, storage_mgr);
     epr = AXIS2_MSG_CTX_GET_TO(first_app_msg, env);
     if(epr)
-        addr = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+        addr = (axis2_char_t*)axis2_endpoint_ref_get_address(
             epr, env);
     if(!AXIS2_MSG_CTX_GET_SERVER_SIDE(first_app_msg, env) ||
         !sandesha2_utils_is_anon_uri(env, addr))

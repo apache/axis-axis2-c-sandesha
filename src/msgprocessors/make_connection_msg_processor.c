@@ -220,7 +220,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         axis2_char_t *epr_address = NULL;
         epr = sandesha2_address_get_epr(address, env);
         if(epr)
-            epr_address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(epr, 
+            epr_address = (axis2_char_t *) axis2_endpoint_ref_get_address(epr, 
                 env);
         if(epr_address)
             sandesha2_sender_bean_set_wsrm_anon_uri(find_sender_bean, env, 

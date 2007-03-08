@@ -723,13 +723,13 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     to = AXIS2_MSG_CTX_GET_TO(msg_ctx, env);
     if(to)
     {
-        address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
+        address = (axis2_char_t *) axis2_endpoint_ref_get_address(to, env);
         sandesha2_msg_store_bean_set_to_url(bean, env, address);
     }
     reply_to = AXIS2_MSG_CTX_GET_REPLY_TO(msg_ctx, env);
     if(reply_to)
     {
-        address = (axis2_char_t *) AXIS2_ENDPOINT_REF_GET_ADDRESS(reply_to, env);
+        address = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to, env);
         sandesha2_msg_store_bean_set_reply_to(bean, env, address);
     }
     /*property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, AXIS2_TRANSPORT_URL,

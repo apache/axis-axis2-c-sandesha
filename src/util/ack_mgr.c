@@ -72,7 +72,7 @@ sandesha2_ack_mgr_generate_ack_msg(
             sandesha2_seq_property_bean_get_value(acks_to_bean, 
                 env));
     if(acks_to)
-        acks_to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(acks_to, env);
+        acks_to_str = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     if(!acks_to_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_EPR, AXIS2_FAILURE);
@@ -415,7 +415,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
 
     to = sandesha2_msg_ctx_get_to(rm_msg_ctx, env);
     if(to)
-        to_str = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(to, env);
+        to_str = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
                         
     found_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
         find_bean);
@@ -439,7 +439,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                 sender_bean, env);
             msg_ctx1 = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
                 msg_ctx_ref_key, conf_ctx);
-            to = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+            to = (axis2_char_t*)axis2_endpoint_ref_get_address(
                 AXIS2_MSG_CTX_GET_TO(msg_ctx1, env), env);
             if(0 == AXIS2_STRCMP(to, to_str))
                 continue; 

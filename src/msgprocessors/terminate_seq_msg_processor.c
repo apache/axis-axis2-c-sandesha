@@ -437,7 +437,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     to_epr = AXIS2_MSG_CTX_GET_TO(msg_ctx, env);
     
     op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
-    if(0 == AXIS2_STRCMP(anon_uri, AXIS2_ENDPOINT_REF_GET_ADDRESS(to_epr, env)))
+    if(0 == AXIS2_STRCMP(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
@@ -487,7 +487,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
         AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    to_address = (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+    to_address = (axis2_char_t*)axis2_endpoint_ref_get_address(
         AXIS2_MSG_CTX_GET_TO(msg_ctx, env), env);
     property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY,
         AXIS2_FALSE);

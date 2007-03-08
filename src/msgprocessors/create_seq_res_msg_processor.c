@@ -317,7 +317,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_set_seq_id(acks_to_bean, env, 
                         offered_seq_id);
         sandesha2_seq_property_bean_set_value(acks_to_bean, env, 
-                        (axis2_char_t*)AXIS2_ENDPOINT_REF_GET_ADDRESS(
+                        (axis2_char_t*)axis2_endpoint_ref_get_address(
                         acks_to_epr, env));
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
         

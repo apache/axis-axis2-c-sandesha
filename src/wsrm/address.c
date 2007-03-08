@@ -206,9 +206,9 @@ sandesha2_address_to_om_node(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     address_impl = SANDESHA2_INTF_TO_IMPL(address);
-    if(!address_impl->epr || !AXIS2_ENDPOINT_REF_GET_ADDRESS(
+    if(!address_impl->epr || !axis2_endpoint_ref_get_address(
             address_impl->epr, env) || 0 == AXIS2_STRLEN(
-            AXIS2_ENDPOINT_REF_GET_ADDRESS(address_impl->epr, env)))
+            axis2_endpoint_ref_get_address(address_impl->epr, env)))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
             AXIS2_FAILURE);
@@ -227,7 +227,7 @@ sandesha2_address_to_om_node(
         return NULL;
     }
     AXIOM_ELEMENT_SET_TEXT(addr_element, env, 
-            AXIS2_ENDPOINT_REF_GET_ADDRESS(address_impl->epr, env), 
+            axis2_endpoint_ref_get_address(address_impl->epr, env), 
             addr_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, addr_node);
     return (axiom_node_t*)om_node;
