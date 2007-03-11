@@ -562,7 +562,7 @@ sandesha2_utils_get_property_bean_from_op(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, op, NULL);
     
-    param = AXIS2_OP_GET_PARAM(op, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    param = axis2_op_get_param(op, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
@@ -713,7 +713,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(svc && op)
     {
         AXIS2_SVC_ADD_OP(svc, env, op);
-        AXIS2_OP_SET_PARENT(op, env, svc);
+        axis2_op_set_parent(op, env, svc);
     }
     
     axis2_allocator_switch_to_global_pool(env->allocator);

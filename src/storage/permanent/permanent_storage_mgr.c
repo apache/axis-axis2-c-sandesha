@@ -702,14 +702,14 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
     if(op)
     {
-        axis2_qname_t *qname = (axis2_qname_t *) AXIS2_OP_GET_QNAME(op, env);
+        axis2_qname_t *qname = (axis2_qname_t *) axis2_op_get_qname(op, env);
         axis2_char_t *mep = NULL;
         if(qname)
         {
             axis2_char_t *op_name = AXIS2_QNAME_TO_STRING(qname, env);
             sandesha2_msg_store_bean_set_op(bean, env, op_name);
         }
-        mep = (axis2_char_t *) AXIS2_OP_GET_MSG_EXCHANGE_PATTERN(op, env);
+        mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
         sandesha2_msg_store_bean_set_op_mep(bean, env, mep);
     }
     sandesha2_msg_store_bean_set_flow(bean, env, AXIS2_MSG_CTX_GET_FLOW(msg_ctx, 
@@ -922,7 +922,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 axis2_op_t *temp = NULL;
                 axis2_hash_this(index, NULL, NULL, &v);
                 temp = (axis2_op_t *) v;
-                mep = (axis2_char_t *) AXIS2_OP_GET_MSG_EXCHANGE_PATTERN(temp, 
+                mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(temp, 
                     env);
                 if(0 == AXIS2_STRCMP(mep, op_mep_str))
                 {

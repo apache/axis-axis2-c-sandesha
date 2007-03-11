@@ -495,7 +495,7 @@ static void add_op_if_null(
             axis2_phases_info_t *info = NULL;
 
             op = axis2_op_create_with_qname(env, tmp_qname);
-            AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_OUT_IN);
+            axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_OUT_IN);
             conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
             conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
             info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
@@ -506,13 +506,13 @@ static void add_op_if_null(
                 status = AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
                 if(AXIS2_SUCCESS != status)
                 {
-                    AXIS2_OP_FREE(op, env);
+                    axis2_op_free(op, env);
                     op = NULL;
                 }
             }
             else
             {
-                AXIS2_OP_FREE(op, env);
+                axis2_op_free(op, env);
                 op = NULL;
             }
         }

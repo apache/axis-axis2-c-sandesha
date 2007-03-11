@@ -195,27 +195,27 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     }
     acks_to = axis2_endpoint_ref_create(env, acks_to_str);
     ack_op = axis2_op_create(env);
-    AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(ack_op, env, AXIS2_MEP_URI_IN_ONLY);
-    rm_msg_op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
+    axis2_op_set_msg_exchange_pattern(ack_op, env, AXIS2_MEP_URI_IN_ONLY);
+    rm_msg_op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(rm_msg_op)
     {
         axis2_array_list_t *out_flow = NULL;
         axis2_array_list_t *new_out_flow = NULL;
         axis2_array_list_t *out_fault_flow = NULL;
         axis2_array_list_t *new_out_fault_flow = NULL;
-        out_flow = AXIS2_OP_GET_OUT_FLOW(rm_msg_op, env);
+        out_flow = axis2_op_get_out_flow(rm_msg_op, env);
         new_out_flow = axis2_phases_info_copy_flow(env, out_flow);
-        out_fault_flow = AXIS2_OP_GET_OUT_FLOW(rm_msg_op, env);
+        out_fault_flow = axis2_op_get_out_flow(rm_msg_op, env);
         new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
         if(new_out_flow)
-            AXIS2_OP_SET_OUT_FLOW(ack_op, env, new_out_flow);
+            axis2_op_set_out_flow(ack_op, env, new_out_flow);
         if(new_out_fault_flow)
-            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, new_out_fault_flow);
+            axis2_op_set_fault_out_flow(ack_op, env, new_out_fault_flow);
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, rm_msg_ctx, 
         ack_op);
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_MSG_CTX_SET_PROPERTY(ack_msg_ctx, env, 
+    axis2_msg_ctx_set_property(ack_msg_ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE, property, AXIS2_FALSE);
     ack_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
     sandesha2_msg_ctx_set_rm_ns_val(ack_rm_msg, env, 
@@ -259,7 +259,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             axis2_op_ctx_t *op_ctx = NULL;
             
             operation = axis2_op_create(env);
-            AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(operation, env, 
+            axis2_op_set_msg_exchange_pattern(operation, env, 
                 AXIS2_MEP_URI_IN_OUT);
             op_ctx = axis2_op_ctx_create(env, operation, NULL);
             AXIS2_MSG_CTX_SET_OP(msg_ctx, env, operation);

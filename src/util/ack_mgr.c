@@ -79,7 +79,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         return NULL;
     }
     ack_op = axis2_op_create(env);
-    AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);
+    axis2_op_set_msg_exchange_pattern(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);
     
     ref_op = AXIS2_MSG_CTX_GET_OP(ref_msg, env);
     if(ref_op)
@@ -88,14 +88,14 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_array_list_t *out_fault_flow = NULL;
         axis2_array_list_t *new_out_flow = NULL;
         axis2_array_list_t *new_out_fault_flow = NULL;
-        out_flow = AXIS2_OP_GET_OUT_FLOW(ref_op, env);
+        out_flow = axis2_op_get_out_flow(ref_op, env);
         new_out_flow = axis2_phases_info_copy_flow(env, out_flow);
-        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_op, env);
+        out_fault_flow = axis2_op_get_fault_out_flow(ref_op, env);
         new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
         if(new_out_flow)
-            AXIS2_OP_SET_OUT_FLOW(ack_op, env, new_out_flow);
+            axis2_op_set_out_flow(ack_op, env, new_out_flow);
         if(new_out_fault_flow)
-            AXIS2_OP_SET_FAULT_OUT_FLOW(ack_op, env, new_out_fault_flow);
+            axis2_op_set_fault_out_flow(ack_op, env, new_out_fault_flow);
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg,
         ack_op);
@@ -149,7 +149,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         if(!op_ctx)
         {
             axis2_op_t *op = axis2_op_create(env);
-            AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_IN_OUT);
+            axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_IN_OUT);
             op_ctx = axis2_op_ctx_create(env, op, NULL);
             AXIS2_MSG_CTX_SET_OP(ref_msg, env, op);
             AXIS2_MSG_CTX_SET_OP_CTX(ref_msg, env, op_ctx);            

@@ -431,7 +431,7 @@ sandesha2_fault_mgr_get_fault(
     AXIS2_MSG_CTX_SET_SVC_CTX_ID(fault_msg_ctx, env, 
                         AXIS2_MSG_CTX_GET_SVC_CTX_ID(ref_msg, env));
     op = axis2_op_create(env);
-    AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(op, env, AXIS2_MEP_URI_OUT_ONLY);
+    axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_OUT_ONLY);
     op_ctx = axis2_op_ctx_create(env, op, NULL);
     AXIS2_MSG_CTX_SET_OP(fault_msg_ctx, env, op);
     AXIS2_MSG_CTX_SET_OP_CTX(fault_msg_ctx, env, op_ctx);

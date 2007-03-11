@@ -511,9 +511,9 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     qname = axis2_qname_create(env, "temp", NULL, NULL);
     
     out_in_op = axis2_op_create_with_qname(env, qname);
-    AXIS2_OP_SET_MSG_EXCHANGE_PATTERN(out_in_op, env, AXIS2_MEP_URI_OUT_IN);
-    AXIS2_OP_SET_IN_FLOW(out_in_op, env, 
-         AXIS2_OP_GET_IN_FLOW(old_op, env));
+    axis2_op_set_msg_exchange_pattern(out_in_op, env, AXIS2_MEP_URI_OUT_IN);
+    axis2_op_set_in_flow(out_in_op, env, 
+         axis2_op_get_in_flow(old_op, env));
 
     axis2_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_op_ctx_create(env, out_in_op, NULL);

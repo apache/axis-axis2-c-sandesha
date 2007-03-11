@@ -154,20 +154,20 @@ sandesha2_msg_creator_create_create_seq_msg(
         axis2_array_list_t *new_in_fault_flow = NULL;
         axis2_array_list_t *new_inflow = NULL;
 
-        outflow = AXIS2_OP_GET_OUT_FLOW(app_msg_op_desc, env);
+        outflow = axis2_op_get_out_flow(app_msg_op_desc, env);
         new_outflow = axis2_phases_info_copy_flow(env, outflow);
-        AXIS2_OP_SET_OUT_FLOW(create_seq_op, env, new_outflow);
-        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(app_msg_op_desc, env);
+        axis2_op_set_out_flow(create_seq_op, env, new_outflow);
+        out_fault_flow = axis2_op_get_fault_out_flow(app_msg_op_desc, env);
         new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
-        AXIS2_OP_SET_FAULT_OUT_FLOW(create_seq_op, env, new_out_fault_flow);
-        in_fault_flow = AXIS2_OP_GET_FAULT_IN_FLOW(app_msg_op_desc, env);
+        axis2_op_set_fault_out_flow(create_seq_op, env, new_out_fault_flow);
+        in_fault_flow = axis2_op_get_fault_in_flow(app_msg_op_desc, env);
         new_in_fault_flow = axis2_phases_info_copy_flow(env, in_fault_flow);
-        AXIS2_OP_SET_FAULT_IN_FLOW(create_seq_op, env, new_in_fault_flow);
-        inflow = AXIS2_OP_GET_IN_FLOW(app_msg_op_desc, env);
+        axis2_op_set_fault_in_flow(create_seq_op, env, new_in_fault_flow);
+        inflow = axis2_op_get_in_flow(app_msg_op_desc, env);
         new_inflow = axis2_phases_info_copy_flow(env, inflow);
-        AXIS2_OP_SET_IN_FLOW(create_seq_op, env, new_inflow);
+        axis2_op_set_in_flow(create_seq_op, env, new_inflow);
     }
-    AXIS2_MSG_CTX_SET_OP(create_seq_msg_ctx, env, create_seq_op);
+    axis2_msg_ctx_set_op(create_seq_msg_ctx, env, create_seq_op);
     property = AXIS2_MSG_CTX_GET_PROPERTY(application_msg_ctx, env, 
         AXIS2_TARGET_EPR, AXIS2_FALSE);
     if(property)
@@ -561,18 +561,18 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         axis2_array_list_t *new_in_fault_flow = NULL;
         axis2_array_list_t *new_inflow = NULL;
 
-        outflow = AXIS2_OP_GET_OUT_FLOW(ref_msg_op, env);
+        outflow = axis2_op_get_out_flow(ref_msg_op, env);
         new_outflow = axis2_phases_info_copy_flow(env, outflow);
-        AXIS2_OP_SET_OUT_FLOW(terminate_seq_op, env, new_outflow);
-        out_fault_flow = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_msg_op, env);
+        axis2_op_set_out_flow(terminate_seq_op, env, new_outflow);
+        out_fault_flow = axis2_op_get_fault_out_flow(ref_msg_op, env);
         new_out_fault_flow = axis2_phases_info_copy_flow(env, out_fault_flow);
-        AXIS2_OP_SET_FAULT_OUT_FLOW(terminate_seq_op, env, new_out_fault_flow);
-        in_fault_flow = AXIS2_OP_GET_FAULT_IN_FLOW(ref_msg_op, env);
+        axis2_op_set_fault_out_flow(terminate_seq_op, env, new_out_fault_flow);
+        in_fault_flow = axis2_op_get_fault_in_flow(ref_msg_op, env);
         new_in_fault_flow = axis2_phases_info_copy_flow(env, in_fault_flow);
-        AXIS2_OP_SET_FAULT_IN_FLOW(terminate_seq_op, env, new_in_fault_flow);
-        inflow = AXIS2_OP_GET_IN_FLOW(ref_msg_op, env);
+        axis2_op_set_fault_in_flow(terminate_seq_op, env, new_in_fault_flow);
+        inflow = axis2_op_get_in_flow(ref_msg_op, env);
         new_inflow = axis2_phases_info_copy_flow(env, inflow);
-        AXIS2_OP_SET_IN_FLOW(terminate_seq_op, env, new_inflow);
+        axis2_op_set_in_flow(terminate_seq_op, env, new_inflow);
     }
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
     if(!rm_version)
@@ -604,12 +604,12 @@ sandesha2_msg_creator_create_terminate_seq_msg(
         axis2_array_list_t *outphases = NULL;
         axis2_array_list_t *out_fault_phases = NULL;
 
-        outphases = AXIS2_OP_GET_OUT_FLOW(ref_msg_op, env);
-        out_fault_phases = AXIS2_OP_GET_FAULT_OUT_FLOW(ref_msg_op, env);
+        outphases = axis2_op_get_out_flow(ref_msg_op, env);
+        out_fault_phases = axis2_op_get_fault_out_flow(ref_msg_op, env);
         if(outphases)
-            AXIS2_OP_SET_OUT_FLOW(terminate_seq_op, env, outphases);
+            axis2_op_set_out_flow(terminate_seq_op, env, outphases);
         if(out_fault_phases)        
-            AXIS2_OP_SET_FAULT_OUT_FLOW(terminate_seq_op, env, out_fault_phases);
+            axis2_op_set_fault_out_flow(terminate_seq_op, env, out_fault_phases);
     }*/
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env);
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
@@ -711,7 +711,7 @@ sandesha2_msg_creator_finalize_creation(
     {
         axis2_array_list_t *op_params = NULL;
 
-        op_params = AXIS2_OP_GET_ALL_PARAMS(old_op, env);
+        op_params = axis2_op_get_all_params(old_op, env);
         if(op_params)
         {
             axis2_op_t *new_op = NULL;
@@ -732,12 +732,12 @@ sandesha2_msg_creator_finalize_creation(
                 temp_value = AXIS2_PARAM_GET_VALUE(next_param, env);
                 new_param = axis2_param_create(env, temp_name, temp_value);
                 /*new_param->ops->value_free = next_param->ops->value_free;*/
-                AXIS2_OP_ADD_PARAM(new_op, env, new_param); 
+                axis2_op_add_param(new_op, env, new_param); 
             }
         }
     }
     /* Operation context properties */
-    old_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(related_msg, env);
+    old_op_ctx = axis2_msg_ctx_get_op_ctx(related_msg, env);
     if(old_op_ctx)
     {
         axis2_hash_t *old_op_ctx_props = NULL;
@@ -1026,8 +1026,8 @@ sandesha2_msg_creator_create_make_connection_msg(
     {
         axis2_op_t *op = AXIS2_MSG_CTX_GET_OP(ref_msg_ctx, env);
         axis2_op_t *make_conn_op = AXIS2_MSG_CTX_GET_OP(make_conn_msg_ctx, env);
-        axis2_array_list_t *out_flow = AXIS2_OP_GET_OUT_FLOW(op, env);
-        axis2_array_list_t *in_flow = AXIS2_OP_GET_IN_FLOW(op, env);
+        axis2_array_list_t *out_flow = axis2_op_get_out_flow(op, env);
+        axis2_array_list_t *in_flow = axis2_op_get_in_flow(op, env);
         int size = axis2_array_list_size(out_flow, env);
         if(size > 0)
         {
@@ -1042,7 +1042,7 @@ sandesha2_msg_creator_create_make_connection_msg(
                     axis2_array_list_add(new_flow, env, phase);
                 }
             }
-            AXIS2_OP_SET_OUT_FLOW(make_conn_op, env, new_flow);
+            axis2_op_set_out_flow(make_conn_op, env, new_flow);
         }
         size = axis2_array_list_size(in_flow, env);
         if(size > 0)
@@ -1058,7 +1058,7 @@ sandesha2_msg_creator_create_make_connection_msg(
                     axis2_array_list_add(new_flow, env, phase);
                 }
             }
-            AXIS2_OP_SET_IN_FLOW(make_conn_op, env, new_flow);
+            axis2_op_set_in_flow(make_conn_op, env, new_flow);
         }
     }
     make_conn = sandesha2_make_connection_create(env, rm_ns_value);

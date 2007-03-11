@@ -1820,7 +1820,7 @@ sandesha2_client_send_non_blocking(
         return AXIS2_FAILURE;
     }
 
-    AXIS2_OP_SET_MSG_RECV(op, env,
+    axis2_op_set_msg_recv(op, env,
             AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, env));
     AXIS2_OP_CLIENT_SET_CALLBACK_RECV(op_client, env, callback_recv);
     return AXIS2_OP_CLIENT_EXECUTE(op_client, env, AXIS2_FALSE);
@@ -1877,7 +1877,7 @@ sandesha2_client_fire_and_forget(
         {
             AXIS2_SVC_CLIENT_FREE(svc_client, env);
         }
-        AXIS2_OP_SET_MSG_RECV(op, env, AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, 
+        axis2_op_set_msg_recv(op, env, AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, 
             env));
         AXIS2_OP_CLIENT_SET_CALLBACK_RECV(op_client, env, callback_recv);
         block = AXIS2_FALSE;

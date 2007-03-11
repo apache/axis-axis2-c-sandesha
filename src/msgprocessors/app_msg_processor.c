@@ -531,7 +531,7 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     acks_to = axis2_endpoint_ref_create(env, acks_to_str);
-    mep = AXIS2_OP_GET_AXIS_SPECIFIC_MEP_CONST(op, env);
+    mep = axis2_op_get_axis_specific_mep_const(op, env);
     back_channel_free = (reply_to_addr && !sandesha2_utils_is_anon_uri(env, 
         reply_to_addr)) || AXIS2_MEP_CONSTANT_IN_ONLY == mep;
     if(!reply_to_epr)
@@ -973,7 +973,7 @@ sandesha2_app_msg_processor_process_out_msg(
             }
         }        
     }
-    op_name = AXIS2_QNAME_GET_LOCALPART(AXIS2_OP_GET_QNAME(AXIS2_OP_CTX_GET_OP(
+    op_name = AXIS2_QNAME_GET_LOCALPART(axis2_op_get_qname(AXIS2_OP_CTX_GET_OP(
         axis2_msg_ctx_get_op_ctx(msg_ctx, env), env), env), env);
     if (to_epr)
         to_addr = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
