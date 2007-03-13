@@ -217,7 +217,7 @@ sandesha2_msg_pending_from_om_node(
             SANDESHA2_ERROR_PENDING_HEADER_MUST_HAVE_ATTRIBUTE_PENDING, 
             AXIS2_FAILURE);
     }
-    value = AXIOM_ATTRIBUTE_GET_VALUE(pending_attr, env);
+    value = axiom_attribute_get_value(pending_attr, env);
     if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_TRUE))
         pending = AXIS2_TRUE;
     if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_FALSE))

@@ -247,11 +247,11 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     sandesha2_seq_report_set_seq_direction(seq_report, env, 
         SANDESHA2_SEQ_DIRECTION_OUT);
 
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf); 
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env); 
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env); 
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     if(client_report_transaction)
     {
         report_transaction = client_report_transaction;
@@ -416,12 +416,12 @@ sandesha2_client_get_report(
     axis2_property_t *property = NULL;
     axis2_bool_t commit = AXIS2_TRUE;
 
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     sandesha2_report = sandesha2_report_create(env);
     internal_seq_find_bean = sandesha2_seq_property_bean_create(env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     if(client_report_transaction)
     {
         report_transaction = client_report_transaction;
@@ -1026,7 +1026,7 @@ sandesha2_client_get_seq_id(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE, AXIS2_FAILURE);
         return NULL;
     }
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
@@ -1268,7 +1268,7 @@ sandesha2_client_configure_close_seq(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_IN_ACTIVE_STATE, AXIS2_FAILURE);
         return NULL;
     }
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
@@ -1580,10 +1580,10 @@ sandesha2_client_get_incoming_seq_report(
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf); 
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env); 
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     if(client_report_transaction)
     {
         report_transaction = client_report_transaction;
@@ -1700,7 +1700,7 @@ sandesha2_client_configure_terminate_seq(
         axis2_char_t *seq_id = NULL;
         sandesha2_transaction_t *transaction = NULL;
 
-        conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+        conf = axis2_conf_ctx_get_conf(conf_ctx, env);
         storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
         if(storage_mgr)
         {
@@ -1930,7 +1930,7 @@ fill_soap_envelope(
             }
         }
     }
-    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(msg_ctx, env, envelope);
+    axis2_msg_ctx_set_soap_envelope(msg_ctx, env, envelope);
 
     return AXIS2_TRUE;
 }
@@ -1974,9 +1974,9 @@ sandesha2_client_get_response_envelope(
     property = (axis2_property_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
         SANDESHA2_CLIENT_SEQ_KEY);
     client_seq_key = axis2_property_get_value(property, env);
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     property = (axis2_property_t *) axis2_ctx_get_property(ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)

@@ -98,7 +98,7 @@ sandesha2_out_handler_invoke(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Configuration Context is NULL");
@@ -161,7 +161,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE, 
             temp_prop, AXIS2_FALSE);
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
@@ -198,7 +198,7 @@ sandesha2_out_handler_invoke(
         axis2_msg_ctx_t *req_msg_ctx = NULL;
         axis2_op_ctx_t *op_ctx = NULL;
 
-        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+        op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
         req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
             AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg_ctx) /* For the server side */
@@ -216,7 +216,7 @@ sandesha2_out_handler_invoke(
                 sandesha2_app_msg_processor_create(env); /* rm intended msg */
             }
         }
-        else if(!AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
+        else if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
             msg_processor = (sandesha2_msg_processor_t *) 
             sandesha2_app_msg_processor_create(env);
@@ -234,7 +234,7 @@ sandesha2_out_handler_invoke(
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         /* Rolling back the transaction */
         if(!within_transaction)
         {

@@ -167,7 +167,7 @@ sandesha2_polling_mgr_start (
     }
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         polling_mgr->conf_ctx, 
-        AXIS2_CONF_CTX_GET_CONF(polling_mgr->conf_ctx, env));
+        axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env));
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
     axis2_thread_mutex_unlock(polling_mgr->mutex);

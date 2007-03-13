@@ -417,24 +417,24 @@ sandesha2_fault_mgr_get_fault(
     
     /* Setting context hierachy - be caereful about freeing
      */
-    AXIS2_MSG_CTX_SET_SVC_GRP(fault_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_GRP(
+    axis2_msg_ctx_set_svc_grp(fault_msg_ctx, env, axis2_msg_ctx_get_svc_grp(
                         ref_msg, env));
-    AXIS2_MSG_CTX_SET_SVC(fault_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC(ref_msg, 
+    axis2_msg_ctx_set_svc_grp(fault_msg_ctx, env, axis2_msg_ctx_get_svc(ref_msg, 
                         env));
-    AXIS2_MSG_CTX_SET_SVC_GRP_CTX(fault_msg_ctx, env, 
-                        AXIS2_MSG_CTX_GET_SVC_GRP_CTX(ref_msg, env));
-    AXIS2_MSG_CTX_SET_SVC_CTX(fault_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(
+    axis2_msg_ctx_set_svc_grp_ctx(fault_msg_ctx, env, 
+                        axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
+    axis2_msg_ctx_set_svc_ctx(fault_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
                         ref_msg, env));
     grp_ctx_id = (axis2_string_t *) axis2_msg_ctx_get_svc_grp_ctx_id(ref_msg, 
         env);
     axis2_msg_ctx_set_svc_grp_ctx_id(fault_msg_ctx, env, grp_ctx_id);
-    AXIS2_MSG_CTX_SET_SVC_CTX_ID(fault_msg_ctx, env, 
-                        AXIS2_MSG_CTX_GET_SVC_CTX_ID(ref_msg, env));
+    axis2_msg_ctx_set_svc_ctx_id(fault_msg_ctx, env, 
+                        axis2_msg_ctx_get_svc_ctx_id(ref_msg, env));
     op = axis2_op_create(env);
     axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_OUT_ONLY);
     op_ctx = axis2_op_ctx_create(env, op, NULL);
-    AXIS2_MSG_CTX_SET_OP(fault_msg_ctx, env, op);
-    AXIS2_MSG_CTX_SET_OP_CTX(fault_msg_ctx, env, op_ctx);
+    axis2_msg_ctx_set_op(fault_msg_ctx, env, op);
+    axis2_msg_ctx_set_op_ctx(fault_msg_ctx, env, op_ctx);
     
     if(SANDESHA2_MSG_TYPE_CREATE_SEQ == sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, 
                         env))
@@ -466,7 +466,7 @@ sandesha2_fault_mgr_get_fault(
     }
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     if(NULL!= acks_to_str && 0 != AXIS2_STRCMP(acks_to_str, anon_uri))
-        AXIS2_MSG_CTX_SET_TO(fault_msg_ctx, env, axis2_endpoint_ref_create(env,
+        axis2_msg_ctx_set_to(fault_msg_ctx, env, axis2_endpoint_ref_create(env,
                         acks_to_str));
     soap_ver = sandesha2_utils_get_soap_version(env, 
                         sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env));

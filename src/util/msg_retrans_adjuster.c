@@ -87,7 +87,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
    
     /* Avoid retrieving property bean from operation until it is availbale */
     /*property_bean = sandesha2_utils_get_property_bean_from_op(env, 
-        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));*/
+        axis2_msg_ctx_get_op(msg_ctx, env));*/
     property_bean = sandesha2_utils_get_property_bean(env, 
         axis2_conf_ctx_get_conf(conf_ctx, env));
     sent_count = sandesha2_sender_bean_get_sent_count(retrans_bean, env) + 1;

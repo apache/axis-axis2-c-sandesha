@@ -274,7 +274,7 @@ sandesha2_sender_worker_worker_func(
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
-        AXIS2_CONF_CTX_GET_CONF(sender_worker->conf_ctx, env));
+        axis2_conf_ctx_get_conf(sender_worker->conf_ctx, env));
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
@@ -356,7 +356,7 @@ sandesha2_sender_worker_worker_func(
     
     /* Avoid retrieving property bean from operation until it is availbale */
     /*prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
-        AXIS2_MSG_CTX_GET_OP(msg_ctx, env));*/
+        axis2_msg_ctx_get_op(msg_ctx, env));*/
     prop_bean = sandesha2_utils_get_property_bean(env, 
         axis2_conf_ctx_get_conf(sender_worker->conf_ctx, env));
     if(prop_bean)
@@ -418,8 +418,8 @@ sandesha2_sender_worker_worker_func(
     }
     
     if(!transport_out) 
-        transport_out = AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx, env);
-    transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
+        transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
+    transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
     if(transport_sender)
     {
         sandesha2_transaction_commit(transaction, env);
@@ -504,7 +504,7 @@ sandesha2_sender_worker_worker_func(
         seq_id = sandesha2_identifier_get_identifier(
                     sandesha2_terminate_seq_get_identifier(terminate_seq, 
                     env), env);
-        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
                     SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
@@ -583,14 +583,14 @@ sandesha2_sender_worker_check_for_sync_res(
     if(!property)
         return AXIS2_SUCCESS;
         
-    res_msg_ctx = axis2_msg_ctx_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx,
-        env), AXIS2_MSG_CTX_GET_TRANSPORT_IN_DESC(
-        msg_ctx, env), AXIS2_MSG_CTX_GET_TRANSPORT_OUT_DESC(msg_ctx,
+    res_msg_ctx = axis2_msg_ctx_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx,
+        env), axis2_msg_ctx_get_transport_in_desc(
+        msg_ctx, env), axis2_msg_ctx_get_transport_out_desc(msg_ctx,
         env));
     /* Setting the message as serverSide will let it go through the 
      * Message Receiver (may be callback MR).
      */
-    AXIS2_MSG_CTX_SET_SERVER_SIDE(res_msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN, 
         AXIS2_FALSE);
     if(property)
@@ -599,34 +599,34 @@ sandesha2_sender_worker_check_for_sync_res(
         axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
             temp_prop, AXIS2_FALSE);
     }
-    AXIS2_MSG_CTX_SET_SVC_CTX(res_msg_ctx, env, AXIS2_MSG_CTX_GET_SVC_CTX(
+    axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
         msg_ctx, env));
-    AXIS2_MSG_CTX_SET_SVC_GRP_CTX(res_msg_ctx, env, 
-        AXIS2_MSG_CTX_GET_SVC_GRP_CTX(msg_ctx, env));
-    req_op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 
+        axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
+    req_op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(req_op_ctx)
     {
         axis2_ctx_t *ctx = NULL;
         
         ctx = AXIS2_OP_CTX_GET_BASE(req_op_ctx, env);
-        if(AXIS2_CTX_GET_PROPERTY(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
+        if(axis2_ctx_get_property(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
             AXIS2_FALSE))
         {
             axis2_msg_ctx_set_property(res_msg_ctx, env, 
-                MTOM_RECIVED_CONTENT_TYPE, AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                MTOM_RECIVED_CONTENT_TYPE, axis2_ctx_get_property(ctx, env, 
                 MTOM_RECIVED_CONTENT_TYPE, AXIS2_FALSE), AXIS2_FALSE);
         }
-        if(AXIS2_CTX_GET_PROPERTY(ctx, env, AXIS2_HTTP_CHAR_SET_ENCODING, 
+        if(axis2_ctx_get_property(ctx, env, AXIS2_HTTP_CHAR_SET_ENCODING, 
             AXIS2_FALSE))
         {
             axis2_msg_ctx_set_property(res_msg_ctx, env, 
-                AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_CTX_GET_PROPERTY(ctx, env, 
+                AXIS2_HTTP_CHAR_SET_ENCODING, axis2_ctx_get_property(ctx, env, 
                 AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_FALSE), AXIS2_FALSE);
         }
     }
-    AXIS2_MSG_CTX_SET_DOING_REST(res_msg_ctx, env, AXIS2_MSG_CTX_GET_DOING_REST(
+    axis2_msg_ctx_set_doing_rest(res_msg_ctx, env, axis2_msg_ctx_get_doing_rest(
         msg_ctx, env));
-    soap_ns_uri = AXIS2_MSG_CTX_GET_IS_SOAP_11(msg_ctx, env) ?
+    soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
          AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
@@ -645,9 +645,9 @@ sandesha2_sender_worker_check_for_sync_res(
     if(res_envelope)
     {
         axis2_engine_t *engine = NULL;
-        AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(res_msg_ctx, env, res_envelope);
+        axis2_msg_ctx_set_soap_envelope(res_msg_ctx, env, res_envelope);
        
-        engine = axis2_engine_create(env, AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, 
+        engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, 
             env));
         if(AXIS2_TRUE == sandesha2_sender_worker_is_fault_envelope(env, 
             res_envelope))

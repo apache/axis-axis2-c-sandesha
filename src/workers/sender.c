@@ -255,7 +255,7 @@ sandesha2_sender_worker_func(
     
     AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_worker_func");
     storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
-        AXIS2_CONF_CTX_GET_CONF(sender->conf_ctx, env));
+        axis2_conf_ctx_get_conf(sender->conf_ctx, env));
                         
     while(sender->run_sender)
     {

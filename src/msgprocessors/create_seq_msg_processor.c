@@ -185,9 +185,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                         AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-                        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+                        axis2_conf_ctx_get_conf(conf_ctx, env));
     
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
                         env, msg_ctx, storage_mgr);
@@ -198,7 +198,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
                         fault_rm_msg_ctx, env));
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
@@ -311,7 +311,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     new_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR, 
                     (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env));
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
-    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, 
                     storage_mgr);
@@ -331,7 +331,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
                     storage_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
-    op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(0 == AXIS2_STRCMP(anon_uri, axis2_endpoint_ref_get_address(to_epr, 
                     env)))
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);

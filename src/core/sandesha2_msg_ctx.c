@@ -129,14 +129,14 @@ sandesha2_msg_ctx_add_soap_envelope(
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    if(AXIS2_FALSE == AXIS2_MSG_CTX_GET_IS_SOAP_11(rm_msg_ctx->msg_ctx, env))
+    if(AXIS2_FALSE == axis2_msg_ctx_get_is_soap_11(rm_msg_ctx->msg_ctx, env))
         soap_ver = AXIOM_SOAP12;
-    soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(rm_msg_ctx->msg_ctx, env);
     if(NULL == soap_envelope)
     {
         soap_envelope = axiom_soap_envelope_create_default_soap_envelope(env,
                         soap_ver);
-        AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env, 
+        axis2_msg_ctx_set_soap_envelope(rm_msg_ctx->msg_ctx, env, 
                         soap_envelope);
     }
     
@@ -211,7 +211,7 @@ sandesha2_msg_ctx_get_from(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_FROM(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_from(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -223,7 +223,7 @@ sandesha2_msg_ctx_set_from(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, from, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_TO(rm_msg_ctx->msg_ctx, env, from);;
+    return axis2_msg_ctx_set_to(rm_msg_ctx->msg_ctx, env, from);;
 }
     
 axis2_endpoint_ref_t *AXIS2_CALL
@@ -233,7 +233,7 @@ sandesha2_msg_ctx_get_to (
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_TO(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_to(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -245,7 +245,7 @@ sandesha2_msg_ctx_set_to(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, to, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_TO(rm_msg_ctx->msg_ctx, env, to);
+    return axis2_msg_ctx_set_to(rm_msg_ctx->msg_ctx, env, to);
 }
     
 axis2_endpoint_ref_t *AXIS2_CALL
@@ -255,7 +255,7 @@ sandesha2_msg_ctx_get_reply_to(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_REPLY_TO(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_reply_to(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -266,7 +266,7 @@ sandesha2_msg_ctx_set_reply_to(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, reply_to, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_REPLY_TO(rm_msg_ctx->msg_ctx, env, reply_to);
+    return axis2_msg_ctx_set_reply_to(rm_msg_ctx->msg_ctx, env, reply_to);
 }
     
 axis2_endpoint_ref_t *AXIS2_CALL
@@ -276,7 +276,7 @@ sandesha2_msg_ctx_get_fault_to(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_FAULT_TO(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_fault_to(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -287,7 +287,7 @@ sandesha2_msg_ctx_set_fault_to(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, fault_to, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_FAULT_TO(rm_msg_ctx->msg_ctx, env, fault_to);
+    return axis2_msg_ctx_set_fault_to(rm_msg_ctx->msg_ctx, env, fault_to);
 }
     
 axis2_relates_to_t *AXIS2_CALL
@@ -297,7 +297,7 @@ sandesha2_msg_ctx_get_relates_to(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_RELATES_TO(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_relates_to(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -308,7 +308,7 @@ sandesha2_msg_ctx_set_relates_to(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, relates_to, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_RELATES_TO(rm_msg_ctx->msg_ctx, env, relates_to);
+    return axis2_msg_ctx_set_relates_to(rm_msg_ctx->msg_ctx, env, relates_to);
 }
     
 axis2_char_t *AXIS2_CALL
@@ -318,7 +318,7 @@ sandesha2_msg_ctx_get_msg_id(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_MESSAGE_ID(
+    return (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(
                         rm_msg_ctx->msg_ctx, env);
 }
 
@@ -331,7 +331,7 @@ sandesha2_msg_ctx_set_msg_id(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_MESSAGE_ID(rm_msg_ctx->msg_ctx, env, msg_id);
+    return axis2_msg_ctx_set_message_id(rm_msg_ctx->msg_ctx, env, msg_id);
 }
     
 axiom_soap_envelope_t *AXIS2_CALL
@@ -341,7 +341,7 @@ sandesha2_msg_ctx_get_soap_envelope(
 {
     AXIS2_ENV_CHECK(env, NULL);
     
-    return AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_soap_envelope(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -353,7 +353,7 @@ sandesha2_msg_ctx_set_soap_envelope(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(rm_msg_ctx->msg_ctx, env, 
+    return axis2_msg_ctx_set_soap_envelope(rm_msg_ctx->msg_ctx, env, 
                         soap_envelope);
 }
             
@@ -364,7 +364,7 @@ sandesha2_msg_ctx_get_wsa_action(
 {
     AXIS2_ENV_CHECK(env, NULL);
         
-    return (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(rm_msg_ctx->msg_ctx, env);
+    return (axis2_char_t*)axis2_msg_ctx_get_wsa_action(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
@@ -375,7 +375,7 @@ sandesha2_msg_ctx_set_wsa_action(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_WSA_ACTION(rm_msg_ctx->msg_ctx, env, action);
+    return axis2_msg_ctx_set_wsa_action(rm_msg_ctx->msg_ctx, env, action);
 }
             
 void *AXIS2_CALL
@@ -386,7 +386,7 @@ sandesha2_msg_ctx_get_property(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     
-    return AXIS2_MSG_CTX_GET_PROPERTY(rm_msg_ctx->msg_ctx, env, key,
+    return axis2_msg_ctx_get_property(rm_msg_ctx->msg_ctx, env, key,
                         AXIS2_FALSE);
 }
 
@@ -400,7 +400,7 @@ sandesha2_msg_ctx_set_property(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FAILURE);
     
-    return AXIS2_MSG_CTX_SET_PROPERTY(rm_msg_ctx->msg_ctx, env, key, val,
+    return axis2_msg_ctx_set_property(rm_msg_ctx->msg_ctx, env, key, val,
                         AXIS2_FALSE);
 }
     
@@ -430,7 +430,7 @@ sandesha2_msg_ctx_set_paused(
     
     if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
-    return AXIS2_MSG_CTX_SET_PAUSED(rm_msg_ctx->msg_ctx, env, paused);    
+    return axis2_msg_ctx_set_paused(rm_msg_ctx->msg_ctx, env, paused);    
 }
     
 axis2_char_t *AXIS2_CALL
@@ -500,7 +500,7 @@ sandesha2_msg_ctx_get_flow(
     
     if(NULL == rm_msg_ctx->msg_ctx)
         return -1;
-    return AXIS2_MSG_CTX_GET_FLOW(rm_msg_ctx->msg_ctx, env);     
+    return axis2_msg_ctx_get_flow(rm_msg_ctx->msg_ctx, env);     
 }
 
 axis2_status_t AXIS2_CALL
@@ -513,7 +513,7 @@ sandesha2_msg_ctx_set_flow(
     if(NULL == rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
         
-    return AXIS2_MSG_CTX_SET_FLOW(rm_msg_ctx->msg_ctx, env, flow); 
+    return axis2_msg_ctx_set_flow(rm_msg_ctx->msg_ctx, env, flow); 
 }
 
 axis2_char_t *AXIS2_CALL

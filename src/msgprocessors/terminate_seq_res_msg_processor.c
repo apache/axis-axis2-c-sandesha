@@ -151,9 +151,9 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
             "sequence id");
         return AXIS2_FAILURE;
     }
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = (sandesha2_storage_mgr_t *) sandesha2_utils_get_storage_mgr(
-        env, conf_ctx, AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+        env, conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
         AXIS2_FALSE, storage_mgr);
     AXIS2_LOG_INFO(env->log, 

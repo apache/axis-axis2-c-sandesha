@@ -99,7 +99,7 @@ sandesha2_in_handler_invoke(
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
 
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -108,7 +108,7 @@ sandesha2_in_handler_invoke(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
+    ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     temp_prop = axis2_ctx_get_property(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(temp_prop)
@@ -132,7 +132,7 @@ sandesha2_in_handler_invoke(
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = NULL;
     temp_prop = axis2_ctx_get_property(ctx, env, 
@@ -153,7 +153,7 @@ sandesha2_in_handler_invoke(
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
             AXIS2_FALSE);
     }
-    svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
         if(!within_transaction)
@@ -176,7 +176,7 @@ sandesha2_in_handler_invoke(
     if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(!within_transaction)
         {
             axis2_property_t *prop = NULL;

@@ -132,12 +132,12 @@ populate_rm_msg_ctx(
      * Assuming the default addressing version.
      */
     if(msg_ctx)
-        ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
-    prop = AXIS2_CTX_GET_PROPERTY(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
+        ctx = axis2_msg_ctx_get_base(msg_ctx, env);
+    prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(prop)
         addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
     
-    if(!addressing_ns && !AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env))
+    if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
     }
@@ -145,8 +145,8 @@ populate_rm_msg_ctx(
         rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
     if(!rm_elements)
         return AXIS2_FAILURE;
-    envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
-    action = (axis2_char_t*)AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+    action = (axis2_char_t*)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     sandesha2_rm_elements_from_soap_envelope(rm_elements, env, envelope, action);
     create_seq = sandesha2_rm_elements_get_create_seq(rm_elements, env);
     if(create_seq)
@@ -292,8 +292,8 @@ static axis2_bool_t validate_msg(
     int temp_flow = -1;
 
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(temp_msg_ctx, env);
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
@@ -421,7 +421,7 @@ static axis2_bool_t validate_msg(
     {
         sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, SANDESHA2_MSG_TYPE_UNKNOWN);
     }
-    temp_flow = AXIS2_MSG_CTX_GET_FLOW(temp_msg_ctx, env);
+    temp_flow = axis2_msg_ctx_get_flow(temp_msg_ctx, env);
     if(temp_flow == AXIS2_IN_FLOW)
     {
         prop_key = AXIS2_STRDUP(seq_id, env);
@@ -471,7 +471,7 @@ static void add_op_if_null(
 {
     axis2_op_t *op = NULL;
         
-    op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
+    op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(!op)
     {
         axis2_svc_t *svc = NULL;
@@ -485,7 +485,7 @@ static void add_op_if_null(
                     AXIS2_FAILURE);
             return;
         }
-        svc = AXIS2_MSG_CTX_GET_SVC(msg_ctx, env);
+        svc = axis2_msg_ctx_get_svc(msg_ctx, env);
         op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env, tmp_qname);
         if(!op)
         {
@@ -496,14 +496,14 @@ static void add_op_if_null(
 
             op = axis2_op_create_with_qname(env, tmp_qname);
             axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_OUT_IN);
-            conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-            conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+            conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+            conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
             AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
             status = AXIS2_SVC_ADD_OP(svc, env, op);
             if(AXIS2_SUCCESS == status)
             {
-                status = AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
+                status = axis2_msg_ctx_set_op(msg_ctx, env, op);
                 if(AXIS2_SUCCESS != status)
                 {
                     axis2_op_free(op, env);
@@ -517,7 +517,7 @@ static void add_op_if_null(
             }
         }
         AXIS2_QNAME_FREE(tmp_qname, env);
-        AXIS2_MSG_CTX_SET_OP(msg_ctx, env, op);
+        axis2_msg_ctx_set_op(msg_ctx, env, op);
     }
 }
 

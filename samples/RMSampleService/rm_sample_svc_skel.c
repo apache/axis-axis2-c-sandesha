@@ -104,7 +104,7 @@ rm_sample_svc_invoke(
     axis2_qname_t *op_qname = NULL;
     axis2_char_t *op_name = NULL;
     
-    op = AXIS2_MSG_CTX_GET_OP(msg_ctx, env);
+    op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(op)
     {
         op_qname = (axis2_qname_t *)axis2_op_get_qname(op, env);

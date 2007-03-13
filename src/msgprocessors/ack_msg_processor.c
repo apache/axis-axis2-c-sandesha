@@ -183,10 +183,10 @@ sandesha2_ack_msg_processor_process_in_msg (
         return AXIS2_FAILURE;        
     }
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+        axis2_conf_ctx_get_conf(conf_ctx, env));
     sandesha2_seq_ack_set_must_understand(seq_ack, env, AXIS2_FALSE);
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
    
@@ -214,7 +214,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_msg_ctx, env));
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     }
     fault_msg_ctx = sandesha2_fault_mgr_check_for_invalid_ack(env, rm_msg_ctx, 
          storage_mgr);
@@ -224,13 +224,13 @@ sandesha2_ack_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
              fault_msg_ctx, env));
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     }
     if(int_seq_id)
         sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
             storage_mgr);
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property,
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property,
          AXIS2_FALSE);
                         
     input_bean = sandesha2_sender_bean_create(env);
@@ -345,7 +345,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             }
         }
     }
-    action = AXIS2_MSG_CTX_GET_WSA_ACTION(msg_ctx, env);
+    action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     if(action && 0 == axis2_strcmp(action, 
         sandesha2_spec_specific_consts_get_ack_req_action(env, 
             sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env))))

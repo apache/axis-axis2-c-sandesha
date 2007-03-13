@@ -120,7 +120,7 @@ sandesha2_permanent_transaction_create(
 	conf_ctx = (axis2_conf_ctx_t *) sandesha2_storage_mgr_get_ctx(
         storage_mgr, env);
     if(conf_ctx)
-        conf = AXIS2_CONF_CTX_GET_CONF((const axis2_conf_ctx_t *) conf_ctx, env);
+        conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     else
         return NULL;
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(

@@ -205,7 +205,7 @@ sandesha2_inmemory_storage_mgr_create(
     storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = AXIS2_STRDUP("Sandesha2MessageMap", 
         env);
     storage_mgr_impl->conf_ctx = conf_ctx;
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     storage_mgr_impl->create_seq_mgr = sandesha2_inmemory_create_seq_mgr_create(
         env, &(storage_mgr_impl->storage_mgr), ctx);
     storage_mgr_impl->next_msg_mgr = sandesha2_inmemory_next_msg_mgr_create(
@@ -399,8 +399,8 @@ sandesha2_inmemory_storage_mgr_retrieve_msg_ctx(
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     conf_ctx = sandesha2_inmemory_storage_mgr_get_ctx(storage_mgr, env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, AXIS2_FALSE);
     storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
     if(!storage_map)
@@ -424,8 +424,8 @@ sandesha2_inmemory_storage_mgr_store_msg_ctx(
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
    
     conf_ctx = sandesha2_inmemory_storage_mgr_get_ctx(storage_mgr, env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, AXIS2_FALSE);
     if(!property)
     {
@@ -438,14 +438,14 @@ sandesha2_inmemory_storage_mgr_store_msg_ctx(
         AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
         AXIS2_PROPERTY_SET_VALUE(property, env, storage_map);
         AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
-        AXIS2_CTX_SET_PROPERTY(ctx, env, storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, 
+        axis2_ctx_set_property(ctx, env, storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, 
                 property, AXIS2_FALSE);
     }
     if(!key)
     {
         key = axis2_uuid_gen(env);
     }
-    AXIS2_MSG_CTX_SET_KEEP_ALIVE(msg_ctx, env, AXIS2_TRUE);
+    axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_TRUE);
     axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, msg_ctx);
     return AXIS2_SUCCESS;
 }
@@ -465,8 +465,8 @@ sandesha2_inmemory_storage_mgr_update_msg_ctx(
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     conf_ctx = sandesha2_inmemory_storage_mgr_get_ctx(storage_mgr, env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, AXIS2_FALSE);
     if(!property)
     {
@@ -505,8 +505,8 @@ sandesha2_inmemory_storage_mgr_remove_msg_ctx(
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     conf_ctx = sandesha2_inmemory_storage_mgr_get_ctx(storage_mgr, env);
-    ctx = AXIS2_CONF_CTX_GET_BASE(conf_ctx, env);
-    property = AXIS2_CTX_GET_PROPERTY(ctx, env, 
+    ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, AXIS2_FALSE);
     if(!property)
     {

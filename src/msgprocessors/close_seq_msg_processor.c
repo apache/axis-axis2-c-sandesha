@@ -155,10 +155,10 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-                        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+                        axis2_conf_ctx_get_conf(conf_ctx, env));
     close_seq = (sandesha2_close_seq_t*)sandesha2_msg_ctx_get_msg_part(
                         rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
     
@@ -172,7 +172,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         AXIS2_ENGINE_SEND(engine, env, sandesha2_msg_ctx_get_msg_ctx(
                         fault_rm_msg_ctx, env));
-        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
@@ -193,8 +193,8 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     
     envelope = axiom_soap_envelope_create_default_soap_envelope(env,
                         sandesha2_utils_get_soap_version(env,
-                        AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env)));
-    AXIS2_MSG_CTX_SET_SOAP_ENVELOPE(ack_msg_ctx, env, envelope);
+                        axis2_msg_ctx_get_soap_envelope(msg_ctx, env)));
+    axis2_msg_ctx_set_soap_envelope(ack_msg_ctx, env, envelope);
     
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(ack_rm_msg, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);

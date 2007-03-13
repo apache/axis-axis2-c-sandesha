@@ -92,7 +92,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
         axis2_allocator_switch_to_local_pool(env->allocator);
     }
     
-    prop_bean = sandesha2_utils_get_property_bean(env, AXIS2_CONF_CTX_GET_CONF(
+    prop_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(
         conf_ctx, env));
     in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
     if(!in_order_invoke)

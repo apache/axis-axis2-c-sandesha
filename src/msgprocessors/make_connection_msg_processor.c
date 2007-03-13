@@ -204,10 +204,10 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(msg_ctx)
-        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(conf_ctx)
         storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-                        AXIS2_CONF_CTX_GET_CONF(conf_ctx, env));
+                        axis2_conf_ctx_get_conf(conf_ctx, env));
     if(storage_mgr)
         sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     /* Selecting the set of sender beans that suit the given criteria */
@@ -281,7 +281,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     /* Setting that the response gets written. This will be used by transports.*/
     if(msg_ctx)
     {
-        op_ctx = AXIS2_MSG_CTX_GET_OP_CTX(msg_ctx, env);
+        op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
     /*
@@ -372,7 +372,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     }
 
-    transport_sender = AXIS2_TRANSPORT_OUT_DESC_GET_SENDER(transport_out, env);
+    transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
     AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, return_msg_ctx);
     bean1 = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(bean1)
@@ -416,11 +416,11 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         seq_id = sandesha2_identifier_get_identifier(
             sandesha2_terminate_seq_get_identifier(terminate_seq, 
                 env), env);
-        conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
             SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-            int_seq_id, AXIS2_MSG_CTX_GET_SERVER_SIDE(msg_ctx, env), 
+            int_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr);
     }
     axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);

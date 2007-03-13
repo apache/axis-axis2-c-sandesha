@@ -163,27 +163,27 @@ sandesha2_transport_sender_invoke (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
         
-    property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, AXIS2_FALSE);
                         
     if(NULL == property || NULL == AXIS2_PROPERTY_GET_VALUE(property, env))
         return AXIS2_FAILURE;
     out_desc = AXIS2_PROPERTY_GET_VALUE(property, env);
-    AXIS2_MSG_CTX_SET_TRANSPORT_OUT_DESC(msg_ctx, env, out_desc);
+    axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, out_desc);
     
-    property = AXIS2_MSG_CTX_GET_PROPERTY(msg_ctx, env, 
+    property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_MESSAGE_STORE_KEY, AXIS2_FALSE);
                         
     if(NULL == property || NULL == AXIS2_PROPERTY_GET_VALUE(property, env))
         return AXIS2_FAILURE;
     
     key = AXIS2_PROPERTY_GET_VALUE(property, env);
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_MSG_CTX_SET_PROPERTY(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
         property, AXIS2_FALSE);
     sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);
     return AXIS2_SUCCESS;

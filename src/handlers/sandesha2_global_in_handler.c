@@ -124,7 +124,7 @@ sandesha2_global_in_handler_invoke(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
         return AXIS2_SUCCESS;
     }
-    conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration"
@@ -132,7 +132,7 @@ sandesha2_global_in_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    ctx = AXIS2_MSG_CTX_GET_BASE(msg_ctx, env);
+    ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -141,9 +141,9 @@ sandesha2_global_in_handler_invoke(
         axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property, AXIS2_FALSE);
     }
-    conf = AXIS2_CONF_CTX_GET_CONF(conf_ctx, env);
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     
-    soap_envelope = AXIS2_MSG_CTX_GET_SOAP_ENVELOPE(msg_ctx, env);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if(!soap_envelope)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]SOAP envelope "
@@ -204,14 +204,14 @@ sandesha2_global_in_handler_invoke(
             rolled_back = AXIS2_TRUE;
             
         }
-        relates_to = AXIS2_MSG_CTX_GET_RELATES_TO(msg_ctx, env);
+        relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
         if(relates_to)
         {
             const axis2_char_t *relates_to_val = NULL;
             axis2_op_ctx_t *op_ctx = NULL;
             
             relates_to_val = axis2_relates_to_get_value(relates_to, env);
-            op_ctx = AXIS2_CONF_CTX_GET_OP_CTX(conf_ctx, env, relates_to_val);
+            op_ctx = axis2_conf_ctx_get_op_ctx(conf_ctx, env, relates_to_val);
             if(op_ctx)
             {
                 axis2_msg_ctx_t *req_msg_ctx = NULL;
@@ -223,7 +223,7 @@ sandesha2_global_in_handler_invoke(
                         req_msg_ctx))
                     {
                         /* TODO we need to notify the listeners */
-                        AXIS2_MSG_CTX_SET_PAUSED(msg_ctx, env, AXIS2_TRUE);
+                        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
                         return AXIS2_SUCCESS;
                     }
                 }
@@ -406,10 +406,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
             axis2_op_ctx_t *op_ctx1 = NULL;
             
             relates_to_val = axis2_relates_to_get_value(relates_to, env);
-            conf_ctx = AXIS2_MSG_CTX_GET_CONF_CTX(sandesha2_msg_ctx_get_msg_ctx(
+            conf_ctx = axis2_msg_ctx_get_conf_ctx(sandesha2_msg_ctx_get_msg_ctx(
                         rm_msg_ctx, env), env);
-            op_ctx = AXIS2_CONF_CTX_GET_OP_CTX(conf_ctx, env, relates_to_val);
-            op_ctx1 = AXIS2_MSG_CTX_GET_OP_CTX(sandesha2_msg_ctx_get_msg_ctx(
+            op_ctx = axis2_conf_ctx_get_op_ctx(conf_ctx, env, relates_to_val);
+            op_ctx1 = axis2_msg_ctx_get_op_ctx(sandesha2_msg_ctx_get_msg_ctx(
                         rm_msg_ctx, env), env);
             if(!op_ctx && !op_ctx1)
             {

@@ -91,9 +91,9 @@ rm_sample_svc_echo (
     if (AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT)
     {
         axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
-        if( text && AXIOM_TEXT_GET_VALUE(text , env))
+        if( text && axiom_text_get_value(text , env))
         {
-            axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
+            axis2_char_t *text_str = axiom_text_get_value(text, env);
             ret_node = build_echo_om(env, text_str);
         }
     }
@@ -193,9 +193,9 @@ rm_sample_svc_ping (
     if (AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT)
     {
         /*axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
-        if( text && AXIOM_TEXT_GET_VALUE(text , env))
+        if( text && axiom_text_get_value(text , env))
         {
-            axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
+            axis2_char_t *text_str = axiom_text_get_value(text, env);
         }*/
     }
     else
@@ -249,10 +249,10 @@ rm_sample_svc_mtom(
     if (AXIOM_NODE_GET_NODE_TYPE(file_text_node, env) == AXIOM_TEXT)
     {
         axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(file_text_node, env);
-        if (text && AXIOM_TEXT_GET_VALUE(text , env))
+        if (text && axiom_text_get_value(text , env))
         {
             axiom_node_t *image_node = NULL;
-            axis2_char_t *text_str = AXIOM_TEXT_GET_VALUE(text, env);
+            axis2_char_t *text_str = axiom_text_get_value(text, env);
 
             image_node = AXIOM_NODE_GET_NEXT_SIBLING(file_name_node, env);
             if (image_node)
@@ -268,7 +268,7 @@ rm_sample_svc_mtom(
                         axiom_data_handler_t *data_handler = NULL;
                         axiom_text_t *bin_text = (axiom_text_t *)
                                 AXIOM_NODE_GET_DATA_ELEMENT(binary_node, env);
-                        data_handler = AXIOM_TEXT_GET_DATA_HANDLER(bin_text, env);
+                        data_handler = axiom_text_get_data_handler(bin_text, env);
                         if (data_handler)
                         {
                             AXIOM_DATA_HANDLER_SET_FILE_NAME(data_handler, env, text_str);
