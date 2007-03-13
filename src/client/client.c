@@ -189,7 +189,7 @@ sandesha2_client_get_outgoing_seq_report_with_svc_client(
             "Service Context is NULL.");
         
     }
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);    
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);    
     internal_seq_id = sandesha2_client_get_internal_seq_id(env, to, seq_key);
 
     return (sandesha2_seq_report_t *) 
@@ -674,7 +674,7 @@ sandesha2_client_terminate_seq_with_svc_client(
     }
     rm_namespc_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
             rm_spec_version);
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     terminate_envelope = sandesha2_client_configure_terminate_seq(env, options, 
             conf_ctx);
     if (!terminate_envelope)
@@ -784,7 +784,7 @@ sandesha2_client_close_seq_with_svc_client(
     }
     rm_namespc_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
             rm_spec_version);
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     close_envelope = sandesha2_client_configure_close_seq(env, options, 
             conf_ctx);
     body = AXIOM_SOAP_ENVELOPE_GET_BODY(close_envelope, env);
@@ -1008,7 +1008,7 @@ sandesha2_client_get_seq_id(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_NULL, AXIS2_FAILURE);
         return NULL;
    }
-   conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+   conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
    internal_seq_id = 
        sandesha2_client_generate_internal_seq_id_for_the_client_side(env, to, 
                seq_key);
@@ -1085,7 +1085,7 @@ sandesha2_client_send_ack_request_with_svc_client(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     to_epr = AXIS2_OPTIONS_GET_TO(options, env);
     if(!to_epr)
     {
@@ -1795,7 +1795,7 @@ sandesha2_client_send_non_blocking(
     if(!op_qname)
         op_qname = axis2_qname_create(env, AXIS2_ANON_OUT_IN_OP, NULL, NULL);
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     svc = AXIS2_SVC_CLIENT_GET_AXIS_SERVICE(svc_client, env);
     op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env,
@@ -1851,7 +1851,7 @@ sandesha2_client_fire_and_forget(
         op_qname = axis2_qname_create(env, AXIS2_ANON_OUT_ONLY_OP, NULL, NULL);
     }
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
-    conf_ctx = AXIS2_SVC_CTX_GET_CONF_CTX(svc_ctx, env);
+    conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     svc = AXIS2_SVC_CLIENT_GET_AXIS_SERVICE(svc_client, env);
     op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env, op_qname);

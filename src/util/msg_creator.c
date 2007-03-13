@@ -743,7 +743,7 @@ sandesha2_msg_creator_finalize_creation(
         axis2_hash_t *old_op_ctx_props = NULL;
         axis2_ctx_t *ctx = NULL;
 
-        ctx = AXIS2_OP_CTX_GET_BASE(old_op_ctx, env);
+        ctx = axis2_op_ctx_get_base(old_op_ctx, env);
         old_op_ctx_props = axis2_ctx_get_all_properties(ctx, env);
         if(old_op_ctx_props)
         {
@@ -764,7 +764,7 @@ sandesha2_msg_creator_finalize_creation(
                 axis2_hash_this (hi, (const void **)&k, NULL, &v);
                 key = (axis2_char_t *) k;
                 prop = (axis2_property_t *) v;
-                ctx = AXIS2_OP_CTX_GET_BASE(new_op_ctx, env);
+                ctx = axis2_op_ctx_get_base(new_op_ctx, env);
                 if(prop)
                     new_prop = AXIS2_PROPERTY_CLONE(prop, env);
                 if(new_prop)

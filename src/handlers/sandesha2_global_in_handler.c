@@ -215,7 +215,7 @@ sandesha2_global_in_handler_invoke(
             if(op_ctx)
             {
                 axis2_msg_ctx_t *req_msg_ctx = NULL;
-                req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+                req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
                     AXIS2_WSDL_MESSAGE_LABEL_OUT);
                 if(req_msg_ctx)
                 {

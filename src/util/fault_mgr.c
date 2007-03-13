@@ -419,7 +419,7 @@ sandesha2_fault_mgr_get_fault(
      */
     axis2_msg_ctx_set_svc_grp(fault_msg_ctx, env, axis2_msg_ctx_get_svc_grp(
                         ref_msg, env));
-    axis2_msg_ctx_set_svc_grp(fault_msg_ctx, env, axis2_msg_ctx_get_svc(ref_msg, 
+    axis2_msg_ctx_set_svc_grp(fault_msg_ctx, env, (axis2_svc_grp_t *)axis2_msg_ctx_get_svc(ref_msg, 
                         env));
     axis2_msg_ctx_set_svc_grp_ctx(fault_msg_ctx, env, 
                         axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));

@@ -370,7 +370,6 @@ sandesha2_permanent_storage_mgr_get_transaction(
     const axis2_env_t *env)
 {
 	sandesha2_transaction_t *transaction = NULL;
-    axis2_hash_index_t *index = NULL;
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     unsigned long int thread_id;
     axis2_char_t *thread_id_key = NULL;
@@ -696,7 +695,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
     if(svc_grp)
     {
-        axis2_char_t *svc_grp_name = (axis2_char_t *) AXIS2_SVC_GRP_GET_NAME(
+        axis2_char_t *svc_grp_name = (axis2_char_t *)  axis2_svc_grp_get_name(
             svc_grp, env);
         sandesha2_msg_store_bean_set_svc_grp(bean, env, svc_grp_name);
     }
@@ -764,7 +763,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     if(op_ctx)
     {
         axis2_msg_ctx_t *in_msg_ctx = NULL;
-        in_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+        in_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
             AXIS2_WSDL_MESSAGE_LABEL_IN); 
         if(in_msg_ctx)
         {
@@ -978,9 +977,9 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         if(op_ctx)
         {
             axis2_char_t *msg_id = NULL;
-            AXIS2_OP_CTX_SET_PARENT(op_ctx, env, svc_ctx);
+             axis2_op_ctx_set_parent(op_ctx, env, svc_ctx);
             axis2_msg_ctx_set_op_ctx(msg_ctx, env, op_ctx);
-            /*AXIS2_OP_CTX_ADD_MSG_CTX(op_ctx, env, msg_ctx);*/
+            /* axis2_op_ctx_add_msg_ctx(op_ctx, env, msg_ctx);*/
             msg_id = (axis2_char_t *) axis2_msg_ctx_get_msg_id(msg_ctx, env);
             /*axis2_conf_ctx_register_op_ctx(conf_ctx, env, msg_id, op_ctx);*/
         }

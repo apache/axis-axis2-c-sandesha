@@ -199,7 +199,7 @@ sandesha2_out_handler_invoke(
         axis2_op_ctx_t *op_ctx = NULL;
 
         op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-        req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+        req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
             AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg_ctx) /* For the server side */
         {

@@ -608,7 +608,7 @@ sandesha2_sender_worker_check_for_sync_res(
     {
         axis2_ctx_t *ctx = NULL;
         
-        ctx = AXIS2_OP_CTX_GET_BASE(req_op_ctx, env);
+        ctx = axis2_op_ctx_get_base(req_op_ctx, env);
         if(axis2_ctx_get_property(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
             AXIS2_FALSE))
         {

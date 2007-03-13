@@ -245,7 +245,7 @@ sandesha2_app_msg_processor_process_in_msg (
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p", AXIS2_OP_CTX_GET_PARENT(op_ctx, env));
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p",  axis2_op_ctx_get_parent(op_ctx, env));
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
@@ -617,8 +617,8 @@ sandesha2_app_msg_processor_process_out_msg(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p", AXIS2_OP_CTX_GET_PARENT(op_ctx, env));
-    req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p",  axis2_op_ctx_get_parent(op_ctx, env));
+    req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
         AXIS2_WSDL_MESSAGE_LABEL_IN);
     /* TODO setting up fault callback */
 
@@ -960,7 +960,7 @@ sandesha2_app_msg_processor_process_out_msg(
         axis2_ctx_t *ctx = NULL;
         axis2_char_t *written = NULL;
         
-        ctx = AXIS2_OP_CTX_GET_BASE(op_ctx, env);
+        ctx = axis2_op_ctx_get_base(op_ctx, env);
         property = axis2_ctx_get_property(ctx, env, SANDESHA2_ACK_WRITTEN, 
                 AXIS2_FALSE);
         if(property)
@@ -973,7 +973,7 @@ sandesha2_app_msg_processor_process_out_msg(
             }
         }        
     }
-    op_name = AXIS2_QNAME_GET_LOCALPART(axis2_op_get_qname(AXIS2_OP_CTX_GET_OP(
+    op_name = AXIS2_QNAME_GET_LOCALPART(axis2_op_get_qname( axis2_op_ctx_get_op(
         axis2_msg_ctx_get_op_ctx(msg_ctx, env), env), env), env);
     if (to_epr)
         to_addr = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
@@ -1299,7 +1299,7 @@ sandesha2_app_msg_processor_process_response_msg(
     {
         axis2_endpoint_ref_t *reply_to = NULL;
         
-        req_msg = AXIS2_OP_CTX_GET_MSG_CTX(axis2_msg_ctx_get_op_ctx(app_msg_ctx, env), 
+        req_msg =  axis2_op_ctx_get_msg_ctx(axis2_msg_ctx_get_op_ctx(app_msg_ctx, env), 
             env, AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg)
         {
@@ -1402,7 +1402,7 @@ sandesha2_app_msg_processor_process_response_msg(
        
         msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
         op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-        req_msg_ctx = AXIS2_OP_CTX_GET_MSG_CTX(op_ctx, env, 
+        req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
         AXIS2_WSDL_MESSAGE_LABEL_IN);
         req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
         req_seq = (sandesha2_seq_t *) sandesha2_msg_ctx_get_msg_part(
