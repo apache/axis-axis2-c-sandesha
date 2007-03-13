@@ -28,6 +28,7 @@
 #include <axis2_thread.h>
 #include <axis2_property.h>
 #include <axis2_module_desc.h>
+#include <sandesha2_permanent_bean_mgr.h>
 #include <platforms/axis2_platform_auto_sense.h>
 #include <sqlite3.h>
 
