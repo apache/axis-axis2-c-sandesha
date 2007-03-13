@@ -121,8 +121,9 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
-    AXIS2_OPTIONS_SET_ACTION(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
+    /*AXIS2_OPTIONS_SET_ACTION(options, env,
+        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
+    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
             "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
                 "__OPERATION_OUT_IN__");

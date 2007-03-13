@@ -640,6 +640,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     axis2_char_t *temp_action = NULL;
     axis2_string_t *soap_action = NULL;
     const axis2_char_t *to_addr = NULL;
+    long send_time = -1;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -741,9 +742,9 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     terminate_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, 
         terminate_msg_ctx);
-    sandesha2_sender_bean_set_time_to_send(terminate_bean, env,
-        sandesha2_utils_get_current_time_in_millis(env) +
-        SANDESHA2_TERMINATE_DELAY);
+    send_time = sandesha2_utils_get_current_time_in_millis(env) +
+        SANDESHA2_TERMINATE_DELAY;
+    sandesha2_sender_bean_set_time_to_send(terminate_bean, env, send_time);
     sandesha2_sender_bean_set_msg_id(terminate_bean, env, 
         sandesha2_msg_ctx_get_msg_id(terminate_rm_msg, env));
     sandesha2_sender_bean_set_send(terminate_bean, env, AXIS2_TRUE);

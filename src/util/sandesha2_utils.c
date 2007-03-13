@@ -99,9 +99,9 @@ AXIS2_EXTERN long AXIS2_CALL
 sandesha2_utils_get_current_time_in_millis(
     const axis2_env_t *env)
 {
-    const long fixed_time = 1153918446;
+    /*const long fixed_time = 1153918446;
+    long millis = -1;*/
     long seconds = -1;
-    long millis = -1;
     struct timeb *tp = AXIS2_MALLOC(env->allocator, sizeof(struct timeb));
     ftime(tp);
     /* To prevent an overflow we substract a contstant from seconds value
@@ -109,12 +109,13 @@ sandesha2_utils_get_current_time_in_millis(
      *
      */
     seconds = tp->time;
-    seconds -= fixed_time;
+    /*seconds -= fixed_time;
     seconds *= 1000;
     millis = tp->millitm;
     millis = millis + seconds;
 
-    return millis;
+    return millis;*/
+    return seconds;
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL

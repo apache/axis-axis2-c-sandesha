@@ -423,7 +423,7 @@ extern "C"
 
 	#define SANDESHA2_CLIENT_SLEEP_TIME  4 /* 32 16 */
 
-	#define SANDESHA2_TERMINATE_DELAY  4 /* 100 32 */
+	#define SANDESHA2_TERMINATE_DELAY  4 /* In seconds */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
@@ -497,7 +497,7 @@ extern "C"
 
     #define SANDESHA2_IN_MESSAGE_STORAGE_KEY "InMsgStoreKey"
     #define SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR ",,,"
-    #define SANDESHA2_BUSY_WAIT_TIME 8
+    #define SANDESHA2_BUSY_WAIT_TIME 1
     #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
     #define SANDESHA2_DB "sandesha2_db"
 /** @} */

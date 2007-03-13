@@ -1176,7 +1176,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
 {
     int counter = 0;
     printf("in busy handler1\n");
-    while(rc == SQLITE_BUSY && counter < 8)
+    while(rc == SQLITE_BUSY && counter < 32)
     {
         printf("in busy handler2\n");
         if(*error_msg)

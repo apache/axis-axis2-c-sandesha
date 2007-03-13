@@ -167,6 +167,9 @@ sandesha2_permanent_transaction_create(
     }
     rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
         &error_msg);
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
+            "BEGIN TRANSACTION", 0, 0, &error_msg, rc);
     /*printf("came1:thread_id:%ld\n", thread_id);*/
     if(rc != SQLITE_OK )
     {
@@ -261,20 +264,16 @@ sandesha2_permanent_transaction_commit(
     rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
     /*unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
     printf("came2:thread_id:%ld\n", thread_id);*/
-    /*if(rc == SQLITE_BUSY)
+    if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "COMMIT TRANSACTION;", 0, 0, &error_msg, rc);*/
-    while(rc != SQLITE_OK )
+            "COMMIT TRANSACTION", 0, 0, &error_msg, rc);
+    if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             error_msg);
         printf("commit error_msg:%s\n", error_msg);
         sqlite3_free(error_msg);
-        AXIS2_SLEEP(1);
-        sqlite3_close(trans_impl->dbconn);
-        sandesha2_permanent_transaction_release_locks(trans, env);
-        rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
     }
     sqlite3_close(trans_impl->dbconn);
     trans_impl->is_active = AXIS2_FALSE;
@@ -294,6 +293,9 @@ sandesha2_permanent_transaction_rollback(
         &error_msg);
     /*unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
     printf("came3:thread_id:%ld\n", thread_id);*/
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
+            "ROLLBACK TRANSACTION", 0, 0, &error_msg, rc);
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);

@@ -168,7 +168,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     axis2_bool_t added = AXIS2_FALSE;
     const axis2_char_t *action = NULL;
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
-
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 

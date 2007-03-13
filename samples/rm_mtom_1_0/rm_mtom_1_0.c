@@ -25,6 +25,7 @@
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 #include <sandesha2_client.h>
+#include <sandesha2_constants.h>
 #include <sandesha2_client_constants.h>
 #include <ctype.h>
 
@@ -131,6 +132,13 @@ int main(int argc, char** argv)
     if(property)
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
             property);
+    property = axis2_property_create_with_args(env, 3, 0, 0, 
+        SANDESHA2_SPEC_VERSION_1_0);
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+    }
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     property = axis2_property_create_with_args(env, 0, 0, 0, "4");
@@ -140,9 +148,8 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
+    /*payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -167,7 +174,6 @@ int main(int argc, char** argv)
     }
     payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
@@ -182,7 +188,7 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }
+    }*/
 
     property = axis2_property_create_with_args(env, 0, 0, 0, "4");
     if(property)
@@ -195,7 +201,6 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
         property);
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
-    /*result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;

@@ -241,7 +241,7 @@ sandesha2_in_handler_invoke(
             prop, AXIS2_FALSE);
     }
     AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_in_handler::invoke");
-    
+   
     return AXIS2_SUCCESS;
 }
 

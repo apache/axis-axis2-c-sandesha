@@ -282,6 +282,11 @@ sandesha2_sender_worker_func(
             sender->seq_index++);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
+        if(!transaction)
+        {
+            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
+            continue;
+        }
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
             storage_mgr, env);
@@ -289,6 +294,7 @@ sandesha2_sender_worker_func(
         if(!sender_bean)
         {
             sandesha2_transaction_commit(transaction, env);
+            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 

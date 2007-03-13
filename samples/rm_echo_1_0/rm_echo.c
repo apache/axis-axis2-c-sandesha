@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axis2_callback_t *callback = NULL;
+    axis2_callback_t *callback1 = NULL;
     axis2_callback_t *callback2 = NULL;
     axis2_callback_t *callback3 = NULL;
     axis2_property_t *property = NULL;
@@ -79,8 +79,6 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
-    /*address = "http://127.0.0.1:5555/axis2/services/RMSampleService";*/
     to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
@@ -126,9 +124,10 @@ int main(int argc, char** argv)
     }
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     
-    /* Seperate listner needs addressing, hence addressing stuff in options */
+    /* Separate listner needs addressing, hence addressing stuff in options */
     /*AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:5555/axis2/services/RMSampleService/anonOutInOp");*/
+    /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");*/
     reply_to = axis2_endpoint_ref_create(env, 
         "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");
@@ -144,7 +143,6 @@ int main(int argc, char** argv)
      * the client uses
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
-    /*client_home = "/home/damitha/workspace/sandeshaya/c/deploy";*/
     if (!client_home)
         client_home = "../../deploy";
 
@@ -158,7 +156,15 @@ int main(int argc, char** argv)
             AXIS2_ERROR_GET_MESSAGE(env->error));
         return -1;
     }
-
+    AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP11);
+    /* RM Version 1.0 */
+    property = axis2_property_create_with_args(env, 3, 0, 0, 
+        SANDESHA2_SPEC_VERSION_1_0);
+    if(property)
+    {
+        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+    }
     /* Set service client options */
     AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);    
     
@@ -170,21 +176,19 @@ int main(int argc, char** argv)
     {
         return AXIS2_FAILURE;
     }
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
-    callback = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback, 
-        payload, listener_manager);
-    wait_on_callback(env, callback);
+    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    callback1 = axis2_callback_create(env);
+    AXIS2_CALLBACK_SET_ON_COMPLETE(callback1, rm_echo_callback_on_complete);
+    AXIS2_CALLBACK_SET_ON_ERROR(callback1, rm_echo_callback_on_error);
+    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback1);
+    wait_on_callback(env, callback1);
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     callback2 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback2, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback2, 
-        payload, listener_manager);
-    wait_on_callback(env, callback2);
+    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback2);
+    wait_on_callback(env, callback2);*/
 
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
@@ -192,10 +196,9 @@ int main(int argc, char** argv)
     callback3 = axis2_callback_create(env);
     AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
     AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, callback3, 
-        payload, listener_manager);
+    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback3);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
         /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
