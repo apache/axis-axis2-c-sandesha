@@ -674,7 +674,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
-    AXIOM_OUTPUT_SET_SOAP11(om_output, env, axis2_msg_ctx_get_is_soap_11(
+    axiom_output_set_soap11(om_output, env, axis2_msg_ctx_get_is_soap_11(
         msg_ctx, env));
     AXIOM_SOAP_ENVELOPE_SERIALIZE(envelope, env, om_output, AXIS2_FALSE);
     soap_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
