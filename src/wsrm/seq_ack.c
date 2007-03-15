@@ -225,7 +225,7 @@ sandesha2_seq_ack_from_om_node(
         return NULL;
     }
     rm_ns = AXIOM_ELEMENT_GET_NAMESPACE(sa_part, env, sa_node);
-    prefix = AXIOM_NAMESPACE_GET_PREFIX(rm_ns, env);
+    prefix = axiom_namespace_get_prefix(rm_ns, env);
     seq_ack_impl->identifier = sandesha2_identifier_create(env, 
                         seq_ack_impl->ns_val);
     if(!seq_ack_impl->identifier)

@@ -691,7 +691,7 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
             soap_header_node);
         if(addr_ns)
         {
-            axis2_char_t *str_addr_ns = AXIOM_NAMESPACE_GET_URI(addr_ns, env);
+            axis2_char_t *str_addr_ns = axiom_namespace_get_uri(addr_ns, env);
             return str_addr_ns;
         }
     }
