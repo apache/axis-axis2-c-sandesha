@@ -246,11 +246,11 @@ sandesha2_seq_ack_from_om_node(
     {
         return NULL;
     }
-    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(ack_iter, env))
+    while(axiom_children_qname_iterator_has_next(ack_iter, env))
     {
         axiom_node_t *ack_node = NULL;
         sandesha2_ack_range_t *ack_range = NULL;
-        ack_node = AXIOM_CHILDREN_QNAME_ITERATOR_NEXT(ack_iter, env);
+        ack_node = axiom_children_qname_iterator_next(ack_iter, env);
         if(ack_node)
         {
             ack_range = sandesha2_ack_range_create(env, seq_ack_impl->ns_val, 
@@ -277,11 +277,11 @@ sandesha2_seq_ack_from_om_node(
     {
         return NULL;
     } 
-    while(AXIOM_CHILDREN_QNAME_ITERATOR_HAS_NEXT(nack_iter, env))
+    while(axiom_children_qname_iterator_has_next(nack_iter, env))
     {
         axiom_node_t *nack_node = NULL;
         sandesha2_nack_t *nack = NULL;
-        nack_node = AXIOM_CHILDREN_QNAME_ITERATOR_NEXT(nack_iter, env);
+        nack_node = axiom_children_qname_iterator_next(nack_iter, env);
         if(NULL != nack_iter)
         {
             nack = sandesha2_nack_create(env, seq_ack_impl->ns_val);
