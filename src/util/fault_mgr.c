@@ -328,7 +328,7 @@ sandesha2_fault_mgr_check_for_invalid_ack(
         sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, dummy_node);
         qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
                         NULL, NULL);
-        detail_ele = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(dummy_ele, env,
+        detail_ele = axiom_element_get_first_child_with_qname(dummy_ele, env,
                         qname, dummy_node, &detail_node);
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
         sandesha2_fault_data_set_reason(fault_data, env, reason);

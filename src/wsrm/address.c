@@ -168,7 +168,7 @@ sandesha2_address_from_om_node(
     {
         return NULL;
     } 
-    addr_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env, 
+    addr_part = axiom_element_get_first_child_with_qname(om_element, env, 
             addr_qname, om_node, &addr_node);
     if(!addr_part)
     {
@@ -176,7 +176,7 @@ sandesha2_address_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    str_address = AXIOM_ELEMENT_GET_TEXT(addr_part, env, addr_node);
+    str_address = axiom_element_get_text(addr_part, env, addr_node);
     if(!str_address || 0 == AXIS2_STRLEN(str_address))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
@@ -226,7 +226,7 @@ sandesha2_address_to_om_node(
     {
         return NULL;
     }
-    AXIOM_ELEMENT_SET_TEXT(addr_element, env, 
+    axiom_element_set_text(addr_element, env, 
             axis2_endpoint_ref_get_address(address_impl->epr, env), 
             addr_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, addr_node);

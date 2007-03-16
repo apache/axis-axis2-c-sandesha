@@ -177,7 +177,7 @@ sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
     {
         return NULL;
     }
-    fault_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    fault_part = axiom_element_get_first_child_with_qname(om_element, env,
                         fault_qname, om_node, &fault_node);
     if(NULL == fault_part)
     {
@@ -185,7 +185,7 @@ sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
                         AXIS2_FAILURE);
         return NULL;
     } 
-    fault_text = AXIOM_ELEMENT_GET_TEXT(fault_part, env, fault_node);
+    fault_text = axiom_element_get_text(fault_part, env, fault_node);
     if(NULL == fault_text)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT, 
@@ -234,7 +234,7 @@ sandesha2_fault_code_to_om_node(sandesha2_iom_rm_element_t *fault_code,
     {
         return NULL;
     }
-    AXIOM_ELEMENT_SET_TEXT(fc_element, env, fault_code_impl->str_fault_code, 
+    axiom_element_set_text(fc_element, env, fault_code_impl->str_fault_code, 
                         fc_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, fc_node);
     return (axiom_node_t*)om_node;

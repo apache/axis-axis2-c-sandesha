@@ -181,7 +181,7 @@ sandesha2_seq_offer_from_om_node(
     {
         return NULL;
     }
-    so_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    so_part = axiom_element_get_first_child_with_qname(om_element, env,
                         so_qname, om_node, &so_node);
     if(NULL == so_part)
     {
@@ -203,7 +203,7 @@ sandesha2_seq_offer_from_om_node(
     {
         return NULL;
     }
-    exp_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(so_part, env,
+    exp_part = axiom_element_get_first_child_with_qname(so_part, env,
                         exp_qname, so_node, &exp_node); 
     if(NULL != exp_part)
     {

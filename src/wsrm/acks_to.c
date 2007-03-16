@@ -177,7 +177,7 @@ sandesha2_acks_to_from_om_node(sandesha2_iom_rm_element_t *acks_to,
     {
         return NULL;
     }
-    acks_to_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    acks_to_part = axiom_element_get_first_child_with_qname(om_element, env,
                         acks_to_qname, om_node, &acks_to_node);
     if(NULL == acks_to_part)
     {

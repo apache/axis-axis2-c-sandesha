@@ -184,7 +184,7 @@ sandesha2_accept_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    accept_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    accept_part = axiom_element_get_first_child_with_qname(om_element, env,
                         accept_qname, om_node, &child_om_node); 
     if(NULL == accept_part || NULL == child_om_node)
     {

@@ -208,7 +208,7 @@ sandesha2_ack_requested_from_om_node(
     {
         return NULL;
     }
-    msg_num_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(requested_part, env, 
+    msg_num_part = axiom_element_get_first_child_with_qname(requested_part, env, 
         msg_num_qname, requested_node, &msg_num_node);
     if(msg_num_part)
     {

@@ -235,7 +235,7 @@ sandesha2_seq_from_om_node(
     {
         return NULL;
     }
-    lm_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
+    lm_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         lm_qname, seq_node, &lm_node);
     if(lm_part)
     {

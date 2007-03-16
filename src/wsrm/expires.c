@@ -186,7 +186,7 @@ sandesha2_expires_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    exp_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    exp_part = axiom_element_get_first_child_with_qname(om_element, env,
                         exp_qname, om_node, &exp_node);
     if(NULL == exp_part)
     {
@@ -194,7 +194,7 @@ sandesha2_expires_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    text = AXIOM_ELEMENT_GET_TEXT(exp_part, env, exp_node);
+    text = axiom_element_get_text(exp_part, env, exp_node);
     if(NULL == text)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT, 
@@ -244,7 +244,7 @@ sandesha2_expires_to_om_node(
     {
         return NULL;
     }
-    AXIOM_ELEMENT_SET_TEXT(exp_element, env, expires_impl->duration, 
+    axiom_element_set_text(exp_element, env, expires_impl->duration, 
                         exp_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, exp_node);
     return (axiom_node_t*)om_node;

@@ -205,13 +205,13 @@ sandesha2_ack_range_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    /*lower_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE(om_element, env,
+    /*lower_str = axiom_element_get_attribute_value(om_element, env,
                         low_qname);
-    upper_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE(om_element, env,
+    upper_str = axiom_element_get_attribute_value(om_element, env,
                         upper_qname);*/
-    lower_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(om_element, env,
+    lower_str = axiom_element_get_attribute_value_by_name(om_element, env,
                         SANDESHA2_WSRM_COMMON_LOWER);
-    upper_str = AXIOM_ELEMENT_GET_ATTRIBUTE_VALUE_BY_NAME(om_element, env,
+    upper_str = axiom_element_get_attribute_value_by_name(om_element, env,
                         SANDESHA2_WSRM_COMMON_UPPER);
     
     if(!lower_str || !upper_str)
@@ -279,8 +279,8 @@ sandesha2_ack_range_to_om_node(
     {
         return NULL;
     }
-    AXIOM_ELEMENT_ADD_ATTRIBUTE(ar_element, env, lower_attr, ar_node);
-    AXIOM_ELEMENT_ADD_ATTRIBUTE(ar_element, env, upper_attr, ar_node);
+    axiom_element_add_attribute(ar_element, env, lower_attr, ar_node);
+    axiom_element_add_attribute(ar_element, env, upper_attr, ar_node);
 
     return (axiom_node_t*)om_node;
 }

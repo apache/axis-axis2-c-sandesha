@@ -39,8 +39,8 @@ build_om_payload_for_echo_svc(
     echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "Text", ns1, &text_om_node);
     seq_om_ele = axiom_element_create(env, echo_om_node, "Sequence", ns1, &seq_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, seq, seq_om_node);
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
     om_str = AXIOM_NODE_TO_STRING(echo_om_node, env);
     if (om_str)

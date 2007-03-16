@@ -170,7 +170,7 @@ sandesha2_rm_elements_from_soap_envelope(
     addr_ns_val = rm_elements->addr_ns_val;
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, rm_ns_val, NULL);
-    seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, env,
+    seq_element = axiom_element_get_first_child_with_qname(header_element, env,
                         qname, header_node, &seq_node);
     if(seq_node)
     {
@@ -180,7 +180,7 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, rm_ns_val, 
                         NULL);
-    seq_ack_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element,
+    seq_ack_element = axiom_element_get_first_child_with_qname(header_element,
                         env, qname, header_node, &seq_ack_node);
     if(seq_ack_element)
     {
@@ -190,7 +190,7 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ, rm_ns_val,
                         NULL);
-    create_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element,
+    create_seq_element = axiom_element_get_first_child_with_qname(body_element,
                         env, qname, body_node, &create_seq_node);
     if(create_seq_node)
     {
@@ -202,7 +202,7 @@ sandesha2_rm_elements_from_soap_envelope(
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, 
                         rm_ns_val, NULL);
-    create_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    create_seq_res_element = axiom_element_get_first_child_with_qname(
         body_element, env, qname, body_node, &create_seq_res_node);
     if(create_seq_res_node)
     {
@@ -214,7 +214,7 @@ sandesha2_rm_elements_from_soap_envelope(
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
                         rm_ns_val, NULL);
-    terminate_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    terminate_seq_element = axiom_element_get_first_child_with_qname(
         body_element, env, qname, body_node, &terminate_seq_node);
     if(terminate_seq_node)
     {
@@ -226,7 +226,7 @@ sandesha2_rm_elements_from_soap_envelope(
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, 
         rm_ns_val, NULL);
-    terminate_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    terminate_seq_res_element = axiom_element_get_first_child_with_qname(
         body_element, env, qname, body_node, &terminate_seq_res_node);
     if(terminate_seq_res_node)
     {
@@ -238,7 +238,7 @@ sandesha2_rm_elements_from_soap_envelope(
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, 
         NULL);
-    close_seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element, 
+    close_seq_element = axiom_element_get_first_child_with_qname(body_element, 
         env, qname, body_node, &close_seq_node);
     if(close_seq_node)
     {
@@ -249,7 +249,7 @@ sandesha2_rm_elements_from_soap_envelope(
     
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
                         rm_ns_val, NULL);
-    close_seq_res_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    close_seq_res_element = axiom_element_get_first_child_with_qname(
         body_element, env, qname, body_node, &close_seq_res_node);
     if(close_seq_res_node)
     {
@@ -260,7 +260,7 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, 
         rm_ns_val, NULL);
-    make_conn_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element, 
+    make_conn_element = axiom_element_get_first_child_with_qname(body_element, 
         env, qname, body_node, &make_conn_node);
     if(make_conn_node)
     {
@@ -271,7 +271,7 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
                         rm_ns_val, NULL);
-    ack_requested_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    ack_requested_element = axiom_element_get_first_child_with_qname(
         header_element, env, qname, header_node, &ack_requested_node);
     if(ack_requested_node)
     {
@@ -282,7 +282,7 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_MESSAGE_PENDING, 
         rm_ns_val, NULL);
-    msg_pending_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    msg_pending_element = axiom_element_get_first_child_with_qname(
         header_element, env, qname, header_node, &msg_pending_node);
     if(msg_pending_node)
     {
@@ -687,7 +687,7 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
         soap_header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
         soap_header_element = AXIOM_NODE_GET_DATA_ELEMENT(soap_header_node, 
             env);
-        addr_ns = AXIOM_ELEMENT_GET_NAMESPACE(soap_header_element, env, 
+        addr_ns = axiom_element_get_namespace(soap_header_element, env, 
             soap_header_node);
         if(addr_ns)
         {

@@ -72,7 +72,7 @@ rm_sample_svc_echo (
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, "Text", ns, NULL);
-    text_parent_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
+    text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
     AXIS2_QNAME_FREE(qname, env);
     if (!text_parent_node) /* 'text' node */
@@ -124,11 +124,11 @@ build_echo_om(
     
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
 
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
 
     echo_om_ele = axiom_element_create(env, NULL, "echoStringResponse", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "EchoStringReturn", ns1, &text_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
 
     
     return echo_om_node;
@@ -174,7 +174,7 @@ rm_sample_svc_ping (
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, "Text", ns, NULL);
-    text_parent_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
+    text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
     AXIS2_QNAME_FREE(qname, env);
     if (!text_parent_node) /* 'text' node */
@@ -302,7 +302,7 @@ build_mtom_om(const axis2_env_t *env, axis2_char_t *text)
 
     mtom_om_ele = axiom_element_create(env, NULL, "response", ns1, &mtom_om_node);
 
-    AXIOM_ELEMENT_SET_TEXT(mtom_om_ele, env, "Image Saved", mtom_om_node);
+    axiom_element_set_text(mtom_om_ele, env, "Image Saved", mtom_om_node);
 
     return mtom_om_node;
 }

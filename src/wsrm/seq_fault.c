@@ -169,7 +169,7 @@ sandesha2_seq_fault_from_om_node(sandesha2_iom_rm_element_t *seq_fault,
     {
         return NULL;
     }
-    sf_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    sf_part = axiom_element_get_first_child_with_qname(om_element, env,
                         sf_qname, om_node, &sf_node);
     if(NULL == sf_part)
     {
@@ -183,7 +183,7 @@ sandesha2_seq_fault_from_om_node(sandesha2_iom_rm_element_t *seq_fault,
     {
         return NULL;
     }
-    fc_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    fc_part = axiom_element_get_first_child_with_qname(om_element, env,
                         sf_qname, sf_node, &fc_node);
     if(NULL != fc_part)
     {

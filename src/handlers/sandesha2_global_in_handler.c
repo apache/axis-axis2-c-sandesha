@@ -350,7 +350,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                         env);
                 body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
                 body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
-                children_iterator = AXIOM_ELEMENT_GET_CHILDREN(body_element, env, 
+                children_iterator = axiom_element_get_children(body_element, env, 
                         body_node);
                 if(!axiom_children_iterator_has_next(children_iterator, env))
                     empty_body = AXIS2_TRUE;

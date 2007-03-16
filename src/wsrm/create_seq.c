@@ -235,7 +235,7 @@ sandesha2_create_seq_from_om_node(
     {
         return NULL;
     }
-    offer_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
+    offer_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         offer_qname, seq_node, &offer_node);
     if(offer_part)
     {
@@ -257,7 +257,7 @@ sandesha2_create_seq_from_om_node(
     {
         return NULL;
     }
-    expires_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(seq_part, env, 
+    expires_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         expires_qname, seq_node, &expires_node);
     if(expires_part)
     {

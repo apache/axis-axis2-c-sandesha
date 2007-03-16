@@ -198,7 +198,7 @@ sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
     {
         return NULL;
     }
-    nack_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    nack_part = axiom_element_get_first_child_with_qname(om_element, env,
                         nack_qname, om_node, &nack_node);
     if(NULL == nack_part)
     {
@@ -206,7 +206,7 @@ sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
                         AXIS2_FAILURE);
         return NULL;
     }
-    nack_text = AXIOM_ELEMENT_GET_TEXT(nack_part, env, nack_node);
+    nack_text = axiom_element_get_text(nack_part, env, nack_node);
     if(NULL == nack_text)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
@@ -251,7 +251,7 @@ sandesha2_nack_to_om_node(sandesha2_iom_rm_element_t *nack,
     }
     str_num = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
     sprintf(str_num, "%ld", nack_impl->nack_num);
-    AXIOM_ELEMENT_SET_TEXT(nack_element, env, str_num, nack_node);
+    axiom_element_set_text(nack_element, env, str_num, nack_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, nack_node);
     
     return (axiom_node_t*)om_node;

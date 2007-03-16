@@ -201,7 +201,7 @@ sandesha2_msg_number_from_om_node(sandesha2_iom_rm_element_t *msg_num,
     {
         return NULL;
     }
-    mn_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    mn_part = axiom_element_get_first_child_with_qname(om_element, env,
                         mn_qname, om_node, &mn_node);
     if(NULL == mn_part)
     {
@@ -209,7 +209,7 @@ sandesha2_msg_number_from_om_node(sandesha2_iom_rm_element_t *msg_num,
                         AXIS2_FAILURE);
         return NULL;
     }
-    mn_str = AXIOM_ELEMENT_GET_TEXT(mn_part, env, mn_node);
+    mn_str = axiom_element_get_text(mn_part, env, mn_node);
     if(NULL == mn_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
@@ -256,7 +256,7 @@ sandesha2_msg_number_to_om_node(sandesha2_iom_rm_element_t *msg_num,
     }
     str_num = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
     sprintf(str_num, "%ld", msg_number_impl->msg_num);
-    AXIOM_ELEMENT_SET_TEXT(mn_element, env, str_num, mn_node);
+    axiom_element_set_text(mn_element, env, str_num, mn_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, mn_node);
     
     return (axiom_node_t*)om_node;

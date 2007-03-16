@@ -189,7 +189,7 @@ build_om_programatically(
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
     ping_om_ele = axiom_element_create(env, NULL, "ping", ns1, &ping_om_node);
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
     
     buffer = AXIOM_NODE_TO_STRING(ping_om_node, env);
     printf("\nSending OM node in XML : %s \n",  buffer); 

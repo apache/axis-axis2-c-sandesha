@@ -42,7 +42,7 @@ build_om_payload_for_mtom(
 
     file_om_ele = axiom_element_create(env, mtom_om_node, "fileName", ns1, 
             &file_om_node);
-    AXIOM_ELEMENT_SET_TEXT(file_om_ele, env, to_save_name, file_om_node);
+    axiom_element_set_text(file_om_ele, env, to_save_name, file_om_node);
 
     image_om_ele = axiom_element_create(env, mtom_om_node, "image", ns1, 
             &image_om_node);

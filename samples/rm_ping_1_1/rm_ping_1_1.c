@@ -206,9 +206,9 @@ build_om_programatically(
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
     if(seq_key)
         seq_om_ele = axiom_element_create(env, ping_om_node, "Sequence", ns1, &seq_om_node);
-    AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
     if(seq_key)
-        AXIOM_ELEMENT_SET_TEXT(text_om_ele, env, seq_key, seq_om_node);
+        axiom_element_set_text(text_om_ele, env, seq_key, seq_om_node);
     
     buffer = AXIOM_NODE_TO_STRING(ping_om_node, env);
     printf("\nSending OM node in XML : %s \n",  buffer); 

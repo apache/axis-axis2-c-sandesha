@@ -187,7 +187,7 @@ sandesha2_identifier_from_om_node(
     {
         return NULL;
     }
-    ident_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    ident_part = axiom_element_get_first_child_with_qname(om_element, env,
                         ident_qname, om_node, &ident_node);
     if(NULL == ident_part)
     {
@@ -195,7 +195,7 @@ sandesha2_identifier_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    ident_str = AXIOM_ELEMENT_GET_TEXT(ident_part, env, ident_node);
+    ident_str = axiom_element_get_text(ident_part, env, ident_node);
     if(NULL == ident_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
@@ -244,7 +244,7 @@ sandesha2_identifier_to_om_node(
     {
         return NULL;
     }
-    AXIOM_ELEMENT_SET_TEXT(id_element, env, identifier_impl->str_id, 
+    axiom_element_set_text(id_element, env, identifier_impl->str_id, 
                         id_node);
     AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, id_node);
     return (axiom_node_t*)om_node;

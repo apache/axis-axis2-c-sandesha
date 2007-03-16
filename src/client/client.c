@@ -684,7 +684,7 @@ sandesha2_client_terminate_seq_with_svc_client(
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
             rm_namespc_value, NULL);
-    terminate_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, 
+    terminate_body_element = axiom_element_get_first_child_with_qname(element, 
         env, qname, node, &terminate_body_node);
     old_action = AXIS2_STRDUP(AXIS2_OPTIONS_GET_ACTION(options, env), env);
     action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
@@ -792,7 +792,7 @@ sandesha2_client_close_seq_with_svc_client(
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, 
             rm_namespc_value, NULL);
-    close_body_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(element, env, 
+    close_body_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &close_body_node);
     old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
     action = sandesha2_spec_specific_consts_get_close_seq_action(env, 
@@ -1153,7 +1153,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
             rm_ns_value, NULL);
-    ack_requested_header_block = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+    ack_requested_header_block = axiom_element_get_first_child_with_qname(
             element, env, qname, node, &ack_requested_header_block_node);
     old_action = (axis2_char_t*)AXIS2_OPTIONS_GET_ACTION(options, env);
     action = sandesha2_spec_specific_consts_get_ack_req_action(env, 

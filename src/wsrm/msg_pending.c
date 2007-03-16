@@ -207,7 +207,7 @@ sandesha2_msg_pending_from_om_node(
     {
         return NULL;
     }
-    pending_attr = AXIOM_ELEMENT_GET_ATTRIBUTE(msg_pending_element, env, 
+    pending_attr = axiom_element_get_attribute(msg_pending_element, env, 
         pending_qname);
     if(!pending_attr)
     {
@@ -276,7 +276,7 @@ sandesha2_msg_pending_to_om_node(
         attr_value = AXIS2_VALUE_FALSE;
     pending_attr = axiom_attribute_create(env, 
         SANDESHA2_WSRM_COMMON_PENDING, attr_value, NULL);
-    AXIOM_ELEMENT_ADD_ATTRIBUTE(msg_pending_element, env, pending_attr, 
+    axiom_element_add_attribute(msg_pending_element, env, pending_attr, 
         msg_pending_node);
     return header_node;
 }

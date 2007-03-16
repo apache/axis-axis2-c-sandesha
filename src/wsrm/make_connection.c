@@ -228,9 +228,9 @@ sandesha2_make_connection_from_om_node(
     {
         return NULL;
     }
-    identifier_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    identifier_element = axiom_element_get_first_child_with_qname(om_element, env,
                         identifier_qname, om_node, &identifier_node);
-    address_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    address_element = axiom_element_get_first_child_with_qname(om_element, env,
                         address_qname, om_node, &address_node);
     if(!identifier_element && !address_element)
     {
@@ -416,7 +416,7 @@ sandesha2_make_connection_to_soap_envelope(
         return AXIS2_FAILURE;
     }
     if(body_element)
-        element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element, env,
+        element = axiom_element_get_first_child_with_qname(body_element, env,
             make_conn_qname, body_node, &node);
     /**
      * Detach if already exists

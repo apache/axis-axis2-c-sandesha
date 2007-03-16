@@ -170,7 +170,7 @@ sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
     {
         return NULL;
     }
-    lm_part = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(om_element, env,
+    lm_part = axiom_element_get_first_child_with_qname(om_element, env,
                         lm_qname, om_node, &lm_node);
     if(NULL == lm_part)
     {

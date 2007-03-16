@@ -86,7 +86,7 @@ sandesha2_utils_remove_soap_body_part(const axis2_env_t *env,
     {
         return AXIS2_FAILURE;
     }
-    body_rm_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(body_element,
+    body_rm_element = axiom_element_get_first_child_with_qname(body_element,
                             env, qname, body_node, &body_rm_node);
     if(body_rm_element)
     {
@@ -896,13 +896,13 @@ sandesha2_utils_is_rm_global_msg(
     
         qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
                         SANDESHA2_SPEC_2005_02_NS_URI, NULL);
-        seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(header_element, 
+        seq_element = axiom_element_get_first_child_with_qname(header_element, 
                         env, qname, header_node, &seq_node);
         if(!seq_element)
         {
             qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
                         SANDESHA2_SPEC_2006_08_NS_URI, NULL);
-            seq_element = AXIOM_ELEMENT_GET_FIRST_CHILD_WITH_QNAME(
+            seq_element = axiom_element_get_first_child_with_qname(
                         header_element, env, qname, header_node, &seq_node);
         }
     }
