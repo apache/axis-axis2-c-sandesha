@@ -545,7 +545,7 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
     
     start_str = axis2_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", NULL);
     start_len = axis2_strlen(start_str);
-    if(0 != axis2_strcmp(incoming_seq_id, start_str, start_len))
+    if(0 != axis2_strncmp(incoming_seq_id, start_str, start_len))
         return NULL;
     ret = axis2_strdup((incoming_seq_id + start_len * sizeof(axis2_char_t)), env);
     
