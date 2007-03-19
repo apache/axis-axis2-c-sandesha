@@ -94,8 +94,8 @@ sandesha2_accept_create(const axis2_env_t *env,  axis2_char_t *rm_ns_val,
         return NULL;
 	}
     
-    accept_impl->rm_ns_val = (axis2_char_t *)AXIS2_STRDUP(rm_ns_val, env);
-    accept_impl->addr_ns_val = (axis2_char_t *)AXIS2_STRDUP(addr_ns_val, env);
+    accept_impl->rm_ns_val = (axis2_char_t *)axis2_strdup(rm_ns_val, env);
+    accept_impl->addr_ns_val = (axis2_char_t *)axis2_strdup(addr_ns_val, env);
     accept_impl->acks_to = NULL;
     
     accept_impl->accept.element.ops->get_namespace_value = 
@@ -250,11 +250,11 @@ sandesha2_accept_is_namespace_supported(sandesha2_iom_rm_element_t *accept,
                     	const axis2_env_t *env, axis2_char_t *namespace)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

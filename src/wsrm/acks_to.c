@@ -81,8 +81,8 @@ sandesha2_acks_to_create(const axis2_env_t *env, sandesha2_address_t *address,
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    acks_to_impl->rm_ns_val = (axis2_char_t *)AXIS2_STRDUP(rm_ns_val, env);
-    acks_to_impl->addr_ns_val = (axis2_char_t *)AXIS2_STRDUP(addr_ns_val, env);
+    acks_to_impl->rm_ns_val = (axis2_char_t *)axis2_strdup(rm_ns_val, env);
+    acks_to_impl->addr_ns_val = (axis2_char_t *)axis2_strdup(addr_ns_val, env);
     acks_to_impl->address = address;
     
     acks_to_impl->acks_to.element.ops = AXIS2_MALLOC(env->allocator,
@@ -244,11 +244,11 @@ sandesha2_acks_to_is_namespace_supported(sandesha2_iom_rm_element_t *acks_to,
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     
     acks_to_impl = SANDESHA2_INTF_TO_IMPL(acks_to);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

@@ -66,19 +66,19 @@ sandesha2_create_seq_find_callback(
     bean = sandesha2_create_seq_bean_create(env);
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "create_seq_msg_id"))
+        if(0 == axis2_strcmp(col_name[i], "create_seq_msg_id"))
             sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "internal_seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "internal_seq_id"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "create_seq_msg_store_key"))
+        if(0 == axis2_strcmp(col_name[i], "create_seq_msg_store_key"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, 
                 argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_store_key"))
+        if(0 == axis2_strcmp(col_name[i], "ref_msg_store_key"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, argv[i]);
     }
@@ -109,19 +109,19 @@ sandesha2_create_seq_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "create_seq_msg_id"))
+        if(0 == axis2_strcmp(col_name[i], "create_seq_msg_id"))
             sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "internal_seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "internal_seq_id"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "create_seq_msg_store_key"))
+        if(0 == axis2_strcmp(col_name[i], "create_seq_msg_store_key"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, 
                 argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "ref_msg_store_key"))
+        if(0 == axis2_strcmp(col_name[i], "ref_msg_store_key"))
             if(argv[i])
                 sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, argv[i]);
     }
@@ -444,7 +444,7 @@ sandesha2_permanent_create_seq_mgr_match(
     msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
     temp_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(candidate, 
         env);
-    if(msg_id && temp_msg_id && 0 != AXIS2_STRCMP(msg_id, temp_msg_id))
+    if(msg_id && temp_msg_id && 0 != axis2_strcmp(msg_id, temp_msg_id))
     {
         equal = AXIS2_FALSE;
     }
@@ -452,7 +452,7 @@ sandesha2_permanent_create_seq_mgr_match(
         (sandesha2_create_seq_bean_t *) bean, env);
     temp_seq_id = sandesha2_create_seq_bean_get_seq_id(
         (sandesha2_create_seq_bean_t *) candidate, env);
-    if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
     {
         equal = AXIS2_FALSE;
     }
@@ -460,7 +460,7 @@ sandesha2_permanent_create_seq_mgr_match(
         (sandesha2_create_seq_bean_t *) bean, env);
     temp_internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(
         (sandesha2_create_seq_bean_t *) candidate, env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != AXIS2_STRCMP(
+    if(internal_seq_id && temp_internal_seq_id && 0 != axis2_strcmp(
         internal_seq_id, temp_internal_seq_id))
     {
         equal = AXIS2_FALSE;

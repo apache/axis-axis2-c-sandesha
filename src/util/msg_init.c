@@ -139,7 +139,7 @@ populate_rm_msg_ctx(
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
-        addressing_ns = AXIS2_STRDUP(AXIS2_WSA_NAMESPACE, env);
+        addressing_ns = axis2_strdup(AXIS2_WSA_NAMESPACE, env);
     }
     if(addressing_ns)
         rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
@@ -424,7 +424,7 @@ static axis2_bool_t validate_msg(
     temp_flow = axis2_msg_ctx_get_flow(temp_msg_ctx, env);
     if(temp_flow == AXIS2_IN_FLOW)
     {
-        prop_key = AXIS2_STRDUP(seq_id, env);
+        prop_key = axis2_strdup(seq_id, env);
     }
     else
     {
@@ -453,7 +453,7 @@ static axis2_bool_t validate_msg(
         }
         if(seq_rm_ns && rm_ns)
         {
-            if(0 != AXIS2_STRCMP(seq_rm_ns, rm_ns))
+            if(0 != axis2_strcmp(seq_rm_ns, rm_ns))
             {
                 AXIS2_ERROR_SET(env->error, 
                     SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ, 

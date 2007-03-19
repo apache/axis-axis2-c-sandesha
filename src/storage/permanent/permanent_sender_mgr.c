@@ -66,33 +66,33 @@ sandesha2_sender_find_callback(
     bean = sandesha2_sender_bean_create(env);
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_id"))
+        if(0 == axis2_strcmp(col_name[i], "msg_id"))
             sandesha2_sender_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_ctx_ref_key"))
+        if(0 == axis2_strcmp(col_name[i], "msg_ctx_ref_key"))
             if(argv[i])
                 sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "internal_seq_ID"))
+        if(0 == axis2_strcmp(col_name[i], "internal_seq_ID"))
             if(argv[i])
                 sandesha2_sender_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "sent_count"))
+        if(0 == axis2_strcmp(col_name[i], "sent_count"))
             sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
+        if(0 == axis2_strcmp(col_name[i], "msg_no"))
             sandesha2_sender_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "send"))
+        if(0 == axis2_strcmp(col_name[i], "send"))
             sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "resend"))
+        if(0 == axis2_strcmp(col_name[i], "resend"))
             sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "time_to_send"))
+        if(0 == axis2_strcmp(col_name[i], "time_to_send"))
             sandesha2_sender_bean_set_time_to_send(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_type"))
+        if(0 == axis2_strcmp(col_name[i], "msg_type"))
             sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_sender_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "wsrm_anon_uri"))
+        if(0 == axis2_strcmp(col_name[i], "wsrm_anon_uri"))
             if(argv[i])
                 sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "to_address"))
+        if(0 == axis2_strcmp(col_name[i], "to_address"))
             if(argv[i])
                 sandesha2_sender_bean_set_to_address(bean, env, argv[i]);
     }
@@ -123,33 +123,33 @@ sandesha2_sender_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_id"))
+        if(0 == axis2_strcmp(col_name[i], "msg_id"))
             sandesha2_sender_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_ctx_ref_key"))
+        if(0 == axis2_strcmp(col_name[i], "msg_ctx_ref_key"))
             if(argv[i])
                 sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "internal_seq_ID"))
+        if(0 == axis2_strcmp(col_name[i], "internal_seq_ID"))
             if(argv[i])
                 sandesha2_sender_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "sent_count"))
+        if(0 == axis2_strcmp(col_name[i], "sent_count"))
             sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
+        if(0 == axis2_strcmp(col_name[i], "msg_no"))
             sandesha2_sender_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "send"))
+        if(0 == axis2_strcmp(col_name[i], "send"))
             sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "resend"))
+        if(0 == axis2_strcmp(col_name[i], "resend"))
             sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "time_to_send"))
+        if(0 == axis2_strcmp(col_name[i], "time_to_send"))
             sandesha2_sender_bean_set_time_to_send(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_type"))
+        if(0 == axis2_strcmp(col_name[i], "msg_type"))
             sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_sender_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "wsrm_anon_uri"))
+        if(0 == axis2_strcmp(col_name[i], "wsrm_anon_uri"))
             if(argv[i])
                 sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "to_address"))
+        if(0 == axis2_strcmp(col_name[i], "to_address"))
             if(argv[i])
                 sandesha2_sender_bean_set_to_address(bean, env, argv[i]);
     }
@@ -557,7 +557,7 @@ sandesha2_permanent_sender_mgr_match(
         (sandesha2_sender_bean_t *) bean, env);
     temp_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
         (sandesha2_sender_bean_t *) candidate, env);
-    if(ref_key && temp_ref_key && 0 != AXIS2_STRCMP(ref_key, temp_ref_key))
+    if(ref_key && temp_ref_key && 0 != axis2_strcmp(ref_key, temp_ref_key))
     {
         add = AXIS2_FALSE;
     }
@@ -572,7 +572,7 @@ sandesha2_permanent_sender_mgr_match(
     }
     msg_id = sandesha2_sender_bean_get_msg_id(bean, env);
     temp_msg_id = sandesha2_sender_bean_get_msg_id(candidate, env);
-    if(msg_id && temp_msg_id && 0 != AXIS2_STRCMP(msg_id, temp_msg_id))
+    if(msg_id && temp_msg_id && 0 != axis2_strcmp(msg_id, temp_msg_id))
     {
         add = AXIS2_FALSE;
     }
@@ -581,7 +581,7 @@ sandesha2_permanent_sender_mgr_match(
     temp_internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
         (sandesha2_sender_bean_t *) candidate, 
             env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != AXIS2_STRCMP(
+    if(internal_seq_id && temp_internal_seq_id && 0 != axis2_strcmp(
                 internal_seq_id, temp_internal_seq_id))
     {
         add = AXIS2_FALSE;

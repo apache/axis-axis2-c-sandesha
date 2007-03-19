@@ -94,8 +94,8 @@ sandesha2_create_seq_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    create_seq_impl->rm_ns_val = (axis2_char_t*)AXIS2_STRDUP(rm_ns_val, env);
-    create_seq_impl->addr_ns_val = (axis2_char_t*)AXIS2_STRDUP(addr_ns_val, env);
+    create_seq_impl->rm_ns_val = (axis2_char_t*)axis2_strdup(rm_ns_val, env);
+    create_seq_impl->addr_ns_val = (axis2_char_t*)axis2_strdup(addr_ns_val, env);
     create_seq_impl->acks_to = NULL;
     create_seq_impl->expires = NULL;
     create_seq_impl->seq_offer = NULL;
@@ -335,11 +335,11 @@ sandesha2_create_seq_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     create_seq_impl = SANDESHA2_INTF_TO_IMPL(create_seq);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

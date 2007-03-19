@@ -151,7 +151,7 @@ sandesha2_seq_report_set_seq_id(
         AXIS2_FREE(env->allocator, report->seq_id);
         report->seq_id = NULL;
     }
-    report->seq_id = AXIS2_STRDUP(seq_id, env);
+    report->seq_id = axis2_strdup(seq_id, env);
     if(!report->seq_id)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
@@ -232,7 +232,7 @@ sandesha2_seq_report_set_internal_seq_id(
         AXIS2_FREE(env->allocator, report->internal_seq_id);
         report->internal_seq_id = NULL;
     }
-    report->internal_seq_id = AXIS2_STRDUP(internal_seq_id, env);
+    report->internal_seq_id = axis2_strdup(internal_seq_id, env);
     if(!report->internal_seq_id)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);

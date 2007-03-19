@@ -93,7 +93,7 @@ sandesha2_last_msg_create(
         return NULL;
 	}
     
-    last_msg_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    last_msg_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     
     last_msg_impl->last_msg.element.ops->get_namespace_value = 
                         sandesha2_last_msg_get_namespace_value;
@@ -223,11 +223,11 @@ sandesha2_last_msg_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     last_msg_impl = SANDESHA2_INTF_TO_IMPL(last_msg);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

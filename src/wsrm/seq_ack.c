@@ -125,7 +125,7 @@ sandesha2_seq_ack_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    seq_ack_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    seq_ack_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     seq_ack_impl->ack_range_list = axis2_array_list_create(env, 
     					AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
     seq_ack_impl->nack_list = axis2_array_list_create(env, 
@@ -470,11 +470,11 @@ sandesha2_seq_ack_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

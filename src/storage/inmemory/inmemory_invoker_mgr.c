@@ -279,7 +279,7 @@ sandesha2_inmemory_create_invoker_mgr_match(
         "[sandesha2]Entry:sandesha2_inmemory_create_invoker_mgr_match");
     ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(bean, env);
     temp_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(candidate, env);
-    if(ref_key && temp_ref_key && 0 != AXIS2_STRCMP(ref_key, temp_ref_key))
+    if(ref_key && temp_ref_key && 0 != axis2_strcmp(ref_key, temp_ref_key))
     {
         select = AXIS2_FALSE;
     }
@@ -287,7 +287,7 @@ sandesha2_inmemory_create_invoker_mgr_match(
         (sandesha2_invoker_bean_t *) bean, env);
     temp_seq_id = sandesha2_invoker_bean_get_seq_id(
         (sandesha2_invoker_bean_t *) candidate, env);
-    if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
     {
         select = AXIS2_FALSE;
     }

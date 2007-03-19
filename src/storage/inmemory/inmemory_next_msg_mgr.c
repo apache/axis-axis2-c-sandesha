@@ -299,7 +299,7 @@ sandesha2_inmemory_next_msg_mgr_match(
          (sandesha2_rm_bean_t *) bean, env);
     temp_seq_id = sandesha2_next_msg_bean_get_seq_id(
         (sandesha2_rm_bean_t *) candidate, env);
-    if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
     {
         equal = AXIS2_FALSE;
     }

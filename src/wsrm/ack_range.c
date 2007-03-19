@@ -101,8 +101,8 @@ sandesha2_ack_range_create(
         return NULL;
 	}
     
-    ack_range_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
-    ack_range_impl->prefix = (axis2_char_t *)AXIS2_STRDUP(prefix, env);
+    ack_range_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    ack_range_impl->prefix = (axis2_char_t *)axis2_strdup(prefix, env);
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     
@@ -295,11 +295,11 @@ sandesha2_ack_range_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

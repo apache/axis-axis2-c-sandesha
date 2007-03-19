@@ -220,7 +220,7 @@ sandesha2_msg_creator_create_create_seq_msg(
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, AXIS2_FALSE);
         if(property)
             offered_seq = AXIS2_PROPERTY_GET_VALUE(property, env);
-        if(offered_seq && 0 != AXIS2_STRCMP("", offered_seq))
+        if(offered_seq && 0 != axis2_strcmp("", offered_seq))
         {
             sandesha2_seq_offer_t *offer_part = NULL;
             sandesha2_identifier_t *identifier = NULL;
@@ -254,9 +254,9 @@ sandesha2_msg_creator_create_create_seq_msg(
 
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, 
             addressing_ns_value);
-    if(!acks_to || 0 == AXIS2_STRCMP("", acks_to))
+    if(!acks_to || 0 == axis2_strcmp("", acks_to))
     {
-        acks_to = AXIS2_STRDUP(anonymous_uri, env);
+        acks_to = axis2_strdup(anonymous_uri, env);
     }
     acks_to_epr = axis2_endpoint_ref_create(env, acks_to);
     if(reply_to_bean)
@@ -358,7 +358,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
         
         temp_identifier = sandesha2_seq_offer_get_identifier(offer, env);
         out_seq_id = sandesha2_identifier_get_identifier(temp_identifier, env);
-        if(out_seq_id && 0 != AXIS2_STRCMP("", out_seq_id))
+        if(out_seq_id && 0 != axis2_strcmp("", out_seq_id))
         {
             sandesha2_accept_t *accept = NULL;
             axis2_endpoint_ref_t *acks_to_epr = NULL;
@@ -950,7 +950,7 @@ sandesha2_msg_creator_add_ack_msg(
             SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(seq_closed_bean)
         str_value = sandesha2_seq_property_bean_get_value(seq_closed_bean, env);
-    if(seq_closed_bean && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE, str_value))
+    if(seq_closed_bean && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, str_value))
     {
         axis2_bool_t is_allowed = AXIS2_FALSE;
         
@@ -1037,7 +1037,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             {
                 const axis2_phase_t *phase = axis2_array_list_get(out_flow, env, i);
                 const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
-                if(0 == AXIS2_STRCMP(phase_name, AXIS2_PHASE_MESSAGE_OUT))
+                if(0 == axis2_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
                 {
                     axis2_array_list_add(new_flow, env, phase);
                 }
@@ -1053,7 +1053,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             {
                 const axis2_phase_t *phase = axis2_array_list_get(in_flow, env, i);
                 const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
-                if(0 == AXIS2_STRCMP(phase_name, "RMPhase"))
+                if(0 == axis2_strcmp(phase_name, "RMPhase"))
                 {
                     axis2_array_list_add(new_flow, env, phase);
                 }

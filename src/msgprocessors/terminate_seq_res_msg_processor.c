@@ -145,7 +145,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     }
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_res_get_identifier(term_seq_res, env), env);
-    if(!seq_id || 0 == AXIS2_STRLEN(seq_id))
+    if(!seq_id || 0 == axis2_strlen(seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
             "sequence id");

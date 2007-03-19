@@ -112,14 +112,14 @@ rm_sample_svc_invoke(
             op_name = AXIS2_QNAME_GET_LOCALPART(op_qname, env);
         if(op_name)
         {
-            if (AXIS2_STRCMP(op_name, "echoString") == 0)
+            if (axis2_strcmp(op_name, "echoString") == 0)
                 return rm_sample_svc_echo(env, node);
-            if (AXIS2_STRCMP(op_name, "ping") == 0)
+            if (axis2_strcmp(op_name, "ping") == 0)
             {
                 rm_sample_svc_ping(env, node);
                 return NULL;
             }
-            if (AXIS2_STRCMP(op_name, "mtomSample") == 0)
+            if (axis2_strcmp(op_name, "mtomSample") == 0)
                 return rm_sample_svc_mtom(env, node);
         }
     }

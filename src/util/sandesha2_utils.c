@@ -159,9 +159,9 @@ sandesha2_utils_get_storage_mgr(
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
     value = sandesha2_property_bean_get_storage_mgr(prop_bean, env);
-    if(0 == AXIS2_STRCMP(value, SANDESHA2_INMEMORY_STORAGE_MGR))
+    if(0 == axis2_strcmp(value, SANDESHA2_INMEMORY_STORAGE_MGR))
         storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
-    else if (0 == AXIS2_STRCMP(value, SANDESHA2_PERMANENT_STORAGE_MGR))
+    else if (0 == axis2_strcmp(value, SANDESHA2_PERMANENT_STORAGE_MGR))
         storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
     else
     {
@@ -229,12 +229,12 @@ sandesha2_utils_get_array_list_from_string(
     axis2_array_list_t *ret = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    if(!str || 0 == AXIS2_STRCMP("", str))
+    if(!str || 0 == axis2_strcmp("", str))
     {
         ret = axis2_array_list_create(env, AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
         return ret;
     }
-    if(2 > AXIS2_STRLEN(str))
+    if(2 > axis2_strlen(str))
     {
         axis2_char_t *ret_str = NULL;
 
@@ -259,9 +259,9 @@ sandesha2_utils_get_array_list_from_string(
         AXIS2_FREE(env->allocator, ret_str);
         return NULL;
     }
-    dup_str = AXIS2_STRDUP(temp_str, env);
-    if(']' == dup_str[AXIS2_STRLEN(dup_str) - 1])
-        dup_str[AXIS2_STRLEN(dup_str) - 1] = '\0';
+    dup_str = axis2_strdup(temp_str, env);
+    if(']' == dup_str[axis2_strlen(dup_str) - 1])
+        dup_str[axis2_strlen(dup_str) - 1] = '\0';
     else
     {
         axis2_char_t *ret_str = NULL;
@@ -281,7 +281,7 @@ sandesha2_utils_get_array_list_from_string(
     {
         if(!sandesha2_utils_array_list_contains(env, ret, temp_str))
         {
-            axis2_char_t *temp_element = AXIS2_STRDUP(temp_str, env);
+            axis2_char_t *temp_element = axis2_strdup(temp_str, env);
             axis2_array_list_add(ret, env, temp_element);
         }
         temp_str = strtok(NULL, ",");
@@ -304,7 +304,7 @@ sandesha2_utils_array_list_contains(
     for(i = 0; i < axis2_array_list_size(list, env); i++)
     {
         axis2_char_t *element = axis2_array_list_get(list, env, i);
-        if(element && 0 == AXIS2_STRCMP(element, str))
+        if(element && 0 == axis2_strcmp(element, str))
             return AXIS2_TRUE;
     }
     return AXIS2_FAILURE;
@@ -322,7 +322,7 @@ sandesha2_utils_array_list_to_string(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
-    list_str = AXIS2_STRDUP("[", env);
+    list_str = axis2_strdup("[", env);
     size = axis2_array_list_size(list, env);
     for(i = 0; i < size; i++)
     {
@@ -544,10 +544,10 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, incoming_seq_id, NULL);
     
     start_str = axis2_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", NULL);
-    start_len = AXIS2_STRLEN(start_str);
+    start_len = axis2_strlen(start_str);
     if(0 != AXIS2_STRNCMP(incoming_seq_id, start_str, start_len))
         return NULL;
-    ret = AXIS2_STRDUP((incoming_seq_id + start_len * sizeof(axis2_char_t)), env);
+    ret = axis2_strdup((incoming_seq_id + start_len * sizeof(axis2_char_t)), env);
     
     return ret;    
 }
@@ -590,11 +590,11 @@ sandesha2_utils_get_internal_seq_id(
     }
     else if(!to)
     {
-        return AXIS2_STRDUP(seq_key, env);
+        return axis2_strdup(seq_key, env);
     }
     else if(!seq_key)
     {
-        return AXIS2_STRDUP(to, env);
+        return axis2_strdup(to, env);
     }
     else
     {
@@ -763,7 +763,7 @@ sandesha2_utils_create_new_related_msg_ctx(
                         AXIS2_FALSE);
     if(property)
     {
-        AXIS2_PROPERTY_SET_SCOPE(property, env, AXIS2_SCOPE_APPLICATION);
+        axis2_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_OUT, 
             AXIS2_PROPERTY_CLONE(property, env), AXIS2_FALSE);
     }*/
@@ -824,7 +824,7 @@ sandesha2_utils_trim_string(
     while(' ' == *tmp)
         tmp++;
         
-    tmp2 = orig_str + AXIS2_STRLEN(orig_str);
+    tmp2 = orig_str + axis2_strlen(orig_str);
     while(' ' == *tmp2 && tmp2 != orig_str)
         tmp2--;
         
@@ -852,9 +852,9 @@ sandesha2_utils_is_retrievable_on_faults(
     if(!action)
         return AXIS2_FALSE;
         
-    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
+    if(0 == axis2_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
         ret = AXIS2_TRUE;
-    else if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ))
+    else if(0 == axis2_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ))
         ret = AXIS2_TRUE;
         
     return ret;
@@ -909,26 +909,26 @@ sandesha2_utils_is_rm_global_msg(
     if(seq_element)
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == AXIS2_STRCMP(action, 
+    if(0 == axis2_strcmp(action, 
                         SANDESHA2_SPEC_2005_02_ACTION_SEQ_ACKNOWLEDGEMENT))
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == AXIS2_STRCMP(action, 
+    if(0 == axis2_strcmp(action, 
                         SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ_RESPONSE))
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
+    if(0 == axis2_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
         is_global_msg = AXIS2_TRUE;    
         
-    if(0 == AXIS2_STRCMP(action, 
+    if(0 == axis2_strcmp(action, 
                         SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT))
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == AXIS2_STRCMP(action, 
+    if(0 == axis2_strcmp(action, 
                         SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE))
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == AXIS2_STRCMP(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ))
+    if(0 == axis2_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ))
         is_global_msg = AXIS2_TRUE;    
     
     return is_global_msg;
@@ -1120,7 +1120,7 @@ get_sorted_msg_no_list(
     axis2_char_t *dup_str = NULL;
     axis2_char_t *temp_str = NULL;
 
-    dup_str = AXIS2_STRDUP(msg_no_str, env);
+    dup_str = axis2_strdup(msg_no_str, env);
     msg_numbers = axis2_array_list_create(env, 0);
     temp_str = strtok(dup_str, delim);
     while(temp_str)
@@ -1287,9 +1287,9 @@ sandesha2_utils_is_anon_uri(
         return AXIS2_TRUE;
     address_l = AXIS2_STRTRIM(env, address, NULL);
 
-    if(0 == AXIS2_STRCMP(AXIS2_WSA_ANONYMOUS_URL, address_l))
+    if(0 == axis2_strcmp(AXIS2_WSA_ANONYMOUS_URL, address_l))
         return AXIS2_TRUE;
-    if(0 == AXIS2_STRCMP(AXIS2_WSA_ANONYMOUS_URL_SUBMISSION, address_l))
+    if(0 == axis2_strcmp(AXIS2_WSA_ANONYMOUS_URL_SUBMISSION, address_l))
         return AXIS2_TRUE;
     else if (sandesha2_utils_is_wsrm_anon_reply_to(env, (axis2_char_t *) address))
         return AXIS2_TRUE;
@@ -1310,12 +1310,12 @@ sandesha2_utils_split(
     while(ptr)
     {
         ptr[0] = AXIS2_EOLN;
-        value = AXIS2_STRDUP(str, env);
+        value = axis2_strdup(str, env);
         axis2_array_list_add(list, env, value);
         str = ptr + 3;
         ptr = AXIS2_STRSTR(str, pattern);
     }
-    value = AXIS2_STRDUP(str, env);
+    value = axis2_strdup(str, env);
     axis2_array_list_add(list, env, value);
 
     return list;
@@ -1328,7 +1328,7 @@ sandesha2_utils_is_single_channel(
     const axis2_char_t *acks_to_addr)
 {
     if(sandesha2_utils_is_anon_uri(env, acks_to_addr) &&
-        (0 == AXIS2_STRCMP(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
+        (0 == axis2_strcmp(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
         return AXIS2_TRUE;
     else return AXIS2_FALSE;
 }

@@ -89,7 +89,7 @@ sandesha2_ack_none_create(const axis2_env_t *env, axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    ack_none_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    ack_none_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     ack_none_impl->ack_none.element.ops->get_namespace_value = 
                         sandesha2_ack_none_get_namespace_value;
     ack_none_impl->ack_none.element.ops->from_om_node = 
@@ -214,11 +214,11 @@ sandesha2_ack_none_is_namespace_supported(sandesha2_iom_rm_element_t *ack_none,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     ack_none_impl = SANDESHA2_INTF_TO_IMPL(ack_none);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

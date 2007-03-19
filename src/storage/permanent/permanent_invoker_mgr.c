@@ -64,14 +64,14 @@ sandesha2_invoker_find_callback(
     bean = sandesha2_invoker_bean_create(env);
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_ctx_ref_key"))
+        if(0 == axis2_strcmp(col_name[i], "msg_ctx_ref_key"))
             sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
+        if(0 == axis2_strcmp(col_name[i], "msg_no"))
             sandesha2_invoker_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_invoker_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "is_invoked"))
+        if(0 == axis2_strcmp(col_name[i], "is_invoked"))
             sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(argv[i]));
     }
     axis2_array_list_add(data_list, env, bean);
@@ -101,14 +101,14 @@ sandesha2_invoker_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_ctx_ref_key"))
+        if(0 == axis2_strcmp(col_name[i], "msg_ctx_ref_key"))
             sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "msg_no"))
+        if(0 == axis2_strcmp(col_name[i], "msg_no"))
             sandesha2_invoker_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == AXIS2_STRCMP(col_name[i], "seq_id"))
+        if(0 == axis2_strcmp(col_name[i], "seq_id"))
             if(argv[i])
                 sandesha2_invoker_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == AXIS2_STRCMP(col_name[i], "is_invoked"))
+        if(0 == axis2_strcmp(col_name[i], "is_invoked"))
             sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(argv[i]));
     }
     return 0;
@@ -409,7 +409,7 @@ sandesha2_permanent_create_invoker_mgr_match(
         "[sandesha2]Entry:sandesha2_permanent_create_invoker_mgr_match");
     ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(bean, env);
     temp_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(candidate, env);
-    if(ref_key && temp_ref_key && 0 != AXIS2_STRCMP(ref_key, temp_ref_key))
+    if(ref_key && temp_ref_key && 0 != axis2_strcmp(ref_key, temp_ref_key))
     {
         select = AXIS2_FALSE;
     }
@@ -417,7 +417,7 @@ sandesha2_permanent_create_invoker_mgr_match(
         (sandesha2_invoker_bean_t *) bean, env);
     temp_seq_id = sandesha2_invoker_bean_get_seq_id(
         (sandesha2_invoker_bean_t *) candidate, env);
-    if(seq_id && temp_seq_id && 0 != AXIS2_STRCMP(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
     {
         select = AXIS2_FALSE;
     }

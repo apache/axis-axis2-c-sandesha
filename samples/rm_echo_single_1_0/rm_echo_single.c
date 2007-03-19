@@ -103,7 +103,7 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    if (AXIS2_STRCMP(address, "-h") == 0)
+    if (axis2_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
@@ -163,7 +163,7 @@ int main(int argc, char** argv)
     property = axis2_property_create(env);
     if(property)
     {
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_STRDUP(offered_seq_id, 
+        AXIS2_PROPERTY_SET_VALUE(property, env, axis2_strdup(offered_seq_id, 
             env));
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);

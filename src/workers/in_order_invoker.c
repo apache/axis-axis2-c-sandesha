@@ -129,7 +129,7 @@ sandesha2_in_order_invoker_stop_invoker_for_seq(
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = axis2_array_list_get(invoker->working_seqs, env, i);
-        if(0 == AXIS2_STRCMP(seq_id, tmp_id))
+        if(0 == axis2_strcmp(seq_id, tmp_id))
         {
             axis2_array_list_remove(invoker->working_seqs, env, i);
             break;
@@ -371,7 +371,7 @@ sandesha2_in_order_invoker_worker_func(
                         SANDESHA2_POST_FAILURE_MESSAGE, AXIS2_FALSE);
                 if(property)
                     post_failure_str = AXIS2_PROPERTY_GET_VALUE(property, env);
-                if(post_failure_str && 0 == AXIS2_STRCMP(
+                if(post_failure_str && 0 == axis2_strcmp(
                         post_failure_str, AXIS2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;
                 engine = axis2_engine_create(env, invoker->conf_ctx);

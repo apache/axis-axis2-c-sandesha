@@ -93,7 +93,7 @@ sandesha2_fault_code_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    fault_code_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    fault_code_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     
     fault_code_impl->fault_code.element.ops->get_namespace_value = 
                         sandesha2_fault_code_get_namespace_value;
@@ -192,7 +192,7 @@ sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
                         AXIS2_FAILURE)
         return NULL;
     }
-    fault_code_impl->str_fault_code = AXIS2_STRDUP(fault_text, env);
+    fault_code_impl->str_fault_code = axis2_strdup(fault_text, env);
     if(NULL == fault_code_impl->str_fault_code)
     {
         return NULL;
@@ -214,7 +214,7 @@ sandesha2_fault_code_to_om_node(sandesha2_iom_rm_element_t *fault_code,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     fault_code_impl = SANDESHA2_INTF_TO_IMPL(fault_code);
-    if(NULL == fault_code_impl->str_fault_code || 0 == AXIS2_STRLEN(
+    if(NULL == fault_code_impl->str_fault_code || 0 == axis2_strlen(
                         fault_code_impl->str_fault_code))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
@@ -249,11 +249,11 @@ sandesha2_fault_code_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     fault_code_impl = SANDESHA2_INTF_TO_IMPL(fault_code);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }
@@ -285,6 +285,6 @@ sandesha2_fault_code_set_fault_code(sandesha2_fault_code_t *fault_code,
     {
         AXIS2_FREE(env->allocator, fault_code_impl->str_fault_code);
     }
-	fault_code_impl->str_fault_code = AXIS2_STRDUP(str_fault_code, env);
+	fault_code_impl->str_fault_code = axis2_strdup(str_fault_code, env);
 	return AXIS2_SUCCESS;
 }

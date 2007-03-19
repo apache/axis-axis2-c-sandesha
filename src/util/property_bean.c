@@ -133,13 +133,13 @@ sandesha2_property_bean_set_inactive_timeout_interval_with_units(
     
     AXIS2_PARAM_CHECK(env->error, units, AXIS2_FAILURE);
     
-    if(0 == AXIS2_STRCMP(units, "seconds"))
+    if(0 == axis2_strcmp(units, "seconds"))
         multiplier = 1000;
-    else if(0 == AXIS2_STRCMP(units, "minutes"))
+    else if(0 == axis2_strcmp(units, "minutes"))
         multiplier = 60*1000;
-    else if(0 == AXIS2_STRCMP(units, "hours"))
+    else if(0 == axis2_strcmp(units, "hours"))
         multiplier = 60*60*1000;
-    else if(0 == AXIS2_STRCMP(units, "days"))
+    else if(0 == axis2_strcmp(units, "days"))
         multiplier = 24*60*60*1000;
     else
         return AXIS2_FAILURE;

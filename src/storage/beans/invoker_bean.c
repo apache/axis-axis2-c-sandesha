@@ -102,13 +102,13 @@ sandesha2_invoker_bean_create_with_data(
 	if(!ref_key)
 		invoker_bean_impl->msg_ctx_ref_key = NULL;
 	else
-		invoker_bean_impl->msg_ctx_ref_key = (axis2_char_t*)AXIS2_STRDUP(
+		invoker_bean_impl->msg_ctx_ref_key = (axis2_char_t*)axis2_strdup(
             ref_key, env);
 
 	if(!seq_id)
 		invoker_bean_impl->seq_id = NULL;	
 	else
-		invoker_bean_impl->seq_id = (axis2_char_t*)AXIS2_STRDUP(seq_id, env);
+		invoker_bean_impl->seq_id = (axis2_char_t*)axis2_strdup(seq_id, env);
 
 	invoker_bean_impl->msg_no = msg_no;
 	invoker_bean_impl->invoked = invoked;
@@ -191,7 +191,7 @@ sandesha2_invoker_bean_set_msg_ctx_ref_key(
 		AXIS2_FREE(env->allocator, invoker_bean_impl->msg_ctx_ref_key);
 
 	invoker_bean_impl->msg_ctx_ref_key = 
-        (axis2_char_t*)AXIS2_STRDUP(context_ref_id, env);
+        (axis2_char_t*)axis2_strdup(context_ref_id, env);
 }
 	
 
@@ -232,7 +232,7 @@ sandesha2_invoker_bean_set_seq_id(
 {
     sandesha2_invoker_bean_impl_t *invoker_bean_impl = NULL;
     invoker_bean_impl = SANDESHA2_INTF_TO_IMPL(invoker_bean);
-	invoker_bean_impl->seq_id = (axis2_char_t*)AXIS2_STRDUP(int_seq_id, env);
+	invoker_bean_impl->seq_id = (axis2_char_t*)axis2_strdup(int_seq_id, env);
 
 }
 

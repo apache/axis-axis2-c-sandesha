@@ -202,7 +202,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_get_identifier(term_seq, env), env);
-    if(!seq_id || 0 == AXIS2_STRLEN(seq_id))
+    if(!seq_id || 0 == axis2_strlen(seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
             "sequence id");
@@ -437,7 +437,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(0 == AXIS2_STRCMP(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
+    if(0 == axis2_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
@@ -522,7 +522,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
         rm_msg_ctx, env), op_ctx);
     axis2_allocator_switch_to_local_pool(env->allocator);
     
-    if(terminated && 0 == AXIS2_STRCMP(terminated, AXIS2_VALUE_TRUE))
+    if(terminated && 0 == axis2_strcmp(terminated, AXIS2_VALUE_TRUE))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate was "
             "added previously");

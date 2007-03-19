@@ -125,7 +125,7 @@ sandesha2_make_connection_create(
         return NULL;
 	}
     
-    make_conn_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    make_conn_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     
     make_conn_impl->make_conn.part.element.ops->get_namespace_value = 
                         sandesha2_make_connection_get_namespace_value;
@@ -325,11 +325,11 @@ sandesha2_make_connection_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     make_conn_impl = SANDESHA2_INTF_TO_IMPL(make_conn);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

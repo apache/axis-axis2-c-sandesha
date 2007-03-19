@@ -126,7 +126,7 @@ sandesha2_sender_worker_create(
     sender_worker->conf_ctx = conf_ctx;
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
-    sender_worker->msg_id = AXIS2_STRDUP(msg_id, env);
+    sender_worker->msg_id = axis2_strdup(msg_id, env);
     sender_worker->msg_ctx = NULL;
     sender_worker->transport_out = NULL;
     sender_worker->status = AXIS2_FAILURE;
@@ -340,7 +340,7 @@ sandesha2_sender_worker_worker_func(
         SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
     if(property)
         qualified_for_sending = AXIS2_PROPERTY_GET_VALUE(property, env);
-    if(qualified_for_sending && 0 != AXIS2_STRCMP(
+    if(qualified_for_sending && 0 != axis2_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
         printf("not qualified for sending\n");

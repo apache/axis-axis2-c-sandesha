@@ -266,7 +266,7 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_storage_mgr_t));
 
-    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = AXIS2_STRDUP("Sandesha2MessageMap", 
+    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axis2_strdup("Sandesha2MessageMap", 
         env);
     storage_mgr_impl->conf_ctx = conf_ctx;
     axis2_allocator_switch_to_global_pool(env->allocator);
@@ -839,7 +839,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     }
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     soap_env_str = sandesha2_msg_store_bean_get_soap_envelope_str(msg_store_bean, env);
-    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, AXIS2_STRLEN(
+    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, axis2_strlen(
         soap_env_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     om_builder = axiom_stax_builder_create(env, reader);
     soap_version = sandesha2_msg_store_bean_get_soap_version(msg_store_bean, env);
@@ -928,7 +928,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 temp = (axis2_op_t *) v;
                 mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(temp, 
                     env);
-                if(0 == AXIS2_STRCMP(mep, op_mep_str))
+                if(0 == axis2_strcmp(mep, op_mep_str))
                 {
                     op = temp;
                     break;
@@ -1020,7 +1020,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     persistent_prop_str = 
         sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, 
             env);
-    if(persistent_prop_str && 0 != AXIS2_STRCMP("", persistent_prop_str))
+    if(persistent_prop_str && 0 != axis2_strcmp("", persistent_prop_str))
     {
         axis2_hash_t *map = 
             sandesha2_permanent_storage_mgr_get_property_map_from_string(env, 
@@ -1131,7 +1131,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
         SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
     if(values)
         size = axis2_array_list_size(values, env);
-    if((size % 2 != 0) || (size == 1 && 0 == AXIS2_STRCMP("", 
+    if((size % 2 != 0) || (size == 1 && 0 == axis2_strcmp("", 
         axis2_array_list_get(values, env, 0))))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -1246,7 +1246,7 @@ sandesha2_permanent_storage_mgr_retrieve_response(
         return NULL;
     }
     reader = axiom_xml_reader_create_for_memory(env, response->response_str, 
-        AXIS2_STRLEN(response->response_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+        axis2_strlen(response->response_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     om_builder = axiom_stax_builder_create(env, reader);
     soap_version = response->soap_version;
     if(SANDESHA2_SOAP_VERSION_1_1 == soap_version)

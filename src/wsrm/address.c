@@ -77,7 +77,7 @@ sandesha2_address_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    address_impl->ns_val = AXIS2_STRDUP(ns_val, env);
+    address_impl->ns_val = axis2_strdup(ns_val, env);
     address_impl->epr = epr;
     address_impl->address.element.ops = NULL;
     
@@ -177,7 +177,7 @@ sandesha2_address_from_om_node(
         return NULL;
     }
     str_address = axiom_element_get_text(addr_part, env, addr_node);
-    if(!str_address || 0 == AXIS2_STRLEN(str_address))
+    if(!str_address || 0 == axis2_strlen(str_address))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
             AXIS2_FAILURE);
@@ -207,7 +207,7 @@ sandesha2_address_to_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     address_impl = SANDESHA2_INTF_TO_IMPL(address);
     if(!address_impl->epr || !axis2_endpoint_ref_get_address(
-            address_impl->epr, env) || 0 == AXIS2_STRLEN(
+            address_impl->epr, env) || 0 == axis2_strlen(
             axis2_endpoint_ref_get_address(address_impl->epr, env)))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
@@ -242,11 +242,11 @@ sandesha2_address_is_namespace_supported(
 	sandesha2_address_impl_t *address_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     address_impl = SANDESHA2_INTF_TO_IMPL(address);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

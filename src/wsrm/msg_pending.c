@@ -91,7 +91,7 @@ sandesha2_msg_pending_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    msg_pending_impl->ns_val = (axis2_char_t *)AXIS2_STRDUP(ns_val, env);
+    msg_pending_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
     msg_pending_impl->pending = AXIS2_TRUE;
     msg_pending_impl->msg_pending.part.ops = NULL;
     msg_pending_impl->msg_pending.part.element.ops = NULL;
@@ -218,9 +218,9 @@ sandesha2_msg_pending_from_om_node(
             AXIS2_FAILURE);
     }
     value = axiom_attribute_get_value(pending_attr, env);
-    if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_TRUE))
+    if(0 == axis2_strcmp(value, AXIS2_VALUE_TRUE))
         pending = AXIS2_TRUE;
-    if(0 == AXIS2_STRCMP(value, AXIS2_VALUE_FALSE))
+    if(0 == axis2_strcmp(value, AXIS2_VALUE_FALSE))
         pending = AXIS2_FALSE;
     else
     {
@@ -291,11 +291,11 @@ sandesha2_msg_pending_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     msg_pending_impl = SANDESHA2_INTF_TO_IMPL(msg_pending);
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == AXIS2_STRCMP(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

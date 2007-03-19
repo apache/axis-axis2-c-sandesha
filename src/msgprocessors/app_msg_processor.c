@@ -417,10 +417,10 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     if(!msg_no_present_in_list)
     {
-        if(msgs_str && 0 < AXIS2_STRLEN(msgs_str))
+        if(msgs_str && 0 < axis2_strlen(msgs_str))
             msgs_str = axis2_strcat(env, msgs_str, ",", msg_num_str, NULL);
         else
-            msgs_str = AXIS2_STRDUP(msg_num_str, env);
+            msgs_str = axis2_strdup(msg_num_str, env);
         sandesha2_seq_property_bean_set_value(msgs_bean, env, msgs_str);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, msgs_bean);
     }
@@ -637,7 +637,7 @@ sandesha2_app_msg_processor_process_out_msg(
     
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
     if((!to_epr || !axis2_endpoint_ref_get_address(to_epr, env)
-        || 0 == AXIS2_STRLEN(axis2_endpoint_ref_get_address(
+        || 0 == axis2_strlen(axis2_endpoint_ref_get_address(
             to_epr, env))) && !is_svr_side)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "to epr is not set - a" 
@@ -831,7 +831,7 @@ sandesha2_app_msg_processor_process_out_msg(
             axis2_char_t *value = NULL;
     
             value = sandesha2_seq_property_bean_get_value(incoming_to_bean, env);
-            incoming_to = AXIS2_STRDUP(value, env);
+            incoming_to = axis2_strdup(value, env);
             property = axis2_property_create_with_args(env, 0, 0, 0, incoming_to);
             axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_SEQ_PROP_TO_EPR, 
                 property, AXIS2_FALSE);

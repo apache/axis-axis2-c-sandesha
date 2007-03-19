@@ -148,7 +148,7 @@ sandesha2_sender_stop_sender_for_seq(
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = axis2_array_list_get(sender->working_seqs, env, i);
-        if(0 == AXIS2_STRCMP(seq_id, tmp_id))
+        if(0 == axis2_strcmp(seq_id, tmp_id))
         {
             axis2_array_list_remove(sender->working_seqs, env, i);
             break;

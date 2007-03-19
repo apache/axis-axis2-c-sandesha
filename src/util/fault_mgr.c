@@ -218,7 +218,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 next_bean = axis2_array_list_get(list, env, i);
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(
                     (sandesha2_rm_bean_t *) next_bean, env);
-                if(0 == AXIS2_STRCMP(seq_id, tmp_id))
+                if(0 == axis2_strcmp(seq_id, tmp_id))
                 {
                     contains = AXIS2_TRUE;
                     break;
@@ -360,7 +360,7 @@ sandesha2_fault_mgr_check_for_seq_closed(
                         storage_man, env);
     closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         seq_id, SANDESHA2_SEQ_PROP_SEQ_CLOSED);
-    if(closed_bean && 0 == AXIS2_STRCMP(AXIS2_VALUE_TRUE,
+    if(closed_bean && 0 == axis2_strcmp(AXIS2_VALUE_TRUE,
                         sandesha2_seq_property_bean_get_value(closed_bean, env)))
     {
         seq_closed = AXIS2_TRUE;
@@ -465,7 +465,7 @@ sandesha2_fault_mgr_get_fault(
                         env);
     }
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-    if(NULL!= acks_to_str && 0 != AXIS2_STRCMP(acks_to_str, anon_uri))
+    if(NULL!= acks_to_str && 0 != axis2_strcmp(acks_to_str, anon_uri))
         axis2_msg_ctx_set_to(fault_msg_ctx, env, axis2_endpoint_ref_create(env,
                         acks_to_str));
     soap_ver = sandesha2_utils_get_soap_version(env, 

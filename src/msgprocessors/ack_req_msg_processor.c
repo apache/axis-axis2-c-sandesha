@@ -248,7 +248,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     addr_ns_val = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_val);
-    if(0 == AXIS2_STRCMP(anon_uri, acks_to_str))
+    if(0 == axis2_strcmp(anon_uri, acks_to_str))
     {
         axis2_engine_t *engine = NULL;
         axis2_op_ctx_t *op_ctx = NULL;

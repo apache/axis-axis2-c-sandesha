@@ -197,7 +197,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     nack_list = sandesha2_seq_ack_get_nack_list(seq_ack, env);
     out_seq_id = sandesha2_identifier_get_identifier(
         sandesha2_seq_ack_get_identifier(seq_ack, env), env);
-    if(!out_seq_id || 0 == AXIS2_STRLEN(out_seq_id))
+    if(!out_seq_id || 0 == axis2_strlen(out_seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] OutSequenceId is"
             " null");

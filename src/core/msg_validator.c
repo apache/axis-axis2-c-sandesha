@@ -59,14 +59,14 @@ sandesha2_msg_validator_validate_msg(
                 rm_ns_seq = sandesha2_spec_specific_consts_get_rm_ns_val(env,
                         rm_ver_seq);
             
-            if(NULL != rm_ns_seq && 0 != AXIS2_STRCMP(rm_ns_seq, rm_ns_msg))
+            if(NULL != rm_ns_seq && 0 != axis2_strcmp(rm_ns_seq, rm_ns_msg))
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Validation"
                         " failed. The RM namespace of the message does not"
                         " match with the sequence");
                 return AXIS2_FAILURE;
             } 
-            if(NULL != addr_ns_seq && 0 != AXIS2_STRCMP(addr_ns_seq, addr_ns_msg))
+            if(NULL != addr_ns_seq && 0 != axis2_strcmp(addr_ns_seq, addr_ns_msg))
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Validation"
                         " failed. The Addressing namespace of the message does"
