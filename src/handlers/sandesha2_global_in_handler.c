@@ -153,7 +153,7 @@ sandesha2_global_in_handler_invoke(
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE, 
             AXIS2_FALSE);
     if(property)
-        reinjected_msg = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(property, env); 
+        reinjected_msg = (axis2_char_t *) axis2_property_get_value(property, env); 
     if(reinjected_msg && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"
@@ -171,7 +171,7 @@ sandesha2_global_in_handler_invoke(
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
         AXIS2_FALSE);
     if(property)
-        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+        within_transaction_str = (axis2_char_t *) axis2_property_get_value(
             property, env);
     if(within_transaction_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, 
         within_transaction_str))
@@ -375,7 +375,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                     rcvd_msgs_str1 = sandesha2_seq_property_bean_get_value(
                             rcvd_msgs_bean, env);
                     sprintf(msg_no_str, "%ld", msg_no);
-                    if(rcvd_msgs_str1 && 0 < AXIS2_STRLEN(rcvd_msgs_str1))
+                    if(rcvd_msgs_str1 && 0 < axis2_strlen(rcvd_msgs_str1))
                         bean_value = axis2_strcat(env, rcvd_msgs_str1, ",",
                             msg_no_str, NULL);
                     else

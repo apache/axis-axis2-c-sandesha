@@ -973,7 +973,7 @@ sandesha2_app_msg_processor_process_out_msg(
             }
         }        
     }
-    op_name = AXIS2_QNAME_GET_LOCALPART(axis2_op_get_qname( axis2_op_ctx_get_op(
+    op_name = axis2_qname_get_localpart(axis2_op_get_qname( axis2_op_ctx_get_op(
         axis2_msg_ctx_get_op_ctx(msg_ctx, env), env), env), env);
     if (to_epr)
         to_addr = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);

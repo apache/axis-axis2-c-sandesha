@@ -353,7 +353,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     property = axis2_msg_ctx_get_property(first_app_msg, env, AXIS2_WSA_VERSION,
                         AXIS2_FALSE);
     if(property)
-        addr_ns_val = AXIS2_PROPERTY_GET_VALUE(property, env);
+        addr_ns_val = axis2_property_get_value(property, env);
     if(!addr_ns_val)
     {
         axis2_op_ctx_t *op_ctx = NULL;
@@ -366,7 +366,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
             property = axis2_msg_ctx_get_property(req_msg_ctx, env, 
                         AXIS2_WSA_VERSION, AXIS2_FALSE);
             if(property)
-                addr_ns_val = AXIS2_PROPERTY_GET_VALUE(property, env);
+                addr_ns_val = axis2_property_get_value(property, env);
         }
     }
     if(!addr_ns_val)
@@ -383,7 +383,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     property = axis2_msg_ctx_get_property(first_app_msg, env, 
                         SANDESHA2_CLIENT_ACKS_TO, AXIS2_FALSE);
     if(property)
-        acks_to_str = AXIS2_PROPERTY_GET_VALUE(property, env);
+        acks_to_str = axis2_property_get_value(property, env);
     /*if(!to_epr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] WSA To is NULL");
@@ -416,7 +416,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         /*ctx = axis2_op_ctx_get_base(op_ctx, env);
         property = axis2_ctx_get_property(ctx, env, 
                 SANDESHA2_SEQ_PROP_REPLY_TO_EPR, AXIS2_FALSE);
-        reply_to_epr = AXIS2_PROPERTY_GET_VALUE(property, env);*/
+        reply_to_epr = axis2_property_get_value(property, env);*/
         if(reply_to_epr)
             reply_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR,
@@ -534,7 +534,7 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(
     property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_ACKS_TO,
                         AXIS2_FALSE);
     if(property)
-        acks_to = AXIS2_PROPERTY_GET_VALUE(property, env);
+        acks_to = axis2_property_get_value(property, env);
     
     
     return AXIS2_SUCCESS;

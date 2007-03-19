@@ -129,7 +129,7 @@ sandesha2_msg_creator_create_create_seq_msg(
      */
     qname = axis2_qname_create(env, "CreateSequenceOperation", NULL, NULL);
     create_seq_op = axis2_op_create_with_qname(env, qname);
-    AXIS2_QNAME_FREE(qname, env);
+    axis2_qname_free(qname, env);
 
     create_seq_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
             application_rm_msg, create_seq_op);
@@ -172,7 +172,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         AXIS2_TARGET_EPR, AXIS2_FALSE);
     if(property)
     {
-        temp_to = AXIS2_PROPERTY_GET_VALUE(property, env);
+        temp_to = axis2_property_get_value(property, env);
         to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(
             temp_to, env));
     }
@@ -219,7 +219,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         property = axis2_ctx_get_property(ctx, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, AXIS2_FALSE);
         if(property)
-            offered_seq = AXIS2_PROPERTY_GET_VALUE(property, env);
+            offered_seq = axis2_property_get_value(property, env);
         if(offered_seq && 0 != axis2_strcmp("", offered_seq))
         {
             sandesha2_seq_offer_t *offer_part = NULL;
@@ -394,7 +394,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(prop)
     {
-       AXIS2_PROPERTY_SET_VALUE(prop, env, addressing_ns_value); 
+       axis2_property_set_value(prop, env, addressing_ns_value); 
     }
     else
     {
@@ -728,8 +728,8 @@ sandesha2_msg_creator_finalize_creation(
 
                 next_param = (axis2_param_t *) axis2_array_list_get(op_params, 
                         env, i);
-                temp_name = AXIS2_PARAM_GET_NAME(next_param, env);
-                temp_value = AXIS2_PARAM_GET_VALUE(next_param, env);
+                temp_name = axis2_param_get_name(next_param, env);
+                temp_value = axis2_param_get_value(next_param, env);
                 new_param = axis2_param_create(env, temp_name, temp_value);
                 /*new_param->ops->value_free = next_param->ops->value_free;*/
                 axis2_op_add_param(new_op, env, new_param); 
@@ -766,7 +766,7 @@ sandesha2_msg_creator_finalize_creation(
                 prop = (axis2_property_t *) v;
                 ctx = axis2_op_ctx_get_base(new_op_ctx, env);
                 if(prop)
-                    new_prop = AXIS2_PROPERTY_CLONE(prop, env);
+                    new_prop = axis2_property_clone(prop, env);
                 if(new_prop)
                     axis2_ctx_set_property(ctx, env, key, new_prop, AXIS2_FALSE);
             }
@@ -799,7 +799,7 @@ sandesha2_msg_creator_finalize_creation(
                 prop = (axis2_property_t *) v;
                 ctx = axis2_msg_ctx_get_base(new_msg, env);
                 if(prop)
-                    new_prop = AXIS2_PROPERTY_CLONE(prop, env);
+                    new_prop = axis2_property_clone(prop, env);
                 if(new_prop)
                     axis2_ctx_set_property(ctx, env, key, new_prop, AXIS2_FALSE);
             }
@@ -834,7 +834,7 @@ sandesha2_msg_creator_finalize_creation(
                 key = (axis2_char_t *) k;
                 prop = (axis2_property_t *) v;
                 if(prop)
-                    new_prop = AXIS2_PROPERTY_CLONE(prop, env);
+                    new_prop = axis2_property_clone(prop, env);
                 if(new_prop)
                 axis2_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
             }
@@ -865,7 +865,7 @@ sandesha2_msg_creator_init_creation(
             void *value = NULL;
             axis2_param_t *new_policy_param = NULL;
 
-            value = AXIS2_PARAM_GET_VALUE(ref_policy_param, env);
+            value = axis2_param_get_value(ref_policy_param, env);
             new_policy_param = axis2_param_create(env, 
                     SANDESHA2_SANDESHA_PROPERTY_BEAN, value);
         }
@@ -1013,7 +1013,7 @@ sandesha2_msg_creator_create_make_connection_msg(
     }
     qname = axis2_qname_create(env, "MakeConnectionOperation", NULL, NULL);
     make_conn_op = axis2_op_create_with_qname(env, qname);
-    AXIS2_QNAME_FREE(qname, env);
+    axis2_qname_free(qname, env);
     make_conn_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
         ref_rm_msg_ctx, make_conn_op);
     if(make_conn_msg_ctx)

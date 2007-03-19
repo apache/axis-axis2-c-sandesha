@@ -166,18 +166,18 @@ sandesha2_transport_sender_invoke (
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, AXIS2_FALSE);
                         
-    if(NULL == property || NULL == AXIS2_PROPERTY_GET_VALUE(property, env))
+    if(NULL == property || NULL == axis2_property_get_value(property, env))
         return AXIS2_FAILURE;
-    out_desc = AXIS2_PROPERTY_GET_VALUE(property, env);
+    out_desc = axis2_property_get_value(property, env);
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, out_desc);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_MESSAGE_STORE_KEY, AXIS2_FALSE);
                         
-    if(NULL == property || NULL == AXIS2_PROPERTY_GET_VALUE(property, env))
+    if(NULL == property || NULL == axis2_property_get_value(property, env))
         return AXIS2_FAILURE;
     
-    key = AXIS2_PROPERTY_GET_VALUE(property, env);
+    key = axis2_property_get_value(property, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);

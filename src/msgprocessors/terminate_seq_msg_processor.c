@@ -492,7 +492,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY,
         AXIS2_FALSE);
     if(property)
-        seq_key = AXIS2_PROPERTY_GET_VALUE(property, env);
+        seq_key = axis2_property_get_value(property, env);
     int_seq_id = sandesha2_utils_get_internal_seq_id(env, to_address, seq_key);
     out_seq_id = sandesha2_utils_get_seq_property(env, int_seq_id, 
         SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_mgr);

@@ -310,7 +310,7 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
+        axis2_property_set_value(property, env, AXIS2_VALUE_TRUE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, 
@@ -339,7 +339,7 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
     if(property)
-        qualified_for_sending = AXIS2_PROPERTY_GET_VALUE(property, env);
+        qualified_for_sending = axis2_property_get_value(property, env);
     if(qualified_for_sending && 0 != axis2_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
@@ -426,7 +426,7 @@ sandesha2_sender_worker_worker_func(
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
         if(property)
-            AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_FALSE);
+            axis2_property_set_value(property, env, AXIS2_VALUE_FALSE);
         else
         {
             property = axis2_property_create_with_args(env, 0, 0, 0,
@@ -447,7 +447,7 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE); 
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_TRUE);
+        axis2_property_set_value(property, env, AXIS2_VALUE_TRUE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0,
@@ -514,7 +514,7 @@ sandesha2_sender_worker_worker_func(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        AXIS2_PROPERTY_SET_VALUE(property, env, AXIS2_VALUE_FALSE);
+        axis2_property_set_value(property, env, AXIS2_VALUE_FALSE);
     else
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, 

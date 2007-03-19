@@ -131,7 +131,7 @@ sandesha2_ack_mgr_generate_ack_msg(
             AXIS2_FALSE);
         if(property)
         {
-            AXIS2_PROPERTY_SET_VALUE(property, env, addr_ns_uri);
+            axis2_property_set_value(property, env, addr_ns_uri);
         }
         else
         {

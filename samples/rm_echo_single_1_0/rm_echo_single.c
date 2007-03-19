@@ -163,7 +163,7 @@ int main(int argc, char** argv)
     property = axis2_property_create(env);
     if(property)
     {
-        AXIS2_PROPERTY_SET_VALUE(property, env, axis2_strdup(offered_seq_id, 
+        axis2_property_set_value(property, env, axis2_strdup(offered_seq_id, 
             env));
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);

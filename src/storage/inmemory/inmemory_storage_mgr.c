@@ -402,7 +402,7 @@ sandesha2_inmemory_storage_mgr_retrieve_msg_ctx(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, AXIS2_FALSE);
-    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
     if(!storage_map)
         return NULL;
     return (axis2_msg_ctx_t *) axis2_hash_get(storage_map, key, 
@@ -431,13 +431,13 @@ sandesha2_inmemory_storage_mgr_store_msg_ctx(
     {
         property = axis2_property_create(env);
     }
-    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
     if(!storage_map)
     {
         storage_map = axis2_hash_make(env);
         axis2_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        AXIS2_PROPERTY_SET_VALUE(property, env, storage_map);
-        AXIS2_PROPERTY_SET_FREE_FUNC(property, env, axis2_hash_free_void_arg);
+        axis2_property_set_value(property, env, storage_map);
+        axis2_property_set_free_func(property, env, axis2_hash_free_void_arg);
         axis2_ctx_set_property(ctx, env, storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, 
                 property, AXIS2_FALSE);
     }
@@ -474,7 +474,7 @@ sandesha2_inmemory_storage_mgr_update_msg_ctx(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
     if(!storage_map)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 
@@ -514,7 +514,7 @@ sandesha2_inmemory_storage_mgr_remove_msg_ctx(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    storage_map = (axis2_hash_t *) AXIS2_PROPERTY_GET_VALUE(property, env);
+    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
     if(!storage_map)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 

@@ -74,7 +74,7 @@ rm_sample_svc_echo (
     qname = axis2_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
-    AXIS2_QNAME_FREE(qname, env);
+    axis2_qname_free(qname, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
@@ -176,7 +176,7 @@ rm_sample_svc_ping (
     qname = axis2_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
-    AXIS2_QNAME_FREE(qname, env);
+    axis2_qname_free(qname, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);

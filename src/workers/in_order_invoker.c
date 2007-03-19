@@ -370,7 +370,7 @@ sandesha2_in_order_invoker_worker_func(
                 property = axis2_msg_ctx_get_property(msg_to_invoke, env,
                         SANDESHA2_POST_FAILURE_MESSAGE, AXIS2_FALSE);
                 if(property)
-                    post_failure_str = AXIS2_PROPERTY_GET_VALUE(property, env);
+                    post_failure_str = axis2_property_get_value(property, env);
                 if(post_failure_str && 0 == axis2_strcmp(
                         post_failure_str, AXIS2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;

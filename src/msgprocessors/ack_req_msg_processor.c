@@ -235,7 +235,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_WSA_VERSION, 
         AXIS2_FALSE);
     if(property)
-        wsa_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+        wsa_version = axis2_property_get_value(property, env);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, wsa_version);
     if(property)

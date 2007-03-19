@@ -262,7 +262,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             AXIS2_FALSE);
         if(property)
-            within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+            within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
@@ -432,7 +432,7 @@ sandesha2_client_get_report(
         property = (axis2_property_t *) axis2_ctx_get_property(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
         if(property)
-            within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+            within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
@@ -666,7 +666,7 @@ sandesha2_client_terminate_seq_with_svc_client(
     property = (axis2_property_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION);
     if(property)
-        rm_spec_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+        rm_spec_version = axis2_property_get_value(property, env);
     if(!rm_spec_version)
     {
         rm_spec_version = 
@@ -776,7 +776,7 @@ sandesha2_client_close_seq_with_svc_client(
     property = (axis2_property_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION);
     if(property)
-        rm_spec_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+        rm_spec_version = axis2_property_get_value(property, env);
     if(!rm_spec_version)
     {
         rm_spec_version = 
@@ -1100,7 +1100,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     property = (axis2_property_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
         SANDESHA2_CLIENT_RM_SPEC_VERSION);
     if(property)
-        rm_spec_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+        rm_spec_version = axis2_property_get_value(property, env);
     if(!rm_spec_version)
     {
         rm_spec_version = axis2_strdup(SANDESHA2_SPEC_VERSION_1_0, env); 
@@ -1289,7 +1289,7 @@ sandesha2_client_configure_close_seq(
     property = (axis2_property_t *) AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION);
     if(property)
-        rm_spec_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+        rm_spec_version = axis2_property_get_value(property, env);
     if(!rm_spec_version)
     {
         rm_spec_version = 
@@ -1594,7 +1594,7 @@ sandesha2_client_get_incoming_seq_report(
         property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             AXIS2_FALSE);
         if(property)
-            within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+            within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
         if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
@@ -1733,7 +1733,7 @@ sandesha2_client_configure_terminate_seq(
         property = AXIS2_OPTIONS_GET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION);
         if(property)
-            rm_spec_version = AXIS2_PROPERTY_GET_VALUE(property, env);
+            rm_spec_version = axis2_property_get_value(property, env);
         if(!rm_spec_version)
         {
             rm_spec_version = 
@@ -1980,7 +1980,7 @@ sandesha2_client_get_response_envelope(
     property = (axis2_property_t *) axis2_ctx_get_property(ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(property)
-        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+        within_transaction_str = (axis2_char_t *) axis2_property_get_value(
             property, env);
     if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
         AXIS2_VALUE_TRUE))

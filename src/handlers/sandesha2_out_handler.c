@@ -150,7 +150,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, AXIS2_FALSE);
     if(temp_prop)
-        str_done = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+        str_done = (axis2_char_t *) axis2_property_get_value(temp_prop, env); 
     if(str_done && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -166,7 +166,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(temp_prop)
-        within_transaction_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+        within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                         temp_prop, env);
     if(within_transaction_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, 
                 within_transaction_str))
@@ -187,7 +187,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE, 
             AXIS2_FALSE);
     if(NULL != temp_prop)
-        dummy_msg_str = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(temp_prop, env); 
+        dummy_msg_str = (axis2_char_t *) axis2_property_get_value(temp_prop, env); 
     if(dummy_msg_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, dummy_msg_str))
     {
         dummy_msg = AXIS2_TRUE;

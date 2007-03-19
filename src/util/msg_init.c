@@ -135,7 +135,7 @@ populate_rm_msg_ctx(
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
     if(prop)
-        addressing_ns = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(prop, env);
+        addressing_ns = (axis2_char_t *) axis2_property_get_value(prop, env);
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
@@ -516,7 +516,7 @@ static void add_op_if_null(
                 op = NULL;
             }
         }
-        AXIS2_QNAME_FREE(tmp_qname, env);
+        axis2_qname_free(tmp_qname, env);
         axis2_msg_ctx_set_op(msg_ctx, env, op);
     }
 }

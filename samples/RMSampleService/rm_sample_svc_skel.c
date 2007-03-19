@@ -109,7 +109,7 @@ rm_sample_svc_invoke(
     {
         op_qname = (axis2_qname_t *)axis2_op_get_qname(op, env);
         if(op_qname)
-            op_name = AXIS2_QNAME_GET_LOCALPART(op_qname, env);
+            op_name = axis2_qname_get_localpart(op_qname, env);
         if(op_name)
         {
             if (axis2_strcmp(op_name, "echoString") == 0)

@@ -710,7 +710,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         axis2_char_t *mep = NULL;
         if(qname)
         {
-            axis2_char_t *op_name = AXIS2_QNAME_TO_STRING(qname, env);
+            axis2_char_t *op_name = axis2_qname_to_string(qname, env);
             sandesha2_msg_store_bean_set_op(bean, env, op_name);
         }
         mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
@@ -772,7 +772,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
             property = axis2_msg_ctx_get_property(msg_ctx, env, 
                 SANDESHA2_IN_MESSAGE_STORAGE_KEY, AXIS2_FALSE);
             if(property)
-                in_msg_store_key = (axis2_char_t *) AXIS2_PROPERTY_GET_VALUE(
+                in_msg_store_key = (axis2_char_t *) axis2_property_get_value(
                     property, env);
             if(!in_msg_store_key)
             {
@@ -1060,7 +1060,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
         SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
     if(property)
     {
-        axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
+        axis2_char_t *value = axis2_property_get_value(property, env);
         prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
@@ -1069,7 +1069,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
     if(property)
     {
         axis2_char_t *temp_str = NULL;
-        axis2_char_t *value = AXIS2_PROPERTY_GET_VALUE(property, env);
+        axis2_char_t *value = axis2_property_get_value(property, env);
         if(value)
         {
             temp_str = prop_str;
@@ -1105,7 +1105,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
 
         property = (axis2_property_t *) v;
         if(property)
-            value = AXIS2_PROPERTY_GET_VALUE(property, env);
+            value = axis2_property_get_value(property, env);
         if(value)
         {
             temp_str = prop_str;
