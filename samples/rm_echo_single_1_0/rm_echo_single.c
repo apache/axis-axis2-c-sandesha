@@ -70,6 +70,7 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_soap_envelope_t *result = NULL;
+    axis2_string_t *soap_action = NULL;
     int c;
     int i = 0, size = 0;
    
@@ -82,8 +83,7 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
-    address = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    address = "http://127.0.0.1:8888/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -119,8 +119,11 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
-    AXIS2_OPTIONS_SET_ACTION(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
+    /*AXIS2_OPTIONS_SET_ACTION(options, env,
+        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
+    soap_action = axis2_string_create(env, "urn:wsrm:EchoString");
+    AXIS2_OPTIONS_SET_SOAP_ACTION(options, env, soap_action);
+    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     /*AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);*/
 
@@ -358,7 +361,7 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:5555/axis2/services/RMSampleService \n");
+        " default is http://127.0.0.1:8888/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

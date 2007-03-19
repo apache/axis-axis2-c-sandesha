@@ -44,6 +44,11 @@ typedef struct sandesha2_response
  * @{
  */
 
+axis2_thread_mutex_t *
+sandesha2_permanent_storage_mgr_get_mutex(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env);
+
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_permanent_storage_mgr_create(
     const axis2_env_t *env, 

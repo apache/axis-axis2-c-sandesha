@@ -425,7 +425,6 @@ sandesha2_permanent_storage_mgr_remove_transaction(
     axis2_char_t *thread_id_key = AXIS2_MALLOC(env->allocator, 128);
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
-    axis2_thread_mutex_lock(storage_mgr_impl->mutex);
     thread_id = (unsigned long int) sandesha2_permanent_transaction_get_thread_id(
         transaction, env);
     sprintf(thread_id_key, "%lu", thread_id); 
@@ -433,7 +432,6 @@ sandesha2_permanent_storage_mgr_remove_transaction(
     axis2_hash_set(storage_mgr_impl->transactions, thread_id_key, 
         AXIS2_HASH_KEY_STRING, NULL);
     axis2_allocator_switch_to_local_pool(env->allocator);
-    axis2_thread_mutex_unlock(storage_mgr_impl->mutex);
 }
 
 void AXIS2_CALL
@@ -1279,5 +1277,15 @@ sandesha2_permanent_storage_mgr_remove_response(
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     return sandesha2_permanent_bean_mgr_remove_response(
         storage_mgr_impl->bean_mgr, env, seq_id, msg_no);
+}
+
+axis2_thread_mutex_t *
+sandesha2_permanent_storage_mgr_get_mutex(
+    sandesha2_storage_mgr_t *storage_mgr, 
+    const axis2_env_t *env)
+{
+    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
+    return storage_mgr_impl->mutex;
 }
 

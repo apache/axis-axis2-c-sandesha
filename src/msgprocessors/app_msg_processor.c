@@ -37,6 +37,10 @@
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_sender_bean.h>
+#include <sandesha2_msg_init.h>
+#include <sandesha2_ack_mgr.h>
+#include <sandesha2_msg_creator.h>
+#include <sandesha2_client_constants.h>
 
 #include <axis2_const.h>
 #include <axis2_msg_ctx.h>
@@ -45,11 +49,7 @@
 #include <axis2_uuid_gen.h>
 #include <axis2_relates_to.h>
 #include <axiom_soap_const.h>
-#include <sandesha2_client_constants.h>
-#include <stdio.h>
-#include <sandesha2_msg_init.h>
-#include <sandesha2_ack_mgr.h>
-#include <sandesha2_msg_creator.h>
+#include <axiom_soap_body.h>
 
 /** 
  * @brief Application Message Processor struct impl
@@ -210,6 +210,9 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_endpoint_ref_t *to_epr = NULL;
     const axis2_char_t *reply_to_addr = NULL;
     const axis2_char_t *to_addr = NULL;
+    const axis2_string_t *str_soap_action = NULL;
+    const axis2_char_t *wsa_action = NULL;
+    const axis2_char_t *soap_action = NULL;
     axis2_char_t *rm_version = NULL;
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     sandesha2_seq_property_bean_t *to_bean = NULL;
@@ -440,6 +443,37 @@ sandesha2_app_msg_processor_process_in_msg (
     in_order_invoke = sandesha2_property_bean_is_in_order(
         sandesha2_utils_get_property_bean(env, 
             axis2_conf_ctx_get_conf(conf_ctx, env)), env);
+    /* test code */
+    if(axis2_msg_ctx_get_server_side(msg_ctx, env))
+    {
+        sandesha2_last_msg_t *last_msg = sandesha2_seq_get_last_msg(seq, env);
+        axis2_char_t *msg_id = (axis2_char_t *)axis2_msg_ctx_get_msg_id(msg_ctx, env);
+        if(last_msg)
+        {
+            sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
+            seq_prop_bean = sandesha2_seq_property_bean_create_with_data(
+                env, str_seq_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, msg_id);
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_prop_bean);
+        }
+    }
+    /* end test code */
+    /*
+     * If this message matches the WSRM 1.0 pattern for an empty last message (e.g.
+     * the sender wanted to signal the last message, but didn't have an application
+     * message to send) then we do not need to send the message on to the application.
+     */
+    str_soap_action = axis2_msg_ctx_get_soap_action(msg_ctx, env);
+    soap_action = axis2_string_get_buffer(str_soap_action, env);
+    wsa_action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+    if(0 == axis2_strcmp(SANDESHA2_SPEC_2005_02_ACTION_LAST_MESSAGE, 
+        wsa_action) || 0 == axis2_strcmp(
+        SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Exit: app_msg_processor"\
+            "::process_in_msg, got WSRM 1.0 last message, aborting");
+        sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+        return AXIS2_SUCCESS;
+    }
     if(axis2_msg_ctx_get_server_side(msg_ctx, env) && in_order_invoke)
     {
         sandesha2_seq_property_bean_t *incoming_seq_list_bean = NULL;
@@ -448,8 +482,8 @@ sandesha2_app_msg_processor_process_in_msg (
         axis2_property_t *property = NULL;
 
         incoming_seq_list_bean = sandesha2_seq_property_mgr_retrieve(
-                        seq_prop_mgr, env, SANDESHA2_SEQ_PROP_ALL_SEQS,
-                        SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
+            seq_prop_mgr, env, SANDESHA2_SEQ_PROP_ALL_SEQS,
+            SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
         if(!incoming_seq_list_bean)
         {
             /**
@@ -553,20 +587,6 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
     }
-    /* test code */
-    if(axis2_msg_ctx_get_server_side(msg_ctx, env))
-    {
-        sandesha2_last_msg_t *last_msg = sandesha2_seq_get_last_msg(seq, env);
-        axis2_char_t *msg_id = (axis2_char_t *)axis2_msg_ctx_get_msg_id(msg_ctx, env);
-        if(last_msg)
-        {
-            sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
-            seq_prop_bean = sandesha2_seq_property_bean_create_with_data(
-                env, str_seq_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, msg_id);
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_prop_bean);
-        }
-    }
-    /* end test code */
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
 
@@ -775,7 +795,6 @@ sandesha2_app_msg_processor_process_out_msg(
     if(!dummy_msg)
         sandesha2_app_msg_processor_set_next_msg_no(env, internal_seq_id, 
             msg_number, storage_mgr);
-    
     sprintf(msg_number_str, "%ld", msg_number); 
     res_highest_msg_bean = sandesha2_seq_property_bean_create_with_data(env,
         internal_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER, 
@@ -995,7 +1014,7 @@ sandesha2_app_msg_processor_process_out_msg(
     
     if(!dummy_msg)
         sandesha2_app_msg_processor_process_response_msg(env, rm_msg_ctx, 
-                internal_seq_id, msg_number, storage_key, storage_mgr);
+            internal_seq_id, msg_number, storage_key, storage_mgr);
     /*if(1 < msg_number && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         return AXIS2_SUCCESS;

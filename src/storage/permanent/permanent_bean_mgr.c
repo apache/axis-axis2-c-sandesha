@@ -207,15 +207,7 @@ sandesha2_permanent_bean_mgr_create(
         sizeof(sandesha2_permanent_bean_mgr_impl_t));
 
     bean_mgr_impl->storage_mgr = storage_mgr;
-    bean_mgr_impl->mutex = NULL;
-
-    bean_mgr_impl->mutex = axis2_thread_mutex_create(env->allocator, 
-        AXIS2_THREAD_MUTEX_DEFAULT);
-    if(!bean_mgr_impl->mutex) 
-    {
-        sandesha2_permanent_bean_mgr_free(&(bean_mgr_impl->bean_mgr), env);
-        return NULL;
-    }
+    bean_mgr_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
     return &(bean_mgr_impl->bean_mgr);
 }
 
@@ -229,11 +221,6 @@ sandesha2_permanent_bean_mgr_free(
         "[sandesha2]Start:sandesha2_permanent_bean_mgr_free_impl");
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
 
-    if(bean_mgr_impl->mutex)
-    {
-        axis2_thread_mutex_destroy(bean_mgr_impl->mutex);
-        bean_mgr_impl->mutex = NULL;
-    }
     if(bean_mgr_impl)
     {
         AXIS2_FREE(env->allocator, bean_mgr_impl);
@@ -834,7 +821,10 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
+    {
+        axis2_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
+    }
 
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
     args->env = env;
@@ -1176,15 +1166,17 @@ sandesha2_permanent_bean_mgr_busy_handler(
 {
     int counter = 0;
     printf("in busy handler1\n");
-    while(rc == SQLITE_BUSY && counter < 32)
+    while(rc == SQLITE_BUSY && counter < 512)
     {
-        printf("in busy handler2\n");
+        printf("in busy handler11\n");
         if(*error_msg)
              sqlite3_free(*error_msg);
         counter++;
-        AXIS2_SLEEP(SANDESHA2_BUSY_WAIT_TIME);
+        /*AXIS2_SLEEP(SANDESHA2_BUSY_WAIT_TIME);*/
+        usleep(100000);
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }
+    printf("in busy handler2\n");
     return rc;
 }
 

@@ -70,6 +70,7 @@ int main(int argc, char** argv)
     axis2_callback_t *callback3 = NULL;
     axis2_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
+    axis2_string_t *soap_action = NULL;
     int c;
    
     /* Set up the environment */
@@ -79,7 +80,7 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
-    to = "http://127.0.0.1:5555/axis2/services/RMSampleService";
+    to = "http://127.0.0.1:8888/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -127,7 +128,9 @@ int main(int argc, char** argv)
     /* Separate listner needs addressing, hence addressing stuff in options */
     /*AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:5555/axis2/services/RMSampleService/anonOutInOp");*/
-    /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");*/
+    soap_action = axis2_string_create(env, "urn:wsrm:EchoString");
+    AXIS2_OPTIONS_SET_SOAP_ACTION(options, env, soap_action);
+    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
         "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");

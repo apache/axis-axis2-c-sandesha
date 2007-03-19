@@ -46,6 +46,8 @@ extern "C"
 
 	#define SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
 
+	#define SANDESHA2_SPEC_2005_02_ACTION_LAST_MESSAGE  "http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage"
+
 	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence"
 
 	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequenceResponse"
@@ -53,6 +55,8 @@ extern "C"
 	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement"
 
 	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_TERMINATE_SEQ  "http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence"
+
+	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE  "http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage"
 	
 	/**
 	 * Spec 2005-10
