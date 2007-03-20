@@ -148,9 +148,11 @@ sandesha2_global_in_handler_invoke(
             if(header)
             {
                 sandesha2_seq_t *sequence = NULL;
+                axiom_node_t *seq_node = NULL;
                 sequence = sandesha2_seq_create(env, SANDESHA2_SPEC_2005_02_NS_URI);
+                seq_node = axiom_soap_header_get_base_node(header, env);
                 sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *) 
-                    sequence, env, header);
+                    sequence, env, seq_node);
                 if(sandesha2_seq_get_last_msg(sequence, env))
                     last_msg_header = AXIS2_TRUE;
                  
@@ -163,13 +165,15 @@ sandesha2_global_in_handler_invoke(
                 body_node = axiom_soap_body_get_base_node(body, env);
                 if(body && !axiom_node_get_first_element(body_node, env))
                 {
+                    axis2_string_t *temp_soap_action = axis2_string_create(env, 
+                        SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
                     /* There is an empty body so we know this is the kind of message
                      * that we are looking for.
                      */
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "Setting SOAP Action for a WSRM 1.0 last message");
                     axis2_msg_ctx_set_soap_action(msg_ctx, env, 
-                        SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
+                        temp_soap_action);
                     isolated_last_msg = AXIS2_TRUE;
                 }
             }
