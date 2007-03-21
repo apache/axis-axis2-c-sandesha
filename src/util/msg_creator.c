@@ -378,8 +378,8 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(create_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
-    temp_soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
-    temp_om_node = AXIOM_SOAP_BODY_GET_BASE_NODE(temp_soap_body, env);
+    temp_soap_body = axiom_soap_envelope_get_body(envelope, env);
+    temp_om_node = axiom_soap_body_get_base_node(temp_soap_body, env);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)(
                 sandesha2_iom_rm_element_t *) response, env, temp_om_node);
     temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(
@@ -968,7 +968,7 @@ sandesha2_msg_creator_add_ack_msg(
     sandesha2_msg_ctx_set_msg_part(app_msg, env, 
             SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, 
             (sandesha2_iom_rm_part_t *) seq_ack);
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+    soap_header = axiom_soap_envelope_get_header(envelope, env);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, soap_header);
 
     rm_version = sandesha2_utils_get_rm_version(env, seq_id, storage_mgr);
@@ -1036,7 +1036,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             for(i = 0; i < size; i++)
             {
                 const axis2_phase_t *phase = axis2_array_list_get(out_flow, env, i);
-                const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
+                const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
                 if(0 == axis2_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
                 {
                     axis2_array_list_add(new_flow, env, phase);
@@ -1052,7 +1052,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             for(i = 0; i < size; i++)
             {
                 const axis2_phase_t *phase = axis2_array_list_get(in_flow, env, i);
-                const axis2_char_t *phase_name = AXIS2_PHASE_GET_NAME(phase, env);
+                const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
                 if(0 == axis2_strcmp(phase_name, "RMPhase"))
                 {
                     axis2_array_list_add(new_flow, env, phase);

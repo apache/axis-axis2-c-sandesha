@@ -193,8 +193,8 @@ int main(int argc, char** argv)
     
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
         callback, payload, listener_manager);
 
@@ -202,23 +202,23 @@ int main(int argc, char** argv)
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     callback2 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback2, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
         callback2, payload, listener_manager);
     wait_on_callback(env, callback2);
 
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     callback3 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
         callback3, payload, listener_manager);
     wait_on_callback(env, callback3);
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback4 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback4, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback4, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback4, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback4, rm_echo_callback_on_error);
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
         listener_manager);
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
@@ -243,7 +243,7 @@ rm_echo_callback_on_complete(
    axiom_node_t *ret_node = NULL;
    axis2_status_t status = AXIS2_SUCCESS;
    
-   soap_envelope = AXIS2_CALLBACK_GET_ENVELOPE(callback, env);
+   soap_envelope = axis2_callback_get_envelope(callback, env);
    
    if (!soap_envelope)
    {
@@ -255,7 +255,7 @@ rm_echo_callback_on_complete(
    }
     else
     {
-        ret_node = AXIOM_SOAP_ENVELOPE_GET_BASE_NODE(soap_envelope, env);
+        ret_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
     
         if(!ret_node)
         {
@@ -298,7 +298,7 @@ void wait_on_callback(
        until our on_complete or on_error is invoked */
     while(1)
     {
-        if (AXIS2_CALLBACK_GET_COMPLETE(callback, env))
+        if (axis2_callback_get_complete(callback, env))
         {
             /* We are done with the callback */
             break;

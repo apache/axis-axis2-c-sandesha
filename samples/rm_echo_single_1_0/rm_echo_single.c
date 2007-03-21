@@ -289,7 +289,7 @@ rm_echo_callback_on_complete(
    axiom_node_t *ret_node = NULL;
    axis2_status_t status = AXIS2_SUCCESS;
    
-   soap_envelope = AXIS2_CALLBACK_GET_ENVELOPE(callback, env);
+   soap_envelope = axis2_callback_get_envelope(callback, env);
    
    if (!soap_envelope)
    {
@@ -301,7 +301,7 @@ rm_echo_callback_on_complete(
    }
     else
     {
-        ret_node = AXIOM_SOAP_ENVELOPE_GET_BASE_NODE(soap_envelope, env);
+        ret_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
     
         if(!ret_node)
         {
@@ -344,7 +344,7 @@ void wait_on_callback(
        until our on_complete or on_error is invoked */
     while(1)
     {
-        if (AXIS2_CALLBACK_GET_COMPLETE(callback, env))
+        if (axis2_callback_get_complete(callback, env))
         {
             /* We are done with the callback */
             break;

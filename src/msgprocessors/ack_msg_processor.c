@@ -212,7 +212,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
+        axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     }
@@ -222,7 +222,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
+        axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
              fault_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     }

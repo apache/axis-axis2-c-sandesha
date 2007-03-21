@@ -679,8 +679,8 @@ sandesha2_client_terminate_seq_with_svc_client(
             conf_ctx);
     if (!terminate_envelope)
         return AXIS2_FAILURE;
-    body = AXIOM_SOAP_ENVELOPE_GET_BODY(terminate_envelope, env);
-    node = AXIOM_SOAP_BODY_GET_BASE_NODE(body, env);
+    body = axiom_soap_envelope_get_body(terminate_envelope, env);
+    node = axiom_soap_body_get_base_node(body, env);
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
             rm_namespc_value, NULL);
@@ -787,8 +787,8 @@ sandesha2_client_close_seq_with_svc_client(
     conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     close_envelope = sandesha2_client_configure_close_seq(env, options, 
             conf_ctx);
-    body = AXIOM_SOAP_ENVELOPE_GET_BODY(close_envelope, env);
-    node = AXIOM_SOAP_BODY_GET_BASE_NODE(body, env);
+    body = axiom_soap_envelope_get_body(close_envelope, env);
+    node = axiom_soap_body_get_base_node(body, env);
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, 
             rm_namespc_value, NULL);
@@ -1148,8 +1148,8 @@ sandesha2_client_send_ack_request_with_svc_client(
     sandesha2_ack_requested_set_identifier(ack_requested, env, identifier);
     sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *) 
             ack_requested, env, dummy_envelope);
-    header = AXIOM_SOAP_ENVELOPE_GET_HEADER(dummy_envelope, env);
-    node = AXIOM_SOAP_HEADER_GET_BASE_NODE(header, env);
+    header = axiom_soap_envelope_get_header(dummy_envelope, env);
+    node = axiom_soap_header_get_base_node(header, env);
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
             rm_ns_value, NULL);
@@ -1811,7 +1811,7 @@ sandesha2_client_send_non_blocking(
     AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);
     transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(
         options, env);
-    AXIS2_LISTNER_MANAGER_MAKE_SURE_STARTED(listener_manager, env, 
+    axis2_listener_manager_make_sure_started(listener_manager, env, 
             transport_in_protocol, conf_ctx);
     callback_recv = axis2_callback_recv_create(env);
     if (!(callback_recv))
@@ -1870,7 +1870,7 @@ sandesha2_client_fire_and_forget(
         /*AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);*/
         transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(
             options, env);
-        AXIS2_LISTNER_MANAGER_MAKE_SURE_STARTED(listener_manager, env,
+        axis2_listener_manager_make_sure_started(listener_manager, env,
             transport_in_protocol, conf_ctx);
         callback_recv = axis2_callback_recv_create(env);
         if (!(callback_recv))
@@ -1919,11 +1919,11 @@ fill_soap_envelope(
     if (payload)
     {
         axiom_soap_body_t *soap_body = NULL;
-        soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
+        soap_body = axiom_soap_envelope_get_body(envelope, env);
         if (soap_body)
         {
             axiom_node_t *node = NULL;
-            node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+            node = axiom_soap_body_get_base_node(soap_body, env);
             if (node)
             {
                 AXIOM_NODE_ADD_CHILD(node, env, (axiom_node_t *)payload);

@@ -170,7 +170,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     if(fault_rm_msg_ctx)
     {
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_ENGINE_SEND(engine, env, sandesha2_msg_ctx_get_msg_ctx(
+        axis2_engine_send(engine, env, sandesha2_msg_ctx_get_msg_ctx(
                         fault_rm_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
@@ -215,7 +215,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_msg_ctx_add_soap_envelope(close_seq_res_rm_msg, env);
     
     engine = axis2_engine_create(env, conf_ctx);
-    AXIS2_ENGINE_SEND(engine, env, close_seq_res_msg);
+    axis2_engine_send(engine, env, close_seq_res_msg);
     return AXIS2_SUCCESS;
 }
     

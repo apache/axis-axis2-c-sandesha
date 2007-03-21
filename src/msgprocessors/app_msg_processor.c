@@ -261,7 +261,7 @@ sandesha2_app_msg_processor_process_in_msg (
 
 		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha2_app_msg_processor_process_in_msg send Fault");
 
-		if(!AXIS2_ENGINE_SEND_FAULT(engine, env, 
+		if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
@@ -283,7 +283,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(fault_ctx)
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
-        if(!AXIS2_ENGINE_SEND_FAULT(engine, env, 
+        if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
@@ -300,7 +300,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(fault_ctx)
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
-        if(!AXIS2_ENGINE_SEND_FAULT(engine, env, 
+        if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
@@ -1091,7 +1091,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         storage_mgr);
     engine = axis2_engine_create(env, conf_ctx);
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
-    sent = AXIS2_ENGINE_SEND(engine, env, msg_ctx);
+    sent = axis2_engine_send(engine, env, msg_ctx);
     if(!sent)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -1234,7 +1234,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_msg_ctx_set_transport_out_desc(create_seq_msg, env, trans_out);
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(create_seq_msg, 
         env));
-    if(!AXIS2_ENGINE_RESUME_SEND(engine, env, create_seq_msg))
+    if(!axis2_engine_resume_send(engine, env, create_seq_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Engine Resume Send failed");
@@ -1445,7 +1445,7 @@ sandesha2_app_msg_processor_process_response_msg(
             storage_mgr);
         engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, 
             env));
-        return AXIS2_ENGINE_RESUME_SEND(engine, env, msg_ctx);
+        return axis2_engine_resume_send(engine, env, msg_ctx);
     }
     sandesha2_sender_bean_set_msg_ctx_ref_key(app_msg_entry, env, 
         storage_key);
@@ -1500,7 +1500,7 @@ sandesha2_app_msg_processor_process_response_msg(
         env));
     AXIS2_LOG_INFO(env->log,  
         "[Sandesha2] Exit:sandesha2_app_msg_processor_process_response_msg");
-    return AXIS2_ENGINE_RESUME_SEND(engine, env, app_msg_ctx);
+    return axis2_engine_resume_send(engine, env, app_msg_ctx);
 }
 
 

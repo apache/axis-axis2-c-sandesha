@@ -459,7 +459,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(options, env);*/
         transport_in_protocol = AXIS2_TRANSPORT_ENUM_HTTP;
             
-        AXIS2_LISTNER_MANAGER_MAKE_SURE_STARTED(listener_manager, env, 
+        axis2_listener_manager_make_sure_started(listener_manager, env, 
                         transport_in_protocol, conf_ctx);
     }
     

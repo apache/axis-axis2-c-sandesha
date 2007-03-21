@@ -651,9 +651,9 @@ sandesha2_sender_worker_check_for_sync_res(
             env));
         if(AXIS2_TRUE == sandesha2_sender_worker_is_fault_envelope(env, 
             res_envelope))
-            AXIS2_ENGINE_RECEIVE_FAULT(engine, env, res_msg_ctx);
+            axis2_engine_receive_fault(engine, env, res_msg_ctx);
         else
-            AXIS2_ENGINE_RECEIVE(engine, env, res_msg_ctx);        
+            axis2_engine_receive(engine, env, res_msg_ctx);        
     }
     /* To avoid a second passing through incoming handlers at mep_client */
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
@@ -671,7 +671,7 @@ sandesha2_sender_worker_is_fault_envelope(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     
-    fault = AXIOM_SOAP_BODY_GET_FAULT(AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope,
+    fault = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(soap_envelope,
         env), env);
     if(fault)
         return AXIS2_TRUE;

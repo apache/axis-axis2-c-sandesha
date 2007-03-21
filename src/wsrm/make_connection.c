@@ -311,8 +311,8 @@ sandesha2_make_connection_to_om_node(
     if(make_conn_impl->address)
         sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)
             make_conn_impl->address, env, make_conn_node);
-    AXIOM_SOAP_BODY_ADD_CHILD(soap_body, env, make_conn_node);
-    return AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    axiom_soap_body_add_child(soap_body, env, make_conn_node);
+    return axiom_soap_body_get_base_node(soap_body, env);
 }
 
 static axis2_bool_t AXIS2_CALL 
@@ -404,9 +404,9 @@ sandesha2_make_connection_to_soap_envelope(
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
 	
 	make_conn_impl = SANDESHA2_INTF_TO_IMPL(make_conn);
-    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
+    soap_body = axiom_soap_envelope_get_body(envelope, env);
     if(soap_body)
-        body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+        body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(body_node)
         body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
     make_conn_qname = axis2_qname_create(env, 

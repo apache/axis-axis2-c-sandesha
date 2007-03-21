@@ -52,6 +52,7 @@ sandesha2_msg_processor_create_msg_processor(
     int msg_type = -1;
 
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
+    printf("msg_type:%d\n", msg_type);
     switch(msg_type)
     {
         case SANDESHA2_MSG_TYPE_CREATE_SEQ:

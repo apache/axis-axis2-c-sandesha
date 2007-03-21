@@ -181,15 +181,15 @@ int main(int argc, char** argv)
     }
     /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     callback1 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback1, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback1, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback1, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback1);
     wait_on_callback(env, callback1);
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     callback2 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback2, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback2, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback2);
     wait_on_callback(env, callback2);*/
 
@@ -197,8 +197,8 @@ int main(int argc, char** argv)
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     callback3 = axis2_callback_create(env);
-    AXIS2_CALLBACK_SET_ON_COMPLETE(callback3, rm_echo_callback_on_complete);
-    AXIS2_CALLBACK_SET_ON_ERROR(callback3, rm_echo_callback_on_error);
+    axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
+    axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
     AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback3);
     wait_on_callback(env, callback3);
     AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
@@ -225,7 +225,7 @@ rm_echo_callback_on_complete(
    
     printf("inside on_complete_callback function\n");
    
-    soap_envelope = AXIS2_CALLBACK_GET_ENVELOPE(callback, env);
+    soap_envelope = axis2_callback_get_envelope(callback, env);
    
     if (!soap_envelope)
     {
@@ -237,7 +237,7 @@ rm_echo_callback_on_complete(
     }
     else
     {
-        ret_node = AXIOM_SOAP_ENVELOPE_GET_BASE_NODE(soap_envelope, env);
+        ret_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
     
         if(!ret_node)
         {
@@ -280,7 +280,7 @@ void wait_on_callback(
        until our on_complete or on_error is invoked */
     while(1)
     {
-        if (AXIS2_CALLBACK_GET_COMPLETE(callback, env))
+        if (axis2_callback_get_complete(callback, env))
         {
             /* We are done with the callback */
             break;

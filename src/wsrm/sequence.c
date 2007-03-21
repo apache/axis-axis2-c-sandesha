@@ -280,15 +280,15 @@ sandesha2_seq_to_om_node(
     {
         return NULL;
     }
-    seq_block = AXIOM_SOAP_HEADER_ADD_HEADER_BLOCK(soap_header, env, 
+    seq_block = axiom_soap_header_add_header_block(soap_header, env, 
                         SANDESHA2_WSRM_COMMON_SEQ, rm_ns);
     if(!seq_block)
     {
         return NULL;
     }
-    AXIOM_SOAP_HEADER_BLOCK_SET_MUST_UNDERSTAND_WITH_BOOL(seq_block, env, 
+    axiom_soap_header_block_set_must_understand_with_bool(seq_block, env, 
                         seq_impl->must_understand);
-    seq_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(seq_block, env);
+    seq_node = axiom_soap_header_block_get_base_node(seq_block, env);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_impl->identifier, env, seq_node);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_impl->msg_num, env, seq_node);
     if(seq_impl->last_msg)
@@ -436,7 +436,7 @@ sandesha2_seq_to_soap_env(
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
 	
 	seq_impl = SANDESHA2_INTF_TO_IMPL(seq);
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+    soap_header = axiom_soap_envelope_get_header(envelope, env);
     /**
      * Remove if old exists
      */
@@ -446,7 +446,7 @@ sandesha2_seq_to_soap_env(
     {
         return AXIS2_FAILURE;
     }
-    AXIOM_SOAP_HEADER_REMOVE_HEADER_BLOCK(soap_header, env, seq_qname);
+    axiom_soap_header_remove_header_block(soap_header, env, seq_qname);
     sandesha2_seq_to_om_node((sandesha2_iom_rm_element_t*)seq, env, 
                         soap_header);
 	return AXIS2_SUCCESS;

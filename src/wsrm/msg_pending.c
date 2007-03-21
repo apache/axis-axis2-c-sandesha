@@ -261,13 +261,13 @@ sandesha2_msg_pending_to_om_node(
     {
         return NULL;
     }
-    msg_pending_block = AXIOM_SOAP_HEADER_ADD_HEADER_BLOCK(soap_header, env, 
+    msg_pending_block = axiom_soap_header_add_header_block(soap_header, env, 
                         SANDESHA2_WSRM_COMMON_MESSAGE_PENDING, rm_ns);
     if(!msg_pending_block)
     {
         return NULL;
     }
-    msg_pending_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(msg_pending_block, 
+    msg_pending_node = axiom_soap_header_block_get_base_node(msg_pending_block, 
         env);
     msg_pending_element = AXIOM_NODE_GET_DATA_ELEMENT(msg_pending_node, env);
     if(pending)
@@ -340,7 +340,7 @@ sandesha2_msg_pending_to_soap_envelope(
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
 	
 	msg_pending_impl = SANDESHA2_INTF_TO_IMPL(msg_pending);
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+    soap_header = axiom_soap_envelope_get_header(envelope, env);
     /**
      * Remove if already exists
      */
@@ -351,7 +351,7 @@ sandesha2_msg_pending_to_soap_envelope(
     {
         return AXIS2_FAILURE;
     }
-    AXIOM_SOAP_HEADER_REMOVE_HEADER_BLOCK(soap_header, env, msg_pending_qname);
+    axiom_soap_header_remove_header_block(soap_header, env, msg_pending_qname);
     sandesha2_msg_pending_to_om_node((sandesha2_iom_rm_element_t*)msg_pending, 
             env, soap_header);
 	return AXIS2_SUCCESS;

@@ -141,7 +141,7 @@ sandesha2_rm_elements_from_soap_envelope(
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
-    soap_version = AXIOM_SOAP_ENVELOPE_GET_SOAP_VERSION(soap_envelope, env);
+    soap_version = axiom_soap_envelope_get_soap_version(soap_envelope, env);
     
     rm_elements->rm_ns_val = sandesha2_rm_elements_get_rm_ns_val(rm_elements,
                         env, soap_envelope, action);
@@ -158,12 +158,12 @@ sandesha2_rm_elements_from_soap_envelope(
                         " addressing version");
         return AXIS2_FAILURE;
     }
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);    
-    header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
+    soap_header = axiom_soap_envelope_get_header(soap_envelope, env);    
+    header_node = axiom_soap_header_get_base_node(soap_header, env);
     header_element = AXIOM_NODE_GET_DATA_ELEMENT(header_node, env);
     
-    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope, env);
-    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(soap_body, env);
     body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
                         
     rm_ns_val = rm_elements->rm_ns_val;
@@ -308,9 +308,9 @@ sandesha2_rm_elements_to_soap_envelope(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
     
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
-    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(soap_envelope, env);
-    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
+    soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(soap_body, env);
     
     if(rm_elements->seq)
     {
@@ -606,16 +606,16 @@ sandesha2_rm_elements_get_rm_ns_val(
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
+    soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     if(soap_header)
     {
         axis2_array_list_t *headers = NULL;
         
-        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
             soap_header, env, SANDESHA2_SPEC_2005_02_NS_URI);
         if(headers && 0 < axis2_array_list_size(headers, env))
             return SANDESHA2_SPEC_2005_02_NS_URI;
-        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
             soap_header, env, SANDESHA2_SPEC_2006_08_NS_URI);                
         if(headers && 0 < axis2_array_list_size(headers, env))
             return SANDESHA2_SPEC_2006_08_NS_URI;
@@ -666,7 +666,7 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_envelope, env);
+    soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     if(soap_header)
     {
         axis2_array_list_t *headers = NULL;
@@ -674,17 +674,17 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
         axiom_element_t *soap_header_element = NULL;
         axiom_namespace_t *addr_ns = NULL;
  
-        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
                         soap_header, env, AXIS2_WSA_NAMESPACE);
         if(headers && 0 < axis2_array_list_size(headers, env))
             return AXIS2_WSA_NAMESPACE;
             
-        headers = AXIOM_SOAP_HEADER_GET_HEADER_BLOCKS_WITH_NAMESPACE_URI(
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
                         soap_header, env, AXIS2_WSA_NAMESPACE_SUBMISSION); 
         if(headers && 0 < axis2_array_list_size(headers, env))
             return AXIS2_WSA_NAMESPACE_SUBMISSION;
 
-        soap_header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
+        soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
         soap_header_element = AXIOM_NODE_GET_DATA_ELEMENT(soap_header_node, 
             env);
         addr_ns = axiom_element_get_namespace(soap_header_element, env, 

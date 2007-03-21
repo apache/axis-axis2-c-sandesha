@@ -311,7 +311,7 @@ sandesha2_terminate_seq_to_soap_env(sandesha2_iom_rm_part_t *terminate_seq,
         return AXIS2_FAILURE;
     }
     sandesha2_utils_remove_soap_body_part(env, envelope, ts_qname);
-    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(AXIOM_SOAP_ENVELOPE_GET_BODY(
+    body_node = axiom_soap_body_get_base_node(axiom_soap_envelope_get_body(
                         envelope, env), env);  
     sandesha2_terminate_seq_to_om_node((sandesha2_iom_rm_element_t*)
                         terminate_seq, env, body_node);

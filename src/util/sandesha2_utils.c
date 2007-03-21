@@ -71,12 +71,12 @@ sandesha2_utils_remove_soap_body_part(const axis2_env_t *env,
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, qname, AXIS2_FAILURE);
     
-    soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(envelope, env);
+    soap_body = axiom_soap_envelope_get_body(envelope, env);
     if(!soap_body)
     {
         return AXIS2_FAILURE;
     }
-    body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+    body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(!body_node)
     {
         return AXIS2_FAILURE;
@@ -208,7 +208,7 @@ sandesha2_utils_get_property_bean(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
-    param = AXIS2_CONF_GET_PARAM(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
@@ -804,7 +804,7 @@ sandesha2_utils_get_soap_version(
     AXIS2_ENV_CHECK(env, -1);
     AXIS2_PARAM_CHECK(env->error, envelope, -1);
     
-    return AXIOM_SOAP_ENVELOPE_GET_SOAP_VERSION(envelope, env);
+    return axiom_soap_envelope_get_soap_version(envelope, env);
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
@@ -887,11 +887,11 @@ sandesha2_utils_is_rm_global_msg(
                         " null");
         return AXIS2_FALSE;
     }
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(soap_env, env);
+    soap_header = axiom_soap_envelope_get_header(soap_env, env);
     
     if(soap_header)
     {
-        header_node = AXIOM_SOAP_HEADER_GET_BASE_NODE(soap_header, env);
+        header_node = axiom_soap_header_get_base_node(soap_header, env);
         header_element = AXIOM_NODE_GET_DATA_ELEMENT(header_node, env);
     
         qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
@@ -1255,11 +1255,11 @@ sandesha2_utils_execute_and_store(
     {
         axis2_msg_ctx_set_current_handler_index(msg_ctx, env, 
             axis2_msg_ctx_get_current_handler_index(msg_ctx, env) + 1);
-        AXIS2_ENGINE_RESUME_SEND(engine, env, msg_ctx);
+        axis2_engine_resume_send(engine, env, msg_ctx);
     }
     else
     {
-        AXIS2_ENGINE_SEND(engine, env, msg_ctx);
+        axis2_engine_send(engine, env, msg_ctx);
     }
     return AXIS2_SUCCESS;
 }

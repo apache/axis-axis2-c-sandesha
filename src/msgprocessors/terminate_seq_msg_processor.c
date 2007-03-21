@@ -218,7 +218,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
         
-        AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
+        axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
@@ -429,7 +429,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     /* end test code */
     
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, env));
-    AXIS2_ENGINE_SEND(engine, env, out_msg_ctx);
+    axis2_engine_send(engine, env, out_msg_ctx);
     
     addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);

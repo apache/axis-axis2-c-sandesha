@@ -498,7 +498,7 @@ static void add_op_if_null(
             axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_OUT_IN);
             conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-            info = AXIS2_CONF_GET_PHASES_INFO(conf, env);
+            info = axis2_conf_get_phases_info(conf, env);
             AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
             status = AXIS2_SVC_ADD_OP(svc, env, op);
             if(AXIS2_SUCCESS == status)

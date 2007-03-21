@@ -148,6 +148,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     const axis2_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
+    printf("came10\n");
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq_part = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -196,7 +197,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         axis2_engine_t *engine = NULL;
         
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_ENGINE_SEND_FAULT(engine, env, sandesha2_msg_ctx_get_msg_ctx(
+        axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
                         fault_rm_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
@@ -316,7 +317,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, 
                     storage_mgr);
     engine = axis2_engine_create(env, conf_ctx);
-    AXIS2_ENGINE_SEND(engine, env, out_msg_ctx);
+    axis2_engine_send(engine, env, out_msg_ctx);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                     new_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
     if(!to_bean)

@@ -274,7 +274,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
             property, AXIS2_FALSE);
         
         engine = axis2_engine_create(env, conf_ctx);
-        if(AXIS2_FAILURE == AXIS2_ENGINE_SEND(engine, env, ack_msg_ctx))
+        if(AXIS2_FAILURE == axis2_engine_send(engine, env, ack_msg_ctx))
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] ack sending"
                 " failed");
@@ -375,7 +375,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         axis2_msg_ctx_set_transport_out_desc(ack_msg_ctx, env, 
             sandesha2_utils_get_transport_out(env));
         engine = axis2_engine_create(env, conf_ctx);
-        if(AXIS2_FAILURE == AXIS2_ENGINE_SEND(engine, env, ack_msg_ctx))
+        if(AXIS2_FAILURE == axis2_engine_send(engine, env, ack_msg_ctx))
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] ack sending"
                 " failed");

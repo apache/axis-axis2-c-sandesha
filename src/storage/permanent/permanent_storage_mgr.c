@@ -674,7 +674,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
     axiom_output_set_soap11(om_output, env, axis2_msg_ctx_get_is_soap_11(
         msg_ctx, env));
-    AXIOM_SOAP_ENVELOPE_SERIALIZE(envelope, env, om_output, AXIS2_FALSE);
+    axiom_soap_envelope_serialize(envelope, env, om_output, AXIS2_FALSE);
     soap_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
     if (axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
         soap_version = SANDESHA2_SOAP_VERSION_1_1;
@@ -851,10 +851,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         soap_builder = axiom_soap_builder_create(env, om_builder,
             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI);
     }
-    soap_envelope = AXIOM_SOAP_BUILDER_GET_SOAP_ENVELOPE(soap_builder, env);
+    soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
     if (!soap_envelope)
     {
-        AXIOM_SOAP_BUILDER_FREE(soap_builder, env);
+        axiom_soap_builder_free(soap_builder, env);
         return NULL;
     }
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
@@ -867,12 +867,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, 
         env);
-    transport_out_desc = AXIS2_CONF_GET_TRANSPORT_OUT(conf, env, transport_out);
+    transport_out_desc = axis2_conf_get_transport_out(conf, env, transport_out);
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, transport_out_desc);
     svc_grp_name_str = sandesha2_msg_store_bean_get_svc_grp(msg_store_bean, env);
     if(svc_grp_name_str)
     {
-        svc_grp = AXIS2_CONF_GET_SVC_GRP(conf, env, svc_grp_name_str);
+        svc_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name_str);
         if(svc_grp)
             axis2_msg_ctx_set_svc_grp(msg_ctx, env, svc_grp);
     }
@@ -884,7 +884,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     svc_name_str = sandesha2_msg_store_bean_get_svc(msg_store_bean, env);
     if(svc_name_str)
     {
-        svc = AXIS2_CONF_GET_SVC(conf, env, svc_name_str);
+        svc = axis2_conf_get_svc(conf, env, svc_name_str);
         if(svc)
             axis2_msg_ctx_set_svc(msg_ctx, env, svc);
         else
@@ -894,7 +894,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_BUILD_MSG_CTX_WHEN_SVC_NOT_PRESENT, 
                 AXIS2_FAILURE);
-            AXIOM_SOAP_BUILDER_FREE(soap_builder, env);
+            axiom_soap_builder_free(soap_builder, env);
             return NULL;
         }
     }
@@ -941,7 +941,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 "operation for the generated message");
             AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG, AXIS2_FAILURE);
-            AXIOM_SOAP_BUILDER_FREE(soap_builder, env);
+            axiom_soap_builder_free(soap_builder, env);
             return NULL;
         }
     }
@@ -1213,7 +1213,7 @@ sandesha2_permanent_storage_mgr_store_response(
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
-    AXIOM_SOAP_ENVELOPE_SERIALIZE(response, env, om_output, AXIS2_FALSE);
+    axiom_soap_envelope_serialize(response, env, om_output, AXIS2_FALSE);
     response_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
 
     sandesha2_permanent_bean_mgr_store_response(storage_mgr_impl->bean_mgr, 
@@ -1257,10 +1257,10 @@ sandesha2_permanent_storage_mgr_retrieve_response(
         soap_builder = axiom_soap_builder_create(env, om_builder,
             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI);
     }
-    response_envelope = AXIOM_SOAP_BUILDER_GET_SOAP_ENVELOPE(soap_builder, env);
+    response_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
     if(!response_envelope)
     {
-        AXIOM_SOAP_BUILDER_FREE(soap_builder, env);
+        axiom_soap_builder_free(soap_builder, env);
     }
     return response_envelope;
 }

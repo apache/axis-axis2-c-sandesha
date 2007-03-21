@@ -87,7 +87,7 @@ mod_sandesha2_init(
         property_bean);
     
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    AXIS2_CONF_ADD_PARAM(conf, env, param);
+    axis2_conf_add_param(conf, env, param);
 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 

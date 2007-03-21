@@ -379,13 +379,13 @@ sandesha2_in_order_invoker_worker_func(
                 {
                     sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
                         invoker, env, msg_to_invoke);
-                    AXIS2_ENGINE_RECEIVE(engine, env, msg_to_invoke);
+                    axis2_engine_receive(engine, env, msg_to_invoke);
                 }
                 else
                 {
                     axis2_status_t status = AXIS2_FAILURE;
                     axis2_msg_ctx_set_paused(msg_to_invoke, env, AXIS2_FALSE);
-                    status = AXIS2_ENGINE_RESUME_RECEIVE(engine, env, msg_to_invoke);
+                    status = axis2_engine_resume_receive(engine, env, msg_to_invoke);
                     if(!status)
                         return NULL;
                 }

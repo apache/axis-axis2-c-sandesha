@@ -715,7 +715,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx, env), env, AXIS2_TRUE);
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
+        axis2_engine_send(engine, env, msg_ctx1);
         /* Clean sending side data */
         {
             sandesha2_terminate_seq_t *terminate_seq = NULL;
@@ -793,6 +793,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             axis2_msg_ctx_set_reply_to(msg_ctx1, env, reply_to_epr);
     }
     engine = axis2_engine_create(env, conf_ctx);
-    return AXIS2_ENGINE_SEND(engine, env, msg_ctx1);
+    return axis2_engine_send(engine, env, msg_ctx1);
 }
 

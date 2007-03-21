@@ -138,7 +138,7 @@ sandesha2_permanent_transaction_create(
         axis2_module_desc_t *module_desc = NULL;
         axis2_qname_t *qname = NULL;
         qname = axis2_qname_create(env, "sandesha2", NULL, NULL);
-        module_desc = AXIS2_CONF_GET_MODULE(conf, env, qname);
+        module_desc = axis2_conf_get_module(conf, env, qname);
         if(module_desc)
         {
             axis2_param_t *db_param = NULL;

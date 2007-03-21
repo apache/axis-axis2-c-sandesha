@@ -257,11 +257,11 @@ sandesha2_ack_requested_to_om_node(
     {
         return NULL;
     }
-    ar_header_blk = AXIOM_SOAP_HEADER_ADD_HEADER_BLOCK(soap_header, env, 
+    ar_header_blk = axiom_soap_header_add_header_block(soap_header, env, 
                         SANDESHA2_WSRM_COMMON_ACK_REQUESTED, rm_ns);
-    AXIOM_SOAP_HEADER_BLOCK_SET_MUST_UNDERSTAND_WITH_BOOL(ar_header_blk, env,
+    axiom_soap_header_block_set_must_understand_with_bool(ar_header_blk, env,
                         ack_requested_impl->must_understand);
-    ar_node = AXIOM_SOAP_HEADER_BLOCK_GET_BASE_NODE(ar_header_blk, env);
+    ar_node = axiom_soap_header_block_get_base_node(ar_header_blk, env);
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)
             ack_requested_impl->identifier, env, ar_node);
     if(ack_requested_impl->msg_num)
@@ -306,7 +306,7 @@ sandesha2_ack_requested_to_soap_env(
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
 	
 	ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
-    soap_header = AXIOM_SOAP_ENVELOPE_GET_HEADER(envelope, env);
+    soap_header = axiom_soap_envelope_get_header(envelope, env);
     /**
      * Remove if header block exists
      */
@@ -317,7 +317,7 @@ sandesha2_ack_requested_to_soap_env(
     {
         return AXIS2_FAILURE;
     } 
-    AXIOM_SOAP_HEADER_REMOVE_HEADER_BLOCK(soap_header, env, requested_qname);
+    axiom_soap_header_remove_header_block(soap_header, env, requested_qname);
     sandesha2_ack_requested_to_om_node((sandesha2_iom_rm_element_t*)
                         ack_requested, env, soap_header);
 	return AXIS2_SUCCESS;

@@ -250,7 +250,7 @@ sandesha2_global_in_handler_invoke(
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop, 
                 AXIS2_FALSE);
     }
-    fault_part = AXIOM_SOAP_BODY_GET_FAULT(AXIOM_SOAP_ENVELOPE_GET_BODY(
+    fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)
     {
@@ -405,10 +405,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
                 axiom_children_iterator_t *children_iterator = NULL;
                 axis2_bool_t empty_body = AXIS2_FALSE;
             
-                soap_body = AXIOM_SOAP_ENVELOPE_GET_BODY(
+                soap_body = axiom_soap_envelope_get_body(
                     sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env), 
                     env);
-                body_node = AXIOM_SOAP_BODY_GET_BASE_NODE(soap_body, env);
+                body_node = axiom_soap_body_get_base_node(soap_body, env);
                 body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
                 children_iterator = axiom_element_get_children(body_element, env, 
                     body_node);
