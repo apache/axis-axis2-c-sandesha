@@ -486,7 +486,7 @@ static void add_op_if_null(
             return;
         }
         svc = axis2_msg_ctx_get_svc(msg_ctx, env);
-        op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env, tmp_qname);
+        op = axis2_svc_get_op_with_qname(svc, env, tmp_qname);
         if(!op)
         {
             axis2_status_t status = AXIS2_FAILURE;
@@ -499,7 +499,7 @@ static void add_op_if_null(
             conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             info = axis2_conf_get_phases_info(conf, env);
-            AXIS2_PHASES_INFO_SET_OP_PHASES(info, env, op);
+            axis2_phases_info_set_op_phases(info, env, op);
             status = AXIS2_SVC_ADD_OP(svc, env, op);
             if(AXIS2_SUCCESS == status)
             {

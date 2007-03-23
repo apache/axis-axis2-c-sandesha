@@ -1173,7 +1173,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
              sqlite3_free(*error_msg);
         counter++;
         /*AXIS2_SLEEP(SANDESHA2_BUSY_WAIT_TIME);*/
-        usleep(100000);
+        AXIS2_USLEEP(100000);
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }
     printf("in busy handler2\n");

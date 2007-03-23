@@ -148,7 +148,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     const axis2_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
-    printf("came10\n");
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq_part = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -169,6 +168,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     axis2_char_t *anon_uri = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
+    printf("came10\n");
      
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);

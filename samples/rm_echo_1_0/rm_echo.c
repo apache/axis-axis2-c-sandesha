@@ -121,16 +121,16 @@ int main(int argc, char** argv)
     if(target_epr)
     {
         property = axis2_property_create_with_args(env, 0, 0, 0, target_epr);
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
+        axis2_options_set_property(options, env, AXIS2_TARGET_EPR, property);
     }
     AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
     
     /* Separate listner needs addressing, hence addressing stuff in options */
-    /*AXIS2_OPTIONS_SET_ACTION(options, env,
+    /*axis2_options_set_action(options, env,
         "http://127.0.0.1:5555/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axis2_string_create(env, "urn:wsrm:EchoString");
     AXIS2_OPTIONS_SET_SOAP_ACTION(options, env, soap_action);
-    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
+    axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
         "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+        axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     /* Set service client options */
@@ -194,7 +194,7 @@ int main(int argc, char** argv)
     wait_on_callback(env, callback2);*/
 
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
+    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
@@ -204,7 +204,7 @@ int main(int argc, char** argv)
     AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
-        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
+        /*axis2_svc_client_free(svc_client, env);*/
         svc_client = NULL;
     }
     

@@ -749,7 +749,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
 
     options = (axis2_options_t *) axis2_msg_ctx_get_options(msg_ctx, env);
-    action  = (axis2_char_t *) AXIS2_OPTIONS_GET_ACTION(options, env);
+	action  = (axis2_char_t *) axis2_options_get_action(options, env);
     sandesha2_msg_store_bean_set_action(bean, env, action);
     prop_str = sandesha2_permanent_storage_mgr_get_property_string(env, msg_ctx);
     if (prop_str)
@@ -908,7 +908,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         {
             axis2_qname_t *op_qname = axis2_qname_create_from_string(env, 
                 op_name_str);
-            op = AXIS2_SVC_GET_OP_WITH_QNAME(svc, env, op_qname);
+            op = axis2_svc_get_op_with_qname(svc, env, op_qname);
         }
         if(!op && op_mep_str && svc)
         {
@@ -1013,7 +1013,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     {
         axis2_char_t *action = sandesha2_msg_store_bean_get_action(
             msg_store_bean, env);
-        AXIS2_OPTIONS_SET_ACTION(options, env, action);
+		axis2_options_set_action(options, env, action);
     }
     persistent_prop_str = 
         sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, 
@@ -1049,10 +1049,11 @@ sandesha2_permanent_storage_mgr_get_property_string(
 {
     axis2_char_t *prop_str = "";
     axis2_property_t *property = NULL;
+    axis2_hash_index_t *index = NULL;
+	axis2_hash_t *properties = NULL;
     axis2_options_t *options = (axis2_options_t *) axis2_msg_ctx_get_options(
         msg_ctx, env);
-    axis2_hash_t *properties = AXIS2_OPTIONS_GET_PROPERTIES(options, env);
-    axis2_hash_index_t *index = NULL;
+	properties = axis2_options_get_properties(options, env);
 
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);

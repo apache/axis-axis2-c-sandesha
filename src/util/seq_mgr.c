@@ -456,7 +456,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
          * Once it is finished change to get from there
          */
         /*options = AXIS2_CTX_GET_OPTIONS(ctx, env);
-        transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(options, env);*/
+        transport_in_protocol = axis2_options_get_transport_in_protocol(options, env);*/
         transport_in_protocol = AXIS2_TRANSPORT_ENUM_HTTP;
             
         axis2_listener_manager_make_sure_started(listener_manager, env, 
@@ -529,7 +529,7 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(
      * Once it is finished change to get from there
      */
     /* options = AXIS2_CTX_GET_OPTIONS(ctx, env);
-    transport_in_protocol = AXIS2_OPTIONS_GET_TRANSPORT_IN_PROTOCOL(options, env);*/
+    transport_in_protocol = axis2_options_get_transport_in_protocol(options, env);*/
     transport_in_protocol = AXIS2_TRANSPORT_HTTP;
     property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_ACKS_TO,
                         AXIS2_FALSE);

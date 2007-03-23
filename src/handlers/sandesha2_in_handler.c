@@ -238,9 +238,8 @@ sandesha2_in_handler_invoke(
     }
     if(!within_transaction && !rolled_back)
     {
-        printf("came26\n");
         axis2_property_t *prop = NULL;
-
+		printf("came26\n");
         sandesha2_transaction_commit(transaction, env);
         prop = axis2_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
