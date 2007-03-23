@@ -99,7 +99,6 @@ sandesha2_in_handler_invoke(
     
     AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
 
-    printf("came20\n");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -136,7 +135,6 @@ sandesha2_in_handler_invoke(
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     temp_prop = NULL;
-    printf("came21\n");
     temp_prop = axis2_ctx_get_property(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
     if(temp_prop)
@@ -175,7 +173,6 @@ sandesha2_in_handler_invoke(
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
 
-    printf("came22\n");
     if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
@@ -207,7 +204,6 @@ sandesha2_in_handler_invoke(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    printf("came23\n");
     /* 
      * TODO Validate the message
      * SANDESHA2_MSG_VALIDATOR_VALIDATE(env, rm_msg_ctx, storage_mgr);
@@ -230,10 +226,8 @@ sandesha2_in_handler_invoke(
     }
     msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
         rm_msg_ctx);
-    printf("came24\n");
     if(msg_processor)
     {
-        printf("came25\n");
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
     }
     if(!within_transaction && !rolled_back)
@@ -246,7 +240,6 @@ sandesha2_in_handler_invoke(
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             prop, AXIS2_FALSE);
     }
-    printf("came27\n");
     AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_in_handler::invoke");
    
     return AXIS2_SUCCESS;

@@ -53,15 +53,6 @@ struct sandesha2_permanent_transaction_impl
 #define SANDESHA2_INTF_TO_IMPL(trans) \
     ((sandesha2_permanent_transaction_impl_t *) trans)
 
-int
-sandesha2_permanent_transaction_busy_handler(
-    sqlite3* dbconn,
-    char *sql_stmt,
-    int (*callback_func)(void *, int, char **, char **),
-    void *args,
-    char **error_msg,
-    int rc);
-
 axis2_status_t AXIS2_CALL
 sandesha2_permanent_transaction_free(
     sandesha2_transaction_t *trans,
@@ -119,18 +110,20 @@ sandesha2_permanent_transaction_create(
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_permanent_transaction_impl_t));
 
+    trans_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
     trans_impl->storage_mgr = storage_mgr;
     trans_impl->thread_id = thread_id;
     trans_impl->dbconn = NULL;
     trans_impl->enlisted_beans = axis2_array_list_create(env, 0);
-    trans_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
     trans_impl->trans.ops = &transaction_ops;
 	conf_ctx = (axis2_conf_ctx_t *) sandesha2_storage_mgr_get_ctx(
         storage_mgr, env);
     if(conf_ctx)
         conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     else
+    {
         return NULL;
+    }
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
     /*path = sandesha2_property_bean_get_db_path(prop_bean, env);*/
@@ -176,7 +169,7 @@ sandesha2_permanent_transaction_create(
     rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
         &error_msg);
     if(rc == SQLITE_BUSY)
-        rc = sandesha2_permanent_transaction_busy_handler(trans_impl->dbconn, 
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
             "BEGIN TRANSACTION", 0, 0, &error_msg, rc);
     if(rc != SQLITE_OK )
     {
@@ -260,7 +253,7 @@ sandesha2_permanent_transaction_commit(
     rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
     if(rc == SQLITE_BUSY)
     {
-        rc = sandesha2_permanent_transaction_busy_handler(trans_impl->dbconn, 
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
             "COMMIT TRANSACTION", 0, 0, &error_msg, rc);
     }
     if(rc != SQLITE_OK )
@@ -291,7 +284,7 @@ sandesha2_permanent_transaction_rollback(
     rc = sqlite3_exec(trans_impl->dbconn, "ROLLBACK TRANSACTION;", 0, 0,
         &error_msg);
     if(rc == SQLITE_BUSY)
-        rc = sandesha2_permanent_transaction_busy_handler(trans_impl->dbconn, 
+        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
             "ROLLBACK TRANSACTION", 0, 0, &error_msg, rc);
     if(rc != SQLITE_OK )
     {
@@ -384,30 +377,4 @@ sandesha2_permanent_transaction_enlist(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_permanent_transaction_enlist");
 }
-
-int
-sandesha2_permanent_transaction_busy_handler(
-    sqlite3* dbconn,
-    char *sql_stmt,
-    int (*callback_func)(void *, int, char **, char **),
-    void *args,
-    char **error_msg,
-    int rc)
-{
-    int counter = 0;
-    printf("in busy handler3\n");
-    while(rc == SQLITE_BUSY && counter < 512)
-    {
-        printf("in busy handler33\n");
-        if(*error_msg)
-             sqlite3_free(*error_msg);
-        counter++;
-        /*AXIS2_SLEEP(SANDESHA2_BUSY_WAIT_TIME);*/
-        AXIS2_USLEEP(100000);
-        rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
-    }
-    printf("in busy handler4\n");
-    return rc;
-}
-
 

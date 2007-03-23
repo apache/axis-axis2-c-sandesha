@@ -188,7 +188,7 @@ int main(int argc, char** argv)
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
    
-    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    property = axis2_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 

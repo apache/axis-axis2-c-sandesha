@@ -190,7 +190,7 @@ int main(int argc, char** argv)
         printf("\necho client two way single channel invoke FAILED!\n");
     }*/
 
-    property = axis2_property_create_with_args(env, 0, 0, 0, "4");
+    property = axis2_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
