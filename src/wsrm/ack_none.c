@@ -89,7 +89,7 @@ sandesha2_ack_none_create(const axis2_env_t *env, axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    ack_none_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    ack_none_impl->ns_val = (axis2_char_t *)axis2_strdup( env , ns_val);
     ack_none_impl->ack_none.element.ops->get_namespace_value = 
                         sandesha2_ack_none_get_namespace_value;
     ack_none_impl->ack_none.element.ops->from_om_node = 

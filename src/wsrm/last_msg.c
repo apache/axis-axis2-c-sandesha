@@ -93,7 +93,7 @@ sandesha2_last_msg_create(
         return NULL;
 	}
     
-    last_msg_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    last_msg_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     last_msg_impl->last_msg.element.ops->get_namespace_value = 
                         sandesha2_last_msg_get_namespace_value;

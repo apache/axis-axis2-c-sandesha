@@ -76,7 +76,7 @@ sandesha2_rm_elements_create(
     rm_elements->make_connection = NULL;
     rm_elements->msg_pending = NULL;
     
-    rm_elements->addr_ns_val = axis2_strdup(addr_ns_val, env);
+    rm_elements->addr_ns_val = axis2_strdup(env, addr_ns_val);
     
 	return rm_elements;
 }

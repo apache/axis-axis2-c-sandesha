@@ -145,7 +145,7 @@ sandesha2_permanent_transaction_create(
     }
     conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
     property = axis2_ctx_get_property(conf_ctx_base, env, 
-        SANDESHA2_IS_SVR_SIDE, AXIS2_FALSE);
+        SANDESHA2_IS_SVR_SIDE);
     if(!property)
     {
         db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 

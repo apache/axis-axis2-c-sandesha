@@ -99,8 +99,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     {
         axis2_allocator_switch_to_global_pool(env->allocator);
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-            AXIS2_HASH_KEY_STRING, axis2_strdup(
-                SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
+            AXIS2_HASH_KEY_STRING, axis2_strdup(env, SANDESHA2_CLEANED_ON_TERMINATE_MSG));
         axis2_allocator_switch_to_local_pool(env->allocator);
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
             seq_id, storage_mgr);
@@ -122,8 +121,8 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
         {
             axis2_allocator_switch_to_global_pool(env->allocator);
             axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-                AXIS2_HASH_KEY_STRING, axis2_strdup(
-                SANDESHA2_CLEANED_ON_TERMINATE_MSG, env));
+                AXIS2_HASH_KEY_STRING, axis2_strdup(env, 
+                SANDESHA2_CLEANED_ON_TERMINATE_MSG));
             axis2_allocator_switch_to_local_pool(env->allocator);
         }
     }
@@ -194,8 +193,8 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     {
         axis2_allocator_switch_to_global_pool(env->allocator);
         axis2_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-            AXIS2_HASH_KEY_STRING, axis2_strdup(
-                SANDESHA2_CLEANED_AFTER_INVOCATION, env));
+            AXIS2_HASH_KEY_STRING, axis2_strdup(env, 
+                SANDESHA2_CLEANED_AFTER_INVOCATION));
         axis2_allocator_switch_to_local_pool(env->allocator);
     }
 
@@ -773,16 +772,16 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     property = axis2_property_create_with_args(env, 0, 0,
         axis2_transport_out_desc_free_void_arg, transport_out);
     axis2_msg_ctx_set_property(msg_ctx1, env, 
-        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
+        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
     
     property = axis2_property_create_with_args(env, 0, 0, 0, key);
     axis2_msg_ctx_set_property(msg_ctx1, env, SANDESHA2_MESSAGE_STORE_KEY, 
-        property, AXIS2_FALSE);
+        property);
                         
     property = axis2_property_create_with_args(env, 0, 0, 0, 
         AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx1, env, SANDESHA2_SET_SEND_TO_TRUE, 
-        property, AXIS2_FALSE);
+        property);
                         
     axis2_msg_ctx_set_transport_out_desc(msg_ctx1, env, 
         sandesha2_utils_get_transport_out(env));

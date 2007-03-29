@@ -89,7 +89,7 @@ sandesha2_ack_final_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    ack_final_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    ack_final_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     ack_final_impl->ack_final.element.ops->get_namespace_value = 
                         sandesha2_ack_final_get_namespace_value;
@@ -132,8 +132,6 @@ sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
 						const axis2_env_t *env)
 {
 	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
-	
 	ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
 	return ack_final_impl->ns_val;
 }

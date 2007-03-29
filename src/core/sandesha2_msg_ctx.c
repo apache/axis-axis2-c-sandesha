@@ -386,8 +386,7 @@ sandesha2_msg_ctx_get_property(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     
-    return axis2_msg_ctx_get_property(rm_msg_ctx->msg_ctx, env, key,
-                        AXIS2_FALSE);
+    return axis2_msg_ctx_get_property(rm_msg_ctx->msg_ctx, env, key);
 }
 
 axis2_status_t AXIS2_CALL
@@ -400,8 +399,7 @@ sandesha2_msg_ctx_set_property(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FAILURE);
     
-    return axis2_msg_ctx_set_property(rm_msg_ctx->msg_ctx, env, key, val,
-                        AXIS2_FALSE);
+    return axis2_msg_ctx_set_property(rm_msg_ctx->msg_ctx, env, key, val);
 }
     
 axis2_status_t AXIS2_CALL
@@ -456,11 +454,11 @@ sandesha2_msg_ctx_set_rm_ns_val(
         AXIS2_FREE(env->allocator, rm_msg_ctx->rm_ns_val);
         rm_msg_ctx->rm_ns_val = NULL;
     }
-    rm_msg_ctx->rm_ns_val = axis2_strdup(ns_val, env);
+    rm_msg_ctx->rm_ns_val = axis2_strdup(env, ns_val);
     if(0 == axis2_strcmp(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
-        rm_msg_ctx->spec_ver = axis2_strdup(SANDESHA2_SPEC_VERSION_1_0, env);
+        rm_msg_ctx->spec_ver = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
     if(0 == axis2_strcmp(ns_val, SANDESHA2_SPEC_2006_08_NS_URI))
-        rm_msg_ctx->spec_ver = axis2_strdup(SANDESHA2_SPEC_VERSION_1_1, env);
+        rm_msg_ctx->spec_ver = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
         
     return AXIS2_SUCCESS;
 }
@@ -487,7 +485,7 @@ sandesha2_msg_ctx_set_addr_ns_val(
         AXIS2_FREE(env->allocator, rm_msg_ctx->addr_ns_val);
         rm_msg_ctx->addr_ns_val = NULL;
     }
-    rm_msg_ctx->addr_ns_val = axis2_strdup(ns_val, env);
+    rm_msg_ctx->addr_ns_val = axis2_strdup(env, ns_val);
     return AXIS2_SUCCESS;
 }
             

@@ -125,7 +125,7 @@ sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         return NULL;
 	}
     
-    seq_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    seq_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     seq_impl->seq.part.element.ops->get_namespace_value = 
                         sandesha2_seq_get_namespace_value;

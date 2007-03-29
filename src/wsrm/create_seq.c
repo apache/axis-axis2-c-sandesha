@@ -94,8 +94,8 @@ sandesha2_create_seq_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    create_seq_impl->rm_ns_val = (axis2_char_t*)axis2_strdup(rm_ns_val, env);
-    create_seq_impl->addr_ns_val = (axis2_char_t*)axis2_strdup(addr_ns_val, env);
+    create_seq_impl->rm_ns_val = (axis2_char_t*)axis2_strdup(env, rm_ns_val);
+    create_seq_impl->addr_ns_val = (axis2_char_t*)axis2_strdup(env, addr_ns_val);
     create_seq_impl->acks_to = NULL;
     create_seq_impl->expires = NULL;
     create_seq_impl->seq_offer = NULL;

@@ -123,19 +123,19 @@ int main(int argc, char** argv)
         property = axis2_property_create_with_args(env, 0, 0, 0, target_epr);
         axis2_options_set_property(options, env, AXIS2_TARGET_EPR, property);
     }
-    AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
+    axis2_options_set_use_separate_listener(options, env, AXIS2_TRUE);
     
     /* Separate listner needs addressing, hence addressing stuff in options */
     /*axis2_options_set_action(options, env,
         "http://127.0.0.1:5555/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axis2_string_create(env, "urn:wsrm:EchoString");
-    AXIS2_OPTIONS_SET_SOAP_ACTION(options, env, soap_action);
+    axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
         "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");
 
-    AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
+    axis2_options_set_reply_to(options, env, reply_to);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
             AXIS2_ERROR_GET_MESSAGE(env->error));
         return -1;
     }
-    AXIS2_OPTIONS_SET_SOAP_VERSION(options, env, AXIOM_SOAP11);
+    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
     /* RM Version 1.0 */
     property = axis2_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
@@ -169,10 +169,10 @@ int main(int argc, char** argv)
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     /* Set service client options */
-    AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);    
+    axis2_svc_client_set_options(svc_client, env, options);    
     
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);  
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+    axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
+    axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
     listener_manager = axis2_listener_manager_create(env);
     if (!listener_manager)
@@ -199,7 +199,7 @@ int main(int argc, char** argv)
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
-    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback3);
+    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback3);
     wait_on_callback(env, callback3);
     AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
     if (svc_client)
@@ -251,7 +251,7 @@ rm_echo_callback_on_complete(
         else
         {
             axis2_char_t *om_str = NULL;
-            om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+            om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
                 printf("\nReceived OM : %s\n", om_str);
             printf("\necho client invoke SUCCESSFUL!\n");

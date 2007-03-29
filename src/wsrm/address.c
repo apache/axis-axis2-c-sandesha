@@ -77,7 +77,7 @@ sandesha2_address_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    address_impl->ns_val = axis2_strdup(ns_val, env);
+    address_impl->ns_val = axis2_strdup(env, ns_val);
     address_impl->epr = epr;
     address_impl->address.element.ops = NULL;
     

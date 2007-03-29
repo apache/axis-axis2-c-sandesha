@@ -266,8 +266,7 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_storage_mgr_t));
 
-    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axis2_strdup("Sandesha2MessageMap", 
-        env);
+    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axis2_strdup(env, "Sandesha2MessageMap");
     storage_mgr_impl->conf_ctx = conf_ctx;
     axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->transactions = axis2_hash_make(env);
@@ -699,7 +698,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
     if (svc) 
     {
-        axis2_char_t *svc_name = (axis2_char_t *) AXIS2_SVC_GET_NAME(svc, env);
+        axis2_char_t *svc_name = (axis2_char_t *) axis2_svc_get_name(svc, env);
         sandesha2_msg_store_bean_set_svc(bean, env, svc_name);
     }
     if(op)
@@ -768,7 +767,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
             axis2_char_t *in_msg_store_key = NULL;
             axis2_bool_t insert = AXIS2_FALSE;
             property = axis2_msg_ctx_get_property(msg_ctx, env, 
-                SANDESHA2_IN_MESSAGE_STORAGE_KEY, AXIS2_FALSE);
+                SANDESHA2_IN_MESSAGE_STORAGE_KEY);
             if(property)
                 in_msg_store_key = (axis2_char_t *) axis2_property_get_value(
                     property, env);
@@ -915,7 +914,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axis2_hash_t *all_ops = NULL;
             axis2_hash_index_t *index = NULL;
             /* Finding an operation using the MEP */
-            all_ops = AXIS2_SVC_GET_ALL_OPS(svc, env);
+            all_ops = axis2_svc_get_all_ops(svc, env);
             for (index = axis2_hash_first(all_ops, env); index; index = 
                 axis2_hash_next(env, index))
             {
@@ -1035,8 +1034,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 axis2_hash_this(index, &k, NULL, &v);
                 key = (axis2_char_t *) k;
                 property = (axis2_property_t *) v;
-                axis2_msg_ctx_set_property(msg_ctx, env, key, property, 
-                    AXIS2_FALSE);
+                axis2_msg_ctx_set_property(msg_ctx, env, key, property);
             }
     }
     return msg_ctx;
@@ -1056,7 +1054,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
 	properties = axis2_options_get_properties(options, env);
 
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
+        SANDESHA2_QUALIFIED_FOR_SENDING);
     if(property)
     {
         axis2_char_t *value = axis2_property_get_value(property, env);
@@ -1064,7 +1062,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        AXIS2_WSA_VERSION, AXIS2_FALSE);
+        AXIS2_WSA_VERSION);
     if(property)
     {
         axis2_char_t *temp_str = NULL;

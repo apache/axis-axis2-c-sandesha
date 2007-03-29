@@ -101,8 +101,8 @@ sandesha2_ack_range_create(
         return NULL;
 	}
     
-    ack_range_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
-    ack_range_impl->prefix = (axis2_char_t *)axis2_strdup(prefix, env);
+    ack_range_impl->ns_val = (axis2_char_t *)axis2_strdup(env ,ns_val);
+    ack_range_impl->prefix = (axis2_char_t *)axis2_strdup(env, prefix);
     ack_range_impl->upper_val = 0;
     ack_range_impl->lower_val = 0;
     

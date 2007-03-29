@@ -124,8 +124,6 @@ sandesha2_report_get_completed_msgs_count(
     axis2_char_t *seq_id)
 {
     long *lng = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     lng = (long *)axis2_hash_get(report->no_of_completed_msgs_map, seq_id, 
         AXIS2_HASH_KEY_STRING);
     if(!lng)
@@ -140,7 +138,6 @@ sandesha2_report_get_incoming_seq_list(
     sandesha2_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     return report->incoming_seq_list;
 }
 
@@ -149,7 +146,6 @@ sandesha2_report_get_outgoing_seq_list(
     sandesha2_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     return report->outgoing_seq_list;
 }
 
@@ -160,7 +156,6 @@ sandesha2_report_get_seq_status_map(
     axis2_char_t *seq_id)
 {
     axis2_char_t *status = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     status = (axis2_char_t *) axis2_hash_get(report->seq_status_map, 
         seq_id, AXIS2_HASH_KEY_STRING);
@@ -199,7 +194,6 @@ sandesha2_report_add_to_no_of_completed_msgs_map(
     long no_of_msgs)
 {
     long *no_of_msgs_l = AXIS2_MALLOC(env->allocator, sizeof(long));
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     *no_of_msgs_l = no_of_msgs;
     axis2_hash_set(report->no_of_completed_msgs_map, id, 
         AXIS2_HASH_KEY_STRING, no_of_msgs_l);
@@ -213,7 +207,6 @@ sandesha2_report_add_to_seq_status_map(
     axis2_char_t *id,
     axis2_char_t status)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     axis2_hash_set(report->seq_status_map, id, 
         AXIS2_HASH_KEY_STRING, &status);
     return AXIS2_SUCCESS;
@@ -225,7 +218,6 @@ sandesha2_report_get_internal_seq_id_of_out_seq(
     const axis2_env_t *env,
     axis2_char_t *out_seq_id)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     return (axis2_char_t *) axis2_hash_get(
         report->outgoing_internal_seq_id_map, out_seq_id, 
         AXIS2_HASH_KEY_STRING);
@@ -238,7 +230,6 @@ sandesha2_report_add_to_outgoing_internal_seq_map(
     axis2_char_t *out_seq_id,
     axis2_char_t *internal_seq_id)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     axis2_hash_set(report->outgoing_internal_seq_id_map, out_seq_id, 
         AXIS2_HASH_KEY_STRING, internal_seq_id);
     return AXIS2_SUCCESS;

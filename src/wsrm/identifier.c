@@ -100,7 +100,7 @@ sandesha2_identifier_create(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    identifier_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    identifier_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     identifier_impl->identifier.element.ops->get_namespace_value = 
                         sandesha2_identifier_get_namespace_value;
@@ -202,7 +202,7 @@ sandesha2_identifier_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    identifier_impl->str_id = axis2_strdup(ident_str, env);
+    identifier_impl->str_id = axis2_strdup(env, ident_str);
     if(NULL == identifier_impl->str_id)
     {
         return NULL;
@@ -300,7 +300,7 @@ sandesha2_identifier_set_identifier(
 		identifier_impl->str_id = NULL;
 	}
 	
-	identifier_impl->str_id = (axis2_char_t *)axis2_strdup(str_id, env);
+	identifier_impl->str_id = (axis2_char_t *)axis2_strdup(env, str_id);
  	return AXIS2_SUCCESS;
 }
 

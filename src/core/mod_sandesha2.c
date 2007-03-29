@@ -90,10 +90,8 @@ mod_sandesha2_init(
     axis2_conf_add_param(conf, env, param);
 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL, 
-        AXIS2_FALSE);
-    axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL, 
-        AXIS2_FALSE);
+    axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL);
+    axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL);
     
     storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
     sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);

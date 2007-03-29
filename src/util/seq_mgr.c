@@ -175,11 +175,11 @@ sandesha2_seq_mgr_setup_new_seq(
             (sandesha2_iom_rm_element_t *) create_seq, env);
     if(0 == axis2_strcmp(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
     {
-        spec_version = axis2_strdup(SANDESHA2_SPEC_VERSION_1_0, env);
+        spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
     }
     else if(0 == axis2_strcmp(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
     {
-        spec_version = axis2_strdup(SANDESHA2_SPEC_VERSION_1_1, env);
+        spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
     }
     else
     {
@@ -350,8 +350,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(first_app_msg, env);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     
-    property = axis2_msg_ctx_get_property(first_app_msg, env, AXIS2_WSA_VERSION,
-                        AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(first_app_msg, env, AXIS2_WSA_VERSION);
     if(property)
         addr_ns_val = axis2_property_get_value(property, env);
     if(!addr_ns_val)
@@ -364,7 +363,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
         if(req_msg_ctx)
         {
             property = axis2_msg_ctx_get_property(req_msg_ctx, env, 
-                        AXIS2_WSA_VERSION, AXIS2_FALSE);
+                        AXIS2_WSA_VERSION);
             if(property)
                 addr_ns_val = axis2_property_get_value(property, env);
         }
@@ -381,7 +380,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     
     to_epr = axis2_msg_ctx_get_to(first_app_msg, env);
     property = axis2_msg_ctx_get_property(first_app_msg, env, 
-                        SANDESHA2_CLIENT_ACKS_TO, AXIS2_FALSE);
+                        SANDESHA2_CLIENT_ACKS_TO);
     if(property)
         acks_to_str = axis2_property_get_value(property, env);
     /*if(!to_epr)
@@ -531,8 +530,7 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(
     /* options = AXIS2_CTX_GET_OPTIONS(ctx, env);
     transport_in_protocol = axis2_options_get_transport_in_protocol(options, env);*/
     transport_in_protocol = AXIS2_TRANSPORT_HTTP;
-    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_ACKS_TO,
-                        AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_ACKS_TO);
     if(property)
         acks_to = axis2_property_get_value(property, env);
     

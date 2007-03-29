@@ -366,7 +366,7 @@ sandesha2_app_msg_processor_process_in_msg (
             highest_in_msg_key_str, msg_ctx);
         response_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_SEQ_KEY, AXIS2_FALSE);
+            SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
             client_seq_key = axis2_property_get_value(property, env);
         if(client_seq_key)
@@ -423,7 +423,7 @@ sandesha2_app_msg_processor_process_in_msg (
         if(msgs_str && 0 < axis2_strlen(msgs_str))
             msgs_str = axis2_strcat(env, msgs_str, ",", msg_num_str, NULL);
         else
-            msgs_str = axis2_strdup(msg_num_str, env);
+            msgs_str = axis2_strdup(env, msg_num_str);
         sandesha2_seq_property_bean_set_value(msgs_bean, env, msgs_str);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, msgs_bean);
     }
@@ -721,13 +721,13 @@ sandesha2_app_msg_processor_process_out_msg(
         
         to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_SEQ_KEY, AXIS2_FALSE);
+            SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
             seq_key = axis2_property_get_value(property, env);
         internal_seq_id = sandesha2_utils_get_internal_seq_id(env, 
             to, seq_key);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_LAST_MESSAGE, AXIS2_FALSE);
+            SANDESHA2_CLIENT_LAST_MESSAGE);
         if(property)
             last_app_msg = axis2_property_get_value(property, env);
         if(last_app_msg && 0 == axis2_strcmp(last_app_msg, AXIS2_VALUE_TRUE))
@@ -740,7 +740,7 @@ sandesha2_app_msg_processor_process_out_msg(
                 axis2_property_t *spec_ver_prop = NULL;
                 /*sandesha2_seq_property_bean_t *spec_ver_bean = NULL;*/
                 spec_ver_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-                    SANDESHA2_CLIENT_RM_SPEC_VERSION, AXIS2_FALSE);
+                    SANDESHA2_CLIENT_RM_SPEC_VERSION);
                 spec_ver = axis2_property_get_value(spec_ver_prop, env);
                 /*spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, 
                     internal_seq_id, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, spec_ver);
@@ -754,7 +754,7 @@ sandesha2_app_msg_processor_process_out_msg(
         }
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_CLIENT_MESSAGE_NUMBER, AXIS2_FALSE);
+        SANDESHA2_CLIENT_MESSAGE_NUMBER);
     if(property)
     {
         msg_num_lng = *(long*)(axis2_property_get_value(property, env));
@@ -787,7 +787,7 @@ sandesha2_app_msg_processor_process_out_msg(
      * application message. The RM handlers will simply let these go.
      */
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_CLIENT_DUMMY_MESSAGE, AXIS2_FALSE);
+        SANDESHA2_CLIENT_DUMMY_MESSAGE);
     if(property)
         dummy_msg_str = axis2_property_get_value(property, env);
     if(dummy_msg_str && 0 == axis2_strcmp(dummy_msg_str, AXIS2_VALUE_TRUE))
@@ -850,10 +850,10 @@ sandesha2_app_msg_processor_process_out_msg(
             axis2_char_t *value = NULL;
     
             value = sandesha2_seq_property_bean_get_value(incoming_to_bean, env);
-            incoming_to = axis2_strdup(value, env);
+            incoming_to = axis2_strdup(env, value);
             property = axis2_property_create_with_args(env, 0, 0, 0, incoming_to);
             axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_SEQ_PROP_TO_EPR, 
-                property, AXIS2_FALSE);
+                property);
         }
        
         req_rm_msg_ctx = sandesha2_msg_init_init_msg(env, req_msg_ctx);
@@ -877,7 +877,7 @@ sandesha2_app_msg_processor_process_out_msg(
     else
     {
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, AXIS2_FALSE);
+            SANDESHA2_CLIENT_RM_SPEC_VERSION);
         if(property)
             spec_ver = axis2_property_get_value(property, env);
     }
@@ -916,7 +916,7 @@ sandesha2_app_msg_processor_process_out_msg(
             if(axis2_msg_ctx_get_svc_ctx(msg_ctx, env))
             {
                 property = axis2_msg_ctx_get_property(msg_ctx, env, 
-                    SANDESHA2_CLIENT_ACKS_TO, AXIS2_FALSE);
+                    SANDESHA2_CLIENT_ACKS_TO);
                 if(property)
                     acks_to = axis2_property_get_value(property, env);
             }
@@ -980,8 +980,7 @@ sandesha2_app_msg_processor_process_out_msg(
         axis2_char_t *written = NULL;
         
         ctx = axis2_op_ctx_get_base(op_ctx, env);
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_ACK_WRITTEN, 
-                AXIS2_FALSE);
+        property = axis2_ctx_get_property(ctx, env, SANDESHA2_ACK_WRITTEN);
         if(property)
             written = axis2_property_get_value(property, env);
         if(!written || 0 != axis2_strcmp(written, AXIS2_VALUE_TRUE))
@@ -1179,7 +1178,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     property = axis2_property_create_with_args(env, 0, 0, 0, 
         AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(create_seq_msg, env, SANDESHA2_WITHIN_TRANSACTION, 
-        property, AXIS2_FALSE);
+        property);
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, 
         internal_seq_id, (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(
         create_seq_msg, env), NULL);
@@ -1214,23 +1213,23 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     sandesha2_sender_bean_set_send(create_seq_entry, env, AXIS2_TRUE);
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
     axis2_msg_ctx_set_property(create_seq_msg, env, 
-        SANDESHA2_QUALIFIED_FOR_SENDING, property, AXIS2_FALSE);
+        SANDESHA2_QUALIFIED_FOR_SENDING, property);
     sandesha2_sender_bean_set_msg_type(create_seq_entry, env, 
         SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_mgr_insert(retrans_mgr, env, create_seq_entry);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, create_seq_msg);
     property = axis2_property_create_with_args(env, 0, 0, 0, str_key);
     axis2_msg_ctx_set_property(create_seq_msg, env, SANDESHA2_MESSAGE_STORE_KEY,
-        property, AXIS2_FALSE);
+        property);
     orig_trans_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg, env);
     property = axis2_property_create_with_args(env, 0, 0, 
         axis2_transport_out_desc_free_void_arg, orig_trans_out);
     axis2_msg_ctx_set_property(create_seq_msg, env, 
-        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
+        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
     trans_out = sandesha2_utils_get_transport_out(env);
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(create_seq_msg, env, SANDESHA2_SET_SEND_TO_TRUE,
-        property, AXIS2_FALSE);
+        property);
     axis2_msg_ctx_set_transport_out_desc(create_seq_msg, env, trans_out);
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(create_seq_msg, 
         env));
@@ -1376,7 +1375,7 @@ sandesha2_app_msg_processor_process_response_msg(
         if(op_ctx)
         {
             property = axis2_msg_ctx_get_property(app_msg_ctx, env, 
-                SANDESHA2_CLIENT_LAST_MESSAGE, AXIS2_FALSE);
+                SANDESHA2_CLIENT_LAST_MESSAGE);
             if(property)
             {
                 axis2_char_t *value = axis2_property_get_value(property, env);
@@ -1467,7 +1466,7 @@ sandesha2_app_msg_processor_process_response_msg(
         property = axis2_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(app_msg_ctx, env, 
-           SANDESHA2_SET_SEND_TO_TRUE, property, AXIS2_FALSE);
+           SANDESHA2_SET_SEND_TO_TRUE, property);
     }
     sandesha2_sender_bean_set_internal_seq_id(app_msg_entry, env, internal_seq_id);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
@@ -1475,7 +1474,7 @@ sandesha2_app_msg_processor_process_response_msg(
     
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
     axis2_msg_ctx_set_property(app_msg_ctx, env, 
-        SANDESHA2_QUALIFIED_FOR_SENDING, property, AXIS2_FALSE);
+        SANDESHA2_QUALIFIED_FOR_SENDING, property);
     trs_sender = axis2_transport_out_desc_get_sender(
         axis2_msg_ctx_get_transport_out_desc(app_msg_ctx, env), env);
     if(trs_sender)
@@ -1484,13 +1483,13 @@ sandesha2_app_msg_processor_process_response_msg(
 
         property = axis2_property_create_with_args(env, 0, 0, 0, storage_key);
         axis2_msg_ctx_set_property(app_msg_ctx, env, 
-            SANDESHA2_MESSAGE_STORE_KEY, property, AXIS2_FALSE);
+            SANDESHA2_MESSAGE_STORE_KEY, property);
                         
         trans_out = axis2_msg_ctx_get_transport_out_desc(app_msg_ctx, env);
         property = axis2_property_create_with_args(env, 0, 0, 
             axis2_transport_out_desc_free_void_arg, trans_out);
         axis2_msg_ctx_set_property(app_msg_ctx, env, 
-            SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property, AXIS2_FALSE);
+            SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
         axis2_msg_ctx_set_transport_out_desc(app_msg_ctx, env, 
             sandesha2_utils_get_transport_out(env));
     }

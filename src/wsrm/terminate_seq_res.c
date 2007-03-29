@@ -115,7 +115,7 @@ sandesha2_terminate_seq_res_create(
     						env->allocator,
         					sizeof(sandesha2_iom_rm_element_ops_t));
     
-    terminate_seq_res_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    terminate_seq_res_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     terminate_seq_res_impl->terminate_seq_res.part.element.ops->
                         get_namespace_value = 

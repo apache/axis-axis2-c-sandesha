@@ -133,13 +133,13 @@ populate_rm_msg_ctx(
      */
     if(msg_ctx)
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
-    prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION, AXIS2_FALSE);
+    prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
         addressing_ns = (axis2_char_t *) axis2_property_get_value(prop, env);
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
-        addressing_ns = axis2_strdup(AXIS2_WSA_NAMESPACE, env);
+        addressing_ns = axis2_strdup(env, AXIS2_WSA_NAMESPACE);
     }
     if(addressing_ns)
         rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
@@ -424,7 +424,7 @@ static axis2_bool_t validate_msg(
     temp_flow = axis2_msg_ctx_get_flow(temp_msg_ctx, env);
     if(temp_flow == AXIS2_IN_FLOW)
     {
-        prop_key = axis2_strdup(seq_id, env);
+        prop_key = axis2_strdup(env, seq_id);
     }
     else
     {
@@ -500,7 +500,7 @@ static void add_op_if_null(
             conf = axis2_conf_ctx_get_conf(conf_ctx, env);
             info = axis2_conf_get_phases_info(conf, env);
             axis2_phases_info_set_op_phases(info, env, op);
-            status = AXIS2_SVC_ADD_OP(svc, env, op);
+            status = axis2_svc_add_op(svc, env, op);
             if(AXIS2_SUCCESS == status)
             {
                 status = axis2_msg_ctx_set_op(msg_ctx, env, op);

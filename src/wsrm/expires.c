@@ -92,7 +92,7 @@ sandesha2_expires_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    expires_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    expires_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     expires_impl->expires.element.ops->get_namespace_value = 
                         sandesha2_expires_get_namespace_value;
@@ -201,7 +201,7 @@ sandesha2_expires_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    expires_impl->duration = axis2_strdup(text, env); 
+    expires_impl->duration = axis2_strdup(env, text); 
     if(NULL == expires_impl->duration)
     {
         return NULL;

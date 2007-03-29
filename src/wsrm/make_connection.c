@@ -125,7 +125,7 @@ sandesha2_make_connection_create(
         return NULL;
 	}
     
-    make_conn_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    make_conn_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     make_conn_impl->make_conn.part.element.ops->get_namespace_value = 
                         sandesha2_make_connection_get_namespace_value;

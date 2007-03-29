@@ -87,7 +87,6 @@ sandesha2_seq_report_set_seq_status(
     const axis2_env_t *env,
     axis2_char_t seq_status)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     if (seq_status >= SANDESHA2_SEQ_STATUS_UNKNOWN && 
         seq_status <= SANDESHA2_MAX_SEQ_STATUS) 
     {
@@ -102,7 +101,6 @@ sandesha2_seq_report_set_seq_direction(
     const axis2_env_t *env,
     axis2_char_t seq_direction)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     if (seq_direction >= SANDESHA2_SEQ_DIRECTION_UNKNOWN && 
         seq_direction <= SANDESHA2_MAX_SEQ_DIRECTION) 
     {
@@ -116,7 +114,6 @@ sandesha2_seq_report_get_seq_status(
     sandesha2_seq_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     return report->seq_status;
 }
 
@@ -125,7 +122,6 @@ sandesha2_seq_report_get_seq_direction(
     sandesha2_seq_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     return report->seq_direction;
 }
 
@@ -134,8 +130,6 @@ sandesha2_seq_report_get_seq_id(
     sandesha2_seq_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return report->seq_id;
 }
 
@@ -151,7 +145,7 @@ sandesha2_seq_report_set_seq_id(
         AXIS2_FREE(env->allocator, report->seq_id);
         report->seq_id = NULL;
     }
-    report->seq_id = axis2_strdup(seq_id, env);
+    report->seq_id = axis2_strdup(env ,seq_id);
     if(!report->seq_id)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
@@ -165,8 +159,6 @@ sandesha2_seq_report_get_completed_msgs(
     sandesha2_seq_report_t *report,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return report->completed_msgs;
 }
 
@@ -215,7 +207,6 @@ sandesha2_seq_report_get_internal_seq_id(
     const axis2_env_t *env,
     long *msg_no)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     return report->internal_seq_id;
 }
 
@@ -232,7 +223,7 @@ sandesha2_seq_report_set_internal_seq_id(
         AXIS2_FREE(env->allocator, report->internal_seq_id);
         report->internal_seq_id = NULL;
     }
-    report->internal_seq_id = axis2_strdup(internal_seq_id, env);
+    report->internal_seq_id = axis2_strdup(env, internal_seq_id);
     if(!report->internal_seq_id)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);

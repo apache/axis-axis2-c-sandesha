@@ -78,7 +78,6 @@ sandesha2_msg_processor_create_msg_processor(
         default :
             return NULL;
     }
-    return NULL;
 }
                         
 axis2_status_t AXIS2_CALL 

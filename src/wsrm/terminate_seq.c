@@ -111,7 +111,7 @@ sandesha2_terminate_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    terminate_seq_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    terminate_seq_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     terminate_seq_impl->terminate_seq.part.element.ops->get_namespace_value = 
                         sandesha2_terminate_seq_get_namespace_value;

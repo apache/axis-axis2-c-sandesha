@@ -313,7 +313,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     }
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
+        SANDESHA2_QUALIFIED_FOR_SENDING);
     if(property)
         qualified_for_sending = axis2_property_get_value(property, env);
     if(qualified_for_sending && 0 != axis2_strcmp(

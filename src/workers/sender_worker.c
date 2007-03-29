@@ -126,7 +126,7 @@ sandesha2_sender_worker_create(
     sender_worker->conf_ctx = conf_ctx;
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
-    sender_worker->msg_id = axis2_strdup(msg_id, env);
+    sender_worker->msg_id = axis2_strdup(env, msg_id);
     sender_worker->msg_ctx = NULL;
     sender_worker->transport_out = NULL;
     sender_worker->status = AXIS2_FAILURE;
@@ -158,7 +158,7 @@ sandesha2_sender_worker_create_with_msg_ctx(
     sender_worker->conf_ctx = conf_ctx;
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
-    sender_worker->msg_id = axis2_strdup(msg_id, env);
+    sender_worker->msg_id = axis2_strdup(env, msg_id);
     sender_worker->msg_ctx = msg_ctx;
     sender_worker->transport_out = NULL;
     sender_worker->status = AXIS2_FAILURE;
@@ -308,7 +308,7 @@ sandesha2_sender_worker_worker_func(
         return NULL;
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+        SANDESHA2_WITHIN_TRANSACTION);
     if(property)
         axis2_property_set_value(property, env, AXIS2_VALUE_TRUE);
     else
@@ -316,7 +316,7 @@ sandesha2_sender_worker_worker_func(
         property = axis2_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
-            property, AXIS2_FALSE);
+            property);
     }
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
         sender_worker_bean, sender_worker->conf_ctx, storage_mgr);
@@ -337,7 +337,7 @@ sandesha2_sender_worker_worker_func(
     }
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_QUALIFIED_FOR_SENDING, AXIS2_FALSE);
+        SANDESHA2_QUALIFIED_FOR_SENDING);
     if(property)
         qualified_for_sending = axis2_property_get_value(property, env);
     if(qualified_for_sending && 0 != axis2_strcmp(
@@ -424,7 +424,7 @@ sandesha2_sender_worker_worker_func(
     {
         sandesha2_transaction_commit(transaction, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+            SANDESHA2_WITHIN_TRANSACTION);
         if(property)
             axis2_property_set_value(property, env, AXIS2_VALUE_FALSE);
         else
@@ -432,7 +432,7 @@ sandesha2_sender_worker_worker_func(
             property = axis2_property_create_with_args(env, 0, 0, 0,
                 AXIS2_VALUE_FALSE);
             axis2_msg_ctx_set_property(msg_ctx, env, 
-                SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
+                SANDESHA2_WITHIN_TRANSACTION, property);
         }
         /* Consider building soap envelope */
         AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
@@ -445,7 +445,7 @@ sandesha2_sender_worker_worker_func(
     }
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE); 
+        SANDESHA2_WITHIN_TRANSACTION); 
     if(property)
         axis2_property_set_value(property, env, AXIS2_VALUE_TRUE);
     else
@@ -453,7 +453,7 @@ sandesha2_sender_worker_worker_func(
         property = axis2_property_create_with_args(env, 0, 0, 0,
             AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(msg_ctx, env, 
-            SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
+            SANDESHA2_WITHIN_TRANSACTION, property);
     }
     msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
         sender_worker_bean, env);
@@ -512,7 +512,7 @@ sandesha2_sender_worker_worker_func(
                 storage_mgr);
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+        SANDESHA2_WITHIN_TRANSACTION);
     if(property)
         axis2_property_set_value(property, env, AXIS2_VALUE_FALSE);
     else
@@ -520,7 +520,7 @@ sandesha2_sender_worker_worker_func(
         property = axis2_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(msg_ctx, env, 
-                    SANDESHA2_WITHIN_TRANSACTION, property, AXIS2_FALSE);
+                    SANDESHA2_WITHIN_TRANSACTION, property);
     }
     /* TODO make transaction handling effective */
     if(transaction)
@@ -578,8 +578,7 @@ sandesha2_sender_worker_check_for_sync_res(
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN,
-        AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(!property)
         return AXIS2_SUCCESS;
         
@@ -591,13 +590,12 @@ sandesha2_sender_worker_check_for_sync_res(
      * Message Receiver (may be callback MR).
      */
     axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN, 
-        AXIS2_FALSE);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(property)
     {
         axis2_property_t *temp_prop = axis2_property_clone(property, env);
         axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
-            temp_prop, AXIS2_FALSE);
+            temp_prop);
     }
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
         msg_ctx, env));
@@ -609,19 +607,17 @@ sandesha2_sender_worker_check_for_sync_res(
         axis2_ctx_t *ctx = NULL;
         
         ctx = axis2_op_ctx_get_base(req_op_ctx, env);
-        if(axis2_ctx_get_property(ctx, env, MTOM_RECIVED_CONTENT_TYPE, 
-            AXIS2_FALSE))
+        if(axis2_ctx_get_property(ctx, env, MTOM_RECIVED_CONTENT_TYPE))
         {
             axis2_msg_ctx_set_property(res_msg_ctx, env, 
                 MTOM_RECIVED_CONTENT_TYPE, axis2_ctx_get_property(ctx, env, 
-                MTOM_RECIVED_CONTENT_TYPE, AXIS2_FALSE), AXIS2_FALSE);
+                MTOM_RECIVED_CONTENT_TYPE));
         }
-        if(axis2_ctx_get_property(ctx, env, AXIS2_HTTP_CHAR_SET_ENCODING, 
-            AXIS2_FALSE))
+        if(axis2_ctx_get_property(ctx, env, AXIS2_HTTP_CHAR_SET_ENCODING))
         {
             axis2_msg_ctx_set_property(res_msg_ctx, env, 
                 AXIS2_HTTP_CHAR_SET_ENCODING, axis2_ctx_get_property(ctx, env, 
-                AXIS2_HTTP_CHAR_SET_ENCODING, AXIS2_FALSE), AXIS2_FALSE);
+                AXIS2_HTTP_CHAR_SET_ENCODING));
         }
     }
     axis2_msg_ctx_set_doing_rest(res_msg_ctx, env, axis2_msg_ctx_get_doing_rest(
@@ -636,12 +632,12 @@ sandesha2_sender_worker_check_for_sync_res(
             soap_ns_uri);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+        SANDESHA2_WITHIN_TRANSACTION);
     if(property)
         new_property = axis2_property_clone(property, env);
     if(new_property)
         axis2_msg_ctx_set_property(res_msg_ctx, env, 
-            SANDESHA2_WITHIN_TRANSACTION, new_property, AXIS2_FALSE);
+            SANDESHA2_WITHIN_TRANSACTION, new_property);
     if(res_envelope)
     {
         axis2_engine_t *engine = NULL;
@@ -658,7 +654,7 @@ sandesha2_sender_worker_check_for_sync_res(
     /* To avoid a second passing through incoming handlers at mep_client */
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
-        property, AXIS2_FALSE);
+        property);
     return AXIS2_SUCCESS;
 }
 

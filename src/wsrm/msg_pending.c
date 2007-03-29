@@ -91,7 +91,7 @@ sandesha2_msg_pending_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    msg_pending_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    msg_pending_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     msg_pending_impl->pending = AXIS2_TRUE;
     msg_pending_impl->msg_pending.part.ops = NULL;
     msg_pending_impl->msg_pending.part.element.ops = NULL;

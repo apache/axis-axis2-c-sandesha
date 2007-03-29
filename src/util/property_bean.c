@@ -214,7 +214,7 @@ sandesha2_property_bean_set_in_mem_storage_mgr(
     const axis2_env_t *env, axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->in_mem_storage_mgr = axis2_strdup(manager, env);
+    bean->in_mem_storage_mgr = axis2_strdup(env, manager);
     return AXIS2_SUCCESS;
 }
             
@@ -232,7 +232,7 @@ sandesha2_property_bean_set_permanent_storage_mgr(
     const axis2_env_t *env, axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->permanent_storage_mgr = axis2_strdup(manager, env);
+    bean->permanent_storage_mgr = axis2_strdup(env, manager);
     return AXIS2_SUCCESS;
 }
  
@@ -251,7 +251,7 @@ sandesha2_property_bean_set_storage_mgr(
     axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->storage_mgr = axis2_strdup(manager, env);
+    bean->storage_mgr = axis2_strdup(env, manager);
     return AXIS2_SUCCESS;
 }
             
@@ -335,7 +335,7 @@ sandesha2_property_bean_set_db_path(
     const axis2_env_t *env,
     axis2_char_t *db_path)
 {
-    bean->db_path = axis2_strdup(db_path, env);
+    bean->db_path = axis2_strdup(env, db_path);
     return AXIS2_SUCCESS;
 }
 

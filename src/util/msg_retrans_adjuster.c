@@ -185,12 +185,12 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+        SANDESHA2_WITHIN_TRANSACTION);
     if(property)
         new_property = axis2_property_clone(property, env);
     if(new_property)
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-            new_property, AXIS2_FALSE);
+            new_property);
     /* we have to callback listener here */
     sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
         AXIS2_FALSE, storage_mgr);

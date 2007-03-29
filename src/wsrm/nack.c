@@ -111,7 +111,7 @@ sandesha2_nack_create(const axis2_env_t *env,  axis2_char_t *ns_val)
         return NULL;
 	}
     
-    nack_impl->ns_val = (axis2_char_t *)axis2_strdup(ns_val, env);
+    nack_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
     
     nack_impl->nack.element.ops->get_namespace_value = 
                         sandesha2_nack_get_namespace_value;

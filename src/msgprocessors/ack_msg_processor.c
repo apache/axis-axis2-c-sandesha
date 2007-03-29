@@ -230,8 +230,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
             storage_mgr);
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property,
-         AXIS2_FALSE);
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property);
                         
     input_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_send(input_bean, env, AXIS2_TRUE);

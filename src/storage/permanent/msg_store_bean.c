@@ -129,7 +129,7 @@ sandesha2_msg_store_bean_set_msg_id(
     const axis2_env_t *env,
     axis2_char_t * msg_id) 
 {
-    msg_store_bean->msg_id = axis2_strdup(msg_id, env);
+    msg_store_bean->msg_id = axis2_strdup(env, msg_id);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -146,7 +146,7 @@ sandesha2_msg_store_bean_set_stored_key(
     const axis2_env_t *env,
     axis2_char_t * key) 
 {
-    msg_store_bean->stored_key = axis2_strdup(key, env);
+    msg_store_bean->stored_key = axis2_strdup(env, key);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -163,7 +163,7 @@ sandesha2_msg_store_bean_set_soap_envelope_str(
     const axis2_env_t *env,
     axis2_char_t * soap_env_str) 
 {
-    msg_store_bean->soap_env_str = axis2_strdup(soap_env_str, env);
+    msg_store_bean->soap_env_str = axis2_strdup(env, soap_env_str);
 }
 
 int AXIS2_CALL 
@@ -214,7 +214,7 @@ sandesha2_msg_store_bean_set_op(
     const axis2_env_t *env,
     axis2_char_t * op) 
 {
-    msg_store_bean->op = axis2_strdup(op, env);
+    msg_store_bean->op = axis2_strdup(env, op);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -231,7 +231,7 @@ sandesha2_msg_store_bean_set_svc(
     const axis2_env_t *env,
     axis2_char_t * svc) 
 {
-    msg_store_bean->svc = axis2_strdup(svc, env);
+    msg_store_bean->svc = axis2_strdup(env, svc);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -248,7 +248,7 @@ sandesha2_msg_store_bean_set_svc_grp(
     const axis2_env_t *env,
     axis2_char_t * svc_grp) 
 {
-    msg_store_bean->svc_grp = axis2_strdup(svc_grp, env);
+    msg_store_bean->svc_grp = axis2_strdup(env, svc_grp);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -265,7 +265,7 @@ sandesha2_msg_store_bean_set_op_mep(
     const axis2_env_t *env,
     axis2_char_t * opAdd) 
 {
-    msg_store_bean->op_mep = axis2_strdup(opAdd, env);
+    msg_store_bean->op_mep = axis2_strdup(env, opAdd);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -282,7 +282,7 @@ sandesha2_msg_store_bean_set_to_url(
     const axis2_env_t *env,
     axis2_char_t * to_url) 
 {
-    msg_store_bean->to_url = axis2_strdup(to_url, env);
+    msg_store_bean->to_url = axis2_strdup(env, to_url);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -299,7 +299,7 @@ sandesha2_msg_store_bean_set_reply_to(
     const axis2_env_t *env,
     axis2_char_t * reply_to) 
 {
-    msg_store_bean->reply_to = axis2_strdup(reply_to, env);
+    msg_store_bean->reply_to = axis2_strdup(env, reply_to);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -316,7 +316,7 @@ sandesha2_msg_store_bean_set_transport_to(
     const axis2_env_t *env,
     axis2_char_t * transport_to) 
 {
-    msg_store_bean->transport_to = axis2_strdup(transport_to, env);
+    msg_store_bean->transport_to = axis2_strdup(env, transport_to);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -333,7 +333,7 @@ sandesha2_msg_store_bean_set_execution_chain_str(
     const axis2_env_t *env,
     axis2_char_t * execution_chain_str) 
 {
-    msg_store_bean->execution_chain_str = axis2_strdup(execution_chain_str,        env);
+    msg_store_bean->execution_chain_str = axis2_strdup(env, execution_chain_str);
 }
 
 int AXIS2_CALL 
@@ -367,7 +367,7 @@ sandesha2_msg_store_bean_set_msg_recv_str(
     const axis2_env_t *env,
     axis2_char_t * msg_recv_str) 
 {
-    msg_store_bean->msg_recv_str = axis2_strdup(msg_recv_str, env);
+    msg_store_bean->msg_recv_str = axis2_strdup(env, msg_recv_str);
 }
 
 axis2_bool_t AXIS2_CALL 
@@ -401,7 +401,7 @@ sandesha2_msg_store_bean_set_in_msg_store_key(
     const axis2_env_t *env,
     axis2_char_t * request_msg_key) 
 {
-    msg_store_bean->in_msg_store_key = axis2_strdup(request_msg_key, env);
+    msg_store_bean->in_msg_store_key = axis2_strdup(env, request_msg_key);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -418,8 +418,8 @@ sandesha2_msg_store_bean_set_persistent_property_str(
     const axis2_env_t *env,
     axis2_char_t * persistent_property_str) 
 {
-    msg_store_bean->persistent_property_str = axis2_strdup(
-        persistent_property_str, env);
+    msg_store_bean->persistent_property_str = axis2_strdup(env,
+        persistent_property_str);
 }
 
 axis2_char_t *AXIS2_CALL 
@@ -436,6 +436,6 @@ sandesha2_msg_store_bean_set_action(
     const axis2_env_t *env,
     axis2_char_t * action) 
 {
-    msg_store_bean->action = axis2_strdup(action, env);
+    msg_store_bean->action = axis2_strdup(env, action);
 }
 

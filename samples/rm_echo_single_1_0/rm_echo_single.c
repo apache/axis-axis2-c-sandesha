@@ -116,14 +116,14 @@ int main(int argc, char** argv)
 
     /* Setup options */
     options = axis2_options_create(env);
-    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+    axis2_options_set_to(options, env, endpoint_ref);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
     /*AXIS2_OPTIONS_SET_ACTION(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axis2_string_create(env, "urn:wsrm:EchoString");
-    AXIS2_OPTIONS_SET_SOAP_ACTION(options, env, soap_action);
-    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
+    axis2_options_set_soap_action(options, env, soap_action);
+    axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     /*AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);*/
 
@@ -151,10 +151,10 @@ int main(int argc, char** argv)
     }
 
     /* Set service client options */
-    AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);    
+    axis2_svc_client_set_options(svc_client, env, options);    
     
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);  
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+    axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
+    axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
     listener_manager = axis2_listener_manager_create(env);
     if (!listener_manager)
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
     {
         axis2_property_set_value(property, env, axis2_strdup(offered_seq_id, 
             env));
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+        axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
     /* RM Version 1.1 */
@@ -176,31 +176,31 @@ int main(int argc, char** argv)
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+        axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     property = axis2_property_create_with_args(env, 3, 0, 0, "sequence1");
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
      
     property = axis2_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
-    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    result = axis2_svc_client_send_receive(svc_client, env, payload);
     /*svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
     {
         axis2_char_t *om_str = NULL;
-        om_str = AXIOM_NODE_TO_STRING(result, env);
+        om_str = axiom_node_to_string(result, env);
         if (om_str)
             printf("\nReceived OM : %s\n", om_str);
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
@@ -249,11 +249,11 @@ int main(int argc, char** argv)
     property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
-    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
     {
         axis2_char_t *om_str = NULL;
-        om_str = AXIOM_NODE_TO_STRING(result, env);
+        om_str = axiom_node_to_string(result, env);
         if (om_str)
             printf("\nReceived OM : %s\n", om_str);
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
@@ -315,7 +315,7 @@ rm_echo_callback_on_complete(
         else
         {
             axis2_char_t *om_str = NULL;
-            om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+            om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
                 printf("\nReceived OM : %s\n", om_str);
             printf("\necho client invoke SUCCESSFUL!\n");

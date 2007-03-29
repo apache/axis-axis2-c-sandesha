@@ -259,8 +259,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     }
     else
     {
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-            AXIS2_FALSE);
+        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
         if(property)
             within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
@@ -430,7 +429,7 @@ sandesha2_client_get_report(
     else
     {
         property = (axis2_property_t *) axis2_ctx_get_property(ctx, env, 
-            SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+            SANDESHA2_WITHIN_TRANSACTION);
         if(property)
             within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
@@ -686,7 +685,7 @@ sandesha2_client_terminate_seq_with_svc_client(
             rm_namespc_value, NULL);
     terminate_body_element = axiom_element_get_first_child_with_qname(element, 
         env, qname, node, &terminate_body_node);
-    old_action = axis2_strdup(axis2_options_get_action(options, env), env);
+    old_action = axis2_strdup(env, axis2_options_get_action(options, env));
     action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
             rm_spec_version);
     if(action)
@@ -1103,7 +1102,7 @@ sandesha2_client_send_ack_request_with_svc_client(
         rm_spec_version = axis2_property_get_value(property, env);
     if(!rm_spec_version)
     {
-        rm_spec_version = axis2_strdup(SANDESHA2_SPEC_VERSION_1_0, env); 
+        rm_spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_0); 
     }
     if(0  == axis2_strcmp(rm_spec_version, SANDESHA2_SPEC_VERSION_1_0))
     {
@@ -1591,8 +1590,7 @@ sandesha2_client_get_incoming_seq_report(
     }
     else
     {
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-            AXIS2_FALSE);
+        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
         if(property)
             within_transaction_str = (axis2_char_t *) axis2_property_get_value(
                 property, env);
@@ -1978,7 +1976,7 @@ sandesha2_client_get_response_envelope(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     property = (axis2_property_t *) axis2_ctx_get_property(ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION, AXIS2_FALSE);
+        SANDESHA2_WITHIN_TRANSACTION);
     if(property)
         within_transaction_str = (axis2_char_t *) axis2_property_get_value(
             property, env);

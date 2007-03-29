@@ -193,7 +193,7 @@ sandesha2_inmemory_bean_mgr_create(
         sandesha2_inmemory_bean_mgr_free(&(bean_mgr_impl->bean_mgr), env);
         return NULL;
     }
-    property = axis2_ctx_get_property(ctx, env, key, AXIS2_FALSE);
+    property = axis2_ctx_get_property(ctx, env, key);
     if(property)
     {
         bean_mgr_impl->table = (axis2_hash_t *) axis2_property_get_value(
@@ -212,7 +212,7 @@ sandesha2_inmemory_bean_mgr_create(
         axis2_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
         axis2_property_set_value(property, env, bean_mgr_impl->table);
         axis2_property_set_free_func(property, env, axis2_hash_free_void_arg);
-        axis2_ctx_set_property(ctx, env, key, property, AXIS2_FALSE);
+        axis2_ctx_set_property(ctx, env, key, property);
     }
     bean_mgr_impl->bean_mgr.ops = bean_mgr_ops;
     return &(bean_mgr_impl->bean_mgr);
