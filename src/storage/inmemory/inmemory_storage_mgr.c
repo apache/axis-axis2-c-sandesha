@@ -31,12 +31,12 @@
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_rm_bean.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_uuid_gen.h>
 #include <axis2_conf_ctx.h>
 
 /** 
@@ -61,109 +61,109 @@ typedef struct sandesha2_inmemory_storage_mgr
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_free_void_arg(
     void *storage_mgr,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_inmemory_storage_mgr_free(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *envv);
+    const axutil_env_t *envv);
 
 struct sandesha2_transaction *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_inmemory_storage_mgr_enlist_bean(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *rm_bean);
 
 sandesha2_create_seq_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_create_seq_mgr(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 sandesha2_next_msg_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_next_msg_mgr(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 sandesha2_sender_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_retrans_mgr(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 sandesha2_seq_property_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_seq_property_mgr(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 sandesha2_invoker_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_storage_map_mgr(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_set_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
 
 axis2_conf_ctx_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_init(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
 	
 axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_conf_ctx_t *conf_ctx);
 		
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_store_msg_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx);
 			
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_update_msg_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx);
 
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key);
 
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_init_storage(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_module_desc_t *module_desc);
 
 axiom_soap_envelope_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_retrieve_soap_envelope(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key);
 
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_store_soap_envelope(
     sandesha2_storage_mgr_t *storage,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_soap_envelope_t *soap_env,
     axis2_char_t *key);
 
@@ -192,7 +192,7 @@ static const sandesha2_storage_mgr_ops_t storage_mgr_ops =
 
 AXIS2_EXTERN sandesha2_storage_mgr_t * AXIS2_CALL
 sandesha2_inmemory_storage_mgr_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
@@ -225,7 +225,7 @@ sandesha2_inmemory_storage_mgr_create(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_free_void_arg(
     void *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     storage_mgr = (sandesha2_inmemory_storage_mgr_t *) storage_mgr;
     return sandesha2_inmemory_storage_mgr_free(storage_mgr, env);
@@ -234,7 +234,7 @@ sandesha2_inmemory_storage_mgr_free_void_arg(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_free(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -282,7 +282,7 @@ sandesha2_inmemory_storage_mgr_free(
 sandesha2_transaction_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_transaction(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sandesha2_inmemory_transaction_create(env, storage_mgr);
 }
@@ -290,7 +290,7 @@ sandesha2_inmemory_storage_mgr_get_transaction(
 void AXIS2_CALL
 sandesha2_inmemory_storage_mgr_enlist_bean(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
     sandesha2_transaction_t *t = sandesha2_inmemory_storage_mgr_get_transaction(
@@ -301,7 +301,7 @@ sandesha2_inmemory_storage_mgr_enlist_bean(
 sandesha2_create_seq_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_create_seq_mgr(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -311,7 +311,7 @@ sandesha2_inmemory_storage_mgr_get_create_seq_mgr(
 sandesha2_next_msg_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_next_msg_mgr(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -321,7 +321,7 @@ sandesha2_inmemory_storage_mgr_get_next_msg_mgr(
 sandesha2_sender_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_retrans_mgr(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -331,7 +331,7 @@ sandesha2_inmemory_storage_mgr_get_retrans_mgr(
 sandesha2_seq_property_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_seq_property_mgr(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -342,7 +342,7 @@ sandesha2_inmemory_storage_mgr_get_seq_property_mgr(
 sandesha2_invoker_mgr_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_storage_map_mgr(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -352,7 +352,7 @@ sandesha2_inmemory_storage_mgr_get_storage_map_mgr(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_set_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
@@ -365,7 +365,7 @@ sandesha2_inmemory_storage_mgr_set_ctx(
 axis2_conf_ctx_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_get_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -375,7 +375,7 @@ sandesha2_inmemory_storage_mgr_get_ctx(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_init(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -388,12 +388,12 @@ sandesha2_inmemory_storage_mgr_init(
 axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_conf_ctx_t *conf_ctx)
 {
-    axis2_hash_t *storage_map = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *storage_map = NULL;
+    axutil_property_t *property = NULL;
     axis2_ctx_t *ctx = NULL;
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
@@ -401,22 +401,22 @@ sandesha2_inmemory_storage_mgr_retrieve_msg_ctx(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     property = axis2_ctx_get_property(ctx, env, 
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY);
-    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
+    storage_map = (axutil_hash_t *) axutil_property_get_value(property, env);
     if(!storage_map)
         return NULL;
-    return (axis2_msg_ctx_t *) axis2_hash_get(storage_map, key, 
+    return (axis2_msg_ctx_t *) axutil_hash_get(storage_map, key, 
         AXIS2_HASH_KEY_STRING);
 }
 		
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_store_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_hash_t *storage_map = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *storage_map = NULL;
+    axutil_property_t *property = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     sandesha2_inmemory_storage_mgr_t *storage_mgr_impl = NULL;
@@ -428,15 +428,15 @@ sandesha2_inmemory_storage_mgr_store_msg_ctx(
             storage_mgr_impl->SANDESHA2_MSG_MAP_KEY);
     if(!property)
     {
-        property = axis2_property_create(env);
+        property = axutil_property_create(env);
     }
-    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
+    storage_map = (axutil_hash_t *) axutil_property_get_value(property, env);
     if(!storage_map)
     {
-        storage_map = axis2_hash_make(env);
-        axis2_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        axis2_property_set_value(property, env, storage_map);
-        axis2_property_set_free_func(property, env, axis2_hash_free_void_arg);
+        storage_map = axutil_hash_make(env);
+        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+        axutil_property_set_value(property, env, storage_map);
+        axutil_property_set_free_func(property, env, axutil_hash_free_void_arg);
         axis2_ctx_set_property(ctx, env, storage_mgr_impl->SANDESHA2_MSG_MAP_KEY, 
                 property);
     }
@@ -445,19 +445,19 @@ sandesha2_inmemory_storage_mgr_store_msg_ctx(
         key = axis2_uuid_gen(env);
     }
     axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_TRUE);
-    axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, msg_ctx);
+    axutil_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, msg_ctx);
     return AXIS2_SUCCESS;
 }
 			
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_update_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_hash_t *storage_map = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *storage_map = NULL;
+    axutil_property_t *property = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     void *old_entry = NULL;
@@ -473,14 +473,14 @@ sandesha2_inmemory_storage_mgr_update_msg_ctx(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
+    storage_map = (axutil_hash_t *) axutil_property_get_value(property, env);
     if(!storage_map)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    old_entry = axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+    old_entry = axutil_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
     if(!old_entry)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_ENTRY_IS_NOT_PRESENT_FOR_UPDATING, 
@@ -493,11 +493,11 @@ sandesha2_inmemory_storage_mgr_update_msg_ctx(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key)
 {
-    axis2_hash_t *storage_map = NULL;
-    axis2_property_t *property = NULL;
+    axutil_hash_t *storage_map = NULL;
+    axutil_property_t *property = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     void *entry = NULL;
@@ -513,17 +513,17 @@ sandesha2_inmemory_storage_mgr_remove_msg_ctx(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    storage_map = (axis2_hash_t *) axis2_property_get_value(property, env);
+    storage_map = (axutil_hash_t *) axutil_property_get_value(property, env);
     if(!storage_map)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_STORAGE_MAP_NOT_PRESENT, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    entry = axis2_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
+    entry = axutil_hash_get(storage_map, key, AXIS2_HASH_KEY_STRING);
     if(entry)
     {
-        axis2_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, NULL);
+        axutil_hash_set(storage_map, key, AXIS2_HASH_KEY_STRING, NULL);
     }
     return AXIS2_SUCCESS;
 }
@@ -531,7 +531,7 @@ sandesha2_inmemory_storage_mgr_remove_msg_ctx(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_init_storage(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_module_desc_t *module_desc)
 {
     return AXIS2_SUCCESS;
@@ -540,7 +540,7 @@ sandesha2_inmemory_storage_mgr_init_storage(
 axiom_soap_envelope_t *AXIS2_CALL
 sandesha2_inmemory_storage_mgr_retrieve_soap_envelope(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key)
 {
     /* TODO No real value */
@@ -550,7 +550,7 @@ sandesha2_inmemory_storage_mgr_retrieve_soap_envelope(
 axis2_status_t AXIS2_CALL
 sandesha2_inmemory_storage_mgr_store_soap_envelope(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_soap_envelope_t *soap_env,
     axis2_char_t *key)
 {

@@ -43,25 +43,25 @@ struct sandesha2_terminate_seq_res_msg_processor_impl
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
     
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
     
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-	const axis2_env_t *env);								
+	const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_terminate_seq_res_msg_processor_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_terminate_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -100,7 +100,7 @@ sandesha2_terminate_seq_res_msg_processor_create(
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_terminate_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -117,7 +117,7 @@ sandesha2_terminate_seq_res_msg_processor_free (
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -165,7 +165,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_res_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     

@@ -17,8 +17,8 @@
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_transaction.h>
 #include <string.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 /* rm_bean struct */
 typedef struct sandesha2_rm_bean_impl
@@ -41,7 +41,7 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
 };
 
 AXIS2_EXTERN sandesha2_rm_bean_t* AXIS2_CALL
-sandesha2_rm_bean_create(const axis2_env_t *env)
+sandesha2_rm_bean_create(const axutil_env_t *env)
 {
 	sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -62,14 +62,14 @@ sandesha2_rm_bean_create(const axis2_env_t *env)
 void AXIS2_CALL
 sandesha2_rm_bean_free (
     sandesha2_rm_bean_t *rm_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
 }
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_rm_bean_get_base( 
     sandesha2_rm_bean_t *rm_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return rm_bean->ops.get_base(rm_bean, env);
 }
@@ -77,7 +77,7 @@ sandesha2_rm_bean_get_base(
 axis2_char_t *AXIS2_CALL
 sandesha2_rm_bean_get_key(
     sandesha2_rm_bean_t *rm_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return rm_bean->ops.get_key(rm_bean, env);
 }
@@ -85,7 +85,7 @@ sandesha2_rm_bean_get_key(
 void AXIS2_CALL
 sandesha2_rm_bean_set_id( 
     sandesha2_rm_bean_t *rm_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     long id)
 {
     sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
@@ -96,7 +96,7 @@ sandesha2_rm_bean_set_id(
 long AXIS2_CALL
 sandesha2_rm_bean_get_id( 
     sandesha2_rm_bean_t *rm_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
     rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);
@@ -106,7 +106,7 @@ sandesha2_rm_bean_get_id(
 void AXIS2_CALL
 sandesha2_rm_bean_set_transaction( 
     sandesha2_rm_bean_t *rm_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     sandesha2_transaction_t *transaction)
 {
     sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
@@ -117,7 +117,7 @@ sandesha2_rm_bean_set_transaction(
 sandesha2_transaction_t *AXIS2_CALL
 sandesha2_rm_bean_get_transaction( 
     sandesha2_rm_bean_t *rm_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
     rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);

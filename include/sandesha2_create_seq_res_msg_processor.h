@@ -23,8 +23,8 @@
   */
 
 #include <sandesha2_msg_processor.h>
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 
 
 #ifdef __cplusplus
@@ -39,7 +39,7 @@ extern "C"
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_create_seq_res_msg_processor_create(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

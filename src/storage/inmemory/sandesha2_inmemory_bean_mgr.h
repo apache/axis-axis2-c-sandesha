@@ -22,12 +22,12 @@
  * @brief Sandesha In Memory Bean Manager Interface
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
-#include <axis2_array_list.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
+#include <axutil_array_list.h>
 #include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
@@ -45,50 +45,50 @@ AXIS2_DECLARE_DATA struct sandesha2_inmemory_bean_mgr_ops
     void (AXIS2_CALL *
             free) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
 
     axis2_bool_t (AXIS2_CALL *
             insert) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 axis2_char_t *key,
                 sandesha2_rm_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
             remove) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 axis2_char_t *key);
 
     sandesha2_rm_bean_t *(AXIS2_CALL *
             retrieve) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 axis2_char_t *key);
 
     axis2_bool_t (AXIS2_CALL *
             update) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 axis2_char_t *key,
                 sandesha2_rm_bean_t *bean);
 
-    axis2_array_list_t *(AXIS2_CALL *
+    axutil_array_list_t *(AXIS2_CALL *
             find) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 sandesha2_rm_bean_t *bean);
 
     sandesha2_rm_bean_t *(AXIS2_CALL *
             find_unique) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 sandesha2_rm_bean_t *bean);
     
     axis2_bool_t (AXIS2_CALL *
             match) (
                 sandesha2_inmemory_bean_mgr_t *bean_mgr,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 sandesha2_rm_bean_t *bean,
                 sandesha2_rm_bean_t *candidate);
 
@@ -101,7 +101,7 @@ AXIS2_DECLARE_DATA struct sandesha2_inmemory_bean_mgr
 
 AXIS2_EXTERN sandesha2_inmemory_bean_mgr_t * AXIS2_CALL
 sandesha2_inmemory_bean_mgr_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct sandesha2_storage_mgr *storage_mgr,
     struct axis2_ctx *ctx,
     axis2_char_t *key);
@@ -109,50 +109,50 @@ sandesha2_inmemory_bean_mgr_create(
 void AXIS2_CALL
 sandesha2_inmemory_bean_mgr_free(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *envv);
+    const axutil_env_t *envv);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_bean_mgr_insert(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     sandesha2_rm_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_bean_mgr_remove(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key);
 
 sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_retrieve(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_bean_mgr_update(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key,
     sandesha2_rm_bean_t *bean);
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_find(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean);
 
 sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_inmemory_bean_mgr_find_unique(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_inmemory_bean_mgr_match(
     sandesha2_inmemory_bean_mgr_t *bean_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate);
 

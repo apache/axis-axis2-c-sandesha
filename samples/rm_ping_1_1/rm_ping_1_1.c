@@ -28,7 +28,7 @@
 
 axiom_node_t *
 build_om_programatically(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *text,
     const axis2_char_t *seq);
 
@@ -38,7 +38,7 @@ usage(
 
 int main(int argc, char** argv)
 {
-    const axis2_env_t *env = NULL;
+    const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     const axis2_char_t *to = NULL;
     const axis2_char_t *seq_key = NULL;
@@ -49,12 +49,12 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     int c;
    
     /* Set up the environment */
-    /*env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
-    env = axis2_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
+    /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
+    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
     /*address = "http://127.0.0.1:8888/axis2/services/RMSampleService";*/
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
         AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
     if(target_epr)
     {
-        property = axis2_property_create_with_args(env, 0, 0, 0, (void*)target_epr);
+        property = axutil_property_create_with_args(env, 0, 0, 0, (void*)target_epr);
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
     }
     /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:Ping");*/
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
     /* Build the SOAP request message payload using OM API.*/
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
     /* RM Version 1.1 */
-    property = axis2_property_create_with_args(env, 0, 0, 0, 
+    property = axutil_property_create_with_args(env, 0, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
     }
     if(seq_key)
     {
-        property = axis2_property_create_with_args(env, 3, 0, 0, (void*)seq_key);
+        property = axutil_property_create_with_args(env, 3, 0, 0, (void*)seq_key);
         if(property)
         {
             AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
@@ -188,7 +188,7 @@ int main(int argc, char** argv)
 /* build SOAP request message content using OM */
 axiom_node_t *
 build_om_programatically(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *text,
     const axis2_char_t *seq_key)
 {

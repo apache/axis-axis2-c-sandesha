@@ -16,7 +16,7 @@
  
 #include <sandesha2_ack_range.h>
 #include <sandesha2_constants.h>
-#include <axis2_types.h>
+#include <axutil_types.h>
 #include <stdio.h>
 /** 
  * @brief AckRange struct impl
@@ -39,29 +39,29 @@ struct sandesha2_ack_range_impl
 /***************************** Function headers *******************************/
 axis2_char_t* AXIS2_CALL 
 sandesha2_ack_range_get_namespace_value (sandesha2_iom_rm_element_t *ack_range,
-						const axis2_env_t *env);
+						const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_ack_range_from_om_node(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+                    	const axutil_env_t *env, axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_ack_range_to_om_node(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, void *om_node);
+                    	const axutil_env_t *env, void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_ack_range_is_namespace_supported(sandesha2_iom_rm_element_t *ack_range,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+                    	const axutil_env_t *env, axis2_char_t *namespace);
                    	
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range, 
-						const axis2_env_t *env);								
+						const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
-    const axis2_env_t *env,  
+    const axutil_env_t *env,  
     axis2_char_t *ns_val,
     axis2_char_t *prefix)
 {
@@ -122,7 +122,7 @@ sandesha2_ack_range_create(
 
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range, 
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
     sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -159,7 +159,7 @@ sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range,
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_ack_range_get_namespace_value (sandesha2_iom_rm_element_t *ack_range,
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -172,12 +172,12 @@ sandesha2_ack_range_get_namespace_value (sandesha2_iom_rm_element_t *ack_range,
 void* AXIS2_CALL 
 sandesha2_ack_range_from_om_node(
     sandesha2_iom_rm_element_t *ack_range,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
-    axis2_qname_t *low_qname = NULL;
-    axis2_qname_t *upper_qname = NULL;
+    axutil_qname_t *low_qname = NULL;
+    axutil_qname_t *upper_qname = NULL;
     axiom_element_t *om_element = NULL;
     axis2_char_t *lower_str = NULL;
     axis2_char_t *upper_str = NULL;
@@ -186,13 +186,13 @@ sandesha2_ack_range_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
-    low_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LOWER, 
+    low_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LOWER, 
                         ack_range_impl->ns_val, ack_range_impl->prefix);
     if(!low_qname)
     {
         return NULL;
     }
-    upper_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_UPPER,
+    upper_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_UPPER,
                         ack_range_impl->ns_val, ack_range_impl->prefix);
     if(!upper_qname)
     {
@@ -230,7 +230,7 @@ sandesha2_ack_range_from_om_node(
 axiom_node_t* AXIS2_CALL 
 sandesha2_ack_range_to_om_node(
     sandesha2_iom_rm_element_t *ack_range,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
@@ -288,7 +288,7 @@ sandesha2_ack_range_to_om_node(
 axis2_bool_t AXIS2_CALL 
 sandesha2_ack_range_is_namespace_supported(
         sandesha2_iom_rm_element_t *ack_range,
-        const axis2_env_t *env, 
+        const axutil_env_t *env, 
         axis2_char_t *namespace)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
@@ -308,7 +308,7 @@ sandesha2_ack_range_is_namespace_supported(
 
 long AXIS2_CALL
 sandesha2_ack_range_get_lower_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env)
+                    	const axutil_env_t *env)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -319,7 +319,7 @@ sandesha2_ack_range_get_lower_value(sandesha2_ack_range_t *ack_range,
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_ack_range_set_lower_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env, long value)
+                    	const axutil_env_t *env, long value)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -331,7 +331,7 @@ sandesha2_ack_range_set_lower_value(sandesha2_ack_range_t *ack_range,
 
 long AXIS2_CALL                    	
 sandesha2_ack_range_get_upper_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env)
+                    	const axutil_env_t *env)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -342,7 +342,7 @@ sandesha2_ack_range_get_upper_value(sandesha2_ack_range_t *ack_range,
 
 axis2_status_t AXIS2_CALL                    	
 sandesha2_ack_range_set_upper_value(sandesha2_ack_range_t *ack_range,
-                    	const axis2_env_t *env, long value)
+                    	const axutil_env_t *env, long value)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

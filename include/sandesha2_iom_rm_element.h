@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_element.h>
 #include <sandesha2_error.h>
@@ -49,24 +49,24 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element_ops
 {	
     axis2_status_t (AXIS2_CALL *free)
         (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     axis2_char_t* (AXIS2_CALL *get_namespace_value) 
         (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     void* (AXIS2_CALL *from_om_node) 
         (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env, axiom_node_t *om_node);
+        const axutil_env_t *env, axiom_node_t *om_node);
 
     axiom_node_t* (AXIS2_CALL *to_om_node) 
         (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env, 
+        const axutil_env_t *env, 
         void *om_node);
 
 	axis2_bool_t (AXIS2_CALL *is_namespace_supported) 
         (sandesha2_iom_rm_element_t *element,
-        const axis2_env_t *env, axis2_char_t *ns);
+        const axutil_env_t *env, axis2_char_t *ns);
 };
 
 /**
@@ -81,29 +81,29 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_element
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_element_free(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
     
 axis2_char_t* AXIS2_CALL
 sandesha2_iom_rm_element_get_namespace_value( 
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void* AXIS2_CALL
 sandesha2_iom_rm_element_from_om_node(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node);
 
 axiom_node_t * AXIS2_CALL
 sandesha2_iom_rm_element_to_om_node(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_iom_rm_element_is_namespace_supported( 
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns);
 
  /** @} */

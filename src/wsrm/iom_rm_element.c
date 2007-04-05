@@ -19,7 +19,7 @@
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_element_free(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return ((sandesha2_iom_rm_element_t*)(element))->ops->free(
         (sandesha2_iom_rm_element_t*)element, env);
@@ -28,7 +28,7 @@ sandesha2_iom_rm_element_free(
 axis2_char_t* AXIS2_CALL
 sandesha2_iom_rm_element_get_namespace_value( 
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return ((sandesha2_iom_rm_element_t*)(element))->ops->get_namespace_value(
         (sandesha2_iom_rm_element_t*)element, env);
@@ -37,7 +37,7 @@ sandesha2_iom_rm_element_get_namespace_value(
 void* AXIS2_CALL
 sandesha2_iom_rm_element_from_om_node(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node)
 {
     return ((sandesha2_iom_rm_element_t*)(element))->ops->from_om_node(
@@ -47,7 +47,7 @@ sandesha2_iom_rm_element_from_om_node(
 axiom_node_t * AXIS2_CALL
 sandesha2_iom_rm_element_to_om_node(
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node)
 {
     return ((sandesha2_iom_rm_element_t*)(element))->ops->to_om_node(
@@ -57,7 +57,7 @@ sandesha2_iom_rm_element_to_om_node(
 axis2_bool_t AXIS2_CALL
 sandesha2_iom_rm_element_is_namespace_supported( 
     sandesha2_iom_rm_element_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns)
 {
     return ((sandesha2_iom_rm_element_t*)(element))->ops->

@@ -22,7 +22,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_engine.h>
 #include <axiom_soap_const.h>
 #include <stdio.h>
@@ -31,7 +31,7 @@
 #include <axis2_conf_ctx.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_close_seq.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
@@ -60,23 +60,23 @@ struct sandesha2_close_seq_msg_processor_impl
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_process_in_msg (
                         sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
+						const axutil_env_t *env,
                         sandesha2_msg_ctx_t *rm_msg_ctx);
     
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_process_out_msg(
                         sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
+                    	const axutil_env_t *env, 
                         sandesha2_msg_ctx_t *rm_msg_ctx);
                     	
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_free (sandesha2_msg_processor_t *element, 
-						const axis2_env_t *env);								
+						const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
-sandesha2_close_seq_msg_processor_create(const axis2_env_t *env)
+sandesha2_close_seq_msg_processor_create(const axutil_env_t *env)
 {
     sandesha2_close_seq_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -113,7 +113,7 @@ sandesha2_close_seq_msg_processor_create(const axis2_env_t *env)
 
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_free (sandesha2_msg_processor_t *msg_processor, 
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
     sandesha2_close_seq_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -130,7 +130,7 @@ sandesha2_close_seq_msg_processor_free (sandesha2_msg_processor_t *msg_processor
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_process_in_msg (
                         sandesha2_msg_processor_t *msg_processor,
-						const axis2_env_t *env,
+						const axutil_env_t *env,
                         sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -148,7 +148,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_seq_ack_t *seq_ack  = NULL;
     axis2_msg_ctx_t *close_seq_res_msg = NULL;
     sandesha2_msg_ctx_t *close_seq_res_rm_msg = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     axis2_engine_t *engine = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -207,7 +207,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
                         SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT,
                         (sandesha2_iom_rm_part_t*)seq_ack);
     sandesha2_msg_ctx_set_flow(close_seq_res_rm_msg, env, AXIS2_OUT_FLOW);
-    property = axis2_property_create_with_args(env, 0, 0, 0, 
+    property = axutil_property_create_with_args(env, 0, 0, 0, 
         AXIS2_VALUE_TRUE);
     sandesha2_msg_ctx_set_property(close_seq_res_rm_msg, env, 
                         SANDESHA2_APPLICATION_PROCESSING_DONE, property);
@@ -222,7 +222,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_msg_processor_process_out_msg(
                         sandesha2_msg_processor_t *msg_processor,
-                    	const axis2_env_t *env, 
+                    	const axutil_env_t *env, 
                         sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     

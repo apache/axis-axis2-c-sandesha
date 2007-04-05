@@ -19,7 +19,7 @@
 /* build SOAP request message content using OM */
 axiom_node_t *
 build_om_payload_for_mtom(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axis2_char_t *image_name,
     const axis2_char_t *to_save_name)
 {

@@ -18,7 +18,7 @@
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_constants.h>
-#include <axis2_hash.h>
+#include <axutil_hash.h>
 #include <axis2_core_utils.h>
 #include <axiom_soap_const.h>
 #include <sandesha2_iom_rm_part.h>
@@ -35,7 +35,7 @@
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_create_seq_refused (
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *create_seq_msg,
     sandesha2_storage_mgr_t *storage_man)
 {
@@ -82,7 +82,7 @@ sandesha2_fault_mgr_check_for_create_seq_refused (
             
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *app_rm_msg,
     sandesha2_storage_mgr_t *storage_man)
 {
@@ -148,7 +148,7 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
             
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_msg_num_rollover(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_man)
 {
@@ -161,7 +161,7 @@ sandesha2_fault_mgr_check_for_msg_num_rollover(
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_unknown_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_man)
@@ -184,14 +184,14 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE == type)
     {
         sandesha2_create_seq_bean_t *find_bean = NULL;
-        axis2_array_list_t *list = NULL;
+        axutil_array_list_t *list = NULL;
         find_bean = sandesha2_create_seq_bean_create(env);
         sandesha2_create_seq_bean_set_seq_id(find_bean, env, seq_id);
         list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
                         find_bean);
         if(list)
         {
-            if(0 == axis2_array_list_size(list, env))
+            if(0 == axutil_array_list_size(list, env))
                 valid_seq = AXIS2_FALSE;
         }
         else
@@ -200,7 +200,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
     else
     {
         sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
-        axis2_array_list_t *list = NULL;
+        axutil_array_list_t *list = NULL;
         axis2_bool_t contains = AXIS2_FALSE;
         
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
@@ -208,14 +208,14 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         list = sandesha2_next_msg_mgr_retrieve_all(next_msg_mgr, env);
         if(list)
         {
-            int size = axis2_array_list_size(list, env);
+            int size = axutil_array_list_size(list, env);
             int i = 0;
 			for(i = 0; i < size; i++)
             {
                 sandesha2_next_msg_bean_t *next_bean = NULL;
                 axis2_char_t *tmp_id = NULL;
                 
-                next_bean = axis2_array_list_get(list, env, i);
+                next_bean = axutil_array_list_get(list, env, i);
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(
                     (sandesha2_rm_bean_t *) next_bean, env);
                 if(0 == axis2_strcmp(seq_id, tmp_id))
@@ -236,7 +236,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         axis2_char_t *rm_ns_val = NULL;
         axiom_element_t *detail_ele = NULL;
         axiom_node_t *detail_node = NULL;
-        axis2_qname_t *qname = NULL;
+        axutil_qname_t *qname = NULL;
         
         fault_data = sandesha2_fault_data_create(env);
         rm_ns_val = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
@@ -249,7 +249,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                         AXIOM_SOAP12_FAULT_CODE_SENDER);
         sandesha2_fault_data_set_sub_code(fault_data, env, 
                         SANDESHA2_SOAP_FAULT_SUBCODE_UNKNOWN_SEQ);
-        qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER,
+        qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER,
                         rm_ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
         detail_ele = axiom_element_create_with_qname(env, NULL, qname, 
                         &detail_node);
@@ -265,14 +265,14 @@ sandesha2_fault_mgr_check_for_unknown_seq(
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_invalid_ack(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *ack_rm_msg,
     sandesha2_storage_mgr_t *storage_man)
 {
     axis2_bool_t invalid_ack = AXIS2_FALSE;
     axis2_char_t reason[256];
     sandesha2_seq_ack_t *seq_ack = NULL;
-    axis2_array_list_t *ack_range_list = NULL;
+    axutil_array_list_t *ack_range_list = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ack_rm_msg, NULL);
@@ -286,12 +286,12 @@ sandesha2_fault_mgr_check_for_invalid_ack(
     if(ack_range_list)
     {
         int i = 0;
-        for(i = 0; i < axis2_array_list_size(ack_range_list, env); i++)
+        for(i = 0; i < axutil_array_list_size(ack_range_list, env); i++)
         {
             sandesha2_ack_range_t *ack_range = NULL;
             long upper = -1;
             long lower = -1;
-            ack_range = axis2_array_list_get(ack_range_list, env, i);
+            ack_range = axutil_array_list_get(ack_range_list, env, i);
             lower = sandesha2_ack_range_get_lower_value(ack_range, env);
             upper = sandesha2_ack_range_get_upper_value(ack_range, env);
             if(lower > upper)
@@ -310,7 +310,7 @@ sandesha2_fault_mgr_check_for_invalid_ack(
         axiom_node_t *detail_node = NULL;
         axiom_element_t *dummy_ele = NULL;
         axiom_node_t *dummy_node = NULL;
-        axis2_qname_t *qname = NULL;
+        axutil_qname_t *qname = NULL;
                 
         fault_data = sandesha2_fault_data_create(env);
         rm_ns_val = sandesha2_msg_ctx_get_rm_ns_val(ack_rm_msg, env);
@@ -326,7 +326,7 @@ sandesha2_fault_mgr_check_for_invalid_ack(
         dummy_ele = axiom_element_create(env, NULL, "dummy_ele", NULL, 
                         &dummy_node);
         sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, dummy_node);
-        qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
+        qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
                         NULL, NULL);
         detail_ele = axiom_element_get_first_child_with_qname(dummy_ele, env,
                         qname, dummy_node, &detail_node);
@@ -341,7 +341,7 @@ sandesha2_fault_mgr_check_for_invalid_ack(
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_seq_closed(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_man)
@@ -390,7 +390,7 @@ sandesha2_fault_mgr_check_for_seq_closed(
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_get_fault(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_fault_data_t *fault_data,
     axis2_char_t *addr_ns_uri,
@@ -402,7 +402,7 @@ sandesha2_fault_mgr_get_fault(
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *acks_to_str = NULL;
     axis2_char_t *anon_uri = NULL;
-    axis2_string_t *grp_ctx_id = NULL;
+    axutil_string_t *grp_ctx_id = NULL;
     int soap_ver = -1;
     sandesha2_msg_ctx_t *fault_rm_msg = NULL;
     
@@ -425,7 +425,7 @@ sandesha2_fault_mgr_get_fault(
                         axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
     axis2_msg_ctx_set_svc_ctx(fault_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
                         ref_msg, env));
-    grp_ctx_id = (axis2_string_t *) axis2_msg_ctx_get_svc_grp_ctx_id(ref_msg, 
+    grp_ctx_id = (axutil_string_t *) axis2_msg_ctx_get_svc_grp_ctx_id(ref_msg, 
         env);
     axis2_msg_ctx_set_svc_grp_ctx_id(fault_msg_ctx, env, grp_ctx_id);
     axis2_msg_ctx_set_svc_ctx_id(fault_msg_ctx, env, 

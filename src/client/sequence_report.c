@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_seq_report.h>
-#include <axis2_log.h>
+#include <axutil_log.h>
 
 /** 
  * @brief Sandesha Sequence Report Struct Impl
@@ -27,12 +27,12 @@ struct sandesha2_seq_report
 	axis2_char_t seq_direction;
 	axis2_char_t *seq_id;
 	axis2_char_t *internal_seq_id;   /* only for outgoing seqs */
-	axis2_array_list_t *completed_msgs; /* no of messages acked (both for incoming and outgoing)*/
+	axutil_array_list_t *completed_msgs; /* no of messages acked (both for incoming and outgoing)*/
 };
 
 AXIS2_EXTERN sandesha2_seq_report_t * AXIS2_CALL
 sandesha2_seq_report_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_report_t *report = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -45,7 +45,7 @@ sandesha2_seq_report_create(
     report->internal_seq_id = NULL;
     report->seq_id = NULL;
 
-    report->completed_msgs = axis2_array_list_create(env, 0);
+    report->completed_msgs = axutil_array_list_create(env, 0);
     if(!report->completed_msgs) 
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
@@ -57,13 +57,13 @@ sandesha2_seq_report_create(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_free(
     void *seq_report,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_report_t *report = (sandesha2_seq_report_t *)seq_report;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     if(report->completed_msgs)
     {
-        axis2_array_list_free(report->completed_msgs, env);
+        axutil_array_list_free(report->completed_msgs, env);
         report->completed_msgs = NULL;
     }
 
@@ -84,7 +84,7 @@ sandesha2_seq_report_free(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_status(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t seq_status)
 {
     if (seq_status >= SANDESHA2_SEQ_STATUS_UNKNOWN && 
@@ -98,7 +98,7 @@ sandesha2_seq_report_set_seq_status(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_direction(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t seq_direction)
 {
     if (seq_direction >= SANDESHA2_SEQ_DIRECTION_UNKNOWN && 
@@ -112,7 +112,7 @@ sandesha2_seq_report_set_seq_direction(
 axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_status(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return report->seq_status;
 }
@@ -120,7 +120,7 @@ sandesha2_seq_report_get_seq_status(
 axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_direction(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return report->seq_direction;
 }
@@ -128,7 +128,7 @@ sandesha2_seq_report_get_seq_direction(
 axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_seq_id(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return report->seq_id;
 }
@@ -136,7 +136,7 @@ sandesha2_seq_report_get_seq_id(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_id(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -154,10 +154,10 @@ sandesha2_seq_report_set_seq_id(
     return AXIS2_SUCCESS;
 }
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_seq_report_get_completed_msgs(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return report->completed_msgs;
 }
@@ -165,20 +165,20 @@ sandesha2_seq_report_get_completed_msgs(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_add_completed_msg(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     long *msg_no)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    axis2_array_list_add(report->completed_msgs, env, msg_no);
+    axutil_array_list_add(report->completed_msgs, env, msg_no);
     return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_completed_msgs(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
-    axis2_array_list_t *completed_msgs)
+    const axutil_env_t *env,
+    axutil_array_list_t *completed_msgs)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -186,15 +186,15 @@ sandesha2_seq_report_set_completed_msgs(
     {
         int i = 0, size = 0;
         
-        size = axis2_array_list_size(report->completed_msgs, env);
+        size = axutil_array_list_size(report->completed_msgs, env);
         for(i = 0; i < size; i++)
         {
             long *msg_no = NULL;
         
-            msg_no = axis2_array_list_get(report->completed_msgs, env, i);
+            msg_no = axutil_array_list_get(report->completed_msgs, env, i);
             AXIS2_FREE(env->allocator, msg_no);
         }
-        axis2_array_list_free(report->completed_msgs, env);
+        axutil_array_list_free(report->completed_msgs, env);
         report->completed_msgs = NULL;
     }
     report->completed_msgs = completed_msgs;
@@ -204,7 +204,7 @@ sandesha2_seq_report_set_completed_msgs(
 axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_internal_seq_id(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     long *msg_no)
 {
     return report->internal_seq_id;
@@ -213,7 +213,7 @@ sandesha2_seq_report_get_internal_seq_id(
 axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_internal_seq_id(
     sandesha2_seq_report_t *report,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *internal_seq_id)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

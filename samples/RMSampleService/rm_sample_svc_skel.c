@@ -15,19 +15,19 @@
  */
 #include <axis2_svc_skeleton.h>
 #include "rm_sample_svc.h"
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_op.h>
 #include <axiom_element.h>
 
 int AXIS2_CALL
 rm_sample_svc_free(
     axis2_svc_skeleton_t *svc_skeleton,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 rm_sample_svc_free_void_arg(
     void *svc_skeleton,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 /*
  * This method invokes the right service method 
@@ -35,7 +35,7 @@ rm_sample_svc_free_void_arg(
 axiom_node_t* AXIS2_CALL 
 rm_sample_svc_invoke(
     axis2_svc_skeleton_t *svc_skeleton,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *node,
     axis2_msg_ctx_t *msg_ctx);
             
@@ -43,17 +43,17 @@ rm_sample_svc_invoke(
 int AXIS2_CALL 
 rm_sample_svc_init(
     axis2_svc_skeleton_t *svc_skeleton,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axiom_node_t* AXIS2_CALL
 rm_sample_svc_on_fault(
     axis2_svc_skeleton_t *svc_skeli, 
-    const axis2_env_t *env, axiom_node_t *node);
+    const axutil_env_t *env, axiom_node_t *node);
 
 /*Create function */
 axis2_svc_skeleton_t *
 rm_sample_svc_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_svc_skeleton_t *svc_skeleton = NULL;
     /* Allocate memory for the structs */
@@ -77,15 +77,15 @@ rm_sample_svc_create(
 int AXIS2_CALL
 rm_sample_svc_init(
     axis2_svc_skeleton_t *svc_skeleton,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
-    svc_skeleton->func_array = axis2_array_list_create(env, 0);
+    svc_skeleton->func_array = axutil_array_list_create(env, 0);
     /* Add the implemented operation names of the service to  
      * the array list of functions 
      */
-    axis2_array_list_add(svc_skeleton->func_array, env, "echoString");
-    axis2_array_list_add(svc_skeleton->func_array, env, "ping");
-    axis2_array_list_add(svc_skeleton->func_array, env, "mtomSample");
+    axutil_array_list_add(svc_skeleton->func_array, env, "echoString");
+    axutil_array_list_add(svc_skeleton->func_array, env, "ping");
+    axutil_array_list_add(svc_skeleton->func_array, env, "mtomSample");
     /* Any initialization stuff of echo service should go here */
     return AXIS2_SUCCESS;
 }
@@ -96,20 +96,20 @@ rm_sample_svc_init(
 axiom_node_t* AXIS2_CALL
 rm_sample_svc_invoke(
     axis2_svc_skeleton_t *svc_skeleton,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *node,
     axis2_msg_ctx_t *msg_ctx)
 {
     axis2_op_t *op = NULL;
-    axis2_qname_t *op_qname = NULL;
+    axutil_qname_t *op_qname = NULL;
     axis2_char_t *op_name = NULL;
     
     op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(op)
     {
-        op_qname = (axis2_qname_t *)axis2_op_get_qname(op, env);
+        op_qname = (axutil_qname_t *)axis2_op_get_qname(op, env);
         if(op_qname)
-            op_name = axis2_qname_get_localpart(op_qname, env);
+            op_name = axutil_qname_get_localpart(op_qname, env);
         if(op_name)
         {
             if (axis2_strcmp(op_name, "echoString") == 0)
@@ -129,7 +129,7 @@ rm_sample_svc_invoke(
 /* On fault, handle the fault */
 axiom_node_t* AXIS2_CALL
 rm_sample_svc_on_fault(axis2_svc_skeleton_t *svc_skeli, 
-              const axis2_env_t *env, axiom_node_t *node)
+              const axutil_env_t *env, axiom_node_t *node)
 {
    /* Here we are just setting a simple error message inside an element 
     * called 'EchoServiceError' 
@@ -147,12 +147,12 @@ rm_sample_svc_on_fault(axis2_svc_skeleton_t *svc_skeli,
 /* Free the resources used */
 int AXIS2_CALL
 rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,
-            const axis2_env_t *env)
+            const axutil_env_t *env)
 {
     /* Free the function array */
     if(svc_skeleton->func_array)
     {
-        axis2_array_list_free(svc_skeleton->func_array, env);
+        axutil_array_list_free(svc_skeleton->func_array, env);
         svc_skeleton->func_array = NULL;
     }
     
@@ -179,7 +179,7 @@ rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,
  */
 AXIS2_EXPORT int 
 axis2_get_instance(axis2_svc_skeleton_t **inst,
-                   const axis2_env_t *env)
+                   const axutil_env_t *env)
 {
    *inst = rm_sample_svc_create(env);
     if(!(*inst))
@@ -193,7 +193,7 @@ axis2_get_instance(axis2_svc_skeleton_t **inst,
 AXIS2_EXPORT int 
 axis2_remove_instance(
     axis2_svc_skeleton_t *inst,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
    if (inst)

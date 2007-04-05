@@ -17,7 +17,7 @@
 #ifndef SANDESHA2_ERROR_H
 #define SANDESHA2_ERROR_H
 
-#include <axis2_error.h>
+#include <axutil_error.h>
 
 #ifdef __cplusplus
 extern "C"

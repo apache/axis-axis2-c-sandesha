@@ -25,11 +25,11 @@
  * request queue or randomly.
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <axis2_conf_ctx.h>
 
 #ifdef __cplusplus
@@ -41,7 +41,7 @@ typedef struct sandesha2_polling_mgr_t sandesha2_polling_mgr_t;
 
 AXIS2_EXTERN sandesha2_polling_mgr_t * AXIS2_CALL
 sandesha2_polling_mgr_create(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
  
 /**
  * Frees the polling_mgr given as a void pointer. This method would cast the 
@@ -53,39 +53,39 @@ sandesha2_polling_mgr_create(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_polling_mgr_free_void_arg(
     void *polling_mgr,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_free(
     sandesha2_polling_mgr_t *polling_mgr, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_stop_polling (
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_start (
     sandesha2_polling_mgr_t *polling_mgr, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx);
             
 void AXIS2_CALL
 sandesha2_polling_mgr_set_poll(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t poll);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_polling_mgr_is_poll(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_polling_mgr_schedule_polling_request(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *internal_seq_id);
                    
 /** @} */

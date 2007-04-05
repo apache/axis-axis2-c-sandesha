@@ -28,8 +28,8 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_conf.h>
 #include <axiom_soap_envelope.h>
-#include <axis2_qname.h>
-#include <axis2_array_list.h>
+#include <axutil_qname.h>
+#include <axutil_array_list.h>
 #include <axis2_op.h>
 #include <sandesha2_property_bean.h>
 #include <sandesha2_msg_ctx.h>
@@ -45,11 +45,11 @@ extern "C"
  */
 AXIS2_EXTERN  sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_property_mgr_load_properties_from_def_values(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 AXIS2_EXTERN  sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_property_mgr_load_properties_from_module_desc(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_module_desc_t *module_desc);
                         
 

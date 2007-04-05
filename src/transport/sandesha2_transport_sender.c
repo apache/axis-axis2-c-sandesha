@@ -18,7 +18,7 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_utils.h>
 #include <axis2_conf.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 
 
 /** 
@@ -39,32 +39,32 @@ struct sandesha2_transport_sender_impl
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *transport_out);
             
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_cleanup(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
             
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_invoke (
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env);								
+    const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN axis2_transport_sender_t* AXIS2_CALL
 sandesha2_transport_sender_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_transport_sender_impl_t *transport_sender_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -105,7 +105,7 @@ sandesha2_transport_sender_create(
 axis2_status_t AXIS2_CALL 
 sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
        
@@ -121,7 +121,7 @@ sandesha2_transport_sender_free(
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *transport_out)
 {
@@ -136,7 +136,7 @@ sandesha2_transport_sender_init(
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_cleanup(
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -150,10 +150,10 @@ sandesha2_transport_sender_cleanup(
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_invoke (
     axis2_transport_sender_t *transport_sender,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_char_t *key = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -166,23 +166,23 @@ sandesha2_transport_sender_invoke (
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC);
                         
-    if(NULL == property || NULL == axis2_property_get_value(property, env))
+    if(NULL == property || NULL == axutil_property_get_value(property, env))
         return AXIS2_FAILURE;
-    out_desc = axis2_property_get_value(property, env);
+    out_desc = axutil_property_get_value(property, env);
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, out_desc);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
                         SANDESHA2_MESSAGE_STORE_KEY);
                         
-    if(NULL == property || NULL == axis2_property_get_value(property, env))
+    if(NULL == property || NULL == axutil_property_get_value(property, env))
         return AXIS2_FAILURE;
     
-    key = axis2_property_get_value(property, env);
+    key = axutil_property_get_value(property, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_man = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     
-    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
         property);
     sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);

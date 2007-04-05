@@ -22,11 +22,11 @@
  * @brief Sandesha Message Retransmission Adjuster
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_sender_bean.h>
 #include <axis2_conf_ctx.h>
@@ -44,7 +44,7 @@ extern "C"
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_retrans(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *retrans_bean,
     axis2_conf_ctx_t *conf_ctx, 
     sandesha2_storage_mgr_t *storage_mgr);

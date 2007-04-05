@@ -15,10 +15,10 @@
  */
 
 #include <axis2_handler_desc.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_svc.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
@@ -33,23 +33,23 @@
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
 
-static const axis2_string_t *AXIS2_CALL
+static const axutil_string_t *AXIS2_CALL
 sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx);
                                              
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 sandesha2_in_handler_create(
-    const axis2_env_t *env, 
-    axis2_qname_t *qname) 
+    const axutil_env_t *env, 
+    axutil_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
     
@@ -76,10 +76,10 @@ sandesha2_in_handler_create(
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx)
 {
-    axis2_property_t *temp_prop = NULL;
+    axutil_property_t *temp_prop = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
@@ -112,7 +112,7 @@ sandesha2_in_handler_invoke(
     temp_prop = axis2_ctx_get_property(ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
-        str_done = (axis2_char_t *) axis2_property_get_value(temp_prop, env); 
+        str_done = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
     if(str_done && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -122,7 +122,7 @@ sandesha2_in_handler_invoke(
     }
     temp_prop = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
     if(temp_prop)
-        reinjected_msg = (axis2_char_t *) axis2_property_get_value(temp_prop, 
+        reinjected_msg = (axis2_char_t *) axutil_property_get_value(temp_prop, 
                         env);
     if(reinjected_msg && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
@@ -137,7 +137,7 @@ sandesha2_in_handler_invoke(
     temp_prop = axis2_ctx_get_property(ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION);
     if(temp_prop)
-        within_transaction_str = (axis2_char_t *) axis2_property_get_value(
+        within_transaction_str = (axis2_char_t *) axutil_property_get_value(
                         temp_prop, env);
     if(within_transaction_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, 
                 within_transaction_str))
@@ -146,9 +146,9 @@ sandesha2_in_handler_invoke(
     }
     if(!within_transaction)
     {
-        axis2_property_t *prop = NULL;
+        axutil_property_t *prop = NULL;
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        prop = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
     }
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
@@ -156,9 +156,9 @@ sandesha2_in_handler_invoke(
     {
         if(!within_transaction)
         {
-            axis2_property_t *prop = NULL;
+            axutil_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, 0, 0, 0, 
+            prop = axutil_property_create_with_args(env, 0, 0, 0, 
                 AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop);
@@ -177,10 +177,10 @@ sandesha2_in_handler_invoke(
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(!within_transaction)
         {
-            axis2_property_t *prop = NULL;
+            axutil_property_t *prop = NULL;
 
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, 0, 0, 0, 
+            prop = axutil_property_create_with_args(env, 0, 0, 0, 
                 AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                     prop);
@@ -189,9 +189,9 @@ sandesha2_in_handler_invoke(
         }
         if(!within_transaction && !rolled_back)
         {
-            axis2_property_t *prop = NULL;
+            axutil_property_t *prop = NULL;
             sandesha2_transaction_commit(transaction, env);
-            prop = axis2_property_create_with_args(env, 0, 0, 0, 
+            prop = axutil_property_create_with_args(env, 0, 0, 0, 
                 AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop);
@@ -230,10 +230,10 @@ sandesha2_in_handler_invoke(
     }
     if(!within_transaction && !rolled_back)
     {
-        axis2_property_t *prop = NULL;
+        axutil_property_t *prop = NULL;
 		printf("came26\n");
         sandesha2_transaction_commit(transaction, env);
-        prop = axis2_property_create_with_args(env, 0, 0, 0, 
+        prop = axutil_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             prop);
@@ -243,11 +243,11 @@ sandesha2_in_handler_invoke(
     return AXIS2_SUCCESS;
 }
 
-static const axis2_string_t *AXIS2_CALL
+static const axutil_string_t *AXIS2_CALL
 sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
-    return axis2_string_create(env, SANDESHA2_IN_HANDLER_NAME);
+    return axutil_string_create(env, SANDESHA2_IN_HANDLER_NAME);
 }
 

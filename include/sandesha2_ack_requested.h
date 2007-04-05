@@ -50,40 +50,40 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_requested
 
 AXIS2_EXTERN sandesha2_ack_requested_t* AXIS2_CALL
 sandesha2_ack_requested_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
                     	
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_ack_requested_get_identifier(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_ack_requested_set_identifier(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_identifier_t *identifier);
 
 sandesha2_msg_number_t * AXIS2_CALL                    	
 sandesha2_ack_requested_get_msg_number(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_status_t AXIS2_CALL
 sandesha2_ack_requested_set_msg_number(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_number_t *msg_number);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_ack_requested_is_must_understand(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_status_t AXIS2_CALL
 sandesha2_ack_requested_set_must_understand(
     sandesha2_ack_requested_t *ack_requested,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_bool_t mu);
                     	
 

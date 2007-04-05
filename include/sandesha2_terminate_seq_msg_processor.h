@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_msg_processor.h>
 
 
@@ -39,7 +39,7 @@ extern "C"
     
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_terminate_seq_msg_processor_create(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

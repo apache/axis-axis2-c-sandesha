@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 #include <axiom_node.h>
 
@@ -42,78 +42,78 @@ typedef struct sandesha2_fault_data_t sandesha2_fault_data_t;
 
 AXIS2_EXTERN sandesha2_fault_data_t* AXIS2_CALL
 sandesha2_fault_data_create(
-	const axis2_env_t *env);
+	const axutil_env_t *env);
   
 axiom_node_t *AXIS2_CALL 
 sandesha2_fault_data_get_detail(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_detail(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *detail);
             
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_reason(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_reason(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *reason);
 
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_sub_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_sub_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *sub_code);
             
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *code);
             
 int AXIS2_CALL 
 sandesha2_fault_data_get_type(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_type(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int type);
             
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_seq_id(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_seq_id(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id);
     
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_free(
     sandesha2_fault_data_t *data, 
-    const axis2_env_t *env);								
+    const axutil_env_t *env);								
 
 /** @} */
 #ifdef __cplusplus

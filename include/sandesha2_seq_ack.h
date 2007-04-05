@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <sandesha2_iom_rm_part.h>
 #include <sandesha2_error.h>
@@ -32,7 +32,7 @@
 #include <sandesha2_ack_range.h>
 #include <sandesha2_ack_final.h>
 #include <sandesha2_ack_none.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 
 
 #ifdef __cplusplus
@@ -57,51 +57,51 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_ack
 
 AXIS2_EXTERN sandesha2_seq_ack_t* AXIS2_CALL
 sandesha2_seq_ack_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
 	axis2_char_t *ns_value);
  
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_seq_ack_get_identifier(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_ack_set_identifier(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_identifier_t *identifier);
         
-axis2_array_list_t * AXIS2_CALL
+axutil_array_list_t * AXIS2_CALL
 sandesha2_seq_ack_get_nack_list(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_ack_set_ack_final(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_ack_final_t *ack_final);
                     
-axis2_array_list_t * AXIS2_CALL
+axutil_array_list_t * AXIS2_CALL
 sandesha2_seq_ack_get_ack_range_list(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_ack_add_ack_range(
     sandesha2_seq_ack_t *seq_ack,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_ack_range_t *ack_range);
     
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_ack_is_must_understand(
     sandesha2_seq_ack_t *element,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_seq_ack_set_must_understand(
     sandesha2_seq_ack_t *element,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_bool_t mu);
 
 /** @} */

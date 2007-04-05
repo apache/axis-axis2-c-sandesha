@@ -18,8 +18,8 @@
 #include <sandesha2_transaction.h>
 #include <sandesha2_rm_bean.h>
 #include <string.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 
 /*seq_property_bean struct */
@@ -38,7 +38,7 @@ typedef struct sandesha2_seq_property_bean_impl
 axis2_char_t* AXIS2_CALL
 sandesha2_inmemory_seq_property_mgr_get_key(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 static const sandesha2_rm_bean_ops_t rm_bean_ops =
 {
@@ -53,7 +53,7 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 sandesha2_seq_property_bean_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -79,7 +79,7 @@ sandesha2_seq_property_bean_create(
 
 AXIS2_EXTERN sandesha2_seq_property_bean_t* AXIS2_CALL
 sandesha2_seq_property_bean_create_with_data(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id,
     axis2_char_t *prop_name,
     axis2_char_t *value)
@@ -110,7 +110,7 @@ sandesha2_seq_property_bean_create_with_data(
 void AXIS2_CALL
 sandesha2_seq_property_bean_free (
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -145,7 +145,7 @@ sandesha2_seq_property_bean_free (
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_seq_property_bean_get_base( 
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -155,7 +155,7 @@ sandesha2_seq_property_bean_get_base(
 void AXIS2_CALL
 sandesha2_seq_property_bean_set_base (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_rm_bean_t* rm_bean)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -166,7 +166,7 @@ sandesha2_seq_property_bean_set_base (
 axis2_char_t *AXIS2_CALL
 sandesha2_seq_property_bean_get_name (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -176,7 +176,7 @@ sandesha2_seq_property_bean_get_name (
 void AXIS2_CALL 
 sandesha2_seq_property_bean_set_name (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *name)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -193,7 +193,7 @@ sandesha2_seq_property_bean_set_name (
 axis2_char_t *AXIS2_CALL
 sandesha2_seq_property_bean_get_seq_id (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -204,7 +204,7 @@ sandesha2_seq_property_bean_get_seq_id (
 void AXIS2_CALL
 sandesha2_seq_property_bean_set_seq_id (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -221,7 +221,7 @@ sandesha2_seq_property_bean_set_seq_id (
 axis2_char_t* AXIS2_CALL
 sandesha2_seq_property_bean_get_value (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -232,7 +232,7 @@ sandesha2_seq_property_bean_get_value (
 void AXIS2_CALL
 sandesha2_seq_property_bean_set_value (
     sandesha2_seq_property_bean_t *seq_property_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *value)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -250,7 +250,7 @@ sandesha2_seq_property_bean_set_value (
 void AXIS2_CALL
 sandesha2_seq_property_bean_set_id(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     long id)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -261,7 +261,7 @@ sandesha2_seq_property_bean_set_id(
 long AXIS2_CALL
 sandesha2_seq_property_bean_get_id(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -271,7 +271,7 @@ sandesha2_seq_property_bean_get_id(
 void AXIS2_CALL
 sandesha2_seq_property_bean_set_transaction(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_transaction_t *transaction)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
@@ -283,7 +283,7 @@ sandesha2_seq_property_bean_set_transaction(
 sandesha2_transaction_t *AXIS2_CALL
 sandesha2_seq_property_bean_get_transaction(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_seq_property_bean_impl_t *seq_property_bean_impl = NULL;
     seq_property_bean_impl = SANDESHA2_INTF_TO_IMPL(seq_property_bean);
@@ -294,7 +294,7 @@ sandesha2_seq_property_bean_get_transaction(
 axis2_char_t* AXIS2_CALL
 sandesha2_inmemory_seq_property_mgr_get_key(
     sandesha2_rm_bean_t *seq_property_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_char_t *seq_id = NULL;
     axis2_char_t *name = NULL;

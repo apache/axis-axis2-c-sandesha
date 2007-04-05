@@ -42,42 +42,42 @@ struct sandesha2_make_connection_impl
 static axis2_char_t* AXIS2_CALL 
 sandesha2_make_connection_get_namespace_value (
     sandesha2_iom_rm_element_t *make_conn,
-	const axis2_env_t *env);
+	const axutil_env_t *env);
     
 static void* AXIS2_CALL 
 sandesha2_make_connection_from_om_node(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node);
     
 static axiom_node_t* AXIS2_CALL 
 sandesha2_make_connection_to_om_node(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node);
                     	
 static axis2_bool_t AXIS2_CALL 
 sandesha2_make_connection_is_namespace_supported(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace);
 
 static axis2_status_t AXIS2_CALL
 sandesha2_make_connection_to_soap_envelope(
     sandesha2_iom_rm_part_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);
                     	                    	
 static axis2_status_t AXIS2_CALL 
 sandesha2_make_connection_free (
     sandesha2_iom_rm_element_t *make_conn, 
-	const axis2_env_t *env);								
+	const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_make_connection_t* AXIS2_CALL
 sandesha2_make_connection_create(
-    const axis2_env_t *env,  
+    const axutil_env_t *env,  
     axis2_char_t *ns_val)
 {
     sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -146,7 +146,7 @@ sandesha2_make_connection_create(
 axis2_status_t AXIS2_CALL
 sandesha2_make_connection_free_void_arg(
     void *make_conn,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_iom_rm_element_t *make_conn_l = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -158,7 +158,7 @@ sandesha2_make_connection_free_void_arg(
 static axis2_status_t AXIS2_CALL 
 sandesha2_make_connection_free (
     sandesha2_iom_rm_element_t *make_conn, 
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_make_connection_impl_t *make_conn_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -181,7 +181,7 @@ sandesha2_make_connection_free (
 static axis2_char_t* AXIS2_CALL 
 sandesha2_make_connection_get_namespace_value (
     sandesha2_iom_rm_element_t *make_conn,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -193,7 +193,7 @@ sandesha2_make_connection_get_namespace_value (
 static void* AXIS2_CALL 
 sandesha2_make_connection_from_om_node(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -202,8 +202,8 @@ sandesha2_make_connection_from_om_node(
     axiom_node_t *identifier_node = NULL;
     axiom_element_t *address_element = NULL;
     axiom_node_t *address_node = NULL;
-    axis2_qname_t *identifier_qname = NULL; 
-    axis2_qname_t *address_qname = NULL; 
+    axutil_qname_t *identifier_qname = NULL; 
+    axutil_qname_t *address_qname = NULL; 
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
@@ -216,13 +216,13 @@ sandesha2_make_connection_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    identifier_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER,
+    identifier_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER,
                         make_conn_impl->ns_val, NULL);
     if(!identifier_qname)
     {
         return NULL;
     }
-    address_qname = axis2_qname_create(env, SANDESHA2_WSA_ADDRESS,
+    address_qname = axutil_qname_create(env, SANDESHA2_WSA_ADDRESS,
                         make_conn_impl->ns_val, NULL);
     if(!address_qname)
     {
@@ -270,7 +270,7 @@ sandesha2_make_connection_from_om_node(
 static axiom_node_t* AXIS2_CALL 
 sandesha2_make_connection_to_om_node(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -318,7 +318,7 @@ sandesha2_make_connection_to_om_node(
 static axis2_bool_t AXIS2_CALL 
 sandesha2_make_connection_is_namespace_supported(
     sandesha2_iom_rm_element_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -339,7 +339,7 @@ sandesha2_make_connection_is_namespace_supported(
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_make_connection_get_identifier(
     sandesha2_make_connection_t *element,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -351,7 +351,7 @@ sandesha2_make_connection_get_identifier(
 axis2_status_t AXIS2_CALL                 
 sandesha2_make_connection_set_identifier(
     sandesha2_make_connection_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_identifier_t *identifier)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -364,7 +364,7 @@ sandesha2_make_connection_set_identifier(
 sandesha2_address_t * AXIS2_CALL
 sandesha2_make_connection_get_address(
     sandesha2_make_connection_t *make_conn,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -376,7 +376,7 @@ sandesha2_make_connection_get_address(
 axis2_status_t AXIS2_CALL                 
 sandesha2_make_connection_set_address(
     sandesha2_make_connection_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_address_t *address)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -389,7 +389,7 @@ sandesha2_make_connection_set_address(
 static axis2_status_t AXIS2_CALL
 sandesha2_make_connection_to_soap_envelope(
     sandesha2_iom_rm_part_t *make_conn,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope)
 {
 	sandesha2_make_connection_impl_t *make_conn_impl = NULL;
@@ -398,7 +398,7 @@ sandesha2_make_connection_to_soap_envelope(
     axiom_element_t *body_element = NULL;
     axiom_node_t *node = NULL;
     axiom_element_t *element = NULL;
-    axis2_qname_t *make_conn_qname = NULL;
+    axutil_qname_t *make_conn_qname = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
@@ -409,7 +409,7 @@ sandesha2_make_connection_to_soap_envelope(
         body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(body_node)
         body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
-    make_conn_qname = axis2_qname_create(env, 
+    make_conn_qname = axutil_qname_create(env, 
         SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, make_conn_impl->ns_val, NULL);
     if(!make_conn_qname)
     {

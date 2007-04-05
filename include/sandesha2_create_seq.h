@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_iom_rm_part.h>
 #include <sandesha2_error.h>
 #include <sandesha2_acks_to.h>
@@ -54,30 +54,30 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq
 
 AXIS2_EXTERN sandesha2_create_seq_t* AXIS2_CALL
 sandesha2_create_seq_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *addr_ns_value,
     axis2_char_t *rm_ns_value);
                     	
 sandesha2_acks_to_t * AXIS2_CALL
 sandesha2_create_seq_get_acks_to(
     sandesha2_create_seq_t *create_seq,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_create_seq_set_acks_to(
     sandesha2_create_seq_t *create_seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_acks_to_t *acks_to);
 
 sandesha2_seq_offer_t * AXIS2_CALL
 sandesha2_create_seq_get_seq_offer(
     sandesha2_create_seq_t *create_seq,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_create_seq_set_seq_offer(
     sandesha2_create_seq_t *create_seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_seq_offer_t *seq_offer);
  
 

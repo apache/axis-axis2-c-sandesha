@@ -24,24 +24,24 @@
 axis2_status_t AXIS2_CALL
 mod_sandesha2_shutdown(
     axis2_module_t *module,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_init(
     axis2_module_t *module,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_module_desc_t *module_desc);
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_fill_handler_create_func_map(
     axis2_module_t *module,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 /******************************************************************************/
 
 AXIS2_EXTERN axis2_module_t * AXIS2_CALL
 mod_sandesha2_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axis2_module_t *module = NULL;
     module = AXIS2_MALLOC(env->allocator, 
@@ -62,12 +62,12 @@ mod_sandesha2_create(
 axis2_status_t AXIS2_CALL
 mod_sandesha2_init(
     axis2_module_t *module,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_module_desc_t *module_desc)
 {
     sandesha2_property_bean_t *property_bean = NULL;
-    axis2_param_t *param = NULL;
+    axutil_param_t *param = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
@@ -83,7 +83,7 @@ mod_sandesha2_init(
         property_bean = sandesha2_property_mgr_load_properties_from_def_values
             (env);
         
-    param = axis2_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
+    param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
         property_bean);
     
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -107,7 +107,7 @@ mod_sandesha2_init(
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_shutdown(axis2_module_t *module,
-                        const axis2_env_t *env)
+                        const axutil_env_t *env)
 {
 
     /* currently we don't have conf_ctx passing to shutdown. When we have that
@@ -126,7 +126,7 @@ mod_sandesha2_shutdown(axis2_module_t *module,
         /* TODO
          *  do the neccessary clean in hash map
          */
-        axis2_hash_free(module->handler_create_func_map, env);
+        axutil_hash_free(module->handler_create_func_map, env);
         module->handler_create_func_map = NULL;
     }
     
@@ -140,22 +140,22 @@ mod_sandesha2_shutdown(axis2_module_t *module,
 
 axis2_status_t AXIS2_CALL
 mod_sandesha2_fill_handler_create_func_map(axis2_module_t *module,
-                                            const axis2_env_t *env)
+                                            const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
-    module->handler_create_func_map = axis2_hash_make(env);
+    module->handler_create_func_map = axutil_hash_make(env);
     if(!module->handler_create_func_map)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    axis2_hash_set(module->handler_create_func_map, "SandeshaGlobalInHandler", 
+    axutil_hash_set(module->handler_create_func_map, "SandeshaGlobalInHandler", 
         AXIS2_HASH_KEY_STRING, sandesha2_global_in_handler_create);
-    axis2_hash_set(module->handler_create_func_map, "SandeshaInHandler", 
+    axutil_hash_set(module->handler_create_func_map, "SandeshaInHandler", 
         AXIS2_HASH_KEY_STRING, sandesha2_in_handler_create);
-    axis2_hash_set(module->handler_create_func_map, "SandeshaOutHandler",
+    axutil_hash_set(module->handler_create_func_map, "SandeshaOutHandler",
         AXIS2_HASH_KEY_STRING, sandesha2_out_handler_create);
     
     return AXIS2_SUCCESS;
@@ -167,7 +167,7 @@ mod_sandesha2_fill_handler_create_func_map(axis2_module_t *module,
 
 AXIS2_EXPORT int 
 axis2_get_instance(axis2_module_t **inst,
-                   const axis2_env_t *env)
+                   const axutil_env_t *env)
 {
    *inst = mod_sandesha2_create(env);
     if(!(*inst))
@@ -180,7 +180,7 @@ axis2_get_instance(axis2_module_t **inst,
 
 AXIS2_EXPORT int 
 axis2_remove_instance(axis2_module_t *inst,
-                      const axis2_env_t *env)
+                      const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
    if (inst)

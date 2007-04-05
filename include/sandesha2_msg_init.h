@@ -24,11 +24,11 @@
  * 
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
@@ -57,7 +57,7 @@ extern "C"
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_init_init_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *ctx);
 
 /** @} */

@@ -52,40 +52,40 @@ AXIS2_DECLARE_DATA struct sandesha2_create_seq_res
 
 AXIS2_EXTERN sandesha2_create_seq_res_t* AXIS2_CALL
 sandesha2_create_seq_res_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *rm_ns_value, 
     axis2_char_t *addr_ns_value);
 
 axis2_status_t AXIS2_CALL
 sandesha2_create_seq_res_set_identifier(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env, 
+   const axutil_env_t *env, 
    sandesha2_identifier_t *identifier);
 
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_create_seq_res_get_identifier(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env);
+   const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_create_seq_res_set_accept(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env, sandesha2_accept_t *accept);
+   const axutil_env_t *env, sandesha2_accept_t *accept);
 
 sandesha2_accept_t * AXIS2_CALL
 sandesha2_create_seq_res_get_accept(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env);
+   const axutil_env_t *env);
                         
 axis2_status_t AXIS2_CALL
 sandesha2_create_seq_res_set_expires(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env, sandesha2_expires_t *expires);
+   const axutil_env_t *env, sandesha2_expires_t *expires);
 
 sandesha2_expires_t * AXIS2_CALL
 sandesha2_create_seq_res_get_expires(
    sandesha2_create_seq_res_t *create_seq_res,
-   const axis2_env_t *env);
+   const axutil_env_t *env);
 
 
 /** @} */

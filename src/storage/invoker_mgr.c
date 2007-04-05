@@ -17,15 +17,15 @@
 #include <sandesha2_invoker_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
 
 void AXIS2_CALL
 sandesha2_invoker_mgr_free(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     invoker->ops.free(invoker, env);
 }
@@ -33,7 +33,7 @@ sandesha2_invoker_mgr_free(
 axis2_bool_t AXIS2_CALL
 sandesha2_invoker_mgr_insert(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_invoker_bean_t *bean)
 {
     return invoker->ops.insert(invoker, env, bean);
@@ -42,7 +42,7 @@ sandesha2_invoker_mgr_insert(
 axis2_bool_t AXIS2_CALL
 sandesha2_invoker_mgr_remove(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key)
 {
     return invoker->ops.remove(invoker, env, key);
@@ -51,7 +51,7 @@ sandesha2_invoker_mgr_remove(
 sandesha2_invoker_bean_t *AXIS2_CALL
 sandesha2_invoker_mgr_retrieve(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *key)
 {
     return invoker->ops.retrieve(invoker, env, key);
@@ -60,16 +60,16 @@ sandesha2_invoker_mgr_retrieve(
 axis2_bool_t AXIS2_CALL
 sandesha2_invoker_mgr_update(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_invoker_bean_t *bean)
 {
     return invoker->ops.update(invoker, env, bean);
 }
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_invoker_mgr_find(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_invoker_bean_t *bean)
 {
     return invoker->ops.find(invoker, env, bean);
@@ -78,7 +78,7 @@ sandesha2_invoker_mgr_find(
 sandesha2_invoker_bean_t *AXIS2_CALL
 sandesha2_invoker_mgr_find_unique(
     sandesha2_invoker_mgr_t *invoker,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_invoker_bean_t *bean)
 {
     return invoker->ops.find_unique(invoker, env, bean);

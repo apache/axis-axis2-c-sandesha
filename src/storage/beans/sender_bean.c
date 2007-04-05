@@ -18,8 +18,8 @@
 #include <sandesha2_transaction.h>
 #include <sandesha2_rm_bean.h>
 #include <string.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 
 /*sender_bean struct */
@@ -56,7 +56,7 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
 };
 
 AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
-sandesha2_sender_bean_create(const axis2_env_t *env)
+sandesha2_sender_bean_create(const axutil_env_t *env)
 {
 	sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -94,7 +94,7 @@ sandesha2_sender_bean_create(const axis2_env_t *env)
 
 AXIS2_EXTERN sandesha2_sender_bean_t* AXIS2_CALL
 sandesha2_sender_bean_create_with_data(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id,
     axis2_char_t *key,
     axis2_bool_t send,
@@ -137,7 +137,7 @@ sandesha2_sender_bean_create_with_data(
 void AXIS2_CALL
 sandesha2_sender_bean_free (
     sandesha2_rm_bean_t *sender_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -181,7 +181,7 @@ sandesha2_sender_bean_free (
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_sender_bean_get_base( 
     sandesha2_rm_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -191,7 +191,7 @@ sandesha2_sender_bean_get_base(
 void AXIS2_CALL
 sandesha2_sender_bean_set_base (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_rm_bean_t* rm_bean)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -202,7 +202,7 @@ sandesha2_sender_bean_set_base (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_ctx_ref_key (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -212,7 +212,7 @@ sandesha2_sender_bean_get_msg_ctx_ref_key (
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_ctx_ref_key (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *ref_key)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -228,7 +228,7 @@ sandesha2_sender_bean_set_msg_ctx_ref_key (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_msg_id (
     sandesha2_rm_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -238,7 +238,7 @@ sandesha2_sender_bean_get_msg_id (
 void AXIS2_CALL 
 sandesha2_sender_bean_set_msg_id (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -254,7 +254,7 @@ sandesha2_sender_bean_set_msg_id (
 axis2_bool_t AXIS2_CALL
 sandesha2_sender_bean_is_send (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -264,7 +264,7 @@ sandesha2_sender_bean_is_send (
 void AXIS2_CALL 
 sandesha2_sender_bean_set_send (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t send)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -275,7 +275,7 @@ sandesha2_sender_bean_set_send (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_internal_seq_id (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -285,7 +285,7 @@ sandesha2_sender_bean_get_internal_seq_id (
 void AXIS2_CALL 
 sandesha2_sender_bean_set_internal_seq_id (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *int_seq_id)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -302,7 +302,7 @@ sandesha2_sender_bean_set_internal_seq_id (
 int AXIS2_CALL 
 sandesha2_sender_bean_get_sent_count (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -312,7 +312,7 @@ sandesha2_sender_bean_get_sent_count (
 void AXIS2_CALL 
 sandesha2_sender_bean_set_sent_count (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int sent_count)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -323,7 +323,7 @@ sandesha2_sender_bean_set_sent_count (
 long AXIS2_CALL
 sandesha2_sender_bean_get_msg_no (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -333,7 +333,7 @@ sandesha2_sender_bean_get_msg_no (
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_no (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     long msg_no)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -344,7 +344,7 @@ sandesha2_sender_bean_set_msg_no (
 axis2_bool_t AXIS2_CALL
 sandesha2_sender_bean_is_resend (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -354,7 +354,7 @@ sandesha2_sender_bean_is_resend (
 void AXIS2_CALL
 sandesha2_sender_bean_set_resend (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t resend)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -365,7 +365,7 @@ sandesha2_sender_bean_set_resend (
 long AXIS2_CALL
 sandesha2_sender_bean_get_time_to_send (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -376,7 +376,7 @@ sandesha2_sender_bean_get_time_to_send (
 void AXIS2_CALL
 sandesha2_sender_bean_set_time_to_send (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     long time_to_send)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -387,7 +387,7 @@ sandesha2_sender_bean_set_time_to_send (
 int AXIS2_CALL
 sandesha2_sender_bean_get_msg_type (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -397,7 +397,7 @@ sandesha2_sender_bean_get_msg_type (
 void AXIS2_CALL
 sandesha2_sender_bean_set_msg_type (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int msg_type)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -408,7 +408,7 @@ sandesha2_sender_bean_set_msg_type (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_seq_id(
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -418,7 +418,7 @@ sandesha2_sender_bean_get_seq_id(
 void AXIS2_CALL
 sandesha2_sender_bean_set_seq_id (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -435,7 +435,7 @@ sandesha2_sender_bean_set_seq_id (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_wsrm_anon_uri(
     sandesha2_sender_bean_t *sender_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -445,7 +445,7 @@ sandesha2_sender_bean_get_wsrm_anon_uri(
 void AXIS2_CALL
 sandesha2_sender_bean_set_wsrm_anon_uri (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *anon_uri)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -462,7 +462,7 @@ sandesha2_sender_bean_set_wsrm_anon_uri (
 void AXIS2_CALL
 sandesha2_sender_bean_set_to_address (
     sandesha2_sender_bean_t *sender_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *to_address)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -479,7 +479,7 @@ sandesha2_sender_bean_set_to_address (
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_to_address(
     sandesha2_sender_bean_t *sender_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -489,7 +489,7 @@ sandesha2_sender_bean_get_to_address(
 void AXIS2_CALL
 sandesha2_sender_bean_set_id( 
     sandesha2_rm_bean_t *sender_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     long id)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -500,7 +500,7 @@ sandesha2_sender_bean_set_id(
 long AXIS2_CALL
 sandesha2_sender_bean_get_id( 
     sandesha2_rm_bean_t *sender_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);
@@ -510,7 +510,7 @@ sandesha2_sender_bean_get_id(
 void AXIS2_CALL
 sandesha2_sender_bean_set_transaction( 
     sandesha2_rm_bean_t *sender_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     sandesha2_transaction_t *transaction)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
@@ -522,7 +522,7 @@ sandesha2_sender_bean_set_transaction(
 sandesha2_transaction_t *AXIS2_CALL
 sandesha2_sender_bean_get_transaction( 
     sandesha2_rm_bean_t *sender_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_sender_bean_impl_t *sender_bean_impl = NULL;
     sender_bean_impl = SANDESHA2_INTF_TO_IMPL(sender_bean);

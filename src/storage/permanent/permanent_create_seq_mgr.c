@@ -21,11 +21,11 @@
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_error.h>
 #include <sandesha2_rm_bean.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
-#include <axis2_types.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
+#include <axutil_types.h>
 
 /** 
  * @brief Sandesha2 Permanent Create Sequence Manager Struct Impl
@@ -51,8 +51,8 @@ sandesha2_create_seq_find_callback(
     int i = 0;
     sandesha2_create_seq_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
-    axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
+    const axutil_env_t *env = args->env;
+    axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
     if(argc < 1)
     {
         args->data = NULL;
@@ -60,7 +60,7 @@ sandesha2_create_seq_find_callback(
     }
     if(!data_list)
     {
-        data_list = axis2_array_list_create(env, 0);
+        data_list = axutil_array_list_create(env, 0);
         args->data = data_list;
     }
     bean = sandesha2_create_seq_bean_create(env);
@@ -82,7 +82,7 @@ sandesha2_create_seq_find_callback(
             if(argv[i])
                 sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, argv[i]);
     }
-    axis2_array_list_add(data_list, env, bean);
+    axutil_array_list_add(data_list, env, bean);
     return 0;
 }
 
@@ -95,7 +95,7 @@ sandesha2_create_seq_retrieve_callback(
 {
     int i = 0;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
+    const axutil_env_t *env = args->env;
     sandesha2_create_seq_bean_t *bean = (sandesha2_create_seq_bean_t *) args->data;
     if(argc < 1)
     {
@@ -143,48 +143,48 @@ sandesha2_create_seq_count_callback(
 static void AXIS2_CALL 
 sandesha2_permanent_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *envv);
+    const axutil_env_t *envv);
 
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_insert(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean);
 
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_remove(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id);
 
 static sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_retrieve(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id);
 
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_update(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean);
 
-static axis2_array_list_t *AXIS2_CALL
+static axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_find(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean);
 
 static sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_find_unique(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean);
 
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate);
 
@@ -201,7 +201,7 @@ static const sandesha2_create_seq_mgr_ops_t create_seq_mgr_ops =
 
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
     axis2_conf_ctx_t *ctx)
 {
@@ -220,7 +220,7 @@ sandesha2_permanent_create_seq_mgr_create(
 static void AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
@@ -240,7 +240,7 @@ sandesha2_permanent_create_seq_mgr_free(
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_insert(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
@@ -289,7 +289,7 @@ sandesha2_permanent_create_seq_mgr_insert(
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_remove(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
@@ -316,7 +316,7 @@ sandesha2_permanent_create_seq_mgr_remove(
 static sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_retrieve(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     axis2_char_t sql_retrieve[256];
@@ -340,7 +340,7 @@ sandesha2_permanent_create_seq_mgr_retrieve(
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_update(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
@@ -379,16 +379,16 @@ sandesha2_permanent_create_seq_mgr_update(
     return ret;
 }
 
-static axis2_array_list_t *AXIS2_CALL
+static axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_find(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     axis2_char_t *sql_find = NULL;
     axis2_char_t *sql_count = NULL;
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
-    axis2_array_list_t *ret = NULL;
+    axutil_array_list_t *ret = NULL;
     AXIS2_LOG_INFO(env->log, 
         "Entry:[sandesha2]sandesha2_permanent_create_seq_mgr_find");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -407,7 +407,7 @@ sandesha2_permanent_create_seq_mgr_find(
 static sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_find_unique(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     axis2_char_t *sql_find = NULL;
@@ -428,7 +428,7 @@ sandesha2_permanent_create_seq_mgr_find_unique(
 static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate)
 {

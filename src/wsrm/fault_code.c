@@ -36,29 +36,29 @@ struct sandesha2_fault_code_impl
 axis2_char_t* AXIS2_CALL 
 sandesha2_fault_code_get_namespace_value (
                         sandesha2_iom_rm_element_t *fault_code,
-						const axis2_env_t *env);
+						const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+                    	const axutil_env_t *env, axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_fault_code_to_om_node(sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, void *om_node);
+                    	const axutil_env_t *env, void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_fault_code_is_namespace_supported(
                         sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+                    	const axutil_env_t *env, axis2_char_t *namespace);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_code_free (sandesha2_iom_rm_element_t *fault_code, 
-						const axis2_env_t *env);								
+						const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_fault_code_t* AXIS2_CALL
-sandesha2_fault_code_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_fault_code_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 {
     sandesha2_fault_code_impl_t *fault_code_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -111,7 +111,7 @@ sandesha2_fault_code_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_code_free (sandesha2_iom_rm_element_t *fault_code, 
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
     sandesha2_fault_code_impl_t *fault_code_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -139,7 +139,7 @@ sandesha2_fault_code_free (sandesha2_iom_rm_element_t *fault_code,
 axis2_char_t* AXIS2_CALL 
 sandesha2_fault_code_get_namespace_value (
                         sandesha2_iom_rm_element_t *fault_code,
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -151,13 +151,13 @@ sandesha2_fault_code_get_namespace_value (
 
 void* AXIS2_CALL 
 sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+                    	const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *fault_part = NULL;
     axiom_node_t *fault_node = NULL;
-    axis2_qname_t *fault_qname = NULL;
+    axutil_qname_t *fault_qname = NULL;
     axis2_char_t *fault_text = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -171,7 +171,7 @@ sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
                         AXIS2_FAILURE);
         return NULL;
     }
-    fault_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_FAULT_CODE, 
+    fault_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_FAULT_CODE, 
                         fault_code_impl->ns_val, NULL);
     if(NULL == fault_qname)
     {
@@ -203,7 +203,7 @@ sandesha2_fault_code_from_om_node(sandesha2_iom_rm_element_t *fault_code,
 
 axiom_node_t* AXIS2_CALL 
 sandesha2_fault_code_to_om_node(sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, void *om_node)
+                    	const axutil_env_t *env, void *om_node)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -243,7 +243,7 @@ sandesha2_fault_code_to_om_node(sandesha2_iom_rm_element_t *fault_code,
 axis2_bool_t AXIS2_CALL 
 sandesha2_fault_code_is_namespace_supported(
                         sandesha2_iom_rm_element_t *fault_code,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+                    	const axutil_env_t *env, axis2_char_t *namespace)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -262,7 +262,7 @@ sandesha2_fault_code_is_namespace_supported(
 
 axis2_char_t * AXIS2_CALL
 sandesha2_fault_code_get_fault_code(sandesha2_fault_code_t *fault_code,
-                    	const axis2_env_t *env)
+                    	const axutil_env_t *env)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -275,7 +275,7 @@ sandesha2_fault_code_get_fault_code(sandesha2_fault_code_t *fault_code,
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_fault_code_set_fault_code(sandesha2_fault_code_t *fault_code,
-                    	const axis2_env_t *env, axis2_char_t *str_fault_code)
+                    	const axutil_env_t *env, axis2_char_t *str_fault_code)
 {
 	sandesha2_fault_code_impl_t *fault_code_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

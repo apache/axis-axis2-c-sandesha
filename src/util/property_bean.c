@@ -16,8 +16,8 @@
 #include <sandesha2_property_bean.h>
 #include <sandesha2_constants.h>
 #include <stdio.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 /** 
  * @brief Property Bean struct impl
@@ -33,14 +33,14 @@ struct sandesha2_property_bean_t
     axis2_char_t *permanent_storage_mgr;
     axis2_char_t *storage_mgr;
     axis2_bool_t is_in_order;
-    axis2_array_list_t *msg_types_to_drop;
+    axutil_array_list_t *msg_types_to_drop;
     int max_retrans_count;
     axis2_char_t *db_path;
 };
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_property_bean_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_property_bean_t *bean = NULL;
     
@@ -71,21 +71,21 @@ sandesha2_property_bean_create(
 axis2_status_t AXIS2_CALL 
 sandesha2_property_bean_free(
     sandesha2_property_bean_t *bean, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     if(bean->msg_types_to_drop)
     {
-        int count = axis2_array_list_size(bean->msg_types_to_drop,
+        int count = axutil_array_list_size(bean->msg_types_to_drop,
             env);
         int i = 0;
         for(i = 0; i < count; i++)
         {
-            int *msg_type = axis2_array_list_get(
+            int *msg_type = axutil_array_list_get(
                 bean->msg_types_to_drop, env, i);
             if(NULL != msg_type)
                 AXIS2_FREE(env->allocator, msg_type);
         }
-        axis2_array_list_free(bean->msg_types_to_drop, env);
+        axutil_array_list_free(bean->msg_types_to_drop, env);
     }
     if(bean->db_path)
     {
@@ -109,7 +109,7 @@ sandesha2_property_bean_free(
 long AXIS2_CALL 
 sandesha2_property_bean_get_inactive_timeout_interval(
     sandesha2_property_bean_t *bean, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->inactive_timeout_interval;
 }
@@ -117,7 +117,7 @@ sandesha2_property_bean_get_inactive_timeout_interval(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_inactive_timeout_interval(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, long interval)
+    const axutil_env_t *env, long interval)
 {
     bean->inactive_timeout_interval = interval;
     return AXIS2_SUCCESS;
@@ -126,7 +126,7 @@ sandesha2_property_bean_set_inactive_timeout_interval(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_inactive_timeout_interval_with_units(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, long interval,
+    const axutil_env_t *env, long interval,
     axis2_char_t *units)
 {
     long multiplier = -1;
@@ -151,7 +151,7 @@ sandesha2_property_bean_set_inactive_timeout_interval_with_units(
 long AXIS2_CALL
 sandesha2_property_bean_get_ack_interval(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->ack_interval;
 }
@@ -159,7 +159,7 @@ sandesha2_property_bean_get_ack_interval(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_ack_interval(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, long interval)
+    const axutil_env_t *env, long interval)
 {
     bean->ack_interval = interval;
     return AXIS2_SUCCESS;
@@ -168,7 +168,7 @@ sandesha2_property_bean_set_ack_interval(
 long AXIS2_CALL
 sandesha2_property_bean_get_retrans_interval( 
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->retrans_interval;
 }
@@ -176,7 +176,7 @@ sandesha2_property_bean_get_retrans_interval(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_retrans_interval(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, long interval)
+    const axutil_env_t *env, long interval)
 {
     bean->retrans_interval = interval;
     return AXIS2_SUCCESS;
@@ -185,7 +185,7 @@ sandesha2_property_bean_set_retrans_interval(
 axis2_bool_t AXIS2_CALL
 sandesha2_property_bean_is_exp_backoff(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 
 {
     return bean->is_exp_backoff;
@@ -194,7 +194,7 @@ sandesha2_property_bean_is_exp_backoff(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_exp_backoff(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, axis2_bool_t exp_backoff)
+    const axutil_env_t *env, axis2_bool_t exp_backoff)
 {
     bean->is_exp_backoff = exp_backoff;
     return AXIS2_SUCCESS;
@@ -203,7 +203,7 @@ sandesha2_property_bean_set_exp_backoff(
 axis2_char_t* AXIS2_CALL
 sandesha2_property_bean_get_in_mem_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->in_mem_storage_mgr;
 }
@@ -211,7 +211,7 @@ sandesha2_property_bean_get_in_mem_storage_mgr(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_in_mem_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, axis2_char_t *manager)
+    const axutil_env_t *env, axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
     bean->in_mem_storage_mgr = axis2_strdup(env, manager);
@@ -221,7 +221,7 @@ sandesha2_property_bean_set_in_mem_storage_mgr(
 axis2_char_t* AXIS2_CALL
 sandesha2_property_bean_get_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->permanent_storage_mgr;
 }
@@ -229,7 +229,7 @@ sandesha2_property_bean_get_permanent_storage_mgr(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_permanent_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, axis2_char_t *manager)
+    const axutil_env_t *env, axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
     bean->permanent_storage_mgr = axis2_strdup(env, manager);
@@ -239,7 +239,7 @@ sandesha2_property_bean_set_permanent_storage_mgr(
 axis2_char_t* AXIS2_CALL
 sandesha2_property_bean_get_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->storage_mgr;
 }
@@ -247,7 +247,7 @@ sandesha2_property_bean_get_storage_mgr(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_storage_mgr(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *manager)
 {
     AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
@@ -258,7 +258,7 @@ sandesha2_property_bean_set_storage_mgr(
 axis2_bool_t AXIS2_CALL
 sandesha2_property_bean_is_in_order(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->is_in_order;
 }
@@ -266,16 +266,16 @@ sandesha2_property_bean_is_in_order(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_in_order(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, axis2_bool_t in_order)
+    const axutil_env_t *env, axis2_bool_t in_order)
 {
     bean->is_in_order = in_order;
     return AXIS2_SUCCESS;
 }
             
-axis2_array_list_t* AXIS2_CALL
+axutil_array_list_t* AXIS2_CALL
 sandesha2_property_bean_get_msg_types_to_drop(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->msg_types_to_drop;
 }
@@ -283,8 +283,8 @@ sandesha2_property_bean_get_msg_types_to_drop(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_msg_types_to_drop(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, 
-    axis2_array_list_t *msg_types)
+    const axutil_env_t *env, 
+    axutil_array_list_t *msg_types)
 {
     AXIS2_PARAM_CHECK(env->error, msg_types, AXIS2_FAILURE);
     bean->msg_types_to_drop = msg_types;
@@ -294,21 +294,21 @@ sandesha2_property_bean_set_msg_types_to_drop(
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_add_msg_type_to_drop(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     int msg_type)
 {
     int *_msg_type = NULL;
     if(!bean->msg_types_to_drop)
         return AXIS2_FAILURE;
     _msg_type = AXIS2_MALLOC(env->allocator, sizeof(int));
-    axis2_array_list_add(bean->msg_types_to_drop, env, _msg_type);
+    axutil_array_list_add(bean->msg_types_to_drop, env, _msg_type);
     return AXIS2_SUCCESS;
 }
             
 int AXIS2_CALL
 sandesha2_property_bean_get_max_retrans_count (
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->max_retrans_count;
 }
@@ -316,7 +316,7 @@ sandesha2_property_bean_get_max_retrans_count (
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_max_retrans_count(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env, int count)
+    const axutil_env_t *env, int count)
 {
     bean->max_retrans_count = count;
     return AXIS2_SUCCESS;
@@ -325,14 +325,14 @@ sandesha2_property_bean_set_max_retrans_count(
 axis2_char_t *AXIS2_CALL
 sandesha2_property_bean_get_db_path(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return bean->db_path;
 }
 axis2_status_t AXIS2_CALL
 sandesha2_property_bean_set_db_path(
     sandesha2_property_bean_t *bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *db_path)
 {
     bean->db_path = axis2_strdup(env, db_path);

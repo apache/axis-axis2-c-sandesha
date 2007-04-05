@@ -19,24 +19,24 @@
 
 #include <axis2_svc_skeleton.h>
 #include <axis2_log_default.h>
-#include <axis2_error_default.h>
+#include <axutil_error_default.h>
 #include <axiom_text.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 
 axiom_node_t *
 rm_sample_svc_echo(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node);
 
 void
 rm_sample_svc_ping (
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node);
 
 axiom_node_t *
 rm_sample_svc_mtom(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node);
 
 #endif /* CALC_H*/

@@ -15,8 +15,8 @@
  */
 
 #include <sandesha2_msg_store_bean.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <axis2_const.h>
 
 /**
@@ -67,7 +67,7 @@ struct sandesha2_msg_store_bean_t
 };
 	
 AXIS2_EXTERN sandesha2_msg_store_bean_t* AXIS2_CALL
-sandesha2_msg_store_bean_create(const axis2_env_t *env)
+sandesha2_msg_store_bean_create(const axutil_env_t *env)
 {
 	sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -106,7 +106,7 @@ sandesha2_msg_store_bean_create(const axis2_env_t *env)
 void AXIS2_CALL
 sandesha2_msg_store_bean_free (
     sandesha2_msg_store_bean_t *msg_store_bean,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     if(msg_store_bean)
     {
@@ -118,7 +118,7 @@ sandesha2_msg_store_bean_free (
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_msg_id(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->msg_id;
 }
@@ -126,7 +126,7 @@ sandesha2_msg_store_bean_get_msg_id(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_msg_id(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * msg_id) 
 {
     msg_store_bean->msg_id = axis2_strdup(env, msg_id);
@@ -135,7 +135,7 @@ sandesha2_msg_store_bean_set_msg_id(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_stored_key(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->stored_key;
 }
@@ -143,7 +143,7 @@ sandesha2_msg_store_bean_get_stored_key(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_stored_key(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * key) 
 {
     msg_store_bean->stored_key = axis2_strdup(env, key);
@@ -152,7 +152,7 @@ sandesha2_msg_store_bean_set_stored_key(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_soap_envelope_str(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->soap_env_str;
 }
@@ -160,7 +160,7 @@ sandesha2_msg_store_bean_get_soap_envelope_str(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_soap_envelope_str(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * soap_env_str) 
 {
     msg_store_bean->soap_env_str = axis2_strdup(env, soap_env_str);
@@ -169,7 +169,7 @@ sandesha2_msg_store_bean_set_soap_envelope_str(
 int AXIS2_CALL 
 sandesha2_msg_store_bean_get_soap_version( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->soap_version;
 }
@@ -177,7 +177,7 @@ sandesha2_msg_store_bean_get_soap_version(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_soap_version(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int soap_version) 
 {		
     msg_store_bean->soap_version = soap_version;
@@ -186,7 +186,7 @@ sandesha2_msg_store_bean_set_soap_version(
 AXIS2_TRANSPORT_ENUMS AXIS2_CALL 
 sandesha2_msg_store_bean_get_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->transport_out;
 }
@@ -194,7 +194,7 @@ sandesha2_msg_store_bean_get_transport_out(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_transport_out(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     AXIS2_TRANSPORT_ENUMS transport_sender) 
 {
     msg_store_bean->transport_out = transport_sender;
@@ -203,7 +203,7 @@ sandesha2_msg_store_bean_set_transport_out(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_op( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->op;
 }
@@ -211,7 +211,7 @@ sandesha2_msg_store_bean_get_op(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_op(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * op) 
 {
     msg_store_bean->op = axis2_strdup(env, op);
@@ -220,7 +220,7 @@ sandesha2_msg_store_bean_set_op(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_svc( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->svc;
 }
@@ -228,7 +228,7 @@ sandesha2_msg_store_bean_get_svc(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_svc(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * svc) 
 {
     msg_store_bean->svc = axis2_strdup(env, svc);
@@ -237,7 +237,7 @@ sandesha2_msg_store_bean_set_svc(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_svc_grp( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->svc_grp;
 }
@@ -245,7 +245,7 @@ sandesha2_msg_store_bean_get_svc_grp(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_svc_grp(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * svc_grp) 
 {
     msg_store_bean->svc_grp = axis2_strdup(env, svc_grp);
@@ -254,7 +254,7 @@ sandesha2_msg_store_bean_set_svc_grp(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_op_mep( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->op_mep;
 }
@@ -262,7 +262,7 @@ sandesha2_msg_store_bean_get_op_mep(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_op_mep(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * opAdd) 
 {
     msg_store_bean->op_mep = axis2_strdup(env, opAdd);
@@ -271,7 +271,7 @@ sandesha2_msg_store_bean_set_op_mep(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_to_url( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->to_url;
 }
@@ -279,7 +279,7 @@ sandesha2_msg_store_bean_get_to_url(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_to_url(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * to_url) 
 {
     msg_store_bean->to_url = axis2_strdup(env, to_url);
@@ -288,7 +288,7 @@ sandesha2_msg_store_bean_set_to_url(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_reply_to( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->reply_to;
 }
@@ -296,7 +296,7 @@ sandesha2_msg_store_bean_get_reply_to(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_reply_to(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * reply_to) 
 {
     msg_store_bean->reply_to = axis2_strdup(env, reply_to);
@@ -305,7 +305,7 @@ sandesha2_msg_store_bean_set_reply_to(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_transport_to( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->transport_to;
 }
@@ -313,7 +313,7 @@ sandesha2_msg_store_bean_get_transport_to(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_transport_to(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * transport_to) 
 {
     msg_store_bean->transport_to = axis2_strdup(env, transport_to);
@@ -322,7 +322,7 @@ sandesha2_msg_store_bean_set_transport_to(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_execution_chain_str( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->execution_chain_str;
 }
@@ -330,7 +330,7 @@ sandesha2_msg_store_bean_get_execution_chain_str(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_execution_chain_str(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * execution_chain_str) 
 {
     msg_store_bean->execution_chain_str = axis2_strdup(env, execution_chain_str);
@@ -339,7 +339,7 @@ sandesha2_msg_store_bean_set_execution_chain_str(
 int AXIS2_CALL 
 sandesha2_msg_store_bean_get_flow( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->flow;
 }
@@ -347,7 +347,7 @@ sandesha2_msg_store_bean_get_flow(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_flow(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int flow) 
 {
     msg_store_bean->flow = flow;
@@ -356,7 +356,7 @@ sandesha2_msg_store_bean_set_flow(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_msg_recv_str( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->msg_recv_str;
 }
@@ -364,7 +364,7 @@ sandesha2_msg_store_bean_get_msg_recv_str(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_msg_recv_str(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * msg_recv_str) 
 {
     msg_store_bean->msg_recv_str = axis2_strdup(env, msg_recv_str);
@@ -373,7 +373,7 @@ sandesha2_msg_store_bean_set_msg_recv_str(
 axis2_bool_t AXIS2_CALL 
 sandesha2_msg_store_bean_is_svr_side( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->svr_side;
 }
@@ -381,7 +381,7 @@ sandesha2_msg_store_bean_is_svr_side(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_svr_side(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t svr_side) 
 {
     msg_store_bean->svr_side = svr_side;
@@ -390,7 +390,7 @@ sandesha2_msg_store_bean_set_svr_side(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_in_msg_store_key(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->in_msg_store_key;
 }
@@ -398,7 +398,7 @@ sandesha2_msg_store_bean_get_in_msg_store_key(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_in_msg_store_key(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * request_msg_key) 
 {
     msg_store_bean->in_msg_store_key = axis2_strdup(env, request_msg_key);
@@ -407,7 +407,7 @@ sandesha2_msg_store_bean_set_in_msg_store_key(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_persistent_property_str( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->persistent_property_str;
 }
@@ -415,7 +415,7 @@ sandesha2_msg_store_bean_get_persistent_property_str(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_persistent_property_str(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * persistent_property_str) 
 {
     msg_store_bean->persistent_property_str = axis2_strdup(env,
@@ -425,7 +425,7 @@ sandesha2_msg_store_bean_set_persistent_property_str(
 axis2_char_t *AXIS2_CALL 
 sandesha2_msg_store_bean_get_action( 
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_store_bean->action;
 }
@@ -433,7 +433,7 @@ sandesha2_msg_store_bean_get_action(
 void AXIS2_CALL 
 sandesha2_msg_store_bean_set_action(
     sandesha2_msg_store_bean_t *msg_store_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * action) 
 {
     msg_store_bean->action = axis2_strdup(env, action);

@@ -34,28 +34,28 @@ struct sandesha2_ack_final_impl
 /***************************** Function headers *******************************/
 axis2_char_t* AXIS2_CALL 
 sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
-						const axis2_env_t *env);
+						const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+                    	const axutil_env_t *env, axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, void *om_node);
+                    	const axutil_env_t *env, void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_ack_final_is_namespace_supported(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+                    	const axutil_env_t *env, axis2_char_t *namespace);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_final_free (sandesha2_iom_rm_element_t *ack_final, 
-                        const axis2_env_t *env);								
+                        const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_final_t* AXIS2_CALL
-sandesha2_ack_final_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_ack_final_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 {
     sandesha2_ack_final_impl_t *ack_final_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -107,7 +107,7 @@ sandesha2_ack_final_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 
 axis2_status_t AXIS2_CALL 
 sandesha2_ack_final_free (sandesha2_iom_rm_element_t *ack_final, 
-                        const axis2_env_t *env)
+                        const axutil_env_t *env)
 {
     sandesha2_ack_final_impl_t *ack_final_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -129,7 +129,7 @@ sandesha2_ack_final_free (sandesha2_iom_rm_element_t *ack_final,
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
 	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
 	ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
@@ -139,10 +139,10 @@ sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
 
 void* AXIS2_CALL 
 sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+                    	const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-    axis2_qname_t *final_qname = NULL;
+    axutil_qname_t *final_qname = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *final_part = NULL;
     axiom_node_t *final_part_node = NULL;
@@ -151,7 +151,7 @@ sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
-    final_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_FINAL, 
+    final_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_FINAL, 
                         ack_final_impl->ns_val, NULL);
     if(NULL == final_qname)
     {
@@ -178,7 +178,7 @@ sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
 
 axiom_node_t* AXIS2_CALL 
 sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, void *om_node)
+                    	const axutil_env_t *env, void *om_node)
 {
 	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
 	axiom_namespace_t *rm_ns = NULL;
@@ -203,7 +203,7 @@ sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
 
 axis2_bool_t AXIS2_CALL 
 sandesha2_ack_final_is_namespace_supported(sandesha2_iom_rm_element_t *ack_final,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+                    	const axutil_env_t *env, axis2_char_t *namespace)
 {
 	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

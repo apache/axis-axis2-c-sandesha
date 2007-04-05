@@ -15,7 +15,7 @@
  */
 #include <sandesha2_fault_data.h>
 #include <sandesha2_constants.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 
 
 /** 
@@ -35,7 +35,7 @@ struct sandesha2_fault_data_t
 
 AXIS2_EXTERN sandesha2_fault_data_t* AXIS2_CALL
 sandesha2_fault_data_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_fault_data_t *fault_data = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -62,7 +62,7 @@ sandesha2_fault_data_create(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_free(
     sandesha2_fault_data_t *data, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -99,7 +99,7 @@ sandesha2_fault_data_free(
 axiom_node_t *AXIS2_CALL 
 sandesha2_fault_data_get_detail(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return data->detail;
@@ -108,7 +108,7 @@ sandesha2_fault_data_get_detail(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_detail(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *detail)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -121,7 +121,7 @@ sandesha2_fault_data_set_detail(
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_reason(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return data->reason;
@@ -130,7 +130,7 @@ sandesha2_fault_data_get_reason(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_reason(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *reason)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -148,7 +148,7 @@ sandesha2_fault_data_set_reason(
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_sub_code( 
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return data->sub_code;
@@ -157,7 +157,7 @@ sandesha2_fault_data_get_sub_code(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_sub_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *sub_code)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -175,7 +175,7 @@ sandesha2_fault_data_set_sub_code(
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return data->code;
@@ -184,7 +184,7 @@ sandesha2_fault_data_get_code(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_code(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *code)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -202,7 +202,7 @@ sandesha2_fault_data_set_code(
 int AXIS2_CALL 
 sandesha2_fault_data_get_type(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, -1);
     return data->type;
@@ -211,7 +211,7 @@ sandesha2_fault_data_get_type(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_type(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -222,7 +222,7 @@ sandesha2_fault_data_set_type(
 axis2_char_t *AXIS2_CALL 
 sandesha2_fault_data_get_seq_id(
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return data->seq_id;
@@ -231,7 +231,7 @@ sandesha2_fault_data_get_seq_id(
 axis2_status_t AXIS2_CALL 
 sandesha2_fault_data_set_seq_id( 
     sandesha2_fault_data_t *data,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

@@ -28,7 +28,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
 
 #define SANDESHA2_MAX_COUNT 10
@@ -37,17 +37,17 @@
 axis2_status_t AXIS2_CALL
 rm_echo_callback_on_complete(
     struct axis2_callback *callback,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 /* on_error callback function */
 axis2_status_t AXIS2_CALL
 rm_echo_callback_on_error(
     struct axis2_callback *callback,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int exception);
 
 void wait_on_callback(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_callback_t *callback);
 
 static void 
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 {
 	int optopt;
 	char *optarg;
-    const axis2_env_t *env = NULL;
+    const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
@@ -70,14 +70,14 @@ int main(int argc, char** argv)
     axis2_callback_t *callback2 = NULL;
     axis2_callback_t *callback3 = NULL;
     axis2_callback_t *callback4 = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_FALSE;
     int c;
    
     /* Set up the environment */
-    env = axis2_env_create_all("echo_non_blocking_dual.log", 
+    env = axutil_env_create_all("echo_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
@@ -167,24 +167,24 @@ int main(int argc, char** argv)
     if(offer)
     {
         offered_seq_id = axis2_uuid_gen(env);
-        property = axis2_property_create(env);
+        property = axutil_property_create(env);
         if(property)
         {
-            axis2_property_set_value(property, env, axis2_strdup(offered_seq_id, 
+            axutil_property_set_value(property, env, axis2_strdup(offered_seq_id, 
                 env));
             AXIS2_OPTIONS_SET_PROPERTY(options, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }
     }
     /* RM Version 1.1 */
-    property = axis2_property_create_with_args(env, 3, 0, 0, 
+    property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    property = axis2_property_create_with_args(env, 3, 0, 0, "sequence1");
+    property = axutil_property_create_with_args(env, 3, 0, 0, "sequence1");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
 axis2_status_t AXIS2_CALL
 rm_echo_callback_on_complete(
     struct axis2_callback *callback,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
    /** SOAP response has arrived here; get the soap envelope 
      from the callback object and do whatever you want to do with it */
@@ -281,7 +281,7 @@ rm_echo_callback_on_complete(
 axis2_status_t AXIS2_CALL
 rm_echo_callback_on_error(
     struct axis2_callback *callback,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int exception)
 {
     /** take necessary action on error */
@@ -291,7 +291,7 @@ rm_echo_callback_on_error(
 }
 
 void wait_on_callback(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_callback_t *callback)
 {
     /** Wait till callback is complete. Simply keep the parent thread running

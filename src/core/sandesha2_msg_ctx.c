@@ -15,7 +15,7 @@
  */
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_constants.h>
-#include <axis2_hash.h>
+#include <axutil_hash.h>
 #include <axiom_soap_const.h>
 #include <sandesha2_iom_rm_part.h>
 #include <stdio.h>
@@ -27,7 +27,7 @@
  */
 struct sandesha2_msg_ctx_t
 {
-    axis2_hash_t *msg_parts;
+    axutil_hash_t *msg_parts;
     int msg_type;
     axis2_char_t *rm_ns_val;
     axis2_char_t *addr_ns_val;
@@ -37,7 +37,7 @@ struct sandesha2_msg_ctx_t
 
 AXIS2_EXTERN sandesha2_msg_ctx_t* AXIS2_CALL
 sandesha2_msg_ctx_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
 {
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
@@ -57,7 +57,7 @@ sandesha2_msg_ctx_create(
     rm_msg_ctx->msg_ctx = NULL;
     rm_msg_ctx->spec_ver = NULL;
     
-    rm_msg_ctx->msg_parts = axis2_hash_make(env);
+    rm_msg_ctx->msg_parts = axutil_hash_make(env);
     rm_msg_ctx->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
     rm_msg_ctx->msg_ctx = msg_ctx;
 
@@ -68,7 +68,7 @@ sandesha2_msg_ctx_create(
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_ctx_free(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -89,7 +89,7 @@ sandesha2_msg_ctx_free(
     }
     if(rm_msg_ctx->msg_parts)
     {
-        axis2_hash_free(rm_msg_ctx->msg_parts, env);
+        axutil_hash_free(rm_msg_ctx->msg_parts, env);
         rm_msg_ctx->msg_parts = NULL;
     }
 	AXIS2_FREE(env->allocator, rm_msg_ctx);
@@ -99,7 +99,7 @@ sandesha2_msg_ctx_free(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_ctx(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -112,7 +112,7 @@ sandesha2_msg_ctx_set_msg_ctx(
 axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_ctx_get_msg_ctx(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return rm_msg_ctx->msg_ctx;
@@ -121,10 +121,10 @@ sandesha2_msg_ctx_get_msg_ctx(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_add_soap_envelope(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     int soap_ver = AXIOM_SOAP11;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_index_t *hi = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -140,13 +140,13 @@ sandesha2_msg_ctx_add_soap_envelope(
                         soap_envelope);
     }
     
-    for(hi = axis2_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
-                        hi = axis2_hash_next(env, hi))
+    for(hi = axutil_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
+                        hi = axutil_hash_next(env, hi))
     {
         sandesha2_iom_rm_part_t *part = NULL;
         void *value = NULL;
 
-        axis2_hash_this(hi, NULL, NULL, &value);
+        axutil_hash_this(hi, NULL, NULL, &value);
         part = (sandesha2_iom_rm_part_t*)value;
         sandesha2_iom_rm_part_to_soap_envelope(part, env, soap_envelope);
     }
@@ -156,7 +156,7 @@ sandesha2_msg_ctx_add_soap_envelope(
 int AXIS2_CALL
 sandesha2_msg_ctx_get_msg_type (
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, -1);
     return rm_msg_ctx->msg_type;
@@ -165,7 +165,7 @@ sandesha2_msg_ctx_get_msg_type (
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_type (
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, int msg_type)
+    const axutil_env_t *env, int msg_type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -176,7 +176,7 @@ sandesha2_msg_ctx_set_msg_type (
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_part (
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, int part_id,
+    const axutil_env_t *env, int part_id,
     sandesha2_iom_rm_part_t *part)
 {
     axis2_char_t *part_id_str = NULL;
@@ -185,7 +185,7 @@ sandesha2_msg_ctx_set_msg_part (
     
     part_id_str = AXIS2_MALLOC(env->allocator, 32 * sizeof(axis2_char_t));
     sprintf(part_id_str, "%d", part_id);
-    axis2_hash_set(rm_msg_ctx->msg_parts, part_id_str, AXIS2_HASH_KEY_STRING,
+    axutil_hash_set(rm_msg_ctx->msg_parts, part_id_str, AXIS2_HASH_KEY_STRING,
                         (const void*)part);
     return AXIS2_SUCCESS;
 }
@@ -193,21 +193,21 @@ sandesha2_msg_ctx_set_msg_part (
 sandesha2_iom_rm_part_t *AXIS2_CALL
 sandesha2_msg_ctx_get_msg_part(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     int part_id)
 {
     axis2_char_t part_id_str[32];
     AXIS2_ENV_CHECK(env, NULL);
     
     sprintf(part_id_str, "%d", part_id);
-    return axis2_hash_get(rm_msg_ctx->msg_parts, part_id_str, 
+    return axutil_hash_get(rm_msg_ctx->msg_parts, part_id_str, 
                         AXIS2_HASH_KEY_STRING);
 }
     
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_from(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -217,7 +217,7 @@ sandesha2_msg_ctx_get_from(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_from(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_endpoint_ref_t *from)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -229,7 +229,7 @@ sandesha2_msg_ctx_set_from(
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_to (
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -239,7 +239,7 @@ sandesha2_msg_ctx_get_to (
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_to(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_endpoint_ref_t *to)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -251,7 +251,7 @@ sandesha2_msg_ctx_set_to(
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_reply_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -261,7 +261,7 @@ sandesha2_msg_ctx_get_reply_to(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_reply_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_endpoint_ref_t *reply_to)
+    const axutil_env_t *env, axis2_endpoint_ref_t *reply_to)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, reply_to, AXIS2_FAILURE);
@@ -272,7 +272,7 @@ sandesha2_msg_ctx_set_reply_to(
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_fault_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -282,7 +282,7 @@ sandesha2_msg_ctx_get_fault_to(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_fault_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_endpoint_ref_t *fault_to)
+    const axutil_env_t *env, axis2_endpoint_ref_t *fault_to)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, fault_to, AXIS2_FAILURE);
@@ -293,7 +293,7 @@ sandesha2_msg_ctx_set_fault_to(
 axis2_relates_to_t *AXIS2_CALL
 sandesha2_msg_ctx_get_relates_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -303,7 +303,7 @@ sandesha2_msg_ctx_get_relates_to(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_relates_to(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_relates_to_t *relates_to)
+    const axutil_env_t *env, axis2_relates_to_t *relates_to)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, relates_to, AXIS2_FAILURE);
@@ -314,7 +314,7 @@ sandesha2_msg_ctx_set_relates_to(
 axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_msg_id(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -325,7 +325,7 @@ sandesha2_msg_ctx_get_msg_id(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_msg_id(
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *msg_id)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -337,7 +337,7 @@ sandesha2_msg_ctx_set_msg_id(
 axiom_soap_envelope_t *AXIS2_CALL
 sandesha2_msg_ctx_get_soap_envelope(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -347,7 +347,7 @@ sandesha2_msg_ctx_get_soap_envelope(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_soap_envelope(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *soap_envelope)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -360,7 +360,7 @@ sandesha2_msg_ctx_set_soap_envelope(
 axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_wsa_action(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
         
@@ -370,7 +370,7 @@ sandesha2_msg_ctx_get_wsa_action(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_wsa_action(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_char_t *action)
+    const axutil_env_t *env, axis2_char_t *action)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
@@ -381,7 +381,7 @@ sandesha2_msg_ctx_set_wsa_action(
 void *AXIS2_CALL
 sandesha2_msg_ctx_get_property(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_char_t *key)
+    const axutil_env_t *env, axis2_char_t *key)
 {
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
@@ -392,7 +392,7 @@ sandesha2_msg_ctx_get_property(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_property(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *key, 
     void *val)
 {
@@ -405,8 +405,8 @@ sandesha2_msg_ctx_set_property(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_soap_action(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
-    axis2_string_t *soap_action)
+    const axutil_env_t *env, 
+    axutil_string_t *soap_action)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_action, AXIS2_FAILURE);
@@ -421,7 +421,7 @@ sandesha2_msg_ctx_set_soap_action(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_paused(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_bool_t paused)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -434,7 +434,7 @@ sandesha2_msg_ctx_set_paused(
 axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_rm_ns_val(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return rm_msg_ctx->rm_ns_val;
@@ -443,7 +443,7 @@ sandesha2_msg_ctx_get_rm_ns_val(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_rm_ns_val(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_val)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -466,7 +466,7 @@ sandesha2_msg_ctx_set_rm_ns_val(
 axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_addr_ns_val(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return rm_msg_ctx->addr_ns_val;
@@ -475,7 +475,7 @@ sandesha2_msg_ctx_get_addr_ns_val(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_addr_ns_val(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, axis2_char_t *ns_val)
+    const axutil_env_t *env, axis2_char_t *ns_val)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, ns_val, AXIS2_FAILURE);
@@ -492,7 +492,7 @@ sandesha2_msg_ctx_set_addr_ns_val(
 int AXIS2_CALL
 sandesha2_msg_ctx_get_flow(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, -1);
     
@@ -504,7 +504,7 @@ sandesha2_msg_ctx_get_flow(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_flow(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env, int flow)
+    const axutil_env_t *env, int flow)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -517,16 +517,16 @@ sandesha2_msg_ctx_set_flow(
 axis2_char_t *AXIS2_CALL
 sandesha2_msg_ctx_get_rm_spec_ver(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return rm_msg_ctx->spec_ver;
 }
 
-AXIS2_EXTERN axis2_stream_t *AXIS2_CALL
+AXIS2_EXTERN axutil_stream_t *AXIS2_CALL
 sandesha2_msg_ctx_get_transport_out_stream(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     if(!rm_msg_ctx->msg_ctx)
         return NULL;
@@ -536,8 +536,8 @@ sandesha2_msg_ctx_get_transport_out_stream(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_transport_out_stream(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env,
-    axis2_stream_t *stream)
+    const axutil_env_t *env,
+    axutil_stream_t *stream)
 {
     if(!rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
@@ -548,7 +548,7 @@ sandesha2_msg_ctx_set_transport_out_stream(
 AXIS2_EXTERN struct axis2_http_out_transport_info *AXIS2_CALL
 sandesha2_msg_ctx_get_http_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     if(!rm_msg_ctx->msg_ctx)
         return NULL;
@@ -558,7 +558,7 @@ sandesha2_msg_ctx_get_http_out_transport_info(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_set_http_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct axis2_http_out_transport_info *http_out_transport_info)
 {
     if(!rm_msg_ctx->msg_ctx)
@@ -570,7 +570,7 @@ sandesha2_msg_ctx_set_http_out_transport_info(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_reset_http_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     if(!rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;

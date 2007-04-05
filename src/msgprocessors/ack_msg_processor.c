@@ -26,7 +26,7 @@
 #include <sandesha2_sender_bean.h>
 #include <sandesha2_sender_mgr.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_engine.h>
 #include <axiom_soap_const.h>
 #include <stdio.h>
@@ -36,7 +36,7 @@
 #include <axis2_core_utils.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_create_seq_res.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
@@ -65,30 +65,30 @@ struct sandesha2_ack_msg_processor_impl
 static axis2_status_t AXIS2_CALL 
 sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
     
 static sandesha2_sender_bean_t* AXIS2_CALL 
 sandesha2_ack_msg_processor_get_retrans_entry(
-    const axis2_env_t *env, 
-    axis2_array_list_t *list,
+    const axutil_env_t *env, 
+    axutil_array_list_t *list,
     long msg_no);
 
 static long AXIS2_CALL 
 sandesha2_ack_msg_processor_get_no_of_msgs_acked(
-    const axis2_env_t *env, 
-    axis2_array_list_t *list);
+    const axutil_env_t *env, 
+    axutil_array_list_t *list);
                     	
 static axis2_status_t AXIS2_CALL 
 sandesha2_ack_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-	const axis2_env_t *env);								
+	const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_ack_msg_processor_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_ack_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -124,7 +124,7 @@ sandesha2_ack_msg_processor_create(
 static axis2_status_t AXIS2_CALL 
 sandesha2_ack_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_ack_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -141,7 +141,7 @@ sandesha2_ack_msg_processor_free (
 static axis2_status_t AXIS2_CALL 
 sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     sandesha2_seq_ack_t *seq_ack = NULL;
@@ -150,14 +150,14 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_sender_mgr_t *retrans_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    axis2_array_list_t *ack_range_list = NULL;
-    axis2_array_list_t *nack_list = NULL;
+    axutil_array_list_t *ack_range_list = NULL;
+    axutil_array_list_t *nack_list = NULL;
     axis2_char_t *out_seq_id = NULL;
     axis2_char_t *int_seq_id = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     sandesha2_sender_bean_t *input_bean = NULL;
-    axis2_array_list_t *retrans_list = NULL;
-    axis2_array_list_t *acked_list = NULL;
+    axutil_array_list_t *retrans_list = NULL;
+    axutil_array_list_t *acked_list = NULL;
     int i = 0, size = 0;
     long no_of_msgs_acked = 0;
     sandesha2_seq_property_bean_t *no_of_msgs_acked_bean = NULL;
@@ -229,7 +229,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     if(int_seq_id)
         sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 
             storage_mgr);
-    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property);
                         
     input_bean = sandesha2_sender_bean_create(env);
@@ -238,14 +238,14 @@ sandesha2_ack_msg_processor_process_in_msg (
     retrans_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
         input_bean);
    
-    acked_list = axis2_array_list_create(env, 0);
+    acked_list = axutil_array_list_create(env, 0);
     if(!acked_list)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     if(ack_range_list)
-        size = axis2_array_list_size(ack_range_list, env);
+        size = axutil_array_list_size(ack_range_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_ack_range_t *ack_range  = NULL;
@@ -253,7 +253,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         long upper = -1;
         long j = 0;
         
-        ack_range = axis2_array_list_get(ack_range_list, env, i);
+        ack_range = axutil_array_list_get(ack_range_list, env, i);
         lower = sandesha2_ack_range_get_lower_value(ack_range, env);
         upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         for(j = lower; j <= upper; j++)
@@ -274,13 +274,13 @@ sandesha2_ack_msg_processor_process_in_msg (
             }
             add_no = AXIS2_MALLOC(env->allocator, sizeof(long));
             *add_no = (long)j;
-            axis2_array_list_add(acked_list, env, add_no);
+            axutil_array_list_add(acked_list, env, add_no);
         }
     }
-    for(i = 0; i < axis2_array_list_size(nack_list, env); i++)
+    for(i = 0; i < axutil_array_list_size(nack_list, env); i++)
     {
         sandesha2_nack_t *nack = NULL;
-        nack = axis2_array_list_get(nack_list, env, i);
+        nack = axutil_array_list_get(nack_list, env, i);
         /* TODO processing nacks */
     }
     no_of_msgs_acked = sandesha2_ack_msg_processor_get_no_of_msgs_acked(
@@ -358,8 +358,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     
 static sandesha2_sender_bean_t* AXIS2_CALL 
 sandesha2_ack_msg_processor_get_retrans_entry(
-    const axis2_env_t *env, 
-    axis2_array_list_t *list,
+    const axutil_env_t *env, 
+    axutil_array_list_t *list,
     long msg_no)
 {
     int i = 0;
@@ -367,10 +367,10 @@ sandesha2_ack_msg_processor_get_retrans_entry(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
-    for(i = 0; i < axis2_array_list_size(list, env); i++)
+    for(i = 0; i < axutil_array_list_size(list, env); i++)
     {
         sandesha2_sender_bean_t *bean = NULL;
-        bean = axis2_array_list_get(list, env, i);
+        bean = axutil_array_list_get(list, env, i);
         if(sandesha2_sender_bean_get_msg_no(bean, env) == msg_no)
             return bean;
     }
@@ -379,8 +379,8 @@ sandesha2_ack_msg_processor_get_retrans_entry(
 
 static long AXIS2_CALL 
 sandesha2_ack_msg_processor_get_no_of_msgs_acked(
-    const axis2_env_t *env, 
-    axis2_array_list_t *list)
+    const axutil_env_t *env, 
+    axutil_array_list_t *list)
 {
     long no_of_msgs = 0;
     int i = 0;
@@ -388,14 +388,14 @@ sandesha2_ack_msg_processor_get_no_of_msgs_acked(
     AXIS2_ENV_CHECK(env, -1);
     AXIS2_PARAM_CHECK(env->error, list, -1);
     
-    for(i = 0; i <  axis2_array_list_size(list, env); i++)
+    for(i = 0; i <  axutil_array_list_size(list, env); i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
         long upper = 0;
         long lower = 0;
         long diff = 0;
         
-        ack_range = axis2_array_list_get(list, env, i);
+        ack_range = axutil_array_list_get(list, env, i);
         lower = sandesha2_ack_range_get_lower_value(ack_range, env);
         upper = sandesha2_ack_range_get_upper_value(ack_range, env);
         

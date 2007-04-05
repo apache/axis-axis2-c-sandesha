@@ -22,11 +22,11 @@
  * @brief Sandesha In Memory Transaction  Interface
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -52,27 +52,27 @@ AXIS2_DECLARE_DATA struct sandesha2_transaction_ops
     axis2_status_t (AXIS2_CALL *
             free) (
                 sandesha2_transaction_t *transaction,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
 
     axis2_bool_t (AXIS2_CALL *
             is_active)(
                 sandesha2_transaction_t *transaction,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
      
     void (AXIS2_CALL *
             commit) (
                 sandesha2_transaction_t *transaction,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
 
     void (AXIS2_CALL *
             rollback) (
                 sandesha2_transaction_t *transaction,
-                const axis2_env_t *env);
+                const axutil_env_t *env);
 
     void (AXIS2_CALL *
             enlist)(
                 sandesha2_transaction_t *trans,
-                const axis2_env_t *env,
+                const axutil_env_t *env,
                 struct sandesha2_rm_bean *rm_bean);
 };
 
@@ -83,33 +83,33 @@ AXIS2_DECLARE_DATA struct sandesha2_transaction
 
 AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL
 sandesha2_transaction_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct sandesha2_storage_mgr *storage_mgr);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_transaction_free(
     sandesha2_transaction_t *transaction,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_transaction_is_active(
     sandesha2_transaction_t *transaction,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_transaction_commit(
     sandesha2_transaction_t *transaction,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_transaction_rollback(
     sandesha2_transaction_t *transaction,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_transaction_enlist(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct sandesha2_rm_bean *rm_bean);
 
 /** @} */

@@ -22,11 +22,11 @@
  * @brief Sandesha Sender Interface
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <axis2_conf_ctx.h>
 
 #ifdef __cplusplus
@@ -38,7 +38,7 @@ typedef struct sandesha2_sender_t sandesha2_sender_t;
 
 AXIS2_EXTERN sandesha2_sender_t * AXIS2_CALL
 sandesha2_sender_create(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
  
 /**
  * Frees the sender given as a void pointer. This method would cast the 
@@ -50,40 +50,40 @@ sandesha2_sender_create(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_sender_free_void_arg(
     void *sender,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_free(
     sandesha2_sender_t *sender, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_stop_sender_for_seq(
     sandesha2_sender_t *sender, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_stop_sending (
     sandesha2_sender_t *sender,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_bool_t AXIS2_CALL 
 sandesha2_sender_is_sender_started( 
     sandesha2_sender_t *sender, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_run_for_seq 
     (sandesha2_sender_t *sender, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_run (
     sandesha2_sender_t *sender,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                         
 /** @} */
 #ifdef __cplusplus

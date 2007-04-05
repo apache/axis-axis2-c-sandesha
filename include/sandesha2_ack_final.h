@@ -47,7 +47,7 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_final
           
 AXIS2_EXTERN sandesha2_ack_final_t* AXIS2_CALL
 sandesha2_ack_final_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
 /** @} */
 #ifdef __cplusplus

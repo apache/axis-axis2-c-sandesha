@@ -16,10 +16,10 @@
 
 #include <sqlite3.h>
 #include <axis2_handler_desc.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_svc.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <axis2_const.h>
 #include <axis2_conf_ctx.h>
 #include <axiom_soap_header.h>
@@ -41,21 +41,21 @@
 #include <sandesha2_identifier.h>
 #include <sandesha2_app_msg_processor.h>
 /*
-static axis2_qname_t *AXIS2_CALL
+static axutil_qname_t *AXIS2_CALL
 sandesha2_global_in_handler_get_qname(
     struct axis2_handler *handler, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 */
 static axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_invoke(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx);
     
 static axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);        
                                              
@@ -63,15 +63,15 @@ sandesha2_global_in_handler_drop_if_duplicate(
 static axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_process_dropped_msg(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);                                             
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 sandesha2_global_in_handler_create(
-    const axis2_env_t *env, 
-    axis2_qname_t *qname) 
+    const axutil_env_t *env, 
+    axutil_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -95,7 +95,7 @@ sandesha2_global_in_handler_create(
 static axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_invoke(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx)
 {
     
@@ -107,7 +107,7 @@ sandesha2_global_in_handler_invoke(
     axis2_char_t *within_transaction_str = NULL;
     axiom_soap_fault_t *fault_part = NULL;
     axis2_char_t *reinjected_msg = AXIS2_FALSE;
-    const axis2_string_t *str_soap_action = NULL;
+    const axutil_string_t *str_soap_action = NULL;
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
@@ -116,7 +116,7 @@ sandesha2_global_in_handler_invoke(
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_transaction_t *transaction = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     axis2_bool_t rolled_back = AXIS2_FALSE;
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -133,7 +133,7 @@ sandesha2_global_in_handler_invoke(
     * processing will be done in the app_msg_processor.
     */
     str_soap_action = axis2_msg_ctx_get_soap_action(msg_ctx, env);
-    soap_action = axis2_string_get_buffer(str_soap_action, env);
+    soap_action = axutil_string_get_buffer(str_soap_action, env);
     wsa_action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     if(!soap_action && !wsa_action)
     {
@@ -165,7 +165,7 @@ sandesha2_global_in_handler_invoke(
                 body_node = axiom_soap_body_get_base_node(body, env);
                 if(body && !axiom_node_get_first_element(body_node, env))
                 {
-                    axis2_string_t *temp_soap_action = axis2_string_create(env, 
+                    axutil_string_t *temp_soap_action = axutil_string_create(env, 
                         SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
                     /* There is an empty body so we know this is the kind of message
                      * that we are looking for.
@@ -198,7 +198,7 @@ sandesha2_global_in_handler_invoke(
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-        axis2_property_t *property = axis2_property_create_with_args(env, 0, 0, 
+        axutil_property_t *property = axutil_property_create_with_args(env, 0, 0, 
             0, NULL);
         axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property);
@@ -214,7 +214,7 @@ sandesha2_global_in_handler_invoke(
     }
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
     if(property)
-        reinjected_msg = (axis2_char_t *) axis2_property_get_value(property, env); 
+        reinjected_msg = (axis2_char_t *) axutil_property_get_value(property, env); 
     if(reinjected_msg && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"
@@ -231,7 +231,7 @@ sandesha2_global_in_handler_invoke(
     }
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
     if(property)
-        within_transaction_str = (axis2_char_t *) axis2_property_get_value(
+        within_transaction_str = (axis2_char_t *) axutil_property_get_value(
             property, env);
     if(within_transaction_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, 
         within_transaction_str))
@@ -240,10 +240,10 @@ sandesha2_global_in_handler_invoke(
     }
     if(!within_transaction)
     {
-        axis2_property_t *prop = NULL;
+        axutil_property_t *prop = NULL;
         
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+        prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
     }
@@ -254,9 +254,9 @@ sandesha2_global_in_handler_invoke(
         axis2_relates_to_t *relates_to = NULL;
         if(!within_transaction)
         {
-            axis2_property_t *prop = NULL;
+            axutil_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+            prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
                 AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
             rolled_back = AXIS2_TRUE;
@@ -296,9 +296,9 @@ sandesha2_global_in_handler_invoke(
     {
         if(!within_transaction)
         {
-            axis2_property_t *prop = NULL;
+            axutil_property_t *prop = NULL;
             sandesha2_transaction_rollback(transaction, env);
-            prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+            prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
                 AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop);
@@ -312,9 +312,9 @@ sandesha2_global_in_handler_invoke(
     /*Process if global processing possible. - Currently none*/
     if(!within_transaction && !rolled_back)
     {
-        axis2_property_t *prop = NULL;
+        axutil_property_t *prop = NULL;
         sandesha2_transaction_commit(transaction, env);
-        prop = axis2_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
+        prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
     }
@@ -324,18 +324,18 @@ sandesha2_global_in_handler_invoke(
     return AXIS2_SUCCESS;
 }
 /*
-static axis2_qname_t *AXIS2_CALL
+static axutil_qname_t *AXIS2_CALL
 sandesha2_global_in_handler_get_qname(
     struct axis2_handler *handler, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
-    return axis2_qname_create(env, SANDESHA2_GLOBAL_IN_HANDLER_NAME, NULL, NULL);
+    return axutil_qname_create(env, SANDESHA2_GLOBAL_IN_HANDLER_NAME, NULL, NULL);
 }
 */
 static axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr)
 {
@@ -374,7 +374,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
             if(rcvd_msgs_bean)
             {
                 axis2_char_t *rcvd_msgs_str = NULL;
-                axis2_array_list_t *msg_no_list = NULL;
+                axutil_array_list_t *msg_no_list = NULL;
                 int i = 0, size = 0;
                 
                 rcvd_msgs_str = sandesha2_seq_property_bean_get_value(
@@ -382,12 +382,12 @@ sandesha2_global_in_handler_drop_if_duplicate(
                 msg_no_list = sandesha2_utils_get_array_list_from_string(env,
                         rcvd_msgs_str);
                 if(msg_no_list)
-                    size = axis2_array_list_size(msg_no_list, env);
+                    size = axutil_array_list_size(msg_no_list, env);
                 for(i = 0; i < size; i++)
                 {
                     axis2_char_t *temp = NULL;
                     
-                    temp = axis2_array_list_get(msg_no_list, env, i);
+                    temp = axutil_array_list_get(msg_no_list, env, i);
                     if(atol(temp) == msg_no)
                         drop = AXIS2_TRUE;
                 }
@@ -487,7 +487,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
 static axis2_status_t AXIS2_CALL
 sandesha2_global_in_handler_process_dropped_msg(
     struct axis2_handler *handler, 
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr)
 {

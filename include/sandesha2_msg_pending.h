@@ -50,29 +50,29 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_pending
 
 AXIS2_EXTERN sandesha2_msg_pending_t* AXIS2_CALL
 sandesha2_msg_pending_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
 	axis2_char_t *ns_value);
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_free_void_arg(
     void *msg_pending,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_bool_t AXIS2_CALL
 sandesha2_msg_pending_is_pending(
     sandesha2_msg_pending_t *msg_pending,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_msg_pending_set_pending(
     sandesha2_msg_pending_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_bool_t pending);
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_to_soap_envelope(
     sandesha2_iom_rm_part_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);
 
 

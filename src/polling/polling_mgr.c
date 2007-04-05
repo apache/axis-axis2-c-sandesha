@@ -30,10 +30,10 @@
 #include <sandesha2_sender_mgr.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
-#include <axis2_uuid_gen.h>
-#include <axis2_rand.h>
+#include <axutil_uuid_gen.h>
+#include <axutil_rand.h>
 #include <stdio.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <platforms/axutil_platform_auto_sense.h>
 
 
 /** 
@@ -49,22 +49,22 @@ struct sandesha2_polling_mgr_t
      * By adding an entry to this, the polling_mgr will be asked to do a polling 
      * request on this sequence.
      */
-    axis2_array_list_t *scheduled_polling_reqs;
+    axutil_array_list_t *scheduled_polling_reqs;
     axis2_bool_t poll;
-    axis2_thread_mutex_t *mutex;
+    axutil_thread_mutex_t *mutex;
 };
 
 struct sandesha2_polling_mgr_args
 {
     sandesha2_polling_mgr_t *impl;
-    axis2_env_t *env;
+    axutil_env_t *env;
     sandesha2_storage_mgr_t *storage_mgr;
 };
             
 static axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_run (
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr);
 
 /**
@@ -72,12 +72,12 @@ sandesha2_polling_mgr_run (
  */
 static void * AXIS2_THREAD_FUNC
 sandesha2_polling_mgr_worker_func(
-    axis2_thread_t *thd, 
+    axutil_thread_t *thd, 
     void *data);
 
 AXIS2_EXTERN sandesha2_polling_mgr_t* AXIS2_CALL
 sandesha2_polling_mgr_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_polling_mgr_t *polling_mgr = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -93,7 +93,7 @@ sandesha2_polling_mgr_create(
 	}
     polling_mgr->scheduled_polling_reqs = NULL;
     polling_mgr->poll = AXIS2_FALSE; 
-    polling_mgr->mutex = axis2_thread_mutex_create(env->allocator,
+    polling_mgr->mutex = axutil_thread_mutex_create(env->allocator,
         AXIS2_THREAD_MUTEX_DEFAULT);
                         
 	return polling_mgr;
@@ -102,7 +102,7 @@ sandesha2_polling_mgr_create(
 axis2_status_t AXIS2_CALL
 sandesha2_polling_mgr_free_void_arg(
     void *polling_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_polling_mgr_t *polling_mgr_l = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -114,7 +114,7 @@ sandesha2_polling_mgr_free_void_arg(
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_free(
     sandesha2_polling_mgr_t *polling_mgr, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     /* Do not free this */
@@ -122,12 +122,12 @@ sandesha2_polling_mgr_free(
     
     if(polling_mgr->mutex)
     {
-        axis2_thread_mutex_destroy(polling_mgr->mutex);
+        axutil_thread_mutex_destroy(polling_mgr->mutex);
         polling_mgr->mutex = NULL;
     }
     if(polling_mgr->scheduled_polling_reqs)
     {
-        axis2_array_list_free(polling_mgr->scheduled_polling_reqs, env);
+        axutil_array_list_free(polling_mgr->scheduled_polling_reqs, env);
         polling_mgr->scheduled_polling_reqs = NULL;
     }
 	AXIS2_FREE(env->allocator, polling_mgr);
@@ -137,7 +137,7 @@ sandesha2_polling_mgr_free(
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_stop_polling (
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -148,21 +148,21 @@ sandesha2_polling_mgr_stop_polling (
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_start (
     sandesha2_polling_mgr_t *polling_mgr, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx)
 {
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
-    axis2_thread_mutex_lock(polling_mgr->mutex);
+    axutil_thread_mutex_lock(polling_mgr->mutex);
     polling_mgr->conf_ctx = conf_ctx;
-    polling_mgr->scheduled_polling_reqs = axis2_array_list_create(env, 
+    polling_mgr->scheduled_polling_reqs = axutil_array_list_create(env, 
         AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
 
     if(!polling_mgr->conf_ctx)
     {
-        axis2_thread_mutex_unlock(polling_mgr->mutex);
+        axutil_thread_mutex_unlock(polling_mgr->mutex);
         return AXIS2_FAILURE;
     }
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
@@ -170,24 +170,24 @@ sandesha2_polling_mgr_start (
         axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env));
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
-    axis2_thread_mutex_unlock(polling_mgr->mutex);
+    axutil_thread_mutex_unlock(polling_mgr->mutex);
     return AXIS2_SUCCESS;
 }
             
 static axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_run (
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr)
 {
-    axis2_thread_t *worker_thread = NULL;
+    axutil_thread_t *worker_thread = NULL;
     sandesha2_polling_mgr_args_t *args = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     args = AXIS2_MALLOC(env->allocator, sizeof(
                         sandesha2_polling_mgr_args_t)); 
     args->impl = polling_mgr;
-    args->env = (axis2_env_t*)env;
+    args->env = (axutil_env_t*)env;
     args->storage_mgr = storage_mgr;
     worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
         sandesha2_polling_mgr_worker_func, (void*)args);
@@ -207,13 +207,13 @@ sandesha2_polling_mgr_run (
  */
 static void * AXIS2_THREAD_FUNC
 sandesha2_polling_mgr_worker_func(
-    axis2_thread_t *thd, 
+    axutil_thread_t *thd, 
     void *data)
 {
     sandesha2_polling_mgr_t *polling_mgr = NULL;
     sandesha2_polling_mgr_args_t *args;
     sandesha2_storage_mgr_t *storage_mgr;
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     
     args = (sandesha2_polling_mgr_args_t*)data;
     env = args->env;
@@ -239,7 +239,7 @@ sandesha2_polling_mgr_worker_func(
         axis2_msg_ctx_t *ref_msg_ctx = NULL;
         axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
         axis2_endpoint_ref_t *to = NULL;
-        axis2_property_t *property = NULL;
+        axutil_property_t *property = NULL;
         sandesha2_transaction_t *transaction = NULL;
         AXIS2_SLEEP(SANDESHA2_POLLING_MANAGER_WAIT_TIME);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
@@ -249,13 +249,13 @@ sandesha2_polling_mgr_worker_func(
           * do the earliest one. else pick one randomly.
           */
         if(polling_mgr->scheduled_polling_reqs)
-            size = axis2_array_list_size(polling_mgr->scheduled_polling_reqs, 
+            size = axutil_array_list_size(polling_mgr->scheduled_polling_reqs, 
                 env);
         if(size > 0)
         {
-            seq_id = axis2_array_list_get(polling_mgr->scheduled_polling_reqs, 
+            seq_id = axutil_array_list_get(polling_mgr->scheduled_polling_reqs, 
                 env, 0);
-            axis2_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);
+            axutil_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);
         }
         if(!seq_id)
         {
@@ -264,21 +264,21 @@ sandesha2_polling_mgr_worker_func(
             int size = 0;
             if(find_bean)
             {
-                axis2_array_list_t *results = NULL;
+                axutil_array_list_t *results = NULL;
                 sandesha2_next_msg_bean_set_polling_mode(find_bean, env, 
                     AXIS2_TRUE);
                 results = sandesha2_next_msg_mgr_find(next_msg_mgr, env, 
                     find_bean);
                 if(results)
-                    size = axis2_array_list_size(results, env);
+                    size = axutil_array_list_size(results, env);
                 if(size > 0)
                 {
                     unsigned int rand_var = 
-                        axis2_rand_get_seed_value_based_on_time(env);
-                    int item = axis2_rand_with_range(&rand_var, 0, size);
+                        axutil_rand_get_seed_value_based_on_time(env);
+                    int item = axutil_rand_with_range(&rand_var, 0, size);
                     item--;
                     next_msg_bean = (sandesha2_next_msg_bean_t *) 
-                        axis2_array_list_get(results, env, item);
+                        axutil_array_list_get(results, env, item);
                 }
 
             }
@@ -328,7 +328,7 @@ sandesha2_polling_mgr_worker_func(
             AXIS2_TRANSPORT_IN, NULL);
         /* Storing the MakeConnection message */
         make_conn_msg_store_key = axis2_uuid_gen(env);
-        property = axis2_property_create_with_args(env, 0, 0, 0, seq_prop_key);
+        property = axutil_property_create_with_args(env, 0, 0, 0, seq_prop_key);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY, property); 
         make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, 
@@ -369,7 +369,7 @@ sandesha2_polling_mgr_worker_func(
         /* This message should not be sent untils it is qualified. i.e. Till
          * it is sent through the sandesha2_transport_sender
          */
-        property = axis2_property_create_with_args(env, 0, 0, 0, 
+        property = axutil_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
@@ -391,7 +391,7 @@ sandesha2_polling_mgr_worker_func(
 void AXIS2_CALL
 sandesha2_polling_mgr_set_poll(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t poll)
 {
     polling_mgr->poll = poll;
@@ -400,7 +400,7 @@ sandesha2_polling_mgr_set_poll(
 axis2_bool_t AXIS2_CALL
 sandesha2_polling_mgr_is_poll(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return polling_mgr->poll;
 }
@@ -408,13 +408,13 @@ sandesha2_polling_mgr_is_poll(
 void AXIS2_CALL
 sandesha2_polling_mgr_schedule_polling_request(
     sandesha2_polling_mgr_t *polling_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *internal_seq_id)
 {
-    if(!axis2_array_list_contains(polling_mgr->scheduled_polling_reqs, env, 
+    if(!axutil_array_list_contains(polling_mgr->scheduled_polling_reqs, env, 
         internal_seq_id))
     {
-        axis2_array_list_add(polling_mgr->scheduled_polling_reqs, env, 
+        axutil_array_list_add(polling_mgr->scheduled_polling_reqs, env, 
             internal_seq_id);
     }
 }

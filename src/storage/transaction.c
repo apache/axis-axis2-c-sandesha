@@ -19,16 +19,16 @@
 #include <sandesha2_error.h>
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_storage_mgr.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
+#include <platforms/axutil_platform_auto_sense.h>
 
 axis2_status_t AXIS2_CALL 
 sandesha2_transaction_free(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return trans->ops->free (trans, env);
 }
@@ -36,7 +36,7 @@ sandesha2_transaction_free(
 axis2_bool_t AXIS2_CALL
 sandesha2_transaction_is_active(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return trans->ops->is_active(trans, env);
 }
@@ -44,7 +44,7 @@ sandesha2_transaction_is_active(
 void AXIS2_CALL
 sandesha2_transaction_commit(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     trans->ops->commit(trans, env);
 }
@@ -52,7 +52,7 @@ sandesha2_transaction_commit(
 void AXIS2_CALL
 sandesha2_transaction_rollback(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     trans->ops->rollback(trans, env);
 }
@@ -60,7 +60,7 @@ sandesha2_transaction_rollback(
 void AXIS2_CALL
 sandesha2_transaction_enlist(
     sandesha2_transaction_t *trans,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *rm_bean)
 {
     trans->ops->enlist(trans, env, rm_bean);

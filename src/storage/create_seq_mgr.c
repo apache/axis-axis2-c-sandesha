@@ -17,15 +17,15 @@
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
 
 void AXIS2_CALL 
 sandesha2_create_seq_mgr_free(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     seq_mgr->ops.free(seq_mgr, env);
 }
@@ -33,7 +33,7 @@ sandesha2_create_seq_mgr_free(
 axis2_bool_t AXIS2_CALL
 sandesha2_create_seq_mgr_insert(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     return seq_mgr->ops.insert(seq_mgr, env, bean);
@@ -42,7 +42,7 @@ sandesha2_create_seq_mgr_insert(
 axis2_bool_t AXIS2_CALL
 sandesha2_create_seq_mgr_remove(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     return seq_mgr->ops.remove(seq_mgr, env, msg_id);
@@ -51,7 +51,7 @@ sandesha2_create_seq_mgr_remove(
 sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_create_seq_mgr_retrieve(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     return seq_mgr->ops.retrieve(seq_mgr, env, msg_id);
@@ -60,16 +60,16 @@ sandesha2_create_seq_mgr_retrieve(
 axis2_bool_t AXIS2_CALL
 sandesha2_create_seq_mgr_update(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     return seq_mgr->ops.update(seq_mgr, env, bean);
 }
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_create_seq_mgr_find(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     return seq_mgr->ops.find(seq_mgr, env, bean);
@@ -78,7 +78,7 @@ sandesha2_create_seq_mgr_find(
 sandesha2_create_seq_bean_t *AXIS2_CALL
 sandesha2_create_seq_mgr_find_unique(
     sandesha2_create_seq_mgr_t *seq_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_create_seq_bean_t *bean)
 {
     return seq_mgr->ops.find_unique(seq_mgr, env, bean);

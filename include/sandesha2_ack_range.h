@@ -49,30 +49,30 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_range
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value,
     axis2_char_t *prefix);
                          	
 long AXIS2_CALL
 sandesha2_ack_range_get_lower_value(
     sandesha2_ack_range_t *ack_range,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_ack_range_set_lower_value(
     sandesha2_ack_range_t *ack_range,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     long value);
 
 long AXIS2_CALL                    	
 sandesha2_ack_range_get_upper_value(
     sandesha2_ack_range_t *ack_range,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_status_t AXIS2_CALL
 sandesha2_ack_range_set_upper_value(
     sandesha2_ack_range_t *ack_range,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     long value);
                     
 /** @} */

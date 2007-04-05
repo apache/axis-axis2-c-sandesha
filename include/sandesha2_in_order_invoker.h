@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 
 
@@ -41,7 +41,7 @@ typedef struct sandesha2_in_order_invoker_t sandesha2_in_order_invoker_t;
 
 AXIS2_EXTERN sandesha2_in_order_invoker_t* AXIS2_CALL
 sandesha2_in_order_invoker_create(
-    const axis2_env_t *env);
+    const axutil_env_t *env);
  
 /**
  * Frees the in_order_invoker given as a void pointer. This method would cast the 
@@ -53,47 +53,47 @@ sandesha2_in_order_invoker_create(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_in_order_invoker_free_void_arg(
     void *invoker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_stop_invoker_for_seq(
     sandesha2_in_order_invoker_t *invoker, 
-    const axis2_env_t *env, axis2_char_t *seq_id);
+    const axutil_env_t *env, axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_stop_invoking (
     sandesha2_in_order_invoker_t *invoker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_bool_t AXIS2_CALL 
 sandesha2_in_order_invoker_is_invoker_started(
     sandesha2_in_order_invoker_t *invoker, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_run_for_seq(
     sandesha2_in_order_invoker_t *invoker, 
-    const axis2_env_t *env, axis2_conf_ctx_t *conf_ctx, 
+    const axutil_env_t *env, axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_run (
     sandesha2_in_order_invoker_t *invoker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                         
 axis2_status_t AXIS2_CALL
 sandesha2_in_order_invoker_make_msg_ready_for_reinjection(
     sandesha2_in_order_invoker_t *invoker, 
-    const axis2_env_t *env, axis2_msg_ctx_t *msg_ctx);
+    const axutil_env_t *env, axis2_msg_ctx_t *msg_ctx);
 
 void * AXIS2_THREAD_FUNC
 sandesha2_in_order_invoker_worker_func(
-    axis2_thread_t *thd, void *data);
+    axutil_thread_t *thd, void *data);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_in_order_invoker_free(
     sandesha2_in_order_invoker_t *invoker, 
-    const axis2_env_t *env);								
+    const axutil_env_t *env);								
 
 
 /** @} */

@@ -35,29 +35,29 @@ struct sandesha2_last_msg_impl
 /***************************** Function headers *******************************/
 axis2_char_t* AXIS2_CALL 
 sandesha2_last_msg_get_namespace_value (sandesha2_iom_rm_element_t *last_msg,
-						const axis2_env_t *env);
+						const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+                    	const axutil_env_t *env, axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_last_msg_to_om_node(sandesha2_iom_rm_element_t *last_msg,
-                    	const axis2_env_t *env, void *om_node);
+                    	const axutil_env_t *env, void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_last_msg_is_namespace_supported(sandesha2_iom_rm_element_t *last_msg,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+                    	const axutil_env_t *env, axis2_char_t *namespace);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_last_msg_free (sandesha2_iom_rm_element_t *last_msg, 
-                        const axis2_env_t *env);								
+                        const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
 sandesha2_last_msg_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_val)
 {
     sandesha2_last_msg_impl_t *last_msg_impl = NULL;
@@ -111,7 +111,7 @@ sandesha2_last_msg_create(
 
 axis2_status_t AXIS2_CALL 
 sandesha2_last_msg_free (sandesha2_iom_rm_element_t *last_msg, 
-                        const axis2_env_t *env)
+                        const axutil_env_t *env)
 {
     sandesha2_last_msg_impl_t *last_msg_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -133,7 +133,7 @@ sandesha2_last_msg_free (sandesha2_iom_rm_element_t *last_msg,
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_last_msg_get_namespace_value (sandesha2_iom_rm_element_t *last_msg,
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
 	sandesha2_last_msg_impl_t *last_msg_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -145,13 +145,13 @@ sandesha2_last_msg_get_namespace_value (sandesha2_iom_rm_element_t *last_msg,
 
 void* AXIS2_CALL 
 sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+                    	const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_last_msg_impl_t *last_msg_impl = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *lm_part = NULL;
     axiom_node_t *lm_node = NULL;
-    axis2_qname_t *lm_qname = NULL;
+    axutil_qname_t *lm_qname = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
@@ -164,7 +164,7 @@ sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
                         AXIS2_FAILURE);
         return NULL;
     }
-    lm_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG, 
+    lm_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG, 
                         last_msg_impl->ns_val, NULL);
     if(NULL == lm_qname)
     {
@@ -185,7 +185,7 @@ sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
 axiom_node_t* AXIS2_CALL 
 sandesha2_last_msg_to_om_node(
     sandesha2_iom_rm_element_t *last_msg,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node)
 {
 	sandesha2_last_msg_impl_t *last_msg_impl = NULL;
@@ -216,7 +216,7 @@ sandesha2_last_msg_to_om_node(
 axis2_bool_t AXIS2_CALL 
 sandesha2_last_msg_is_namespace_supported(
     sandesha2_iom_rm_element_t *last_msg,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
 	sandesha2_last_msg_impl_t *last_msg_impl = NULL;

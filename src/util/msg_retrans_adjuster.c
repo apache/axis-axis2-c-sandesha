@@ -19,26 +19,26 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_msg_init.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_mgr.h>
 
 /******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_sender_bean_t *retrans_bean, 
     sandesha2_property_bean_t *property_bean);
 
 long AXIS2_CALL
 sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int count,
     long initial_interval);
                         
 axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *int_seq_id,
     axis2_char_t *seq_id,
     axis2_msg_ctx_t *msg_ctx,
@@ -49,7 +49,7 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_retrans(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *retrans_bean,
     axis2_conf_ctx_t *conf_ctx, 
     sandesha2_storage_mgr_t *storage_mgr)
@@ -117,7 +117,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
 
 sandesha2_sender_bean_t * AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_sender_bean_t *retrans_bean, 
     sandesha2_property_bean_t *property_bean)
 {
@@ -151,7 +151,7 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
 
 long AXIS2_CALL
 sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int count,
     long initial_interval)
 {
@@ -163,7 +163,7 @@ sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *int_seq_id,
     axis2_char_t *seq_id,
     axis2_msg_ctx_t *msg_ctx,
@@ -171,8 +171,8 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
-    axis2_property_t *property = NULL;
-    axis2_property_t *new_property = NULL;
+    axutil_property_t *property = NULL;
+    axutil_property_t *new_property = NULL;
     
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -187,7 +187,7 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION);
     if(property)
-        new_property = axis2_property_clone(property, env);
+        new_property = axutil_property_clone(property, env);
     if(new_property)
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             new_property);

@@ -22,11 +22,11 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_sender_bean.h>
 #include <sandesha2_storage_mgr.h>
-#include <axis2_log.h>
-#include <axis2_hash.h>
-#include <axis2_thread.h>
-#include <axis2_property.h>
-#include <axis2_types.h>
+#include <axutil_log.h>
+#include <axutil_hash.h>
+#include <axutil_thread.h>
+#include <axutil_property.h>
+#include <axutil_types.h>
 
 /** 
  * @brief Sandesha2 Permanent Sender Manager Struct Impl
@@ -51,8 +51,8 @@ sandesha2_sender_find_callback(
     int i = 0;
     sandesha2_sender_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
-    axis2_array_list_t *data_list = (axis2_array_list_t *) args->data;
+    const axutil_env_t *env = args->env;
+    axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
     if(argc < 1)
     {
         args->data = NULL;
@@ -60,7 +60,7 @@ sandesha2_sender_find_callback(
     }
     if(!data_list)
     {
-        data_list = axis2_array_list_create(env, 0);
+        data_list = axutil_array_list_create(env, 0);
         args->data = data_list;
     }
     bean = sandesha2_sender_bean_create(env);
@@ -96,7 +96,7 @@ sandesha2_sender_find_callback(
             if(argv[i])
                 sandesha2_sender_bean_set_to_address(bean, env, argv[i]);
     }
-    axis2_array_list_add(data_list, env, bean);
+    axutil_array_list_add(data_list, env, bean);
     return 0;
 }
 
@@ -109,7 +109,7 @@ sandesha2_sender_retrieve_callback(
 {
     int i = 0;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axis2_env_t *env = args->env;
+    const axutil_env_t *env = args->env;
     sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) args->data;
     if(argc < 1)
     {
@@ -172,61 +172,61 @@ sandesha2_sender_count_callback(
 void AXIS2_CALL
 sandesha2_permanent_sender_mgr_free(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_insert(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_remove(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id);
 
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_retrieve(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_update(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean);
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_by_internal_seq_id(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *internal_seq_id);
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_by_sender_bean(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean);
 
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_unique(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_match(
     sandesha2_permanent_bean_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate);
 
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axis2_char_t *seq_id);
 
 static const sandesha2_sender_mgr_ops_t sender_mgr_ops = 
@@ -244,7 +244,7 @@ static const sandesha2_sender_mgr_ops_t sender_mgr_ops =
 
 AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
 sandesha2_permanent_sender_mgr_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_storage_mgr_t *storage_mgr,
     axis2_conf_ctx_t *ctx)
 {
@@ -264,7 +264,7 @@ sandesha2_permanent_sender_mgr_create(
 void AXIS2_CALL
 sandesha2_permanent_sender_mgr_free(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
@@ -284,7 +284,7 @@ sandesha2_permanent_sender_mgr_free(
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_insert(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
     axis2_char_t sql_insert[1024];
@@ -343,7 +343,7 @@ sandesha2_permanent_sender_mgr_insert(
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_remove(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     axis2_char_t sql_retrieve[256];
@@ -368,7 +368,7 @@ sandesha2_permanent_sender_mgr_remove(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_retrieve(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *msg_id)
 {
     axis2_char_t sql_retrieve[256];
@@ -397,7 +397,7 @@ sandesha2_permanent_sender_mgr_retrieve(
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_update(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
     axis2_char_t sql_retrieve[256];
@@ -447,16 +447,16 @@ sandesha2_permanent_sender_mgr_update(
     return AXIS2_SUCCESS;
 }
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_by_internal_seq_id(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *internal_seq_id)
 {
     axis2_char_t *sql_find = NULL;
     axis2_char_t *sql_count = NULL;
     sandesha2_sender_bean_t *bean = NULL;
-    axis2_array_list_t *ret = NULL;
+    axutil_array_list_t *ret = NULL;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_find_by_internal_seq_id");
@@ -480,16 +480,16 @@ sandesha2_permanent_sender_mgr_find_by_internal_seq_id(
     return ret;
 }
 
-axis2_array_list_t *AXIS2_CALL
+axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_by_sender_bean(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
     axis2_char_t *sql_find = NULL;
     axis2_char_t *sql_count = NULL;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
-    axis2_array_list_t *ret = NULL;
+    axutil_array_list_t *ret = NULL;
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_find_by_sender_bean");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -509,7 +509,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_find_unique(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
     axis2_char_t *sql_find = NULL;
@@ -531,7 +531,7 @@ sandesha2_permanent_sender_mgr_find_unique(
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_match(
     sandesha2_permanent_bean_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     sandesha2_rm_bean_t *candidate)
 {
@@ -629,7 +629,7 @@ sandesha2_permanent_sender_mgr_match(
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axis2_char_t *seq_id)
 {
     axis2_char_t *sql_find = NULL;
@@ -637,7 +637,7 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_bean_t *matcher = sandesha2_sender_bean_create(env);
     long time_now = 0;
     int i = 0, size = 0;
-    axis2_array_list_t *match_list = NULL;
+    axutil_array_list_t *match_list = NULL;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     sandesha2_sender_bean_t *result = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -664,12 +664,12 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
      * message first then we are done.
      */
     if(match_list)
-        size = axis2_array_list_size(match_list, env);
+        size = axutil_array_list_size(match_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *bean = NULL;
         int msg_type = -1;
-        bean = (sandesha2_sender_bean_t *) axis2_array_list_get(match_list, 
+        bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, 
             env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
         if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)

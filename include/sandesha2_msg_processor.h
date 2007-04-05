@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_element.h>
 #include <sandesha2_msg_ctx.h>
@@ -50,17 +50,17 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_processor_ops
     axis2_status_t (AXIS2_CALL *
                 process_in_msg)(
                     sandesha2_msg_processor_t *proc,
-                    const axis2_env_t *env,
+                    const axutil_env_t *env,
                     sandesha2_msg_ctx_t *rm_msg_ctx);
                     
     axis2_status_t (AXIS2_CALL *
                 process_out_msg)(
                     sandesha2_msg_processor_t *proc,
-                    const axis2_env_t *env,
+                    const axutil_env_t *env,
                     sandesha2_msg_ctx_t *rm_msg_ctx);
 
     axis2_status_t (AXIS2_CALL *free) (sandesha2_msg_processor_t *proc,
-                    const axis2_env_t *env);
+                    const axutil_env_t *env);
 };
 
 /**
@@ -78,24 +78,24 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_processor
  */
 sandesha2_msg_processor_t *AXIS2_CALL   
 sandesha2_msg_processor_create_msg_processor(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
                         
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
     
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
 
 /** @} */

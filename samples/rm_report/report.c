@@ -38,17 +38,17 @@
 axis2_status_t AXIS2_CALL
 rm_report_callback_on_complete(
     struct axis2_callback *callback,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 /* on_error callback function */
 axis2_status_t AXIS2_CALL
 rm_report_callback_on_error(
     struct axis2_callback *callback,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int exception);
 
 void wait_on_callback(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_callback_t *callback);
 
 static void 
@@ -57,7 +57,7 @@ usage(
 
 int main(int argc, char** argv)
 {
-    const axis2_env_t *env = NULL;
+    const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axiom_node_t *payload = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_soap_envelope_t *result = NULL;
@@ -76,11 +76,11 @@ int main(int argc, char** argv)
     int i = 0, size = 0;
    
     /* Set up the environment */
-    /*env = axis2_env_create_all("report_non_blocking_dual.log", 
+    /*env = axutil_env_create_all("report_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_DEBUG);*/
-    /*env = axis2_env_create_all("report_non_blocking_dual.log", 
+    /*env = axutil_env_create_all("report_non_blocking_dual.log", 
             AXIS2_LOG_LEVEL_ERROR);*/
-    env = axis2_env_create_all("rm_report.log", 
+    env = axutil_env_create_all("rm_report.log", 
             AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of report service */
@@ -162,23 +162,23 @@ int main(int argc, char** argv)
     }
     /* Offer sequence */
     offered_seq_id = axis2_uuid_gen(env);
-    property = axis2_property_create(env);
+    property = axutil_property_create(env);
     if(property)
     {
-        axis2_property_set_value(property, env, axis2_strdup(offered_seq_id, 
+        axutil_property_set_value(property, env, axis2_strdup(offered_seq_id, 
             env));
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
     /* RM Version 1.1 */
-    property = axis2_property_create_with_args(env, 3, 0, 0, 
+    property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    property = axis2_property_create_with_args(env, 3, 0, 0, "sequence1");
+    property = axutil_property_create_with_args(env, 3, 0, 0, "sequence1");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
@@ -188,7 +188,7 @@ int main(int argc, char** argv)
     svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
    
-    property = axis2_property_create_with_args(env, 0, 0, 0, "12");
+    property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
         AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
@@ -217,14 +217,14 @@ int main(int argc, char** argv)
     if(report)
     {
         int i = 0, size = 0;
-        axis2_array_list_t *incoming_seq_list = NULL;
-        axis2_array_list_t *outgoing_seq_list = NULL;
+        axutil_array_list_t *incoming_seq_list = NULL;
+        axutil_array_list_t *outgoing_seq_list = NULL;
         incoming_seq_list = sandesha2_report_get_incoming_seq_list(report, env);
         if(incoming_seq_list)
-            size = axis2_array_list_size(incoming_seq_list, env);
+            size = axutil_array_list_size(incoming_seq_list, env);
         for(i = 0; i < size; i++)
         {
-            axis2_char_t *seq_id = axis2_array_list_get(incoming_seq_list, env, i);
+            axis2_char_t *seq_id = axutil_array_list_get(incoming_seq_list, env, i);
             if(seq_id)
             {
                 printf("incoming seq_id %d:%s\n", i+1, seq_id);
@@ -233,10 +233,10 @@ int main(int argc, char** argv)
         size = 0;
         outgoing_seq_list = sandesha2_report_get_outgoing_seq_list(report, env);
         if(outgoing_seq_list)
-            size = axis2_array_list_size(outgoing_seq_list, env);
+            size = axutil_array_list_size(outgoing_seq_list, env);
         for(i = 0; i < size; i++)
         {
-            axis2_char_t *seq_id = axis2_array_list_get(outgoing_seq_list, env, i);
+            axis2_char_t *seq_id = axutil_array_list_get(outgoing_seq_list, env, i);
             if(seq_id)
             {
                 long completed_msgs_count = -1; 
@@ -247,7 +247,7 @@ int main(int argc, char** argv)
             }
         }
     }
-    property = axis2_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
@@ -281,7 +281,7 @@ int main(int argc, char** argv)
 axis2_status_t AXIS2_CALL
 rm_report_callback_on_complete(
     struct axis2_callback *callback,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
    /** SOAP response has arrived here; get the soap envelope 
      from the callback object and do whatever you want to do with it */
@@ -328,7 +328,7 @@ rm_report_callback_on_complete(
 axis2_status_t AXIS2_CALL
 rm_report_callback_on_error(
     struct axis2_callback *callback,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int exception)
 {
    /** take necessary action on error */
@@ -338,7 +338,7 @@ rm_report_callback_on_error(
 }
 
 void wait_on_callback(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_callback_t *callback)
 {
     /** Wait till callback is complete. Simply keep the parent thread running

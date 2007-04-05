@@ -22,11 +22,11 @@
  * @brief Sandesha Permanat Sender Manager Interface
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -43,7 +43,7 @@ struct axis2_conf_ctx;
 
 AXIS2_EXTERN struct sandesha2_sender_mgr * AXIS2_CALL
 sandesha2_permanent_sender_mgr_create(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     struct sandesha2_storage_mgr *storage_mgr,
     struct axis2_conf_ctx *ctx);
 

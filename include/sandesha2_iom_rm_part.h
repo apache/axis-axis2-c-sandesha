@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <sandesha2_iom_rm_element.h>
 
@@ -49,7 +49,7 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_part_ops
 	axis2_status_t (AXIS2_CALL *
         to_soap_env) 
     	    (sandesha2_iom_rm_part_t *part,
-             const axis2_env_t *env, 
+             const axutil_env_t *env, 
              axiom_soap_envelope_t *envelope);
 };
 
@@ -66,12 +66,12 @@ AXIS2_DECLARE_DATA struct sandesha2_iom_rm_part
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_part_free(
     sandesha2_iom_rm_part_t *part,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_part_to_soap_envelope( 
     sandesha2_iom_rm_part_t *part,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);
 
  /** @} */

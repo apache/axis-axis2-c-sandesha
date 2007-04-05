@@ -47,12 +47,12 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_number_ops
     long (AXIS2_CALL *
         get_msg_num)
             (sandesha2_msg_number_t *msg_number,
-            const axis2_env_t *env);
+            const axutil_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
         set_msg_num)
             (sandesha2_msg_number_t *msg_number,
-            const axis2_env_t *env, 
+            const axutil_env_t *env, 
             long value);
 };
 
@@ -68,7 +68,7 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_number
 
 AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
 sandesha2_msg_number_create(
-						const axis2_env_t *env,
+						const axutil_env_t *env,
 					    axis2_char_t *ns_value);
 
 /************************** Start of function macros **************************/

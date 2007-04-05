@@ -16,19 +16,19 @@
 
 #include <stdlib.h>
 #include <sandesha2_error.h>
-#include <axis2_error_default.h>
+#include <axutil_error_default.h>
 
 const axis2_char_t * AXIS2_CALL 
-sandesha2_error_impl_get_message (const axis2_error_t *error);
+sandesha2_error_impl_get_message (const axutil_error_t *error);
       
 axis2_status_t AXIS2_CALL
-sandesha2_error_impl_set_error_number (axis2_error_t *error, axis2_error_codes_t error_number);
+sandesha2_error_impl_set_error_number (axutil_error_t *error, axutil_error_codes_t error_number);
 
 axis2_status_t AXIS2_CALL
-sandesha2_error_impl_set_status_code (axis2_error_t *error, axis2_status_codes_t status_code);
+sandesha2_error_impl_set_status_code (axutil_error_t *error, axis2_status_codes_t status_code);
 
 axis2_status_t AXIS2_CALL
-sandesha2_error_impl_get_status_code (axis2_error_t *error);
+sandesha2_error_impl_get_status_code (axutil_error_t *error);
 
 /* array to hold error messages */
 const axis2_char_t* sandesha2_error_messages[AXIS2_ERROR_LAST];
@@ -200,7 +200,7 @@ sandesha2_error_init()
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_error_impl_free (axis2_error_t *error)
+sandesha2_error_impl_free (axutil_error_t *error)
 {
     if (NULL != error && NULL != error->ops)
     {
@@ -213,14 +213,14 @@ sandesha2_error_impl_free (axis2_error_t *error)
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_error_t* AXIS2_CALL
+AXIS2_EXTERN axutil_error_t* AXIS2_CALL
 sandesha2_error_create (axis2_allocator_t * allocator)
 {
-    axis2_error_t *error = NULL;
+    axutil_error_t *error = NULL;
     if (!allocator)
         return NULL;
 
-    error = axis2_error_create(allocator);
+    error = axutil_error_create(allocator);
 
     if (!error)
         return NULL;
@@ -236,7 +236,7 @@ sandesha2_error_create (axis2_allocator_t * allocator)
 
 const axis2_char_t * AXIS2_CALL
 sandesha2_error_impl_get_message (
-        const axis2_error_t *error)
+        const axutil_error_t *error)
 {
     if (error && error->error_number >= AXIS2_ERROR_NONE && error->error_number 
             < AXIS2_ERROR_LAST)
@@ -254,15 +254,15 @@ sandesha2_error_impl_get_message (
 
 axis2_status_t AXIS2_CALL
 sandesha2_error_impl_set_error_number (
-        axis2_error_t *error, 
-        axis2_error_codes_t error_number)
+        axutil_error_t *error, 
+        axutil_error_codes_t error_number)
 {
     error->error_number = error_number; 
     return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
-sandesha2_error_impl_set_status_code (axis2_error_t *error, axis2_status_codes_t status_code)
+sandesha2_error_impl_set_status_code (axutil_error_t *error, axis2_status_codes_t status_code)
 {
     error->status_code = status_code; 
     return AXIS2_SUCCESS;
@@ -270,7 +270,7 @@ sandesha2_error_impl_set_status_code (axis2_error_t *error, axis2_status_codes_t
 
 axis2_status_t AXIS2_CALL
 sandesha2_error_impl_get_status_code (
-        axis2_error_t *error)
+        axutil_error_t *error)
 {
     return error->status_code;
 }

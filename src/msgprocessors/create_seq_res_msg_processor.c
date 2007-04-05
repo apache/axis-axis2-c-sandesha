@@ -25,7 +25,7 @@
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_sender_bean.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_engine.h>
 #include <axiom_soap_const.h>
 #include <stdio.h>
@@ -39,7 +39,7 @@
 #include <sandesha2_seq_offer.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_create_seq_res.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_uuid_gen.h>
 #include <sandesha2_create_seq_bean.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <axis2_endpoint_ref.h>
@@ -73,18 +73,18 @@ struct sandesha2_create_seq_res_msg_processor_impl
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
 /*    
 static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_offer_accepted(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *seq_id,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);
@@ -92,13 +92,13 @@ sandesha2_create_seq_res_msg_processor_offer_accepted(
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-    const axis2_env_t *env);								
+    const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_create_seq_res_msg_processor_create(
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_create_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -137,7 +137,7 @@ sandesha2_create_seq_res_msg_processor_create(
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_create_seq_res_msg_processor_impl_t *msg_proc_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -154,7 +154,7 @@ sandesha2_create_seq_res_msg_processor_free (
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -176,7 +176,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     sandesha2_accept_t *accept = NULL;
     sandesha2_sender_bean_t *target_bean = NULL;
-    axis2_array_list_t *found_list = NULL;
+    axutil_array_list_t *found_list = NULL;
     int i = 0, size = 0;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_bool_t polling_mode = AXIS2_FALSE;
@@ -387,7 +387,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     found_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
                         target_bean);
     if(found_list)
-        size = axis2_array_list_size(found_list, env);
+        size = axutil_array_list_size(found_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *tmp_bean = NULL;
@@ -400,7 +400,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_identifier_t *ident = NULL;
         sandesha2_ack_requested_t *ack_req_part = NULL;
         
-        tmp_bean = axis2_array_list_get(found_list, env, i);
+        tmp_bean = axutil_array_list_get(found_list, env, i);
         key = sandesha2_sender_bean_get_msg_ctx_ref_key(tmp_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
                         key, conf_ctx);
@@ -459,7 +459,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     

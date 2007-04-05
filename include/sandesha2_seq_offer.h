@@ -50,29 +50,29 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_offer
 
 AXIS2_EXTERN sandesha2_seq_offer_t* AXIS2_CALL
 sandesha2_seq_offer_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
 
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_seq_offer_get_identifier(
     sandesha2_seq_offer_t *seq_offer,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_offer_set_identifier(
     sandesha2_seq_offer_t *seq_offer,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_identifier_t *identifier);
 
 sandesha2_expires_t * AXIS2_CALL                    	
 sandesha2_seq_offer_get_expires(
     sandesha2_seq_offer_t *seq_offer,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_status_t AXIS2_CALL
 sandesha2_seq_offer_set_expires(
     sandesha2_seq_offer_t *seq_offer,
-    const axis2_env_t *env, sandesha2_expires_t *expires);
+    const axutil_env_t *env, sandesha2_expires_t *expires);
  
 /** @} */
 #ifdef __cplusplus

@@ -17,8 +17,8 @@
 #ifndef SANDESHA2_INVOKER_BEAN_H
 #define SANDESHA2_INVOKER_BEAN_H
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
@@ -38,11 +38,11 @@ AXIS2_DECLARE_DATA struct sandesha2_invoker_bean
  */
 AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
 sandesha2_invoker_bean_create(
-	const axis2_env_t *env);
+	const axutil_env_t *env);
 
 AXIS2_EXTERN sandesha2_invoker_bean_t* AXIS2_CALL
 sandesha2_invoker_bean_create_with_data(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t * ref_key,
 	long msg_no,
 	axis2_char_t *seq_id,
@@ -51,81 +51,81 @@ sandesha2_invoker_bean_create_with_data(
 void AXIS2_CALL 
 sandesha2_invoker_bean_free  (
     sandesha2_rm_bean_t *invoker_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 sandesha2_rm_bean_t * AXIS2_CALL
 sandesha2_invoker_bean_get_base( 
     sandesha2_rm_bean_t* invoker,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_base (
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_rm_bean_t* rm_bean);
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_ctx_ref_key(
     sandesha2_rm_bean_t *invoker_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL 
 sandesha2_invoker_bean_set_msg_ctx_ref_key(
     sandesha2_invoker_bean_t *invoker_bean,
-	const axis2_env_t *env, axis2_char_t* context_ref_id) ;
+	const axutil_env_t *env, axis2_char_t* context_ref_id) ;
 
 long AXIS2_CALL 
 sandesha2_invoker_bean_get_msg_no(
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 	
 void AXIS2_CALL
 sandesha2_invoker_bean_set_msg_no(
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env, long msgno) ;
+    const axutil_env_t *env, long msgno) ;
 
 axis2_char_t* AXIS2_CALL
 sandesha2_invoker_bean_get_seq_id(
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_seq_id(
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env, axis2_char_t* int_seq_id);
+    const axutil_env_t *env, axis2_char_t* int_seq_id);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_invoker_bean_is_invoked (
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 void AXIS2_CALL 
 sandesha2_invoker_bean_set_invoked( 
     sandesha2_invoker_bean_t *invoker_bean,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t invoked);
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_id( 
     sandesha2_rm_bean_t *invoker_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     long id);
 
 long AXIS2_CALL
 sandesha2_invoker_bean_get_id( 
     sandesha2_rm_bean_t *invoker_bean,
-	const axis2_env_t *env);
+	const axutil_env_t *env);
 
 void AXIS2_CALL
 sandesha2_invoker_bean_set_transaction( 
     sandesha2_rm_bean_t *invoker_bean,
-	const axis2_env_t *env, 
+	const axutil_env_t *env, 
     struct sandesha2_transaction *transaction);
 
 struct sandesha2_transaction *AXIS2_CALL
 sandesha2_invoker_bean_get_transaction( 
     sandesha2_rm_bean_t *invoker_bean,
-	const axis2_env_t *env);
+	const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

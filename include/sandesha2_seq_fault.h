@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 #include <sandesha2_fault_code.h>
@@ -52,18 +52,18 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_fault
     
 AXIS2_EXTERN sandesha2_seq_fault_t* AXIS2_CALL
 sandesha2_seq_fault_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
 
 sandesha2_fault_code_t * AXIS2_CALL
 sandesha2_seq_fault_get_fault_code(
     sandesha2_seq_fault_t *seq_fault,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_fault_set_fault_code(
     sandesha2_seq_fault_t *seq_fault,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_fault_code_t *fault_code);
 
 

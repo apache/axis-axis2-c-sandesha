@@ -22,11 +22,11 @@
  * @brief Sandesha Message Validator
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
@@ -43,7 +43,7 @@ extern "C"
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_validator_validate_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx, 
     sandesha2_storage_mgr_t *storage_mgr);
 

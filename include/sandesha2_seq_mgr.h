@@ -22,12 +22,12 @@
  * @brief Sandesha In Memory Sequence Manager Interface
  */
 
-#include <axis2_allocator.h>
-#include <axis2_env.h>
-#include <axis2_utils_defines.h>
-#include <axis2_error.h>
-#include <axis2_string.h>
-#include <axis2_utils.h>
+#include <axutil_allocator.h>
+#include <axutil_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_error.h>
+#include <axutil_string.h>
+#include <axutil_utils.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
 
@@ -43,7 +43,7 @@ extern "C"
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_mgr_setup_new_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *create_seq_msg, 
     sandesha2_storage_mgr_t *storage_mgr);
        
@@ -54,20 +54,20 @@ sandesha2_seq_mgr_setup_new_seq(
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_mgr_update_last_activated_time(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *property_key,
     sandesha2_storage_mgr_t *storage_mgr);
     
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_seq_mgr_has_seq_timedout(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *property_key,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);
         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_mgr_setup_new_client_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *int_seq_id,
     axis2_char_t *spec_version,

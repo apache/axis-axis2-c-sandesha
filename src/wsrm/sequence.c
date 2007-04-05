@@ -42,41 +42,41 @@ struct sandesha2_seq_impl
 static axis2_char_t* AXIS2_CALL 
 sandesha2_seq_get_namespace_value (
     sandesha2_iom_rm_element_t *seq,
-	const axis2_env_t *env);
+	const axutil_env_t *env);
     
 static void* AXIS2_CALL 
 sandesha2_seq_from_om_node(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node);
     
 static axiom_node_t* AXIS2_CALL 
 sandesha2_seq_to_om_node(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node);
                     	
 static axis2_bool_t AXIS2_CALL 
 sandesha2_seq_is_namespace_supported(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace);
 
 static axis2_status_t AXIS2_CALL
 sandesha2_seq_to_soap_env(
     sandesha2_iom_rm_part_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);
                     	                    	
 static axis2_status_t AXIS2_CALL 
 sandesha2_seq_free (
     sandesha2_iom_rm_element_t *seq, 
-	const axis2_env_t *env);								
+	const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_seq_t* AXIS2_CALL
-sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_seq_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 {
     sandesha2_seq_impl_t *seq_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -146,7 +146,7 @@ sandesha2_seq_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 axis2_status_t AXIS2_CALL
 sandesha2_seq_free_void_arg(
     void *seq,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_iom_rm_element_t *seq_l = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -158,7 +158,7 @@ sandesha2_seq_free_void_arg(
 static axis2_status_t AXIS2_CALL 
 sandesha2_seq_free (
     sandesha2_iom_rm_element_t *seq, 
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -182,7 +182,7 @@ sandesha2_seq_free (
 static axis2_char_t* AXIS2_CALL 
 sandesha2_seq_get_namespace_value (
     sandesha2_iom_rm_element_t *seq,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -195,14 +195,14 @@ sandesha2_seq_get_namespace_value (
 static void* AXIS2_CALL 
 sandesha2_seq_from_om_node(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *seq_node)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
     axiom_element_t *seq_part = NULL;
     axiom_element_t *lm_part = NULL;
     axiom_node_t *lm_node = NULL;
-    axis2_qname_t *lm_qname = NULL; 
+    axutil_qname_t *lm_qname = NULL; 
     
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_node, NULL);
@@ -229,7 +229,7 @@ sandesha2_seq_from_om_node(
     }
     sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)
         seq_impl->msg_num, env, seq_node);
-    lm_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG,
+    lm_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG,
         seq_impl->ns_val, NULL);
     if(!lm_qname)
     {
@@ -255,7 +255,7 @@ sandesha2_seq_from_om_node(
 static axiom_node_t* AXIS2_CALL 
 sandesha2_seq_to_om_node(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, void *om_node)
+    const axutil_env_t *env, void *om_node)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -300,7 +300,7 @@ sandesha2_seq_to_om_node(
 static axis2_bool_t AXIS2_CALL 
 sandesha2_seq_is_namespace_supported(
     sandesha2_iom_rm_element_t *seq,
-    const axis2_env_t *env, axis2_char_t *namespace)
+    const axutil_env_t *env, axis2_char_t *namespace)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -320,7 +320,7 @@ sandesha2_seq_is_namespace_supported(
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_seq_get_identifier(
     sandesha2_seq_t *element,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -333,7 +333,7 @@ sandesha2_seq_get_identifier(
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_set_identifier(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_identifier_t *identifier)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
@@ -347,7 +347,7 @@ sandesha2_seq_set_identifier(
 sandesha2_msg_number_t * AXIS2_CALL
 sandesha2_seq_get_msg_num(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -360,7 +360,7 @@ sandesha2_seq_get_msg_num(
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_set_msg_num(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env, sandesha2_msg_number_t *msg_num)
+    const axutil_env_t *env, sandesha2_msg_number_t *msg_num)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -373,7 +373,7 @@ sandesha2_seq_set_msg_num(
 sandesha2_last_msg_t * AXIS2_CALL
 sandesha2_seq_get_last_msg(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -386,7 +386,7 @@ sandesha2_seq_get_last_msg(
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_set_last_msg(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env, sandesha2_last_msg_t *last_msg)
+    const axutil_env_t *env, sandesha2_last_msg_t *last_msg)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -399,7 +399,7 @@ sandesha2_seq_set_last_msg(
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_is_must_understand(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -411,7 +411,7 @@ sandesha2_seq_is_must_understand(
 axis2_status_t AXIS2_CALL                 
 sandesha2_seq_set_must_understand(
     sandesha2_seq_t *seq,
-    const axis2_env_t *env, axis2_bool_t mu)
+    const axutil_env_t *env, axis2_bool_t mu)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -425,12 +425,12 @@ sandesha2_seq_set_must_understand(
 static axis2_status_t AXIS2_CALL
 sandesha2_seq_to_soap_env(
     sandesha2_iom_rm_part_t *seq,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope)
 {
 	sandesha2_seq_impl_t *seq_impl = NULL;
 	axiom_soap_header_t *soap_header = NULL;
-    axis2_qname_t *seq_qname = NULL;
+    axutil_qname_t *seq_qname = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
@@ -440,7 +440,7 @@ sandesha2_seq_to_soap_env(
     /**
      * Remove if old exists
      */
-    seq_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, 
+    seq_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, 
                         seq_impl->ns_val, NULL);
     if(!seq_qname)
     {

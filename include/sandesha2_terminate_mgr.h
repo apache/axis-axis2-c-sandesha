@@ -28,8 +28,8 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_conf.h>
 #include <axiom_soap_envelope.h>
-#include <axis2_qname.h>
-#include <axis2_array_list.h>
+#include <axutil_qname.h>
+#include <axutil_array_list.h>
 #include <axis2_op.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_msg_ctx.h>
@@ -53,21 +53,21 @@ struct sandesha2_seq_property_bean_t;
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_man);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_invocation(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_man);
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
@@ -75,14 +75,14 @@ sandesha2_terminate_mgr_terminate_sending_side(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_do_updates_if_needed(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *seq_id,
     sandesha2_seq_property_bean_t *prop_bean,
     struct sandesha2_seq_property_mgr *prop_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_time_out_sending_side_seq(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
@@ -90,7 +90,7 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_add_terminate_seq_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *out_seq_id,
     axis2_char_t *int_seq_id,

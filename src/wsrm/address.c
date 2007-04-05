@@ -37,31 +37,31 @@ struct sandesha2_address_impl
 axis2_char_t* AXIS2_CALL 
 sandesha2_address_get_namespace_value (
     sandesha2_iom_rm_element_t *address,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_address_from_om_node(
     sandesha2_iom_rm_element_t *address,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_address_to_om_node(
     sandesha2_iom_rm_element_t *address,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_address_is_namespace_supported(
     sandesha2_iom_rm_element_t *address,
-   	const axis2_env_t *env, 
+   	const axutil_env_t *env, 
     axis2_char_t *namespace);
                     	
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_address_t* AXIS2_CALL
 sandesha2_address_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_val, 
 	axis2_endpoint_ref_t *epr)
 {
@@ -107,7 +107,7 @@ sandesha2_address_create(
 axis2_status_t AXIS2_CALL 
 sandesha2_address_free (
     sandesha2_iom_rm_element_t *address, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_address_impl_t *address_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -131,7 +131,7 @@ sandesha2_address_free (
 axis2_char_t* AXIS2_CALL 
 sandesha2_address_get_namespace_value (
     sandesha2_iom_rm_element_t *element,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
 	sandesha2_address_impl_t *address_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -143,13 +143,13 @@ sandesha2_address_get_namespace_value (
 void* AXIS2_CALL 
 sandesha2_address_from_om_node(
     sandesha2_iom_rm_element_t *address,
-   	const axis2_env_t *env, axiom_node_t *om_node)
+   	const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_address_impl_t *address_impl = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *addr_part = NULL;
     axiom_node_t *addr_node = NULL;
-    axis2_qname_t *addr_qname = NULL;
+    axutil_qname_t *addr_qname = NULL;
     axis2_char_t *str_address = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
@@ -162,7 +162,7 @@ sandesha2_address_from_om_node(
            AXIS2_FAILURE);
         return NULL;
     }
-    addr_qname = axis2_qname_create(env, SANDESHA2_WSA_ADDRESS, 
+    addr_qname = axutil_qname_create(env, SANDESHA2_WSA_ADDRESS, 
            address_impl->ns_val, NULL);
     if(!addr_qname)
     {
@@ -195,7 +195,7 @@ sandesha2_address_from_om_node(
 axiom_node_t* AXIS2_CALL 
 sandesha2_address_to_om_node(
     sandesha2_iom_rm_element_t *address,
-   	const axis2_env_t *env, 
+   	const axutil_env_t *env, 
     void *om_node)
 {
 	sandesha2_address_impl_t *address_impl = NULL;
@@ -236,7 +236,7 @@ sandesha2_address_to_om_node(
 axis2_bool_t AXIS2_CALL 
 sandesha2_address_is_namespace_supported(
     sandesha2_iom_rm_element_t *address,
-   	const axis2_env_t *env, 
+   	const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
 	sandesha2_address_impl_t *address_impl = NULL;
@@ -256,7 +256,7 @@ sandesha2_address_is_namespace_supported(
 axis2_endpoint_ref_t * AXIS2_CALL                    	
 sandesha2_address_get_epr(
     sandesha2_address_t *address,
-   	const axis2_env_t *env)
+   	const axutil_env_t *env)
 {
 	sandesha2_address_impl_t *address_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -268,7 +268,7 @@ sandesha2_address_get_epr(
 axis2_status_t AXIS2_CALL
 sandesha2_address_set_epr(
     sandesha2_address_t *address,
-   	const axis2_env_t *env, 
+   	const axutil_env_t *env, 
     axis2_endpoint_ref_t *epr)
 {
 	sandesha2_address_impl_t *address_impl = NULL;

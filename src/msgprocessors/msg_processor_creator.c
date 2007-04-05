@@ -38,7 +38,7 @@
 #include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_app_msg_processor.h>
 #include <sandesha2_make_connection_msg_processor.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <stdio.h>
 /** 
  * @brief Application Message Processor Creator struct impl
@@ -46,7 +46,7 @@
  */
 sandesha2_msg_processor_t *AXIS2_CALL   
 sandesha2_msg_processor_create_msg_processor(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     int msg_type = -1;
@@ -83,7 +83,7 @@ sandesha2_msg_processor_create_msg_processor(
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_free (
     sandesha2_msg_processor_t *msg_processor, 
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return msg_processor->ops->free (msg_processor, env);
 }
@@ -91,7 +91,7 @@ sandesha2_msg_processor_free (
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     return msg_processor->ops->process_in_msg(msg_processor, env, rm_msg_ctx);
@@ -100,7 +100,7 @@ sandesha2_msg_processor_process_in_msg (
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     return msg_processor->ops->process_out_msg(msg_processor, env, rm_msg_ctx);

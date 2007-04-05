@@ -19,7 +19,7 @@
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_part_free(
     sandesha2_iom_rm_part_t *part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return ((part)->element.ops->free ((sandesha2_iom_rm_element_t *) part, env));
 }
@@ -27,7 +27,7 @@ sandesha2_iom_rm_part_free(
 axis2_status_t AXIS2_CALL
 sandesha2_iom_rm_part_to_soap_envelope( 
     sandesha2_iom_rm_part_t *part,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope)
 {
     return ((sandesha2_iom_rm_part_t*)(part))->ops->to_soap_env(

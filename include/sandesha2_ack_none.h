@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
@@ -49,7 +49,7 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_none
 };    
 AXIS2_EXTERN sandesha2_ack_none_t * AXIS2_CALL
 sandesha2_ack_none_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
 /** @} */
 #ifdef __cplusplus

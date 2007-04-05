@@ -16,24 +16,24 @@
 #include "rm_sample_svc.h"
 #include <axiom_xml_writer.h>
 #include <stdio.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axiom_output.h>
 #include <axiom_element.h>
 
 axiom_node_t *
 build_echo_om(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *text);
 
 /* Builds the response content */
 axiom_node_t *
 build_mtom_om(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *text);
 
 axiom_node_t *
 rm_sample_svc_echo (
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node)
 {
     axiom_node_t *text_parent_node = NULL;
@@ -42,7 +42,7 @@ rm_sample_svc_echo (
     axiom_node_t *ret_node = NULL;
     axiom_element_t *element = NULL;
     axis2_char_t *ns = "http://tempuri.org/";
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
    
@@ -71,10 +71,10 @@ rm_sample_svc_echo (
     }
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
-    qname = axis2_qname_create(env, "Text", ns, NULL);
+    qname = axutil_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
@@ -109,7 +109,7 @@ rm_sample_svc_echo (
 /* Builds the response content */
 axiom_node_t *
 build_echo_om(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *text)
 {
     axiom_node_t *echo_om_node = NULL;
@@ -136,7 +136,7 @@ build_echo_om(
 
 void
 rm_sample_svc_ping (
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node)
 {
     axiom_node_t *text_parent_node = NULL;
@@ -144,7 +144,7 @@ rm_sample_svc_ping (
     axiom_node_t *text_node = NULL;
     axiom_element_t *element = NULL;
     axis2_char_t *ns = "http://tempuri.org/";
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
    
@@ -173,10 +173,10 @@ rm_sample_svc_ping (
     }
 
     element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
-    qname = axis2_qname_create(env, "Text", ns, NULL);
+    qname = axutil_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
@@ -209,7 +209,7 @@ rm_sample_svc_ping (
 
 axiom_node_t *
 rm_sample_svc_mtom(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *node)
 {
     axiom_node_t *file_name_node = NULL;
@@ -292,7 +292,7 @@ rm_sample_svc_mtom(
 
 /* Builds the response content */
 axiom_node_t *
-build_mtom_om(const axis2_env_t *env, axis2_char_t *text)
+build_mtom_om(const axutil_env_t *env, axis2_char_t *text)
 {
     axiom_node_t *mtom_om_node = NULL;
     axiom_element_t* mtom_om_ele = NULL;

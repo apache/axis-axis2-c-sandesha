@@ -42,9 +42,9 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_ctx.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_property.h>
-#include <axis2_log.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_property.h>
+#include <axutil_log.h>
+#include <axutil_uuid_gen.h>
 #include <axis2_addr.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_soap_body.h>
@@ -58,7 +58,7 @@
  */
 static axis2_status_t
 populate_rm_msg_ctx(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     sandesha2_msg_ctx_t *rm_msg_ctx);
 
@@ -70,11 +70,11 @@ populate_rm_msg_ctx(
  * @return
  */
 static axis2_bool_t validate_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx);
 
 static void add_op_if_null(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
 /**
@@ -91,7 +91,7 @@ static void add_op_if_null(
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_init_init_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
@@ -104,7 +104,7 @@ sandesha2_msg_init_init_msg(
 
 static axis2_status_t
 populate_rm_msg_ctx(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
@@ -112,7 +112,7 @@ populate_rm_msg_ctx(
     axis2_char_t *addressing_ns_value = NULL;
     axis2_char_t *rm_ns = NULL;
     axis2_char_t *action = NULL;
-    axis2_property_t *prop = NULL;
+    axutil_property_t *prop = NULL;
     axis2_ctx_t *ctx = NULL;
     axiom_soap_envelope_t *envelope = NULL;
     sandesha2_rm_elements_t *rm_elements = NULL;
@@ -135,7 +135,7 @@ populate_rm_msg_ctx(
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
-        addressing_ns = (axis2_char_t *) axis2_property_get_value(prop, env);
+        addressing_ns = (axis2_char_t *) axutil_property_get_value(prop, env);
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
@@ -268,7 +268,7 @@ populate_rm_msg_ctx(
 }
 
 static axis2_bool_t validate_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -466,7 +466,7 @@ static axis2_bool_t validate_msg(
 }
 
 static void add_op_if_null(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
     axis2_op_t *op = NULL;
@@ -475,9 +475,9 @@ static void add_op_if_null(
     if(!op)
     {
         axis2_svc_t *svc = NULL;
-        axis2_qname_t *tmp_qname = NULL;
+        axutil_qname_t *tmp_qname = NULL;
     
-        tmp_qname = axis2_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
+        tmp_qname = axutil_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
                 NULL);
         if (!tmp_qname)
         {
@@ -516,7 +516,7 @@ static void add_op_if_null(
                 op = NULL;
             }
         }
-        axis2_qname_free(tmp_qname, env);
+        axutil_qname_free(tmp_qname, env);
         axis2_msg_ctx_set_op(msg_ctx, env, op);
     }
 }

@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 
 
@@ -49,17 +49,17 @@ AXIS2_DECLARE_DATA struct sandesha2_transaction_ops
     axis2_status_t (AXIS2_CALL *
         commit) 
             (sandesha2_transaction_t *transaction,
-            const axis2_env_t *env);
+            const axutil_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
         rollback) 
             (sandesha2_transaction_t *transaction,
-            const axis2_env_t *env);
+            const axutil_env_t *env);
             
     axis2_status_t (AXIS2_CALL *
         free) 
             (sandesha2_transaction_t *transaction,
-            const axis2_env_t *env);
+            const axutil_env_t *env);
 };
 
 /**
@@ -73,7 +73,7 @@ AXIS2_DECLARE_DATA struct sandesha2_transaction
 
 AXIS2_EXTERN sandesha2_transaction_t* AXIS2_CALL
 sandesha2_transaction_create(
-						const axis2_env_t *env);
+						const axutil_env_t *env);
                         
 /************************** Start of function macros **************************/
 #define sandesha2_transaction_free(transaction, env) \

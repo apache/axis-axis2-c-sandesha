@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <sandesha2_iom_rm_element.h>
 #include <sandesha2_address.h>
@@ -51,7 +51,7 @@ AXIS2_DECLARE_DATA struct sandesha2_acks_to
 
 AXIS2_EXTERN sandesha2_acks_to_t * AXIS2_CALL
 sandesha2_acks_to_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_address_t *address,
     axis2_char_t *rm_ns_value, 
     axis2_char_t *addr_ns_value);
@@ -59,12 +59,12 @@ sandesha2_acks_to_create(
 sandesha2_address_t * AXIS2_CALL
 sandesha2_acks_to_get_address(
     sandesha2_acks_to_t *acks_to,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
                     	
 axis2_status_t AXIS2_CALL 
 sandesha2_acks_to_set_address (
     sandesha2_acks_to_t *acks_to, 
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     sandesha2_address_t *address);								
  
 /** @} */

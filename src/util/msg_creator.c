@@ -41,9 +41,9 @@
 #include <axis2_conf_ctx.h>
 #include <axis2_ctx.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_property.h>
-#include <axis2_log.h>
-#include <axis2_uuid_gen.h>
+#include <axutil_property.h>
+#include <axutil_log.h>
+#include <axutil_uuid_gen.h>
 #include <axis2_addr.h>
 #include <axis2_options.h>
 #include <axiom_soap_envelope.h>
@@ -55,13 +55,13 @@
   
 static axis2_status_t
 sandesha2_msg_creator_finalize_creation(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *related_msg,
     axis2_msg_ctx_t *new_msg);
  
 static axis2_status_t
 sandesha2_msg_creator_init_creation(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *related_msg,
     axis2_msg_ctx_t *new_msg);
 
@@ -74,7 +74,7 @@ sandesha2_msg_creator_init_creation(
  */
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_create_seq_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *application_rm_msg, 
     axis2_char_t *internal_seq_id,
     axis2_char_t *acks_to,
@@ -94,13 +94,13 @@ sandesha2_msg_creator_create_create_seq_msg(
     axis2_char_t *anonymous_uri = NULL;
     axis2_char_t *temp_value = NULL;
     axis2_char_t *temp_action = NULL;
-    axis2_string_t *temp_soap_action = NULL;
+    axutil_string_t *temp_soap_action = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_endpoint_ref_t *temp_to = NULL;
     axis2_endpoint_ref_t *reply_to_epr = NULL;
     axis2_endpoint_ref_t *acks_to_epr = NULL;
     axis2_endpoint_ref_t *temp_reply_to = NULL;
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     sandesha2_create_seq_t *create_seq_part = NULL;
     sandesha2_seq_property_bean_t *reply_to_bean = NULL;
     sandesha2_seq_property_bean_t *to_bean = NULL;
@@ -108,7 +108,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_t *create_seq_rm_msg = NULL;
     sandesha2_address_t *temp_address = NULL;
     sandesha2_acks_to_t *temp_acks_to = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
 
     application_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(application_rm_msg, env);
     if(!application_msg_ctx)
@@ -127,9 +127,9 @@ sandesha2_msg_creator_create_create_seq_msg(
     /* Creating by copying common contents. (This will not see contexts except
      * for conf_ctx)
      */
-    qname = axis2_qname_create(env, "CreateSequenceOperation", NULL, NULL);
+    qname = axutil_qname_create(env, "CreateSequenceOperation", NULL, NULL);
     create_seq_op = axis2_op_create_with_qname(env, qname);
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
 
     create_seq_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
             application_rm_msg, create_seq_op);
@@ -145,14 +145,14 @@ sandesha2_msg_creator_create_create_seq_msg(
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     if(app_msg_op_desc)
     {
-        axis2_array_list_t *outflow = NULL;
-        axis2_array_list_t *out_fault_flow = NULL;
-        axis2_array_list_t *in_fault_flow = NULL;
-        axis2_array_list_t *inflow = NULL;
-        axis2_array_list_t *new_outflow = NULL;
-        axis2_array_list_t *new_out_fault_flow = NULL;
-        axis2_array_list_t *new_in_fault_flow = NULL;
-        axis2_array_list_t *new_inflow = NULL;
+        axutil_array_list_t *outflow = NULL;
+        axutil_array_list_t *out_fault_flow = NULL;
+        axutil_array_list_t *in_fault_flow = NULL;
+        axutil_array_list_t *inflow = NULL;
+        axutil_array_list_t *new_outflow = NULL;
+        axutil_array_list_t *new_out_fault_flow = NULL;
+        axutil_array_list_t *new_in_fault_flow = NULL;
+        axutil_array_list_t *new_inflow = NULL;
 
         outflow = axis2_op_get_out_flow(app_msg_op_desc, env);
         new_outflow = axis2_phases_info_copy_flow(env, outflow);
@@ -172,7 +172,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         AXIS2_TARGET_EPR);
     if(property)
     {
-        temp_to = axis2_property_get_value(property, env);
+        temp_to = axutil_property_get_value(property, env);
         to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(
             temp_to, env));
     }
@@ -212,14 +212,14 @@ sandesha2_msg_creator_create_create_seq_msg(
     if(op_ctx)
     {
         axis2_char_t *offered_seq = NULL;
-        axis2_property_t *property = NULL;
+        axutil_property_t *property = NULL;
         axis2_ctx_t *ctx = NULL;
 
         ctx = axis2_msg_ctx_get_base(application_msg_ctx, env);
         property = axis2_ctx_get_property(ctx, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID);
         if(property)
-            offered_seq = axis2_property_get_value(property, env);
+            offered_seq = axutil_property_get_value(property, env);
         if(offered_seq && 0 != axis2_strcmp("", offered_seq))
         {
             sandesha2_seq_offer_t *offer_part = NULL;
@@ -285,7 +285,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_set_wsa_action(create_seq_rm_msg, env, temp_action);
     /*temp_soap_action = sandesha2_spec_specific_consts_get_create_seq_action(env, 
             rm_version);*/
-    temp_soap_action = axis2_string_create(env, temp_action);
+    temp_soap_action = axutil_string_create(env, temp_action);
     sandesha2_msg_ctx_set_soap_action(create_seq_rm_msg, env, temp_soap_action);
     sandesha2_msg_creator_finalize_creation(env, application_msg_ctx, 
             create_seq_msg_ctx);
@@ -301,7 +301,7 @@ sandesha2_msg_creator_create_create_seq_msg(
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_creator_create_create_seq_res_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *create_seq_msg,
     axis2_msg_ctx_t *out_msg,
     axis2_char_t *new_seq_id,
@@ -310,13 +310,13 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     axis2_msg_ctx_t *temp_msg_ctx = NULL;
-    axis2_property_t *prop = NULL;
+    axutil_property_t *prop = NULL;
     axis2_char_t *rm_version = NULL;
     axis2_char_t *rm_ns_value = NULL;
     axis2_char_t *addressing_ns_value = NULL;
     axis2_char_t *new_msg_id = NULL;
     axis2_char_t *temp_action = NULL;
-    axis2_string_t *soap_action = NULL;
+    axutil_string_t *soap_action = NULL;
     axiom_soap_envelope_t *envelope = NULL;
     axiom_soap_envelope_t *temp_envelope = NULL;
     axiom_soap_body_t *temp_soap_body = NULL;
@@ -388,17 +388,17 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     /*temp_action = 
         sandesha2_spec_specific_consts_get_create_seq_res_action(env, 
                 rm_version);*/
-    soap_action = axis2_string_create(env, temp_action);
+    soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
     ctx = axis2_msg_ctx_get_base(out_msg, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
     {
-       axis2_property_set_value(prop, env, addressing_ns_value); 
+       axutil_property_set_value(prop, env, addressing_ns_value); 
     }
     else
     {
-        prop = axis2_property_create_with_args(env, 0, 0, 0, addressing_ns_value);
+        prop = axutil_property_create_with_args(env, 0, 0, 0, addressing_ns_value);
         axis2_ctx_set_property(ctx, env, AXIS2_WSA_VERSION, prop);
     }
     new_msg_id = axis2_uuid_gen(env);
@@ -425,7 +425,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_creator_create_close_seq_res_msg(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         sandesha2_msg_ctx_t *close_seq_msg,
         axis2_msg_ctx_t *out_msg,
         sandesha2_storage_mgr_t *storage_mgr)
@@ -435,7 +435,7 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     axis2_char_t *rm_version = NULL;
     axis2_char_t *ns = NULL;
     axis2_char_t *temp_action = NULL;
-    axis2_string_t *soap_action = NULL;
+    axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_id = NULL;
     axiom_soap_envelope_t *envelope = NULL;
     axiom_soap_envelope_t *temp_envelope = NULL;
@@ -472,7 +472,7 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     temp_action = 
         sandesha2_spec_specific_consts_get_close_seq_res_action(env, 
                 rm_version);
-    soap_action = axis2_string_create(env, temp_action);
+    soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
 
 
@@ -494,7 +494,7 @@ sandesha2_msg_creator_create_close_seq_res_msg(
  */
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_terminate_seq_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg, 
     axis2_char_t *seq_id,
     axis2_char_t *internal_seq_id,
@@ -552,14 +552,14 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     terminate_seq_op = axis2_msg_ctx_get_op(terminate_seq_msg_ctx, env);
     if(ref_msg_op)
     {
-        axis2_array_list_t *outflow = NULL;
-        axis2_array_list_t *out_fault_flow = NULL;
-        axis2_array_list_t *in_fault_flow = NULL;
-        axis2_array_list_t *inflow = NULL;
-        axis2_array_list_t *new_outflow = NULL;
-        axis2_array_list_t *new_out_fault_flow = NULL;
-        axis2_array_list_t *new_in_fault_flow = NULL;
-        axis2_array_list_t *new_inflow = NULL;
+        axutil_array_list_t *outflow = NULL;
+        axutil_array_list_t *out_fault_flow = NULL;
+        axutil_array_list_t *in_fault_flow = NULL;
+        axutil_array_list_t *inflow = NULL;
+        axutil_array_list_t *new_outflow = NULL;
+        axutil_array_list_t *new_out_fault_flow = NULL;
+        axutil_array_list_t *new_in_fault_flow = NULL;
+        axutil_array_list_t *new_inflow = NULL;
 
         outflow = axis2_op_get_out_flow(ref_msg_op, env);
         new_outflow = axis2_phases_info_copy_flow(env, outflow);
@@ -601,8 +601,8 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     /*ref_msg_op = axis2_msg_ctx_get_op(ref_msg_ctx, env);
     if(ref_msg_op)
     {
-        axis2_array_list_t *outphases = NULL;
-        axis2_array_list_t *out_fault_phases = NULL;
+        axutil_array_list_t *outphases = NULL;
+        axutil_array_list_t *out_fault_phases = NULL;
 
         outphases = axis2_op_get_out_flow(ref_msg_op, env);
         out_fault_phases = axis2_op_get_fault_out_flow(ref_msg_op, env);
@@ -632,7 +632,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_terminate_seq_res_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg,
     axis2_msg_ctx_t *out_msg,
     sandesha2_storage_mgr_t *storage_mgr)
@@ -646,7 +646,7 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     axiom_soap_envelope_t *soap_envelope = NULL;
     axis2_char_t *rm_version = NULL;
     axis2_char_t *temp_action = NULL;
-    axis2_string_t *soap_action = NULL;
+    axutil_string_t *soap_action = NULL;
     
     res_rm_msg = sandesha2_msg_ctx_create(env, out_msg);
     terminate_seq = (sandesha2_terminate_seq_t*)sandesha2_msg_ctx_get_msg_part(
@@ -677,7 +677,7 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     temp_action = sandesha2_spec_specific_consts_get_teminate_seq_res_action(
         env, rm_version);
     axis2_msg_ctx_set_wsa_action(out_msg, env, temp_action);
-    soap_action = axis2_string_create(env, temp_action);
+    soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action); 
     sandesha2_msg_creator_init_creation(env, sandesha2_msg_ctx_get_msg_ctx(
                         ref_rm_msg, env), out_msg);
@@ -691,15 +691,15 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
 
 static axis2_status_t
 sandesha2_msg_creator_finalize_creation(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *related_msg,
     axis2_msg_ctx_t *new_msg)
 {
     axis2_op_t *old_op = NULL;
     axis2_op_ctx_t *old_op_ctx = NULL;
     axis2_bool_t temp_bool = AXIS2_FALSE;
-    axis2_hash_t *related_msg_props = NULL;
-    axis2_hash_t *new_msg_props = NULL;
+    axutil_hash_t *related_msg_props = NULL;
+    axutil_hash_t *new_msg_props = NULL;
     axis2_ctx_t *related_ctx = NULL;
     axis2_ctx_t *new_ctx = NULL;
 
@@ -709,7 +709,7 @@ sandesha2_msg_creator_finalize_creation(
     old_op = axis2_msg_ctx_get_op(related_msg, env);
     if(old_op)
     {
-        axis2_array_list_t *op_params = NULL;
+        axutil_array_list_t *op_params = NULL;
 
         op_params = axis2_op_get_all_params(old_op, env);
         if(op_params)
@@ -718,19 +718,19 @@ sandesha2_msg_creator_finalize_creation(
             int i = 0, size = 0;
 
             new_op = axis2_msg_ctx_get_op(new_msg, env);
-            size = axis2_array_list_size(op_params, env);
+            size = axutil_array_list_size(op_params, env);
             for(i = 0; i < size; i++)
             {
-                axis2_param_t *next_param = NULL;
-                axis2_param_t *new_param = NULL;
+                axutil_param_t *next_param = NULL;
+                axutil_param_t *new_param = NULL;
                 axis2_char_t *temp_name = NULL;
                 void *temp_value = NULL;
 
-                next_param = (axis2_param_t *) axis2_array_list_get(op_params, 
+                next_param = (axutil_param_t *) axutil_array_list_get(op_params, 
                         env, i);
-                temp_name = axis2_param_get_name(next_param, env);
-                temp_value = axis2_param_get_value(next_param, env);
-                new_param = axis2_param_create(env, temp_name, temp_value);
+                temp_name = axutil_param_get_name(next_param, env);
+                temp_value = axutil_param_get_value(next_param, env);
+                new_param = axutil_param_create(env, temp_name, temp_value);
                 /*new_param->ops->value_free = next_param->ops->value_free;*/
                 axis2_op_add_param(new_op, env, new_param); 
             }
@@ -740,7 +740,7 @@ sandesha2_msg_creator_finalize_creation(
     old_op_ctx = axis2_msg_ctx_get_op_ctx(related_msg, env);
     if(old_op_ctx)
     {
-        axis2_hash_t *old_op_ctx_props = NULL;
+        axutil_hash_t *old_op_ctx_props = NULL;
         axis2_ctx_t *ctx = NULL;
 
         ctx = axis2_op_ctx_get_base(old_op_ctx, env);
@@ -748,25 +748,25 @@ sandesha2_msg_creator_finalize_creation(
         if(old_op_ctx_props)
         {
             axis2_op_ctx_t *new_op_ctx = NULL;
-            axis2_hash_index_t *hi = NULL;
+            axutil_hash_index_t *hi = NULL;
 
             new_op_ctx = axis2_msg_ctx_get_op_ctx(new_msg, env);
-            for (hi = axis2_hash_first (old_op_ctx_props, env); hi; hi = 
-                    axis2_hash_next (env, hi))
+            for (hi = axutil_hash_first (old_op_ctx_props, env); hi; hi = 
+                    axutil_hash_next (env, hi))
             {
                 void *v = NULL;
                 void *k = NULL;
                 axis2_char_t *key = NULL;
-                axis2_property_t *prop = NULL;
-                axis2_property_t *new_prop = NULL;
+                axutil_property_t *prop = NULL;
+                axutil_property_t *new_prop = NULL;
                 axis2_ctx_t *ctx = NULL;
 
-                axis2_hash_this (hi, (const void **)&k, NULL, &v);
+                axutil_hash_this (hi, (const void **)&k, NULL, &v);
                 key = (axis2_char_t *) k;
-                prop = (axis2_property_t *) v;
+                prop = (axutil_property_t *) v;
                 ctx = axis2_op_ctx_get_base(new_op_ctx, env);
                 if(prop)
-                    new_prop = axis2_property_clone(prop, env);
+                    new_prop = axutil_property_clone(prop, env);
                 if(new_prop)
                     axis2_ctx_set_property(ctx, env, key, new_prop);
             }
@@ -775,31 +775,31 @@ sandesha2_msg_creator_finalize_creation(
     /* Message Context properties */
     /*if(related_msg && new_msg)
     {
-        axis2_hash_t *old_msg_ctx_props = NULL;
+        axutil_hash_t *old_msg_ctx_props = NULL;
         axis2_ctx_t *ctx = NULL;
         
         ctx = axis2_msg_ctx_get_base(related_msg, env);
         old_msg_ctx_props = axis2_ctx_get_all_properties(ctx, env);
         if(old_msg_ctx_props)
         {
-            axis2_hash_index_t *i = NULL;
+            axutil_hash_index_t *i = NULL;
 
-            for (i = axis2_hash_first (old_msg_ctx_props, env); i; i = 
-                    axis2_hash_next (env, i))
+            for (i = axutil_hash_first (old_msg_ctx_props, env); i; i = 
+                    axutil_hash_next (env, i))
             {
                 void *v = NULL;
                 void *k = NULL;
                 axis2_char_t *key = NULL;
-                axis2_property_t *prop = NULL;
-                axis2_property_t *new_prop = NULL;
+                axutil_property_t *prop = NULL;
+                axutil_property_t *new_prop = NULL;
                 axis2_ctx_t *ctx = NULL;
 
-                axis2_hash_this (i, (const void **)&k, NULL, &v);
+                axutil_hash_this (i, (const void **)&k, NULL, &v);
                 key = (axis2_char_t *) k;
-                prop = (axis2_property_t *) v;
+                prop = (axutil_property_t *) v;
                 ctx = axis2_msg_ctx_get_base(new_msg, env);
                 if(prop)
-                    new_prop = axis2_property_clone(prop, env);
+                    new_prop = axutil_property_clone(prop, env);
                 if(new_prop)
                     axis2_ctx_set_property(ctx, env, key, new_prop, AXIS2_FALSE);
             }
@@ -815,28 +815,28 @@ sandesha2_msg_creator_finalize_creation(
         new_msg_props = axis2_ctx_get_all_properties(new_ctx, env);
         /*if(!new_msg_props)
         {
-            new_msg_props = axis2_hash_make(env);
+            new_msg_props = axutil_hash_make(env);
         }*/
         if(related_msg_props)
         {
-            axis2_hash_index_t *i = NULL;
+            axutil_hash_index_t *i = NULL;
 
-            for (i = axis2_hash_first (related_msg_props, env); i; i = 
-                    axis2_hash_next (env, i))
+            for (i = axutil_hash_first (related_msg_props, env); i; i = 
+                    axutil_hash_next (env, i))
             {
                 void *v = NULL;
                 void *k = NULL;
                 axis2_char_t *key = NULL;
-                axis2_property_t *prop = NULL;
-                axis2_property_t *new_prop = NULL;
+                axutil_property_t *prop = NULL;
+                axutil_property_t *new_prop = NULL;
 
-                axis2_hash_this (i, (const void **)&k, NULL, &v);
+                axutil_hash_this (i, (const void **)&k, NULL, &v);
                 key = (axis2_char_t *) k;
-                prop = (axis2_property_t *) v;
+                prop = (axutil_property_t *) v;
                 if(prop)
-                    new_prop = axis2_property_clone(prop, env);
+                    new_prop = axutil_property_clone(prop, env);
                 if(new_prop)
-                axis2_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
+                axutil_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
             }
         }
     }
@@ -845,7 +845,7 @@ sandesha2_msg_creator_finalize_creation(
  
 static axis2_status_t
 sandesha2_msg_creator_init_creation(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *related_msg,
     axis2_msg_ctx_t *new_msg)
 {
@@ -856,17 +856,17 @@ sandesha2_msg_creator_init_creation(
     new_svc = axis2_msg_ctx_get_svc(new_msg, env);
     if(related_svc && new_svc && related_svc != new_svc)
     {
-        axis2_param_t *ref_policy_param = NULL;
+        axutil_param_t *ref_policy_param = NULL;
 
         ref_policy_param = axis2_svc_get_param(related_svc, env, 
                 SANDESHA2_SANDESHA_PROPERTY_BEAN);
         if(ref_policy_param)
         {
             void *value = NULL;
-            axis2_param_t *new_policy_param = NULL;
+            axutil_param_t *new_policy_param = NULL;
 
-            value = axis2_param_get_value(ref_policy_param, env);
-            new_policy_param = axis2_param_create(env, 
+            value = axutil_param_get_value(ref_policy_param, env);
+            new_policy_param = axutil_param_create(env, 
                     SANDESHA2_SANDESHA_PROPERTY_BEAN, value);
         }
         
@@ -882,7 +882,7 @@ sandesha2_msg_creator_init_creation(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_msg_creator_add_ack_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *app_msg,
     axis2_char_t *seq_id,
     sandesha2_storage_mgr_t *storage_mgr)
@@ -895,7 +895,7 @@ sandesha2_msg_creator_add_ack_msg(
     axis2_char_t *msg_no_list = NULL;
     axis2_char_t *ack_req_action = NULL;
     axis2_char_t *temp_action = NULL;
-    axis2_string_t *ack_req_soap_action = NULL;
+    axutil_string_t *ack_req_soap_action = NULL;
     axis2_char_t *str_value = NULL;
     axis2_char_t *uuid = NULL;
     sandesha2_identifier_t *id = NULL;
@@ -904,7 +904,7 @@ sandesha2_msg_creator_add_ack_msg(
     sandesha2_seq_property_bean_t *seq_bean = NULL;
     sandesha2_seq_property_bean_t *seq_closed_bean = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
-    axis2_array_list_t *ack_range_list = NULL;
+    axutil_array_list_t *ack_range_list = NULL;
     int i = 0, size = 0;
 
     envelope = sandesha2_msg_ctx_get_soap_envelope(app_msg, env);
@@ -938,12 +938,12 @@ sandesha2_msg_creator_add_ack_msg(
     ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
             rm_ns_value);
     if(ack_range_list)
-        size = axis2_array_list_size(ack_range_list, env);
+        size = axutil_array_list_size(ack_range_list, env);
     for(i = 0; i < size; i++)
     {
         sandesha2_ack_range_t *ack_range = NULL;
 
-        ack_range = axis2_array_list_get(ack_range_list, env, i);
+        ack_range = axutil_array_list_get(ack_range_list, env, i);
         sandesha2_seq_ack_add_ack_range(seq_ack, env, ack_range);
     }
     seq_closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
@@ -978,7 +978,7 @@ sandesha2_msg_creator_add_ack_msg(
     temp_action = 
         sandesha2_spec_specific_consts_get_seq_ack_soap_action(env, 
                 rm_version);
-    ack_req_soap_action = axis2_string_create(env, temp_action); 
+    ack_req_soap_action = axutil_string_create(env, temp_action); 
     sandesha2_msg_ctx_set_soap_action(app_msg, env, ack_req_soap_action); 
     uuid = axis2_uuid_gen(env);
     sandesha2_msg_ctx_set_msg_id(app_msg, env, uuid);
@@ -989,7 +989,7 @@ sandesha2_msg_creator_add_ack_msg(
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_make_connection_msg(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg_ctx, 
     axis2_char_t *make_conn_seq_id,
     axis2_char_t *make_conn_anon_uri,
@@ -1001,7 +1001,7 @@ sandesha2_msg_creator_create_make_connection_msg(
     axis2_char_t *rm_version = NULL;
     axis2_op_t *make_conn_op = NULL;
     axis2_char_t *wsa_action = NULL;
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     sandesha2_make_connection_t *make_conn = NULL;
     sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
    
@@ -1011,9 +1011,9 @@ sandesha2_msg_creator_create_make_connection_msg(
         rm_ns_value = sandesha2_msg_ctx_get_rm_ns_val(ref_rm_msg_ctx, env);
         rm_version = sandesha2_msg_ctx_get_rm_spec_ver(ref_rm_msg_ctx, env);
     }
-    qname = axis2_qname_create(env, "MakeConnectionOperation", NULL, NULL);
+    qname = axutil_qname_create(env, "MakeConnectionOperation", NULL, NULL);
     make_conn_op = axis2_op_create_with_qname(env, qname);
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
     make_conn_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
         ref_rm_msg_ctx, make_conn_op);
     if(make_conn_msg_ctx)
@@ -1026,36 +1026,36 @@ sandesha2_msg_creator_create_make_connection_msg(
     {
         axis2_op_t *op = axis2_msg_ctx_get_op(ref_msg_ctx, env);
         axis2_op_t *make_conn_op = axis2_msg_ctx_get_op(make_conn_msg_ctx, env);
-        axis2_array_list_t *out_flow = axis2_op_get_out_flow(op, env);
-        axis2_array_list_t *in_flow = axis2_op_get_in_flow(op, env);
-        int size = axis2_array_list_size(out_flow, env);
+        axutil_array_list_t *out_flow = axis2_op_get_out_flow(op, env);
+        axutil_array_list_t *in_flow = axis2_op_get_in_flow(op, env);
+        int size = axutil_array_list_size(out_flow, env);
         if(size > 0)
         {
             int i = 0;
-            axis2_array_list_t *new_flow = axis2_array_list_create(env, 0);
+            axutil_array_list_t *new_flow = axutil_array_list_create(env, 0);
             for(i = 0; i < size; i++)
             {
-                const axis2_phase_t *phase = axis2_array_list_get(out_flow, env, i);
+                const axis2_phase_t *phase = axutil_array_list_get(out_flow, env, i);
                 const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
                 if(0 == axis2_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
                 {
-                    axis2_array_list_add(new_flow, env, phase);
+                    axutil_array_list_add(new_flow, env, phase);
                 }
             }
             axis2_op_set_out_flow(make_conn_op, env, new_flow);
         }
-        size = axis2_array_list_size(in_flow, env);
+        size = axutil_array_list_size(in_flow, env);
         if(size > 0)
         {
             int i = 0;
-            axis2_array_list_t *new_flow = axis2_array_list_create(env, 0);
+            axutil_array_list_t *new_flow = axutil_array_list_create(env, 0);
             for(i = 0; i < size; i++)
             {
-                const axis2_phase_t *phase = axis2_array_list_get(in_flow, env, i);
+                const axis2_phase_t *phase = axutil_array_list_get(in_flow, env, i);
                 const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
                 if(0 == axis2_strcmp(phase_name, "RMPhase"))
                 {
-                    axis2_array_list_add(new_flow, env, phase);
+                    axutil_array_list_add(new_flow, env, phase);
                 }
             }
             axis2_op_set_in_flow(make_conn_op, env, new_flow);

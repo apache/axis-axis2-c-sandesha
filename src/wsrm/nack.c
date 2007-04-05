@@ -37,36 +37,36 @@ struct sandesha2_nack_impl
 /***************************** Function headers *******************************/
 axis2_char_t* AXIS2_CALL 
 sandesha2_nack_get_namespace_value (sandesha2_iom_rm_element_t *nack,
-						const axis2_env_t *env);
+						const axutil_env_t *env);
     
 void* AXIS2_CALL 
 sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env, axiom_node_t *om_node);
+                    	const axutil_env_t *env, axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
 sandesha2_nack_to_om_node(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env,void *om_node);
+                    	const axutil_env_t *env,void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
 sandesha2_nack_is_namespace_supported(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env, axis2_char_t *namespace);
+                    	const axutil_env_t *env, axis2_char_t *namespace);
                     	
 long AXIS2_CALL
 sandesha2_nack_get_nack_num(sandesha2_nack_t *nack,
-                    	const axis2_env_t *env);
+                    	const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_nack_set_nack_num(sandesha2_nack_t *nack,
-                    	const axis2_env_t *env, long value);
+                    	const axutil_env_t *env, long value);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_nack_free (sandesha2_iom_rm_element_t *nack, 
-						const axis2_env_t *env);								
+						const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_nack_t* AXIS2_CALL
-sandesha2_nack_create(const axis2_env_t *env,  axis2_char_t *ns_val)
+sandesha2_nack_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 {
     sandesha2_nack_impl_t *nack_impl = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -131,7 +131,7 @@ sandesha2_nack_create(const axis2_env_t *env,  axis2_char_t *ns_val)
 
 axis2_status_t AXIS2_CALL 
 sandesha2_nack_free (sandesha2_iom_rm_element_t *nack, 
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
     sandesha2_nack_impl_t *nack_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -160,7 +160,7 @@ sandesha2_nack_free (sandesha2_iom_rm_element_t *nack,
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_nack_get_namespace_value (sandesha2_iom_rm_element_t *nack,
-						const axis2_env_t *env)
+						const axutil_env_t *env)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -172,13 +172,13 @@ sandesha2_nack_get_namespace_value (sandesha2_iom_rm_element_t *nack,
 
 void* AXIS2_CALL 
 sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env, axiom_node_t *om_node)
+                    	const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *nack_part = NULL;
     axiom_node_t *nack_node = NULL;
-    axis2_qname_t *nack_qname = NULL;
+    axutil_qname_t *nack_qname = NULL;
     axis2_char_t *nack_text = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -192,7 +192,7 @@ sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
                         AXIS2_FAILURE);
         return NULL;
     }
-    nack_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_NACK,
+    nack_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_NACK,
                         nack_impl->ns_val, NULL);
     if(NULL == nack_qname)
     {
@@ -219,7 +219,7 @@ sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
 
 axiom_node_t* AXIS2_CALL 
 sandesha2_nack_to_om_node(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env, void *om_node)
+                    	const axutil_env_t *env, void *om_node)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
     axiom_namespace_t *rm_ns = NULL;
@@ -259,7 +259,7 @@ sandesha2_nack_to_om_node(sandesha2_iom_rm_element_t *nack,
 
 axis2_bool_t AXIS2_CALL 
 sandesha2_nack_is_namespace_supported(sandesha2_iom_rm_element_t *nack,
-                    	const axis2_env_t *env, axis2_char_t *namespace)
+                    	const axutil_env_t *env, axis2_char_t *namespace)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -278,7 +278,7 @@ sandesha2_nack_is_namespace_supported(sandesha2_iom_rm_element_t *nack,
 
 long AXIS2_CALL
 sandesha2_nack_get_nack_num(sandesha2_nack_t *nack,
-                    	const axis2_env_t *env)
+                    	const axutil_env_t *env)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -289,7 +289,7 @@ sandesha2_nack_get_nack_num(sandesha2_nack_t *nack,
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_nack_set_nack_num(sandesha2_nack_t *nack,
-                    	const axis2_env_t *env, long value)
+                    	const axutil_env_t *env, long value)
 {
 	sandesha2_nack_impl_t *nack_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

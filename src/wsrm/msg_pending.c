@@ -40,36 +40,36 @@ struct sandesha2_msg_pending_impl
 static axis2_char_t* AXIS2_CALL 
 sandesha2_msg_pending_get_namespace_value (
     sandesha2_iom_rm_element_t *msg_pending,
-	const axis2_env_t *env);
+	const axutil_env_t *env);
     
 static void* AXIS2_CALL 
 sandesha2_msg_pending_from_om_node(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *msg_pending_node);
     
 static axiom_node_t* AXIS2_CALL 
 sandesha2_msg_pending_to_om_node(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *header_node);
                     	
 static axis2_bool_t AXIS2_CALL 
 sandesha2_msg_pending_is_namespace_supported(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace);
                     	                    	
 static axis2_status_t AXIS2_CALL 
 sandesha2_msg_pending_free (
     sandesha2_iom_rm_element_t *msg_pending, 
-	const axis2_env_t *env);								
+	const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_pending_t* AXIS2_CALL
 sandesha2_msg_pending_create(
-    const axis2_env_t *env,  
+    const axutil_env_t *env,  
     axis2_char_t *ns_val)
 {
     sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
@@ -134,7 +134,7 @@ sandesha2_msg_pending_create(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_free_void_arg(
     void *msg_pending,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     sandesha2_iom_rm_element_t *msg_pending_l = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -146,7 +146,7 @@ sandesha2_msg_pending_free_void_arg(
 static axis2_status_t AXIS2_CALL 
 sandesha2_msg_pending_free (
     sandesha2_iom_rm_element_t *msg_pending, 
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
     sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -167,7 +167,7 @@ sandesha2_msg_pending_free (
 static axis2_char_t* AXIS2_CALL 
 sandesha2_msg_pending_get_namespace_value (
     sandesha2_iom_rm_element_t *msg_pending,
-	const axis2_env_t *env)
+	const axutil_env_t *env)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
 	AXIS2_ENV_CHECK(env, NULL);
@@ -180,12 +180,12 @@ sandesha2_msg_pending_get_namespace_value (
 static void* AXIS2_CALL 
 sandesha2_msg_pending_from_om_node(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_node_t *msg_pending_node)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
     axiom_element_t *msg_pending_element = NULL;
-    axis2_qname_t *pending_qname = NULL; 
+    axutil_qname_t *pending_qname = NULL; 
     axis2_char_t *value = NULL;
     axiom_attribute_t *pending_attr = NULL;
     axis2_bool_t pending = AXIS2_FALSE;
@@ -201,7 +201,7 @@ sandesha2_msg_pending_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    pending_qname = axis2_qname_create(env, SANDESHA2_WSRM_COMMON_PENDING,
+    pending_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_PENDING,
         NULL, NULL);
     if(!pending_qname)
     {
@@ -237,7 +237,7 @@ sandesha2_msg_pending_from_om_node(
 static axiom_node_t* AXIS2_CALL 
 sandesha2_msg_pending_to_om_node(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     void *header_node)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
@@ -284,7 +284,7 @@ sandesha2_msg_pending_to_om_node(
 static axis2_bool_t AXIS2_CALL 
 sandesha2_msg_pending_is_namespace_supported(
     sandesha2_iom_rm_element_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
@@ -305,7 +305,7 @@ sandesha2_msg_pending_is_namespace_supported(
 axis2_bool_t AXIS2_CALL
 sandesha2_msg_pending_is_pending(
     sandesha2_msg_pending_t *msg_pending,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -316,7 +316,7 @@ sandesha2_msg_pending_is_pending(
 axis2_status_t AXIS2_CALL                 
 sandesha2_msg_pending_set_pending(
     sandesha2_msg_pending_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_bool_t pending)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
@@ -329,12 +329,12 @@ sandesha2_msg_pending_set_pending(
 axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_to_soap_envelope(
     sandesha2_iom_rm_part_t *msg_pending,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope)
 {
 	sandesha2_msg_pending_impl_t *msg_pending_impl = NULL;
 	axiom_soap_header_t *soap_header = NULL;
-    axis2_qname_t *msg_pending_qname = NULL;
+    axutil_qname_t *msg_pending_qname = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
@@ -344,7 +344,7 @@ sandesha2_msg_pending_to_soap_envelope(
     /**
      * Remove if already exists
      */
-    msg_pending_qname = axis2_qname_create(env, 
+    msg_pending_qname = axutil_qname_create(env, 
             SANDESHA2_WSRM_COMMON_MESSAGE_PENDING, msg_pending_impl->ns_val, 
             NULL);
     if(!msg_pending_qname)

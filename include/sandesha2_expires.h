@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
@@ -42,12 +42,12 @@ typedef struct sandesha2_expires sandesha2_expires_t;
 axis2_char_t *AXIS2_CALL
 sandesha2_expires_get_duration(
     sandesha2_expires_t *expires,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_expires_set_duration(
     sandesha2_expires_t *expires,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *duration);
 
 /**
@@ -61,7 +61,7 @@ AXIS2_DECLARE_DATA struct sandesha2_expires
     
 AXIS2_EXTERN sandesha2_expires_t* AXIS2_CALL
 sandesha2_expires_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
 
 /** @} */

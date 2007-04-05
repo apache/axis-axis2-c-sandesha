@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <axis2_utils_defines.h>
-#include <axis2_env.h>
+#include <axutil_utils_defines.h>
+#include <axutil_env.h>
 #include <axiom_soap_envelope.h>
 #include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
@@ -51,18 +51,18 @@ AXIS2_DECLARE_DATA struct sandesha2_identifier
 
 AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
 sandesha2_identifier_create(
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *ns_value);
                     	
 axis2_char_t * AXIS2_CALL
 sandesha2_identifier_get_identifier(
     sandesha2_identifier_t *identifier,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL                 
 sandesha2_identifier_set_identifier(
     sandesha2_identifier_t *identifier,
-    const axis2_env_t *env, 
+    const axutil_env_t *env, 
     axis2_char_t *str_id);
 
 
