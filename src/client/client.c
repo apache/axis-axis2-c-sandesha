@@ -563,7 +563,7 @@ sandesha2_client_create_seq_with_svc_client(
     {
         axis2_char_t *offered_seq_id = NULL;
     
-        offered_seq_id = axis2_uuid_gen(env);
+        offered_seq_id = axutil_uuid_gen(env);
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, 
                 offered_seq_id);
     }
@@ -575,7 +575,7 @@ sandesha2_client_create_seq_with_svc_client(
         seq_key = axutil_property_get_value(property, env);
 	if (seq_key == NULL) 
     {
-		seq_key = axis2_uuid_gen(env);
+		seq_key = axutil_uuid_gen(env);
         property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
@@ -680,12 +680,12 @@ sandesha2_client_terminate_seq_with_svc_client(
         return AXIS2_FAILURE;
     body = axiom_soap_envelope_get_body(terminate_envelope, env);
     node = axiom_soap_body_get_base_node(body, env);
-    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
             rm_namespc_value, NULL);
     terminate_body_element = axiom_element_get_first_child_with_qname(element, 
         env, qname, node, &terminate_body_node);
-    old_action = axis2_strdup(env, axis2_options_get_action(options, env));
+    old_action = axutil_strdup(env, axis2_options_get_action(options, env));
     action = sandesha2_spec_specific_consts_get_terminate_seq_action(env, 
             rm_spec_version);
     if(action)
@@ -788,7 +788,7 @@ sandesha2_client_close_seq_with_svc_client(
             conf_ctx);
     body = axiom_soap_envelope_get_body(close_envelope, env);
     node = axiom_soap_body_get_base_node(body, env);
-    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, 
             rm_namespc_value, NULL);
     close_body_element = axiom_element_get_first_child_with_qname(element, env, 
@@ -1102,7 +1102,7 @@ sandesha2_client_send_ack_request_with_svc_client(
         rm_spec_version = axutil_property_get_value(property, env);
     if(!rm_spec_version)
     {
-        rm_spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_0); 
+        rm_spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0); 
     }
     if(0  == axis2_strcmp(rm_spec_version, SANDESHA2_SPEC_VERSION_1_0))
     {
@@ -1149,7 +1149,7 @@ sandesha2_client_send_ack_request_with_svc_client(
             ack_requested, env, dummy_envelope);
     header = axiom_soap_envelope_get_header(dummy_envelope, env);
     node = axiom_soap_header_get_base_node(header, env);
-    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
             rm_ns_value, NULL);
     ack_requested_header_block = axiom_element_get_first_child_with_qname(

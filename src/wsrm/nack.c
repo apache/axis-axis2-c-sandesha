@@ -111,7 +111,7 @@ sandesha2_nack_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         return NULL;
 	}
     
-    nack_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    nack_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     nack_impl->nack.element.ops->get_namespace_value = 
                         sandesha2_nack_get_namespace_value;
@@ -185,7 +185,7 @@ sandesha2_nack_from_om_node(sandesha2_iom_rm_element_t *nack,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     nack_impl = SANDESHA2_INTF_TO_IMPL(nack);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

@@ -220,7 +220,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     ack_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
     sandesha2_msg_ctx_set_rm_ns_val(ack_rm_msg, env, 
         sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env));
-    axis2_msg_ctx_set_message_id(ack_msg_ctx, env, axis2_uuid_gen(env));
+    axis2_msg_ctx_set_message_id(ack_msg_ctx, env, axutil_uuid_gen(env));
     
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
         sandesha2_utils_get_soap_version(env, 
@@ -296,7 +296,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         axis2_transport_out_desc_t *transport_out = NULL;
         
         retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
-        key = axis2_uuid_gen(env);
+        key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
         sandesha2_sender_bean_set_msg_id(ack_bean, env, 

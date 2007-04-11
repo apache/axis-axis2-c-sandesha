@@ -200,8 +200,8 @@ sandesha2_in_order_invoker_run (
                         sandesha2_in_order_invoker_args_t)); 
     args->impl = invoker;
     args->env = (axutil_env_t*)env;
-    worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
-                        sandesha2_in_order_invoker_worker_func, (void*)args);
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
+        sandesha2_in_order_invoker_worker_func, (void*)args);
     if(NULL == worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed"
@@ -247,7 +247,7 @@ sandesha2_in_order_invoker_worker_func(
     axutil_env_t *env = NULL;
     
     args = (sandesha2_in_order_invoker_args_t*)data;
-    env = axis2_init_thread_env(args->env);
+    env = axutil_init_thread_env(args->env);
     invoker = args->impl;
     
     while(invoker->run_invoker)

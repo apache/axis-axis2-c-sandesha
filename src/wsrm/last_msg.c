@@ -93,7 +93,7 @@ sandesha2_last_msg_create(
         return NULL;
 	}
     
-    last_msg_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    last_msg_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     last_msg_impl->last_msg.element.ops->get_namespace_value = 
                         sandesha2_last_msg_get_namespace_value;
@@ -157,7 +157,7 @@ sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     last_msg_impl = SANDESHA2_INTF_TO_IMPL(last_msg);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

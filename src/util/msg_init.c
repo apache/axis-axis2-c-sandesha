@@ -139,7 +139,7 @@ populate_rm_msg_ctx(
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
-        addressing_ns = axis2_strdup(env, AXIS2_WSA_NAMESPACE);
+        addressing_ns = axutil_strdup(env, AXIS2_WSA_NAMESPACE);
     }
     if(addressing_ns)
         rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
@@ -424,7 +424,7 @@ static axis2_bool_t validate_msg(
     temp_flow = axis2_msg_ctx_get_flow(temp_msg_ctx, env);
     if(temp_flow == AXIS2_IN_FLOW)
     {
-        prop_key = axis2_strdup(env, seq_id);
+        prop_key = axutil_strdup(env, seq_id);
     }
     else
     {

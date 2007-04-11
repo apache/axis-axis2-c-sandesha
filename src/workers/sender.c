@@ -220,7 +220,7 @@ sandesha2_sender_run (
     args->impl = sender;
     args->env = (axutil_env_t*)env;
 
-    worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
         sandesha2_sender_worker_func, (void*)args);
     if(NULL == worker_thread)
     {
@@ -249,7 +249,7 @@ sandesha2_sender_worker_func(
     axis2_bool_t do_sleep = AXIS2_FALSE;
     
     args = (sandesha2_sender_args_t*)data;
-    env = axis2_init_thread_env(args->env);
+    env = axutil_init_thread_env(args->env);
     sender = args->impl;
     sender = (sandesha2_sender_t*)sender;
     

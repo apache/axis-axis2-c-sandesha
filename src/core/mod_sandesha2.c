@@ -37,6 +37,14 @@ axis2_status_t AXIS2_CALL
 mod_sandesha2_fill_handler_create_func_map(
     axis2_module_t *module,
     const axutil_env_t *env);
+    
+static const axis2_module_ops_t mod_sandesha2_ops_var =
+{
+    mod_sandesha2_init,
+    mod_sandesha2_shutdown,
+    mod_sandesha2_fill_handler_create_func_map
+};
+
 /******************************************************************************/
 
 AXIS2_EXTERN axis2_module_t * AXIS2_CALL
@@ -50,12 +58,7 @@ mod_sandesha2_create(
     
     module->ops = AXIS2_MALLOC(
         env->allocator, sizeof(axis2_module_ops_t));
-
-    module->ops->shutdown = mod_sandesha2_shutdown;
-    module->ops->init = mod_sandesha2_init;
-    module->ops->fill_handler_create_func_map = 
-        mod_sandesha2_fill_handler_create_func_map;
-
+    module->ops = &mod_sandesha2_ops_var;
     return module;
 }
 
@@ -77,6 +80,7 @@ mod_sandesha2_init(
     AXIS2_PARAM_CHECK(env->error, module_desc, AXIS2_FAILURE);
     
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing ..");
+    sandesha2_error_init();
     property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
         module_desc);
     if(!property_bean)
@@ -115,12 +119,6 @@ mod_sandesha2_shutdown(axis2_module_t *module,
      * sandesha2_utils_stop_sender(env, conf_ctx);
      * sandesha2_utils_stop_invoker(env, conf_ctx);
      */
-    if(module->ops)
-    {
-        AXIS2_FREE(env->allocator, module->ops);
-        module->ops = NULL;
-    }
-
     if(module->handler_create_func_map)
     {
         /* TODO

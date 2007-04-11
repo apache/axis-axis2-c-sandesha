@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
 
     /* Offer sequence */
-    offered_seq_id = axis2_uuid_gen(env);
+    offered_seq_id = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 0, 0, 0, offered_seq_id);
     if(property)
         AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,

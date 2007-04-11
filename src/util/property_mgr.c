@@ -408,7 +408,7 @@ sandesha2_property_mgr_load_msg_types_to_drop(
         axis2_char_t *str2 = NULL;
         axutil_array_list_t *list = NULL;
         
-        str2 = axis2_strcat(env, "[", str, "]", NULL);
+        str2 = axutil_strcat(env, "[", str, "]", NULL);
         list = sandesha2_utils_get_array_list_from_string(env, str2);
         if(list)
         {

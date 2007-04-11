@@ -70,7 +70,7 @@ rm_sample_svc_echo (
         buffer = AXIOM_XML_WRITER_GET_XML(writer, env);
     }
 
-    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
@@ -90,7 +90,7 @@ rm_sample_svc_echo (
     
     if (AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT)
     {
-        axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
+        axiom_text_t *text = (axiom_text_t *)axiom_node_get_data_element(text_node, env);
         if( text && axiom_text_get_value(text , env))
         {
             axis2_char_t *text_str = axiom_text_get_value(text, env);
@@ -172,7 +172,7 @@ rm_sample_svc_ping (
         buffer = AXIOM_XML_WRITER_GET_XML(writer, env);
     }
 
-    element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
@@ -192,7 +192,7 @@ rm_sample_svc_ping (
     
     if (AXIOM_NODE_GET_NODE_TYPE(text_node, env) == AXIOM_TEXT)
     {
-        /*axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(text_node, env);
+        /*axiom_text_t *text = (axiom_text_t *)axiom_node_get_data_element(text_node, env);
         if( text && axiom_text_get_value(text , env))
         {
             axis2_char_t *text_str = axiom_text_get_value(text, env);
@@ -248,7 +248,7 @@ rm_sample_svc_mtom(
 
     if (AXIOM_NODE_GET_NODE_TYPE(file_text_node, env) == AXIOM_TEXT)
     {
-        axiom_text_t *text = (axiom_text_t *)AXIOM_NODE_GET_DATA_ELEMENT(file_text_node, env);
+        axiom_text_t *text = (axiom_text_t *)axiom_node_get_data_element(file_text_node, env);
         if (text && axiom_text_get_value(text , env))
         {
             axiom_node_t *image_node = NULL;
@@ -267,7 +267,7 @@ rm_sample_svc_mtom(
                     {
                         axiom_data_handler_t *data_handler = NULL;
                         axiom_text_t *bin_text = (axiom_text_t *)
-                                AXIOM_NODE_GET_DATA_ELEMENT(binary_node, env);
+                                axiom_node_get_data_element(binary_node, env);
                         data_handler = axiom_text_get_data_handler(bin_text, env);
                         if (data_handler)
                         {

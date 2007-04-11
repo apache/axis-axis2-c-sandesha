@@ -189,7 +189,7 @@ sandesha2_polling_mgr_run (
     args->impl = polling_mgr;
     args->env = (axutil_env_t*)env;
     args->storage_mgr = storage_mgr;
-    worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
         sandesha2_polling_mgr_worker_func, (void*)args);
     if(!worker_thread)
     {
@@ -327,7 +327,7 @@ sandesha2_polling_mgr_worker_func(
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             AXIS2_TRANSPORT_IN, NULL);
         /* Storing the MakeConnection message */
-        make_conn_msg_store_key = axis2_uuid_gen(env);
+        make_conn_msg_store_key = axutil_uuid_gen(env);
         property = axutil_property_create_with_args(env, 0, 0, 0, seq_prop_key);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY, property); 

@@ -94,8 +94,8 @@ sandesha2_create_seq_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    create_seq_impl->rm_ns_val = (axis2_char_t*)axis2_strdup(env, rm_ns_val);
-    create_seq_impl->addr_ns_val = (axis2_char_t*)axis2_strdup(env, addr_ns_val);
+    create_seq_impl->rm_ns_val = (axis2_char_t*)axutil_strdup(env, rm_ns_val);
+    create_seq_impl->addr_ns_val = (axis2_char_t*)axutil_strdup(env, addr_ns_val);
     create_seq_impl->acks_to = NULL;
     create_seq_impl->expires = NULL;
     create_seq_impl->seq_offer = NULL;
@@ -211,7 +211,7 @@ sandesha2_create_seq_from_om_node(
     AXIS2_PARAM_CHECK(env->error, seq_node, NULL);
     
     create_seq_impl = SANDESHA2_INTF_TO_IMPL(create_seq);
-    seq_part = AXIOM_NODE_GET_DATA_ELEMENT(seq_node, env);
+    seq_part = axiom_node_get_data_element(seq_node, env);
     if(!seq_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

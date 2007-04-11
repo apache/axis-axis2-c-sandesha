@@ -85,8 +85,7 @@ sandesha2_global_in_handler_create(
     /* handler init is handled by conf loading, so no need to do it here */
     
     /* set the base struct's invoke op */
-    if (handler->ops) 
-        handler->ops->invoke = sandesha2_global_in_handler_invoke;
+    axis2_handler_set_invoke(handler, env, sandesha2_global_in_handler_invoke);
 
     return handler;
 }
@@ -404,7 +403,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                     sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env), 
                     env);
                 body_node = axiom_soap_body_get_base_node(soap_body, env);
-                body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
+                body_element = axiom_node_get_data_element(body_node, env);
                 children_iterator = axiom_element_get_children(body_element, env, 
                     body_node);
                 if(!axiom_children_iterator_has_next(children_iterator, env))
@@ -431,10 +430,10 @@ sandesha2_global_in_handler_drop_if_duplicate(
                             rcvd_msgs_bean, env);
                     sprintf(msg_no_str, "%ld", msg_no);
                     if(rcvd_msgs_str1 && 0 < axis2_strlen(rcvd_msgs_str1))
-                        bean_value = axis2_strcat(env, rcvd_msgs_str1, ",",
+                        bean_value = axutil_strcat(env, rcvd_msgs_str1, ",",
                             msg_no_str, NULL);
                     else
-                        bean_value = axis2_strdup(env, msg_no_str);
+                        bean_value = axutil_strdup(env, msg_no_str);
                     
                     sandesha2_seq_property_bean_set_value(rcvd_msgs_bean, env,
                         bean_value);

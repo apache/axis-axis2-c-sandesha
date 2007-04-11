@@ -33,10 +33,10 @@
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
 
-static const axutil_string_t *AXIS2_CALL
+/*static const axutil_string_t *AXIS2_CALL
 sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
-    const axutil_env_t *env);
+    const axutil_env_t *env);*/
 
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
@@ -64,11 +64,7 @@ sandesha2_in_handler_create(
     /* handler init is handled by conf loading, so no need to do it here */
     
     /* set the base struct's invoke op */
-    if (handler->ops) 
-        handler->ops->invoke = sandesha2_in_handler_invoke;
-    if (handler->ops) 
-        handler->ops->get_name = sandesha2_in_handler_get_name;
-
+    axis2_handler_set_invoke(handler, env, sandesha2_in_handler_invoke);
     return handler;
 }
 
@@ -243,11 +239,11 @@ sandesha2_in_handler_invoke(
     return AXIS2_SUCCESS;
 }
 
-static const axutil_string_t *AXIS2_CALL
+/*static const axutil_string_t *AXIS2_CALL
 sandesha2_in_handler_get_name(
     const struct axis2_handler *handler, 
     const axutil_env_t *env)
 {
     return axutil_string_create(env, SANDESHA2_IN_HANDLER_NAME);
-}
+}*/
 

@@ -126,7 +126,7 @@ sandesha2_sender_worker_create(
     sender_worker->conf_ctx = conf_ctx;
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
-    sender_worker->msg_id = axis2_strdup(env, msg_id);
+    sender_worker->msg_id = axutil_strdup(env, msg_id);
     sender_worker->msg_ctx = NULL;
     sender_worker->transport_out = NULL;
     sender_worker->status = AXIS2_FAILURE;
@@ -158,7 +158,7 @@ sandesha2_sender_worker_create_with_msg_ctx(
     sender_worker->conf_ctx = conf_ctx;
     sender_worker->mutex = NULL;
     sender_worker->counter = 0;
-    sender_worker->msg_id = axis2_strdup(env, msg_id);
+    sender_worker->msg_id = axutil_strdup(env, msg_id);
     sender_worker->msg_ctx = msg_ctx;
     sender_worker->transport_out = NULL;
     sender_worker->status = AXIS2_FAILURE;
@@ -220,7 +220,7 @@ sandesha2_sender_worker_run (
     args->impl = sender_worker;
     args->env = (axutil_env_t*)env;
 
-    worker_thread = AXIS2_THREAD_POOL_GET_THREAD(env->thread_pool,
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
         sandesha2_sender_worker_worker_func, (void*)args);
     if(!worker_thread)
     {
@@ -264,7 +264,7 @@ sandesha2_sender_worker_worker_func(
     axis2_char_t *msg_id = NULL;
 
     args = (sandesha2_sender_worker_args_t*)data;
-    env = axis2_init_thread_env(args->env);
+    env = axutil_init_thread_env(args->env);
     sender_worker = args->impl;
     msg_id = sender_worker->msg_id;
     msg_ctx = sender_worker->msg_ctx;

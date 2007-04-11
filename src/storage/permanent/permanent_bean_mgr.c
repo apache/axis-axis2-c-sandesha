@@ -85,7 +85,7 @@ sandesha2_permanent_bean_mgr_response_retrieve_callback(
     {
         if(0 == axis2_strcmp(col_name[i], "response_str"))
             if(argv[i])
-                response->response_str = axis2_strdup(env, argv[i]);
+                response->response_str = axutil_strdup(env, argv[i]);
         if(0 == axis2_strcmp(col_name[i], "soap_version"))
             if(argv[i])
                 response->soap_version = axis2_atoi(argv[i]);

@@ -497,7 +497,7 @@ sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(
 {
     axis2_char_t *id = NULL;
 
-    id = axis2_strcat(env, seq_id, ":", name, NULL);
+    id = axutil_strcat(env, seq_id, ":", name, NULL);
     return id;
 }
 
@@ -512,7 +512,7 @@ sandesha2_permanent_seq_property_mgr_get_id_with_bean(
 
     seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
     name = sandesha2_seq_property_bean_get_name(bean, env);
-    id = axis2_strcat(env, seq_id, ":", name, NULL);
+    id = axutil_strcat(env, seq_id, ":", name, NULL);
 
     return id;
 }

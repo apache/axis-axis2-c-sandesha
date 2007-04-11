@@ -346,7 +346,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, 
                 env, ref_msg_store_key, conf_ctx);
         }
-        new_msg_store_key = axis2_uuid_gen(env);
+        new_msg_store_key = axutil_uuid_gen(env);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 
             ref_msg_ctx);
         sandesha2_next_msg_bean_set_ref_msg_key(next_bean, env, 

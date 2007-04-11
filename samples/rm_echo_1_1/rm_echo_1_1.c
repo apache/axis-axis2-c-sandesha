@@ -166,11 +166,11 @@ int main(int argc, char** argv)
     /* Offer sequence */
     if(offer)
     {
-        offered_seq_id = axis2_uuid_gen(env);
+        offered_seq_id = axutil_uuid_gen(env);
         property = axutil_property_create(env);
         if(property)
         {
-            axutil_property_set_value(property, env, axis2_strdup(offered_seq_id, 
+            axutil_property_set_value(property, env, axutil_strdup(offered_seq_id, 
                 env));
             AXIS2_OPTIONS_SET_PROPERTY(options, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);

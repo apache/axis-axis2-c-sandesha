@@ -112,7 +112,7 @@ sandesha2_msg_number_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    msg_number_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    msg_number_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     msg_number_impl->msg_number.element.ops->get_namespace_value = 
                         sandesha2_msg_number_get_namespace_value;
@@ -188,7 +188,7 @@ sandesha2_msg_number_from_om_node(sandesha2_iom_rm_element_t *msg_num,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     msg_number_impl = SANDESHA2_INTF_TO_IMPL(msg_num);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

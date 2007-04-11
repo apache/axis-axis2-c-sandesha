@@ -76,7 +76,7 @@ sandesha2_rm_elements_create(
     rm_elements->make_connection = NULL;
     rm_elements->msg_pending = NULL;
     
-    rm_elements->addr_ns_val = axis2_strdup(env, addr_ns_val);
+    rm_elements->addr_ns_val = axutil_strdup(env, addr_ns_val);
     
 	return rm_elements;
 }
@@ -160,11 +160,11 @@ sandesha2_rm_elements_from_soap_envelope(
     }
     soap_header = axiom_soap_envelope_get_header(soap_envelope, env);    
     header_node = axiom_soap_header_get_base_node(soap_header, env);
-    header_element = AXIOM_NODE_GET_DATA_ELEMENT(header_node, env);
+    header_element = axiom_node_get_data_element(header_node, env);
     
     soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
     body_node = axiom_soap_body_get_base_node(soap_body, env);
-    body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
+    body_element = axiom_node_get_data_element(body_node, env);
                         
     rm_ns_val = rm_elements->rm_ns_val;
     addr_ns_val = rm_elements->addr_ns_val;
@@ -685,7 +685,7 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
             return AXIS2_WSA_NAMESPACE_SUBMISSION;
 
         soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
-        soap_header_element = AXIOM_NODE_GET_DATA_ELEMENT(soap_header_node, 
+        soap_header_element = axiom_node_get_data_element(soap_header_node, 
             env);
         addr_ns = axiom_element_get_namespace(soap_header_element, env, 
             soap_header_node);

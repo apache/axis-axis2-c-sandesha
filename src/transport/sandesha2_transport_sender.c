@@ -44,7 +44,7 @@ sandesha2_transport_sender_init(
     axis2_transport_out_desc_t *transport_out);
             
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_cleanup(
+sandesha2_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
@@ -55,12 +55,19 @@ sandesha2_transport_sender_invoke (
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
             
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env);								
 
 /***************************** End of function headers ************************/
+
+static const axis2_transport_sender_ops_t sandesha2_transport_sender_ops_var = {
+    sandesha2_transport_sender_init,
+    sandesha2_transport_sender_invoke,
+    sandesha2_transport_sender_clean_up,
+    sandesha2_transport_sender_free
+};
 
 AXIS2_EXTERN axis2_transport_sender_t* AXIS2_CALL
 sandesha2_transport_sender_create(
@@ -88,34 +95,19 @@ sandesha2_transport_sender_create(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    
-    transport_sender_impl->transport_sender.ops->init = 
-        sandesha2_transport_sender_init;
-    transport_sender_impl->transport_sender.ops->cleanup = 
-        sandesha2_transport_sender_cleanup;
-    transport_sender_impl->transport_sender.ops->invoke = 
-        sandesha2_transport_sender_invoke;
-    transport_sender_impl->transport_sender.ops->free = 
-        sandesha2_transport_sender_free;
-                        
+    transport_sender_impl->transport_sender.ops = &sandesha2_transport_sender_ops_var; 
 	return &(transport_sender_impl->transport_sender);
 }
 
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender, 
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
        
-    if(NULL != transport_sender->ops)
-    {
-        AXIS2_FREE(env->allocator, transport_sender->ops);
-        transport_sender->ops = NULL;
-    }
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(transport_sender));
-	return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
@@ -134,7 +126,7 @@ sandesha2_transport_sender_init(
 }
             
 axis2_status_t AXIS2_CALL
-sandesha2_transport_sender_cleanup(
+sandesha2_transport_sender_clean_up(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)

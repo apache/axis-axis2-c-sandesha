@@ -141,7 +141,7 @@ sandesha2_fault_data_set_reason(
         AXIS2_FREE(env->allocator, data->reason);
         data->reason = NULL;
     }
-    data->reason = axis2_strdup(env, reason);
+    data->reason = axutil_strdup(env, reason);
     return AXIS2_SUCCESS;
 }
 
@@ -168,7 +168,7 @@ sandesha2_fault_data_set_sub_code(
         AXIS2_FREE(env->allocator, data->sub_code);
         data->sub_code = NULL;
     }
-    data->sub_code = axis2_strdup(env, sub_code);
+    data->sub_code = axutil_strdup(env, sub_code);
     return AXIS2_SUCCESS;
 }
             
@@ -195,7 +195,7 @@ sandesha2_fault_data_set_code(
         AXIS2_FREE(env->allocator, data->code);
         data->code = NULL;
     }
-    data->code = axis2_strdup(env, code);
+    data->code = axutil_strdup(env, code);
     return AXIS2_SUCCESS;
 }
             
@@ -242,7 +242,7 @@ sandesha2_fault_data_set_seq_id(
         AXIS2_FREE(env->allocator, data->seq_id);
         data->seq_id = NULL;
     }
-    data->seq_id = axis2_strdup(env, seq_id);
+    data->seq_id = axutil_strdup(env, seq_id);
     return AXIS2_SUCCESS;
     
 }

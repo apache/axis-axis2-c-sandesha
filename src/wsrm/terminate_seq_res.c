@@ -115,7 +115,7 @@ sandesha2_terminate_seq_res_create(
     						env->allocator,
         					sizeof(sandesha2_iom_rm_element_ops_t));
     
-    terminate_seq_res_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    terminate_seq_res_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     terminate_seq_res_impl->terminate_seq_res.part.element.ops->
                         get_namespace_value = 
@@ -186,7 +186,7 @@ sandesha2_terminate_seq_res_from_om_node(
     AXIS2_PARAM_CHECK(env->error, tsr_node, NULL);
     
     terminate_seq_res_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq_res);
-    tsr_part = AXIOM_NODE_GET_DATA_ELEMENT(tsr_node, env);
+    tsr_part = axiom_node_get_data_element(tsr_node, env);
     if(!tsr_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

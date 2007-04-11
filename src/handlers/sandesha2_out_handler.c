@@ -64,8 +64,7 @@ sandesha2_out_handler_create(
     /* handler init is handled by conf loading, so no need to do it here */
     
     /* set the base struct's invoke op */
-    if (handler->ops) 
-        handler->ops->invoke = sandesha2_out_handler_invoke;
+    hxis2_handler_set_invoke(handler, env, sandesha2_out_handler_invoke);
 
     return handler;
 }
@@ -262,7 +261,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
-        axutil_property_set_value(temp_prop, env, axis2_strdup(
+        axutil_property_set_value(temp_prop, env, axutil_strdup(
             env,AXIS2_VALUE_FALSE));
     AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
     return AXIS2_SUCCESS;

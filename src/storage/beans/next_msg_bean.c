@@ -86,7 +86,7 @@ sandesha2_next_msg_bean_create_with_data(
 		return NULL;
 	}
 	/* init the properties. */
-	next_msg_bean_impl->seq_id = (axis2_char_t*)axis2_strdup(env, seq_id);
+	next_msg_bean_impl->seq_id = (axis2_char_t*)axutil_strdup(env, seq_id);
     next_msg_bean_impl->ref_msg_key = NULL;
 	next_msg_bean_impl->msg_no = msg_no;
     next_msg_bean_impl->polling_mode = AXIS2_FALSE;
@@ -171,7 +171,7 @@ sandesha2_next_msg_bean_set_seq_id(
 		next_msg_bean_impl->seq_id = NULL;
 	}
 
-	next_msg_bean_impl->seq_id = (axis2_char_t*) axis2_strdup(env, seq_id); 
+	next_msg_bean_impl->seq_id = (axis2_char_t*) axutil_strdup(env, seq_id); 
 }
 
 
@@ -235,7 +235,7 @@ sandesha2_next_msg_bean_set_ref_msg_key(
 {
     sandesha2_next_msg_bean_impl_t *next_msg_bean_impl = NULL;
     next_msg_bean_impl = SANDESHA2_INTF_TO_IMPL(next_msg_bean);
-    next_msg_bean_impl->ref_msg_key = axis2_strdup(env, ref_msg_key);
+    next_msg_bean_impl->ref_msg_key = axutil_strdup(env, ref_msg_key);
 }
 
 void AXIS2_CALL

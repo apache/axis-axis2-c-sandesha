@@ -113,7 +113,7 @@ sandesha2_close_seq_res_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         return NULL;
 	}
     
-    close_seq_res_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    close_seq_res_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     close_seq_res_impl->close_seq_res.part.element.ops->get_namespace_value = 
                         sandesha2_close_seq_res_get_namespace_value;
@@ -186,7 +186,7 @@ sandesha2_close_seq_res_from_om_node(
     AXIS2_PARAM_CHECK(env->error, csr_node, NULL);
     
     close_seq_res_impl = SANDESHA2_INTF_TO_IMPL(close_seq_res);
-    csr_part = AXIOM_NODE_GET_DATA_ELEMENT(csr_node, env);
+    csr_part = axiom_node_get_data_element(csr_node, env);
     if(!csr_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

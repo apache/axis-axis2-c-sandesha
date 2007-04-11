@@ -125,7 +125,7 @@ sandesha2_make_connection_create(
         return NULL;
 	}
     
-    make_conn_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    make_conn_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     make_conn_impl->make_conn.part.element.ops->get_namespace_value = 
                         sandesha2_make_connection_get_namespace_value;
@@ -209,7 +209,7 @@ sandesha2_make_connection_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     make_conn_impl = SANDESHA2_INTF_TO_IMPL(make_conn);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(!om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -408,7 +408,7 @@ sandesha2_make_connection_to_soap_envelope(
     if(soap_body)
         body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(body_node)
-        body_element = AXIOM_NODE_GET_DATA_ELEMENT(body_node, env);
+        body_element = axiom_node_get_data_element(body_node, env);
     make_conn_qname = axutil_qname_create(env, 
         SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, make_conn_impl->ns_val, NULL);
     if(!make_conn_qname)

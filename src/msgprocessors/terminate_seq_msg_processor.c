@@ -402,7 +402,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     trans_out = sandesha2_utils_get_transport_out(env);
     axis2_msg_ctx_set_transport_out_desc(out_msg_ctx, env, trans_out);
 
-    key = axis2_uuid_gen(env);
+    key = axutil_uuid_gen(env);
     term_res_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(term_res_bean, env, key);
     property = axutil_property_create_with_args(env, 0, 0, 0, key);
@@ -560,7 +560,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
 
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     
-    /*key = axis2_uuid_gen(env);
+    /*key = axutil_uuid_gen(env);
     term_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(term_bean, env, key);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, msg_ctx);

@@ -91,7 +91,7 @@ sandesha2_msg_pending_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    msg_pending_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    msg_pending_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     msg_pending_impl->pending = AXIS2_TRUE;
     msg_pending_impl->msg_pending.part.ops = NULL;
     msg_pending_impl->msg_pending.part.element.ops = NULL;
@@ -194,7 +194,7 @@ sandesha2_msg_pending_from_om_node(
     AXIS2_PARAM_CHECK(env->error, msg_pending_node, NULL);
     
     msg_pending_impl = SANDESHA2_INTF_TO_IMPL(msg_pending);
-    msg_pending_element = AXIOM_NODE_GET_DATA_ELEMENT(msg_pending_node, env);
+    msg_pending_element = axiom_node_get_data_element(msg_pending_node, env);
     if(!msg_pending_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -269,7 +269,7 @@ sandesha2_msg_pending_to_om_node(
     }
     msg_pending_node = axiom_soap_header_block_get_base_node(msg_pending_block, 
         env);
-    msg_pending_element = AXIOM_NODE_GET_DATA_ELEMENT(msg_pending_node, env);
+    msg_pending_element = axiom_node_get_data_element(msg_pending_node, env);
     if(pending)
         attr_value = AXIS2_VALUE_TRUE;
     else if(!pending)

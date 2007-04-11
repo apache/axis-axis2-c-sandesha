@@ -94,8 +94,8 @@ sandesha2_accept_create(const axutil_env_t *env,  axis2_char_t *rm_ns_val,
         return NULL;
 	}
     
-    accept_impl->rm_ns_val = (axis2_char_t *)axis2_strdup(env ,rm_ns_val);
-    accept_impl->addr_ns_val = (axis2_char_t *)axis2_strdup(env, addr_ns_val);
+    accept_impl->rm_ns_val = (axis2_char_t *)axutil_strdup(env ,rm_ns_val);
+    accept_impl->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
     accept_impl->acks_to = NULL;
     
     accept_impl->accept.element.ops->get_namespace_value = 
@@ -175,7 +175,7 @@ sandesha2_accept_from_om_node(
     {
         return NULL;
     }
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env); 
+    om_element = axiom_node_get_data_element(om_node, env); 
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, 

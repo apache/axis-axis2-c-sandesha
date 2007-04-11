@@ -94,7 +94,7 @@ sandesha2_seq_fault_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    seq_fault_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    seq_fault_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     seq_fault_impl->seq_fault.element.ops->get_namespace_value = 
                         sandesha2_seq_fault_get_namespace_value;
@@ -156,7 +156,7 @@ sandesha2_seq_fault_from_om_node(sandesha2_iom_rm_element_t *seq_fault,
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     seq_fault_impl = SANDESHA2_INTF_TO_IMPL(seq_fault);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

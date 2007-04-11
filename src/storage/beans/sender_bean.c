@@ -116,9 +116,9 @@ sandesha2_sender_bean_create_with_data(
 	}
 
 	/* init properties */
-	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)axis2_strdup(env, key);
-	sender_bean_impl->msg_id = (axis2_char_t *)axis2_strdup(env, msg_id);
-	sender_bean_impl->internal_seq_id = (axis2_char_t *)axis2_strdup(env, int_seq_id);
+	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)axutil_strdup(env, key);
+	sender_bean_impl->msg_id = (axis2_char_t *)axutil_strdup(env, msg_id);
+	sender_bean_impl->internal_seq_id = (axis2_char_t *)axutil_strdup(env, int_seq_id);
 	sender_bean_impl->sent_count = -1;
 	sender_bean_impl->msg_no = msg_no;
 	sender_bean_impl->send = send; 
@@ -222,7 +222,7 @@ sandesha2_sender_bean_set_msg_ctx_ref_key (
 		AXIS2_FREE(env->allocator, sender_bean_impl->msg_ctx_ref_key);
 		sender_bean_impl->msg_ctx_ref_key = NULL;
 	}
-	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)axis2_strdup(env, ref_key);
+	sender_bean_impl->msg_ctx_ref_key = (axis2_char_t *)axutil_strdup(env, ref_key);
 }
 
 axis2_char_t* AXIS2_CALL
@@ -248,7 +248,7 @@ sandesha2_sender_bean_set_msg_id (
 		AXIS2_FREE(env->allocator, msg_id);
 		sender_bean_impl->msg_id = NULL;
 	}
-	sender_bean_impl->msg_id = (axis2_char_t *)axis2_strdup(env, msg_id);
+	sender_bean_impl->msg_id = (axis2_char_t *)axutil_strdup(env, msg_id);
 }
 
 axis2_bool_t AXIS2_CALL
@@ -296,7 +296,7 @@ sandesha2_sender_bean_set_internal_seq_id (
 		sender_bean_impl->internal_seq_id = NULL;
 	}
 
-	sender_bean_impl->internal_seq_id = (axis2_char_t *)axis2_strdup(env, int_seq_id);
+	sender_bean_impl->internal_seq_id = (axis2_char_t *)axutil_strdup(env, int_seq_id);
 }
 
 int AXIS2_CALL 
@@ -429,7 +429,7 @@ sandesha2_sender_bean_set_seq_id (
 		sender_bean_impl->seq_id = NULL;
 	}
 
-	sender_bean_impl->seq_id = (axis2_char_t *)axis2_strdup(env, seq_id);
+	sender_bean_impl->seq_id = (axis2_char_t *)axutil_strdup(env, seq_id);
 }
 
 axis2_char_t* AXIS2_CALL
@@ -456,7 +456,7 @@ sandesha2_sender_bean_set_wsrm_anon_uri (
 		sender_bean_impl->wsrm_anon_uri = NULL;
 	}
 
-	sender_bean_impl->wsrm_anon_uri = (axis2_char_t *)axis2_strdup(env, anon_uri);
+	sender_bean_impl->wsrm_anon_uri = (axis2_char_t *)axutil_strdup(env, anon_uri);
 }
 
 void AXIS2_CALL
@@ -473,7 +473,7 @@ sandesha2_sender_bean_set_to_address (
 		sender_bean_impl->to_address = NULL;
 	}
 
-	sender_bean_impl->to_address = (axis2_char_t *)axis2_strdup(env, to_address);
+	sender_bean_impl->to_address = (axis2_char_t *)axutil_strdup(env, to_address);
 }
 
 axis2_char_t* AXIS2_CALL

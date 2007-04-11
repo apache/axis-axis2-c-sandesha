@@ -77,7 +77,7 @@ sandesha2_address_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    address_impl->ns_val = axis2_strdup(env, ns_val);
+    address_impl->ns_val = axutil_strdup(env, ns_val);
     address_impl->epr = epr;
     address_impl->address.element.ops = NULL;
     
@@ -155,7 +155,7 @@ sandesha2_address_from_om_node(
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     address_impl = SANDESHA2_INTF_TO_IMPL(address);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(!om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

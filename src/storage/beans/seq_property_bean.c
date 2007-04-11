@@ -97,9 +97,9 @@ sandesha2_seq_property_bean_create_with_data(
 		return NULL;
 	}
 	/* initialize properties */
-	seq_property_bean_impl->seq_id = (axis2_char_t *)axis2_strdup(env, seq_id);
-	seq_property_bean_impl->name = (axis2_char_t *)axis2_strdup(env, prop_name);
-	seq_property_bean_impl->value = (axis2_char_t *)axis2_strdup(env, value);
+	seq_property_bean_impl->seq_id = (axis2_char_t *)axutil_strdup(env, seq_id);
+	seq_property_bean_impl->name = (axis2_char_t *)axutil_strdup(env, prop_name);
+	seq_property_bean_impl->value = (axis2_char_t *)axutil_strdup(env, value);
     seq_property_bean_impl->rm_bean_impl = sandesha2_rm_bean_create(env);
     seq_property_bean_impl->seq_property_bean.rm_bean.ops = rm_bean_ops;
 
@@ -187,7 +187,7 @@ sandesha2_seq_property_bean_set_name (
 		seq_property_bean_impl->name = NULL;
 	}
     if(name)
-        seq_property_bean_impl->name = (axis2_char_t *)axis2_strdup(env, name);
+        seq_property_bean_impl->name = (axis2_char_t *)axutil_strdup(env, name);
 }
 
 axis2_char_t *AXIS2_CALL
@@ -215,7 +215,7 @@ sandesha2_seq_property_bean_set_seq_id (
 		seq_property_bean_impl->seq_id = NULL;
 	}
     if(seq_id)
-        seq_property_bean_impl->seq_id = (axis2_char_t *)axis2_strdup(env, seq_id);
+        seq_property_bean_impl->seq_id = (axis2_char_t *)axutil_strdup(env, seq_id);
 }
 
 axis2_char_t* AXIS2_CALL
@@ -243,7 +243,7 @@ sandesha2_seq_property_bean_set_value (
 		seq_property_bean_impl->value = NULL;
 	}
     if(value)
-        seq_property_bean_impl->value = (axis2_char_t *)axis2_strdup(env, value);
+        seq_property_bean_impl->value = (axis2_char_t *)axutil_strdup(env, value);
 
 }
 
@@ -304,7 +304,7 @@ sandesha2_inmemory_seq_property_mgr_get_key(
         (sandesha2_seq_property_bean_t *) seq_property_bean, env);
     name = sandesha2_seq_property_bean_get_name(
         (sandesha2_seq_property_bean_t *) seq_property_bean, env);
-    id = axis2_strcat(env, seq_id, ":", name, NULL);
+    id = axutil_strcat(env, seq_id, ":", name, NULL);
 
     return id;
 }

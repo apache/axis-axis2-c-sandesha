@@ -92,7 +92,7 @@ sandesha2_expires_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    expires_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    expires_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     expires_impl->expires.element.ops->get_namespace_value = 
                         sandesha2_expires_get_namespace_value;
@@ -166,7 +166,7 @@ sandesha2_expires_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     expires_impl = SANDESHA2_INTF_TO_IMPL(expires);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -179,7 +179,7 @@ sandesha2_expires_from_om_node(
     {
         return NULL;
     }
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -201,7 +201,7 @@ sandesha2_expires_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    expires_impl->duration = axis2_strdup(env, text); 
+    expires_impl->duration = axutil_strdup(env, text); 
     if(NULL == expires_impl->duration)
     {
         return NULL;

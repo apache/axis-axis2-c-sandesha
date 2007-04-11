@@ -266,7 +266,7 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_storage_mgr_t));
 
-    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axis2_strdup(env, "Sandesha2MessageMap");
+    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axutil_strdup(env, "Sandesha2MessageMap");
     storage_mgr_impl->conf_ctx = conf_ctx;
     axis2_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->transactions = axutil_hash_make(env);
@@ -773,7 +773,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
                     property, env);
             if(!in_msg_store_key)
             {
-                in_msg_store_key = (axis2_char_t *) axis2_uuid_gen(env);
+                in_msg_store_key = (axis2_char_t *) axutil_uuid_gen(env);
                 insert = AXIS2_TRUE;
             }
             /*if(insert)
@@ -861,7 +861,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         msg_store_bean, env));
     /* You cannot set the same message id to a new message context again. So generate
      * a new message id and set it
-     * axis2_msg_ctx_set_msg_id(msg_ctx, env, axis2_uuid_gen(env));*/
+     * axis2_msg_ctx_set_msg_id(msg_ctx, env, axutil_uuid_gen(env));*/
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, 
@@ -1058,7 +1058,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
     if(property)
     {
         axis2_char_t *value = axutil_property_get_value(property, env);
-        prop_str = axis2_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
+        prop_str = axutil_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -1070,7 +1070,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
         if(value)
         {
             temp_str = prop_str;
-            prop_str = axis2_strcat(env, temp_str, 
+            prop_str = axutil_strcat(env, temp_str, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, AXIS2_WSA_VERSION, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
             if(temp_str && 0 < axis2_strlen(temp_str))
@@ -1106,7 +1106,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
         if(value)
         {
             temp_str = prop_str;
-            prop_str = axis2_strcat(env, temp_str, 
+            prop_str = axutil_strcat(env, temp_str, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, key, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, 
                 value, NULL);

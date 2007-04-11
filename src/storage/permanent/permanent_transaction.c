@@ -148,12 +148,12 @@ sandesha2_permanent_transaction_create(
         SANDESHA2_IS_SVR_SIDE);
     if(!property)
     {
-        db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_svr_db", NULL);
     }
     else
     {
-        db_name = axis2_strcat(env, path, AXIS2_PATH_SEP_STR, 
+        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_client_db", NULL);
     }
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));

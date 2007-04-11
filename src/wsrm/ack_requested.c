@@ -111,7 +111,7 @@ sandesha2_ack_requested_create(const axutil_env_t *env,  axis2_char_t *ns_val)
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    ack_requested_impl->ns_val = (axis2_char_t *)axis2_strdup(env , ns_val);
+    ack_requested_impl->ns_val = (axis2_char_t *)axutil_strdup(env , ns_val);
     
     ack_requested_impl->ack_requested.part.element.ops->get_namespace_value = 
                         sandesha2_ack_requested_get_namespace_value;
@@ -184,7 +184,7 @@ sandesha2_ack_requested_from_om_node(
     AXIS2_PARAM_CHECK(env->error, requested_node, NULL);
     
     ack_requested_impl = SANDESHA2_INTF_TO_IMPL(ack_requested);
-    requested_part = AXIOM_NODE_GET_DATA_ELEMENT(requested_node, env);
+    requested_part = axiom_node_get_data_element(requested_node, env);
     if(!requested_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

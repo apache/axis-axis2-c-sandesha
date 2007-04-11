@@ -87,7 +87,7 @@ sandesha2_seq_mgr_setup_new_seq(
     axis2_char_t *address = NULL;
     axis2_char_t *reply_to_addr = NULL;
 
-    seq_id = axis2_uuid_gen(env);
+    seq_id = axutil_uuid_gen(env);
     to = sandesha2_msg_ctx_get_to(create_seq_msg, env);
     if(!to)
     {
@@ -175,11 +175,11 @@ sandesha2_seq_mgr_setup_new_seq(
             (sandesha2_iom_rm_element_t *) create_seq, env);
     if(0 == axis2_strcmp(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
     {
-        spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
+        spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
     }
     else if(0 == axis2_strcmp(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
     {
-        spec_version = axis2_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
+        spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
     }
     else
     {

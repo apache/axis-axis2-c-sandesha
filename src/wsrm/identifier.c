@@ -100,7 +100,7 @@ sandesha2_identifier_create(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    identifier_impl->ns_val = (axis2_char_t *)axis2_strdup(env, ns_val);
+    identifier_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
     identifier_impl->identifier.element.ops->get_namespace_value = 
                         sandesha2_identifier_get_namespace_value;
@@ -174,7 +174,7 @@ sandesha2_identifier_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
-    om_element = AXIOM_NODE_GET_DATA_ELEMENT(om_node, env);
+    om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -202,7 +202,7 @@ sandesha2_identifier_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    identifier_impl->str_id = axis2_strdup(env, ident_str);
+    identifier_impl->str_id = axutil_strdup(env, ident_str);
     if(NULL == identifier_impl->str_id)
     {
         return NULL;
@@ -300,7 +300,7 @@ sandesha2_identifier_set_identifier(
 		identifier_impl->str_id = NULL;
 	}
 	
-	identifier_impl->str_id = (axis2_char_t *)axis2_strdup(env, str_id);
+	identifier_impl->str_id = (axis2_char_t *)axutil_strdup(env, str_id);
  	return AXIS2_SUCCESS;
 }
 

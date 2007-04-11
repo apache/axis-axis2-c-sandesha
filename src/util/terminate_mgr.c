@@ -99,7 +99,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     {
         axis2_allocator_switch_to_global_pool(env->allocator);
         axutil_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-            AXIS2_HASH_KEY_STRING, axis2_strdup(env, SANDESHA2_CLEANED_ON_TERMINATE_MSG));
+            AXIS2_HASH_KEY_STRING, axutil_strdup(env, SANDESHA2_CLEANED_ON_TERMINATE_MSG));
         axis2_allocator_switch_to_local_pool(env->allocator);
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
             seq_id, storage_mgr);
@@ -121,7 +121,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
         {
             axis2_allocator_switch_to_global_pool(env->allocator);
             axutil_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-                AXIS2_HASH_KEY_STRING, axis2_strdup(env, 
+                AXIS2_HASH_KEY_STRING, axutil_strdup(env, 
                 SANDESHA2_CLEANED_ON_TERMINATE_MSG));
             axis2_allocator_switch_to_local_pool(env->allocator);
         }
@@ -193,7 +193,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     {
         axis2_allocator_switch_to_global_pool(env->allocator);
         axutil_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
-            AXIS2_HASH_KEY_STRING, axis2_strdup(env, 
+            AXIS2_HASH_KEY_STRING, axutil_strdup(env, 
                 SANDESHA2_CLEANED_AFTER_INVOCATION));
         axis2_allocator_switch_to_local_pool(env->allocator);
     }
@@ -735,7 +735,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         }
         return AXIS2_SUCCESS;
     }
-    key = axis2_uuid_gen(env);
+    key = axutil_uuid_gen(env);
     terminate_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_bean, env, key);
     terminate_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
