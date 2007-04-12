@@ -173,11 +173,11 @@ sandesha2_seq_mgr_setup_new_seq(
     }
     msg_rm_ns = sandesha2_iom_rm_element_get_namespace_value(
             (sandesha2_iom_rm_element_t *) create_seq, env);
-    if(0 == axis2_strcmp(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
+    if(0 == axutil_strcmp(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
     {
         spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
     }
-    else if(0 == axis2_strcmp(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
+    else if(0 == axutil_strcmp(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
     {
         spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
     }
@@ -448,7 +448,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
                         int_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR,
                         acks_to_str);
     if(!axis2_msg_ctx_get_server_side(first_app_msg, env) &&
-                        0 != axis2_strcmp(acks_to_str, anon_uri))
+                        0 != axutil_strcmp(acks_to_str, anon_uri))
     {
         ctx = axis2_msg_ctx_get_base(first_app_msg, env);
         /* TODO currently axis2 doesn't expose the *options* at msg ctx level.

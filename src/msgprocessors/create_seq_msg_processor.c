@@ -333,7 +333,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(0 == axis2_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, 
+    if(0 == axutil_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, 
                     env)))
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     else
@@ -384,7 +384,7 @@ sandesha2_create_seq_msg_processor_offer_accepted(
                         seq_id);
     list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, find_bean);
     /* Single char offerings are not accepted */
-    if(1 >= axis2_strlen(seq_id))
+    if(1 >= axutil_strlen(seq_id))
         return AXIS2_FALSE;
         
     if(NULL != list && 0 < axutil_array_list_size(list, env))

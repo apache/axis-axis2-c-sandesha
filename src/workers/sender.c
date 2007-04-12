@@ -148,7 +148,7 @@ sandesha2_sender_stop_sender_for_seq(
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = axutil_array_list_get(sender->working_seqs, env, i);
-        if(0 == axis2_strcmp(seq_id, tmp_id))
+        if(0 == axutil_strcmp(seq_id, tmp_id))
         {
             axutil_array_list_remove(sender->working_seqs, env, i);
             break;
@@ -228,7 +228,7 @@ sandesha2_sender_run (
             "failed sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
-    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread);     
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);     
     AXIS2_LOG_INFO(env->log, "End:sandesha2_sender_run");
     return AXIS2_SUCCESS;
 }

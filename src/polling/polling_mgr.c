@@ -197,7 +197,7 @@ sandesha2_polling_mgr_run (
             " sandesha2_polling_mgr_run");
         return AXIS2_FAILURE;
     }
-    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread); 
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread); 
         
     return AXIS2_SUCCESS;
 }

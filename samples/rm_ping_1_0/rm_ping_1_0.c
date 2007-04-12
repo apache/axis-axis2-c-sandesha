@@ -91,13 +91,13 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     if(endpoint_ref)
-        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+        axis2_options_set_to(options, env, endpoint_ref);
     if(target_epr)
     {
         property = axutil_property_create_with_args(env, 0, 0, 0, target_epr);
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TARGET_EPR, property);
+        axis2_options_set_property(options, env, AXIS2_TARGET_EPR, property);
     }
-    /*AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:Ping");*/
+    /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -122,41 +122,41 @@ int main(int argc, char** argv)
     }
 
     /* Set service client options */
-    AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);    
+    axis2_svc_client_set_options(svc_client, env, options);    
     
     /* Engage addressing module */
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);
+    axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
     
     /* Build the SOAP request message payload using OM API.*/
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+    axis2_svc_client_engage_module(svc_client, env, "sandesha2");
     /* RM Version 1.0 */
     property = axutil_property_create_with_args(env, 0, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+        axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     /* Send request */
     payload = build_om_programatically(env, "ping1");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(MAX_COUNT);
     
     payload = build_om_programatically(env, "ping2");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(2 * MAX_COUNT);
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", 
+    axis2_options_set_property(options, env, "Sandesha2LastMessage", 
         property);
     payload = build_om_programatically(env, "ping3");
-    status = AXIS2_SVC_CLIENT_SEND_ROBUST(svc_client, env, payload);
+    status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
    
     if (svc_client)
     {
-        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
+        /*axis2_svc_client_free(svc_client, env);*/
         svc_client = NULL;
     }
     return 0;
@@ -191,7 +191,7 @@ build_om_programatically(
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
     
-    buffer = AXIOM_NODE_TO_STRING(ping_om_node, env);
+    buffer = axiom_node_to_string(ping_om_node, env);
     printf("\nSending OM node in XML : %s \n",  buffer); 
 
     return ping_om_node;

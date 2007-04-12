@@ -202,7 +202,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_get_identifier(term_seq, env), env);
-    if(!seq_id || 0 == axis2_strlen(seq_id))
+    if(!seq_id || 0 == axutil_strlen(seq_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
             "sequence id");
@@ -315,7 +315,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         highest_out_relates_to = sandesha2_utils_get_seq_property(env, 
             res_side_int_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO, 
             storage_mgr);
-        if(highest_out_relates_to && 0 == axis2_strcmp(highest_out_relates_to, 
+        if(highest_out_relates_to && 0 == axutil_strcmp(highest_out_relates_to, 
             in_msg_id))
         {
             axis2_char_t *highest_out_msg_num_str = NULL;
@@ -437,7 +437,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(0 == axis2_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
+    if(0 == axutil_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
@@ -514,14 +514,14 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     axis2_op_set_in_flow(out_in_op, env, 
          axis2_op_get_in_flow(old_op, env));
 
-    axis2_allocator_switch_to_global_pool(env->allocator);
+    axutil_allocator_switch_to_global_pool(env->allocator);
     op_ctx = axis2_op_ctx_create(env, out_in_op, NULL);
     axis2_op_ctx_set_parent(op_ctx, env, axis2_msg_ctx_get_svc_ctx(msg_ctx, env));
     axis2_conf_ctx_register_op_ctx(conf_ctx, env, sandesha2_msg_ctx_get_msg_id(
         rm_msg_ctx, env), op_ctx);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     
-    if(terminated && 0 == axis2_strcmp(terminated, AXIS2_VALUE_TRUE))
+    if(terminated && 0 == axutil_strcmp(terminated, AXIS2_VALUE_TRUE))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate was "
             "added previously");

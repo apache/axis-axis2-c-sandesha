@@ -325,11 +325,11 @@ sandesha2_make_connection_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     make_conn_impl = SANDESHA2_INTF_TO_IMPL(make_conn);
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }
@@ -422,7 +422,7 @@ sandesha2_make_connection_to_soap_envelope(
      * Detach if already exists
      */
     if(node)
-        AXIOM_NODE_DETACH(node, env);
+        axiom_node_detach(node, env);
     sandesha2_make_connection_to_om_node((sandesha2_iom_rm_element_t*)make_conn, 
             env, soap_body);
 	return AXIS2_SUCCESS;

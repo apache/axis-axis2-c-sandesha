@@ -42,7 +42,7 @@ build_om_payload_for_echo_svc(
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
     axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
-    om_str = AXIOM_NODE_TO_STRING(echo_om_node, env);
+    om_str = axiom_node_to_string(echo_om_node, env);
     if (om_str)
         printf("\nSending OM : %s\n", om_str);
 

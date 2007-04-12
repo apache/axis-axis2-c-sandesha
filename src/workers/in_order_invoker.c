@@ -129,7 +129,7 @@ sandesha2_in_order_invoker_stop_invoker_for_seq(
     {
         axis2_char_t *tmp_id = NULL;
         tmp_id = axutil_array_list_get(invoker->working_seqs, env, i);
-        if(0 == axis2_strcmp(seq_id, tmp_id))
+        if(0 == axutil_strcmp(seq_id, tmp_id))
         {
             axutil_array_list_remove(invoker->working_seqs, env, i);
             break;
@@ -208,7 +208,7 @@ sandesha2_in_order_invoker_run (
                   " sandesha2_in_order_invoker_run");
         return AXIS2_FAILURE;
     }
-    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread); 
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread); 
         
     return AXIS2_SUCCESS;
 }
@@ -370,7 +370,7 @@ sandesha2_in_order_invoker_worker_func(
                         SANDESHA2_POST_FAILURE_MESSAGE);
                 if(property)
                     post_failure_str = axutil_property_get_value(property, env);
-                if(post_failure_str && 0 == axis2_strcmp(
+                if(post_failure_str && 0 == axutil_strcmp(
                         post_failure_str, AXIS2_VALUE_TRUE))
                     post_failure_invocation = AXIS2_TRUE;
                 engine = axis2_engine_create(env, invoker->conf_ctx);

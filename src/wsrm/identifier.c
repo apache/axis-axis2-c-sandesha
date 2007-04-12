@@ -225,7 +225,7 @@ sandesha2_identifier_to_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
-    if(!identifier_impl->str_id || 0 == axis2_strlen(
+    if(!identifier_impl->str_id || 0 == axutil_strlen(
                         identifier_impl->str_id))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
@@ -246,7 +246,7 @@ sandesha2_identifier_to_om_node(
     }
     axiom_element_set_text(id_element, env, identifier_impl->str_id, 
                         id_node);
-    AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, id_node);
+    axiom_node_add_child((axiom_node_t*)om_node, env, id_node);
     return (axiom_node_t*)om_node;
 }
 
@@ -260,11 +260,11 @@ sandesha2_identifier_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     identifier_impl = SANDESHA2_INTF_TO_IMPL(identifier);
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

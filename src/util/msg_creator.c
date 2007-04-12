@@ -138,9 +138,9 @@ sandesha2_msg_creator_create_create_seq_msg(
     create_seq_op_ctx = axis2_msg_ctx_get_op_ctx(create_seq_msg_ctx, env);
     create_seq_msg_id = axutil_uuid_gen(env);
     axis2_msg_ctx_set_message_id(create_seq_msg_ctx, env, create_seq_msg_id);
-    axis2_allocator_switch_to_global_pool(env->allocator);
+    axutil_allocator_switch_to_global_pool(env->allocator);
     axis2_conf_ctx_register_op_ctx(ctx, env, create_seq_msg_id, create_seq_op_ctx);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     app_msg_op_desc = axis2_msg_ctx_get_op(application_msg_ctx, env);
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     if(app_msg_op_desc)
@@ -220,7 +220,7 @@ sandesha2_msg_creator_create_create_seq_msg(
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID);
         if(property)
             offered_seq = axutil_property_get_value(property, env);
-        if(offered_seq && 0 != axis2_strcmp("", offered_seq))
+        if(offered_seq && 0 != axutil_strcmp("", offered_seq))
         {
             sandesha2_seq_offer_t *offer_part = NULL;
             sandesha2_identifier_t *identifier = NULL;
@@ -254,7 +254,7 @@ sandesha2_msg_creator_create_create_seq_msg(
 
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, 
             addressing_ns_value);
-    if(!acks_to || 0 == axis2_strcmp("", acks_to))
+    if(!acks_to || 0 == axutil_strcmp("", acks_to))
     {
         acks_to = axutil_strdup(env, anonymous_uri);
     }
@@ -358,7 +358,7 @@ sandesha2_msg_creator_create_create_seq_res_msg(
         
         temp_identifier = sandesha2_seq_offer_get_identifier(offer, env);
         out_seq_id = sandesha2_identifier_get_identifier(temp_identifier, env);
-        if(out_seq_id && 0 != axis2_strcmp("", out_seq_id))
+        if(out_seq_id && 0 != axutil_strcmp("", out_seq_id))
         {
             sandesha2_accept_t *accept = NULL;
             axis2_endpoint_ref_t *acks_to_epr = NULL;
@@ -543,11 +543,11 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     terminate_seq_op_ctx = axis2_msg_ctx_get_op_ctx(terminate_seq_msg_ctx, env);
     terminate_seq_msg_id = (axis2_char_t*)axis2_msg_ctx_get_msg_id(
                         terminate_seq_msg_ctx, env);
-    axis2_allocator_switch_to_global_pool(env->allocator);
+    axutil_allocator_switch_to_global_pool(env->allocator);
     if(terminate_seq_msg_id)
         axis2_conf_ctx_register_op_ctx(conf_ctx, env, terminate_seq_msg_id, 
             terminate_seq_op_ctx);
-    axis2_allocator_switch_to_local_pool(env->allocator);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     ref_msg_op = axis2_msg_ctx_get_op(ref_msg_ctx, env);
     terminate_seq_op = axis2_msg_ctx_get_op(terminate_seq_msg_ctx, env);
     if(ref_msg_op)
@@ -950,7 +950,7 @@ sandesha2_msg_creator_add_ack_msg(
             SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(seq_closed_bean)
         str_value = sandesha2_seq_property_bean_get_value(seq_closed_bean, env);
-    if(seq_closed_bean && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, str_value))
+    if(seq_closed_bean && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_value))
     {
         axis2_bool_t is_allowed = AXIS2_FALSE;
         
@@ -1037,7 +1037,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             {
                 const axis2_phase_t *phase = axutil_array_list_get(out_flow, env, i);
                 const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
-                if(0 == axis2_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
+                if(0 == axutil_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
                 {
                     axutil_array_list_add(new_flow, env, phase);
                 }
@@ -1053,7 +1053,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             {
                 const axis2_phase_t *phase = axutil_array_list_get(in_flow, env, i);
                 const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
-                if(0 == axis2_strcmp(phase_name, "RMPhase"))
+                if(0 == axutil_strcmp(phase_name, "RMPhase"))
                 {
                     axutil_array_list_add(new_flow, env, phase);
                 }

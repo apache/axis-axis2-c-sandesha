@@ -103,7 +103,7 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    if (axis2_strcmp(address, "-h") == 0)
+    if (axutil_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
@@ -119,13 +119,13 @@ int main(int argc, char** argv)
     axis2_options_set_to(options, env, endpoint_ref);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
-    /*AXIS2_OPTIONS_SET_ACTION(options, env,
+    /*axis2_options_set_action(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
     axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
-    /*AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);*/
+    /*axis2_options_set_reply_to(options, env, reply_to);*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -194,7 +194,7 @@ int main(int argc, char** argv)
     }
     payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     result = axis2_svc_client_send_receive(svc_client, env, payload);
-    /*svc_ctx = AXIS2_SVC_CLIENT_GET_SVC_CTX(svc_client, env);
+    /*svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
     conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
     result = sandesha2_client_get_response_envelope(env, conf_ctx, svc_client, 1);*/
     if(result)
@@ -217,16 +217,16 @@ int main(int argc, char** argv)
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
-    result = AXIS2_SVC_CLIENT_SEND_RECEIVE(svc_client, env, payload);
+    result = axis2_svc_client_send_receive(svc_client, env, payload);
 
     if(result)
     {
         axis2_char_t *om_str = NULL;
-        om_str = AXIOM_NODE_TO_STRING(result, env);
+        om_str = axiom_node_to_string(result, env);
         if (om_str)
             printf("\nReceived OM : %s\n", om_str);
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
@@ -243,11 +243,11 @@ int main(int argc, char** argv)
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    AXIS2_OPTIONS_SET_PROPERTY(options, env, "Sandesha2LastMessage", property);
+    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
@@ -270,7 +270,7 @@ int main(int argc, char** argv)
 
     if (svc_client)
     {
-        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
+        /*axis2_svc_client_free(svc_client, env);*/
         svc_client = NULL;
     }
     

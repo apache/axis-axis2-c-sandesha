@@ -240,7 +240,7 @@ sandesha2_terminate_seq_res_to_om_node(
     }
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)terminate_seq_res_impl->identifier, 
                         env, tsr_node);
-    AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, tsr_node);
+    axiom_node_add_child((axiom_node_t*)om_node, env, tsr_node);
     return (axiom_node_t*)om_node;
 }
 
@@ -254,7 +254,7 @@ sandesha2_terminate_seq_res_is_namespace_supported(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     terminate_seq_res_impl = SANDESHA2_INTF_TO_IMPL(terminate_seq_res);
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

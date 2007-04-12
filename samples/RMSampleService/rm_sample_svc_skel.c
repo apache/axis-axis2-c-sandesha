@@ -50,6 +50,13 @@ rm_sample_svc_on_fault(
     axis2_svc_skeleton_t *svc_skeli, 
     const axutil_env_t *env, axiom_node_t *node);
 
+static const axis2_svc_skeleton_ops_t rm_sample_svc_ops_var = {
+    rm_sample_svc_init,
+    rm_sample_svc_invoke,
+    rm_sample_svc_on_fault,
+    rm_sample_svc_free
+};
+
 /*Create function */
 axis2_svc_skeleton_t *
 rm_sample_svc_create(
@@ -62,13 +69,8 @@ rm_sample_svc_create(
 
     svc_skeleton->ops = AXIS2_MALLOC(
         env->allocator, sizeof(axis2_svc_skeleton_ops_t));
-
+    svc_skeleton->ops = &rm_sample_svc_ops_var;
     svc_skeleton->func_array = NULL;
-    /* Assign function pointers */
-    svc_skeleton->ops->free = rm_sample_svc_free;
-    svc_skeleton->ops->init = rm_sample_svc_init;
-    svc_skeleton->ops->invoke = rm_sample_svc_invoke;
-    svc_skeleton->ops->on_fault = rm_sample_svc_on_fault;
 
     return svc_skeleton;
 }
@@ -112,14 +114,14 @@ rm_sample_svc_invoke(
             op_name = axutil_qname_get_localpart(op_qname, env);
         if(op_name)
         {
-            if (axis2_strcmp(op_name, "echoString") == 0)
+            if (axutil_strcmp(op_name, "echoString") == 0)
                 return rm_sample_svc_echo(env, node);
-            if (axis2_strcmp(op_name, "ping") == 0)
+            if (axutil_strcmp(op_name, "ping") == 0)
             {
                 rm_sample_svc_ping(env, node);
                 return NULL;
             }
-            if (axis2_strcmp(op_name, "mtomSample") == 0)
+            if (axutil_strcmp(op_name, "mtomSample") == 0)
                 return rm_sample_svc_mtom(env, node);
         }
     }

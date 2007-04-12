@@ -326,7 +326,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_next_msg_bean_set_next_msg_no_to_process(next_bean, env, 1);
         
         rm_spec_ver = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
-        if(0 == axis2_strcmp(SANDESHA2_SPEC_VERSION_1_1, rm_spec_ver))
+        if(0 == axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, rm_spec_ver))
         {
             axis2_char_t *reply_to_addr = sandesha2_utils_get_seq_property(env, 
                 int_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR, storage_mgr); 

@@ -453,7 +453,7 @@ static axis2_bool_t validate_msg(
         }
         if(seq_rm_ns && rm_ns)
         {
-            if(0 != axis2_strcmp(seq_rm_ns, rm_ns))
+            if(0 != axutil_strcmp(seq_rm_ns, rm_ns))
             {
                 AXIS2_ERROR_SET(env->error, 
                     SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ, 

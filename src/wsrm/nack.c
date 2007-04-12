@@ -252,7 +252,7 @@ sandesha2_nack_to_om_node(sandesha2_iom_rm_element_t *nack,
     str_num = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
     sprintf(str_num, "%ld", nack_impl->nack_num);
     axiom_element_set_text(nack_element, env, str_num, nack_node);
-    AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, nack_node);
+    axiom_node_add_child((axiom_node_t*)om_node, env, nack_node);
     
     return (axiom_node_t*)om_node;
 }
@@ -265,11 +265,11 @@ sandesha2_nack_is_namespace_supported(sandesha2_iom_rm_element_t *nack,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     nack_impl = SANDESHA2_INTF_TO_IMPL(nack);
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

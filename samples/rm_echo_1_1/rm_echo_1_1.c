@@ -104,7 +104,7 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    if (axis2_strcmp(address, "-h") == 0)
+    if (axutil_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
@@ -117,17 +117,17 @@ int main(int argc, char** argv)
 
     /* Setup options */
     options = axis2_options_create(env);
-    AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
-    AXIS2_OPTIONS_SET_USE_SEPARATE_LISTENER(options, env, AXIS2_TRUE);
+    axis2_options_set_to(options, env, endpoint_ref);
+    axis2_options_set_use_separate_listener(options, env, AXIS2_TRUE);
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
-    /*AXIS2_OPTIONS_SET_ACTION(options, env,
+    /*axis2_options_set_action(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
-    AXIS2_OPTIONS_SET_ACTION(options, env, "urn:wsrm:EchoString");
+    axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
             "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
                 "__OPERATION_OUT_IN__");
-    AXIS2_OPTIONS_SET_REPLY_TO(options, env, reply_to);
+    axis2_options_set_reply_to(options, env, reply_to);
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -153,10 +153,10 @@ int main(int argc, char** argv)
     }
 
     /* Set service client options */
-    AXIS2_SVC_CLIENT_SET_OPTIONS(svc_client, env, options);    
+    axis2_svc_client_set_options(svc_client, env, options);    
     
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, AXIS2_MODULE_ADDRESSING);  
-    AXIS2_SVC_CLIENT_ENGAGE_MODULE(svc_client, env, "sandesha2");
+    axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
+    axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
     listener_manager = axis2_listener_manager_create(env);
     if (!listener_manager)
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
         {
             axutil_property_set_value(property, env, axutil_strdup(offered_seq_id, 
                 env));
-            AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+            axis2_options_set_property(options, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }
     }
@@ -181,13 +181,13 @@ int main(int argc, char** argv)
         SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, 
+        axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     property = axutil_property_create_with_args(env, 3, 0, 0, "sequence1");
     if(property)
     {
-        AXIS2_OPTIONS_SET_PROPERTY(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
     
@@ -224,7 +224,7 @@ int main(int argc, char** argv)
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     if (svc_client)
     {
-        /*AXIS2_SVC_CLIENT_FREE(svc_client, env);*/
+        /*axis2_svc_client_free(svc_client, env);*/
         svc_client = NULL;
     }
     
@@ -269,7 +269,7 @@ rm_echo_callback_on_complete(
         else
         {
             axis2_char_t *om_str = NULL;
-            om_str = AXIOM_NODE_TO_STRING(ret_node, env);
+            om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
                 printf("\nReceived OM : %s\n", om_str);
             printf("\necho client invoke SUCCESSFUL!\n");

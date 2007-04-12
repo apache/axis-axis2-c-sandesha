@@ -197,7 +197,7 @@ sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
     }
     af_element = axiom_element_create(env, NULL, SANDESHA2_WSRM_COMMON_FINAL,
                         rm_ns, &af_node);
-    AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, af_node);
+    axiom_node_add_child((axiom_node_t*)om_node, env, af_node);
     return (axiom_node_t*)om_node;
 }
 
@@ -209,11 +209,11 @@ sandesha2_ack_final_is_namespace_supported(sandesha2_iom_rm_element_t *ack_final
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     } 

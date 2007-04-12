@@ -137,7 +137,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         }
     }
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-    if(0 == axis2_strcmp(acks_to_str, anon_uri))
+    if(0 == axutil_strcmp(acks_to_str, anon_uri))
     {
         axis2_op_ctx_t *op_ctx = NULL;
 
@@ -434,7 +434,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                 msg_ctx_ref_key, conf_ctx);
             to = (axis2_char_t*)axis2_endpoint_ref_get_address(
                 axis2_msg_ctx_get_to(msg_ctx1, env), env);
-            if(0 == axis2_strcmp(to, to_str))
+            if(0 == axutil_strcmp(to, to_str))
                 continue; 
                 /*axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((const sandesha2_sender_bean_t *)sender_bean, env);*/
             sandesha2_sender_mgr_remove(retrans_mgr, env, 

@@ -238,7 +238,7 @@ sandesha2_accept_to_om_node(sandesha2_iom_rm_element_t *accept,
     }
     sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)
             accept_impl->acks_to, env, accept_node);
-    AXIOM_NODE_ADD_CHILD((axiom_node_t*)om_node, env, accept_node);
+    axiom_node_add_child((axiom_node_t*)om_node, env, accept_node);
 
     return (axiom_node_t*)om_node;
 }
@@ -247,11 +247,11 @@ axis2_bool_t AXIS2_CALL
 sandesha2_accept_is_namespace_supported(sandesha2_iom_rm_element_t *accept,
                     	const axutil_env_t *env, axis2_char_t *namespace)
 {
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
-    if(0 == axis2_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
     {
         return AXIS2_TRUE;
     }

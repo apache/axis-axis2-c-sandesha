@@ -324,7 +324,7 @@ sandesha2_inmemory_sender_mgr_match(
         (sandesha2_sender_bean_t *) bean, env);
     temp_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
         (sandesha2_sender_bean_t *) candidate, env);
-    if(ref_key && temp_ref_key && 0 != axis2_strcmp(ref_key, temp_ref_key))
+    if(ref_key && temp_ref_key && 0 != axutil_strcmp(ref_key, temp_ref_key))
     {
         add = AXIS2_FALSE;
     }
@@ -341,7 +341,7 @@ sandesha2_inmemory_sender_mgr_match(
         (sandesha2_rm_bean_t *) bean, env);
     temp_msg_id = sandesha2_sender_bean_get_msg_id(
         (sandesha2_rm_bean_t *) candidate, env);
-    if(msg_id && temp_msg_id && 0 != axis2_strcmp(msg_id, temp_msg_id))
+    if(msg_id && temp_msg_id && 0 != axutil_strcmp(msg_id, temp_msg_id))
     {
         add = AXIS2_FALSE;
     }
@@ -350,7 +350,7 @@ sandesha2_inmemory_sender_mgr_match(
     temp_internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
         (sandesha2_sender_bean_t *) candidate, 
             env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != axis2_strcmp(
+    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
                 internal_seq_id, temp_internal_seq_id))
     {
         add = AXIS2_FALSE;

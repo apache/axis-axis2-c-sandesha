@@ -263,7 +263,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         if(property)
             within_transaction_str = (axis2_char_t *) axutil_property_get_value(
                 property, env);
-        if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
+        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
@@ -433,7 +433,7 @@ sandesha2_client_get_report(
         if(property)
             within_transaction_str = (axis2_char_t *) axutil_property_get_value(
                 property, env);
-        if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
+        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
@@ -831,7 +831,7 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
     }
     spec_version = (axis2_char_t *) axis2_options_get_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION);
-    if(0 != axis2_strcmp(SANDESHA2_SPEC_VERSION_1_1, spec_version))
+    if(0 != axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, spec_version))
     {
         AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1, 
@@ -1104,7 +1104,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     {
         rm_spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0); 
     }
-    if(0  == axis2_strcmp(rm_spec_version, SANDESHA2_SPEC_VERSION_1_0))
+    if(0  == axutil_strcmp(rm_spec_version, SANDESHA2_SPEC_VERSION_1_0))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_ACK_REQUEST_MESSAGE, 
                 AXIS2_FAILURE);
@@ -1130,7 +1130,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     }
     out_seq_id = sandesha2_client_get_seq_id(env, svc_client);
     soap_ns_uri = (axis2_char_t *) axis2_options_get_soap_version_uri(options, env);
-    if(0 == axis2_strcmp(AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
+    if(0 == axutil_strcmp(AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
     {
         dummy_envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
                 AXIOM_SOAP11); 
@@ -1303,7 +1303,7 @@ sandesha2_client_configure_close_seq(
         return NULL;
     }
     soap_ns_uri = (axis2_char_t *) axis2_options_get_soap_version_uri(options, env);
-    if(0 == axis2_strcmp(AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
+    if(0 == axutil_strcmp(AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
     {
         dummy_envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
                 AXIOM_SOAP12); 
@@ -1359,7 +1359,7 @@ sandesha2_client_is_seq_terminated(
     seq_terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             out_seq_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED);
     value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
-    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, value))
+    if(seq_terminated_bean != NULL && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, value))
     {
         return AXIS2_TRUE;
     }
@@ -1401,7 +1401,7 @@ sandesha2_client_is_seq_timedout(
     seq_terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             out_seq_id, SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT);
     value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
-    if(seq_terminated_bean != NULL && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, value))
+    if(seq_terminated_bean != NULL && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, value))
     {
         return AXIS2_TRUE;
     }
@@ -1594,7 +1594,7 @@ sandesha2_client_get_incoming_seq_report(
         if(property)
             within_transaction_str = (axis2_char_t *) axutil_property_get_value(
                 property, env);
-        if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
+        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
             AXIS2_VALUE_TRUE))
         {
             within_transaction = AXIS2_TRUE;
@@ -1742,7 +1742,7 @@ sandesha2_client_configure_terminate_seq(
         axis2_options_set_action(options, env, action);
         soap_ns_uri = (axis2_char_t *) axis2_options_get_soap_version_uri(options, 
             env);
-        if(0 == axis2_strcmp(AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
+        if(0 == axutil_strcmp(AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI, soap_ns_uri))
         {
             dummy_envelope = axiom_soap_envelope_create_default_soap_envelope(env, 
                 AXIOM_SOAP12); 
@@ -1805,8 +1805,8 @@ sandesha2_client_send_non_blocking(
     }
     if (!fill_soap_envelope(env, msg_ctx, options, payload))
         return AXIS2_FAILURE;
-    AXIS2_OP_CLIENT_SET_CALLBACK(op_client, env, callback);
-    AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);
+    axis2_op_client_set_callback(op_client, env, callback);
+    axis2_op_client_add_out_msg_ctx(op_client, env, msg_ctx);
     transport_in_protocol = axis2_options_get_transport_in_protocol(
         options, env);
     axis2_listener_manager_make_sure_started(listener_manager, env, 
@@ -1820,8 +1820,8 @@ sandesha2_client_send_non_blocking(
 
     axis2_op_set_msg_recv(op, env,
             AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, env));
-    AXIS2_OP_CLIENT_SET_CALLBACK_RECV(op_client, env, callback_recv);
-    return AXIS2_OP_CLIENT_EXECUTE(op_client, env, AXIS2_FALSE);
+    axis2_op_client_set_callback_recv(op_client, env, callback_recv);
+    return axis2_op_client_execute(op_client, env, AXIS2_FALSE);
 }
 
 void AXIS2_CALL
@@ -1864,8 +1864,8 @@ sandesha2_client_fire_and_forget(
     }
     if(callback)
     {
-        AXIS2_OP_CLIENT_SET_CALLBACK(op_client, env, callback);
-        /*AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);*/
+        axis2_op_client_set_callback(op_client, env, callback);
+        /*axis2_op_client_add_out_msg_ctx(op_client, env, msg_ctx);*/
         transport_in_protocol = axis2_options_get_transport_in_protocol(
             options, env);
         axis2_listener_manager_make_sure_started(listener_manager, env,
@@ -1877,11 +1877,11 @@ sandesha2_client_fire_and_forget(
         }
         axis2_op_set_msg_recv(op, env, AXIS2_CALLBACK_RECV_GET_BASE(callback_recv, 
             env));
-        AXIS2_OP_CLIENT_SET_CALLBACK_RECV(op_client, env, callback_recv);
+        axis2_op_client_set_callback_recv(op_client, env, callback_recv);
         block = AXIS2_FALSE;
     }
-    AXIS2_OP_CLIENT_ADD_OUT_MSG_CTX(op_client, env, msg_ctx);
-    AXIS2_OP_CLIENT_EXECUTE(op_client, env, block);
+    axis2_op_client_add_out_msg_ctx(op_client, env, msg_ctx);
+    axis2_op_client_execute(op_client, env, block);
 }
 
 static axis2_bool_t
@@ -1902,7 +1902,7 @@ fill_soap_envelope(
         return AXIS2_FALSE;
     }
 
-    if (axis2_strcmp(soap_version_uri,
+    if (axutil_strcmp(soap_version_uri,
             AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI) == 0)
         soap_version = AXIOM_SOAP11;
     else
@@ -1924,7 +1924,7 @@ fill_soap_envelope(
             node = axiom_soap_body_get_base_node(soap_body, env);
             if (node)
             {
-                AXIOM_NODE_ADD_CHILD(node, env, (axiom_node_t *)payload);
+                axiom_node_add_child(node, env, (axiom_node_t *)payload);
             }
         }
     }
@@ -1980,7 +1980,7 @@ sandesha2_client_get_response_envelope(
     if(property)
         within_transaction_str = (axis2_char_t *) axutil_property_get_value(
             property, env);
-    if(within_transaction_str && 0 == axis2_strcmp(within_transaction_str, 
+    if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
         AXIS2_VALUE_TRUE))
     {
         within_transaction = AXIS2_TRUE;

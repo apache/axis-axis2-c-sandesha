@@ -50,7 +50,7 @@ build_om_payload_for_mtom(
     data_handler = axiom_data_handler_create(env, image_name, "image/jpeg");
     data_text = axiom_text_create_with_data_handler(env, image_om_node, 
             data_handler, &data_om_node);
-    /*printf("%s", AXIOM_NODE_TO_STRING(mtom_om_node, env));*/
+    /*printf("%s", axiom_node_to_string(mtom_om_node, env));*/
     return mtom_om_node;
 }
 

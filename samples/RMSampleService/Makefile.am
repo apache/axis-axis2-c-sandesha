@@ -8,6 +8,6 @@ noinst_HEADERS = rm_sample_svc.h
 SUBDIRS =
 libRMSampleService_la_SOURCES = rm_sample_svc.c rm_sample_svc_skel.c
 libRMSampleService_la_LIBADD  =
-INCLUDES = -I$(AXIS2C_HOME)/include \
+INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@

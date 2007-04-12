@@ -228,7 +228,7 @@ sandesha2_sender_worker_run (
                         "failed sandesha2_sender_worker_run");
         return AXIS2_FAILURE;
     }
-    AXIS2_THREAD_POOL_THREAD_DETACH(env->thread_pool, worker_thread); 
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread); 
     AXIS2_LOG_INFO(env->log, "Exit:sandesha2_sender_worker_run");
     return AXIS2_SUCCESS;
 }
@@ -291,10 +291,10 @@ sandesha2_sender_worker_worker_func(
     key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_worker_bean, env);
     if(!msg_ctx)
     {
-        axis2_allocator_switch_to_global_pool(env->allocator);
+        axutil_allocator_switch_to_global_pool(env->allocator);
         msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
             sender_worker->conf_ctx);
-        axis2_allocator_switch_to_local_pool(env->allocator);
+        axutil_allocator_switch_to_local_pool(env->allocator);
     }
     if(!msg_ctx)
     {
@@ -340,7 +340,7 @@ sandesha2_sender_worker_worker_func(
         SANDESHA2_QUALIFIED_FOR_SENDING);
     if(property)
         qualified_for_sending = axutil_property_get_value(property, env);
-    if(qualified_for_sending && 0 != axis2_strcmp(
+    if(qualified_for_sending && 0 != axutil_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
         printf("not qualified for sending\n");

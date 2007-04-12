@@ -100,7 +100,7 @@ int main(int argc, char** argv)
                 return -1;
         }
     }
-    if (axis2_strcmp(address, "-h") == 0)
+    if (axutil_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
@@ -117,7 +117,7 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     if(endpoint_ref)
-        AXIS2_OPTIONS_SET_TO(options, env, endpoint_ref);
+        axis2_options_set_to(options, env, endpoint_ref);
     if(target_epr)
     {
         property = axutil_property_create_with_args(env, 0, 0, 0, target_epr);
@@ -183,14 +183,14 @@ int main(int argc, char** argv)
     callback1 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback1, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
-    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback1);
+    axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback1);
     wait_on_callback(env, callback1);
 
     payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    AXIS2_SVC_CLIENT_SEND_RECEIVE_NON_BLOCKING(svc_client, env, payload, callback2);
+    axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback2);
     wait_on_callback(env, callback2);*/
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);

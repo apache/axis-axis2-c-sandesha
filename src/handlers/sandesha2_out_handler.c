@@ -64,7 +64,7 @@ sandesha2_out_handler_create(
     /* handler init is handled by conf loading, so no need to do it here */
     
     /* set the base struct's invoke op */
-    hxis2_handler_set_invoke(handler, env, sandesha2_out_handler_invoke);
+    axis2_handler_set_invoke(handler, env, sandesha2_out_handler_invoke);
 
     return handler;
 }
@@ -150,7 +150,7 @@ sandesha2_out_handler_invoke(
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
         str_done = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
-    if(str_done && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, str_done))
+    if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Exit: sandesha2_out_handler::invoke, Application \
@@ -167,7 +167,7 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
         within_transaction_str = (axis2_char_t *) axutil_property_get_value(
                         temp_prop, env);
-    if(within_transaction_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, 
+    if(within_transaction_str && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
                 within_transaction_str))
     {
         within_transaction = AXIS2_TRUE;
@@ -185,7 +185,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
     if(NULL != temp_prop)
         dummy_msg_str = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
-    if(dummy_msg_str && 0 == axis2_strcmp(AXIS2_VALUE_TRUE, dummy_msg_str))
+    if(dummy_msg_str && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, dummy_msg_str))
     {
         dummy_msg = AXIS2_TRUE;
     }

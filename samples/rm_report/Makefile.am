@@ -6,7 +6,7 @@ rm_report_SOURCES = report.c report_util.c
 
 rm_report_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
-					-laxis2_util \
+					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
                     -laxis2_parser \
@@ -20,7 +20,7 @@ rm_report_LDADD   =  \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include \
+INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
 			-I$(AXIS2C_HOME)/modules/sandesha2 \
 			@UTILINC@ \
 			@AXIOMINC@
