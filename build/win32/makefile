@@ -37,18 +37,18 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nolog
 #linker options 
 LD = link.exe
 LDFLAGS = /nologo /LIBPATH:$(AXIS2_INSTALL_DIR)\lib /LIBPATH:$(SQLITE_SRC_DIR) /LIBPATH:$(SANDESHADISTDIR)\sandesha2
-LIBS = axis2_util.lib axiom.lib axis2_parser.lib axis2_engine.lib sqlite3.lib axis2_http_receiver.lib axis2_http_sender.lib
+LIBS = axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib axis2_http_receiver.lib axis2_http_sender.lib
 
 #debug symbols
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
-LDFLAGS = $(LDFLAGS) /DEBUG /NODEFAULTLIB:LIBCMTD.lib
+LDFLAGS = $(LDFLAGS) /DEBUG /NODEFAULTLIB:LIBCMTD.lib /LIBPATH:$(MYSQL_BIN_DIR)\lib\debug libmysql.lib
 !else
 CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 
-LDFLAGS = $(LDFLAGS)
+LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt libmysql.lib
 !endif
 
-CFLAGS = $(CFLAGS) /I$(AXIS2_INSTALL_DIR)\include /I$(SQLITE_SRC_DIR) /I$(SANDESHASRC)\include
+CFLAGS = $(CFLAGS) /I$(AXIS2_INSTALL_DIR)\include /I$(SQLITE_SRC_DIR) /I$(SANDESHASRC)\include /I$(MYSQL_BIN_DIR)\include
 
 #create the director structure
 
