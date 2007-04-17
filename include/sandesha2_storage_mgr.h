@@ -21,7 +21,7 @@
   * @file sandesha2_storage_mgr.h
   * @brief 
   */
-
+#include <platforms/axutil_platform_auto_sense.h>
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axiom_soap_envelope.h>

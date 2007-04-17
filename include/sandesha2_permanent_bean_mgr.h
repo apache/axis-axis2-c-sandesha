@@ -22,6 +22,8 @@
  * @brief Sandesha In Memory Bean Manager Interface
  */
 
+#include <platforms/axutil_platform_auto_sense.h>
+#include <mysql.h>
 #include <axutil_allocator.h>
 #include <axutil_env.h>
 #include <axutil_error.h>
@@ -30,7 +32,6 @@
 #include <axutil_array_list.h>
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_msg_store_bean.h>
-#include <mysql.h>
 
 #ifdef __cplusplus
 extern "C"

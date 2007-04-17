@@ -14,6 +14,8 @@
  * limitations under the License.
  */
  
+#include <platforms/axutil_platform_auto_sense.h>
+#include <mysql.h>
 #include <sandesha2_permanent_transaction.h>
 #include "sandesha2_permanent_storage_mgr.h"
 #include <sandesha2_transaction.h>
@@ -29,8 +31,6 @@
 #include <axutil_property.h>
 #include <axis2_module_desc.h>
 #include <sandesha2_permanent_bean_mgr.h>
-#include <platforms/axutil_platform_auto_sense.h>
-#include <mysql.h>
 
 typedef struct sandesha2_permanent_transaction_impl 
     sandesha2_permanent_transaction_impl_t;

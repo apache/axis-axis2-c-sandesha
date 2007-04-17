@@ -169,9 +169,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_msg_ctx_t *fault_ctx = NULL;
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    sandesha2_seq_property_bean_t *term_rcvd_bean = NULL;
-    sandesha2_seq_property_bean_t *transmit_bean = NULL;
     axis2_char_t *spec_version = NULL;
   
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

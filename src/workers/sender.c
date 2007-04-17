@@ -267,12 +267,7 @@ sandesha2_sender_worker_func(
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
         axis2_char_t *seq_id = NULL;
-        axis2_char_t *out_int_seq_id = NULL;
-        axis2_char_t *out_seq_id = NULL;
         int no_of_seqs = 0;
-        axis2_bool_t seq_completed = AXIS2_FALSE;
-        sandesha2_seq_property_bean_t *terminated_bean = NULL;
-        axis2_char_t *terminated = NULL;
         no_of_seqs = axutil_array_list_size(sender->working_seqs, env);
         if(sender->seq_index >= no_of_seqs)
         {
@@ -300,8 +295,7 @@ sandesha2_sender_worker_func(
         if(!sender_bean)
         {
             sandesha2_transaction_commit(transaction, env);
-            /*AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME);*/
-            usleep(100000);
+            AXIS2_USLEEP(100000);
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 

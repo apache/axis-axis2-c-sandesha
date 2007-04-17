@@ -29,7 +29,6 @@
 #include <axutil_property.h>
 #include <axis2_conf_ctx.h>
 #include <axutil_types.h>
-#include <platforms/axutil_platform_auto_sense.h>
 
 /** 
  * @brief Sandesha2 Permanent Bean Manager Struct Impl
