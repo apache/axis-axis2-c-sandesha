@@ -1358,10 +1358,13 @@ sandesha2_client_is_seq_terminated(
     out_seq_id = sandesha2_seq_property_bean_get_seq_id(internal_seq_bean, env);
     seq_terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             out_seq_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED);
-    value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
-    if(seq_terminated_bean != NULL && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, value))
+    if(seq_terminated_bean)
     {
-        return AXIS2_TRUE;
+        value = sandesha2_seq_property_bean_get_value(seq_terminated_bean, env);
+        if(0 == axutil_strcmp(AXIS2_VALUE_TRUE, value))
+        {
+            return AXIS2_TRUE;
+        }
     }
     return AXIS2_FALSE;
     

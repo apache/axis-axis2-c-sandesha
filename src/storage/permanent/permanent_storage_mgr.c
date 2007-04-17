@@ -70,7 +70,7 @@ typedef struct sandesha2_permanent_storage_mgr
     sandesha2_invoker_mgr_t *invoker_mgr;
     axis2_conf_ctx_t *conf_ctx;
     axis2_char_t *db_name;
-    /*sqlite3 *db;*/
+    /*MYSQL *db;*/
     axutil_hash_t *transactions;
     sandesha2_permanent_bean_mgr_t *bean_mgr;
     axutil_hash_t *msg_ctx_map;
@@ -266,7 +266,8 @@ sandesha2_permanent_storage_mgr_create(
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_storage_mgr_t));
 
-    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axutil_strdup(env, "Sandesha2MessageMap");
+    storage_mgr_impl->SANDESHA2_MSG_MAP_KEY = axutil_strdup(env, 
+        "Sandesha2MessageMap");
     storage_mgr_impl->conf_ctx = conf_ctx;
     axutil_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->transactions = axutil_hash_make(env);
@@ -375,7 +376,6 @@ sandesha2_permanent_storage_mgr_get_transaction(
 
 	storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 	thread_id = (unsigned long int ) axis2_os_thread_current();
-
 
     axutil_thread_mutex_lock(storage_mgr_impl->mutex);
     axutil_allocator_switch_to_global_pool(env->allocator);
@@ -748,7 +748,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
 
     options = (axis2_options_t *) axis2_msg_ctx_get_options(msg_ctx, env);
-	action  = (axis2_char_t *) axis2_options_get_action(options, env);
+    action  = (axis2_char_t *) axis2_options_get_action(options, env);
     sandesha2_msg_store_bean_set_action(bean, env, action);
     prop_str = sandesha2_permanent_storage_mgr_get_property_string(env, msg_ctx);
     if (prop_str)
@@ -1012,7 +1012,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     {
         axis2_char_t *action = sandesha2_msg_store_bean_get_action(
             msg_store_bean, env);
-		axis2_options_set_action(options, env, action);
+        axis2_options_set_action(options, env, action);
     }
     persistent_prop_str = 
         sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, 
@@ -1047,11 +1047,10 @@ sandesha2_permanent_storage_mgr_get_property_string(
 {
     axis2_char_t *prop_str = "";
     axutil_property_t *property = NULL;
-    axutil_hash_index_t *index = NULL;
-	axutil_hash_t *properties = NULL;
     axis2_options_t *options = (axis2_options_t *) axis2_msg_ctx_get_options(
         msg_ctx, env);
-	properties = axis2_options_get_properties(options, env);
+    axutil_hash_t *properties = axis2_options_get_properties(options, env);
+    axutil_hash_index_t *index = NULL;
 
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING);
@@ -1148,30 +1147,26 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     return map;
 }
 
-sqlite3 * AXIS2_CALL
+MYSQL * AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_dbconn(
     sandesha2_storage_mgr_t *storage_mgr, 
     const axutil_env_t *env)
 {
-    sqlite3* dbconn = NULL;
+    MYSQL * dbconn = NULL;
     sandesha2_transaction_t *transaction = NULL;
     unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
     axis2_char_t thread_id_key[128];
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    /*axutil_thread_mutex_lock(storage_mgr_impl->mutex);*/
     sprintf(thread_id_key, "%lu", thread_id);
     axutil_allocator_switch_to_global_pool(env->allocator);
     transaction = (sandesha2_transaction_t *) axutil_hash_get(
         storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
     axutil_allocator_switch_to_local_pool(env->allocator);
-    /*transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
-        env);*/
     if(transaction)
     {
-        dbconn = (sqlite3 *) sandesha2_permanent_transaction_get_dbconn(transaction, env);
+        dbconn = (MYSQL *) sandesha2_permanent_transaction_get_dbconn(transaction, env);
     }
-    /*axutil_thread_mutex_unlock(storage_mgr_impl->mutex);*/
     return dbconn;
 }
 

@@ -41,88 +41,82 @@ typedef struct sandesha2_permanent_invoker_mgr
 
 static int 
 sandesha2_invoker_find_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+    MYSQL_RES *res,
+    void *data)
 {
-    int i = 0;
+    MYSQL_ROW row;
     sandesha2_invoker_bean_t *bean = NULL;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
+    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if(argc < 1)
+    if((row = mysql_fetch_row(res)) != NULL)
+    {
+        if(!data_list)
+        {
+            data_list = axutil_array_list_create(env, 0);
+            args->data = data_list;
+        }
+        bean = sandesha2_invoker_bean_create(env);
+        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
+        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
+        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
+        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
+        axutil_array_list_add(data_list, env, bean);
+    }
+    else
     {
         args->data = NULL;
         return 0;
     }
-    if(!data_list)
+    while((row = mysql_fetch_row(res)) != NULL)
     {
-        data_list = axutil_array_list_create(env, 0);
-        args->data = data_list;
+        bean = sandesha2_invoker_bean_create(env);
+        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
+        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
+        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
+        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
+        axutil_array_list_add(data_list, env, bean);
     }
-    bean = sandesha2_invoker_bean_create(env);
-    for(i = 0; i < argc; i++)
-    {
-        if(0 == axutil_strcmp(col_name[i], "msg_ctx_ref_key"))
-            sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "msg_no"))
-            sandesha2_invoker_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "seq_id"))
-            if(argv[i])
-                sandesha2_invoker_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "is_invoked"))
-            sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(argv[i]));
-    }
-    axutil_array_list_add(data_list, env, bean);
     return 0;
 }
 
 static int 
 sandesha2_invoker_retrieve_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+    MYSQL_RES *res,
+    void *data)
 {
-    int i = 0;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
+    MYSQL_ROW row;
+    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     sandesha2_invoker_bean_t *bean = (sandesha2_invoker_bean_t *) args->data;
-    if(argc < 1)
+    if((row = mysql_fetch_row(res)) != NULL)
+    {
+        if(!bean)
+        {
+            bean = sandesha2_invoker_bean_create(env);
+            args->data = bean;
+        }
+        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
+        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
+        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
+        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
+    }
+    else
     {
         args->data = NULL;
-        return 0;
-    }
-    if(!bean)
-    {
-        bean = sandesha2_invoker_bean_create(env);
-        args->data = bean;
-    }
-    for(i = 0; i < argc; i++)
-    {
-        if(0 == axutil_strcmp(col_name[i], "msg_ctx_ref_key"))
-            sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "msg_no"))
-            sandesha2_invoker_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "seq_id"))
-            if(argv[i])
-                sandesha2_invoker_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "is_invoked"))
-            sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(argv[i]));
     }
     return 0;
 }
 
 static int 
 sandesha2_invoker_count_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+    MYSQL_RES *res,
+    void *data)
 {
-    int *count = (int *) not_used;
-    *count = AXIS2_ATOI(argv[0]);
+    MYSQL_ROW row;
+    int *count = (int *) data;
+    if((row = mysql_fetch_row(res)) != NULL)
+        *count = AXIS2_ATOI(row[0]);
     return 0;
 }
 

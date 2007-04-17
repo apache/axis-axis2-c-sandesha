@@ -19,6 +19,7 @@ libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../workers/libsandesha2_workers.la\
                         ../wsrm/libsandesha2_wsrm.la \
                         ../polling/libsandesha2_polling.la \
-						-lsqlite3
+						-lsqlite3 \
+						-lmysqlclient -lnsl -lm -lz
 
 

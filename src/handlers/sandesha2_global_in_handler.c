@@ -119,9 +119,7 @@ sandesha2_global_in_handler_invoke(
     axis2_bool_t rolled_back = AXIS2_FALSE;
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-   
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Starting sandesha2 global in handler ......");
+    AXIS2_LOG_INFO(env->log, "[sandesha2]Start:sandesha2_global_in_handler");
    /* This handler needs to identify messages which follow the WSRM 1.0 
     * convention for sending 'LastMessage' when the sender doesn't have a 
     * reliable message to piggyback the last message marker onto.
@@ -177,12 +175,15 @@ sandesha2_global_in_handler_invoke(
                 }
             }
         }
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] soap::action and wsa::action are NULL. So return here");
         return AXIS2_SUCCESS;
     }
     is_rm_global_msg = sandesha2_utils_is_rm_global_msg(env, msg_ctx);
     if(!is_rm_global_msg)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Not a global RM Message");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Not a global RM Message");
         return AXIS2_SUCCESS;
     }
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -208,7 +209,7 @@ sandesha2_global_in_handler_invoke(
     if(!soap_envelope)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]SOAP envelope "
-                        "is NULL");
+            "is NULL");
         return AXIS2_FAILURE;
     }
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
@@ -217,7 +218,7 @@ sandesha2_global_in_handler_invoke(
     if(reinjected_msg && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"
-                        " reinjected_msg");
+             " reinjected_msg. So return here.");
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
@@ -225,7 +226,7 @@ sandesha2_global_in_handler_invoke(
     if(!storage_mgr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get the "
-                        "storage manager");
+            "storage manager");
         return AXIS2_FAILURE;
     }
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
@@ -280,6 +281,8 @@ sandesha2_global_in_handler_invoke(
                         req_msg_ctx))
                     {
                         /* TODO we need to notify the listeners */
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2] soap fault generated");
                         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
                         return AXIS2_SUCCESS;
                     }
@@ -305,7 +308,8 @@ sandesha2_global_in_handler_invoke(
         }
         sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx,
                         storage_mgr);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_ctx dropped");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] msg_ctx dropped. So return here");
         return AXIS2_SUCCESS;
     }
     /*Process if global processing possible. - Currently none*/
@@ -317,8 +321,7 @@ sandesha2_global_in_handler_invoke(
             AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit sandesha2 global in handler ......");
+    AXIS2_LOG_INFO(env->log, "[sandesha2]Exit:sandesha2_global_in_handler");
        
     return AXIS2_SUCCESS;
 }

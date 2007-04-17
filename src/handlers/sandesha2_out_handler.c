@@ -96,24 +96,28 @@ sandesha2_out_handler_invoke(
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Starting out handler .........");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Start: sandesha2_out_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Configuration Context is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     module_qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
     if(!axis2_svc_is_module_engaged(svc, env, module_qname))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] RM is not engaged. So return here");
         return AXIS2_SUCCESS;
     }
     axutil_qname_free(module_qname, env);
@@ -127,10 +131,11 @@ sandesha2_out_handler_invoke(
     }
     else
     {
+        int size = -1, i = 0;
         axutil_qname_t *mod_qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
-        axutil_array_list_t *mod_qnames = (axutil_array_list_t *)axis2_svc_get_all_module_qnames(svc, env);
-        int size = axutil_array_list_size(mod_qnames, env);
-        int i = 0;  
+        axutil_array_list_t *mod_qnames = (axutil_array_list_t *)
+            axis2_svc_get_all_module_qnames(svc, env);
+        size = axutil_array_list_size(mod_qnames, env);
         axis2_bool_t found = AXIS2_FALSE;
         for (i = 0; i < size; i++)
         {
@@ -144,7 +149,11 @@ sandesha2_out_handler_invoke(
             }
         }
         if (!found)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] RM is not engaged. So return here.");
             return AXIS2_SUCCESS;
+        }
     }
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
@@ -153,8 +162,7 @@ sandesha2_out_handler_invoke(
     if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Exit: sandesha2_out_handler::invoke, Application \
-                    Processing Done");
+            "[sandesha2] Application Processing Done. So return here.");
         return AXIS2_SUCCESS; 
     }
     temp_prop = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
@@ -243,7 +251,8 @@ sandesha2_out_handler_invoke(
                 prop);
             rolled_back = AXIS2_TRUE;
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Error in processing the message");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -263,7 +272,7 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
         axutil_property_set_value(temp_prop, env, axutil_strdup(
             env,AXIS2_VALUE_FALSE));
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler::invoke");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler_invoke");
     return AXIS2_SUCCESS;
 }
 

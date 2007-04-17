@@ -30,7 +30,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 40
+#define SANDESHA2_MAX_COUNT 8
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -71,13 +71,12 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axutil_string_t *soap_action = NULL;
+    axis2_char_t *seq_key = NULL;
     int c;
    
     /* Set up the environment */
-    /*env = axutil_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_TRACE);*/
-    env = axutil_env_create_all("echo_non_blocking_dual.log", 
-            AXIS2_LOG_LEVEL_CRITICAL);
+    env = axutil_env_create_all("rm_echo_1_0.log", 
+            AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     to = "http://127.0.0.1:8888/axis2/services/RMSampleService";
@@ -126,8 +125,6 @@ int main(int argc, char** argv)
     axis2_options_set_use_separate_listener(options, env, AXIS2_TRUE);
     
     /* Separate listner needs addressing, hence addressing stuff in options */
-    /*axis2_options_set_action(options, env,
-        "http://127.0.0.1:5555/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
     axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
@@ -179,29 +176,37 @@ int main(int argc, char** argv)
     {
         return AXIS2_FAILURE;
     }
-    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    seq_key = axutil_uuid_gen(env);
+    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
+    if(property)
+    {
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
+            property);
+    }
+    /*payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     callback1 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback1, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
     axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback1);
     wait_on_callback(env, callback1);
 
-    payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
     axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback2);
-    wait_on_callback(env, callback2);*/
-
+    wait_on_callback(env, callback2);
+    */
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo3", seq_key);
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
     axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback3);
     wait_on_callback(env, callback3);
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
+    AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
         /*axis2_svc_client_free(svc_client, env);*/
@@ -297,7 +302,7 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:5555/axis2/services/RMSampleService \n");
+        " default is http://127.0.0.1:8888/axis2/services/RMSampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

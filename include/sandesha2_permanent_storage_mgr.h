@@ -25,7 +25,7 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axis2_conf_ctx.h>
-#include <sqlite3.h>
+#include <mysql.h>
 #include <sandesha2_storage_mgr.h>
 
 #ifdef __cplusplus
@@ -54,7 +54,7 @@ sandesha2_permanent_storage_mgr_create(
     const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx);
 
-sqlite3 * AXIS2_CALL
+MYSQL * AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_dbconn(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env);

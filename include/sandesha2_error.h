@@ -215,6 +215,9 @@ extern "C"
         SANDESHA2_ERROR_LAST
     };
         
+axis2_status_t AXIS2_CALL
+sandesha2_error_init();
+
 /** @} */
 #ifdef __cplusplus
 }

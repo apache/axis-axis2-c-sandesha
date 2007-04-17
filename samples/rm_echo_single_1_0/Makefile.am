@@ -17,6 +17,7 @@ rm_echo_single_1_0_LDADD   =  \
 					-lsandesha2_client \
 					-lsandesha2 \
 					-lsqlite3 \
+					-lmysqlclient -lnsl -lm -lz \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

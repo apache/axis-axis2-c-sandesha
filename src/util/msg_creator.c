@@ -329,17 +329,21 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     sandesha2_create_seq_t *cs = NULL;
     int soap_version = -1;
 
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2] Start:sandesha2_msg_creator_create_create_seq_res_msg");
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     msg_part = (sandesha2_iom_rm_element_t *) sandesha2_msg_ctx_get_msg_part(
-            create_seq_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+        create_seq_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     cs = (sandesha2_create_seq_t *) msg_part;
     rm_version = sandesha2_utils_get_rm_version(env, new_seq_id, storage_mgr);
     if(!rm_version)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "Cannot find rm version of given message");
         AXIS2_ERROR_SET(env->error, 
-                SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
-                AXIS2_FAILURE);
+            SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
+            AXIS2_FAILURE);
         return NULL;
     }
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
@@ -413,6 +417,8 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     sandesha2_msg_creator_finalize_creation(env, temp_msg_ctx, out_msg);
     axis2_msg_ctx_set_server_side(temp_msg_ctx, env, AXIS2_TRUE);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2] Exit:sandesha2_msg_creator_create_create_seq_res_msg");
     return create_seq_response;
 }
  

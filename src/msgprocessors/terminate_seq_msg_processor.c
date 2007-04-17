@@ -178,7 +178,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] sandesha2_terminate_msg_processor_process_in_msg .........");
-    
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(
@@ -223,14 +222,14 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
+    /*seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     term_rcvd_bean = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_seq_id(term_rcvd_bean, env, seq_id);
     sandesha2_seq_property_bean_set_name(term_rcvd_bean, env, 
         SANDESHA2_SEQ_PROP_TERMINATE_RECEIVED);
     sandesha2_seq_property_bean_set_value(term_rcvd_bean, env, 
         AXIS2_VALUE_TRUE);
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, term_rcvd_bean);
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, term_rcvd_bean);*/
    
     spec_version = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
     if(AXIS2_TRUE == sandesha2_spec_specific_consts_is_term_seq_res_reqd(env, 
@@ -241,11 +240,11 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         storage_mgr, seq_id, rm_msg_ctx);
     sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx,
         seq_id, storage_mgr);
-    transmit_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
+    /*transmit_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
         SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, transmit_bean);
     sandesha2_seq_mgr_update_last_activated_time(env, seq_id, storage_mgr);
-    
+    */
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Exit: sandesha2_terminate_msg_processor_process_in_msg");

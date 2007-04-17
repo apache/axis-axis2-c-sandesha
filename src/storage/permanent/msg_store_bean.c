@@ -418,8 +418,8 @@ sandesha2_msg_store_bean_set_persistent_property_str(
     const axutil_env_t *env,
     axis2_char_t * persistent_property_str) 
 {
-    msg_store_bean->persistent_property_str = axutil_strdup(env,
-        persistent_property_str);
+    msg_store_bean->persistent_property_str = axutil_strdup(
+        env, persistent_property_str);
 }
 
 axis2_char_t *AXIS2_CALL 

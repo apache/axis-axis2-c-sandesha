@@ -510,6 +510,7 @@ sandesha2_sender_worker_worker_func(
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr);
+        sender_worker->status = AXIS2_FAILURE;
     }
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION);
@@ -590,13 +591,13 @@ sandesha2_sender_worker_check_for_sync_res(
      * Message Receiver (may be callback MR).
      */
     axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
+    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(property)
     {
         axutil_property_t *temp_prop = axutil_property_clone(property, env);
         axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
             temp_prop);
-    }
+    }*/
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
         msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 

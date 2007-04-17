@@ -41,133 +41,111 @@ typedef struct sandesha2_permanent_sender_mgr
 #define SANDESHA2_INTF_TO_IMPL(sender_mgr) \
     ((sandesha2_permanent_sender_mgr_t *) sender_mgr)
 
-static int 
+static int
 sandesha2_sender_find_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+    MYSQL_RES *res,
+    void *data)
 {
-    int i = 0;
+    MYSQL_ROW row;
     sandesha2_sender_bean_t *bean = NULL;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
+    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if(argc < 1)
+    if((row = mysql_fetch_row(res)) != NULL)
+    {
+        if(!data_list)
+        {
+            data_list = axutil_array_list_create(env, 0);
+            args->data = data_list;
+        }
+        bean = sandesha2_sender_bean_create(env);
+        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
+        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
+        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
+        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
+        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
+        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
+        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
+        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
+        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
+        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
+        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
+        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
+        axutil_array_list_add(data_list, env, bean);
+    }
+    else
     {
         args->data = NULL;
         return 0;
     }
-    if(!data_list)
-    {
-        data_list = axutil_array_list_create(env, 0);
-        args->data = data_list;
-    }
-    bean = sandesha2_sender_bean_create(env);
-    for(i = 0; i < argc; i++)
-    {
-        if(0 == axutil_strcmp(col_name[i], "msg_id"))
-            sandesha2_sender_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "msg_ctx_ref_key"))
-            if(argv[i])
-                sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "internal_seq_ID"))
-            if(argv[i])
-                sandesha2_sender_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "sent_count"))
-            sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "msg_no"))
-            sandesha2_sender_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "send"))
-            sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "resend"))
-            sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "time_to_send"))
-            sandesha2_sender_bean_set_time_to_send(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "msg_type"))
-            sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "seq_id"))
-            if(argv[i])
-                sandesha2_sender_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "wsrm_anon_uri"))
-            if(argv[i])
-                sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "to_address"))
-            if(argv[i])
-                sandesha2_sender_bean_set_to_address(bean, env, argv[i]);
-    }
-    axutil_array_list_add(data_list, env, bean);
-    return 0;
-}
-
-static int 
-sandesha2_sender_retrieve_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
-{
-    int i = 0;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axutil_env_t *env = args->env;
-    sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) args->data;
-    if(argc < 1)
-    {
-        args->data = NULL;
-        return 0;
-    }
-    if(!bean)
+    while((row = mysql_fetch_row(res)) != NULL)
     {
         bean = sandesha2_sender_bean_create(env);
-        args->data = bean;
-    }
-    for(i = 0; i < argc; i++)
-    {
-        if(0 == axutil_strcmp(col_name[i], "msg_id"))
-            sandesha2_sender_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "msg_ctx_ref_key"))
-            if(argv[i])
-                sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "internal_seq_ID"))
-            if(argv[i])
-                sandesha2_sender_bean_set_internal_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "sent_count"))
-            sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "msg_no"))
-            sandesha2_sender_bean_set_msg_no(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "send"))
-            sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "resend"))
-            sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "time_to_send"))
-            sandesha2_sender_bean_set_time_to_send(bean, env, atol(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "msg_type"))
-            sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axutil_strcmp(col_name[i], "seq_id"))
-            if(argv[i])
-                sandesha2_sender_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "wsrm_anon_uri"))
-            if(argv[i])
-                sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "to_address"))
-            if(argv[i])
-                sandesha2_sender_bean_set_to_address(bean, env, argv[i]);
+        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
+        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
+        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
+        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
+        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
+        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
+        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
+        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
+        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
+        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
+        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
+        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
+        axutil_array_list_add(data_list, env, bean);
     }
     return 0;
 }
 
-static int 
-sandesha2_sender_count_callback(
-    void *not_used, 
-    int argc, 
-    char **argv, 
-    char **col_name)
+static int
+sandesha2_sender_retrieve_callback(
+    MYSQL_RES *res,
+    void *data)
 {
-    int *count = (int *) not_used;
-    *count = AXIS2_ATOI(argv[0]);
+    MYSQL_ROW row;
+    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
+    const axutil_env_t *env = args->env;
+    sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) args->data;
+    if((row = mysql_fetch_row(res)) != NULL)
+    {
+        if(!bean)
+        {
+            bean = sandesha2_sender_bean_create(env);
+            args->data = bean;
+        }
+        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
+        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
+        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
+        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
+        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
+        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
+        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
+        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
+        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
+        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
+        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
+        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
+
+    }
+    else
+    {
+        args->data = NULL;
+    }
     return 0;
 }
 
+static int
+sandesha2_sender_count_callback(
+    MYSQL_RES *res,
+    void *data)
+{
+    MYSQL_ROW row;
+    int *count = (int *) data;
+    if((row = mysql_fetch_row(res)) != NULL)
+        *count = AXIS2_ATOI(row[0]);
+    return 0;
+}
 
 void AXIS2_CALL
 sandesha2_permanent_sender_mgr_free(
@@ -542,8 +520,8 @@ sandesha2_permanent_sender_mgr_match(
     long temp_time_to_send = 0;
     axis2_char_t *msg_id = NULL;
     axis2_char_t *temp_msg_id = NULL;
-    axis2_char_t *internal_seq_id = NULL;
-    axis2_char_t *temp_internal_seq_id = NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t *temp_seq_id = NULL;
     long msg_no = 0;
     long temp_msg_no = 0;
     int msg_type = 0;
@@ -551,8 +529,6 @@ sandesha2_permanent_sender_mgr_match(
     axis2_bool_t is_send = AXIS2_FALSE;
     axis2_bool_t temp_is_send = AXIS2_FALSE;
     
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_match");
     ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
         (sandesha2_sender_bean_t *) bean, env);
     temp_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
@@ -576,13 +552,13 @@ sandesha2_permanent_sender_mgr_match(
     {
         add = AXIS2_FALSE;
     }
-    internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
+    seq_id = sandesha2_sender_bean_get_seq_id(
         (sandesha2_sender_bean_t *) bean, env);
-    temp_internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
+    temp_seq_id = sandesha2_sender_bean_get_seq_id(
         (sandesha2_sender_bean_t *) candidate, 
             env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
-                internal_seq_id, temp_internal_seq_id))
+    if(seq_id && temp_seq_id && 0 != axutil_strcmp(
+        seq_id, temp_seq_id))
     {
         add = AXIS2_FALSE;
     }
@@ -620,9 +596,6 @@ sandesha2_permanent_sender_mgr_match(
     {
         add = AXIS2_FALSE;
     }*/
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_sender_mgr_match:add:%d", 
-            add);
     return add;
 }
 
@@ -646,7 +619,7 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_bean_set_send(matcher, env, AXIS2_TRUE);
     time_now = sandesha2_utils_get_current_time_in_millis(env);
     sandesha2_sender_bean_set_time_to_send(matcher, env, time_now);
-    sandesha2_sender_bean_set_internal_seq_id(matcher, env, 
+    sandesha2_sender_bean_set_seq_id(matcher, env, 
         (axis2_char_t *) seq_id);
     sql_find = "select msg_id, msg_ctx_ref_key, "\
         "internal_seq_id, sent_count, msg_no, send, resend, "\

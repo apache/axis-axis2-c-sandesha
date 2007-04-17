@@ -70,6 +70,7 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
+    axis2_char_t *seq_key = NULL;
     axiom_soap_envelope_t *result = NULL;
     sandesha2_seq_report_t *report = NULL;
     int c;
@@ -178,7 +179,8 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    property = axutil_property_create_with_args(env, 3, 0, 0, "sequence1");
+    seq_key = axutil_uuid_gen(env);
+    property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
     if(property)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
@@ -194,7 +196,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
 
     if(result)
@@ -249,7 +251,7 @@ int main(int argc, char** argv)
     }
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
     {
@@ -268,7 +270,7 @@ int main(int argc, char** argv)
     }
     payload = NULL;
     AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
-
+    AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
         /*axis2_svc_client_free(svc_client, env);*/

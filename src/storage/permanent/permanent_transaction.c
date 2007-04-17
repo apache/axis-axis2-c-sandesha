@@ -30,7 +30,7 @@
 #include <axis2_module_desc.h>
 #include <sandesha2_permanent_bean_mgr.h>
 #include <platforms/axutil_platform_auto_sense.h>
-#include <sqlite3.h>
+#include <mysql.h>
 
 typedef struct sandesha2_permanent_transaction_impl 
     sandesha2_permanent_transaction_impl_t;
@@ -45,7 +45,7 @@ struct sandesha2_permanent_transaction_impl
     sandesha2_storage_mgr_t *storage_mgr;
     axutil_array_list_t *enlisted_beans;
     axutil_thread_mutex_t *mutex;
-    sqlite3 *dbconn;
+    MYSQL *dbconn;
     axis2_bool_t is_active;
     unsigned long int thread_id;
 };
@@ -95,7 +95,9 @@ sandesha2_permanent_transaction_create(
     unsigned long int thread_id)
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
-    axis2_char_t *error_msg = NULL;
+    char *server = "localhost";
+    char *user = "g";
+    char *password = "g";
     axis2_char_t *path = NULL;
     axis2_char_t *db_name = NULL;
     int rc = -1;
@@ -110,7 +112,8 @@ sandesha2_permanent_transaction_create(
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_permanent_transaction_impl_t));
 
-    trans_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
+    trans_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, 
+        env);
     trans_impl->storage_mgr = storage_mgr;
     trans_impl->thread_id = thread_id;
     trans_impl->dbconn = NULL;
@@ -121,9 +124,7 @@ sandesha2_permanent_transaction_create(
     if(conf_ctx)
         conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     else
-    {
         return NULL;
-    }
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
     /*path = sandesha2_property_bean_get_db_path(prop_bean, env);*/
@@ -148,36 +149,35 @@ sandesha2_permanent_transaction_create(
         SANDESHA2_IS_SVR_SIDE);
     if(!property)
     {
-        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
-            "sandesha2_svr_db", NULL);
+        /*db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
+            "sandesha2_svr_db", NULL);*/
+        db_name = "sandesha2_svr_db";
     }
     else
     {
-        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
-            "sandesha2_client_db", NULL);
+        /*db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
+            "sandesha2_client_db", NULL);*/
+        db_name = "sandesha2_client_db";
     }
-    rc = sqlite3_open(db_name, &(trans_impl->dbconn));
-    if(rc != SQLITE_OK)
+    trans_impl->dbconn = mysql_init(NULL);
+    if (!mysql_real_connect(trans_impl->dbconn, server,
+         user, password, db_name, 0, NULL, 0))
     {
+        mysql_close(trans_impl->dbconn);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
-            sqlite3_errmsg(trans_impl->dbconn));
+            mysql_error(trans_impl->dbconn));
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
             AXIS2_FAILURE);
-        sqlite3_close(trans_impl->dbconn);
         return NULL;
     }
-    rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
-        &error_msg);
-    if(rc == SQLITE_BUSY)
-        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "BEGIN TRANSACTION", 0, 0, &error_msg, rc);
-    if(rc != SQLITE_OK )
+    rc = mysql_query(trans_impl->dbconn, "begin;");
+    if(rc )
     {
+        mysql_close(trans_impl->dbconn);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "SQL Error %s",
-            error_msg);
-        printf("transaction begin error_msg:%s\n", error_msg);
-        sqlite3_free(error_msg);
+            mysql_error(trans_impl->dbconn));
+        printf("transaction begin error_msg:%s\n", mysql_error(trans_impl->dbconn));
         sandesha2_transaction_free(&(trans_impl->trans), env);
         return NULL;
     }
@@ -208,7 +208,7 @@ sandesha2_permanent_transaction_free(
     return AXIS2_SUCCESS;
 }
 
-sqlite3 *AXIS2_CALL
+MYSQL *AXIS2_CALL
 sandesha2_permanent_transaction_get_dbconn(
     sandesha2_transaction_t *trans,
     const axutil_env_t *env)
@@ -244,30 +244,24 @@ sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axutil_env_t *env)
 {
-    axis2_char_t *error_msg = NULL;
     int rc = -1;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
    
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = sqlite3_exec(trans_impl->dbconn, "COMMIT TRANSACTION;", 0, 0, &error_msg);
-    if(rc == SQLITE_BUSY)
+    rc = mysql_query(trans_impl->dbconn, "commit;");
+    if(rc )
     {
-        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "COMMIT TRANSACTION", 0, 0, &error_msg, rc);
-    }
-    if(rc != SQLITE_OK )
-    {
+        mysql_close(trans_impl->dbconn);
         axutil_thread_mutex_unlock(trans_impl->mutex);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
-        printf("commit error_msg:%s\n", error_msg);
-        sqlite3_free(error_msg);
+            mysql_error(trans_impl->dbconn));
+        printf("commit error_msg:%s\n", mysql_error(trans_impl->dbconn));
     }
-    sqlite3_close(trans_impl->dbconn);
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
+    mysql_close(trans_impl->dbconn);
     axutil_thread_mutex_unlock(trans_impl->mutex);
 }
 
@@ -276,29 +270,24 @@ sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axutil_env_t *env)
 {
-    axis2_char_t *error_msg = NULL;
     int rc = -1;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = sqlite3_exec(trans_impl->dbconn, "ROLLBACK TRANSACTION;", 0, 0,
-        &error_msg);
-    if(rc == SQLITE_BUSY)
-        rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "ROLLBACK TRANSACTION", 0, 0, &error_msg, rc);
-    if(rc != SQLITE_OK )
+    rc = mysql_query(trans_impl->dbconn, "rollback;");
+    if(rc )
     {
+        mysql_close(trans_impl->dbconn);
         axutil_thread_mutex_unlock(trans_impl->mutex);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
-        printf("sql_stmt_rollback:%s\n", "ROLLBACK TRANSACTION;");
-        printf("rollback error_msg:%s\n", error_msg);
-        sqlite3_free(error_msg);
+            mysql_error(trans_impl->dbconn));
+        printf("sql_stmt_rollback:%s\n", "rollback;");
+        printf("rollback error_msg:%s\n", mysql_error(trans_impl->dbconn));
     }
-    sqlite3_close(trans_impl->dbconn);
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
+    mysql_close(trans_impl->dbconn);
     axutil_thread_mutex_unlock(trans_impl->mutex);
 }
 
@@ -377,4 +366,31 @@ sandesha2_permanent_transaction_enlist(
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Exit:sandesha2_permanent_transaction_enlist");
 }
+
+/*int
+sandesha2_permanent_transaction_busy_handler(
+    MYSQL* dbconn,
+    char *sql_stmt,
+    int (*callback_func)(void *, int, char **, char **),
+    void *args,
+    char **error_msg,
+    int rc)
+{
+    int counter = 0;
+    printf("in busy handler3\n");
+    while(rc == SQLITE_BUSY && counter < 512)
+    {
+        printf("in busy handler33\n");
+        counter++;
+#ifdef WIN32
+		Sleep(100);
+#else
+		usleep(100000);
+#endif
+        rc = mysql_query(dbconn, sql_stmt, callback_func, args, error_msg);
+    }
+    printf("in busy handler4\n");
+    return rc;
+}
+*/
 

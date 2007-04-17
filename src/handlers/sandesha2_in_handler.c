@@ -93,7 +93,7 @@ sandesha2_in_handler_invoke(
     sandesha2_ack_requested_t *ack_requested = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Starting in handler .........");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Start: sandesha2_in_handler_invoke");
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
@@ -112,8 +112,7 @@ sandesha2_in_handler_invoke(
     if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Exit: sandesha2_in_handler::invoke, Application " \
-             "processing done");
+            "[sandesha2] Application processing done");
         return AXIS2_SUCCESS;
     }
     temp_prop = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
@@ -123,7 +122,7 @@ sandesha2_in_handler_invoke(
     if(reinjected_msg && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Exit: sandesha2_in_handler::invoke, reinjected_msg");
+            "[sandesha2] Reinjected_msg. So return here");
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
@@ -227,14 +226,13 @@ sandesha2_in_handler_invoke(
     if(!within_transaction && !rolled_back)
     {
         axutil_property_t *prop = NULL;
-		printf("came26\n");
         sandesha2_transaction_commit(transaction, env);
         prop = axutil_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             prop);
     }
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_in_handler::invoke");
+    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_in_handler_invoke");
    
     return AXIS2_SUCCESS;
 }

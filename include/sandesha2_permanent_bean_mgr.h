@@ -30,7 +30,7 @@
 #include <axutil_array_list.h>
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_msg_store_bean.h>
-#include <sqlite3.h>
+#include <mysql.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -93,7 +93,7 @@ sandesha2_permanent_bean_mgr_insert(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*retrieve_func)(void *, int, char **, char **),
+    int (*retrieve_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_update,
     axis2_char_t *sql_stmt_insert);
@@ -102,7 +102,7 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_remove(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    int (*retrieve_func)(void *, int, char **, char **),
+    int (*retrieve_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_remove);
 
@@ -110,7 +110,7 @@ sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    int (*retrieve_func)(void *, int, char **, char **),
+    int (*retrieve_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_retrieve);
 
 axis2_bool_t AXIS2_CALL
@@ -118,7 +118,7 @@ sandesha2_permanent_bean_mgr_update(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*update_func)(void *, int, char **, char **),
+    int (*retrieve_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_retrieve_old_bean,
     axis2_char_t *sql_stmt_update);
 
@@ -127,8 +127,8 @@ sandesha2_permanent_bean_mgr_find(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*find_func)(void *, int, char **, char **),
-    int (*count_func)(void *, int, char **, char **),
+    int (*find_func)(MYSQL_RES *, void *),
+    int (*count_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_find,
     axis2_char_t *sql_stmt_count);
 
@@ -137,8 +137,8 @@ sandesha2_permanent_bean_mgr_find_unique(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
-    int (*find_func)(void *, int, char **, char **),
-    int (*count_func)(void *, int, char **, char **),
+    int (*find_func)(MYSQL_RES *, void *),
+    int (*count_func)(MYSQL_RES *, void *),
     axis2_char_t *sql_stmt_find,
     axis2_char_t *sql_stmt_count);
 
@@ -193,11 +193,8 @@ sandesha2_permanent_bean_mgr_retrieve_response(
 
 int
 sandesha2_permanent_bean_mgr_busy_handler(
-    sqlite3* dbconn,
+    MYSQL * dbconn,
     char *sql_stmt,
-    int (*callback_func)(void *, int, char **, char **),
-    void *arg,
-    char **error_msg,
     int rc);
 
 /** @} */

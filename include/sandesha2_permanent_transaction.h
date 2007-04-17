@@ -27,7 +27,7 @@
 #include <axutil_error.h>
 #include <axutil_string.h>
 #include <axutil_utils.h>
-#include <sqlite3.h>
+#include <mysql.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -43,7 +43,7 @@ sandesha2_permanent_transaction_create(
     struct sandesha2_storage_mgr *storage_mgr,
     unsigned long int thread_id);
 
-sqlite3 * AXIS2_CALL
+MYSQL * AXIS2_CALL
 sandesha2_permanent_transaction_get_dbconn(
     struct sandesha2_transaction *transaction,
     const axutil_env_t *env);

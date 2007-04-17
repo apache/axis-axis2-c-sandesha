@@ -267,7 +267,12 @@ sandesha2_sender_worker_func(
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
         axis2_char_t *seq_id = NULL;
+        axis2_char_t *out_int_seq_id = NULL;
+        axis2_char_t *out_seq_id = NULL;
         int no_of_seqs = 0;
+        axis2_bool_t seq_completed = AXIS2_FALSE;
+        sandesha2_seq_property_bean_t *terminated_bean = NULL;
+        axis2_char_t *terminated = NULL;
         no_of_seqs = axutil_array_list_size(sender->working_seqs, env);
         if(sender->seq_index >= no_of_seqs)
         {
@@ -280,6 +285,7 @@ sandesha2_sender_worker_func(
         }
         seq_id = axutil_array_list_get(sender->working_seqs, env, 
             sender->seq_index++);
+
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
         if(!transaction)
@@ -287,14 +293,15 @@ sandesha2_sender_worker_func(
             AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
             continue;
         }
-        mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
             storage_mgr, env);
+        mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env, seq_id);
         if(!sender_bean)
         {
             sandesha2_transaction_commit(transaction, env);
-            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
+            /*AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME);*/
+            usleep(100000);
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
