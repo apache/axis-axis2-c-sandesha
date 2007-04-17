@@ -132,11 +132,12 @@ sandesha2_out_handler_invoke(
     else
     {
         int size = -1, i = 0;
+		axis2_bool_t found = AXIS2_FALSE;
+		axutil_array_list_t *mod_qnames = NULL;
         axutil_qname_t *mod_qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
-        axutil_array_list_t *mod_qnames = (axutil_array_list_t *)
-            axis2_svc_get_all_module_qnames(svc, env);
+		mod_qnames = (axutil_array_list_t *)axis2_svc_get_all_module_qnames(svc, env);
         size = axutil_array_list_size(mod_qnames, env);
-        axis2_bool_t found = AXIS2_FALSE;
+        
         for (i = 0; i < size; i++)
         {
             axutil_qname_t *qname = NULL;
