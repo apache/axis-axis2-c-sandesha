@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/sandesha2
+prglibdir=$(prefix)/modules/sandesha2
 prglib_LTLIBRARIES = libsandesha2.la
 
 libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
@@ -6,7 +6,12 @@ libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
                           msg_validator.c
 
 INCLUDES = -I$(top_builddir)/include \
-            @AXIS2INC@
+            -I ../../../axis2c/util/include \
+            -I ../../../axis2c/include \
+            -I ../../../axis2c/axiom/include \
+            -I ../../../axis2c/xml_schema/include \
+            -I ../../../axis2c/woden/include
+
 libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../handlers/libsandesha_handlers.la\
                         ../msgprocessors/libsandesha2_msgprocessors.la\
@@ -19,7 +24,5 @@ libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../workers/libsandesha2_workers.la\
                         ../wsrm/libsandesha2_wsrm.la \
                         ../polling/libsandesha2_polling.la \
-						-lsqlite3 \
 						-lmysqlclient -lnsl -lm -lz
-
 
