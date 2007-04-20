@@ -194,7 +194,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     if(fault_rm_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]A fault occurred in create_seq_msg_processor_process_in_msg"); 
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(

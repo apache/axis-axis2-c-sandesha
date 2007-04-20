@@ -755,14 +755,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     property = axutil_property_create_with_args(env, 0, 0, 0, addr_ver);
     axis2_msg_ctx_set_property(new_msg, env, AXIS2_WSA_VERSION, property);
     
-    /*property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_OUT, 
-                        AXIS2_FALSE);
-    if(property)
-    {
-        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-        axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_OUT, 
-            axutil_property_clone(property, env), AXIS2_FALSE);
-    }*/
     out_stream = axis2_msg_ctx_get_transport_out_stream(ref_msg, 
         env);
     axis2_msg_ctx_set_transport_out_stream(new_msg, env, out_stream);

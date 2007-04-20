@@ -604,19 +604,6 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     }
     temp_msg_id = axutil_uuid_gen(env);
     axis2_msg_ctx_set_message_id(terminate_seq_msg_ctx, env, temp_msg_id);
-    /*ref_msg_op = axis2_msg_ctx_get_op(ref_msg_ctx, env);
-    if(ref_msg_op)
-    {
-        axutil_array_list_t *outphases = NULL;
-        axutil_array_list_t *out_fault_phases = NULL;
-
-        outphases = axis2_op_get_out_flow(ref_msg_op, env);
-        out_fault_phases = axis2_op_get_fault_out_flow(ref_msg_op, env);
-        if(outphases)
-            axis2_op_set_out_flow(terminate_seq_op, env, outphases);
-        if(out_fault_phases)        
-            axis2_op_set_fault_out_flow(terminate_seq_op, env, out_fault_phases);
-    }*/
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env);
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
@@ -632,7 +619,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_msg_creator_finalize_creation(env, ref_msg_ctx, 
                         terminate_seq_msg_ctx);
     axis2_msg_ctx_set_property(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN,
-                        NULL);
+        NULL);
     return terminate_rm_msg;
 }
 
@@ -737,7 +724,6 @@ sandesha2_msg_creator_finalize_creation(
                 temp_name = axutil_param_get_name(next_param, env);
                 temp_value = axutil_param_get_value(next_param, env);
                 new_param = axutil_param_create(env, temp_name, temp_value);
-                /*new_param->ops->value_free = next_param->ops->value_free;*/
                 axis2_op_add_param(new_op, env, new_param); 
             }
         }
@@ -774,55 +760,23 @@ sandesha2_msg_creator_finalize_creation(
                 if(prop)
                     new_prop = axutil_property_clone(prop, env);
                 if(new_prop)
+                {
+                    if(0 == axutil_strcmp(AXIS2_TRANSPORT_IN, key))
+                    {
+                        axutil_property_set_own_value(new_prop, env, AXIS2_FALSE);
+                    }
                     axis2_ctx_set_property(ctx, env, key, new_prop);
+                }
             }
         }
     }
-    /* Message Context properties */
-    /*if(related_msg && new_msg)
-    {
-        axutil_hash_t *old_msg_ctx_props = NULL;
-        axis2_ctx_t *ctx = NULL;
-        
-        ctx = axis2_msg_ctx_get_base(related_msg, env);
-        old_msg_ctx_props = axis2_ctx_get_all_properties(ctx, env);
-        if(old_msg_ctx_props)
-        {
-            axutil_hash_index_t *i = NULL;
-
-            for (i = axutil_hash_first (old_msg_ctx_props, env); i; i = 
-                    axutil_hash_next (env, i))
-            {
-                void *v = NULL;
-                void *k = NULL;
-                axis2_char_t *key = NULL;
-                axutil_property_t *prop = NULL;
-                axutil_property_t *new_prop = NULL;
-                axis2_ctx_t *ctx = NULL;
-
-                axutil_hash_this (i, (const void **)&k, NULL, &v);
-                key = (axis2_char_t *) k;
-                prop = (axutil_property_t *) v;
-                ctx = axis2_msg_ctx_get_base(new_msg, env);
-                if(prop)
-                    new_prop = axutil_property_clone(prop, env);
-                if(new_prop)
-                    axis2_ctx_set_property(ctx, env, key, new_prop, AXIS2_FALSE);
-            }
-        }
-    }*/
     /* Setting options with properties copied from the old one */
-
     if(related_msg && new_msg)
     {
         related_ctx = axis2_msg_ctx_get_base(related_msg, env);
         related_msg_props = axis2_ctx_get_all_properties(related_ctx, env);
         new_ctx = axis2_msg_ctx_get_base(new_msg, env);
         new_msg_props = axis2_ctx_get_all_properties(new_ctx, env);
-        /*if(!new_msg_props)
-        {
-            new_msg_props = axutil_hash_make(env);
-        }*/
         if(related_msg_props)
         {
             axutil_hash_index_t *i = NULL;
@@ -842,7 +796,13 @@ sandesha2_msg_creator_finalize_creation(
                 if(prop)
                     new_prop = axutil_property_clone(prop, env);
                 if(new_prop)
-                axutil_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
+                {
+                    if(0 == axutil_strcmp(AXIS2_TRANSPORT_IN, key))
+                    {
+                        axutil_property_set_own_value(new_prop, env, AXIS2_FALSE);
+                    }
+                    axutil_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);
+                }
             }
         }
     }

@@ -354,9 +354,6 @@ sandesha2_sender_worker_worker_func(
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
-    /* Avoid retrieving property bean from operation until it is availbale */
-    /*prop_bean = sandesha2_utils_get_property_bean_from_op(env, 
-        axis2_msg_ctx_get_op(msg_ctx, env));*/
     prop_bean = sandesha2_utils_get_property_bean(env, 
         axis2_conf_ctx_get_conf(sender_worker->conf_ctx, env));
     if(prop_bean)
@@ -434,14 +431,12 @@ sandesha2_sender_worker_worker_func(
             axis2_msg_ctx_set_property(msg_ctx, env, 
                 SANDESHA2_WITHIN_TRANSACTION, property);
         }
+        /* This is neccessary to avoid a double free */
+        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
         /* Consider building soap envelope */
         AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
         successfully_sent = AXIS2_TRUE;
         sender_worker->counter++;
-        /*printf("**********************counter******************:%d\n", sender_worker->counter);
-        if(2 == sender_worker->counter)
-        sleep(300000);*/
-                    
     }
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -591,13 +586,13 @@ sandesha2_sender_worker_check_for_sync_res(
      * Message Receiver (may be callback MR).
      */
     axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
-    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(property)
     {
         axutil_property_t *temp_prop = axutil_property_clone(property, env);
         axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
             temp_prop);
-    }*/
+    }
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
         msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 
