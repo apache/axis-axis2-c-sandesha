@@ -11,9 +11,4 @@ libsandesha2_storage_la_SOURCES = \
 								seq_property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
-			-I$(top_builddir)/include/sandesha2 \
-            -I ../../../axis2c/util/include \
-            -I ../../../axis2c/include \
-            -I ../../../axis2c/axiom/include \
-            -I ../../../axis2c/xml_schema/include \
-            -I ../../../axis2c/woden/include
+		   	@AXIS2INC@

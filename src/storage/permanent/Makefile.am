@@ -12,12 +12,7 @@ libsandesha2_permanent_la_SOURCES = \
 								msg_store_bean.c
 
 INCLUDES = -I$(top_builddir)/include \
-			-I$(top_builddir)/include/sandesha2 \
-            -I ../../../../axis2c/util/include \
-            -I ../../../../axis2c/include \
-            -I ../../../../axis2c/axiom/include \
-            -I ../../../../axis2c/xml_schema/include \
-            -I ../../../../axis2c/woden/include \
+		   	@AXIS2INC@ \
 			-I/usr/include/mysql
 
 EXTRA_DIST=sandesha2_sqls.h
