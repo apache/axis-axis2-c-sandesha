@@ -571,7 +571,9 @@ sandesha2_sender_worker_check_for_sync_res(
     axis2_op_ctx_t *req_op_ctx = NULL;
     axiom_soap_envelope_t *res_envelope = NULL;
     axis2_char_t *soap_ns_uri = NULL;
-    
+   
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2] Start:sandesha2_sender_worker_check_for_sync_res");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
@@ -651,6 +653,8 @@ sandesha2_sender_worker_check_for_sync_res(
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
         property);
+    AXIS2_LOG_INFO(env->log, 
+        "[sandesha2] Exit:sandesha2_sender_worker_check_for_sync_res");
     return AXIS2_SUCCESS;
 }
 
