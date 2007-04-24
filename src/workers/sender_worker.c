@@ -580,7 +580,7 @@ sandesha2_sender_worker_check_for_sync_res(
     if(!property)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "transport_in property not found");
+            "[sandesha2] transport_in property not found");
         return AXIS2_SUCCESS;
     }
         
