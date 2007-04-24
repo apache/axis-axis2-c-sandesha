@@ -578,7 +578,11 @@ sandesha2_sender_worker_check_for_sync_res(
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(!property)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "transport_in property not found");
         return AXIS2_SUCCESS;
+    }
         
     res_msg_ctx = axis2_msg_ctx_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx,
         env), axis2_msg_ctx_get_transport_in_desc(
