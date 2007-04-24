@@ -227,7 +227,7 @@ sandesha2_app_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2] Start:sandesha2_app_msg_processor_process_in_msg");
-  
+ 
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(!msg_ctx)
     {
@@ -248,8 +248,6 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p",  axis2_op_ctx_get_parent(op_ctx, env));
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
@@ -638,8 +636,6 @@ sandesha2_app_msg_processor_process_out_msg(
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx is %p", op_ctx);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_ctx parent is %p",  axis2_op_ctx_get_parent(op_ctx, env));
     req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
         AXIS2_WSDL_MESSAGE_LABEL_IN);
     /* TODO setting up fault callback */
