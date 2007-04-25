@@ -668,14 +668,14 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     om_output = axiom_output_create(env, xml_writer);
     if (!om_output)
     {
-        AXIOM_XML_WRITER_FREE(xml_writer, env);
+        axiom_xml_writer_free(xml_writer, env);
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
     axiom_output_set_soap11(om_output, env, axis2_msg_ctx_get_is_soap_11(
         msg_ctx, env));
     axiom_soap_envelope_serialize(envelope, env, om_output, AXIS2_FALSE);
-    soap_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
+    soap_str = (axis2_char_t *)axiom_xml_writer_get_xml(xml_writer, env);
     if (axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
         soap_version = SANDESHA2_SOAP_VERSION_1_1;
     else
@@ -699,7 +699,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     }
     if (svc) 
     {
-        axis2_char_t *svc_name = (axis2_char_t *) AXIS2_SVC_GET_NAME(svc, env);
+        axis2_char_t *svc_name = (axis2_char_t *) axis2_svc_get_name(svc, env);
         sandesha2_msg_store_bean_set_svc(bean, env, svc_name);
     }
     if(op)
@@ -837,7 +837,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     }
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     soap_env_str = sandesha2_msg_store_bean_get_soap_envelope_str(msg_store_bean, env);
-    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, axis2_strlen(
+    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, axutil_strlen(
         soap_env_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     om_builder = axiom_stax_builder_create(env, reader);
     soap_version = sandesha2_msg_store_bean_get_soap_version(msg_store_bean, env);
@@ -926,7 +926,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 temp = (axis2_op_t *) v;
                 mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(temp, 
                     env);
-                if(0 == axis2_strcmp(mep, op_mep_str))
+                if(0 == axutil_strcmp(mep, op_mep_str))
                 {
                     op = temp;
                     break;
@@ -1018,7 +1018,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     persistent_prop_str = 
         sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, 
             env);
-    if(persistent_prop_str && 0 != axis2_strcmp("", persistent_prop_str))
+    if(persistent_prop_str && 0 != axutil_strcmp("", persistent_prop_str))
     {
         axutil_hash_t *map = 
             sandesha2_permanent_storage_mgr_get_property_map_from_string(env, 
@@ -1074,7 +1074,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
             prop_str = axutil_strcat(env, temp_str, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, AXIS2_WSA_VERSION, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
-            if(temp_str && 0 < axis2_strlen(temp_str))
+            if(temp_str && 0 < axutil_strlen(temp_str))
                 AXIS2_FREE(env->allocator, temp_str);
         }
     }
@@ -1088,17 +1088,17 @@ sandesha2_permanent_storage_mgr_get_property_string(
         axis2_char_t *value = NULL;
         axutil_hash_this(index, &k, NULL, &v);
         key = (axis2_char_t *) k;
-        if(0 == axis2_strcmp(AXIS2_HTTP_OUT_TRANSPORT_INFO, key))
+        if(0 == axutil_strcmp(AXIS2_HTTP_OUT_TRANSPORT_INFO, key))
             continue;
-        if(0 == axis2_strcmp(AXIS2_TRANSPORT_OUT, key))
+        if(0 == axutil_strcmp(AXIS2_TRANSPORT_OUT, key))
             continue;
-        if(0 == axis2_strcmp(AXIS2_TRANSPORT_IN, key))
+        if(0 == axutil_strcmp(AXIS2_TRANSPORT_IN, key))
             continue;
-        if(0 == axis2_strcmp(AXIS2_TRANSPORT_HEADERS, key))
+        if(0 == axutil_strcmp(AXIS2_TRANSPORT_HEADERS, key))
             continue;
-        if(0 == axis2_strcmp(SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, key))
+        if(0 == axutil_strcmp(SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, key))
             continue;
-        if(0 == axis2_strcmp(AXIS2_HTTP_CLIENT, key))
+        if(0 == axutil_strcmp(AXIS2_HTTP_CLIENT, key))
             continue;
 
         property = (axutil_property_t *) v;
@@ -1111,7 +1111,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, key, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, 
                 value, NULL);
-            if(temp_str && axis2_strlen(temp_str)> 0)
+            if(temp_str && axutil_strlen(temp_str)> 0)
                 AXIS2_FREE(env->allocator, temp_str);
         }
     }
@@ -1129,7 +1129,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
         SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
     if(values)
         size = axutil_array_list_size(values, env);
-    if((size % 2 != 0) || (size == 1 && 0 == axis2_strcmp("", 
+    if((size % 2 != 0) || (size == 1 && 0 == axutil_strcmp("", 
         axutil_array_list_get(values, env, 0))))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -1209,12 +1209,12 @@ sandesha2_permanent_storage_mgr_store_response(
     om_output = axiom_output_create(env, xml_writer);
     if (!om_output)
     {
-        AXIOM_XML_WRITER_FREE(xml_writer, env);
+        axiom_xml_writer_free(xml_writer, env);
         xml_writer = NULL;
         return AXIS2_FAILURE;
     }
     axiom_soap_envelope_serialize(response, env, om_output, AXIS2_FALSE);
-    response_str = (axis2_char_t *)AXIOM_XML_WRITER_GET_XML(xml_writer, env);
+    response_str = (axis2_char_t *)axiom_xml_writer_get_xml(xml_writer, env);
 
     sandesha2_permanent_bean_mgr_store_response(storage_mgr_impl->bean_mgr, 
         env, seq_id, response_str, msg_no, soap_version);
@@ -1244,7 +1244,7 @@ sandesha2_permanent_storage_mgr_retrieve_response(
         return NULL;
     }
     reader = axiom_xml_reader_create_for_memory(env, response->response_str, 
-        axis2_strlen(response->response_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+        axutil_strlen(response->response_str), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
     om_builder = axiom_stax_builder_create(env, reader);
     soap_version = response->soap_version;
     if(SANDESHA2_SOAP_VERSION_1_1 == soap_version)

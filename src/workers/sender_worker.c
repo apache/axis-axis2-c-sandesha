@@ -434,9 +434,15 @@ sandesha2_sender_worker_worker_func(
         /* This is neccessary to avoid a double free */
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
         /* Consider building soap envelope */
-        AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx);
-        successfully_sent = AXIS2_TRUE;
-        sender_worker->counter++;
+        if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
+        {
+            successfully_sent = AXIS2_TRUE;
+            sender_worker->counter++;
+        }
+        else
+        {
+            successfully_sent = AXIS2_FALSE;
+        }
     }
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 

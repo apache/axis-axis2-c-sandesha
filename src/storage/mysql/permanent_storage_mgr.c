@@ -1147,7 +1147,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     return map;
 }
 
-MYSQL * AXIS2_CALL
+void * AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_dbconn(
     sandesha2_storage_mgr_t *storage_mgr, 
     const axutil_env_t *env)

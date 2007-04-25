@@ -83,12 +83,12 @@ sandesha2_permanent_bean_mgr_response_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "response_str"))
+        if(0 == axutil_strcmp(col_name[i], "response_str"))
             if(argv[i])
                 response->response_str = axutil_strdup(env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "soap_version"))
+        if(0 == axutil_strcmp(col_name[i], "soap_version"))
             if(argv[i])
-                response->soap_version = axis2_atoi(argv[i]);
+                response->soap_version = axutil_atoi(argv[i]);
     }
     return 0;
 }
@@ -118,64 +118,64 @@ sandesha2_msg_store_bean_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "stored_key"))
+        if(0 == axutil_strcmp(col_name[i], "stored_key"))
             if(argv[i])
             {
                 sandesha2_msg_store_bean_set_stored_key(bean, env, argv[i]);
             }
-        if(0 == axis2_strcmp(col_name[i], "msg_id"))
+        if(0 == axutil_strcmp(col_name[i], "msg_id"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "soap_env_str"))
+        if(0 == axutil_strcmp(col_name[i], "soap_env_str"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, 
                     argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "soap_version"))
+        if(0 == axutil_strcmp(col_name[i], "soap_version"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_soap_version(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axis2_strcmp(col_name[i], "transport_out"))
+        if(0 == axutil_strcmp(col_name[i], "transport_out"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_transport_out(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axis2_strcmp(col_name[i], "op"))
+        if(0 == axutil_strcmp(col_name[i], "op"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_op(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "svc"))
+        if(0 == axutil_strcmp(col_name[i], "svc"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_svc(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "svc_grp"))
+        if(0 == axutil_strcmp(col_name[i], "svc_grp"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_svc_grp(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "op_mep"))
+        if(0 == axutil_strcmp(col_name[i], "op_mep"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_op_mep(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "to_url"))
+        if(0 == axutil_strcmp(col_name[i], "to_url"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_to_url(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "transport_to"))
-            if(argv[i] && 0 != axis2_strcmp("(null)", argv[i]))
+        if(0 == axutil_strcmp(col_name[i], "transport_to"))
+            if(argv[i] && 0 != axutil_strcmp("(null)", argv[i]))
             {
                 sandesha2_msg_store_bean_set_transport_to(bean, env, argv[i]);
             }
-        if(0 == axis2_strcmp(col_name[i], "execution_chain_str"))
+        if(0 == axutil_strcmp(col_name[i], "execution_chain_str"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_execution_chain_str(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "flow"))
+        if(0 == axutil_strcmp(col_name[i], "flow"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_flow(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axis2_strcmp(col_name[i], "msg_recv_str"))
+        if(0 == axutil_strcmp(col_name[i], "msg_recv_str"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_msg_recv_str(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "svr_side"))
+        if(0 == axutil_strcmp(col_name[i], "svr_side"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_svr_side(bean, env, AXIS2_ATOI(argv[i]));
-        if(0 == axis2_strcmp(col_name[i], "in_msg_store_key"))
+        if(0 == axutil_strcmp(col_name[i], "in_msg_store_key"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_in_msg_store_key(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "prop_str"))
+        if(0 == axutil_strcmp(col_name[i], "prop_str"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_persistent_property_str(bean, 
                     env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "action"))
+        if(0 == axutil_strcmp(col_name[i], "action"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_action(bean, env, argv[i]);
     }
@@ -809,13 +809,13 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
-    sql_size = axis2_strlen(msg_id) + axis2_strlen(stored_key) + 
-        axis2_strlen(soap_env_str) + sizeof(int) + sizeof(int) + 
-        axis2_strlen(op) + axis2_strlen(svc) + axis2_strlen(svc_grp) + 
-        axis2_strlen(op_mep) + axis2_strlen(to_url) + axis2_strlen(reply_to) +
-        axis2_strlen(transport_to) + axis2_strlen(execution_chain_str) + sizeof(int) + 
-        axis2_strlen(msg_recv_str) + sizeof(int) + axis2_strlen(in_msg_store_key) +
-        axis2_strlen(prop_str) + axis2_strlen(action) + 512;
+    sql_size = axutil_strlen(msg_id) + axutil_strlen(stored_key) + 
+        axutil_strlen(soap_env_str) + sizeof(int) + sizeof(int) + 
+        axutil_strlen(op) + axutil_strlen(svc) + axutil_strlen(svc_grp) + 
+        axutil_strlen(op_mep) + axutil_strlen(to_url) + axutil_strlen(reply_to) +
+        axutil_strlen(transport_to) + axutil_strlen(execution_chain_str) + sizeof(int) + 
+        axutil_strlen(msg_recv_str) + sizeof(int) + axutil_strlen(in_msg_store_key) +
+        axutil_strlen(prop_str) + axutil_strlen(action) + 512;
 
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
@@ -983,7 +983,7 @@ sandesha2_permanent_bean_mgr_store_response(
 	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Start:sandesha2_permanent_bean_mgr_store_response");
-    sql_size = axis2_strlen(seq_id) + axis2_strlen(response) + 
+    sql_size = axutil_strlen(seq_id) + axutil_strlen(response) + 
         sizeof(int) + sizeof(int) + 512;
     sprintf(sql_stmt_count, "select count(seq_id)"\
         " from response where seq_id = '%s' and msg_no=%d", seq_id, msg_no);

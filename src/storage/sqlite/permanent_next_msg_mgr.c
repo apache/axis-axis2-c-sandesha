@@ -69,21 +69,21 @@ sandesha2_next_msg_find_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "seq_id"))
+        if(0 == axutil_strcmp(col_name[i], "seq_id"))
         {
             sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
         }
-        if(0 == axis2_strcmp(col_name[i], "ref_msg_key"))
+        if(0 == axutil_strcmp(col_name[i], "ref_msg_key"))
         {
-            if(argv[i] && 0 != axis2_strcmp("(null)", argv[i]))
+            if(argv[i] && 0 != axutil_strcmp("(null)", argv[i]))
             {
                 sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
             }
         }
-        if(0 == axis2_strcmp(col_name[i], "polling_mode"))
+        if(0 == axutil_strcmp(col_name[i], "polling_mode"))
             sandesha2_next_msg_bean_set_polling_mode(bean, env, 
                 AXIS2_ATOI(argv[i]));
-        if(0 == axis2_strcmp(col_name[i], "msg_no"))
+        if(0 == axutil_strcmp(col_name[i], "msg_no"))
             sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
                 atol(argv[i]));
     }
@@ -115,19 +115,19 @@ sandesha2_next_msg_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "seq_id"))
+        if(0 == axutil_strcmp(col_name[i], "seq_id"))
             sandesha2_next_msg_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "ref_msg_key"))
-            if(argv[i] && 0 != axis2_strcmp("(null)", argv[i]))
+        if(0 == axutil_strcmp(col_name[i], "ref_msg_key"))
+            if(argv[i] && 0 != axutil_strcmp("(null)", argv[i]))
             {
                 sandesha2_next_msg_bean_set_ref_msg_key(bean, env, argv[i]);
             }
-        if(0 == axis2_strcmp(col_name[i], "polling_mode"))
+        if(0 == axutil_strcmp(col_name[i], "polling_mode"))
         {
             sandesha2_next_msg_bean_set_polling_mode(bean, env, 
                 AXIS2_ATOI(argv[i]));
         }
-        if(0 == axis2_strcmp(col_name[i], "msg_no"))
+        if(0 == axutil_strcmp(col_name[i], "msg_no"))
             sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
                 atol(argv[i]));
     }
@@ -467,7 +467,7 @@ sandesha2_permanent_next_msg_mgr_match(
     }
     seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
     temp_seq_id = sandesha2_next_msg_bean_get_seq_id(candidate, env);
-    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axutil_strcmp(seq_id, temp_seq_id))
     {
         equal = AXIS2_FALSE;
     }

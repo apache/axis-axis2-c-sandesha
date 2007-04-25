@@ -61,11 +61,65 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(whether to build  mysql storage library)
+AC_ARG_ENABLE(mysql, [  --enable-mysql    build mysql storage. default=no],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    WRAPPER_DIR="mysql"
+    #PKG_CHECK_MODULES(PARSER, libmysqlclient)
+    if test -d $srcdir/storage/mysql; then
+        CFLAGS="$CFLAGS $STORAGE_CFLAGS"
+        LDFLAGS="$LDFLAGS $STORAGE_LIBS"
+    fi
+
+    MYSQL_LIBS="$srcdir/storage/mysql"
+    WRAPPER_DIR="mysql"
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+SQLITE_LIBS=""
+
+AC_MSG_CHECKING(whether to build sqlite storage library)
+AC_ARG_ENABLE(sqlite, [  --enable-sqlite    build sqlite storage library. default=yes],
+[ case "${enableval}" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    WRAPPER_DIR="sqlite"
+    #PKG_CHECK_MODULES(PARSER, libsqlite3)
+    if test -d $srcdir/storage/sqlite; then
+        CFLAGS="$CFLAGS $STORAGE_CFLAGS"
+        LDFLAGS="$LDFLAGS $STORAGE_LIBS"
+    fi
+
+    SQLITE_LIBS="$srcdir/storage/sqlite"
+    WRAPPER_DIR="sqlite"
+
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  MYSQL_LIBS="$srcdir/storage/sqlite"
+  WRAPPER_DIR="sqlite"
+)
+
 AXIS2INC=$axis2inc
 
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
+AC_SUBST(WRAPPER_DIR)
+AC_SUBST(MYSQL_LIBS)
+AC_SUBST(SQLITE_LIBS)
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
@@ -78,7 +132,8 @@ AC_CONFIG_FILES([Makefile \
     src/storage/Makefile\
     src/storage/beans/Makefile\
     src/storage/inmemory/Makefile\
-    src/storage/permanent/Makefile\
+    src/storage/sqlite/Makefile\
+    src/storage/mysql/Makefile\
     src/client/Makefile \
     src/core/Makefile \
     src/polling/Makefile 

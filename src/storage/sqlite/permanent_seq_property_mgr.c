@@ -68,12 +68,12 @@ sandesha2_seq_property_find_callback(
     bean = sandesha2_seq_property_bean_create(env);
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "seq_id"))
+        if(0 == axutil_strcmp(col_name[i], "seq_id"))
             sandesha2_seq_property_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "name"))
+        if(0 == axutil_strcmp(col_name[i], "name"))
             if(argv[i])
                 sandesha2_seq_property_bean_set_name(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "value"))
+        if(0 == axutil_strcmp(col_name[i], "value"))
             if(argv[i])
                 sandesha2_seq_property_bean_set_value(bean, env, argv[i]);
     }
@@ -105,12 +105,12 @@ sandesha2_seq_property_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axis2_strcmp(col_name[i], "seq_id"))
+        if(0 == axutil_strcmp(col_name[i], "seq_id"))
             sandesha2_seq_property_bean_set_seq_id(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "name"))
+        if(0 == axutil_strcmp(col_name[i], "name"))
             if(argv[i])
                 sandesha2_seq_property_bean_set_name(bean, env, argv[i]);
-        if(0 == axis2_strcmp(col_name[i], "value"))
+        if(0 == axutil_strcmp(col_name[i], "value"))
             if(argv[i])
                 sandesha2_seq_property_bean_set_value(bean, env, argv[i]);
     }
@@ -452,7 +452,7 @@ sandesha2_permanent_seq_property_mgr_match(
         (sandesha2_seq_property_bean_t *) bean, env);
     temp_seq_id = sandesha2_seq_property_bean_get_seq_id(
         (sandesha2_seq_property_bean_t *) candidate, env);
-    if(seq_id && temp_seq_id && 0 != axis2_strcmp(seq_id, temp_seq_id))
+    if(seq_id && temp_seq_id && 0 != axutil_strcmp(seq_id, temp_seq_id))
     {
         equal = AXIS2_FALSE;
     }
@@ -460,7 +460,7 @@ sandesha2_permanent_seq_property_mgr_match(
         (sandesha2_seq_property_bean_t *) bean, env);
     temp_name = sandesha2_seq_property_bean_get_name(
         (sandesha2_seq_property_bean_t *) candidate, env);
-    if(name && temp_name && 0 != axis2_strcmp(name, temp_name))
+    if(name && temp_name && 0 != axutil_strcmp(name, temp_name))
     {
         equal = AXIS2_FALSE;
     }
@@ -468,7 +468,7 @@ sandesha2_permanent_seq_property_mgr_match(
         (sandesha2_seq_property_bean_t *) bean, env);
     temp_value = sandesha2_seq_property_bean_get_value(
         (sandesha2_seq_property_bean_t *) candidate, env);
-    if(value && temp_value && 0 != axis2_strcmp(value, temp_value))
+    if(value && temp_value && 0 != axutil_strcmp(value, temp_value))
     {
         equal = AXIS2_FALSE;
     }

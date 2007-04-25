@@ -13,6 +13,7 @@ libsandesha2_permanent_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
+			-I. \
 			-I/usr/include/mysql
 
 EXTRA_DIST=sandesha2_sqls.h
