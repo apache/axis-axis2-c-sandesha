@@ -16,6 +16,4 @@ libsandesha_util_la_SOURCES = \
                             property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@ \
-			@MYSQLINC@ \
-			@SQLITEINC@
+		   	@AXIS2INC@
