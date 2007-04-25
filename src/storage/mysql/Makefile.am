@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libsandesha2_mysql.la
+noinst_LTLIBRARIES = libsandesha2_permanent.la
 
 libsandesha2_permanent_la_SOURCES = \
 								permanent_create_seq_mgr.c \
