@@ -17,4 +17,5 @@ libsandesha_util_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
-			-I/usr/include/mysql
+			@MYSQLINC@ \
+			@SQLITEINC@

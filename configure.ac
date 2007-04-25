@@ -61,22 +61,56 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
-AC_MSG_CHECKING(whether to build  mysql storage library)
-AC_ARG_ENABLE(mysql, [  --enable-mysql    build mysql storage. default=no],
-[ case "${enableval}" in
+AC_MSG_CHECKING(path to use sqlite storage .)
+AC_ARG_WITH(sqlite,
+[  --with-sqlite[=PATH]      use sqlite storage.],
+[ case "$withval" in
   no)
     AC_MSG_RESULT(no)
     WRAPPER_DIR=""
     ;;
   *)
-    AC_MSG_RESULT(yes)
-    WRAPPER_DIR="mysql"
-    #PKG_CHECK_MODULES(PARSER, libmysqlclient)
-    if test -d $srcdir/storage/mysql; then
-        CFLAGS="$CFLAGS $STORAGE_CFLAGS"
-        LDFLAGS="$LDFLAGS $STORAGE_LIBS"
+    AC_MSG_RESULT($withval)
+    WRAPPER_DIR="sqlite"
+    dnl Find sqlite include dir in the path
+    if test -d $withval; then
+        sqliteinc="-I$withval"
+    dnl else find the sqliteinc include dir in /usr/include
+    elif test -d '/usr/include'; then
+        sqliteinc="-I/usr/include"
+    else
+        AC_MSG_ERROR(could not find sqliteinc. stop)
     fi
+    MYSQL_LIBS="$srcdir/storage/sqlite"
+    WRAPPER_DIR="sqlite"
+    ;;
+  esac ],
+  AC_MSG_RESULT(yes)
+  MYSQL_LIBS="$srcdir/storage/sqlite"
+  WRAPPER_DIR="sqlite"
+  sqliteinc="-I/usr/include"
+)
 
+AC_MSG_CHECKING(path to use mysql storage .)
+AC_ARG_WITH(mysql,
+[  --with-mysql[=PATH]      use mysql storage.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    WRAPPER_DIR=""
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    WRAPPER_DIR="mysql"
+    dnl Find mysql include dir in the path
+    if test -d $withval; then
+        mysqlinc="-I$withval"
+    dnl else find the mysqlinc include dir in /usr/include/mysql
+    elif test -d '/usr/include/mysql'; then
+        mysqlinc="-I/usr/include/mysql"
+    else
+        AC_MSG_ERROR(could not find mysqlinc. stop)
+    fi
     MYSQL_LIBS="$srcdir/storage/mysql"
     WRAPPER_DIR="mysql"
     ;;
@@ -84,37 +118,13 @@ AC_ARG_ENABLE(mysql, [  --enable-mysql    build mysql storage. default=no],
   AC_MSG_RESULT(no)
 )
 
-SQLITE_LIBS=""
-
-AC_MSG_CHECKING(whether to build sqlite storage library)
-AC_ARG_ENABLE(sqlite, [  --enable-sqlite    build sqlite storage library. default=yes],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    WRAPPER_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    WRAPPER_DIR="sqlite"
-    #PKG_CHECK_MODULES(PARSER, libsqlite3)
-    if test -d $srcdir/storage/sqlite; then
-        CFLAGS="$CFLAGS $STORAGE_CFLAGS"
-        LDFLAGS="$LDFLAGS $STORAGE_LIBS"
-    fi
-
-    SQLITE_LIBS="$srcdir/storage/sqlite"
-    WRAPPER_DIR="sqlite"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  MYSQL_LIBS="$srcdir/storage/sqlite"
-  WRAPPER_DIR="sqlite"
-)
-
 AXIS2INC=$axis2inc
+MYSQLINC=$mysqlinc
+SQLITEINC=$sqliteinc
 
 AC_SUBST(AXIS2INC)
+AC_SUBST(MYSQLINC)
+AC_SUBST(SQLITEINC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(WRAPPER_DIR)
