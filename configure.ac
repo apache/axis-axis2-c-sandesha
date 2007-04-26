@@ -81,14 +81,14 @@ AC_ARG_WITH(sqlite,
     else
         AC_MSG_ERROR(could not find sqliteinc. stop)
     fi
-    MYSQL_LIBS="$srcdir/storage/sqlite"
     WRAPPER_DIR="sqlite"
+    LDFLAGS="$LDFLAGS -lsqlite3"
     ;;
   esac ],
   AC_MSG_RESULT(yes)
-  MYSQL_LIBS="$srcdir/storage/sqlite"
   WRAPPER_DIR="sqlite"
   sqliteinc="-I/usr/include"
+  LDFLAGS="$LDFLAGS -lsqlite3"
 )
 
 AC_MSG_CHECKING(path to use mysql storage .)
@@ -111,12 +111,14 @@ AC_ARG_WITH(mysql,
     else
         AC_MSG_ERROR(could not find mysqlinc. stop)
     fi
-    MYSQL_LIBS="$srcdir/storage/mysql"
     WRAPPER_DIR="mysql"
+    LDFLAGS="$LDFLAGS -lmysqlclient -lnsl -lm -lz"
     ;;
   esac ],
   AC_MSG_RESULT(no)
 )
+
+AC_CONFIG_SUBDIRS(samples)
 
 AXIS2INC=$axis2inc
 MYSQLINC=$mysqlinc
@@ -128,8 +130,6 @@ AC_SUBST(SQLITEINC)
 AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(WRAPPER_DIR)
-AC_SUBST(MYSQL_LIBS)
-AC_SUBST(SQLITE_LIBS)
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \

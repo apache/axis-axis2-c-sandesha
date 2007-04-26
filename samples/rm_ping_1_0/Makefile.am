@@ -13,11 +13,10 @@ rm_ping_1_0_LDADD   =  \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-					-lsqlite3 \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
-			-I$(AXIS2C_HOME)/modules/sandesha2 \
+			-I../../include \
 			@UTILINC@ \
 			@AXIOMINC@

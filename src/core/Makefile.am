@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/sandesha2
+prglibdir=$(prefix)/modules/sandesha2
 prglib_LTLIBRARIES = libsandesha2.la
 
 libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
@@ -18,8 +18,6 @@ libsandesha2_la_LIBADD = ../client/libsandesha2_client.la\
                         ../util/libsandesha_util.la\
                         ../workers/libsandesha2_workers.la\
                         ../wsrm/libsandesha2_wsrm.la \
-                        ../polling/libsandesha2_polling.la \
-						-lsqlite3 \
-						-lmysqlclient -lnsl -lm -lz
+                        ../polling/libsandesha2_polling.la 
 
 

@@ -13,14 +13,12 @@ rm_mtom_1_0_LDADD   =  \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-                    -L$(AXIS2C_HOME)/modules/sandesha2 \
-					-lsandesha2_client \
-					-lsandesha2 \
-					-lsqlite3 \
+                    ../../src/client/libsandesha2_client.la \
+					../../src/core/libsandesha2.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
-			-I$(AXIS2C_HOME)/modules/sandesha2 \
+			-I../../include \
 			@UTILINC@ \
 			@AXIOMINC@
