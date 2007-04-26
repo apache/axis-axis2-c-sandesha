@@ -585,6 +585,9 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
             AXIS2_HASH_KEY_STRING);
     if(entry)
     {
+        axis2_op_ctx_t *op_ctx = 
+            axis2_msg_ctx_get_op_ctx((axis2_msg_ctx_t *) entry, env);
+        axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
         axutil_hash_set(storage_mgr_impl->msg_ctx_map, key, 
             AXIS2_HASH_KEY_STRING, NULL);
     }
