@@ -17,6 +17,10 @@ Note: 1.
         It is assumed that sqlite3.h in /usr/include include directory. If you have different include path for
         sqlite3.h then add the configure option --with-sqlite=<sqlite include file path> to the configure options
         above. If is assumed that libsqlite3.so is in the /usr/lib folder
+        To run samples in persistent/sqlite mode copy sandesha2c/config/sqlite_schema.sh to axis2c deploy directory and 
+        execute it to create the database schema. sqlite3 is an embedded database which need no configuration. If you
+        use axis2c apache2 module instead of simple_axis2_server make sure that apache2 user can access the sqlite 
+        database files sandesha2_svr_db and sandesha2_client_db.
 
         if you want to use the inmemory storage instead, change the entry in the sandesha2_constants.h
         file.
@@ -26,16 +30,11 @@ Note: 1.
         If you want to use persistent storage with mysql then add the option --with-mysql=<mysql include file path>
         to the configure options above. It is assumed that libmysqlclient.so is in /usr/lib folder. It is recommended
         to use mysql database for serius use. It is not included as as the default database because of licencing issues.
+        To run samples in persistent/mysql mode copy sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
+        to axis2c deploy directory and execute it to create the database schema. The username/password combination for
+        mysql is assumed to be g/g
 
       2.
-       To run samples in persistent/mysql mode copy sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
-       to axis2c deploy directory and execute it to create the database schema. The username/password combination for
-       mysql is assumed to be g/g
-
-       To run samples in persistent/sqlite mode copy sandesha2c/config/sqlite_schema.sh to axis2c deploy directory and 
-       execute it to create the database schema. sqlite3 is an embedded database which need no configuration.
-       
-      3.
        Sandesha2 module is installed into <axis2c_install_path>/modules/sandesha2c directory. The installed module contain
        libsandesha2.so, module.xml and header files. The sample clients are installed into <axis2c_install_path>/bin/samples
        directory. Sample services are installed into <axis2c_install_path>/services directory.
