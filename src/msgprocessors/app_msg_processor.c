@@ -248,6 +248,7 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_TRUE);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
