@@ -103,25 +103,6 @@ sandesha2_msg_store_bean_retrieve_callback(
             bean = sandesha2_msg_store_bean_create(env);
             args->data = bean;
         }
-        /*printf("row0:%s\n", row[0]);
-        printf("row1:%s\n", row[1]);
-        printf("row2:%s\n", row[2]);
-        printf("row3:%s\n", row[3]);
-        printf("row4:%s\n", row[4]);
-        printf("row5:%s\n", row[5]);
-        printf("row6:%s\n", row[6]);
-        printf("row7:%s\n", row[7]);
-        printf("row8:%s\n", row[8]);
-        printf("row9:%s\n", row[9]);
-        printf("row10:%s\n", row[10]);
-        printf("row11:%s\n", row[11]);
-        printf("row12:%s\n", row[12]);
-        printf("row13:%s\n", row[13]);
-        printf("row14:%s\n", row[14]);
-        printf("row15:%s\n", row[15]);
-        printf("row16:%s\n", row[16]);
-        printf("row17:%s\n", row[17]);
-        printf("row18:%s\n", row[18]);*/
         sandesha2_msg_store_bean_set_stored_key(bean, env, row[0]);
         sandesha2_msg_store_bean_set_msg_id(bean, env, row[1]);
         sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, row[2]);

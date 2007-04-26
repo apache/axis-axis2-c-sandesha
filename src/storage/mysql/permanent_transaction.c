@@ -249,7 +249,7 @@ sandesha2_permanent_transaction_commit(
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
    
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = mysql_query(trans_impl->dbconn, "commit;");
+    rc = mysql_commit(trans_impl->dbconn);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);
@@ -274,7 +274,7 @@ sandesha2_permanent_transaction_rollback(
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = mysql_query(trans_impl->dbconn, "rollback;");
+    rc = mysql_rollback(trans_impl->dbconn);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);

@@ -326,7 +326,6 @@ sandesha2_permanent_seq_property_mgr_retrieve(
         seq_id, name);
     sprintf(sql_retrieve, "select seq_id, name, value from seq_property "\
         "where id='%s'", key);
-    printf("sql_retrieve:%s\n", sql_retrieve);
     ret = (sandesha2_seq_property_bean_t *) sandesha2_permanent_bean_mgr_retrieve(
         seq_prop_mgr_impl->bean_mgr, env, sandesha2_seq_property_retrieve_callback, 
         sql_retrieve);
