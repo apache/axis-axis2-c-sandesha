@@ -159,7 +159,7 @@ sandesha2_permanent_transaction_create(
             "sandesha2_client_db", NULL);*/
         db_name = "sandesha2_client_db";
     }
-    trans_impl->dbconn = mysql_init(NULL);
+    trans_impl->dbconn = mysql_init(trans_impl->dbconn);
     if (!mysql_real_connect(trans_impl->dbconn, server,
          user, password, db_name, 0, NULL, 0))
     {
@@ -170,7 +170,7 @@ sandesha2_permanent_transaction_create(
             AXIS2_FAILURE);
         return NULL;
     }
-    rc = mysql_query(trans_impl->dbconn, "begin;");
+    rc = mysql_autocommit(trans_impl->dbconn, 0);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);
