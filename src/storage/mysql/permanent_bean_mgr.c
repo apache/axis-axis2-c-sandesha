@@ -203,19 +203,17 @@ sandesha2_permanent_bean_mgr_insert(
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
+    rc = mysql_query(dbconn, sql_stmt_insert);
+    if(rc)
     {
-        rc = mysql_query(dbconn, sql_stmt_insert);
-        if(rc)
-        {
-            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", 
-                sql_stmt_insert, mysql_error(dbconn));
-            printf("sql_stmt_insert:%s\n", sql_stmt_insert);
-            printf("insert error_msg:%s\n", mysql_error(dbconn));
-            mysql_close(dbconn);
-            axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-            return AXIS2_FALSE;
-        }
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", 
+            sql_stmt_insert, mysql_error(dbconn));
+        printf("sql_stmt_insert:%s\n", sql_stmt_insert);
+        printf("insert error_msg:%s\n", mysql_error(dbconn));
+        mysql_close(dbconn);
+        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+        return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;

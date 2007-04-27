@@ -16,7 +16,7 @@ sqlite sandesha2_svr_db "create table sender(msg_id varchar(100) primary key,
     seq_id varchar(200), wsrm_anon_uri varchar(100), to_address varchar(100))"
 sqlite sandesha2_svr_db "create table next_msg(seq_id varchar(200) primary key, 
     ref_msg_key varchar(100), polling_mode boolean, msg_no long)"
-sqlite sandesha2_svr_db "create table seq_property(id varchar(200) primary key, 
+sqlite sandesha2_svr_db "create table seq_property(id varchar(200) , 
     seq_id varchar(200), name varchar(200), value varchar(200))"
 sqlite sandesha2_svr_db "create table msg(stored_key varchar(200) primary key,
     msg_id varchar(200), soap_env_str text, soap_version int, transport_out varchar(100),
@@ -43,7 +43,7 @@ sqlite sandesha2_client_db "create table sender(msg_id varchar(100) primary key,
     seq_id varchar(200), wsrm_anon_uri varchar(100), to_address varchar(100))"
 sqlite sandesha2_client_db "create table next_msg(seq_id varchar(200) primary key, 
     ref_msg_key varchar(100), polling_mode boolean, msg_no long)"
-sqlite sandesha2_client_db "create table seq_property(id varchar(200) primary key, 
+sqlite sandesha2_client_db "create table seq_property(id varchar(200) , 
     seq_id varchar(200), name varchar(200), value varchar(200))"
 sqlite sandesha2_client_db "create table msg(stored_key varchar(200) primary key,
     msg_id varchar(200), soap_env_str text, soap_version int, transport_out varchar(100),
