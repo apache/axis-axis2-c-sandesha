@@ -185,10 +185,7 @@ sandesha2_permanent_bean_mgr_insert(
     axis2_char_t *sql_stmt_insert)
 {
     int rc = -1;
-    int num_rows = -1;
     MYSQL *dbconn = NULL;
-    MYSQL_RES *res;
-    sandesha2_rm_bean_t *retrieve_bean = NULL;
     sandesha2_bean_mgr_args_t *args = NULL;
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -206,28 +203,6 @@ sandesha2_permanent_bean_mgr_insert(
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    rc = mysql_query(dbconn, sql_stmt_retrieve);
-    if(rc)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt:%s. sql error: %s",
-            sql_stmt_retrieve, mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-        return AXIS2_FALSE;
-    }
-    res = mysql_store_result(dbconn);
-    num_rows = mysql_num_rows(res);
-    if(num_rows > 0)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Record already inserted. So no need to try again");
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-        return AXIS2_TRUE;
-    }
-    else
     {
         rc = mysql_query(dbconn, sql_stmt_insert);
         if(rc)
@@ -377,12 +352,8 @@ sandesha2_permanent_bean_mgr_update(
     axis2_char_t *sql_stmt_update)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    sandesha2_bean_mgr_args_t *args = NULL;
     MYSQL *dbconn = NULL;
-    MYSQL_RES *res;
-    sandesha2_rm_bean_t *old_bean = NULL;
     int rc = -1;
-    axis2_char_t *key = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     if(bean)
@@ -395,26 +366,6 @@ sandesha2_permanent_bean_mgr_update(
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
-    args->env = (axutil_env_t*)env;
-    args->data = NULL;
-    rc = mysql_query(dbconn, sql_stmt_retrieve_old_bean);
-    if(rc)
-    {
-        if(args)
-            AXIS2_FREE(env->allocator, args);
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
-            mysql_error(dbconn));
-        printf("sql_stmt_retrieve_old_bean:%s\n", sql_stmt_retrieve_old_bean);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-        return AXIS2_FALSE;
-    }
-    res = mysql_store_result(dbconn);
-    retrieve_func(res, args);
-    mysql_free_result(res);
     rc = mysql_query(dbconn, sql_stmt_update);
     if(rc)
     {
@@ -428,14 +379,6 @@ sandesha2_permanent_bean_mgr_update(
         return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-    if(args->data)
-        old_bean = (sandesha2_rm_bean_t *) args->data;
-    if(old_bean)
-        key = sandesha2_rm_bean_get_key(old_bean, env);
-    if(!key)
-        return AXIS2_FALSE;
-    if(args)
-        AXIS2_FREE(env->allocator, args);
     return AXIS2_TRUE;
 }
 
