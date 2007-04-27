@@ -192,12 +192,6 @@ sandesha2_permanent_bean_mgr_retrieve_response(
     axis2_char_t *seq_id,
     int msg_no);
 
-int
-sandesha2_permanent_bean_mgr_busy_handler(
-    MYSQL * dbconn,
-    char *sql_stmt,
-    int rc);
-
 /** @} */
 #ifdef __cplusplus
 }
