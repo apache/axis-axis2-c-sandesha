@@ -38,7 +38,6 @@ typedef struct sandesha2_permanent_bean_mgr_impl
 {
     sandesha2_permanent_bean_mgr_t bean_mgr;
     sandesha2_storage_mgr_t *storage_mgr;
-    axutil_thread_mutex_t *mutex;
 
 }sandesha2_permanent_bean_mgr_impl_t;
 
@@ -155,7 +154,6 @@ sandesha2_permanent_bean_mgr_create(
         sizeof(sandesha2_permanent_bean_mgr_impl_t));
 
     bean_mgr_impl->storage_mgr = storage_mgr;
-    bean_mgr_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
     return &(bean_mgr_impl->bean_mgr);
 }
 
@@ -186,21 +184,15 @@ sandesha2_permanent_bean_mgr_insert(
 {
     int rc = -1;
     MYSQL *dbconn = NULL;
-    sandesha2_bean_mgr_args_t *args = NULL;
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     
     sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
-    args->env = env;
-    args->data = NULL;
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     rc = mysql_query(dbconn, sql_stmt_insert);
@@ -212,10 +204,8 @@ sandesha2_permanent_bean_mgr_insert(
         printf("sql_stmt_insert:%s\n", sql_stmt_insert);
         printf("insert error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -228,43 +218,17 @@ sandesha2_permanent_bean_mgr_remove(
     axis2_char_t *sql_stmt_remove)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    sandesha2_bean_mgr_args_t *args = NULL;
     sandesha2_rm_bean_t *bean = NULL;
     MYSQL *dbconn = NULL;
-    MYSQL_RES *res;
     int rc = -1;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
-    args->env = env;
-    args->data = NULL;
-    rc = mysql_query(dbconn, sql_stmt_retrieve);
-    if(rc)
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s",
-            sql_stmt_retrieve, mysql_error(dbconn));
-        printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
-        printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-        return AXIS2_FALSE;
-    }
-    res = mysql_store_result(dbconn);
-    retrieve_func(res, args);
-    mysql_free_result(res);
-    if(args->data)
-        bean = (sandesha2_rm_bean_t *) args->data;
-    if(args)
-        AXIS2_FREE(env->allocator, args);
     rc = mysql_query(dbconn, sql_stmt_remove);
     if(rc)
     {
@@ -274,10 +238,8 @@ sandesha2_permanent_bean_mgr_remove(
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -296,12 +258,10 @@ sandesha2_permanent_bean_mgr_retrieve(
     int rc = -1;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
     }
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
@@ -316,7 +276,6 @@ sandesha2_permanent_bean_mgr_retrieve(
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -336,7 +295,6 @@ sandesha2_permanent_bean_mgr_retrieve(
         bean = (sandesha2_rm_bean_t *) args->data;
     if(args)
         AXIS2_FREE(env->allocator, args);
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return bean;
 }
 
@@ -356,12 +314,10 @@ sandesha2_permanent_bean_mgr_update(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     if(bean)
         sandesha2_storage_mgr_enlist_bean(bean_mgr_impl->storage_mgr, env, bean);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     rc = mysql_query(dbconn, sql_stmt_update);
@@ -373,10 +329,8 @@ sandesha2_permanent_bean_mgr_update(
         printf("sql_stmt_update:%s\n", sql_stmt_update);
         printf("update error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -405,7 +359,6 @@ sandesha2_permanent_bean_mgr_find(
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
     args->env = (axutil_env_t*)env;
     args->data = NULL;
@@ -413,7 +366,6 @@ sandesha2_permanent_bean_mgr_find(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
     }
     rc = mysql_query(dbconn, sql_stmt_find);
@@ -429,7 +381,6 @@ sandesha2_permanent_bean_mgr_find(
         printf("sql_stmt_find:%s\n", sql_stmt_find);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
     }
     res = mysql_store_result(dbconn);
@@ -478,7 +429,6 @@ sandesha2_permanent_bean_mgr_find(
                 printf("sql_stmt_count:%s\n", sql_stmt_count);
                 printf("retrieve error_msg:%s\n", mysql_error(dbconn));
                 mysql_close(dbconn);
-                axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
                 return NULL;
             }
             res = mysql_store_result(dbconn);
@@ -490,7 +440,6 @@ sandesha2_permanent_bean_mgr_find(
             }
         }
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return beans;
 }
 
@@ -542,12 +491,10 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
     axis2_char_t sql_stmt_retrieve[512];
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
     }
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
@@ -567,7 +514,6 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -577,7 +523,6 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         msg_store_bean = (sandesha2_msg_store_bean_t *) args->data;
     if(args)
         AXIS2_FREE(env->allocator, args);
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return msg_store_bean;
 }
 
@@ -647,12 +592,10 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         axutil_strlen(msg_recv_str) + sizeof(int) + axutil_strlen(in_msg_store_key) +
         axutil_strlen(prop_str) + axutil_strlen(action) + 512;
 
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
 
@@ -673,7 +616,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -706,11 +648,9 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
             printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
             mysql_close(dbconn);
-            axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_update);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_TRUE;
     }
     sql_stmt_insert = AXIS2_MALLOC(env->allocator, sql_size);
@@ -732,11 +672,9 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         printf("insert error_msg:%s\n", mysql_error(dbconn));
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     AXIS2_FREE(env->allocator, sql_stmt_insert);
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -752,12 +690,10 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     MYSQL *dbconn = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     sprintf(sql_stmt_remove, "delete from msg where stored_key='%s'", key);
@@ -770,10 +706,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -802,12 +736,10 @@ sandesha2_permanent_bean_mgr_store_response(
     sprintf(sql_stmt_count, "select count(seq_id)"\
         " from response where seq_id = '%s' and msg_no=%d", seq_id, msg_no);
 
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     rc = mysql_query(dbconn, sql_stmt_count);
@@ -819,7 +751,6 @@ sandesha2_permanent_bean_mgr_store_response(
         printf("sql_stmt_count:%s\n", sql_stmt_count);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
@@ -842,11 +773,9 @@ sandesha2_permanent_bean_mgr_store_response(
             printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
             mysql_close(dbconn);
-            axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_update);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_TRUE;
     }
     else
@@ -864,11 +793,9 @@ sandesha2_permanent_bean_mgr_store_response(
             printf("insert error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_insert);
             mysql_close(dbconn);
-            axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_insert);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     }
     return AXIS2_TRUE;
 }
@@ -886,12 +813,10 @@ sandesha2_permanent_bean_mgr_remove_response(
     MYSQL *dbconn = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     sprintf(sql_stmt_remove, 
@@ -905,10 +830,8 @@ sandesha2_permanent_bean_mgr_remove_response(
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return AXIS2_TRUE;
 }
 
@@ -927,12 +850,10 @@ sandesha2_permanent_bean_mgr_retrieve_response(
     axis2_char_t sql_stmt_retrieve[512];
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (MYSQL *) sandesha2_permanent_storage_mgr_get_dbconn(
         bean_mgr_impl->storage_mgr, env);
     if(!dbconn)
     {
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return NULL;
     }
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
@@ -949,13 +870,11 @@ sandesha2_permanent_bean_mgr_retrieve_response(
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
         mysql_close(dbconn);
-        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     sandesha2_permanent_bean_mgr_response_retrieve_callback(res, args);
     mysql_free_result(res);
-    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     return (sandesha2_response_t *) args->data;
 }
 

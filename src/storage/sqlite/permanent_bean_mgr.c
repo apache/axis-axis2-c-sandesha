@@ -1087,7 +1087,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
     printf("in busy handler1\n");
     while(rc == SQLITE_BUSY && counter < 512)
     {
-        printf("in busy handler11\n");
+        printf("in busy handler\n");
         if(*error_msg)
              sqlite3_free(*error_msg);
         counter++;
