@@ -70,7 +70,6 @@ typedef struct sandesha2_permanent_storage_mgr
     sandesha2_invoker_mgr_t *invoker_mgr;
     axis2_conf_ctx_t *conf_ctx;
     axis2_char_t *db_name;
-    /*sqlite3 *db;*/
     axutil_hash_t *transactions;
     sandesha2_permanent_bean_mgr_t *bean_mgr;
     axutil_hash_t *msg_ctx_map;
@@ -737,19 +736,10 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         address = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to, env);
         sandesha2_msg_store_bean_set_reply_to(bean, env, address);
     }
-    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_URL,
-        AXIS2_FALSE);
-    if(property)
-    
-    {
+    axis2_char_t *transport_to = NULL;
+    transport_to = axis2_msg_ctx_get_transport_url(msg_ctx, env);
+    if(transport_to)
         sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
-    }*/
-    {
-        axis2_char_t *transport_to = NULL;
-        transport_to = axis2_msg_ctx_get_transport_url(msg_ctx, env);
-        if(transport_to)
-            sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
-    }
 
     options = (axis2_options_t *) axis2_msg_ctx_get_options(msg_ctx, env);
 	action  = (axis2_char_t *) axis2_options_get_action(options, env);
@@ -863,9 +853,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
     axis2_msg_ctx_set_msg_id(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
         msg_store_bean, env));
-    /* You cannot set the same message id to a new message context again. So generate
-     * a new message id and set it
-     * axis2_msg_ctx_set_msg_id(msg_ctx, env, axutil_uuid_gen(env));*/
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, 
@@ -980,9 +967,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axis2_char_t *msg_id = NULL;
              axis2_op_ctx_set_parent(op_ctx, env, svc_ctx);
             axis2_msg_ctx_set_op_ctx(msg_ctx, env, op_ctx);
-            /* axis2_op_ctx_add_msg_ctx(op_ctx, env, msg_ctx);*/
             msg_id = (axis2_char_t *) axis2_msg_ctx_get_msg_id(msg_ctx, env);
-            /*axis2_conf_ctx_register_op_ctx(conf_ctx, env, msg_id, op_ctx);*/
         }
         axutil_allocator_switch_to_local_pool(env->allocator);
     }
@@ -994,9 +979,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         env);
     if(transport_to_str)
     {
-        /*property = axutil_property_create_with_args(env, 0, 0, 0, transport_to_str);
-        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_URL, property,
-        AXIS2_FALSE);*/
         axis2_msg_ctx_set_transport_url(msg_ctx, env, transport_to_str);
     }
     to_url_str = sandesha2_msg_store_bean_get_to_url(msg_store_bean, env);
