@@ -566,8 +566,11 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     axutil_allocator_switch_to_global_pool(env->allocator);
     if(storage_mgr_impl->msg_ctx_map)
-        entry = axutil_hash_get(storage_mgr_impl->msg_ctx_map, key, 
-            AXIS2_HASH_KEY_STRING);
+    {
+        if(key)
+            entry = axutil_hash_get(storage_mgr_impl->msg_ctx_map, key, 
+                AXIS2_HASH_KEY_STRING);
+    }
     if(entry)
     {
         axis2_op_ctx_t *op_ctx = 

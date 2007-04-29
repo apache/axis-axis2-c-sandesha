@@ -47,53 +47,58 @@ sandesha2_sender_find_callback(
     void *data)
 {
     MYSQL_ROW row;
+    int num_rows, i = 0;
     sandesha2_sender_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if((row = mysql_fetch_row(res)) != NULL)
+    num_rows = mysql_num_rows(res);
+    if(num_rows > 0)
     {
         if(!data_list)
         {
             data_list = axutil_array_list_create(env, 0);
             args->data = data_list;
         }
-        bean = sandesha2_sender_bean_create(env);
-        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
-        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
-        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
-        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
-        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
-        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
-        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
-        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
-        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
-        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
-        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
-        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
-        axutil_array_list_add(data_list, env, bean);
     }
     else
     {
         args->data = NULL;
         return 0;
     }
-    while((row = mysql_fetch_row(res)) != NULL)
+    for(i = 0; i < num_rows; i++)
     {
-        bean = sandesha2_sender_bean_create(env);
-        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
-        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
-        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
-        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
-        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
-        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
-        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
-        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
-        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
-        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
-        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
-        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
-        axutil_array_list_add(data_list, env, bean);
+        if((row = mysql_fetch_row(res)) != NULL)
+        {
+            unsigned long *lengths = NULL;
+            lengths = mysql_fetch_lengths(res);
+            bean = sandesha2_sender_bean_create(env);
+            if(0 < (int) lengths[0])
+                sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
+            if(0 < (int) lengths[1])
+                sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
+            if(0 < (int) lengths[2])
+                sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
+            if(0 < (int) lengths[3])
+                sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
+            if(0 < (int) lengths[4])
+                sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
+            if(0 < (int) lengths[5])
+                sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
+            if(0 < (int) lengths[6])
+                sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
+            if(0 < (int) lengths[7])
+                sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
+            if(0 < (int) lengths[8])
+                sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
+            if(0 < (int) lengths[9])
+                sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
+            if(0 < (int) lengths[10])
+                sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
+            if(0 < (int) lengths[11])
+                sandesha2_sender_bean_set_to_address(bean, env, row[11]);
+            axutil_array_list_add(data_list, env, bean);
+        }
     }
     return 0;
 }
@@ -273,8 +278,11 @@ sandesha2_permanent_sender_mgr_insert(
 
     axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
         env);
+    if(!msg_id) msg_id = "";
     axis2_char_t *msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
+    if(!msg_ctx_ref_key) msg_ctx_ref_key = "";
     axis2_char_t *internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
+    if(!internal_seq_id) internal_seq_id = "";
     int sent_count = sandesha2_sender_bean_get_sent_count(bean, env);
     long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
     axis2_bool_t send = sandesha2_sender_bean_is_send(bean, env);
@@ -282,8 +290,11 @@ sandesha2_permanent_sender_mgr_insert(
     long time_to_send = sandesha2_sender_bean_get_time_to_send(bean, env);
     int msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
     axis2_char_t *seq_id = sandesha2_sender_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *wsrm_anon_uri = sandesha2_sender_bean_get_wsrm_anon_uri(bean, env);
+    if(!wsrm_anon_uri) wsrm_anon_uri = "";
     axis2_char_t *to_address = sandesha2_sender_bean_get_to_address(bean, env);
+    if(!to_address) to_address = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -373,8 +384,11 @@ sandesha2_permanent_sender_mgr_update(
 
     axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
         env);
+    if(!msg_id) msg_id = "";
     axis2_char_t *msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
+    if(!msg_ctx_ref_key) msg_ctx_ref_key = "";
     axis2_char_t *internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
+    if(!internal_seq_id) internal_seq_id = "";
     int sent_count = sandesha2_sender_bean_get_sent_count(bean, env);
     long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
     axis2_bool_t send = sandesha2_sender_bean_is_send(bean, env);
@@ -382,8 +396,11 @@ sandesha2_permanent_sender_mgr_update(
     long time_to_send = sandesha2_sender_bean_get_time_to_send(bean, env);
     int msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
     axis2_char_t *seq_id = sandesha2_sender_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *wsrm_anon_uri = sandesha2_sender_bean_get_wsrm_anon_uri(bean, env);
+    if(!wsrm_anon_uri) wsrm_anon_uri = "";
     axis2_char_t *to_address = sandesha2_sender_bean_get_to_address(bean, env);
+    if(!to_address) to_address = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);

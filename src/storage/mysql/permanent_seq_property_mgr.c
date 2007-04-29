@@ -73,10 +73,15 @@ sandesha2_seq_property_find_callback(
     {
         if((row = mysql_fetch_row(res)) != NULL)
         {
+            unsigned long *lengths = NULL;
+            lengths = mysql_fetch_lengths(res);
             bean = sandesha2_seq_property_bean_create(env);
-            sandesha2_seq_property_bean_set_seq_id(bean, env, row[0]);
-            sandesha2_seq_property_bean_set_name(bean, env, row[1]);
-            sandesha2_seq_property_bean_set_value(bean, env, row[2]);
+            if(0 < (int) lengths[0])
+                sandesha2_seq_property_bean_set_seq_id(bean, env, row[0]);
+            if(0 < (int) lengths[1])
+                sandesha2_seq_property_bean_set_name(bean, env, row[1]);
+            if(0 < (int) lengths[2])
+                sandesha2_seq_property_bean_set_value(bean, env, row[2]);
             axutil_array_list_add(data_list, env, bean);
         }
     }
@@ -89,25 +94,25 @@ sandesha2_seq_property_retrieve_callback(
     void *data)
 {
     MYSQL_ROW row;
-    int num_rows = -1;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     sandesha2_seq_property_bean_t *bean = NULL;
     bean = (sandesha2_seq_property_bean_t *) args->data;
-    num_rows = mysql_num_rows(res);
-    if(num_rows > 0)
+    if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
         if(!bean)
         {
             bean = sandesha2_seq_property_bean_create(env);
             args->data = bean;
         }
-        if((row = mysql_fetch_row(res)) != NULL)
-        {
+        lengths = mysql_fetch_lengths(res);
+        if(0 < (int) lengths[0])
             sandesha2_seq_property_bean_set_seq_id(bean, env, row[0]);
+        if(0 < (int) lengths[1])
             sandesha2_seq_property_bean_set_name(bean, env, row[1]);
+        if(0 < (int) lengths[2])
             sandesha2_seq_property_bean_set_value(bean, env, row[2]);
-        }
     }
     else
     {
@@ -264,9 +269,13 @@ sandesha2_permanent_seq_property_mgr_insert(
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
     axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+    if(!id) id = "";
     axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
+    if(!name) name = "";
     axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
+    if(!value) value = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -351,9 +360,13 @@ sandesha2_permanent_seq_property_mgr_update(
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
     axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+    if(!id) id = "";
     axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
+    if(!name) name = "";
     axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
+    if(!value) value = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
