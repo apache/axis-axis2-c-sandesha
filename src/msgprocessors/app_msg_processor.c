@@ -375,8 +375,11 @@ sandesha2_app_msg_processor_process_in_msg (
                 soap_version = SANDESHA2_SOAP_VERSION_1_1;
             else
                 soap_version = SANDESHA2_SOAP_VERSION_1_2;
-            sandesha2_storage_mgr_store_response(storage_mgr, env, client_seq_key, 
-                response_envelope, msg_no, soap_version);
+            if(response_envelope)
+            {
+                sandesha2_storage_mgr_store_response(storage_mgr, env, 
+                    client_seq_key, response_envelope, msg_no, soap_version);
+            }
         }
         if(highest_in_msg_no_str)
         {

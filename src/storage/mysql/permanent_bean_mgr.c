@@ -97,30 +97,48 @@ sandesha2_msg_store_bean_retrieve_callback(
     bean = (sandesha2_msg_store_bean_t *) args->data;
     if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
         if(!bean)
         {
             bean = sandesha2_msg_store_bean_create(env);
             args->data = bean;
         }
-        sandesha2_msg_store_bean_set_stored_key(bean, env, row[0]);
-        sandesha2_msg_store_bean_set_msg_id(bean, env, row[1]);
-        sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, row[2]);
+        lengths = mysql_fetch_lengths(res);
+        if(0 < (int) lengths[0])
+            sandesha2_msg_store_bean_set_stored_key(bean, env, row[0]);
+        if(0 < (int) lengths[1])
+            sandesha2_msg_store_bean_set_msg_id(bean, env, row[1]);
+        if(0 < (int) lengths[2])
+            sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, row[2]);
         sandesha2_msg_store_bean_set_soap_version(bean, env, AXIS2_ATOI(row[3]));
         sandesha2_msg_store_bean_set_transport_out(bean, env, AXIS2_ATOI(row[4]));
-        sandesha2_msg_store_bean_set_op(bean, env, row[5]);
-        sandesha2_msg_store_bean_set_svc(bean, env, row[6]);
-        sandesha2_msg_store_bean_set_svc_grp(bean, env, row[7]);
-        sandesha2_msg_store_bean_set_op_mep(bean, env, row[8]);
-        sandesha2_msg_store_bean_set_to_url(bean, env, row[9]);
-        sandesha2_msg_store_bean_set_reply_to(bean, env, row[10]);
-        sandesha2_msg_store_bean_set_transport_to(bean, env, row[11]);
-        sandesha2_msg_store_bean_set_execution_chain_str(bean, env, row[12]);
+        if(0 < (int) lengths[5])
+            sandesha2_msg_store_bean_set_op(bean, env, row[5]);
+        if(0 < (int) lengths[6])
+            sandesha2_msg_store_bean_set_svc(bean, env, row[6]);
+        if(0 < (int) lengths[7])
+            sandesha2_msg_store_bean_set_svc_grp(bean, env, row[7]);
+        if(0 < (int) lengths[8])
+            sandesha2_msg_store_bean_set_op_mep(bean, env, row[8]);
+        if(0 < (int) lengths[9])
+            sandesha2_msg_store_bean_set_to_url(bean, env, row[9]);
+        if(0 < (int) lengths[10])
+            sandesha2_msg_store_bean_set_reply_to(bean, env, row[10]);
+        if(0 < (int) lengths[11])
+            sandesha2_msg_store_bean_set_transport_to(bean, env, row[11]);
+        if(0 < (int) lengths[12])
+            sandesha2_msg_store_bean_set_execution_chain_str(bean, env, row[12]);
         sandesha2_msg_store_bean_set_flow(bean, env, AXIS2_ATOI(row[13]));
-        sandesha2_msg_store_bean_set_msg_recv_str(bean, env, row[14]);
+        if(0 < (int) lengths[14])
+            sandesha2_msg_store_bean_set_msg_recv_str(bean, env, row[14]);
         sandesha2_msg_store_bean_set_svr_side(bean, env, AXIS2_ATOI(row[15]));
-        sandesha2_msg_store_bean_set_in_msg_store_key(bean, env, row[16]);
-        sandesha2_msg_store_bean_set_persistent_property_str(bean, env, row[17]);
-        sandesha2_msg_store_bean_set_action(bean, env, row[18]);
+        if(0 < (int) lengths[16])
+            sandesha2_msg_store_bean_set_in_msg_store_key(bean, env, row[16]);
+        if(0 < (int) lengths[17])
+            sandesha2_msg_store_bean_set_persistent_property_str(bean, env, row[17]);
+        if(0 < (int) lengths[18])
+            sandesha2_msg_store_bean_set_action(bean, env, row[18]);
+
     }
     else
     {
@@ -218,7 +236,6 @@ sandesha2_permanent_bean_mgr_remove(
     axis2_char_t *sql_stmt_remove)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    sandesha2_rm_bean_t *bean = NULL;
     MYSQL *dbconn = NULL;
     int rc = -1;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
@@ -540,8 +557,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     int sql_size = -1;
     MYSQL *dbconn = NULL;
     MYSQL_RES *res;
-    sandesha2_bean_mgr_args_t *args = NULL;
-    sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 	axis2_char_t *msg_id = NULL;
 	axis2_char_t *stored_key = NULL;
 	axis2_char_t *soap_env_str = NULL;
@@ -557,6 +572,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 	axis2_char_t *execution_chain_str = NULL;
 	sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
 	int flow;	
+    int num_rows = -1;
 	axis2_char_t *msg_recv_str = NULL;
 	axis2_bool_t svr_side = AXIS2_FALSE;
 	axis2_char_t *in_msg_store_key = NULL;
@@ -565,24 +581,39 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 
 	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
 	msg_id = sandesha2_msg_store_bean_get_msg_id(bean, env);
+    if(!msg_id) msg_id = "";
 	stored_key = sandesha2_msg_store_bean_get_stored_key(bean, env);
+    if(!stored_key) stored_key = "";
 	soap_env_str =  sandesha2_msg_store_bean_get_soap_envelope_str(bean, env);
+    if(!soap_env_str) soap_env_str = "";
 	soap_version = sandesha2_msg_store_bean_get_soap_version(bean, env);
 	transport_out = sandesha2_msg_store_bean_get_transport_out(bean, env);
 	op = sandesha2_msg_store_bean_get_op(bean, env);
+    if(!op) op = "";
     svc = sandesha2_msg_store_bean_get_svc(bean, env);
+    if(!svc) svc = "";
 	svc_grp = sandesha2_msg_store_bean_get_svc_grp(bean, env);
+    if(!svc_grp) svc_grp = "";
     op_mep = sandesha2_msg_store_bean_get_op_mep(bean, env);;
+    if(!op_mep) op_mep = "";
     to_url = sandesha2_msg_store_bean_get_to_url(bean, env);
+    if(!to_url) to_url = "";
 	reply_to = sandesha2_msg_store_bean_get_reply_to(bean, env);
+    if(!reply_to) reply_to = "";
 	transport_to = sandesha2_msg_store_bean_get_transport_to(bean, env);
+    if(!transport_to) transport_to = "";
 	execution_chain_str = sandesha2_msg_store_bean_get_execution_chain_str(bean, env);
+    if(!execution_chain_str) execution_chain_str = "";
 	flow = sandesha2_msg_store_bean_get_flow(bean, env);
 	msg_recv_str = sandesha2_msg_store_bean_get_msg_recv_str(bean, env);
+    if(!msg_recv_str) msg_recv_str = "";
     svr_side = sandesha2_msg_store_bean_is_svr_side(bean, env);
 	in_msg_store_key = sandesha2_msg_store_bean_get_in_msg_store_key(bean, env);
+    if(!in_msg_store_key) in_msg_store_key = "";
 	prop_str = sandesha2_msg_store_bean_get_persistent_property_str(bean, env);
+    if(!prop_str) prop_str = "";
 	action = sandesha2_msg_store_bean_get_action(bean, env);
+    if(!action) action = "";
 
     sql_size = axutil_strlen(msg_id) + axutil_strlen(stored_key) + 
         axutil_strlen(soap_env_str) + sizeof(int) + sizeof(int) + 
@@ -599,9 +630,6 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         return AXIS2_FALSE;
     }
 
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
-    args->env = env;
-    args->data = NULL;
     sprintf(sql_stmt_retrieve, "select stored_key, msg_id, soap_env_str,"\
         "soap_version, transport_out, op, svc, svc_grp, op_mep, to_url, reply_to, "\
         "transport_to, execution_chain_str, flow, msg_recv_str, svr_side, "\
@@ -619,13 +647,9 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
-    sandesha2_msg_store_bean_retrieve_callback(res, args);
+    num_rows = mysql_num_rows(res);
     mysql_free_result(res);
-    if(args->data)
-        msg_store_bean = (sandesha2_msg_store_bean_t *) args->data;
-    if(args)
-        AXIS2_FREE(env->allocator, args);
-    if(msg_store_bean)
+    if(num_rows > 0)
     {
         sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
         sprintf(sql_stmt_update, "update msg set msg_id='%s',"\

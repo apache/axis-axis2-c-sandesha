@@ -1299,12 +1299,14 @@ sandesha2_utils_split(
     {
         ptr[0] = AXIS2_EOLN;
         value = axutil_strdup(env, str);
-        axutil_array_list_add(list, env, value);
+        if(value && 0 != axutil_strcmp(value, ""))
+            axutil_array_list_add(list, env, value);
         str = ptr + 3;
         ptr = axutil_strstr(str, pattern);
     }
     value = axutil_strdup(env, str);
-    axutil_array_list_add(list, env, value);
+    if(value && 0 != axutil_strcmp(value, ""))
+        axutil_array_list_add(list, env, value);
 
     return list;
 }
