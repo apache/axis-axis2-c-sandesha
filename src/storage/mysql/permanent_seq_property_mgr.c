@@ -101,12 +101,12 @@ sandesha2_seq_property_retrieve_callback(
     if((row = mysql_fetch_row(res)) != NULL)
     {
         unsigned long *lengths = NULL;
+        lengths = mysql_fetch_lengths(res);
         if(!bean)
         {
             bean = sandesha2_seq_property_bean_create(env);
             args->data = bean;
         }
-        lengths = mysql_fetch_lengths(res);
         if(0 < (int) lengths[0])
             sandesha2_seq_property_bean_set_seq_id(bean, env, row[0]);
         if(0 < (int) lengths[1])

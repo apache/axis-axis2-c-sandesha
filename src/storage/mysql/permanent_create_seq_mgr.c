@@ -47,39 +47,44 @@ sandesha2_create_seq_find_callback(
     void *data)
 {
     MYSQL_ROW row;
+    int num_rows, i = 0;
     sandesha2_create_seq_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if((row = mysql_fetch_row(res)) != NULL)
+    num_rows = mysql_num_rows(res);
+    if(num_rows > 0)
     {
         if(!data_list)
         {
             data_list = axutil_array_list_create(env, 0);
             args->data = data_list;
         }
-        bean = sandesha2_create_seq_bean_create(env);
-        sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, row[0]);
-        sandesha2_create_seq_bean_set_internal_seq_id(bean, env, row[1]);
-        sandesha2_create_seq_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, row[3]);
-        sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, row[4]);
-        axutil_array_list_add(data_list, env, bean);
     }
     else
     {
         args->data = NULL;
         return 0;
     }
-    while((row = mysql_fetch_row(res)) != NULL)
+    for(i = 0; i < num_rows; i++)
     {
-        bean = sandesha2_create_seq_bean_create(env);
-        sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, row[0]);
-        sandesha2_create_seq_bean_set_internal_seq_id(bean, env, row[1]);
-        sandesha2_create_seq_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, row[3]);
-        sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, row[4]);
-        axutil_array_list_add(data_list, env, bean);
+        if((row = mysql_fetch_row(res)) != NULL)
+        {
+            unsigned long *lengths = NULL;
+            lengths = mysql_fetch_lengths(res);
+            bean = sandesha2_create_seq_bean_create(env);
+            if(0 < (int) lengths[0])
+                sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, row[0]);
+            if(0 < (int) lengths[1])
+                sandesha2_create_seq_bean_set_internal_seq_id(bean, env, row[1]);
+            if(0 < (int) lengths[2])
+                sandesha2_create_seq_bean_set_seq_id(bean, env, row[2]);
+            if(0 < (int) lengths[3])
+                sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, row[3]);
+            if(0 < (int) lengths[4])
+                sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, row[4]);
+            axutil_array_list_add(data_list, env, bean);
+        }
     }
     return 0;
 }
@@ -95,16 +100,23 @@ sandesha2_create_seq_retrieve_callback(
     sandesha2_create_seq_bean_t *bean = (sandesha2_create_seq_bean_t *) args->data;
     if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
+        lengths = mysql_fetch_lengths(res);
         if(!bean)
         {
             bean = sandesha2_create_seq_bean_create(env);
             args->data = bean;
         }
-        sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, row[0]);
-        sandesha2_create_seq_bean_set_internal_seq_id(bean, env, row[1]);
-        sandesha2_create_seq_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, row[3]);
-        sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, row[4]);
+        if(0 < (int) lengths[0])
+            sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, row[0]);
+        if(0 < (int) lengths[1])
+            sandesha2_create_seq_bean_set_internal_seq_id(bean, env, row[1]);
+        if(0 < (int) lengths[2])
+            sandesha2_create_seq_bean_set_seq_id(bean, env, row[2]);
+        if(0 < (int) lengths[3])
+            sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, row[3]);
+        if(0 < (int) lengths[4])
+            sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, row[4]);
     }
     else
     {
@@ -236,12 +248,17 @@ sandesha2_permanent_create_seq_mgr_insert(
 
     axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
         (sandesha2_rm_bean_t *) bean, env);
+    if(!create_seq_msg_id) create_seq_msg_id = "";
     axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+    if(!internal_seq_id) internal_seq_id = "";
     axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *create_seq_msg_store_key = 
         sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    if(!create_seq_msg_store_key) create_seq_msg_store_key = "";
     axis2_char_t *ref_msg_store_key = 
         sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+    if(!ref_msg_store_key) ref_msg_store_key = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -323,12 +340,17 @@ sandesha2_permanent_create_seq_mgr_update(
 
     axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
         (sandesha2_rm_bean_t *) bean, env);
+    if(!create_seq_msg_id) create_seq_msg_id = "";
     axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+    if(!internal_seq_id) internal_seq_id = "";
     axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *create_seq_msg_store_key = 
         sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    if(!create_seq_msg_store_key) create_seq_msg_store_key = "";
     axis2_char_t *ref_msg_store_key = 
         sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+    if(!ref_msg_store_key) ref_msg_store_key = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);

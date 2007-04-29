@@ -47,45 +47,40 @@ sandesha2_next_msg_find_callback(
     void *data)
 {
     MYSQL_ROW row;
+    int num_rows, i = 0;
     sandesha2_next_msg_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if((row = mysql_fetch_row(res)) != NULL)
+    num_rows = mysql_num_rows(res);
+    if(num_rows > 0)
     {
         if(!data_list)
         {
             data_list = axutil_array_list_create(env, 0);
             args->data = data_list;
         }
-        bean = sandesha2_next_msg_bean_create(env);
-        sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
-        if(row[1] && 0 != axutil_strcmp("(null)", row[1]))
-        {
-            sandesha2_next_msg_bean_set_ref_msg_key(bean, env, row[1]);
-        }
-        sandesha2_next_msg_bean_set_polling_mode(bean, env, AXIS2_ATOI(row[2]));
-        sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-            atol(row[3]));
-        axutil_array_list_add(data_list, env, bean);
     }
     else
     {
         args->data = NULL;
         return 0;
     }
-    while((row = mysql_fetch_row(res)) != NULL)
+    for(i = 0; i < num_rows; i++)
     {
-        bean = sandesha2_next_msg_bean_create(env);
-        sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
-        if(row[1] && 0 != axutil_strcmp("(null)", row[1]))
+        if((row = mysql_fetch_row(res)) != NULL)
         {
-            sandesha2_next_msg_bean_set_ref_msg_key(bean, env, row[1]);
+            bean = sandesha2_next_msg_bean_create(env);
+            sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
+            if(row[1] && 0 != axutil_strcmp("(null)", row[1]))
+            {
+                sandesha2_next_msg_bean_set_ref_msg_key(bean, env, row[1]);
+            }
+            sandesha2_next_msg_bean_set_polling_mode(bean, env, AXIS2_ATOI(row[2]));
+            sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
+                atol(row[3]));
+            axutil_array_list_add(data_list, env, bean);
         }
-        sandesha2_next_msg_bean_set_polling_mode(bean, env, AXIS2_ATOI(row[2]));
-        sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-            atol(row[3]));
-        axutil_array_list_add(data_list, env, bean);
     }
     return 0;
 }
@@ -101,20 +96,23 @@ sandesha2_next_msg_retrieve_callback(
     sandesha2_next_msg_bean_t *bean = (sandesha2_next_msg_bean_t *) args->data;
     if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
+        lengths = mysql_fetch_lengths(res);
         if(!bean)
         {
             bean = sandesha2_next_msg_bean_create(env);
             args->data = bean;
         }
-        sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
-        if(row[1] && 0 != axutil_strcmp("(null)", row[1]))
-        {
+        if(0 < (int) lengths[0])
+            sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
+        if(0 < (int) lengths[1])
             sandesha2_next_msg_bean_set_ref_msg_key(bean, env, row[1]);
-        }
-        sandesha2_next_msg_bean_set_polling_mode(bean, env, 
-            AXIS2_ATOI(row[2]));
-        sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-            atol(row[3]));
+        if(0 < (int) lengths[2])
+            sandesha2_next_msg_bean_set_polling_mode(bean, env, 
+                AXIS2_ATOI(row[2]));
+        if(0 < (int) lengths[3])
+            sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
+                atol(row[3]));
     }
     else
     {
@@ -267,7 +265,9 @@ sandesha2_permanent_next_msg_mgr_insert(
 
 	seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
+    if(!seq_id) seq_id = "";
 	ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+    if(!ref_msg_key) ref_msg_key = "";
 	polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
     msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
@@ -342,7 +342,9 @@ sandesha2_permanent_next_msg_mgr_update(
 
     axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
+    if(!seq_id) seq_id = "";
     axis2_char_t *ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+    if(!ref_msg_key) ref_msg_key = "";
     axis2_bool_t polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
     long msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
