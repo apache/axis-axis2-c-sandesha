@@ -19,7 +19,6 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 #include <axis2_svc_ctx.h>
-#include <axis2_conf_ctx.h>
 #include <axis2_op_client.h>
 #include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
@@ -63,17 +62,14 @@ int main(int argc, char** argv)
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
-    axis2_svc_ctx_t *svc_ctx = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    axiom_soap_envelope_t *result = NULL;
+    axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
     int c;
-    int i = 0, size = 0;
    
     /* Set up the environment */
     /*env = axutil_env_create_all("rm_echo_single_1_0.log", 

@@ -171,8 +171,8 @@ int main(int argc, char** argv)
         property = axutil_property_create(env);
         if(property)
         {
-            axutil_property_set_value(property, env, axutil_strdup(offered_seq_id, 
-                env));
+            axutil_property_set_value(property, env, axutil_strdup(env, 
+                offered_seq_id));
             axis2_options_set_property(options, env, 
                 SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }

@@ -47,8 +47,7 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
-    axiom_soap_envelope_t *result = NULL;
+    axiom_node_t *result = NULL;
     int c;
     const axis2_char_t *image_name = "resources/axis2.jpg";
    

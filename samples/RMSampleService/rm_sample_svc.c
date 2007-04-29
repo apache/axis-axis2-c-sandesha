@@ -23,13 +23,13 @@
 axiom_node_t *
 build_echo_om(
     const axutil_env_t *env, 
-    axis2_char_t *text);
+    const axis2_char_t *text);
 
 /* Builds the response content */
 axiom_node_t *
 build_mtom_om(
     const axutil_env_t *env, 
-    axis2_char_t *text);
+    const axis2_char_t *text);
 
 axiom_node_t *
 rm_sample_svc_echo (
@@ -93,7 +93,7 @@ rm_sample_svc_echo (
         axiom_text_t *text = (axiom_text_t *)axiom_node_get_data_element(text_node, env);
         if( text && axiom_text_get_value(text , env))
         {
-            axis2_char_t *text_str = axiom_text_get_value(text, env);
+            const axis2_char_t *text_str = axiom_text_get_value(text, env);
             ret_node = build_echo_om(env, text_str);
         }
     }
@@ -110,7 +110,7 @@ rm_sample_svc_echo (
 axiom_node_t *
 build_echo_om(
     const axutil_env_t *env, 
-    axis2_char_t *text)
+    const axis2_char_t *text)
 {
     axiom_node_t *echo_om_node = NULL;
     axiom_element_t* echo_om_ele = NULL;
@@ -252,7 +252,7 @@ rm_sample_svc_mtom(
         if (text && axiom_text_get_value(text , env))
         {
             axiom_node_t *image_node = NULL;
-            axis2_char_t *text_str = axiom_text_get_value(text, env);
+            const axis2_char_t *text_str = axiom_text_get_value(text, env);
 
             image_node = axiom_node_get_next_sibling(file_name_node, env);
             if (image_node)
@@ -271,7 +271,8 @@ rm_sample_svc_mtom(
                         data_handler = axiom_text_get_data_handler(bin_text, env);
                         if (data_handler)
                         {
-                            axiom_data_handler_set_file_name(data_handler, env, text_str);
+                            axiom_data_handler_set_file_name(data_handler, env, 
+                                (axis2_char_t *) text_str);
                             axiom_data_handler_write_to(data_handler, env);
                             ret_node = build_mtom_om(env, text_str);
                         }
@@ -292,7 +293,9 @@ rm_sample_svc_mtom(
 
 /* Builds the response content */
 axiom_node_t *
-build_mtom_om(const axutil_env_t *env, axis2_char_t *text)
+build_mtom_om(
+    const axutil_env_t *env, 
+    const axis2_char_t *text)
 {
     axiom_node_t *mtom_om_node = NULL;
     axiom_element_t* mtom_om_ele = NULL;

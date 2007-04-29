@@ -71,10 +71,9 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_char_t *seq_key = NULL;
-    axiom_soap_envelope_t *result = NULL;
-    sandesha2_seq_report_t *report = NULL;
+    axiom_node_t *result = NULL;
+    sandesha2_report_t *report = NULL;
     int c;
-    int i = 0, size = 0;
    
     /* Set up the environment */
     /*env = axutil_env_create_all("report_non_blocking_dual.log", 
@@ -166,8 +165,8 @@ int main(int argc, char** argv)
     property = axutil_property_create(env);
     if(property)
     {
-        axutil_property_set_value(property, env, axutil_strdup(offered_seq_id, 
-            env));
+        axutil_property_set_value(property, env, axutil_strdup(env, 
+            offered_seq_id));
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
@@ -245,7 +244,7 @@ int main(int argc, char** argv)
                 printf("outgoing seq_id %d:%s\n", i+1, seq_id);
                 completed_msgs_count = sandesha2_report_get_completed_msgs_count(
                     report, env, seq_id);
-                printf("completed_msgs_count:%d\n", completed_msgs_count);
+                printf("completed_msgs_count:%ld\n", completed_msgs_count);
             }
         }
     }

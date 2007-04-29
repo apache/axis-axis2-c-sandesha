@@ -65,8 +65,8 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axis2_callback_t *callback1 = NULL;
-    axis2_callback_t *callback2 = NULL;
+    /*axis2_callback_t *callback1 = NULL;
+    axis2_callback_t *callback2 = NULL;*/
     axis2_callback_t *callback3 = NULL;
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;

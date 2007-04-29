@@ -158,13 +158,6 @@ rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,
         svc_skeleton->func_array = NULL;
     }
     
-    /* Free the function array */
-    if(svc_skeleton->ops)
-    {
-        AXIS2_FREE(env->allocator, svc_skeleton->ops);
-        svc_skeleton->ops = NULL;
-    }
-    
     /* Free the service skeleton */
     if(svc_skeleton)
     {
