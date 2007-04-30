@@ -25,7 +25,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				CommandLine="copy .\..\..\..\..\config\axis2.xml  $(AXIS2C_HOME)"
-				ExcludedFromBuild="true"
+				ExcludedFromBuild="false"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -69,9 +69,9 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				UseLibraryDependencyInputs="true"
-				AdditionalDependencies="axis2_util.lib axiom.lib axis2_engine.lib axis2_parser.lib sqlite3.lib"
+				AdditionalDependencies="axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib libmysql.lib sqlite3.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib;$(SQLITE3_HOME);"
+				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib;C:\Program Files\MySQL\MySQL Server 5.0\lib\debug;$(SQLITE_HOME);"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				MapExports="false"
@@ -380,46 +380,74 @@
 						</File>
 					</Filter>
 					<Filter
-						Name="premanent"
+						Name="mysql"
 						>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\msg_store_bean.c"
+							RelativePath="..\..\..\..\src\storage\mysql\msg_store_bean.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_bean_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_bean_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_create_seq_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_create_seq_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_invoker_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_invoker_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_next_msg_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_next_msg_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_sender_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_sender_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_seq_property_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_seq_property_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_storage_mgr.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_storage_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\permanent_transaction.c"
+							RelativePath="..\..\..\..\src\storage\mysql\permanent_transaction.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\permanent\sandesha2_sqls.h"
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_bean_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_create_seq_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_invoker_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_next_msg_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_sender_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_seq_property_mgr.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_transaction.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_sqls.h"
 							>
 						</File>
 					</Filter>
