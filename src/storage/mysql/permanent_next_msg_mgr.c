@@ -265,15 +265,16 @@ sandesha2_permanent_next_msg_mgr_insert(
 
 	seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
-    if(!seq_id) seq_id = "";
 	ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    if(!ref_msg_key) ref_msg_key = "";
 	polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
     msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
+
+    if(!seq_id) seq_id = "";
+    if(!ref_msg_key) ref_msg_key = "";
 
     sprintf(sql_retrieve, "select seq_id, ref_msg_key, polling_mode, msg_no"\
         " from next_msg where seq_id='%s';", seq_id);
@@ -345,12 +346,12 @@ sandesha2_permanent_next_msg_mgr_update(
 
     axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
-    if(!seq_id) seq_id = "";
     ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    if(!ref_msg_key) ref_msg_key = "";
     polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
     msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
+    if(!seq_id) seq_id = "";
+    if(!ref_msg_key) ref_msg_key = "";
    
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);

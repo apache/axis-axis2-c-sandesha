@@ -399,11 +399,8 @@ sandesha2_permanent_sender_mgr_update(
 
     axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
         env);
-    if(!msg_id) msg_id = "";
     axis2_char_t *msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
-    if(!msg_ctx_ref_key) msg_ctx_ref_key = "";
     axis2_char_t *internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
-    if(!internal_seq_id) internal_seq_id = "";
     int sent_count = sandesha2_sender_bean_get_sent_count(bean, env);
     long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
     axis2_bool_t send = sandesha2_sender_bean_is_send(bean, env);
@@ -411,15 +408,19 @@ sandesha2_permanent_sender_mgr_update(
     long time_to_send = sandesha2_sender_bean_get_time_to_send(bean, env);
     int msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
     axis2_char_t *seq_id = sandesha2_sender_bean_get_seq_id(bean, env);
-    if(!seq_id) seq_id = "";
     axis2_char_t *wsrm_anon_uri = sandesha2_sender_bean_get_wsrm_anon_uri(bean, env);
-    if(!wsrm_anon_uri) wsrm_anon_uri = "";
     axis2_char_t *to_address = sandesha2_sender_bean_get_to_address(bean, env);
-    if(!to_address) to_address = "";
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
+
+    if(!msg_id) msg_id = "";
+    if(!msg_ctx_ref_key) msg_ctx_ref_key = "";
+    if(!internal_seq_id) internal_seq_id = "";
+    if(!seq_id) seq_id = "";
+    if(!wsrm_anon_uri) wsrm_anon_uri = "";
+    if(!to_address) to_address = "";
 
     sprintf(sql_retrieve, "select msg_id, msg_ctx_ref_key, "\
         "internal_seq_id, sent_count, msg_no, send, resend, time_to_send, "\
