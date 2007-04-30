@@ -20,18 +20,18 @@
 #include <sandesha2_permanent_storage_mgr.h>
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_msg_store_bean.h>
-#include <sandesha2_permanent_create_seq_mgr.h>
+#include "sandesha2_permanent_create_seq_mgr.h"
 #include <sandesha2_invoker_mgr.h>
-#include <sandesha2_permanent_invoker_mgr.h>
+#include "sandesha2_permanent_invoker_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
-#include <sandesha2_permanent_next_msg_mgr.h>
+#include "sandesha2_permanent_next_msg_mgr.h"
 #include <sandesha2_sender_mgr.h>
-#include <sandesha2_permanent_sender_mgr.h>
+#include "sandesha2_permanent_sender_mgr.h"
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2_permanent_seq_property_mgr.h>
+#include "sandesha2_permanent_seq_property_mgr.h"
 #include <sandesha2_transaction.h>
 #include <sandesha2_property_bean.h>
-#include <sandesha2_permanent_transaction.h>
+#include "sandesha2_permanent_transaction.h"
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
@@ -639,6 +639,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     axiom_output_t *om_output = NULL;
     axis2_transport_out_desc_t *transport_out_desc = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
+    axis2_char_t *transport_to = NULL;
     axis2_svc_t *svc = NULL;
     axis2_op_t *op = NULL;
     axis2_endpoint_ref_t *to = NULL;
@@ -736,7 +737,6 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         address = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to, env);
         sandesha2_msg_store_bean_set_reply_to(bean, env, address);
     }
-    axis2_char_t *transport_to = NULL;
     transport_to = axis2_msg_ctx_get_transport_url(msg_ctx, env);
     if(transport_to)
         sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
@@ -1134,7 +1134,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     return map;
 }
 
-sqlite3 * AXIS2_CALL
+void * AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_dbconn(
     sandesha2_storage_mgr_t *storage_mgr, 
     const axutil_env_t *env)

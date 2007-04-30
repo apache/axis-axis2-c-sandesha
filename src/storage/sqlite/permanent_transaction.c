@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include <sandesha2_permanent_transaction.h>
+#include "sandesha2_permanent_transaction.h"
 #include "sandesha2_permanent_storage_mgr.h"
 #include <sandesha2_transaction.h>
 #include <sandesha2_constants.h>
@@ -28,7 +28,7 @@
 #include <axutil_thread.h>
 #include <axutil_property.h>
 #include <axis2_module_desc.h>
-#include <sandesha2_permanent_bean_mgr.h>
+#include "sandesha2_permanent_bean_mgr.h"
 #include <platforms/axutil_platform_auto_sense.h>
 #include <sqlite3.h>
 

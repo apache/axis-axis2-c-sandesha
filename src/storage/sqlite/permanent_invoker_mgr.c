@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include <sandesha2_permanent_invoker_mgr.h>
+#include "sandesha2_permanent_invoker_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_invoker_mgr.h>
 #include <sandesha2_storage_mgr.h>

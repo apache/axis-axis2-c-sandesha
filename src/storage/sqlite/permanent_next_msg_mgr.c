@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include <sandesha2_permanent_next_msg_mgr.h>
+#include "sandesha2_permanent_next_msg_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_constants.h>
