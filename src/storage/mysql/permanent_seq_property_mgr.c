@@ -15,7 +15,7 @@
  */
  
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2_permanent_seq_property_mgr.h>
+#include "sandesha2_permanent_seq_property_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>

@@ -298,6 +298,7 @@ sandesha2_sender_worker_worker_func(
     }
     if(!msg_ctx)
     {
+        printf("msg_ctx is not present\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
                     "not present in the store");
@@ -322,6 +323,7 @@ sandesha2_sender_worker_worker_func(
     sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
     if(!continue_sending)
     {
+        printf("do not continue\n");
         sender_worker->status = AXIS2_FAILURE;
         /* We commit here since we have cleaned the
          * sending side data and that need to commited */
@@ -341,6 +343,7 @@ sandesha2_sender_worker_worker_func(
     if(qualified_for_sending && 0 != axutil_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
+        printf("not qualified for sending\n");
         sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
@@ -375,6 +378,7 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
+            printf("continue sending is true\n");
             sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
@@ -430,15 +434,17 @@ sandesha2_sender_worker_worker_func(
         /* This is neccessary to avoid a double free */
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
         /* Consider building soap envelope */
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came100###############################");
         if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
-        {
-            successfully_sent = AXIS2_TRUE;
-            sender_worker->counter++;
-        }
-        else
-        {
-            successfully_sent = AXIS2_FALSE;
-        }
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came101###############################");
+        	successfully_sent = AXIS2_TRUE;
+        	sender_worker->counter++;
+		}else
+		{
+			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came102###############################");
+        	successfully_sent = AXIS2_FALSE;
+		}
     }
     transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -578,13 +584,13 @@ sandesha2_sender_worker_check_for_sync_res(
         "[sandesha2] Start:sandesha2_sender_worker_check_for_sync_res");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
+    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(!property)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] transport_in property not found");
         return AXIS2_SUCCESS;
-    }
+    }*/
         
     res_msg_ctx = axis2_msg_ctx_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx,
         env), axis2_msg_ctx_get_transport_in_desc(
@@ -597,10 +603,15 @@ sandesha2_sender_worker_check_for_sync_res(
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
     if(property)
     {
-        axutil_property_t *temp_prop = axutil_property_clone(property, env);
+		axutil_property_t *temp_prop = NULL;
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "AXIS2_TRANSPORT_IN not NULL");
+        temp_prop = axutil_property_clone(property, env);
         axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
             temp_prop);
     }
+    else
+		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "AXIS2_TRANSPORT_IN NULL######################################3");
+
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(
         msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 
@@ -632,10 +643,8 @@ sandesha2_sender_worker_check_for_sync_res(
 
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
     if(!res_envelope)
-    {
         res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
             soap_ns_uri);
-    }
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION);

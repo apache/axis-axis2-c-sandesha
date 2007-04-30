@@ -20,9 +20,9 @@
 #include <sandesha2_permanent_storage_mgr.h>
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_msg_store_bean.h>
-#include <sandesha2_permanent_create_seq_mgr.h>
+#include "sandesha2_permanent_create_seq_mgr.h"
 #include <sandesha2_invoker_mgr.h>
-#include <sandesha2_permanent_invoker_mgr.h>
+#include "sandesha2_permanent_invoker_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_permanent_next_msg_mgr.h>
 #include <sandesha2_sender_mgr.h>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#include <sandesha2_permanent_create_seq_mgr.h>
+#include "sandesha2_permanent_create_seq_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_constants.h>
 #include <sandesha2_storage_mgr.h>
@@ -245,24 +245,43 @@ sandesha2_permanent_create_seq_mgr_insert(
     axis2_char_t sql_insert[1024];
     axis2_char_t sql_update[1024];
     axis2_char_t sql_retrieve[256];
+	axis2_char_t *create_seq_msg_id = NULL;
+	axis2_char_t *internal_seq_id = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *create_seq_msg_store_key = NULL;
+	axis2_char_t *ref_msg_store_key = NULL;
 
-    axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-        (sandesha2_rm_bean_t *) bean, env);
-    if(!create_seq_msg_id) create_seq_msg_id = "";
-    axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
-    if(!internal_seq_id) internal_seq_id = "";
-    axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
-    if(!seq_id) seq_id = "";
-    axis2_char_t *create_seq_msg_store_key = 
-        sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
-    if(!create_seq_msg_store_key) create_seq_msg_store_key = "";
-    axis2_char_t *ref_msg_store_key = 
-        sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
-    if(!ref_msg_store_key) ref_msg_store_key = "";
-
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
+	AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
+
+	create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
+        (sandesha2_rm_bean_t *) bean, env);
+	if(!create_seq_msg_id){
+		create_seq_msg_id = "";
+	}
+	internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+
+    if(!internal_seq_id)
+	{	
+		internal_seq_id = "";
+	}
+
+	seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+    if(!seq_id)
+	{	
+		seq_id = "";
+	}
+	create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    if(!create_seq_msg_store_key)
+	{
+		create_seq_msg_store_key = "";
+	}
+
+    ref_msg_store_key  = sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+    if(!ref_msg_store_key)
+	{
+		ref_msg_store_key = "";
+	}
 
     sprintf(sql_retrieve, "select create_seq_msg_id, internal_seq_id,"\
         "seq_id, create_seq_msg_store_key, ref_msg_store_key from create_seq "\
@@ -337,33 +356,44 @@ sandesha2_permanent_create_seq_mgr_update(
     axis2_char_t sql_retrieve[256];
     axis2_char_t sql_update[1024];
     axis2_bool_t ret = AXIS2_FALSE;
+	axis2_char_t *internal_seq_id = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *create_seq_msg_store_key = NULL;
+	axis2_char_t *ref_msg_store_key = NULL;
 
     axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
         (sandesha2_rm_bean_t *) bean, env);
     if(!create_seq_msg_id) create_seq_msg_id = "";
-    axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
-    if(!internal_seq_id) internal_seq_id = "";
-    axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+
+    internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+    
+	if(!internal_seq_id) internal_seq_id = "";
+
+    seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
     if(!seq_id) seq_id = "";
-    axis2_char_t *create_seq_msg_store_key = 
-        sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
-    if(!create_seq_msg_store_key) create_seq_msg_store_key = "";
-    axis2_char_t *ref_msg_store_key = 
-        sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+
+    create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    
+	if(!create_seq_msg_store_key) create_seq_msg_store_key = "";
+    
+	ref_msg_store_key = sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+
     if(!ref_msg_store_key) ref_msg_store_key = "";
 
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
+    
+	seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
     sprintf(sql_retrieve, "select create_seq_msg_id, internal_seq_id,"\
         "seq_id, create_seq_msg_store_key, ref_msg_store_key from create_seq "\
         "where create_seq_msg_id='%s';", create_seq_msg_id);
-    sprintf(sql_update, "update create_seq set internal_seq_id='%s', seq_id='%s'"\
+    
+	sprintf(sql_update, "update create_seq set internal_seq_id='%s', seq_id='%s'"\
         ",create_seq_msg_store_key='%s', ref_msg_store_key='%s' where "\
         "create_seq_msg_id='%s';", internal_seq_id, seq_id, 
         create_seq_msg_store_key, ref_msg_store_key, create_seq_msg_id);
-    ret = sandesha2_permanent_bean_mgr_update(seq_mgr_impl->bean_mgr, env, 
+    
+	ret = sandesha2_permanent_bean_mgr_update(seq_mgr_impl->bean_mgr, env, 
         (sandesha2_rm_bean_t *)bean, sandesha2_create_seq_retrieve_callback, 
         sql_retrieve, sql_update);
     return ret;
