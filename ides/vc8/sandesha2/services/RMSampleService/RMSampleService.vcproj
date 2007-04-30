@@ -17,10 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(AXIS2C_HOME)\services\RMSampleService"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axiom.lib axis2_util.lib sandesha2.lib axis2_parser.lib axis2_engine.lib"
+				AdditionalDependencies="axiom.lib axutil.lib sandesha2.lib axis2_parser.lib axis2_engine.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib;$(AXIS2C_HOME)\modules\sandesha2;"
 				GenerateDebugInformation="true"
@@ -91,6 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy .\..\..\..\..\..\samples\RMSampleService\services.xml  $(AXIS2C_HOME)\services\RMSampleService\"
 			/>
 		</Configuration>
 		<Configuration
