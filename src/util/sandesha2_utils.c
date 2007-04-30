@@ -46,6 +46,8 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 
+#define AXIS2_WS_RM_ANONYMOUS_URL "http://docs.oasis-open.org/ws-rx/wsmc/200702/anonymous?id="
+
 static axutil_array_list_t *
 get_sorted_msg_no_list(
         const axutil_env_t *env,
@@ -1257,9 +1259,9 @@ sandesha2_utils_is_wsrm_anon_reply_to(
     const axutil_env_t *env,
     const axis2_char_t *reply_to)
 {
-    /*if (reply_to && axutil_strstr(reply_to, SANDESHA2_WSRM_ANON_URI_PREFIX))
-        return AXIS2_TRUE;*/
     if (reply_to && axutil_strstr(reply_to, "anonymous"))
+        return AXIS2_TRUE;
+    if (reply_to && axutil_strstr(reply_to, AXIS2_WS_RM_ANONYMOUS_URL))
         return AXIS2_TRUE;
     else
         return AXIS2_FALSE;
