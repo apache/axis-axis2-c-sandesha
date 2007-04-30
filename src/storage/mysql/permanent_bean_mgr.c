@@ -221,7 +221,7 @@ sandesha2_permanent_bean_mgr_insert(
             sql_stmt_insert, mysql_error(dbconn));
         printf("sql_stmt_insert:%s\n", sql_stmt_insert);
         printf("insert error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */ 
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -254,7 +254,7 @@ sandesha2_permanent_bean_mgr_remove(
             sql_stmt_remove, mysql_error(dbconn));
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -292,14 +292,14 @@ sandesha2_permanent_bean_mgr_retrieve(
             sql_stmt_retrieve, mysql_error(dbconn));
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     if(res)
     {
         retrieve_func(res, args);
-        mysql_free_result(res);
+        /* mysql_free_result(res); */
     }
     else
     {
@@ -345,7 +345,7 @@ sandesha2_permanent_bean_mgr_update(
             mysql_error(dbconn));
         printf("sql_stmt_update:%s\n", sql_stmt_update);
         printf("update error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -397,12 +397,12 @@ sandesha2_permanent_bean_mgr_find(
             mysql_error(dbconn));
         printf("sql_stmt_find:%s\n", sql_stmt_find);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return NULL;
     }
     res = mysql_store_result(dbconn);
     find_func(res, args);
-    mysql_free_result(res);
+    /* mysql_free_result(res); */
     if(args->data)
     {
         data_array = (axutil_array_list_t *) args->data;
@@ -445,12 +445,12 @@ sandesha2_permanent_bean_mgr_find(
                     mysql_error(dbconn));
                 printf("sql_stmt_count:%s\n", sql_stmt_count);
                 printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-                mysql_close(dbconn);
+                /* mysql_close(dbconn); */
                 return NULL;
             }
             res = mysql_store_result(dbconn);
             count_func(res, &count);
-            mysql_free_result(res);
+            /* mysql_free_result(res); */
             if(count == 0)
             {
                 axutil_array_list_remove(beans, env, i);
@@ -530,12 +530,12 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
             mysql_error(dbconn));
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     sandesha2_msg_store_bean_retrieve_callback(res, args);
-    mysql_free_result(res);
+    /* mysql_free_result(res); */
     if(args->data)
         msg_store_bean = (sandesha2_msg_store_bean_t *) args->data;
     if(args)
@@ -643,12 +643,12 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
             mysql_error(dbconn));
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     num_rows = mysql_num_rows(res);
-    mysql_free_result(res);
+    /* mysql_free_result(res); */
     if(num_rows > 0)
     {
         sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
@@ -671,7 +671,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
             printf("sql_stmt_update:%s\n", sql_stmt_update);
             printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
-            mysql_close(dbconn);
+            /* mysql_close(dbconn); */
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_update);
@@ -695,7 +695,7 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
         printf("sql_stmt_insert:%s\n", sql_stmt_insert);
         printf("insert error_msg:%s\n", mysql_error(dbconn));
         AXIS2_FREE(env->allocator, sql_stmt_insert);
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     AXIS2_FREE(env->allocator, sql_stmt_insert);
@@ -729,7 +729,7 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
             mysql_error(dbconn));
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -774,12 +774,12 @@ sandesha2_permanent_bean_mgr_store_response(
             mysql_error(dbconn));
         printf("sql_stmt_count:%s\n", sql_stmt_count);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     sandesha2_permanent_bean_mgr_count_callback(res, &count);
-    mysql_free_result(res);
+    /* mysql_free_result(res); */
     if(count > 0)
     {
         sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
@@ -796,7 +796,7 @@ sandesha2_permanent_bean_mgr_store_response(
             printf("sql_stmt_update:%s\n", sql_stmt_update);
             printf("update error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_update);
-            mysql_close(dbconn);
+            /* mysql_close(dbconn); */
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_update);
@@ -816,7 +816,7 @@ sandesha2_permanent_bean_mgr_store_response(
             printf("sql_stmt_insert:%s\n", sql_stmt_insert);
             printf("insert error_msg:%s\n", mysql_error(dbconn));
             AXIS2_FREE(env->allocator, sql_stmt_insert);
-            mysql_close(dbconn);
+            /* mysql_close(dbconn); */
             return AXIS2_FALSE;
         }
         AXIS2_FREE(env->allocator, sql_stmt_insert);
@@ -853,7 +853,7 @@ sandesha2_permanent_bean_mgr_remove_response(
             mysql_error(dbconn));
         printf("sql_stmt_remove:%s\n", sql_stmt_remove);
         printf("remove error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     return AXIS2_TRUE;
@@ -893,12 +893,12 @@ sandesha2_permanent_bean_mgr_retrieve_response(
             mysql_error(dbconn));
         printf("sql_stmt_retrieve:%s\n", sql_stmt_retrieve);
         printf("retrieve error_msg:%s\n", mysql_error(dbconn));
-        mysql_close(dbconn);
+        /* mysql_close(dbconn); */
         return AXIS2_FALSE;
     }
     res = mysql_store_result(dbconn);
     sandesha2_permanent_bean_mgr_response_retrieve_callback(res, args);
-    mysql_free_result(res);
+    /* mysql_free_result(res); */
     return (sandesha2_response_t *) args->data;
 }
 

@@ -24,14 +24,14 @@
 #include <sandesha2_invoker_mgr.h>
 #include "sandesha2_permanent_invoker_mgr.h"
 #include <sandesha2_next_msg_mgr.h>
-#include <sandesha2_permanent_next_msg_mgr.h>
+#include "sandesha2_permanent_next_msg_mgr.h"
 #include <sandesha2_sender_mgr.h>
-#include <sandesha2_permanent_sender_mgr.h>
+#include "sandesha2_permanent_sender_mgr.h"
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2_permanent_seq_property_mgr.h>
+#include "sandesha2_permanent_seq_property_mgr.h"
 #include <sandesha2_transaction.h>
 #include <sandesha2_property_bean.h>
-#include <sandesha2_permanent_transaction.h>
+#include "sandesha2_permanent_transaction.h"
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
@@ -639,6 +639,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     axis2_char_t *prop_str = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     sandesha2_msg_store_bean_t *bean = NULL;
+	axis2_char_t *transport_to = NULL;
         
     envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if (!envelope)
@@ -725,7 +726,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         address = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to, env);
         sandesha2_msg_store_bean_set_reply_to(bean, env, address);
     }
-    axis2_char_t *transport_to = NULL;
+    
     transport_to = axis2_msg_ctx_get_transport_url(msg_ctx, env);
     if(transport_to)
         sandesha2_msg_store_bean_set_transport_to(bean, env, transport_to);
