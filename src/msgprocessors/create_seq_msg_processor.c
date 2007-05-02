@@ -195,7 +195,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     {
         axis2_engine_t *engine = NULL;
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]A fault occurred in create_seq_msg_processor_process_in_msg"); 
+            "[sandesha2]A fault occurred"); 
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_rm_msg_ctx, env));
@@ -215,11 +215,11 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         AXIS2_VALUE_TRUE);
     /* For making sure that this won't be processed again */
     sandesha2_msg_ctx_set_property(create_seq_res_msg, env, 
-                        SANDESHA2_APPLICATION_PROCESSING_DONE, property); 
+        SANDESHA2_APPLICATION_PROCESSING_DONE, property); 
     
     create_seq_res_part = (sandesha2_create_seq_res_t*)
-                        sandesha2_msg_ctx_get_msg_part(create_seq_res_msg, 
-                        env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
+        sandesha2_msg_ctx_get_msg_part(create_seq_res_msg, 
+        env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, 
                         env);
     /* Offer processing */ 
@@ -252,8 +252,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_t *out_seq_bean = NULL;
             sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Offer Accepted");
-            
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Offer Accepted"); 
             create_seq_bean = sandesha2_create_seq_bean_create(env);
             sandesha2_create_seq_bean_set_seq_id(create_seq_bean, env, 
                         offer_seq_id);
@@ -270,10 +270,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             out_seq_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(out_seq_bean, env, 
                 SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
-            /*sandesha2_seq_property_bean_set_seq_id(out_seq_bean, env, 
-                        offer_seq_id);
-            sandesha2_seq_property_bean_set_value(out_seq_bean, env, 
-                        int_seq_id);*/
             sandesha2_seq_property_bean_set_seq_id(out_seq_bean, env, 
                 int_seq_id);
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, 
@@ -302,8 +298,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     if(!acks_to || !axis2_endpoint_ref_get_address(acks_to, 
                     env))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Acks to is null"
-            " in create_seq message");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Acks to is null");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_EPR, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -326,10 +321,10 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     to_epr = axis2_endpoint_ref_create(env, 
-                    sandesha2_seq_property_bean_get_value(to_bean, env));
+        sandesha2_seq_property_bean_get_value(to_bean, env));
     addr_ns_uri = sandesha2_utils_get_seq_property(env, new_seq_id, 
-                    SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE,
-                    storage_mgr);
+        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE,
+        storage_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
@@ -352,9 +347,9 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_process_out_msg(
-                        sandesha2_msg_processor_t *msg_processor,
-                    	const axutil_env_t *env, 
-                        sandesha2_msg_ctx_t *rm_msg_ctx)
+    sandesha2_msg_processor_t *msg_processor,
+    const axutil_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

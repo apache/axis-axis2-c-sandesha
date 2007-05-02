@@ -75,16 +75,22 @@ sandesha2_utils_remove_soap_body_part(const axutil_env_t *env,
     soap_body = axiom_soap_envelope_get_body(envelope, env);
     if(!soap_body)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Soap envelope does not have a soap body");
         return AXIS2_FAILURE;
     }
     body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(!body_node)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Soap body does not have a base node");
         return AXIS2_FAILURE;
     }
     body_element = axiom_node_get_data_element(body_node, env);
     if(!body_element)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Soap body node does not have a node element");
         return AXIS2_FAILURE;
     }
     body_rm_element = axiom_element_get_first_child_with_qname(body_element,
@@ -167,6 +173,7 @@ sandesha2_utils_get_storage_mgr(
     else
     {
         axutil_allocator_switch_to_local_pool(env->allocator);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Unknown storage manager");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNKNOWN_STORAGE_MGR,
                         AXIS2_FAILURE);
         return NULL;
@@ -212,6 +219,7 @@ sandesha2_utils_get_property_bean(
     param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration not set");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
             AXIS2_FAILURE);
         return NULL;
@@ -239,8 +247,8 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "Invalid String Array", str, NULL);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);
         AXIS2_FREE(env->allocator, ret_str);
@@ -253,8 +261,8 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "Invalid String Array", str, NULL);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);
         AXIS2_FREE(env->allocator, ret_str);
@@ -267,8 +275,8 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "Invalid String Array", str, NULL);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, ret_str);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);
         AXIS2_FREE(env->allocator, ret_str);
@@ -357,34 +365,39 @@ sandesha2_utils_start_invoker_for_seq(
 {
     sandesha2_in_order_invoker_t *invoker = NULL;
     axutil_property_t *property = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
     property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_INVOKER);
+        env, SANDESHA2_INVOKER);
     if(property)
         invoker = axutil_property_get_value(property, env);
     if(!invoker)
     {
         invoker = sandesha2_in_order_invoker_create(env);
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
-            AXIS2_FALSE, (void *)sandesha2_in_order_invoker_free_void_arg, invoker);
+            AXIS2_FALSE, (void *)sandesha2_in_order_invoker_free_void_arg, 
+            invoker);
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_INVOKER, property);
+            env, SANDESHA2_INVOKER, property);
     }
-    sandesha2_in_order_invoker_run_for_seq(invoker, env, conf_ctx, seq_id);
-    return AXIS2_SUCCESS;
+    status = sandesha2_in_order_invoker_run_for_seq(invoker, env, conf_ctx, 
+        seq_id);
+    return status;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_sender_for_seq(const axutil_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx,
-                        axis2_char_t *seq_id)
+sandesha2_utils_start_sender_for_seq(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *seq_id)
 {
     sandesha2_sender_t *sender = NULL;
     axutil_property_t *property = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -403,8 +416,8 @@ sandesha2_utils_start_sender_for_seq(const axutil_env_t *env,
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
                         env, SANDESHA2_SENDER, property);
     }
-    sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id);
-    return AXIS2_SUCCESS;
+    status = sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id);
+    return status;
 }
  
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
@@ -414,6 +427,7 @@ sandesha2_utils_start_polling_mgr(
 {
     sandesha2_polling_mgr_t *polling_mgr = NULL;
     axutil_property_t *property = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -434,20 +448,21 @@ sandesha2_utils_start_polling_mgr(
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
                         env, SANDESHA2_POLLING_MGR, property);
     }
-    sandesha2_polling_mgr_start(polling_mgr, env, conf_ctx);
-    return AXIS2_SUCCESS;
+    status = sandesha2_polling_mgr_start(polling_mgr, env, conf_ctx);
+    return status;
 }
                    
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_outgoing_internal_seq_id(const axutil_env_t *env,
+sandesha2_utils_get_outgoing_internal_seq_id(
+    const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
     AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
     return axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":",
-                        seq_id, NULL);
+        seq_id, NULL);
 }
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
@@ -465,8 +480,9 @@ sandesha2_utils_get_transport_out(const axutil_env_t *env)
 }
 
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_inmemory_storage_mgr(const axutil_env_t *env,
-                        axis2_conf_ctx_t *conf_ctx)
+sandesha2_utils_get_inmemory_storage_mgr(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx)
 {
     axutil_property_t *property = NULL;
     axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -504,7 +520,6 @@ sandesha2_utils_get_permanent_storage_mgr(
 {
     axutil_property_t *property = NULL;
     axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    /*axutil_array_list_t *storage_mgr_list = axutil_array_list_create(env, 0);*/
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -519,15 +534,6 @@ sandesha2_utils_get_permanent_storage_mgr(
         AXIS2_FALSE, 0, storage_mgr);
     axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
         property);
-    /*if(property)
-        storage_mgr_list = axutil_property_get_value(property, env);
-    sandesha2_storage_mgr_t *storage_mgr = 
-        sandesha2_permanent_storage_mgr_create(env, conf_ctx);
-    axutil_array_list_add(storage_mgr_list, env, storage_mgr);
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
-        AXIS2_FALSE, 0, storage_mgr_list);
-    axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
-        property, AXIS2_FALSE);*/
     return storage_mgr;
 }
 
@@ -565,6 +571,8 @@ sandesha2_utils_get_property_bean_from_op(
     param = axis2_op_get_param(op, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Configuration not set.");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
             AXIS2_FAILURE);
         return NULL;
@@ -598,7 +606,7 @@ sandesha2_utils_get_internal_seq_id(
     else
     {
         ret = axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", to, ":", 
-                        seq_key, NULL);
+            seq_key, NULL);
         return ret;
     }
     return NULL;
@@ -673,7 +681,8 @@ sandesha2_utils_create_new_related_msg_ctx(
 
     if(axis2_msg_ctx_get_svc(ref_msg, env))
     {
-        axis2_msg_ctx_set_svc_grp(new_msg, env, (axis2_svc_grp_t *)axis2_msg_ctx_get_svc(ref_msg, env));
+        axis2_msg_ctx_set_svc_grp(new_msg, env, (axis2_svc_grp_t *)
+            axis2_msg_ctx_get_svc(ref_msg, env));
         if(axis2_msg_ctx_get_svc_ctx(ref_msg, env))
         {
             axis2_msg_ctx_set_svc_ctx(new_msg, env, 
@@ -873,7 +882,7 @@ sandesha2_utils_is_rm_global_msg(
     if(!soap_env)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] SOAP envelope is"
-                        " null");
+            " NULL");
         return AXIS2_FALSE;
     }
     soap_header = axiom_soap_envelope_get_header(soap_env, env);

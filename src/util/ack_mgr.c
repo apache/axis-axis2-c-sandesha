@@ -298,8 +298,10 @@ sandesha2_ack_mgr_get_client_completed_msgs_list(
     }
     else
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]completed_msgs_bean is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL, 
-                AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return completed_msg_list;
@@ -307,9 +309,9 @@ sandesha2_ack_mgr_get_client_completed_msgs_list(
  
 AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 sandesha2_ack_mgr_get_svr_completed_msgs_list(
-        const axutil_env_t *env,
-        axis2_char_t *seq_id,
-        sandesha2_seq_property_mgr_t *seq_prop_mgr)
+    const axutil_env_t *env,
+    axis2_char_t *seq_id,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     sandesha2_seq_property_bean_t *completed_msgs_bean = NULL;
     axutil_array_list_t *completed_msg_list = NULL;
@@ -325,6 +327,8 @@ sandesha2_ack_mgr_get_svr_completed_msgs_list(
     }
     else
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]completed_msgs_bean is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COMPLETED_MSGS_BEAN_IS_NULL, 
             AXIS2_FAILURE);
         return NULL;
@@ -435,7 +439,6 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                 axis2_msg_ctx_get_to(msg_ctx1, env), env);
             if(0 == axutil_strcmp(to, to_str))
                 continue; 
-                /*axis2_char_t *msg_id = sandesha2_sender_bean_get_msg_id((const sandesha2_sender_bean_t *)sender_bean, env);*/
             sandesha2_sender_mgr_remove(retrans_mgr, env, 
                 sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                     sender_bean, env));
