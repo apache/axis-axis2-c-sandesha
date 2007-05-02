@@ -489,6 +489,8 @@ extern "C"
 	#define SANDESHA2_MODULE_CLASS_LOADER  "Sandesha2ModuleClassLoader"
 
     #define SANDESHA2_WSRM_ANON_URI_PREFIX "http://docs.oasis-open.org/ws-rx/wsrm/200608/anonymous"
+
+    #define AXIS2_WS_RM_ANONYMOUS_URL "http://docs.oasis-open.org/ws-rx/wsmc/200702/anonymous?id="
     
     /**
      * Message context values

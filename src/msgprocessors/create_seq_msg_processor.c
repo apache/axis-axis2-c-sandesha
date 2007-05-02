@@ -333,11 +333,15 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(0 == axutil_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, 
-                    env)))
+    if(sandesha2_utils_is_anon_uri(env, axis2_endpoint_ref_get_address(to_epr, 
+        env)))
+    {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
+    }
     else
+    {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_FALSE);
+    }
     
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     AXIS2_LOG_INFO(env->log, 

@@ -354,7 +354,6 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     axutil_property_t *property = NULL;
     axis2_engine_t *engine = NULL;
     axis2_char_t *addr_ns_uri = NULL;
-    axis2_char_t *anon_uri = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_transport_out_desc_t *orig_trans_out = NULL;
@@ -429,11 +428,11 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     
     addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);
-    anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    if(0 == axutil_strcmp(anon_uri, axis2_endpoint_ref_get_address(to_epr, env)))
+    if(sandesha2_utils_is_anon_uri(env, axis2_endpoint_ref_get_address(to_epr, 
+        env)))
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }

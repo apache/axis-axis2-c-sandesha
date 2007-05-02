@@ -46,7 +46,6 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 
-#define AXIS2_WS_RM_ANONYMOUS_URL "http://docs.oasis-open.org/ws-rx/wsmc/200702/anonymous?id="
 
 static axutil_array_list_t *
 get_sorted_msg_no_list(

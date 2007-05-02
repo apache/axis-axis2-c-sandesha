@@ -447,8 +447,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env,
                         int_seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR,
                         acks_to_str);
-    if(!axis2_msg_ctx_get_server_side(first_app_msg, env) &&
-                        0 != axutil_strcmp(acks_to_str, anon_uri))
+    if(!axis2_msg_ctx_get_server_side(first_app_msg, env) && 
+        !sandesha2_utils_is_anon_uri(env, acks_to_str))
     {
         ctx = axis2_msg_ctx_get_base(first_app_msg, env);
         /* TODO currently axis2 doesn't expose the *options* at msg ctx level.

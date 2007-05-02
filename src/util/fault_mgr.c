@@ -401,7 +401,6 @@ sandesha2_fault_mgr_get_fault(
     axis2_op_t *op = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *acks_to_str = NULL;
-    axis2_char_t *anon_uri = NULL;
     axutil_string_t *grp_ctx_id = NULL;
     int soap_ver = -1;
     sandesha2_msg_ctx_t *fault_rm_msg = NULL;
@@ -464,8 +463,7 @@ sandesha2_fault_mgr_get_fault(
             acks_to_str = sandesha2_seq_property_bean_get_value(acks_to_bean, 
                         env);
     }
-    anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-    if(NULL!= acks_to_str && 0 != axutil_strcmp(acks_to_str, anon_uri))
+    if(!sandesha2_utils_is_anon_uri(env, acks_to_str))
         axis2_msg_ctx_set_to(fault_msg_ctx, env, axis2_endpoint_ref_create(env,
                         acks_to_str));
     soap_ver = sandesha2_utils_get_soap_version(env, 

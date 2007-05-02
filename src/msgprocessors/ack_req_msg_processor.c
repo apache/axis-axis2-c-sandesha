@@ -158,7 +158,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     axiom_soap_envelope_t *envelope = NULL;
     axis2_char_t *wsa_version = NULL;
     axis2_char_t *addr_ns_val = NULL;
-    axis2_char_t *anon_uri = NULL;
     
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -245,8 +244,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     
     addr_ns_val = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);
-    anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_val);
-    if(0 == axutil_strcmp(anon_uri, acks_to_str))
+    if(sandesha2_utils_is_anon_uri(env, acks_to_str))
     {
         axis2_engine_t *engine = NULL;
         axis2_op_ctx_t *op_ctx = NULL;

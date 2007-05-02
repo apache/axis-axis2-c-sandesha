@@ -506,7 +506,6 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     {
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
         axis2_char_t *addr_ns_uri = NULL;
-        axis2_char_t *anon_uri = NULL;
         axis2_bool_t stop_listner_for_async = AXIS2_FALSE;
         
         acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
@@ -514,12 +513,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
         addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id, 
             SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, 
             storage_mgr);
-        anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
         if(acks_to_bean)
         {
             axis2_char_t *acks_to = NULL;
             acks_to = sandesha2_seq_property_bean_get_value(acks_to_bean, env);
-            if(acks_to && 0 == axutil_strcmp(acks_to, anon_uri))
+        if(sandesha2_utils_is_anon_uri(env, acks_to))
                 stop_listner_for_async = AXIS2_TRUE;
         }
         

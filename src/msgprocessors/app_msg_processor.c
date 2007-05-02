@@ -231,6 +231,8 @@ sandesha2_app_msg_processor_process_in_msg (
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(!msg_ctx)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Message context is not set");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -244,6 +246,8 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     if(processed && 0 == axutil_strcmp(processed, "true"))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Message already processed. So returning here");
         return AXIS2_SUCCESS;
     }
     
@@ -259,11 +263,14 @@ sandesha2_app_msg_processor_process_in_msg (
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
 
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha2_app_msg_processor_process_in_msg send Fault");
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]sandesha2_app_msg_processor_process_in_msg send Fault");
 
 		if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
+		    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                 AXIS2_FAILURE);
             return AXIS2_FAILURE;
@@ -283,9 +290,13 @@ sandesha2_app_msg_processor_process_in_msg (
     if(fault_ctx)
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]sandesha2_app_msg_processor_process_in_msg send Fault");
         if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
+		    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                         AXIS2_FAILURE);
             return AXIS2_FAILURE;
@@ -300,9 +311,13 @@ sandesha2_app_msg_processor_process_in_msg (
     if(fault_ctx)
     {
         axis2_engine_t *engine = axis2_engine_create(env, conf_ctx);
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]sandesha2_app_msg_processor_process_in_msg send Fault");
         if(!axis2_engine_send_fault(engine, env, 
             sandesha2_msg_ctx_get_msg_ctx(fault_ctx, env)))
         {
+		    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                 AXIS2_FAILURE);
             return AXIS2_FAILURE;
@@ -319,6 +334,8 @@ sandesha2_app_msg_processor_process_in_msg (
         seq, env), env);
     if(0 == msg_no)
     {
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Invalid message number");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_MSG_NUM, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -437,6 +454,8 @@ sandesha2_app_msg_processor_process_in_msg (
        str_seq_id);
     if(!next_msg_bean)
     {
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Sequence does not exist");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_EXIST, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -511,7 +530,11 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             axis2_status_t status = AXIS2_ERROR_GET_STATUS_CODE(env->error);
             if(AXIS2_SUCCESS != status)
+            {
+		        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2]Incoming sequence list empty");
                 return status;
+            }
         }
         /* Adding current seq to the incoming seq List */
         if(!sandesha2_utils_array_list_contains(env,
@@ -546,7 +569,8 @@ sandesha2_app_msg_processor_process_in_msg (
     rm_version = sandesha2_utils_get_rm_version(env, str_seq_id, storage_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Unable to find RM spec version");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Unable to find RM spec version");
         return AXIS2_FAILURE;
     }
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
@@ -579,8 +603,10 @@ sandesha2_app_msg_processor_process_in_msg (
             reply_to_addr = sandesha2_seq_property_bean_get_value(to_bean, env); 
     }
     if(back_channel_free)
+    {
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
+    }
     else if(sandesha2_utils_is_single_channel(env, rm_version, acks_to_str))
     {
         /* Do nothing */
@@ -1075,7 +1101,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         env), env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] cont_ctx is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -1095,7 +1121,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sent = axis2_engine_send(engine, env, msg_ctx);
     if(!sent)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[Sandesha2]Engine Send failed");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, AXIS2_FAILURE);
         return AXIS2_FAILURE;

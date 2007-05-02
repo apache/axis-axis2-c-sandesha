@@ -52,7 +52,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_op_t *ref_op = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
     axis2_char_t *addr_ns_uri = NULL;
-    axis2_char_t *anon_uri = NULL;
     axutil_property_t *property = NULL;
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
@@ -75,6 +74,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         acks_to_str = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     if(!acks_to_str)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid epr");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_EPR, AXIS2_FAILURE);
         return NULL;
     }
@@ -136,8 +136,7 @@ sandesha2_ack_mgr_generate_ack_msg(
             axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_WSA_VERSION, property);
         }
     }
-    anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-    if(0 == axutil_strcmp(acks_to_str, anon_uri))
+    if(sandesha2_utils_is_anon_uri(env, acks_to_str))
     {
         axis2_op_ctx_t *op_ctx = NULL;
 
