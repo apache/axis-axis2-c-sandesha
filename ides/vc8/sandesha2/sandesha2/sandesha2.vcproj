@@ -29,7 +29,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="copy .\..\..\..\..\config\sandesha2_schema.bat $(AXIS2C_HOME)&#x0D;&#x0A;"
+				CommandLine=""
 				Outputs="$(AXIS2C_HOME)"
 			/>
 			<Tool
@@ -53,7 +53,7 @@
 				WarningLevel="3"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -69,8 +69,8 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				UseLibraryDependencyInputs="true"
-				AdditionalDependencies="axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib libmysql.lib sqlite3.lib"
-				LinkIncremental="2"
+				AdditionalDependencies="axutil.lib axiom.lib axis2_engine.lib axis2_parser.lib libmysql.lib"
+				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib;C:\Program Files\MySQL\MySQL Server 5.0\lib\debug;$(SQLITE_HOME);"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
