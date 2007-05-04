@@ -31,8 +31,8 @@ Note: 1.
         to the configure options above. It is assumed that libmysqlclient.so is in /usr/lib folder. It is recommended
         to use mysql database for serius use. It is not included as as the default database because of licencing issues.
         To run samples in persistent/mysql mode copy sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
-        to axis2c deploy directory and execute it to create the database schema. The username/password combination for
-        mysql is assumed to be g/g
+        to axis2c deploy directory and execute it to create the database schema. The database parameters for mysql should
+        be included in module.xml. The defaults for server, user and password are localhost, g,g.
 
       2.
        Sandesha2 module is installed into <axis2c_install_path>/modules/sandesha2c directory. The installed module contain
