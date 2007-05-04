@@ -95,9 +95,9 @@ sandesha2_permanent_transaction_create(
     unsigned long int thread_id)
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
-    char *server = "localhost";
-    char *user = "g";
-    char *password = "g";
+    axis2_char_t *server = NULL;
+    axis2_char_t *user = NULL;
+    axis2_char_t *password = NULL;
     axis2_char_t *path = NULL;
     axis2_char_t *db_name = NULL;
     int rc = -1;
@@ -106,6 +106,8 @@ sandesha2_permanent_transaction_create(
     sandesha2_property_bean_t *prop_bean = NULL;
     axis2_ctx_t *conf_ctx_base = NULL; 
     axutil_property_t *property = NULL;
+    axis2_module_desc_t *module_desc = NULL;
+    axutil_qname_t *qname = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -127,23 +129,39 @@ sandesha2_permanent_transaction_create(
         return NULL;
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
-    /*path = sandesha2_property_bean_get_db_path(prop_bean, env);*/
+    qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+    module_desc = axis2_conf_get_module(conf, env, qname);
+    if(module_desc)
     {
-        axis2_module_desc_t *module_desc = NULL;
-        axutil_qname_t *qname = NULL;
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
-        module_desc = axis2_conf_get_module(conf, env, qname);
-        if(module_desc)
+        axutil_param_t *db_path = NULL;
+        axutil_param_t *db_server = NULL;
+        axutil_param_t *db_user = NULL;
+        axutil_param_t *db_password = NULL;
+        db_path = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
+        if(db_path)
         {
-            axutil_param_t *db_param = NULL;
-            db_param = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
-            if(db_param)
-            {
-                path = (axis2_char_t *) axutil_param_get_value(db_param, env);
-            }
+            path = (axis2_char_t *) axutil_param_get_value(db_path, env);
         }
-        axutil_qname_free(qname, env);
+        db_server = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_DB_SERVER);
+        if(db_server)
+        {
+            server = (axis2_char_t *) axutil_param_get_value(db_server, env);
+        }
+        db_user = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_DB_USER);
+        if(db_user)
+        {
+            user = (axis2_char_t *) axutil_param_get_value(db_user, env);
+        }
+        db_password = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_DB_PASSWORD);
+        if(db_password)
+        {
+            password = (axis2_char_t *) axutil_param_get_value(db_password, env);
+        }
     }
+    axutil_qname_free(qname, env);
     conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
     property = axis2_ctx_get_property(conf_ctx_base, env, 
         SANDESHA2_IS_SVR_SIDE);

@@ -506,6 +506,9 @@ extern "C"
     #define SANDESHA2_BUSY_WAIT_TIME 1
     #define SANDESHA2_IS_SVR_SIDE "is_svr_side" 
     #define SANDESHA2_DB "sandesha2_db"
+    #define SANDESHA2_DB_SERVER "sandesha2_server"
+    #define SANDESHA2_DB_USER "db_user"
+    #define SANDESHA2_DB_PASSWORD "db_password"
 /** @} */
 #ifdef __cplusplus
 }
