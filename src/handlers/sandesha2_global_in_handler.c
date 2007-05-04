@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <sqlite3.h>
 #include <axis2_handler_desc.h>
 #include <axutil_array_list.h>
 #include <axis2_svc.h>
