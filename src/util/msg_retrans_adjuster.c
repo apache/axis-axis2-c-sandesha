@@ -79,7 +79,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         return AXIS2_FALSE;
     }
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-        stored_key, conf_ctx);
+        stored_key, conf_ctx, AXIS2_FALSE);
     if(msg_ctx)
         rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     int_seq_id = sandesha2_sender_bean_get_internal_seq_id(retrans_bean, env);

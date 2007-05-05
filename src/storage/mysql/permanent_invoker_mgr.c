@@ -45,37 +45,42 @@ sandesha2_invoker_find_callback(
     void *data)
 {
     MYSQL_ROW row;
+    int num_rows, i = 0;
     sandesha2_invoker_bean_t *bean = NULL;
     sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) data;
     const axutil_env_t *env = args->env;
     axutil_array_list_t *data_list = (axutil_array_list_t *) args->data;
-    if((row = mysql_fetch_row(res)) != NULL)
+    num_rows = mysql_num_rows(res);
+    if(num_rows > 0)
     {
         if(!data_list)
         {
             data_list = axutil_array_list_create(env, 0);
             args->data = data_list;
         }
-        bean = sandesha2_invoker_bean_create(env);
-        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
-        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
-        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
-        axutil_array_list_add(data_list, env, bean);
     }
     else
     {
         args->data = NULL;
         return 0;
     }
-    while((row = mysql_fetch_row(res)) != NULL)
+    for(i = 0; i < num_rows; i++)
     {
-        bean = sandesha2_invoker_bean_create(env);
-        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
-        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
-        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
-        axutil_array_list_add(data_list, env, bean);
+        if((row = mysql_fetch_row(res)) != NULL)
+        {
+            unsigned long *lengths = NULL;
+            lengths = mysql_fetch_lengths(res);
+            bean = sandesha2_invoker_bean_create(env);
+            if(0 < (int) lengths[0])
+                sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
+            if(0 < (int) lengths[1])
+                sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
+            if(0 < (int) lengths[2])
+                sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
+            if(0 < (int) lengths[3])
+                sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
+            axutil_array_list_add(data_list, env, bean);
+        }
     }
     return 0;
 }
@@ -91,15 +96,21 @@ sandesha2_invoker_retrieve_callback(
     sandesha2_invoker_bean_t *bean = (sandesha2_invoker_bean_t *) args->data;
     if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
+        lengths = mysql_fetch_lengths(res);
         if(!bean)
         {
             bean = sandesha2_invoker_bean_create(env);
             args->data = bean;
         }
-        sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
-        sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
-        sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
-        sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
+        if(0 < (int) lengths[0])
+            sandesha2_invoker_bean_set_msg_ctx_ref_key(bean, env, row[0]);
+        if(0 < (int) lengths[1])
+            sandesha2_invoker_bean_set_msg_no(bean, env, atol(row[1]));
+        if(0 < (int) lengths[2])
+            sandesha2_invoker_bean_set_seq_id(bean, env, row[2]);
+        if(0 < (int) lengths[3])
+            sandesha2_invoker_bean_set_invoked(bean, env, AXIS2_ATOI(row[3]));
     }
     else
     {

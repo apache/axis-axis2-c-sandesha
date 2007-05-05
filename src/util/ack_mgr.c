@@ -434,7 +434,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                 sender_bean, env);
             msg_ctx1 = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
-                msg_ctx_ref_key, conf_ctx);
+                msg_ctx_ref_key, conf_ctx, AXIS2_FALSE);
             to = (axis2_char_t*)axis2_endpoint_ref_get_address(
                 axis2_msg_ctx_get_to(msg_ctx1, env), env);
             if(0 == axutil_strcmp(to, to_str))

@@ -114,23 +114,37 @@ sandesha2_sender_retrieve_callback(
     sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) args->data;
     if((row = mysql_fetch_row(res)) != NULL)
     {
+        unsigned long *lengths = NULL;
+        lengths = mysql_fetch_lengths(res);
         if(!bean)
         {
             bean = sandesha2_sender_bean_create(env);
             args->data = bean;
         }
-        sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
-        sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
-        sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
-        sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
-        sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
-        sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
-        sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
-        sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
-        sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
-        sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
-        sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
-        sandesha2_sender_bean_set_to_address(bean, env, row[11]);
+        if(0 < (int) lengths[0])
+            sandesha2_sender_bean_set_msg_id(bean, env, row[0]);
+        if(0 < (int) lengths[1])
+            sandesha2_sender_bean_set_msg_ctx_ref_key(bean, env, row[1]);
+        if(0 < (int) lengths[2])
+            sandesha2_sender_bean_set_internal_seq_id(bean, env, row[2]);
+        if(0 < (int) lengths[3])
+            sandesha2_sender_bean_set_sent_count(bean, env, AXIS2_ATOI(row[3]));
+        if(0 < (int) lengths[4])
+            sandesha2_sender_bean_set_msg_no(bean, env, atol(row[4]));
+        if(0 < (int) lengths[5])
+            sandesha2_sender_bean_set_send(bean, env, AXIS2_ATOI(row[5]));
+        if(0 < (int) lengths[6])
+            sandesha2_sender_bean_set_resend(bean, env, AXIS2_ATOI(row[6]));
+        if(0 < (int) lengths[7])
+            sandesha2_sender_bean_set_time_to_send(bean, env, atol(row[7]));
+        if(0 < (int) lengths[8])
+            sandesha2_sender_bean_set_msg_type(bean, env, AXIS2_ATOI(row[8]));
+        if(0 < (int) lengths[9])
+            sandesha2_sender_bean_set_seq_id(bean, env, row[9]);
+        if(0 < (int) lengths[10])
+            sandesha2_sender_bean_set_wsrm_anon_uri(bean, env, row[10]);
+        if(0 < (int) lengths[11])
+            sandesha2_sender_bean_set_to_address(bean, env, row[11]);
 
     }
     else
@@ -597,14 +611,6 @@ sandesha2_permanent_sender_mgr_match(
     }
     /* Do not use the is_resend flag to match messages, as it can stop us from
      * detecting RM messages during 'get_next_msg_to_send'*/
-    /*is_resend = sandesha2_sender_bean_is_resend(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_is_resend = sandesha2_sender_bean_is_resend(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(is_resend != temp_is_resend)
-    {
-        add = AXIS2_FALSE;
-    }*/
     return add;
 }
 

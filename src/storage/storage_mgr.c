@@ -138,9 +138,11 @@ sandesha2_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_bool_t persistent)
 {
-     return storage_mgr->ops->retrieve_msg_ctx(storage_mgr, env, key, conf_ctx);
+     return storage_mgr->ops->retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, 
+         persistent);
 }
 		
 axis2_status_t AXIS2_CALL

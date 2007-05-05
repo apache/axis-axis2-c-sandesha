@@ -27,6 +27,7 @@ typedef struct sandesha2_next_msg_bean_impl
     sandesha2_next_msg_bean_t next_msg_bean;
     sandesha2_rm_bean_t *rm_bean_impl;
 	axis2_char_t *seq_id;
+	axis2_char_t *internal_seq_id;
     axis2_char_t *ref_msg_key;
     axis2_bool_t polling_mode;
 	long msg_no;
@@ -61,6 +62,7 @@ sandesha2_next_msg_bean_create(
 	}
 	/* init the properties. */
 	next_msg_bean_impl->seq_id = NULL;
+	next_msg_bean_impl->internal_seq_id = NULL;
     next_msg_bean_impl->ref_msg_key = NULL;
 	next_msg_bean_impl->msg_no = -1;
     next_msg_bean_impl->polling_mode = AXIS2_FALSE;
@@ -87,6 +89,7 @@ sandesha2_next_msg_bean_create_with_data(
 	}
 	/* init the properties. */
 	next_msg_bean_impl->seq_id = (axis2_char_t*)axutil_strdup(env, seq_id);
+	next_msg_bean_impl->internal_seq_id = NULL;
     next_msg_bean_impl->ref_msg_key = NULL;
 	next_msg_bean_impl->msg_no = msg_no;
     next_msg_bean_impl->polling_mode = AXIS2_FALSE;
@@ -111,6 +114,11 @@ sandesha2_next_msg_bean_free (
 	{
 		AXIS2_FREE(env->allocator, next_msg_bean_impl->seq_id);
 		next_msg_bean_impl->seq_id= NULL;
+	}
+	if(next_msg_bean_impl->internal_seq_id)
+	{
+		AXIS2_FREE(env->allocator, next_msg_bean_impl->internal_seq_id);
+		next_msg_bean_impl->internal_seq_id= NULL;
 	}
 	if(next_msg_bean_impl->ref_msg_key)
 	{
@@ -174,6 +182,34 @@ sandesha2_next_msg_bean_set_seq_id(
 	next_msg_bean_impl->seq_id = (axis2_char_t*) axutil_strdup(env, seq_id); 
 }
 
+axis2_char_t* AXIS2_CALL
+sandesha2_next_msg_bean_get_internal_seq_id(
+    sandesha2_rm_bean_t *next_msg_bean,
+    const axutil_env_t *env)
+{
+    sandesha2_next_msg_bean_impl_t *next_msg_bean_impl = NULL;
+    next_msg_bean_impl = SANDESHA2_INTF_TO_IMPL(next_msg_bean);
+	return next_msg_bean_impl->internal_seq_id;
+}
+
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_internal_seq_id(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axutil_env_t *env, 
+    axis2_char_t *internal_seq_id)
+{
+    sandesha2_next_msg_bean_impl_t *next_msg_bean_impl = NULL;
+    next_msg_bean_impl = SANDESHA2_INTF_TO_IMPL(next_msg_bean);
+	if(next_msg_bean_impl->internal_seq_id)
+	{
+		AXIS2_FREE(env->allocator, next_msg_bean_impl->internal_seq_id);
+		next_msg_bean_impl->internal_seq_id = NULL;
+	}
+
+	next_msg_bean_impl->internal_seq_id = (axis2_char_t*) axutil_strdup(env, 
+        internal_seq_id); 
+}
 
 long AXIS2_CALL
 sandesha2_next_msg_bean_get_next_msg_no_to_process(

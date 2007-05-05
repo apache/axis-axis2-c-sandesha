@@ -423,7 +423,8 @@ sandesha2_utils_start_sender_for_seq(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_polling_mgr(
     const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_char_t *internal_seq_id)
 {
     sandesha2_polling_mgr_t *polling_mgr = NULL;
     axutil_property_t *property = NULL;
@@ -432,8 +433,9 @@ sandesha2_utils_start_polling_mgr(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
+    axutil_allocator_switch_to_global_pool(env->allocator);
     property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_POLLING_MGR);
+        env, SANDESHA2_POLLING_MGR);
     if(property)
         polling_mgr = axutil_property_get_value(property, env);
        
@@ -442,13 +444,17 @@ sandesha2_utils_start_polling_mgr(
      */
     if(!polling_mgr)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Starting the polling manager");
         polling_mgr = sandesha2_polling_mgr_create(env);
-        property = axutil_property_create_with_args(env, 3, AXIS2_FALSE,
+        property = axutil_property_create_with_args(env, 0, AXIS2_FALSE,
             (void *)sandesha2_polling_mgr_free_void_arg, polling_mgr);
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_POLLING_MGR, property);
+            env, SANDESHA2_POLLING_MGR, property);
     }
-    status = sandesha2_polling_mgr_start(polling_mgr, env, conf_ctx);
+    status = sandesha2_polling_mgr_start(polling_mgr, env, conf_ctx, 
+        internal_seq_id);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     return status;
 }
                    
@@ -1223,6 +1229,7 @@ sandesha2_utils_execute_and_store(
     axis2_transport_out_desc_t *sandesha2_transport_out = NULL;
     axutil_property_t *property = NULL;
     axis2_engine_t *engine = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
 
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(msg_ctx)
@@ -1241,8 +1248,7 @@ sandesha2_utils_execute_and_store(
     axis2_msg_ctx_set_property(msg_ctx, env, 
         SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
     
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-        AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, 
         property);
     sandesha2_transport_out = sandesha2_utils_get_transport_out(env);
@@ -1253,13 +1259,13 @@ sandesha2_utils_execute_and_store(
     {
         axis2_msg_ctx_set_current_handler_index(msg_ctx, env, 
             axis2_msg_ctx_get_current_handler_index(msg_ctx, env) + 1);
-        axis2_engine_resume_send(engine, env, msg_ctx);
+        status = axis2_engine_resume_send(engine, env, msg_ctx);
     }
     else
     {
-        axis2_engine_send(engine, env, msg_ctx);
+        status = axis2_engine_send(engine, env, msg_ctx);
     }
-    return AXIS2_SUCCESS;
+    return status;
 }
 
 axis2_bool_t AXIS2_CALL

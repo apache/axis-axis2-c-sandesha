@@ -293,7 +293,7 @@ sandesha2_sender_worker_worker_func(
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
         msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
-            sender_worker->conf_ctx);
+            sender_worker->conf_ctx, AXIS2_FALSE);
         axutil_allocator_switch_to_local_pool(env->allocator);
     }
     if(!msg_ctx)
@@ -434,15 +434,12 @@ sandesha2_sender_worker_worker_func(
         /* This is neccessary to avoid a double free */
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
         /* Consider building soap envelope */
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came100###############################");
         if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
 		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came101###############################");
         	successfully_sent = AXIS2_TRUE;
         	sender_worker->counter++;
 		}else
 		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]came102###############################");
         	successfully_sent = AXIS2_FALSE;
 		}
     }

@@ -39,6 +39,7 @@
 #include <axiom_soap_fault.h>
 #include <axiom_soap_body.h>
 #include <platforms/axutil_platform_auto_sense.h>
+#include <axutil_types.h>
 
 /** 
  * @brief Sender struct impl
@@ -247,15 +248,16 @@ sandesha2_sender_worker_func(
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     axis2_bool_t do_sleep = AXIS2_FALSE;
+    axis2_conf_t *conf = NULL;
     
     args = (sandesha2_sender_args_t*)data;
     env = axutil_init_thread_env(args->env);
     sender = args->impl;
     sender = (sandesha2_sender_t*)sender;
-    
     AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_worker_func");
+    conf = axis2_conf_ctx_get_conf(sender->conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
-        axis2_conf_ctx_get_conf(sender->conf_ctx, env));
+        conf);
                         
     while(sender->run_sender)
     {
@@ -267,7 +269,10 @@ sandesha2_sender_worker_func(
         sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
         axis2_char_t *seq_id = NULL;
-        int no_of_seqs = 0;
+        axis2_module_desc_t *module_desc = NULL;
+        axutil_qname_t *qname = NULL;
+        axutil_param_t *sleep_time_param = NULL;
+        int no_of_seqs = 0, sleep_time = 0;
         no_of_seqs = axutil_array_list_size(sender->working_seqs, env);
         if(sender->seq_index >= no_of_seqs)
         {
@@ -283,9 +288,18 @@ sandesha2_sender_worker_func(
 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
             env);
+        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        module_desc = axis2_conf_get_module(conf, env, qname);
+        sleep_time_param = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_SENDER_SLEEP);
+        if(sleep_time_param)
+        {
+            sleep_time = AXIS2_ATOI(axutil_param_get_value(sleep_time_param, env));
+        }
+        axutil_qname_free(qname, env);
         if(!transaction)
         {
-            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME); 
+            AXIS2_SLEEP(sleep_time); 
             continue;
         }
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
@@ -308,7 +322,7 @@ sandesha2_sender_worker_func(
             sender_worker = sandesha2_sender_worker_create(env, sender->conf_ctx, 
                 msg_id);
             sandesha2_sender_worker_run(sender_worker, env);
-            AXIS2_SLEEP(SANDESHA2_SENDER_SLEEP_TIME * 2); 
+            AXIS2_SLEEP(sleep_time * 2); 
             status = sandesha2_sender_worker_get_status(
                 sender_worker, env);
             if(!status)

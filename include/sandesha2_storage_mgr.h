@@ -122,7 +122,8 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 sandesha2_storage_mgr_t *storage_mgr,
                 const axutil_env_t *env,
                 axis2_char_t *key,
-                axis2_conf_ctx_t *conf_ctx);
+                axis2_conf_ctx_t *conf_ctx,
+                const axis2_bool_t persistent);
             
     axis2_status_t (AXIS2_CALL *
             store_msg_ctx)(
@@ -287,7 +288,8 @@ sandesha2_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx);
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_bool_t persistent);
 
 /**
  * Store the application message context. When Sandesha2 handlers

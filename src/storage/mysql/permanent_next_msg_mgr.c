@@ -70,15 +70,18 @@ sandesha2_next_msg_find_callback(
     {
         if((row = mysql_fetch_row(res)) != NULL)
         {
+            unsigned long *lengths = NULL;
+            lengths = mysql_fetch_lengths(res);
             bean = sandesha2_next_msg_bean_create(env);
-            sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
-            if(row[1] && 0 != axutil_strcmp("(null)", row[1]))
-            {
+            if(0 < (int) lengths[0])
+                sandesha2_next_msg_bean_set_seq_id(bean, env, row[0]);
+            if(0 < (int) lengths[1])
                 sandesha2_next_msg_bean_set_ref_msg_key(bean, env, row[1]);
-            }
-            sandesha2_next_msg_bean_set_polling_mode(bean, env, AXIS2_ATOI(row[2]));
-            sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
-                atol(row[3]));
+            if(0 < (int) lengths[2])
+                sandesha2_next_msg_bean_set_polling_mode(bean, env, AXIS2_ATOI(row[2]));
+            if(0 < (int) lengths[3])
+                sandesha2_next_msg_bean_set_next_msg_no_to_process(bean, env, 
+                    atol(row[3]));
             axutil_array_list_add(data_list, env, bean);
         }
     }
@@ -435,6 +438,8 @@ sandesha2_permanent_next_msg_mgr_match(
     long temp_next_msg_no = 0;
     axis2_char_t *seq_id = NULL;
     axis2_char_t *temp_seq_id = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    axis2_char_t *temp_internal_seq_id = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
@@ -449,6 +454,14 @@ sandesha2_permanent_next_msg_mgr_match(
     seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
     temp_seq_id = sandesha2_next_msg_bean_get_seq_id(candidate, env);
     if(seq_id && temp_seq_id && 0 != axutil_strcmp(seq_id, temp_seq_id))
+    {
+        equal = AXIS2_FALSE;
+    }
+    internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(bean, env);
+    temp_internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(
+        candidate, env);
+    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
+        internal_seq_id, temp_internal_seq_id))
     {
         equal = AXIS2_FALSE;
     }

@@ -158,9 +158,9 @@ sandesha2_seq_mgr_setup_new_seq(
     sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
 
     /* Message to invoke. This will apply for only in-order invocations */
-    if(!axis2_msg_ctx_get_server_side(msg_ctx, env) || 
+    /*if(!axis2_msg_ctx_get_server_side(msg_ctx, env) || 
         !sandesha2_utils_is_anon_uri(env, reply_to_addr))
-            sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);
+            sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id);*/
     /* Setting the RM Spec version for this sequence */
     create_seq_msg_action = sandesha2_msg_ctx_get_wsa_action(create_seq_msg, 
         env);

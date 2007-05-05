@@ -352,7 +352,7 @@ sandesha2_in_order_invoker_worker_func(
                     (sandesha2_rm_bean_t *) st_map_bean, env);
                 printf("msg_ref_key:%s\n", key);
                 msg_to_invoke = sandesha2_storage_mgr_retrieve_msg_ctx(
-                    storage_mgr, env, key, invoker->conf_ctx);
+                    storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
                 if(msg_to_invoke)
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
@@ -393,7 +393,7 @@ sandesha2_in_order_invoker_worker_func(
                         storage_mgr, env);
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
                 msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
-                        storage_mgr, env, key, invoker->conf_ctx);
+                    storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
                 if(msg_ctx)
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr,
                         env, key);

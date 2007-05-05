@@ -696,7 +696,6 @@ sandesha2_app_msg_processor_process_out_msg(
     if(!axis2_msg_ctx_get_msg_id(msg_ctx, env))
         axis2_msg_ctx_set_message_id(msg_ctx, env, axutil_uuid_gen(env));
     storage_key = axutil_uuid_gen(env);
-   
     if(is_svr_side)
     {
         sandesha2_seq_t *req_seq = NULL;

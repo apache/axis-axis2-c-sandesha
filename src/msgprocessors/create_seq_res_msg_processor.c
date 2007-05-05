@@ -323,6 +323,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         next_bean = sandesha2_next_msg_bean_create(env);
         sandesha2_next_msg_bean_set_seq_id(next_bean, env, offered_seq_id);
+        sandesha2_next_msg_bean_set_internal_seq_id(next_bean, env, int_seq_id);
         sandesha2_next_msg_bean_set_next_msg_no_to_process(next_bean, env, 1);
         
         rm_spec_ver = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
@@ -344,7 +345,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         if(ref_msg_store_key)
         {
             ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, 
-                env, ref_msg_store_key, conf_ctx);
+                env, ref_msg_store_key, conf_ctx, AXIS2_FALSE);
         }
         new_msg_store_key = axutil_uuid_gen(env);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 
@@ -354,7 +355,9 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_next_msg_bean_set_polling_mode(next_bean, env, polling_mode);
         /* If polling_mode is true, starting the polling manager */
         if(polling_mode)
-            sandesha2_utils_start_polling_mgr(env, conf_ctx);
+        {
+            sandesha2_utils_start_polling_mgr(env, conf_ctx, int_seq_id);
+        }
         next_bean_mgr = sandesha2_storage_mgr_get_next_msg_mgr(storage_mgr,
             env);
         sandesha2_next_msg_mgr_insert(next_bean_mgr, env, next_bean);
@@ -403,7 +406,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         tmp_bean = axutil_array_list_get(found_list, env, i);
         key = sandesha2_sender_bean_get_msg_ctx_ref_key(tmp_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
-                        key, conf_ctx);
+            key, conf_ctx, AXIS2_FALSE);
         if(!app_msg_ctx)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Unavailable"

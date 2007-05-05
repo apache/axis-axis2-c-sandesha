@@ -34,6 +34,7 @@
 #include <axutil_rand.h>
 #include <stdio.h>
 #include <platforms/axutil_platform_auto_sense.h>
+#include <axutil_types.h>
 
 
 /** 
@@ -149,7 +150,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_polling_mgr_start (
     sandesha2_polling_mgr_t *polling_mgr, 
     const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_char_t *internal_seq_id)
 {
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -163,12 +165,15 @@ sandesha2_polling_mgr_start (
     if(!polling_mgr->conf_ctx)
     {
         axutil_thread_mutex_unlock(polling_mgr->mutex);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "conf_ctx is NULL");
         return AXIS2_FAILURE;
     }
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         polling_mgr->conf_ctx, 
         axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env));
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
+    sandesha2_polling_mgr_schedule_polling_request(polling_mgr, env, 
+        internal_seq_id);
     sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
     axutil_thread_mutex_unlock(polling_mgr->mutex);
     return AXIS2_SUCCESS;
@@ -230,6 +235,7 @@ sandesha2_polling_mgr_worker_func(
         sandesha2_sender_mgr_t *sender_bean_mgr = NULL;
         int size = 0;
         axis2_char_t *seq_id = NULL;
+        axis2_char_t *make_conn_seq_id = NULL;
         axis2_char_t *ref_msg_key = NULL;
         axis2_char_t *seq_prop_key = NULL;
         axis2_char_t *reply_to = NULL;
@@ -240,8 +246,25 @@ sandesha2_polling_mgr_worker_func(
         axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
         axis2_endpoint_ref_t *to = NULL;
         axutil_property_t *property = NULL;
+        axutil_qname_t *qname = NULL;
+        axutil_param_t *wait_time_param = NULL;
+        int wait_time = 0;
+        axis2_conf_t *conf = NULL;
+        axis2_module_desc_t *module_desc = NULL;
         sandesha2_transaction_t *transaction = NULL;
-        AXIS2_SLEEP(SANDESHA2_POLLING_MANAGER_WAIT_TIME);
+        axis2_status_t status = AXIS2_FAILURE;
+
+        conf = axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env);
+        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        module_desc = axis2_conf_get_module(conf, env, qname);
+        wait_time_param = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_POLLING_WAIT);
+        if(wait_time_param)
+        {
+            wait_time = AXIS2_ATOI(axutil_param_get_value(wait_time_param, env));
+        }
+        axutil_qname_free(qname, env);
+        AXIS2_SLEEP(wait_time);
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
@@ -255,7 +278,7 @@ sandesha2_polling_mgr_worker_func(
         {
             seq_id = axutil_array_list_get(polling_mgr->scheduled_polling_reqs, 
                 env, 0);
-            axutil_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);
+            /*axutil_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);*/
         }
         if(!seq_id)
         {
@@ -291,7 +314,7 @@ sandesha2_polling_mgr_worker_func(
             {
                 sandesha2_next_msg_bean_set_polling_mode(find_bean, env, 
                     AXIS2_TRUE);
-                sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
+                sandesha2_next_msg_bean_set_internal_seq_id(find_bean, env, seq_id);
                 next_msg_bean = sandesha2_next_msg_mgr_find_unique(next_msg_mgr,
                     env, find_bean);
             }
@@ -299,28 +322,31 @@ sandesha2_polling_mgr_worker_func(
         /* If no valid entry is found, try again later */
         if(!next_msg_bean)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "No valid MakeConnection entry is found.");
             sandesha2_transaction_rollback(transaction, env);
             continue;
         }
-        seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
+        make_conn_seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
             next_msg_bean, env);
         /* Create a MakeConnection message */
         ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(next_msg_bean, env);
-        seq_prop_key = seq_id;
+        seq_prop_key = make_conn_seq_id;
         reply_to = sandesha2_utils_get_seq_property(env, seq_prop_key, 
             SANDESHA2_SEQ_PROP_REPLY_TO_EPR, storage_mgr);
         if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
             wsrm_anon_reply_to_uri = reply_to;
         ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-            ref_msg_key, polling_mgr->conf_ctx);
+            ref_msg_key, polling_mgr->conf_ctx, AXIS2_FALSE);
         if(ref_msg_ctx)
             ref_rm_msg_ctx = sandesha2_msg_init_init_msg(env, ref_msg_ctx);
         make_conn_rm_msg_ctx = 
             sandesha2_msg_creator_create_make_connection_msg(env, 
-            ref_rm_msg_ctx, seq_id, wsrm_anon_reply_to_uri, storage_mgr);
+            ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, storage_mgr);
         if(!make_conn_rm_msg_ctx)
         {
             sandesha2_transaction_rollback(transaction, env);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "No memory");
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
         }
@@ -378,8 +404,15 @@ sandesha2_polling_mgr_worker_func(
             sandesha2_sender_mgr_insert(sender_bean_mgr, env, 
                 make_conn_sender_bean);
         }
-        sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
+        status = sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);
+        if(!status)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]make_connection sending failed");
+            sandesha2_transaction_rollback(transaction, env);
+            return NULL;
+        }
         if(transaction)
         {
             sandesha2_transaction_commit(transaction, env);
@@ -409,10 +442,10 @@ void AXIS2_CALL
 sandesha2_polling_mgr_schedule_polling_request(
     sandesha2_polling_mgr_t *polling_mgr,
     const axutil_env_t *env,
-    axis2_char_t *internal_seq_id)
+    const axis2_char_t *internal_seq_id)
 {
     if(!axutil_array_list_contains(polling_mgr->scheduled_polling_reqs, env, 
-        internal_seq_id))
+        (axis2_char_t *)internal_seq_id))
     {
         axutil_array_list_add(polling_mgr->scheduled_polling_reqs, env, 
             internal_seq_id);

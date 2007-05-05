@@ -72,7 +72,19 @@ sandesha2_next_msg_bean_get_seq_id(
 void AXIS2_CALL
 sandesha2_next_msg_bean_set_seq_id(
     sandesha2_next_msg_bean_t *next_msg_bean,
-    const axutil_env_t *env, axis2_char_t *seq_id);
+    const axutil_env_t *env, 
+    axis2_char_t *seq_id);
+
+axis2_char_t* AXIS2_CALL
+sandesha2_next_msg_bean_get_internal_seq_id(
+    sandesha2_rm_bean_t *next_msg_bean,
+    const axutil_env_t *env);
+
+void AXIS2_CALL
+sandesha2_next_msg_bean_set_internal_seq_id(
+    sandesha2_next_msg_bean_t *next_msg_bean,
+    const axutil_env_t *env, 
+    axis2_char_t *internal_seq_id);
 
 long AXIS2_CALL
 sandesha2_next_msg_bean_get_next_msg_no_to_process(

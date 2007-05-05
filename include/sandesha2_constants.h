@@ -509,6 +509,9 @@ extern "C"
     #define SANDESHA2_DB_SERVER "sandesha2_server"
     #define SANDESHA2_DB_USER "db_user"
     #define SANDESHA2_DB_PASSWORD "db_password"
+	#define SANDESHA2_SENDER_SLEEP  "SenderSleepTime"
+	#define SANDESHA2_INVOKER_SLEEP  "InvokerSleepTime"
+	#define SANDESHA2_POLLING_WAIT  "PollingWaitTime"
 /** @} */
 #ifdef __cplusplus
 }

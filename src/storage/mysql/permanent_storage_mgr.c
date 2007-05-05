@@ -147,7 +147,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx);
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_bool_t persistent);
 		
 axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_store_msg_ctx(
@@ -778,7 +779,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr, 
     const axutil_env_t *env, 
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_bool_t persistent)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -807,8 +809,9 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    msg_ctx = (axis2_msg_ctx_t *) axutil_hash_get(storage_mgr_impl->msg_ctx_map,
-        key, AXIS2_HASH_KEY_STRING);
+    if(!persistent)
+        msg_ctx = (axis2_msg_ctx_t *) axutil_hash_get(
+            storage_mgr_impl->msg_ctx_map, key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
         return msg_ctx;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieving msg_ctx from database");

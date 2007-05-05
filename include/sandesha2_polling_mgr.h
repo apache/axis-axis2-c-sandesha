@@ -69,7 +69,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_polling_mgr_start (
     sandesha2_polling_mgr_t *polling_mgr, 
     const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx);
+    axis2_conf_ctx_t *conf_ctx,
+    const axis2_char_t *internal_seq_id);
             
 void AXIS2_CALL
 sandesha2_polling_mgr_set_poll(
@@ -86,7 +87,7 @@ void AXIS2_CALL
 sandesha2_polling_mgr_schedule_polling_request(
     sandesha2_polling_mgr_t *polling_mgr,
     const axutil_env_t *env,
-    axis2_char_t *internal_seq_id);
+    const axis2_char_t *internal_seq_id);
                    
 /** @} */
 #ifdef __cplusplus
