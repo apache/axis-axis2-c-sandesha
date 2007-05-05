@@ -251,7 +251,6 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     /* Selecting a bean to send randomly. TODO - Should use a better mechanism */
     if(retrans_list)
         size = axutil_array_list_size(retrans_list, env);
-    printf("size:%d\n", size);
     if(size > 0)
     {
        unsigned int rand_var = axutil_rand_get_seed_value_based_on_time(env);
