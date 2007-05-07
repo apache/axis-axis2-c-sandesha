@@ -168,7 +168,7 @@ all_services: RMSampleService
 
 samples: all_clients all_services
 
-dist: clean distdir sandesha2 copy_samples samples copy_xml copy_include copy_extra
+dist: clean distdir intdir sandesha2 copy_samples samples copy_xml copy_include copy_extra
 
 
 	 
