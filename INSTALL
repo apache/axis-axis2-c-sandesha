@@ -38,9 +38,9 @@ Note: 1.
        libsandesha2.so, module.xml and header files. The sample clients are installed into <axis2c_install_path>/bin/samples
        directory. Sample services are installed into <axis2c_install_path>/services directory.
 
-Installing Sandesha2c on WIN32
+2 Installing Sandesha2c on WIN32
 
-1. Building from source distribution
+    1. Building from source distribution
 
     i. You need to have unziped axis2c 1.0 release binary to some folder.
     ii. Sandesha2 can be used with one of following two databse systems.
@@ -55,9 +55,9 @@ Installing Sandesha2c on WIN32
        to a directory sandesha2 in <sandesha2 src>\build\sandesha2.
 
 
-2. Configuring sandesha2 module
+    2. Configuring sandesha2 module
 
-   Sandesha2 binary distribution will have following directory structure.
+    Sandesha2 binary distribution will have following directory structure.
 
     Sandesha2
         |
