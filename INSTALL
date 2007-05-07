@@ -1,6 +1,5 @@
 SANDESHA2 INSTALL
 =================
-
 1. Getting Sandesha2C working with the source release on Linux
     - This version of Sandesha2C depends on Axis2C 1.0
         - Download Axis2C from http://ws.apache.org/axis2/c/download.cgi and
@@ -39,3 +38,49 @@ Note: 1.
        libsandesha2.so, module.xml and header files. The sample clients are installed into <axis2c_install_path>/bin/samples
        directory. Sample services are installed into <axis2c_install_path>/services directory.
 
+Installing Sandesha2c on WIN32
+
+1. Building from source distribution
+
+    i. You need to have unziped axis2c 1.0 release binary to some folder.
+    ii. Sandesha2 can be used with one of following two databse systems.
+            (sqlite, MySql) 
+        So install one of above database systems on your machine.
+    iii. On your cmd.exe cd to <sandesha2 src>\build\win32
+      Edit configure.in file with your binary locations.
+      To select MySql have your configure.in entry  WITH_MYSQL = 1.
+      To Select Sqlite have your configure.in entry WITH_SQLITE = 1.
+    iv. To set necessary environment variables on command line run vcvars32.bat file.
+    v. Run nmake dist command on command line. This will build the sandesha2 binary and samples
+       to a directory sandesha2 in <sandesha2 src>\build\sandesha2.
+
+
+2. Configuring sandesha2 module
+
+   Sandesha2 binary distribution will have following directory structure.
+
+    Sandesha2
+        |
+        + - Sandesha2 (sandesha2 module dll and module.xml file)
+        |
+        + - samples
+               |
+               + - bin 
+               |
+               + - source files of samples in folders
+        |
+        + - include ( header files)
+
+        
+    copy Sandesha2 directory ( containing sandesha2 dll and module.xml ) to <AXIS2C_HOME>\modules directory.
+    copy RMSampleService directory in samples\bin directory to <AXIS2C_HOME>\services directory
+    copy axis2.xml file in Sandesha2 directory to <AXIS2C_HOME>
+
+    Now you should be able to run the samples.
+
+                
+
+
+
+     
+                                        
