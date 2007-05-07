@@ -118,8 +118,6 @@ AC_ARG_WITH(mysql,
   AC_MSG_RESULT(no)
 )
 
-AC_CONFIG_SUBDIRS(samples)
-
 AXIS2INC=$axis2inc
 MYSQLINC=$mysqlinc
 SQLITEINC=$sqliteinc

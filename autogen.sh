@@ -41,6 +41,3 @@ fi
 
 echo 'done'
 
-cd samples
-./autogen.sh
-cd ..
