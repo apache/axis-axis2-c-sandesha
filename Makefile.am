@@ -10,7 +10,7 @@ include_HEADERS= \
 			include/sandesha2_client.h \
 			include/sandesha2_seq_report.h \
 			include/sandesha2_report.h
-data_DATA = LICENSE config/module.xml
+data_DATA = config/module.xml
 prgbin_DATA = config/mysql_schema.sh config/init_mysql.sh config/sqlite_schema.sh
-EXTRA_DIST=config include LICENSE
+EXTRA_DIST=config include build.sh LICENSE
 
