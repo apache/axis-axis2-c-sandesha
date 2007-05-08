@@ -16,4 +16,12 @@ INCLUDES = -I$(top_builddir)/include \
 			-I. \
 			@MYSQLINC@
 
-EXTRA_DIST=sandesha2_sqls.h
+EXTRA_DIST=sandesha2_permanent_bean_mgr.h \
+		sandesha2_permanent_next_msg_mgr.h \
+		sandesha2_permanent_transaction.h \
+		sandesha2_permanent_create_seq_mgr.h \
+		sandesha2_permanent_sender_mgr.h \
+		sandesha2_sqls.h \
+		sandesha2_permanent_invoker_mgr.h \
+		sandesha2_permanent_seq_property_mgr.h
+
