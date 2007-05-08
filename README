@@ -12,7 +12,7 @@
   
   The Latest Version
   ------------------
-  Sandesha2C is its early ages and not release yet.
+  0.90.
 
   Documentation
   -------------
@@ -27,15 +27,15 @@
 
   Installation
   ------------
-  Please see the file called INSTALL. 
+  Please see the INSTALL file.
 
   Licensing
   ---------
-  Please see the file called LICENSE.
+  Please see the LICENSE file.
 
   How To Run.
   ----------
-  Install sandesha2 module into axis2/modules folder. Add the RMPhase
+  Install sandesha2 module into <axis2 deploy folder>/modules folder. Add the RMPhase
   information into axis2.xml as following. Search for 'RMPhase' in the
   following xml block to identify the RM specific entries.
 
@@ -113,13 +113,3 @@ axis2.xml.
 
 You can use samples in the samples folder for testing.
 
-Note: Sandesha2 has two main storage mechanisms call inmemory and persistent. 
-      By default sandesha2 use the sqlite as the persistent storage. You can
-      change this to inmemory by changing the entry in the sandesha2_constants.h
-      file.
-        #define SANDESHA2_DEFAULT_STORAGE_MGR "persistent"
-
-        You must have sqlite3.h in sandesha2 include directory.
-        When compiling it statically link with sqlite library. So make sure you have
-        src/core/libsqlite3.a.
-        Above configurations regarding sqlite may be refined before the release.
