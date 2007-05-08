@@ -12,3 +12,4 @@ libsandesha2_storage_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@
+EXTRA_DIST=mysql
