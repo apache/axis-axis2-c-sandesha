@@ -25,6 +25,7 @@ SANDESHA2 INSTALL
         + - samples
                |
                + - source files of samples in folders
+        + - services (Contain sample service)
         |
         + - include ( header files)
         + - bin (database scripts)
