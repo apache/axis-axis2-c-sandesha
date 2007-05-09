@@ -6,6 +6,7 @@ rm_ping_1_0_SOURCES = rm_ping_1_0.c
 
 rm_ping_1_0_LDADD   =  \
                     -L$(AXIS2C_HOME)/lib \
+                    -L$(AXIS2C_HOME)/modules/sandesha2 \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -13,6 +14,7 @@ rm_ping_1_0_LDADD   =  \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
+                    -lsandesha2_client \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

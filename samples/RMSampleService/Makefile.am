@@ -5,9 +5,7 @@ samples_DATA=rm_sample_svc.c rm_sample_svc_skel.c rm_sample_svc.h services.xml M
 prglib_DATA= services.xml
 EXTRA_DIST = services.xml
 noinst_HEADERS = rm_sample_svc.h
-SUBDIRS =
 libRMSampleService_la_SOURCES = rm_sample_svc.c rm_sample_svc_skel.c
-libRMSampleService_la_LIBADD  =
 INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
 			@UTILINC@ \
 			@AXIOMINC@
