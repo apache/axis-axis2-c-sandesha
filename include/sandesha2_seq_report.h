@@ -55,68 +55,68 @@ typedef struct sandesha2_seq_report sandesha2_seq_report_t;
   * @ingroup sandesha2
   * @{
   */
-axis2_status_t AXIS2_CALL 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 sandesha2_seq_report_free(
     void *report,
     const axutil_env_t *envv);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_status(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     axis2_char_t seq_status);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_direction(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     axis2_char_t seq_direction);
 
-axis2_char_t AXIS2_CALL
+AXIS2_EXTERN axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_status(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env);
 
-axis2_char_t AXIS2_CALL
+AXIS2_EXTERN axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_direction(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env);
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     axis2_char_t *seq_id);
 
-axutil_array_list_t *AXIS2_CALL
+AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 sandesha2_seq_report_get_completed_msgs(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_add_completed_msg(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     long *msg_no);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_completed_msgs(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     axutil_array_list_t *completed_msgs);
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_internal_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
     long *msg_no);
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_internal_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,

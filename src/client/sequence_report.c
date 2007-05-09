@@ -54,7 +54,7 @@ sandesha2_seq_report_create(
     return report;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_free(
     void *seq_report,
     const axutil_env_t *env)
@@ -81,7 +81,7 @@ sandesha2_seq_report_free(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_status(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -95,7 +95,7 @@ sandesha2_seq_report_set_seq_status(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_direction(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -109,7 +109,7 @@ sandesha2_seq_report_set_seq_direction(
     return AXIS2_SUCCESS;
 }
 
-axis2_char_t AXIS2_CALL
+AXIS2_EXTERN axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_status(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env)
@@ -117,7 +117,7 @@ sandesha2_seq_report_get_seq_status(
     return report->seq_status;
 }
 
-axis2_char_t AXIS2_CALL
+AXIS2_EXTERN axis2_char_t AXIS2_CALL
 sandesha2_seq_report_get_seq_direction(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env)
@@ -125,7 +125,7 @@ sandesha2_seq_report_get_seq_direction(
     return report->seq_direction;
 }
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env)
@@ -133,7 +133,7 @@ sandesha2_seq_report_get_seq_id(
     return report->seq_id;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -154,7 +154,7 @@ sandesha2_seq_report_set_seq_id(
     return AXIS2_SUCCESS;
 }
 
-axutil_array_list_t *AXIS2_CALL
+AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 sandesha2_seq_report_get_completed_msgs(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env)
@@ -162,7 +162,7 @@ sandesha2_seq_report_get_completed_msgs(
     return report->completed_msgs;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_add_completed_msg(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -174,7 +174,7 @@ sandesha2_seq_report_add_completed_msg(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_completed_msgs(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -201,7 +201,7 @@ sandesha2_seq_report_set_completed_msgs(
     return AXIS2_SUCCESS;
 }
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_report_get_internal_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
@@ -210,7 +210,7 @@ sandesha2_seq_report_get_internal_seq_id(
     return report->internal_seq_id;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_report_set_internal_seq_id(
     sandesha2_seq_report_t *report,
     const axutil_env_t *env,
