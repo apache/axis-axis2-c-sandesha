@@ -35,7 +35,7 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nolog
 
 #linker options 
 LD = @link.exe
-LDFLAGS = /nologo /LIBPATH:$(AXIS2_BIN_DIR)\lib /LIBPATH:$(SANDESHADISTDIR)\sandesha2
+LDFLAGS = /nologo /LIBPATH:$(AXIS2_BIN_DIR)\lib /LIBPATH:$(SANDESHADISTDIR)\modules\sandesha2
 LIBS = axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib axis2_http_receiver.lib axis2_http_sender.lib
 
 
@@ -68,11 +68,12 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt
 
 distdir:
 	if not exist $(SANDESHADISTDIR) mkdir $(SANDESHADISTDIR)
-	if not exist $(SANDESHADISTDIR)\sandesha2 mkdir $(SANDESHADISTDIR)\sandesha2
+	if not exist $(SANDESHADISTDIR)\modules\sandesha2 mkdir $(SANDESHADISTDIR)\modules\sandesha2
 	if not exist $(SANDESHADISTDIR)\include mkdir $(SANDESHADISTDIR)\include
 	if not exist $(SANDESHADISTDIR)\samples mkdir $(SANDESHADISTDIR)\samples
-	if not exist $(SANDESHADISTDIR)\samples\bin mkdir $(SANDESHADISTDIR)\samples\bin
-	if not exist $(SANDESHADISTDIR)\samples\bin\RMSampleService mkdir $(SANDESHADISTDIR)\samples\bin\RMSampleService
+	if not exist $(SANDESHADISTDIR)\bin\samples mkdir $(SANDESHADISTDIR)\bin\samples
+	if not exist $(SANDESHADISTDIR)\services\RMSampleService mkdir $(SANDESHADISTDIR)\services\RMSampleService
+	if not exist $(SANDESHADISTDIR)\config mkdir $(SANDESHADISTDIR)\config
 
 intdir:
 	if not exist $(SANDESHA2_INTDIR) mkdir $(SANDESHA2_INTDIR)
@@ -99,7 +100,6 @@ copy_extra:
 	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\NEWS $(SANDESHADISTDIR)
 	
-	
 copy_samples:
 	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples
 	@del /s /q $(SANDESHADISTDIR)\samples\*.am
@@ -111,58 +111,67 @@ copy_include:
 sandesha2:
 	$(CC) $(CFLAGS) $(SANDESHA2_CODE) /Fo$(SANDESHA2_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\*.obj /DLL \
-	/OUT:$(SANDESHADISTDIR)\sandesha2\$(SANDESHA_DLL).dll /IMPLIB:$(SANDESHADISTDIR)\sandesha2\$(SANDESHA_DLL).lib
+	/OUT:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll /IMPLIB:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).lib
 
 copy_xml:
 	@copy $(SANDESHASRC)\config\axis2.xml  $(SANDESHADISTDIR)\axis2.xml
-	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\sandesha2\module.xml
+	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\modules\sandesha2\module.xml
+	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\
+	
 
 ### sample clients
 
 rm_ping_1_0:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\rm_ping_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\bin\samples\rm_ping_1_0.exe
 
 rm_ping_1_1:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\rm_ping_1_1.exe 
+	/OUT:$(SANDESHADISTDIR)\bin\samples\rm_ping_1_1.exe 
 
 rm_echo_1_0:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\rm_echo_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\bin\samples\rm_echo_1_0.exe
 	
 rm_echo_1_1:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_1\*.obj \
-	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\samples\bin\rm_echo_1_1.exe 
+	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\rm_echo_1_1.exe 
 
 rm_mtom_1_0:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_mtom_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\rm_mtom_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\bin\samples\rm_mtom_1_0.exe
 	
 rm_echo_single_1_0:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\rm_echo_single_1_0.exe 
+	/OUT:$(SANDESHADISTDIR)\bin\samples\rm_echo_single_1_0.exe 
 
 rm_echo_single_1_1:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\*.obj \
-	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\samples\bin\rm_echo_single_1_1.exe 
+	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\rm_echo_single_1_1.exe
+	
+rm_report:
+	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_report\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_report\ /c
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_report\*.obj \
+	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\rm_report.exe
+	
 
-all_clients: rm_ping_1_0 rm_ping_1_1 rm_echo_1_1 rm_echo_1_0 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1
+all_clients: rm_ping_1_0 rm_ping_1_1 rm_echo_1_1 rm_echo_1_0 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1 rm_report
+
 
 #### services
 RMSampleService:
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\RMSampleService\*.c /Fo$(SANDESHA2_INTDIR)\samples\RMSampleService\ /c
 	$(LD) $(LDFLAGS) $(SANDESHA2_INTDIR)\samples\RMSampleService\*.obj $(LIBS) /DLL \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\RMSampleService\RMSampleService.dll
+	/OUT:$(SANDESHADISTDIR)\services\RMSampleService\RMSampleService.dll
 	
-	@copy $(SANDESHASRC)\samples\RMSampleService\services.xml $(SANDESHADISTDIR)\samples\bin\RMSampleService
+	@copy $(SANDESHASRC)\samples\RMSampleService\services.xml $(SANDESHADISTDIR)\services\RMSampleService
 
 all_services: RMSampleService
 
