@@ -93,8 +93,6 @@ clean :
 
 copy_extra:
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)
-	@copy $(SANDESHASRC)\config\mysql_schema.txt $(SANDESHADISTDIR)
-	@copy $(SANDESHASRC)\config\init_mysql.bat $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\LICENSE $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)
