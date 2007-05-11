@@ -92,7 +92,7 @@ clean :
 	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
 
 copy_extra:
-	@copy $(SANDESHASRC)\config\*.* $(SANDESHADISTDIR)\config\
+	@copy $(SANDESHASRC)\config\* $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\LICENSE $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)
