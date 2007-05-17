@@ -71,7 +71,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *int_seq_id,
     axis2_char_t *spec_version,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_bool_t persistent);
 
 /** @} */
 #ifdef __cplusplus

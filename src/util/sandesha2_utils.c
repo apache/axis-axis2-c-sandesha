@@ -393,7 +393,8 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_start_sender_for_seq(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id)
+    axis2_char_t *seq_id,
+    const axis2_bool_t persistent)
 {
     sandesha2_sender_t *sender = NULL;
     axutil_property_t *property = NULL;
@@ -416,7 +417,8 @@ sandesha2_utils_start_sender_for_seq(
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
                         env, SANDESHA2_SENDER, property);
     }
-    status = sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id);
+    status = sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id, 
+        persistent);
     return status;
 }
  

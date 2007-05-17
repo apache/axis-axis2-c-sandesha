@@ -54,6 +54,7 @@ struct sandesha2_sender_worker_t
     axis2_msg_ctx_t *msg_ctx;
     axis2_transport_out_desc_t *transport_out;
     axis2_status_t status;
+    axis2_bool_t persistent_msg_ctx;
 };
 
 struct sandesha2_sender_worker_args
@@ -70,7 +71,8 @@ sandesha2_sender_worker_get_status (
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_worker_run (
     sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    const axis2_bool_t persistent_msg_ctx);
                         
 static void * AXIS2_THREAD_FUNC
 sandesha2_sender_worker_worker_func(
@@ -207,7 +209,8 @@ sandesha2_sender_worker_free(
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_worker_run (
     sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env)
+    const axutil_env_t *env,
+    const axis2_bool_t persistent_msg_ctx)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_sender_worker_args_t *args = NULL;
@@ -216,6 +219,7 @@ sandesha2_sender_worker_run (
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     sender_worker->status = AXIS2_TRUE;
+    sender_worker->persistent_msg_ctx = persistent_msg_ctx;
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_worker_args_t)); 
     args->impl = sender_worker;
     args->env = (axutil_env_t*)env;
@@ -292,8 +296,12 @@ sandesha2_sender_worker_worker_func(
     if(!msg_ctx)
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
-        msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
-            sender_worker->conf_ctx, AXIS2_FALSE);
+        if(sender_worker->persistent_msg_ctx)
+            msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
+                key, sender_worker->conf_ctx, AXIS2_FALSE);
+        else
+            msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
+                key, sender_worker->conf_ctx, AXIS2_TRUE);
         axutil_allocator_switch_to_local_pool(env->allocator);
     }
     if(!msg_ctx)

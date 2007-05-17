@@ -92,7 +92,8 @@ sandesha2_sender_worker_run_for_seq
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_worker_run (
     sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    const axis2_bool_t persistent_msg_ctx);
 
 void sandesha2_sender_worker_set_transport_out(
     sandesha2_sender_worker_t *sender_worker,

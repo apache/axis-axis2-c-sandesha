@@ -55,6 +55,7 @@ struct sandesha2_sender_t
     axutil_thread_mutex_t *mutex;
     int seq_index;
     int counter;
+    axis2_bool_t persistent_msg_ctx;
 };
 
 struct sandesha2_sender_args
@@ -185,7 +186,8 @@ sandesha2_sender_run_for_seq(
     sandesha2_sender_t *sender, 
     const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx, 
-    axis2_char_t *seq_id)
+    axis2_char_t *seq_id,
+    const axis2_bool_t persistent)
 {
     AXIS2_LOG_INFO(env->log, "Start:sandesha2_sender_run_for_seq");
     axutil_thread_mutex_lock(sender->mutex);
@@ -199,6 +201,7 @@ sandesha2_sender_run_for_seq(
     {
         sender->conf_ctx = conf_ctx;
         sender->run_sender = AXIS2_TRUE;
+        sender->persistent_msg_ctx = persistent;
         sandesha2_sender_run(sender, env);
     }
     axutil_thread_mutex_unlock(sender->mutex);
@@ -321,7 +324,8 @@ sandesha2_sender_worker_func(
             /* Start a sender worker which will work on this message */
             sender_worker = sandesha2_sender_worker_create(env, sender->conf_ctx, 
                 msg_id);
-            sandesha2_sender_worker_run(sender_worker, env);
+            sandesha2_sender_worker_run(sender_worker, env, 
+                sender->persistent_msg_ctx);
             AXIS2_SLEEP(sleep_time * 2); 
             status = sandesha2_sender_worker_get_status(
                 sender_worker, env);

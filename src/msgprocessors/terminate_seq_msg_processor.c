@@ -392,7 +392,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     to_epr = axis2_msg_ctx_get_to(out_msg_ctx, env);
     if(to_epr && !sandesha2_utils_is_anon_uri(env, 
         axis2_endpoint_ref_get_address(to_epr, env)))
-    {       
+    {   
         orig_trans_out = axis2_msg_ctx_get_transport_out_desc(out_msg_ctx, env);
         property = axutil_property_create_with_args(env, 0, 0, 0, orig_trans_out);
         axis2_msg_ctx_set_property(out_msg_ctx, env,
@@ -434,22 +434,18 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     op_ctx = axis2_msg_ctx_get_op_ctx(out_msg_ctx, env);
     if(to_epr)
     {
-        printf("to_epr:%s\n", axis2_endpoint_ref_get_address(to_epr, env));
         if(sandesha2_utils_is_anon_uri(env, axis2_endpoint_ref_get_address(to_epr, 
             env)))
         {
-            printf("came1\n");
             axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
         }
         else
         {
-            printf("came2\n");
             axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_FALSE);
         }
     }
     else
     {
-        printf("came3\n");
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
     return AXIS2_SUCCESS;

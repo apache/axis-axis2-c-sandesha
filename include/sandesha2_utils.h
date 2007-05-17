@@ -114,7 +114,8 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_utils_start_sender_for_seq(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id);
+    axis2_char_t *seq_id,
+    const axis2_bool_t persistent);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_polling_mgr(

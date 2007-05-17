@@ -316,7 +316,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *int_seq_id,
     axis2_char_t *spec_version,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axis2_bool_t persistent)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -497,7 +498,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
             epr, env);
     if(!axis2_msg_ctx_get_server_side(first_app_msg, env) ||
         !sandesha2_utils_is_anon_uri(env, addr))
-        sandesha2_utils_start_sender_for_seq(env, conf_ctx, int_seq_id);
+        sandesha2_utils_start_sender_for_seq(env, conf_ctx, int_seq_id, 
+            persistent);
     sandesha2_seq_mgr_update_client_side_listener_if_needed(env, first_app_msg,
         anon_uri);
     AXIS2_LOG_INFO(env->log, "Exit:sandesha2_seq_mgr_setup_new_client_seq");

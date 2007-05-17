@@ -914,8 +914,16 @@ sandesha2_app_msg_processor_process_out_msg(
     {
         if(!out_seq_bean)
             send_create_seq = AXIS2_TRUE;
-        sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
-            spec_ver, storage_mgr);
+        if(is_svr_side)
+        {
+            sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
+                spec_ver, storage_mgr, AXIS2_FALSE);
+        }
+        else
+        {
+            sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
+                spec_ver, storage_mgr, AXIS2_TRUE);
+        }
     }
     if(send_create_seq)
     {
