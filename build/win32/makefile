@@ -74,6 +74,7 @@ distdir:
 	if not exist $(SANDESHADISTDIR)\bin\samples mkdir $(SANDESHADISTDIR)\bin\samples
 	if not exist $(SANDESHADISTDIR)\services\RMSampleService mkdir $(SANDESHADISTDIR)\services\RMSampleService
 	if not exist $(SANDESHADISTDIR)\config mkdir $(SANDESHADISTDIR)\config
+	if not exist $(SANDESHADISTDIR)\docs mkdir $(SANDESHADISTDIR)\docs
 
 intdir:
 	if not exist $(SANDESHA2_INTDIR) mkdir $(SANDESHA2_INTDIR)
@@ -92,12 +93,13 @@ clean :
 	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
 
 copy_extra:
-	@copy $(SANDESHASRC)\config\* $(SANDESHADISTDIR)
-	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)
+	@copy $(SANDESHASRC)\config\* $(SANDESHADISTDIR)\config
 	@copy $(SANDESHASRC)\LICENSE $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\NEWS $(SANDESHADISTDIR)
+	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)\docs
+	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)\docs
 	
 copy_samples:
 	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples
@@ -113,7 +115,6 @@ sandesha2:
 	/OUT:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll /IMPLIB:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).lib
 
 copy_xml:
-	@copy $(SANDESHASRC)\config\axis2.xml  $(SANDESHADISTDIR)\axis2.xml
 	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\modules\sandesha2\module.xml
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\
 	
