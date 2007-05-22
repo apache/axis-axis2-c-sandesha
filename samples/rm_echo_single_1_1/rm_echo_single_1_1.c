@@ -114,9 +114,6 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     axis2_options_set_action(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
-    /*reply_to = axis2_endpoint_ref_create(env, 
-        "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
-            "__OPERATION_OUT_IN__");*/
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     axis2_options_set_reply_to(options, env, reply_to);
 

@@ -129,7 +129,7 @@ int main(int argc, char** argv)
     axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
     reply_to = axis2_endpoint_ref_create(env, 
-        "http://localhost:7777/axis2/services/__ANONYMOUS_SERVICE__/"\
+        "http://localhost:6060/axis2/services/__ANONYMOUS_SERVICE__/"\
             "__OPERATION_OUT_IN__");
 
     axis2_options_set_reply_to(options, env, reply_to);
