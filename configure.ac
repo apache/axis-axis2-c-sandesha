@@ -118,6 +118,8 @@ AC_ARG_WITH(mysql,
 )
 
 AXIS2INC=$axis2inc
+AXIOMINC=$axis2inc/../axiom/include
+UTILINC=$axis2inc/../util/include
 MYSQLINC=$mysqlinc
 SQLITEINC=$sqliteinc
 

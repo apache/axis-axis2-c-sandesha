@@ -6,7 +6,9 @@ libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
                           msg_validator.c
 
 INCLUDES = -I$(top_builddir)/include \
-            @AXIS2INC@
+            @AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@
 libsandesha2_la_LIBADD = ../handlers/libsandesha_handlers.la\
                         ../msgprocessors/libsandesha2_msgprocessors.la\
                         ../storage/beans/libsandesha2_storage_beans.la\

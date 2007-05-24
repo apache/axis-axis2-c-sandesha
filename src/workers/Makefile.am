@@ -5,5 +5,7 @@ libsandesha2_workers_la_SOURCES = in_order_invoker.c\
                                   sender_worker.c
 
 INCLUDES = -I$(top_builddir)/include \
+		   	@AXIOMINC@ \
+		   	@UTILINC@ \
 		   	@AXIS2INC@
 

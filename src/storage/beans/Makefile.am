@@ -9,5 +9,7 @@ libsandesha2_storage_beans_la_SOURCES = invoker_bean.c \
 				rm_bean.c
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@
+		   	@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@
 

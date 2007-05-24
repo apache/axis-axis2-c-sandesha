@@ -13,6 +13,8 @@ libsandesha2_permanent_la_SOURCES = \
 
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@ \
 			-I. \
 			@MYSQLINC@
 

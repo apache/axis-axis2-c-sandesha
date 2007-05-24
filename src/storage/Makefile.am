@@ -11,5 +11,7 @@ libsandesha2_storage_la_SOURCES = \
 								seq_property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@
+		   	@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@
 EXTRA_DIST=mysql

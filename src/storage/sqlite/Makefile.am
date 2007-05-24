@@ -15,6 +15,8 @@ INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
 			-I. \
 			@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@ \
 			@SQLITEINC@
 
 EXTRA_DIST=sandesha2_permanent_bean_mgr.h \

@@ -16,4 +16,6 @@ libsandesha_util_la_SOURCES = \
                             property_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
+		   	@AXIOMINC@ \
+		   	@UTILINC@ \
 		   	@AXIS2INC@

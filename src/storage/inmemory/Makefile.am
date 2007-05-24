@@ -11,7 +11,9 @@ libsandesha2_inmemory_la_SOURCES = \
 								inmemory_bean_mgr.c
 
 INCLUDES = -I$(top_builddir)/include \
-		   	@AXIS2INC@
+		   	@AXIS2INC@ \
+		   	@AXIOMINC@ \
+		   	@UTILINC@
 
 EXTRA_DIST=sandesha2_inmemory_bean_mgr.h
 
