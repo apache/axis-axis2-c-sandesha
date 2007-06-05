@@ -18,6 +18,8 @@
 #include <sandesha2_error.h>
 #include <axutil_error_default.h>
 
+AXIS2_IMPORT extern const axis2_char_t* axutil_error_messages[];
+
 axis2_status_t AXIS2_CALL
 sandesha2_error_init()
 {
