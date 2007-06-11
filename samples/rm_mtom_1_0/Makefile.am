@@ -5,8 +5,7 @@ samples_DATA=rm_mtom_1_0.c Makefile.am Makefile.in
 rm_mtom_1_0_SOURCES = rm_mtom_1_0.c mtom_util.c
 
 rm_mtom_1_0_LDADD   =  \
-                    -L$(AXIS2C_HOME)/lib \
-                    -L$(AXIS2C_HOME)/modules/sandesha2 \
+			../../src/core/libsandesha2.la \
 					-laxutil \
                     -laxis2_axiom \
                     -laxis2_engine \
@@ -18,7 +17,5 @@ rm_mtom_1_0_LDADD   =  \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
-INCLUDES = -I$(AXIS2C_HOME)/include/axis2-1.0 \
-			-I../../include \
-			@UTILINC@ \
-			@AXIOMINC@
+INCLUDES = @AXIS2INC@ \
+			-I../../include 
