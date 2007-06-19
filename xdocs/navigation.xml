@@ -1,4 +1,3 @@
-<!-- Created By Damitha Kumarage -->
 <project name="Sandesha2C">
   <body>
       <menu name="Apache Sandesha2/C">
@@ -20,7 +19,7 @@
         </item>
         <item name="Project Information" href="team-list.html">
             <item name="Project Team" href="team-list.html"/>
-            <item name="Source Code"  href="http://svn.apache.org/repos/asf/webservices/sandesha/trunk/c"/>
+            <item name="Source Code"  href="http://svn.apache.org/viewvc/webservices/sandesha/trunk/c/"/>
         </item>
     </menu>
   </body>
