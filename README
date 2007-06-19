@@ -1,12 +1,12 @@
-                        Apache Sandesha2C
+                        Apache Sandesha2/C
 
   What is it?
   -----------
-  Sandesha2C is a C implementation of WS-ReliableMessaging specification 
-  published by IBM, Microsoft, BEA and TIBCO. Sandesha2C is built on top 
-  of Axis2C. Therefore by using Sandesha2C you can add reliable messaging 
-  capability to the web services hosted using Axis2C. Sandesha2C can also 
-  be used with Axis2C client to interact with already hosted web services 
+  Sandesha2/C is a C implementation of WS-ReliableMessaging specification 
+  published by IBM, Microsoft, BEA and TIBCO. Sandesha2/C is built on top 
+  of Axis2/C. Therefore by using Sandesha2/C you can add reliable messaging 
+  capability to the web services hosted using Axis2/C. Sandesha2/C can also 
+  be used with Axis2/C client to interact with already hosted web services 
   in a reliable manner. Read Sandesha2 Architecture guide to see how 
   Sandesha2 work internally. 
   
@@ -22,7 +22,7 @@
 
   Acknowledgments
   ----------------
-  Apache Sandesha2C relies heavily on the use of autoconf and libtool to
+  Apache Sandesha2/C relies heavily on the use of autoconf and libtool to
   provide a build environment.
 
   Installation
@@ -115,7 +115,7 @@ You can use samples in the samples folder for testing.
 
 Known Issues
 
-Please keep in mind the following when using sandesha2c with axis2c.
+Please keep in mind the following when using Sandesha2/C with Axis2/C.
 
 1. Comment the line no:295 in src/core/transport/http/receiver/http_svr_thread.c
    axutil_free_thread_env(thread_env);
@@ -133,6 +133,5 @@ Please keep in mind the following when using sandesha2c with axis2c.
    be the database is corrupted for some reason. Try rerunning the  the database
    scripts to clean the database.
 
-Some of the above changes may lead to memory leaks in axis2c. This will be fixed for the next release
-of Axis2 C and Sandesha2 C and soon for the nightly builds.
+Some of the above changes may lead to memory leaks in Axis2/C. 
 
