@@ -72,6 +72,18 @@
   <!-- ========== -->
   <developers>
     <developer>
+      <name>Samisa Abeysinghe</name>
+      <id>samisa</id>
+      <email>samisa AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Dushshantha Chandradasa</name>
+      <id>dushshantha</id>
+      <email>dushshantha AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
       <name>Sahan Gamage</name>
       <id>sahan</id>
       <email>sahans AT gmail.com</email>
@@ -81,6 +93,18 @@
       <name>Damitha Kumarage</name>
       <id>damitha</id>
       <email>damitha AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Nandika Jayawardana</name>
+      <id>nandika</id>
+      <email>nandika AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Sanjaya Rathnaweera</name>
+      <id>pini</id>
+      <email>sanjaya AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
   </developers>
