@@ -57,7 +57,6 @@ int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
-    const axis2_char_t *to = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_endpoint_ref_t* target_epr = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
@@ -79,7 +78,7 @@ int main(int argc, char** argv)
             AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
-    to = "http://127.0.0.1:9090/axis2/services/RMSampleService";
+    address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -108,10 +107,7 @@ int main(int argc, char** argv)
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    if(to)
-        endpoint_ref = axis2_endpoint_ref_create(env, to);
-    if(address)
-        target_epr = axis2_endpoint_ref_create(env, address);
+    target_epr = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
