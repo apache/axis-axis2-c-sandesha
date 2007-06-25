@@ -165,10 +165,14 @@ sandesha2_utils_get_storage_mgr(
     axutil_allocator_switch_to_global_pool(env->allocator);
     prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
         env, conf);
-    value = sandesha2_property_bean_get_storage_mgr(prop_bean, env);
-    if(0 == axutil_strcmp(value, SANDESHA2_INMEMORY_STORAGE_MGR))
+    if (prop_bean)
+    {
+        value = sandesha2_property_bean_get_storage_mgr(prop_bean, env);
+    }
+    
+    if(value && (0 == axutil_strcmp(value, SANDESHA2_INMEMORY_STORAGE_MGR)))
         storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
-    else if (0 == axutil_strcmp(value, SANDESHA2_PERMANENT_STORAGE_MGR))
+    else if (value && (0 == axutil_strcmp(value, SANDESHA2_PERMANENT_STORAGE_MGR)))
         storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
     else
     {

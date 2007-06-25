@@ -417,7 +417,10 @@ sandesha2_client_get_report(
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
+    if (storage_mgr)
+    {
+        seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
+    }
     sandesha2_report = sandesha2_report_create(env);
     internal_seq_find_bean = sandesha2_seq_property_bean_create(env);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -440,16 +443,22 @@ sandesha2_client_get_report(
         }
         if(AXIS2_TRUE != within_transaction)
         {
-            report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
-                env);
+            if (storage_mgr)
+            {
+                report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
+                    env);
+            }
         }
         client_report_transaction = report_transaction;
     }
     if(internal_seq_find_bean) 
         sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
             SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
-    collection = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, 
-        internal_seq_find_bean);
+    if (seq_prop_mgr)
+    {
+        collection = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, 
+            internal_seq_find_bean);
+    }
     if(collection)
         size = axutil_array_list_size(collection, env);
     for(i = 0; i < size; i++)
@@ -485,8 +494,11 @@ sandesha2_client_get_report(
     if(svr_completed_msgs_find_bean)
         sandesha2_seq_property_bean_set_name(svr_completed_msgs_find_bean, env, 
             SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
-    svr_completed_msgs_beans = sandesha2_seq_property_mgr_find(seq_prop_mgr, 
-        env, svr_completed_msgs_find_bean);
+    if (seq_prop_mgr)
+    {
+        svr_completed_msgs_beans = sandesha2_seq_property_mgr_find(seq_prop_mgr, 
+            env, svr_completed_msgs_find_bean);
+    }
     if(svr_completed_msgs_beans)
         size = axutil_array_list_size(svr_completed_msgs_beans, env);
     for(i = 0; i < size; i++)
