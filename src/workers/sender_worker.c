@@ -284,7 +284,7 @@ sandesha2_sender_worker_worker_func(
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
-        AXIS2_LOG_WARN(env->log, AXIS2_LOG_SI, "[sandesha2] sender_worker_bean is NULL");
+        AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "[sandesha2] sender_worker_bean is NULL");
         sandesha2_transaction_rollback(transaction, env);
         #ifdef AXIS2_SVR_MULTI_THREADED
             AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);

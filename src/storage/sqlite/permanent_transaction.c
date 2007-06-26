@@ -357,7 +357,7 @@ sandesha2_permanent_transaction_enlist(
                 size = axutil_array_list_size(trans_impl->enlisted_beans, env);
             if(size > 0)
             {
-                AXIS2_LOG_WARN(env->log, AXIS2_LOG_SI, "Possible deadlock");
+                AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "Possible deadlock");
                 AXIS2_ERROR_SET(env->error, AXIS2_ERROR_POSSIBLE_DEADLOCK, 
                     AXIS2_FAILURE);
             }
