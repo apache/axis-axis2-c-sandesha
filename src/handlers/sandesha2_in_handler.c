@@ -93,12 +93,12 @@ sandesha2_in_handler_invoke(
     sandesha2_ack_requested_t *ack_requested = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Start: sandesha2_in_handler_invoke");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] Start: sandesha2_in_handler_invoke");
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, 
                 AXIS2_FAILURE);
@@ -159,7 +159,7 @@ sandesha2_in_handler_invoke(
                 prop);
             rolled_back = AXIS2_TRUE;
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -191,7 +191,7 @@ sandesha2_in_handler_invoke(
             axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
                 prop);
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Cannot initialize the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_INIT_MSG, 
                 AXIS2_FAILURE);
@@ -232,7 +232,7 @@ sandesha2_in_handler_invoke(
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
             prop);
     }
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_in_handler_invoke");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] Exit: sandesha2_in_handler_invoke");
    
     return AXIS2_SUCCESS;
 }

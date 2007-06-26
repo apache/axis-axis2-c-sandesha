@@ -174,7 +174,7 @@ sandesha2_inmemory_seq_property_mgr_insert(
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_inmemory_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Entry:[sandesha2]sandesha2_inmemory_seq_property_mgr_insert");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -183,7 +183,7 @@ sandesha2_inmemory_seq_property_mgr_insert(
     id = sandesha2_inmemory_seq_property_mgr_get_id_with_bean(env, bean);
     ret = sandesha2_inmemory_bean_mgr_insert(seq_prop_mgr_impl->bean_mgr, env,
         id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Exit:[sandesha2]sandesha2_inmemory_seq_property_mgr_insert:return%d", 
             ret);
     return ret;
@@ -227,8 +227,8 @@ sandesha2_inmemory_seq_property_mgr_retrieve(
     sandesha2_seq_property_bean_t *ret = NULL;
     sandesha2_inmemory_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_seq_property_mgr_retrieve");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_seq_property_mgr_retrieve");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, name, AXIS2_FALSE);
@@ -239,8 +239,8 @@ sandesha2_inmemory_seq_property_mgr_retrieve(
     ret = (sandesha2_seq_property_bean_t *) sandesha2_inmemory_bean_mgr_retrieve(
         seq_prop_mgr_impl->bean_mgr, env, key);
     /*AXIS2_FREE(env->allocator, key);*/
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_seq_property_mgr_retrieve");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_seq_property_mgr_retrieve");
     return ret;
 }
 
@@ -254,7 +254,7 @@ sandesha2_inmemory_seq_property_mgr_update(
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_inmemory_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Entry:[sandesha2]sandesha2_inmemory_seq_property_mgr_update");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -266,7 +266,7 @@ sandesha2_inmemory_seq_property_mgr_update(
     }
     ret = sandesha2_inmemory_bean_mgr_update(seq_prop_mgr_impl->bean_mgr, env,
         id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Exit:[sandesha2]sandesha2_inmemory_seq_property_mgr_update:return:%d", ret);
     return ret;
 }
@@ -279,14 +279,14 @@ sandesha2_inmemory_seq_property_mgr_find(
 {
     sandesha2_inmemory_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
     axutil_array_list_t *ret = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_seq_property_mgr_find");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_seq_property_mgr_find");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     ret = sandesha2_inmemory_bean_mgr_find(seq_prop_mgr_impl->bean_mgr, env,
         (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_seq_property_mgr_find");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_seq_property_mgr_find");
     return ret;
 }
 
@@ -320,8 +320,8 @@ sandesha2_inmemory_seq_property_mgr_match(
     axis2_char_t *value = NULL;
     axis2_char_t *temp_value = NULL;
     
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_seq_property_mgr_match");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_seq_property_mgr_match");
     seq_id = sandesha2_seq_property_bean_get_seq_id(
         (sandesha2_seq_property_bean_t *) bean, env);
     temp_seq_id = sandesha2_seq_property_bean_get_seq_id(
@@ -346,8 +346,8 @@ sandesha2_inmemory_seq_property_mgr_match(
     {
         equal = AXIS2_FALSE;
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_seq_property_mgr_match:equal:%d", 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_seq_property_mgr_match:equal:%d", 
             equal);
     return equal;
 }

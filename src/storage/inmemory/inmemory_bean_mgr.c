@@ -224,7 +224,7 @@ sandesha2_inmemory_bean_mgr_free_impl(
     const axutil_env_t *env)
 {
     sandesha2_inmemory_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Start:sandesha2_inmemory_bean_mgr_free_impl");
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
 
@@ -243,8 +243,8 @@ sandesha2_inmemory_bean_mgr_free_impl(
         AXIS2_FREE(env->allocator, bean_mgr_impl);
         bean_mgr_impl = NULL;
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_bean_mgr_free_impl");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_bean_mgr_free_impl");
 }
 
 static axis2_bool_t AXIS2_CALL
@@ -300,7 +300,7 @@ sandesha2_inmemory_bean_mgr_retrieve_impl(
     AXIS2_PARAM_CHECK(env->error, key, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, "%s\n", key);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "%s\n", key);
     bean = (sandesha2_rm_bean_t *) axutil_hash_get(bean_mgr_impl->table, 
             key, AXIS2_HASH_KEY_STRING);
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);

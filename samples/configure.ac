@@ -5,8 +5,10 @@ AC_PREREQ(2.59)
 AC_INIT(sandesha2-sample-src, 0.93)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE([tar-ustar])
+dnl AM_INIT_AUTOMAKE([tar-ustar])
+AM_INIT_AUTOMAKE
 AC_PREFIX_DEFAULT(/usr/local/sandesha2/samples)
+m4_ifdef([_A][M_PROG_TAR],[_A][M_SET_OPTION([tar-ustar])])
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -21,7 +23,7 @@ dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 
 CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE"
-LDFLAGS="-lpthread"
+LDFLAGS="-L$AXIS2C_HOME/lib -lpthread"
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -38,23 +40,6 @@ PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
 if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS -g"
 fi
-
-AC_MSG_CHECKING(whether to build dynamic invocation client)
-AC_ARG_ENABLE(diclient, [  --enable-diclient    build diclient. default=no],
-[ case "${enableval}" in
-  no)
-    AC_MSG_RESULT(no)
-    DICLIENT_DIR=""
-    ;;
-  *)
-    AC_MSG_RESULT(yes)
-    DICLIENT_DIR="diclient"
-
-    ;;
-  esac ],
-  AC_MSG_RESULT(yes)
-  DICLIENT_DIR=""
-)
 
 AC_MSG_CHECKING(To Use Axis2 C Axis2. This is a compulsory module to build Sandesha2 C)
 AC_ARG_WITH(axis2,

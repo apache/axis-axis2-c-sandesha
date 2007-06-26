@@ -159,8 +159,8 @@ sandesha2_permanent_transaction_create(
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
     if(rc != SQLITE_OK)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
-            sqlite3_errmsg(trans_impl->dbconn));
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s"
+            " sqlite error: %s\n", db_name, sqlite3_errmsg(trans_impl->dbconn));
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
             AXIS2_FAILURE);
         sqlite3_close(trans_impl->dbconn);
@@ -336,7 +336,7 @@ sandesha2_permanent_transaction_enlist(
     sandesha2_rm_bean_t *rm_bean_l = NULL;
     unsigned long int thread_id = -1;
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Start:sandesha2_permanent_transaction_enlist");
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     rm_bean_l = sandesha2_rm_bean_get_base(rm_bean, env);
@@ -357,7 +357,7 @@ sandesha2_permanent_transaction_enlist(
                 size = axutil_array_list_size(trans_impl->enlisted_beans, env);
             if(size > 0)
             {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Possible deadlock");
+                AXIS2_LOG_WARN(env->log, AXIS2_LOG_SI, "Possible deadlock");
                 AXIS2_ERROR_SET(env->error, AXIS2_ERROR_POSSIBLE_DEADLOCK, 
                     AXIS2_FAILURE);
             }
@@ -374,7 +374,7 @@ sandesha2_permanent_transaction_enlist(
         }   
         axutil_thread_mutex_unlock(trans_impl->mutex);
     }    
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_transaction_enlist");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_permanent_transaction_enlist");
 }
 

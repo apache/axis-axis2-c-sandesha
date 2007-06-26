@@ -96,7 +96,7 @@ sandesha2_out_handler_invoke(
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Start: sandesha2_out_handler_invoke");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] Start: sandesha2_out_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -273,7 +273,8 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
         axutil_property_set_value(temp_prop, env, axutil_strdup(
             env,AXIS2_VALUE_FALSE));
-    AXIS2_LOG_INFO(env->log, "[sandesha2] Exit: sandesha2_out_handler_invoke");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Exit: "
+            "sandesha2_out_handler_invoke");
     return AXIS2_SUCCESS;
 }
 

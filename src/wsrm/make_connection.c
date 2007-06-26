@@ -289,7 +289,7 @@ sandesha2_make_connection_to_om_node(
         AXIS2_ERROR_SET(env->error, 
             SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL, 
             AXIS2_FAILURE);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Invalid MakeConnection " \
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid MakeConnection " \
             "object. Both Identifier and Address are null");
         return NULL;
     }

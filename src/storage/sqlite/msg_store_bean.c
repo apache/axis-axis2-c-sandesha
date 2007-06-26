@@ -25,44 +25,24 @@
  */
 struct sandesha2_msg_store_bean_t 
 {
-
-	
 	axis2_char_t * stored_key;
-	
     axis2_char_t * msg_id;
-	
     axis2_char_t * soap_env_str;
-	
 	int soap_version;
-
 	AXIS2_TRANSPORT_ENUMS transport_out;
-	
     axis2_char_t * op;
-	
     axis2_char_t * svc;
-	
 	axis2_char_t * svc_grp;
-	
 	axis2_char_t * op_mep;
-	
 	axis2_char_t * to_url;
-	
     axis2_char_t * reply_to;
-	
 	axis2_char_t * transport_to;
-	
 	axis2_char_t * execution_chain_str;
-
 	int flow;
-	
 	axis2_char_t * msg_recv_str;
-	
 	axis2_bool_t svr_side;
-	
 	axis2_char_t * in_msg_store_key;
-		
 	axis2_char_t * persistent_property_str;
-	
 	axis2_char_t * action;
 };
 	

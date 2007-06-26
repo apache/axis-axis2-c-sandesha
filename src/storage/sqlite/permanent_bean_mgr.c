@@ -217,8 +217,8 @@ sandesha2_permanent_bean_mgr_free(
     const axutil_env_t *env)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Start:sandesha2_permanent_bean_mgr_free_impl");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Start:sandesha2_permanent_bean_mgr_free_impl");
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
 
     if(bean_mgr_impl)
@@ -226,8 +226,8 @@ sandesha2_permanent_bean_mgr_free(
         AXIS2_FREE(env->allocator, bean_mgr_impl);
         bean_mgr_impl = NULL;
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_free_impl");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_permanent_bean_mgr_free_impl");
 }
 
 axis2_bool_t AXIS2_CALL
@@ -726,8 +726,8 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 	prop_str = sandesha2_msg_store_bean_get_persistent_property_str(bean, env);
 	action = sandesha2_msg_store_bean_get_action(bean, env);
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Entry:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
     sql_size = axutil_strlen(msg_id) + axutil_strlen(stored_key) + 
         axutil_strlen(soap_env_str) + sizeof(int) + sizeof(int) + 
         axutil_strlen(op) + axutil_strlen(svc) + axutil_strlen(svc_grp) + 
@@ -833,8 +833,8 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     }
     AXIS2_FREE(env->allocator, sql_stmt_insert);
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_permanent_bean_mgr_insert_msg_store_bean");
     return AXIS2_TRUE;
 }
 
@@ -849,8 +849,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     axis2_char_t *error_msg = NULL;
     int rc = -1;
     sqlite3 *dbconn = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Entry:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
@@ -875,8 +875,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
         return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
     return AXIS2_TRUE;
 }
 
@@ -900,7 +900,7 @@ sandesha2_permanent_bean_mgr_store_response(
     int count = -1;
 
 	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
         "[sandesha2]Start:sandesha2_permanent_bean_mgr_store_response");
     sql_size = axutil_strlen(seq_id) + axutil_strlen(response) + 
         sizeof(int) + sizeof(int) + 512;
@@ -979,8 +979,8 @@ sandesha2_permanent_bean_mgr_store_response(
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_store_response");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_permanent_bean_mgr_store_response");
     return AXIS2_TRUE;
 }
 
@@ -996,8 +996,8 @@ sandesha2_permanent_bean_mgr_remove_response(
     axis2_char_t *error_msg = NULL;
     int rc = -1;
     sqlite3 *dbconn = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_remove_response");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Entry:sandesha2_permanent_bean_mgr_remove_response");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
@@ -1023,8 +1023,8 @@ sandesha2_permanent_bean_mgr_remove_response(
         return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_remove_response");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_permanent_bean_mgr_remove_response");
     return AXIS2_TRUE;
 }
 

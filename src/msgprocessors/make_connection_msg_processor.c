@@ -187,7 +187,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_INFO(env->log, "[sandesha2] sandesha2_make_connection_msg_" \
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] sandesha2_make_connection_msg_" \
             "processor_process_in_msg .........");
 
     make_conn = (sandesha2_make_connection_t*)
@@ -434,7 +434,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
                 storage_mgr);
     }
     axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
-    AXIS2_LOG_INFO(env->log, "[sandesha2] EXIT sandesha2_make_connection_msg_" \
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] EXIT sandesha2_make_connection_msg_" \
             "processor_process_in_msg .........");
     return AXIS2_SUCCESS;
 }

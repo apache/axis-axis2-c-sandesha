@@ -118,7 +118,7 @@ sandesha2_global_in_handler_invoke(
     axis2_bool_t rolled_back = AXIS2_FALSE;
     AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_INFO(env->log, "[sandesha2]Start:sandesha2_global_in_handler");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2]Start:sandesha2_global_in_handler");
    /* This handler needs to identify messages which follow the WSRM 1.0 
     * convention for sending 'LastMessage' when the sender doesn't have a 
     * reliable message to piggyback the last message marker onto.
@@ -319,7 +319,7 @@ sandesha2_global_in_handler_invoke(
             AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
     }
-    AXIS2_LOG_INFO(env->log, "[sandesha2]Exit:sandesha2_global_in_handler");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] Exit:sandesha2_global_in_handler");
        
     return AXIS2_SUCCESS;
 }

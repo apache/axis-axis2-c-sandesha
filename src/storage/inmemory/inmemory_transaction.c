@@ -197,7 +197,7 @@ sandesha2_inmemory_transaction_enlist(
 {
     sandesha2_rm_bean_t *rm_bean_l = NULL;
     sandesha2_inmemory_transaction_impl_t *trans_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Start:sandesha2_inmemory_transaction_enlist");
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     rm_bean_l = sandesha2_rm_bean_get_base(rm_bean, env);
@@ -228,7 +228,7 @@ sandesha2_inmemory_transaction_enlist(
         }   
         axutil_thread_mutex_unlock(trans_impl->mutex);
     }    
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_transaction_enlist");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_transaction_enlist");
 }
 

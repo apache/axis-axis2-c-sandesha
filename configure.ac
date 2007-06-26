@@ -108,7 +108,8 @@ AC_ARG_WITH(mysql,
     WRAPPER_DIR="mysql"
     dnl Find mysql include dir in the path
     if test -d $withval; then
-        mysqlinc="-I$withval"
+        mysqlinc="-I$withval/include"
+        LDFLAGS="-L$withval/lib $LDFLAGS"
     dnl else find the mysqlinc include dir in /usr/include/mysql
     elif test -d '/usr/include/mysql'; then
         mysqlinc="-I/usr/include/mysql"
@@ -116,7 +117,8 @@ AC_ARG_WITH(mysql,
         AC_MSG_ERROR(could not find mysqlinc. stop)
     fi
     WRAPPER_DIR="mysql"
-    LDFLAGS="$LDFLAGS -lmysqlclient -lnsl -lm -lz"
+    dnl LDFLAGS="$LDFLAGS -lmysqlclient -lnsl -lm -lz"
+    LDFLAGS="$LDFLAGS -lmysqlclient -lm -lz"
     ;;
   esac ],
   AC_MSG_RESULT(no)
@@ -140,16 +142,17 @@ AC_SUBST(WRAPPER_DIR)
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
     src/util/Makefile \
-    src/wsrm/Makefile\
-    src/transport/Makefile\
-    src/workers/Makefile\
-    src/handlers/Makefile\
-    src/msgprocessors/Makefile\
-    src/storage/Makefile\
-    src/storage/beans/Makefile\
-    src/storage/inmemory/Makefile\
-    src/storage/sqlite/Makefile\
-    src/storage/mysql/Makefile\
+    src/wsrm/Makefile \
+    src/transport/Makefile \
+    src/workers/Makefile \
+    src/handlers/Makefile \
+    src/msgprocessors/Makefile \
+    src/storage/Makefile \
+    src/storage/beans/Makefile \
+    src/storage/common/Makefile \
+    src/storage/inmemory/Makefile \
+    src/storage/sqlite/Makefile \
+    src/storage/mysql/Makefile \
     src/client/Makefile \
     src/core/Makefile \
     src/polling/Makefile 

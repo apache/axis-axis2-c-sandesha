@@ -147,8 +147,8 @@ sandesha2_inmemory_create_seq_mgr_insert(
     axis2_char_t *msg_id = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_create_seq_mgr_insert");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_create_seq_mgr_insert");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
@@ -157,8 +157,8 @@ sandesha2_inmemory_create_seq_mgr_insert(
         (sandesha2_rm_bean_t *) bean, env);
     ret = sandesha2_inmemory_bean_mgr_insert(seq_mgr_impl->bean_mgr, env, 
         msg_id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_create_seq_mgr_insert");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_create_seq_mgr_insert");
     return ret;
 }
 
@@ -201,7 +201,7 @@ sandesha2_inmemory_create_seq_mgr_update(
     axis2_char_t *msg_id = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
 
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Entry:[sandesha2]sandesha2_inmemory_create_seq_mgr_update");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
@@ -215,7 +215,7 @@ sandesha2_inmemory_create_seq_mgr_update(
     }
     ret = sandesha2_inmemory_bean_mgr_update(seq_mgr_impl->bean_mgr, env, 
         msg_id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Exit:[sandesha2]sandesha2_inmemory_create_seq_mgr_update:return:%d", 
             ret);
     return ret;
@@ -229,13 +229,13 @@ sandesha2_inmemory_create_seq_mgr_find(
 {
     sandesha2_inmemory_create_seq_mgr_t *seq_mgr_impl = NULL;
     axutil_array_list_t *ret = NULL;
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Entry:[sandesha2]sandesha2_inmemory_create_seq_mgr_find");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
     ret = sandesha2_inmemory_bean_mgr_find(seq_mgr_impl->bean_mgr, env, 
         (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "Exit:[sandesha2]sandesha2_inmemory_create_seq_mgr_find");
     return ret;
 }
@@ -270,8 +270,8 @@ sandesha2_inmemory_create_seq_mgr_match(
     axis2_char_t *temp_seq_id = NULL;
     axis2_char_t *internal_seq_id = NULL;
     axis2_char_t *temp_internal_seq_id = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_create_seq_mgr_match");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_create_seq_mgr_match");
     msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(bean, env);
     temp_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(candidate, 
         env);
@@ -296,8 +296,8 @@ sandesha2_inmemory_create_seq_mgr_match(
     {
         equal = AXIS2_FALSE;
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_create_seq_mgr_match:equal:%d", 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_create_seq_mgr_match:equal:%d", 
             equal);
     return equal;
 }

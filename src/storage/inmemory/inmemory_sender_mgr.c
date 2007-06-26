@@ -162,8 +162,8 @@ sandesha2_inmemory_sender_mgr_insert(
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_insert");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_insert");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
@@ -177,8 +177,8 @@ sandesha2_inmemory_sender_mgr_insert(
     }
     ret = sandesha2_inmemory_bean_mgr_insert(sender_mgr_impl->bean_mgr, env,
         msg_id, (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_insert:return:%d", ret);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_insert:return:%d", ret);
     return ret;
 }
 
@@ -206,14 +206,14 @@ sandesha2_inmemory_sender_mgr_retrieve(
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_retrieve");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_retrieve");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);
     ret = (sandesha2_sender_bean_t *) sandesha2_inmemory_bean_mgr_retrieve(
         sender_mgr_impl->bean_mgr, env, msg_id);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_retrieve");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_retrieve");
     return ret;
 }
 
@@ -227,8 +227,8 @@ sandesha2_inmemory_sender_mgr_update(
     axis2_bool_t ret = AXIS2_FALSE;*/
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
 
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_update");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_update");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
@@ -246,8 +246,8 @@ sandesha2_inmemory_sender_mgr_find_by_internal_seq_id(
     sandesha2_sender_bean_t *bean = NULL;
     axutil_array_list_t *ret = NULL;
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_find_by_internal_seq_id");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_find_by_internal_seq_id");
     AXIS2_ENV_CHECK(env, NULL);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
     
@@ -256,8 +256,8 @@ sandesha2_inmemory_sender_mgr_find_by_internal_seq_id(
         internal_seq_id);
     ret = sandesha2_inmemory_bean_mgr_find(sender_mgr_impl->bean_mgr, env,
         (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_find_by_internal_seq_id");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_find_by_internal_seq_id");
     return ret;
 }
 
@@ -269,14 +269,14 @@ sandesha2_inmemory_sender_mgr_find_by_sender_bean(
 {
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
     axutil_array_list_t *ret = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_find_by_sender_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_find_by_sender_bean");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
     ret = sandesha2_inmemory_bean_mgr_find(sender_mgr_impl->bean_mgr, env,
         (sandesha2_rm_bean_t *) bean);
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_find_by_sender_bean");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_find_by_sender_bean");
     return ret;
 }
 
@@ -318,8 +318,8 @@ sandesha2_inmemory_sender_mgr_match(
     axis2_bool_t is_send = AXIS2_FALSE;
     axis2_bool_t temp_is_send = AXIS2_FALSE;
     
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_match");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_match");
     ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
         (sandesha2_sender_bean_t *) bean, env);
     temp_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
@@ -389,8 +389,8 @@ sandesha2_inmemory_sender_mgr_match(
     {
         add = AXIS2_FALSE;
     }*/
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_match:add:%d", 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_match:add:%d", 
             add);
     return add;
 }
@@ -407,8 +407,8 @@ sandesha2_inmemory_sender_mgr_get_next_msg_to_send(
     int i = 0, size = 0;
     axutil_array_list_t *match_list = NULL;
     sandesha2_inmemory_sender_mgr_t *sender_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_sender_mgr_get_next_msg_to_send");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_sender_mgr_get_next_msg_to_send");
     AXIS2_ENV_CHECK(env, NULL);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
 
@@ -447,8 +447,8 @@ sandesha2_inmemory_sender_mgr_get_next_msg_to_send(
             break;
         }
     }
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Exit:sandesha2_inmemory_sender_mgr_get_next_msg_to_send");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_inmemory_sender_mgr_get_next_msg_to_send");
     return result;
 }
 

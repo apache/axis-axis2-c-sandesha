@@ -283,8 +283,8 @@ sandesha2_inmemory_next_msg_mgr_match(
     axis2_char_t *seq_id = NULL;
     axis2_char_t *temp_seq_id = NULL;
     sandesha2_inmemory_next_msg_mgr_t *next_msg_mgr_impl = NULL;
-    AXIS2_LOG_INFO(env->log, 
-        "[sandesha2]Entry:sandesha2_inmemory_next_msg_mgr_match");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_inmemory_next_msg_mgr_match");
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
     next_msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(
@@ -303,7 +303,7 @@ sandesha2_inmemory_next_msg_mgr_match(
     {
         equal = AXIS2_FALSE;
     }
-    AXIS2_LOG_INFO(env->log, 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_inmemory_next_msg_mgr_match:equal:%d", 
             equal);
     return equal;
