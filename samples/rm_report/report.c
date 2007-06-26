@@ -223,12 +223,16 @@ int main(int argc, char** argv)
         incoming_seq_list = sandesha2_report_get_incoming_seq_list(report, env);
         if(incoming_seq_list)
             size = axutil_array_list_size(incoming_seq_list, env);
+        
+        printf("Sandesha client report.\n");
+        printf(".......................\n");
+        
         for(i = 0; i < size; i++)
         {
             axis2_char_t *seq_id = axutil_array_list_get(incoming_seq_list, env, i);
             if(seq_id)
             {
-                printf("incoming seq_id %d:%s\n", i+1, seq_id);
+                printf("Incoming sequence ID %d : %s\n", i+1, seq_id);
             }
         }
         size = 0;
@@ -241,12 +245,13 @@ int main(int argc, char** argv)
             if(seq_id)
             {
                 long completed_msgs_count = -1; 
-                printf("outgoing seq_id %d:%s\n", i+1, seq_id);
+                printf("Outgoing sequence ID %d : %s\n", i+1, seq_id);
                 completed_msgs_count = sandesha2_report_get_completed_msgs_count(
                     report, env, seq_id);
-                printf("completed_msgs_count:%ld\n", completed_msgs_count);
+                printf("Completed message count : %ld\n", completed_msgs_count);
             }
         }
+        printf("End of Sandesha client report.\n");
     }
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
