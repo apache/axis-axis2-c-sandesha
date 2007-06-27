@@ -18,7 +18,7 @@ SANDESHA2_CODE = $(SANDESHASRC)\src\core\*.c \
 		 $(SANDESHASRC)\src\client\*.c \
 		 $(SANDESHASRC)\src\storage\beans\*.c \
 		 $(SANDESHASRC)\src\storage\inmemory\*.c \
-		 $(SANDESHASRC)\src\storage\*.c \
+		 $(SANDESHASRC)\src\storage\common\*.c \
 		 $(SANDESHASRC)\src\transport\*.c \
 		 $(SANDESHASRC)\src\polling\*.c \
 		 $(SANDESHASRC)\src\msgprocessors\*.c \
