@@ -1,5 +1,5 @@
-drop database sandesha2_svr_db;
-drop database sandesha2_client_db;
+drop database IF EXISTS sandesha2_svr_db;
+drop database IF EXISTS sandesha2_client_db;
 create database sandesha2_svr_db;
 create database sandesha2_client_db;
 
