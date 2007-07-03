@@ -1,9 +1,9 @@
 ####################################################
-# Makefile for Sandesha2						   #
-# you can do 					                   #
+# Makefile for Sandesha2			   #
+# you can do 			                   #
 # nmake dist     - distribution  (dist / samples ) #
-# nmake clean  	 - clean			               #
-# nmake samples  - samples 			               #
+# nmake clean  	 - clean	                   #
+# nmake samples  - samples 			   #
 ####################################################
 
 AUTOCONF = configure.in
@@ -16,19 +16,7 @@ SANDESHADISTDIR = ..\sandesha2
 SANDESHA2_INTDIR = .\int.msvc
 SANDESHA_DLL = sandesha2
 
-SANDESHA2_CODE = $(SANDESHASRC)\src\core\*.c \
-		 $(SANDESHASRC)\src\client\*.c \
-		 $(SANDESHASRC)\src\storage\beans\*.c \
-		 $(SANDESHASRC)\src\storage\inmemory\*.c \
-		 $(SANDESHASRC)\src\storage\common\*.c \
-		 $(SANDESHASRC)\src\transport\*.c \
-		 $(SANDESHASRC)\src\polling\*.c \
-		 $(SANDESHASRC)\src\msgprocessors\*.c \
-		 $(SANDESHASRC)\src\handlers\*.c \
-		 $(SANDESHASRC)\src\transport\*.c \
-         $(SANDESHASRC)\src\util\*.c \
- 		 $(SANDESHASRC)\src\workers\*.c \
-	     $(SANDESHASRC)\src\wsrm\*.c 
+ 
 	     
 #compiler options
 CC = @cl.exe
@@ -95,6 +83,11 @@ intdir:
 clean :
 	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
 
+distclean :
+	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
+	@if exist $(SANDESHA2_INTDIR) rmdir /S /Q $(SANDESHA2_INTDIR)
+
+
 copy_extra:
 	@copy $(SANDESHASRC)\config\* $(SANDESHADISTDIR)\config
 	@copy $(SANDESHASRC)\LICENSE $(SANDESHADISTDIR)
@@ -112,11 +105,153 @@ copy_samples:
 copy_include:
 	@xcopy /E $(SANDESHASRC)\include $(SANDESHADISTDIR)\include
 
-sandesha2:
-	$(CC) $(CFLAGS) $(SANDESHA2_CODE) /Fo$(SANDESHA2_INTDIR)\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\*.obj /DLL \
-	/OUT:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll /IMPLIB:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).lib
 
+SANDESHA2_CODE = $(SANDESHASRC)\src
+
+SANDESHA2_INTDIR1 = $(SANDESHA2_INTDIR)\src\core
+SANDESHA2_INTDIR2 = $(SANDESHA2_INTDIR)\src\client
+SANDESHA2_INTDIR3 = $(SANDESHA2_INTDIR)\src\storage\beans
+SANDESHA2_INTDIR4 = $(SANDESHA2_INTDIR)\src\storage\inmemory
+SANDESHA2_INTDIR5 = $(SANDESHA2_INTDIR)\src\storage\common
+SANDESHA2_INTDIR6 = $(SANDESHA2_INTDIR)\src\transport
+SANDESHA2_INTDIR7 = $(SANDESHA2_INTDIR)\src\polling
+SANDESHA2_INTDIR8 = $(SANDESHA2_INTDIR)\src\msgprocessors
+SANDESHA2_INTDIR9 = $(SANDESHA2_INTDIR)\src\handlers
+SANDESHA2_INTDIR10 = $(SANDESHA2_INTDIR)\src\util
+SANDESHA2_INTDIR11 = $(SANDESHA2_INTDIR)\src\workers
+SANDESHA2_INTDIR12 = $(SANDESHA2_INTDIR)\src\wsrm
+SANDESHA2_INTDIR13 = $(SANDESHA2_INTDIR)\src\storage\mysql
+SANDESHA2_INTDIR14 = $(SANDESHA2_INTDIR)\src\storage\sqlite
+
+
+SANDESHA2_OBJS = $(SANDESHA2_INTDIR1)\*.obj \
+		 $(SANDESHA2_INTDIR2)\*.obj \
+		 $(SANDESHA2_INTDIR3)\*.obj \
+		 $(SANDESHA2_INTDIR4)\*.obj \
+		 $(SANDESHA2_INTDIR5)\*.obj \
+		 $(SANDESHA2_INTDIR6)\*.obj \
+		 $(SANDESHA2_INTDIR7)\*.obj \
+		 $(SANDESHA2_INTDIR8)\*.obj \
+		 $(SANDESHA2_INTDIR9)\*.obj \
+		 $(SANDESHA2_INTDIR10)\*.obj \
+		 $(SANDESHA2_INTDIR11)\*.obj \
+		 $(SANDESHA2_INTDIR12)\*.obj 
+
+		  
+
+
+$(SANDESHA2_INTDIR1) :
+	if not exist $(SANDESHA2_INTDIR1) mkdir $(SANDESHA2_INTDIR1)
+
+$(SANDESHA2_INTDIR2) :
+	if not exist $(SANDESHA2_INTDIR2) mkdir $(SANDESHA2_INTDIR2)
+
+$(SANDESHA2_INTDIR3) :
+	if not exist $(SANDESHA2_INTDIR3) mkdir $(SANDESHA2_INTDIR3)
+
+$(SANDESHA2_INTDIR4) :
+	if not exist $(SANDESHA2_INTDIR4) mkdir $(SANDESHA2_INTDIR4)
+
+$(SANDESHA2_INTDIR5) :
+	if not exist $(SANDESHA2_INTDIR5) mkdir $(SANDESHA2_INTDIR5)
+
+$(SANDESHA2_INTDIR6) :
+	if not exist $(SANDESHA2_INTDIR6) mkdir $(SANDESHA2_INTDIR6)
+
+$(SANDESHA2_INTDIR7) :
+	if not exist $(SANDESHA2_INTDIR7) mkdir $(SANDESHA2_INTDIR7)
+
+$(SANDESHA2_INTDIR8) :
+	if not exist $(SANDESHA2_INTDIR8) mkdir $(SANDESHA2_INTDIR8)
+
+$(SANDESHA2_INTDIR9) :
+	if not exist $(SANDESHA2_INTDIR9) mkdir $(SANDESHA2_INTDIR9)
+
+$(SANDESHA2_INTDIR10) :
+	if not exist $(SANDESHA2_INTDIR10) mkdir $(SANDESHA2_INTDIR10)
+
+$(SANDESHA2_INTDIR11) :
+	if not exist $(SANDESHA2_INTDIR11) mkdir $(SANDESHA2_INTDIR11)
+
+$(SANDESHA2_INTDIR12) :
+	if not exist $(SANDESHA2_INTDIR12) mkdir $(SANDESHA2_INTDIR12)
+
+$(SANDESHA2_INTDIR13) :
+	if not exist $(SANDESHA2_INTDIR13) mkdir $(SANDESHA2_INTDIR13)
+
+$(SANDESHA2_INTDIR14) :
+	if not exist $(SANDESHA2_INTDIR14) mkdir $(SANDESHA2_INTDIR14)
+
+
+{$(SANDESHA2_CODE)\core}.c{$(SANDESHA2_INTDIR1)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR1)\ /c $<
+
+{$(SANDESHA2_CODE)\client}.c{$(SANDESHA2_INTDIR2)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR2)\ /c $<
+
+{$(SANDESHA2_CODE)\storage\beans}.c{$(SANDESHA2_INTDIR3)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR3)\ /c $<
+
+{$(SANDESHA2_CODE)\storage\inmemory}.c{$(SANDESHA2_INTDIR4)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR4)\ /c $<
+
+{$(SANDESHA2_CODE)\storage\common}.c{$(SANDESHA2_INTDIR5)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR5)\ /c $<
+
+{$(SANDESHA2_CODE)\transport}.c{$(SANDESHA2_INTDIR6)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR6)\ /c $<
+
+{$(SANDESHA2_CODE)\polling}.c{$(SANDESHA2_INTDIR7)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR7)\ /c $<
+
+{$(SANDESHA2_CODE)\msgprocessors}.c{$(SANDESHA2_INTDIR8)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR8)\ /c $<
+
+{$(SANDESHA2_CODE)\handlers}.c{$(SANDESHA2_INTDIR9)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR9)\ /c $<
+
+{$(SANDESHA2_CODE)\util}.c{$(SANDESHA2_INTDIR10)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR10)\ /c $<
+
+{$(SANDESHA2_CODE)\workers}.c{$(SANDESHA2_INTDIR11)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR11)\ /c $<
+
+{$(SANDESHA2_CODE)\wsrm}.c{$(SANDESHA2_INTDIR12)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR12)\ /c $<
+
+{$(SANDESHA2_CODE)\storage\mysql}.c{$(SANDESHA2_INTDIR13)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR13)\ /c $<
+
+{$(SANDESHA2_CODE)\storage\sqlite}.c{$(SANDESHA2_INTDIR14)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR14)\ /c $<
+
+
+!if "$(WITH_SQLITE)" == "1"
+$(SANDESHA2_OBJS) : $(SANDESHA2_INTDIR1) $(SANDESHA2_INTDIR2) $(SANDESHA2_INTDIR3) $(SANDESHA2_INTDIR4) \
+	$(SANDESHA2_INTDIR5) $(SANDESHA2_INTDIR6) $(SANDESHA2_INTDIR7) $(SANDESHA2_INTDIR8) $(SANDESHA2_INTDIR9) \
+	$(SANDESHA2_INTDIR10) $(SANDESHA2_INTDIR11) $(SANDESHA2_INTDIR12) $(SANDESHA2_INTDIR14)
+
+SANDESHA2_OBJS = $(SANDESHA2_OBJS) \
+		 $(SANDESHA2_INTDIR14)\*.obj 
+
+!endif
+
+!if "$(WITH_MYSQL)" == "1"
+
+$(SANDESHA2_OBJS) : $(SANDESHA2_INTDIR1) $(SANDESHA2_INTDIR2) $(SANDESHA2_INTDIR3) $(SANDESHA2_INTDIR4) \
+	$(SANDESHA2_INTDIR5) $(SANDESHA2_INTDIR6) $(SANDESHA2_INTDIR7) $(SANDESHA2_INTDIR8) $(SANDESHA2_INTDIR9) \
+	$(SANDESHA2_INTDIR10) $(SANDESHA2_INTDIR11) $(SANDESHA2_INTDIR12) $(SANDESHA2_INTDIR13)
+
+SANDESHA2_OBJS = $(SANDESHA2_OBJS) \
+		 $(SANDESHA2_INTDIR13)\*.obj 
+!endif
+
+$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll : $(SANDESHA2_OBJS)
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_OBJS) /DLL /OUT:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll \
+	/IMPLIB:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).lib
+
+sandesha2: $(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll
+	
 copy_xml:
 	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\modules\sandesha2\module.xml
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\
