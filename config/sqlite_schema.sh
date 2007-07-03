@@ -1,10 +1,10 @@
 #!/bin/bash
-sqlite sandesha2_svr_db "drop table create_seq;"
-sqlite sandesha2_svr_db "drop table  invoker;"
-sqlite sandesha2_svr_db "drop table  sender"
-sqlite sandesha2_svr_db "drop table  next_msg"
-sqlite sandesha2_svr_db "drop table  seq_property"
-sqlite sandesha2_svr_db "drop table  msg"
+sqlite sandesha2_svr_db "drop table if exists create_seq;"
+sqlite sandesha2_svr_db "drop table if exists invoker;"
+sqlite sandesha2_svr_db "drop table if exists sender"
+sqlite sandesha2_svr_db "drop table if exists next_msg"
+sqlite sandesha2_svr_db "drop table if exists seq_property"
+sqlite sandesha2_svr_db "drop table if exists msg"
 sqlite sandesha2_svr_db "create table create_seq(create_seq_msg_id varchar(100) primary key, 
     internal_seq_id varchar(200), seq_id varchar(200), create_seq_msg_store_key varchar(100),
     ref_msg_store_key varchar(100))"
@@ -25,13 +25,13 @@ sqlite sandesha2_svr_db "create table msg(stored_key varchar(200) primary key,
     msg_recv_str varchar(200), svr_side boolean, in_msg_store_key varchar(200), prop_str varchar(8192), 
     action varchar(200))"
 
-sqlite sandesha2_client_db "drop table create_seq;"
-sqlite sandesha2_client_db "drop table  invoker;"
-sqlite sandesha2_client_db "drop table  sender"
-sqlite sandesha2_client_db "drop table  next_msg"
-sqlite sandesha2_client_db "drop table  seq_property"
-sqlite sandesha2_client_db "drop table  msg"
-sqlite sandesha2_client_db "drop table  response"
+sqlite sandesha2_client_db "drop table if exists create_seq;"
+sqlite sandesha2_client_db "drop table if exists invoker;"
+sqlite sandesha2_client_db "drop table if exists sender"
+sqlite sandesha2_client_db "drop table if exists next_msg"
+sqlite sandesha2_client_db "drop table if exists seq_property"
+sqlite sandesha2_client_db "drop table if exists msg"
+sqlite sandesha2_client_db "drop table if exists response"
 sqlite sandesha2_client_db "create table create_seq(create_seq_msg_id varchar(100) primary key, 
     internal_seq_id varchar(200), seq_id varchar(200), create_seq_msg_store_key varchar(100),
     ref_msg_store_key varchar(100))"
