@@ -79,17 +79,12 @@ int main(int argc, char** argv)
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
-    target_epr = axis2_endpoint_ref_create(env, address);
+    endpoint_ref = axis2_endpoint_ref_create(env, address);
 
     /* Setup options */
     options = axis2_options_create(env);
     if(endpoint_ref)
         axis2_options_set_to(options, env, endpoint_ref);
-    if(target_epr)
-    {
-        property = axutil_property_create_with_args(env, 0, 0, 0, target_epr);
-        axis2_options_set_property(options, env, AXIS2_TARGET_EPR, property);
-    }
     /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
