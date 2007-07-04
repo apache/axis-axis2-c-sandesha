@@ -19,3 +19,5 @@ rm_mtom_1_0_LDADD   =  \
 
 INCLUDES = @AXIS2INC@ \
 			-I../../include 
+
+EXTRA_DIST=mtom_util.h

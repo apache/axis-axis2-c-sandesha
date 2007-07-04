@@ -20,3 +20,5 @@ rm_echo_1_0_LDADD   =  \
 INCLUDES =	-I../../include \
 		-I../../include/sandesha2 \
 		@AXIS2INC@
+
+EXTRA_DIST=echo_util.h

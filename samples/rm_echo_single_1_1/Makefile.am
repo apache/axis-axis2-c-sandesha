@@ -19,3 +19,5 @@ rm_echo_single_1_1_LDADD   =  \
 
 INCLUDES = @AXIS2INC@ \
 			-I../../include 
+
+EXTRA_DIST=echo_util.h

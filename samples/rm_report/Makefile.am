@@ -19,3 +19,5 @@ rm_report_LDADD   =  \
 
 INCLUDES = @AXIS2INC@ \
 			-I../../include 
+
+EXTRA_DIST=report_util.h
