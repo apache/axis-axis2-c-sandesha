@@ -58,7 +58,6 @@ int main(int argc, char** argv)
     const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
-    axis2_endpoint_ref_t* target_epr = NULL;
     axis2_endpoint_ref_t* reply_to = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
