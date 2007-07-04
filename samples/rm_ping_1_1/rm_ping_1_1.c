@@ -42,7 +42,6 @@ int main(int argc, char** argv)
     const axis2_char_t *address = NULL;
     const axis2_char_t *seq_key = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
-    axis2_endpoint_ref_t* target_epr = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
