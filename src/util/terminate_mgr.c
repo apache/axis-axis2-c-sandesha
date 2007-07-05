@@ -592,7 +592,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                     seq_prop_bean, env);
                 axis2_char_t *name = sandesha2_seq_property_bean_get_name(
                     seq_prop_bean, env);
-                if(axutil_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
+                if(!axutil_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
                 {
                     highest_in_msg_key_str = 
                         sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
