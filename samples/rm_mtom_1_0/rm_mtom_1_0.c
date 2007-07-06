@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
     int c;
-    const axis2_char_t *image_name = "resources/axis2.jpg";
+    const axis2_char_t *image_name = "../resources/axis2.jpg";
    
     /* Set up the environment */
     env = axutil_env_create_all("echo_non_blocking_dual.log", 
