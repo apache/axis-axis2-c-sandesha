@@ -1,1 +1,1 @@
-mysql -u g -p < mysql_create_schema.sh
+mysql -u g -p < mysql_schema.sh
