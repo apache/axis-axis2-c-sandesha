@@ -317,6 +317,7 @@ samples: all_clients all_services
 
 dist: clean distdir intdir sandesha2 copy_samples samples copy_xml copy_include copy_extra
 
+dist_no_samples: clean distdir intdir sandesha2 copy_xml copy_include copy_extra
 
 	 
 
