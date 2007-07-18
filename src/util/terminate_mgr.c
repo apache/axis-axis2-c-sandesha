@@ -334,7 +334,7 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                     seq_prop_bean, env);
                 axis2_char_t *name = sandesha2_seq_property_bean_get_name(
                     seq_prop_bean, env);
-                if(axutil_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
+                if(!axutil_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
                 {
                     highest_in_msg_key_str = 
                         sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
@@ -562,7 +562,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             create_seq_bean = axutil_array_list_get(found_list, env, i);
             key = sandesha2_create_seq_bean_get_ref_msg_store_key(
                 create_seq_bean, env);
-            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+            if(key) 
+               sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
             msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
                 (sandesha2_rm_bean_t *) create_seq_bean, env);
             sandesha2_create_seq_mgr_remove(create_seq_mgr, env, msg_id);

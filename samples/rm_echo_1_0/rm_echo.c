@@ -112,7 +112,6 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     if(endpoint_ref)
         axis2_options_set_to(options, env, endpoint_ref);
-
     axis2_options_set_use_separate_listener(options, env, AXIS2_TRUE);
     
     /* Separate listner needs addressing, hence addressing stuff in options */
