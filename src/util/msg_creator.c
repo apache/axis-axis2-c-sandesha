@@ -724,6 +724,8 @@ sandesha2_msg_creator_finalize_creation(
                 temp_name = axutil_param_get_name(next_param, env);
                 temp_value = axutil_param_get_value(next_param, env);
                 new_param = axutil_param_create(env, temp_name, temp_value);
+                axutil_param_set_value_free(new_param, env, 
+                    axutil_param_dummy_free_fn);
                 axis2_op_add_param(new_op, env, new_param); 
             }
         }

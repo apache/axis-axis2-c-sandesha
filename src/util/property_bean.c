@@ -106,6 +106,15 @@ sandesha2_property_bean_free(
 	return AXIS2_SUCCESS;
 }
 
+axis2_status_t AXIS2_CALL 
+sandesha2_property_bean_free_void_arg(
+    void *arg, 
+    const axutil_env_t *env)
+{
+    return sandesha2_property_bean_free((sandesha2_property_bean_t*)arg, env);
+}
+
+
 long AXIS2_CALL 
 sandesha2_property_bean_get_inactive_timeout_interval(
     sandesha2_property_bean_t *bean, 

@@ -89,7 +89,9 @@ mod_sandesha2_init(
         
     param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, 
         property_bean);
-    
+    axutil_param_set_value_free(param, env, 
+        sandesha2_property_bean_free_void_arg); 
+
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     axis2_conf_add_param(conf, env, param);
 
