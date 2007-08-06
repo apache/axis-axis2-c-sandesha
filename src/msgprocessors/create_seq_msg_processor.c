@@ -202,7 +202,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
-    out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
+    out_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, 
                         env);
     new_seq_id = sandesha2_seq_mgr_setup_new_seq(env, rm_msg_ctx, 

@@ -367,7 +367,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
+    out_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
     out_rm_msg = sandesha2_msg_creator_create_terminate_seq_res_msg(env, 
         rm_msg_ctx, out_msg_ctx, storage_mgr);
     ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id,

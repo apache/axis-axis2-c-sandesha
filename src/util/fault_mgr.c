@@ -412,7 +412,7 @@ sandesha2_fault_mgr_get_fault(
     AXIS2_PARAM_CHECK(env->error, fault_data, NULL);
     
     ref_msg = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    fault_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, ref_msg);
+    fault_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, ref_msg);
     
     /* Setting context hierachy - be caereful about freeing
      */

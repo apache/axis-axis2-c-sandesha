@@ -198,7 +198,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(ack_rm_msg, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-    close_seq_res_msg = axis2_core_utils_create_out_msg_ctx(env, msg_ctx);
+    close_seq_res_msg = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
     
     close_seq_res_rm_msg = sandesha2_msg_creator_create_close_seq_res_msg(env, 
                         rm_msg_ctx, close_seq_res_msg, storage_mgr);
