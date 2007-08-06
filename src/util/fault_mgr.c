@@ -30,6 +30,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_utils.h>
 #include <stdio.h>
 #include <string.h>
 

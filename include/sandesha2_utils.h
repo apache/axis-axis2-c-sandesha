@@ -260,6 +260,11 @@ sandesha2_utils_is_single_channel(
     const axis2_char_t *rm_version,
     const axis2_char_t *acks_to_addr);
 
+AXIS2_EXTERN axis2_msg_ctx_t * AXIS2_CALL
+sandesha2_utils_create_out_msg_ctx(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *in_msg_ctx);
+
 /** @} */
 #ifdef __cplusplus
 }
