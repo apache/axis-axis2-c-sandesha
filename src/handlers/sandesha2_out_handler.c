@@ -261,7 +261,10 @@ sandesha2_out_handler_invoke(
     if(!within_transaction && !rolled_back)
     {
         axutil_property_t *prop = NULL;
-        sandesha2_transaction_commit(transaction, env);
+        if (transaction)
+        {
+            sandesha2_transaction_commit(transaction, env);
+        }
         prop = axutil_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 

@@ -166,13 +166,15 @@ sandesha2_permanent_transaction_create(
         sqlite3_close(trans_impl->dbconn);
         return NULL;
     }
+    axutil_thread_mutex_lock(trans_impl->mutex);
     rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
         &error_msg);
     if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "BEGIN TRANSACTION", 0, 0, &error_msg, rc);
+            "BEGIN TRANSACTION", 0, 0, &error_msg, rc, trans_impl->mutex);
     if(rc != SQLITE_OK )
     {
+        axutil_thread_mutex_unlock(trans_impl->mutex);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "SQL Error %s",
             error_msg);
@@ -181,6 +183,8 @@ sandesha2_permanent_transaction_create(
         sandesha2_transaction_free(&(trans_impl->trans), env);
         return NULL;
     }
+
+    axutil_thread_mutex_unlock(trans_impl->mutex);
     trans_impl->is_active = AXIS2_TRUE;
     return &(trans_impl->trans);
 }
@@ -254,7 +258,7 @@ sandesha2_permanent_transaction_commit(
     if(rc == SQLITE_BUSY)
     {
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "COMMIT TRANSACTION", 0, 0, &error_msg, rc);
+            "COMMIT TRANSACTION", 0, 0, &error_msg, rc, trans_impl->mutex);
     }
     if(rc != SQLITE_OK )
     {
@@ -285,7 +289,7 @@ sandesha2_permanent_transaction_rollback(
         &error_msg);
     if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "ROLLBACK TRANSACTION", 0, 0, &error_msg, rc);
+            "ROLLBACK TRANSACTION", 0, 0, &error_msg, rc, trans_impl->mutex);
     if(rc != SQLITE_OK )
     {
         axutil_thread_mutex_unlock(trans_impl->mutex);

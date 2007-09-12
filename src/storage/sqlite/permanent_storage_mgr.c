@@ -404,8 +404,10 @@ sandesha2_permanent_storage_mgr_get_transaction(
     
     if(!transaction)
     {
+        axutil_thread_mutex_unlock(storage_mgr_impl->mutex);
         transaction = 
             sandesha2_permanent_transaction_create(env, storage_mgr, thread_id);
+        axutil_thread_mutex_lock(storage_mgr_impl->mutex);
         axutil_hash_set(storage_mgr_impl->transactions, thread_id_key, 
             AXIS2_HASH_KEY_STRING, transaction);
     }
