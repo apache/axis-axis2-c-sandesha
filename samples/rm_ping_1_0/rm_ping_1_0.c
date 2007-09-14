@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define MAX_COUNT 2
+#define MAX_COUNT 5
 
 axiom_node_t *
 build_om_programatically(
@@ -130,14 +130,14 @@ int main(int argc, char** argv)
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    /*AXIS2_SLEEP(MAX_COUNT);*/
+    AXIS2_SLEEP(MAX_COUNT);
     
     payload = build_om_programatically(env, "ping2");
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    /*AXIS2_SLEEP(2 * MAX_COUNT);*/
+    AXIS2_SLEEP(MAX_COUNT);
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", 
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
-    AXIS2_SLEEP(10 * MAX_COUNT);
+    AXIS2_SLEEP(MAX_COUNT);
    
     if (svc_client)
     {
