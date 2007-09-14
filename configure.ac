@@ -108,7 +108,7 @@ AC_ARG_WITH(mysql,
     WRAPPER_DIR="mysql"
     dnl Find mysql include dir in the path
     if test -d $withval; then
-        mysqlinc="-I$withval/include"
+        mysqlinc="-I$withval"
         LDFLAGS="-L$withval/lib $LDFLAGS"
     dnl else find the mysqlinc include dir in /usr/include/mysql
     elif test -d '/usr/include/mysql'; then
