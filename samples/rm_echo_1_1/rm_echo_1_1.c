@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    env = axutil_env_create_all("echo_non_blocking_dual.log", 
+    env = axutil_env_create_all("rm_echo_1_1.log", 
             AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
@@ -299,15 +299,15 @@ void wait_on_callback(
 {
     /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
-    int count = 3;
+    int count = 30;
     while(count-- > 0)
     {
         if (axis2_callback_get_complete(callback, env))
         {
             /* We are done with the callback */
-            break;
+            return;
         }
-        AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+        AXIS2_SLEEP(1); 
     }
     return;
 }
