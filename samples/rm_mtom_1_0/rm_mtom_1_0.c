@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     const axis2_char_t *image_name = "../resources/axis2.jpg";
    
     /* Set up the environment */
-    env = axutil_env_create_all("echo_non_blocking_dual.log", 
+    env = axutil_env_create_all("rm_mtom_1_0.log", 
             AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
