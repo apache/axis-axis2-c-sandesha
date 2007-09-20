@@ -1,7 +1,7 @@
-Apache Sandesha2/C Team is pleased to announce the release of Apache Sandesha2/C version 0.90
+Apache Sandesha2/C Team is pleased to announce the release of Apache Sandesha2/C version 0.91
 You can download this release from
 http://ws.apache.org/sandesha/sandesha2/c/download.cgi
-This release is supposed to be used with the Axis2C 1.0.0 distribution which is released recently.
+This release is supposed to be used with the Axis2C 1.1.0 distribution which is released recently.
 
 Key Features:
 
@@ -15,6 +15,13 @@ Key Features:
   6. Samples to test RM scenarios.
   7. Interoperablity with java and .net.
   8. Documentation
+
+Major Changes Since Last Release
+  
+  1. Bug Fixes.
+        This release is the Sandesha2/C compatible release for
+        Axis2/C 1.1.
+
 
 We welcome your early feedback on this implementation.
 Thanks for your interest in Sandesha2/C
