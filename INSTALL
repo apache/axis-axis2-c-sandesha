@@ -2,7 +2,7 @@ SANDESHA2 INSTALL
 =================
 1. Installing Sandesha2/C source release on Linux
 
-    - This version of Sandesha2/C depends on Axis2/C 1.0
+    - This version of Sandesha2/C depends on Axis2/C 1.1
         - Download Axis2/C from http://ws.apache.org/axis2/c/download.cgi and
           install.
     - Go to Sandesha2/C source directory
@@ -93,9 +93,13 @@ SANDESHA2 INSTALL
             #define SANDESHA2_DEFAULT_STORAGE_MGR "persistent" as
             #define SANDESHA2_DEFAULT_STORAGE_MGR "inmemory".
 
+        Or you can change the following entry in the module.xml file.
+            <parameter name="StorageManager" locked="false">inmemory</parameter>
+            <parameter name="StorageManager" locked="false">persistent</parameter>
+
         If you want to use persistent storage with MySQL then add the option --with-mysql=<MySQL include file path>
         to the configure options above. It is assumed that libmysqlclient.so is in /usr/lib folder. It is recommended
-        to use MySQL database for any serious use. It is not included as as the default database because of licensing issues.
+        to use MySQL database for any serious use. It is not included as the default database because of licensing issues.
         To run samples in persistent/mysql mode run sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
         to create the database schema. The database parameters for MySQL should
         be included in module.xml. The defaults for server, user and password are localhost, g,g.
