@@ -107,6 +107,14 @@
       <email>sanjaya AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
+    <developer>
+      <name>Manjula Peiris</name>
+      <id>pini</id>
+      <email>manjula AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+
+
   </developers>
   <contributors>
     <contributor>
