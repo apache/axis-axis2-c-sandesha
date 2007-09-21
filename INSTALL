@@ -40,7 +40,7 @@ SANDESHA2 INSTALL
 
     1. Building from source distribution
 
-    i. You need to have unziped Axis2/C 1.0 release binary to some folder.
+    i. You need to have unziped Axis2/C 1.1 release binary to some folder.
     ii. Sandesha2/C can be used with one of following two database systems.
             (sqlite, MySql) 
         So install one of above database systems on your machine.
