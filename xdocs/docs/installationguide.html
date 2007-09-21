@@ -51,8 +51,8 @@ distributions)</p>
 
 <h3>1.1. Installing Sandesha2/C Source Release on Linux</h3>
 
-<p>This version of Sandesha2/C depends on Axis2/C 1.0. <a href="http://ws.apache.org/axis2/c/download.cgi">Download Axis2/C</a> from  and
-install. /p>
+<p>This version of Sandesha2/C depends on Axis2/C 1.1.0 <a href="http://ws.apache.org/axis2/c/download.cgi">Download Axis2/C</a> from  and
+install. </p>
 <ol>
     <li> Download Sandesha2 source distribution</li>
     <li> Extract the source distribution and go to extracted directory</li>
@@ -104,7 +104,7 @@ distributions.)</p>
 
 <h3>2.1. Installing Sandesha2/C Source Release on Windows</h3>
 <ol>
-    <li> You need to have unziped Axis2/C 1.0 release binary to some folder.</li>
+    <li> You need to have unziped Axis2/C 1.1.0 release binary to some folder.</li>
     <li> Sandesha2/C can be used with one of following two database systems.
             <ul>
                 <li>sqlite</li>
@@ -169,11 +169,19 @@ distributions.)</p>
 as
 #define SANDESHA2_DEFAULT_STORAGE_MGR "inmemory". </pre>
 
+        <p>Or you can change the following entry in the module.xml file.</p>
+        <p>
+        <p>&lt;parameter name="StorageManager" locked="false"&gt;inmemory&lt;parameter&gt;</p>
+        <p>&lt;parameter name="StorageManager" locked="false"&gt;persistent&lt;parameter&gt;</p>
+        </p>
+
+        <p>
         If you want to use persistent storage with MySQL then add the option --with-mysql=&lt;MySQL include file path&gt;
         to the configure options above. It is assumed that libmysqlclient.so is in /usr/lib folder. It is recommended
         to use MySQL database for any serious use. It is not included as as the default database because of licensing issues.
         To run samples in persistent/mysql mode run sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
         to create the database schema. The database parameters for MySQL should be included in module.xml. The defaults for server, user and password are localhost, g,g.
+        </p>
 </li>
 <li>
        Sandesha2/C module is installed into &lt;axis2c_deploy_path&gt;/modules/sandesha2c directory. The installed module contain
