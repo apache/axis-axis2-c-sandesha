@@ -17,3 +17,14 @@ install-data-hook:
 
 
 EXTRA_DIST=LICENSE config xdocs build samples ides
+
+
+dist-hook:
+	rm -rf `find $(distdir)/ -type d -name .svn`
+	rm -rf `find $(distdir)/ -type f -name *.la`
+	rm -rf `find $(distdir)/ -type f -name *.o`
+	rm -rf `find $(distdir)/ -type f -name *.lo`
+	rm -rf `find $(distdir)/ -type f -name *.loT`
+	rm -rf `find $(distdir)/ -type d -name .deps`
+	rm -rf `find $(distdir)/ -type d -name .libs`
+	rm -rf `find $(distdir)/ -type f -name Makefile`
