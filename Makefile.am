@@ -28,3 +28,4 @@ dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .deps`
 	rm -rf `find $(distdir)/ -type d -name .libs`
 	rm -rf `find $(distdir)/ -type f -name Makefile`
+	mv $(distdir)/xdocs $(distdir)/docs 
