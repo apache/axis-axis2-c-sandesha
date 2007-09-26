@@ -94,8 +94,8 @@ copy_extra:
 	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\NEWS $(SANDESHADISTDIR)
-	@copy $(SANDESHASRC)\docs\docs\* $(SANDESHADISTDIR)\docs
-	@xcopy /E $(SANDESHASRC)\docs\api $(SANDESHADISTDIR)\docs
+#	@copy $(SANDESHASRC)\docs\docs\* $(SANDESHADISTDIR)\docs
+#	@xcopy /E $(SANDESHASRC)\docs\api $(SANDESHADISTDIR)\docs
 
 copy_samples:
 	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples
