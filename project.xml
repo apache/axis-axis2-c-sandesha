@@ -38,7 +38,7 @@
   <inceptionYear>2005</inceptionYear>
   <logo>http://ws.apache.org/sandesha2/c/images/sandesha2c_logo.jpg</logo>
   <description> 
-    Apache Sandesha2/C is the security module of the Apache Axis2/C
+    Apache Sandesha2/C is the Reliable-messaging module of the Apache Axis2/C
   </description>
   <shortDescription>Sandesha2 C</shortDescription>
   <!-- the project home page -->
