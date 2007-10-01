@@ -13,7 +13,7 @@ docs_DATA=
 sysconf_DATA=config/axis2.xml
 
 install-data-hook: 
-	cp -rf xdocs/* $(docsdir)
+	cp -rf docs/* $(docsdir)
 
 
 EXTRA_DIST=LICENSE config xdocs build samples ides
