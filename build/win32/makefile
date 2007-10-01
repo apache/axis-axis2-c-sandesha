@@ -96,6 +96,7 @@ copy_extra:
 	@copy $(SANDESHASRC)\NEWS $(SANDESHADISTDIR)
 #	@copy $(SANDESHASRC)\docs\docs\* $(SANDESHADISTDIR)\docs
 #	@xcopy /E $(SANDESHASRC)\docs\api $(SANDESHADISTDIR)\docs
+	if exist $(SANDESHASRC)\docs xcopy /E /I /Y $(SANDESHASRC)\docs $(SANDESHADISTDIR)\docs
 
 copy_samples:
 	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples
