@@ -7,11 +7,19 @@ SANDESHA2 INSTALL
           install.
     - Go to Sandesha2/C source directory
     - Run configure with AXIS2 include path.
-        ./configure --prefix=<axis2c_deploy_path> --enable-static=no --with-axis2=<axis2c_deploy_path>
+        ./configure --prefix=<axis2c_deploy_path> --enable-static=no --with-axis2=<axis2c_include_path>
     - Run make and make install
 
     This will install the Sandesha2/C as a module in Axis2/C in <axis2c_deploy_path>/modules folder. The module
     folder contains the Sandesha2/C libraries and the module.xml file.
+
+    -To Install samples
+        - Go samples directory
+        - Run configure with AXIS2 include path.
+            ./configure --prefix=<axis2c_deploy_path> --with-axis2=<axis2c_include_path>
+        -make
+        -make install
+
 
 2. Installing Sandesha2/C binary release on Linux
    Sandesha2/C binary distribution for Linux has the following folder structure. 
