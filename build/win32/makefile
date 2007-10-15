@@ -20,7 +20,7 @@ SANDESHA_DLL = sandesha2
 	     
 #compiler options
 CC = @cl.exe
-CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nologo \
+CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nologo $(CRUNTIME) \
 	/I$(AXIS2_BIN_DIR)\include  /I$(SANDESHASRC)\include 
 
 #linker options 
@@ -48,7 +48,7 @@ LIBS =$(LIBS) libmysql.lib
 #debug symbols
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
-LDFLAGS = $(LDFLAGS) /DEBUG /NODEFAULTLIB:LIBCMTD.lib
+LDFLAGS = $(LDFLAGS) /DEBUG
 !else
 CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 
 LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt
