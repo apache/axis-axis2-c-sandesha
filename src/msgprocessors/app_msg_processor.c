@@ -1301,6 +1301,7 @@ sandesha2_app_msg_processor_process_response_msg(
     sandesha2_identifier_t *identifier = NULL;
     axis2_char_t *msg_id = NULL;
     axis2_bool_t last_msg = AXIS2_FALSE;
+    axis2_op_ctx_t *temp_op_ctx = NULL;
     
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_process_response_msg");
@@ -1495,6 +1496,8 @@ sandesha2_app_msg_processor_process_response_msg(
            SANDESHA2_SET_SEND_TO_TRUE, property);
     }
     sandesha2_sender_bean_set_seq_id(app_msg_entry, env, internal_seq_id);
+    temp_op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
+    axis2_op_ctx_increment_ref(temp_op_ctx, env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
     sandesha2_sender_mgr_insert(retrans_mgr, env, app_msg_entry);
     
