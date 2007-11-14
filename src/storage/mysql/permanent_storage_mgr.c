@@ -742,6 +742,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     
     /* setting the request message if this a response message.*/
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+
     if(op_ctx)
     {
         axis2_msg_ctx_t *in_msg_ctx = NULL;

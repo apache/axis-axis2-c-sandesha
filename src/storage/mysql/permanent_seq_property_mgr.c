@@ -264,7 +264,7 @@ sandesha2_permanent_seq_property_mgr_insert(
 {
     axis2_char_t sql_insert[1024];
     axis2_char_t sql_update[1024];
-    axis2_char_t sql_retrieve[256];
+    axis2_char_t sql_retrieve[1024];
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
@@ -303,7 +303,7 @@ sandesha2_permanent_seq_property_mgr_remove(
 {
     axis2_char_t *key = NULL;
     axis2_char_t sql_remove[256];
-    axis2_char_t sql_retrieve[256];
+    axis2_char_t sql_retrieve[1024];
     axis2_status_t status = AXIS2_FAILURE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
@@ -330,7 +330,7 @@ sandesha2_permanent_seq_property_mgr_retrieve(
     axis2_char_t *name)
 {
     axis2_char_t *key = NULL;
-    axis2_char_t sql_retrieve[256];
+    axis2_char_t sql_retrieve[1024];
     sandesha2_seq_property_bean_t *ret = NULL;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
@@ -356,7 +356,7 @@ sandesha2_permanent_seq_property_mgr_update(
     sandesha2_seq_property_bean_t *bean)
 {
     axis2_char_t sql_update[1024];
-    axis2_char_t sql_retrieve[256];
+    axis2_char_t sql_retrieve[1024];
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
