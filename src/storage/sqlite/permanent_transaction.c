@@ -96,7 +96,7 @@ sandesha2_permanent_transaction_create(
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     axis2_char_t *error_msg = NULL;
-    axis2_char_t *path = NULL;
+    axis2_char_t *path = "./";
     axis2_char_t *db_name = NULL;
     int rc = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
