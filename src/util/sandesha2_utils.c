@@ -548,13 +548,19 @@ sandesha2_utils_get_permanent_storage_mgr(
    
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR);
     if(property)
+    {    
         storage_mgr = axutil_property_get_value(property, env);
+    }
+
     else
+    {    
         storage_mgr = sandesha2_permanent_storage_mgr_create(env, conf_ctx);
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
-        AXIS2_FALSE, 0, storage_mgr);
-    axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
-        property);
+        property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+            AXIS2_FALSE, 0, storage_mgr);
+        axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
+            property);
+    }
+
     return storage_mgr;
 }
 
@@ -1432,7 +1438,7 @@ sandesha2_utils_create_out_msg_ctx(
     axis2_msg_info_headers_set_action(msg_info_headers, env, action);
 
     op_ctx =  axis2_msg_ctx_get_op_ctx(in_msg_ctx, env);
-     axis2_msg_ctx_set_op_ctx(new_msg_ctx, env, op_ctx);
+    axis2_msg_ctx_set_op_ctx(new_msg_ctx, env, op_ctx);
 
     svc_ctx =  axis2_msg_ctx_get_svc_ctx(in_msg_ctx, env);
      axis2_msg_ctx_set_svc_ctx(new_msg_ctx, env, svc_ctx);
