@@ -202,12 +202,12 @@ sandesha2_permanent_bean_mgr_create(
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     bean_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_bean_mgr_impl_t));
 
     bean_mgr_impl->storage_mgr = storage_mgr;
-    bean_mgr_impl->mutex = sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
+    bean_mgr_impl->mutex = 
+        sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
     return &(bean_mgr_impl->bean_mgr);
 }
 
@@ -1132,5 +1132,6 @@ sandesha2_permanent_bean_mgr_busy_handler(
     printf("in busy handler2\n");
     return rc;
 }
+
 
 

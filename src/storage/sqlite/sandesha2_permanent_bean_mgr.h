@@ -30,7 +30,7 @@
 #include <axutil_array_list.h>
 #include <sandesha2_rm_bean.h>
 #include <sandesha2_msg_store_bean.h>
-#include <sqlite3.h>
+#include "sqlite3.h"
 
 #ifdef __cplusplus
 extern "C"

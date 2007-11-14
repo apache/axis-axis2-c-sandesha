@@ -9,15 +9,15 @@ libsandesha2_permanent_la_SOURCES = \
 								permanent_transaction.c \
 								permanent_storage_mgr.c \
 								permanent_bean_mgr.c \
-								msg_store_bean.c
+								msg_store_bean.c \
+								sqlite3.c
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(top_builddir)/include/sandesha2 \
 			-I. \
 			@AXIS2INC@ \
 		   	@AXIOMINC@ \
-		   	@UTILINC@ \
-			@SQLITEINC@
+		   	@UTILINC@
 
 EXTRA_DIST=sandesha2_permanent_bean_mgr.h \
 		sandesha2_permanent_next_msg_mgr.h \

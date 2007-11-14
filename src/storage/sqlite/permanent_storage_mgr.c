@@ -278,6 +278,8 @@ sandesha2_permanent_storage_mgr_create(
     axutil_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->msg_ctx_map = axutil_hash_make(env);
     axutil_allocator_switch_to_local_pool(env->allocator);
+    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+        return NULL;
     conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     storage_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
         &(storage_mgr_impl->storage_mgr), conf_ctx, NULL);
@@ -1277,5 +1279,174 @@ sandesha2_permanent_storage_mgr_get_mutex(
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     return storage_mgr_impl->mutex;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_create_db(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx)
+{
+    axis2_conf_t *conf = NULL;
+    axis2_char_t *path = "./";
+    int rc = -1;
+    sqlite3 *dbconn = NULL;
+    axis2_ctx_t *conf_ctx_base = NULL; 
+    axutil_property_t *property = NULL;
+    axis2_char_t *db_name = NULL;
+    axis2_char_t *sql_stmt1 = NULL;
+    axis2_char_t *sql_stmt2 = NULL;
+    axis2_char_t *sql_stmt3 = NULL;
+    axis2_char_t *sql_stmt4 = NULL;
+    axis2_char_t *sql_stmt5 = NULL;
+    axis2_char_t *sql_stmt6 = NULL;
+    axis2_char_t *sql_stmt7 = NULL;
+    axis2_char_t *error_msg = NULL;
+
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    {
+        axis2_module_desc_t *module_desc = NULL;
+        axutil_qname_t *qname = NULL;
+        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        module_desc = axis2_conf_get_module(conf, env, qname);
+        if(module_desc)
+        {
+            axutil_param_t *db_param = NULL;
+            db_param = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
+            if(db_param)
+            {
+                path = (axis2_char_t *) axutil_param_get_value(db_param, env);
+            }
+        }
+        axutil_qname_free(qname, env);
+    }
+    conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
+    property = axis2_ctx_get_property(conf_ctx_base, env,
+        AXIS2_IS_SVR_SIDE);
+    if(property && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
+        axutil_property_get_value(property, env)))
+    {
+        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
+            "sandesha2_svr_db", NULL);
+    }
+    else if(property && 0 == axutil_strcmp(AXIS2_VALUE_FALSE, 
+        axutil_property_get_value(property, env)))
+    {
+        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
+            "sandesha2_client_db", NULL);
+    }
+    rc = sqlite3_open(db_name, &dbconn);
+    if(rc != SQLITE_OK)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s"
+            " sqlite error: %s\n", path, sqlite3_errmsg(dbconn));
+        sqlite3_close(dbconn);
+        dbconn = NULL;
+        return AXIS2_FAILURE;
+    }
+    sql_stmt1 = "create table if not exists create_seq("\
+        "create_seq_msg_id varchar(100) primary key, "\
+        "internal_seq_id varchar(200), seq_id varchar(200), "\
+        "create_seq_msg_store_key varchar(100), ref_msg_store_key varchar(100))";
+    sql_stmt2 = "create table if not exists invoker("\
+        "msg_ctx_ref_key varchar(100) primary key,"\
+        "msg_no long, seq_id varchar(200), is_invoked boolean)";
+    sql_stmt3 = "create table if not exists sender("\
+        "msg_id varchar(100) primary key, msg_ctx_ref_key varchar(100), "\
+        "internal_seq_id varchar(200), sent_count int, msg_no long, "\
+        "send boolean, resend boolean, time_to_send long, msg_type int, "\
+        "seq_id varchar(200), wsrm_anon_uri varchar(100), "\
+        "to_address varchar(100))";
+    sql_stmt4 = "create table if not exists next_msg("\
+        "seq_id varchar(200) primary key, ref_msg_key varchar(100), "\
+        "polling_mode boolean, msg_no long)";
+    sql_stmt5 = "create table if not exists seq_property(id varchar(200) ,"\
+        "seq_id varchar(200), name varchar(200), value varchar(200))";
+    sql_stmt6 = "create table if not exists msg("\
+        "stored_key varchar(200) primary key, msg_id varchar(200), "\
+        "soap_env_str text, soap_version int, transport_out varchar(100), "\
+        "op varchar(100), svc varchar(100), svc_grp varchar(100), "\
+        "op_mep varchar(100), to_url varchar(200), reply_to varchar(200), "\
+        "transport_to varchar(200), execution_chain_str varchar(200), "\
+        "flow int, msg_recv_str varchar(200), svr_side boolean, "\
+        "in_msg_store_key varchar(200), prop_str varchar(8192), "\
+        "action varchar(200))";
+    sql_stmt7 = "create table if not exists response(seq_id varchar(200), "\
+        "response_str text, msg_no int, soap_version int)";
+    if(dbconn)
+    {
+        rc = sqlite3_exec(dbconn, sql_stmt1, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table create_seq; SQL Error: %s", error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt2, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table invoker; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt3, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table sender; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt4, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table next_msg; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt5, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table seq_property; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt6, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table msg; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        rc = sqlite3_exec(dbconn, sql_stmt7, NULL, 0, &error_msg);
+        if( rc != SQLITE_OK )
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Error creating database table response; SQL Error: %s",
+                error_msg);
+            sqlite3_free(error_msg);
+            sqlite3_close(dbconn);
+            return AXIS2_FAILURE;
+        }
+        sqlite3_close(dbconn);
+    }
+    else
+        return AXIS2_FAILURE;
+    return AXIS2_SUCCESS;
 }
 

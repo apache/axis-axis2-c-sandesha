@@ -101,12 +101,9 @@ sandesha2_permanent_transaction_create(
     int rc = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
-    sandesha2_property_bean_t *prop_bean = NULL;
     axis2_ctx_t *conf_ctx_base = NULL; 
     axutil_property_t *property = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
-    
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_permanent_transaction_impl_t));
 
@@ -124,8 +121,6 @@ sandesha2_permanent_transaction_create(
     {
         return NULL;
     }
-    prop_bean = (sandesha2_property_bean_t *)sandesha2_utils_get_property_bean(
-        env, conf);
     /*path = sandesha2_property_bean_get_db_path(prop_bean, env);*/
     {
         axis2_module_desc_t *module_desc = NULL;
