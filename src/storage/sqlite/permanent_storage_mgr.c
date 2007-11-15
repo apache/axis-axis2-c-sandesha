@@ -1139,19 +1139,15 @@ sandesha2_permanent_storage_mgr_get_dbconn(
     axis2_char_t thread_id_key[128];
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    /*axutil_thread_mutex_lock(storage_mgr_impl->mutex);*/
     sprintf(thread_id_key, "%lu", thread_id);
     axutil_allocator_switch_to_global_pool(env->allocator);
     transaction = (sandesha2_transaction_t *) axutil_hash_get(
         storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
     axutil_allocator_switch_to_local_pool(env->allocator);
-    /*transaction = sandesha2_permanent_storage_mgr_get_transaction(storage_mgr, 
-        env);*/
     if(transaction)
     {
         dbconn = (sqlite3 *) sandesha2_permanent_transaction_get_dbconn(transaction, env);
     }
-    /*axutil_thread_mutex_unlock(storage_mgr_impl->mutex);*/
     return dbconn;
 }
 
@@ -1277,8 +1273,6 @@ sandesha2_permanent_storage_mgr_create_db(
     axis2_char_t *path = "./";
     int rc = -1;
     sqlite3 *dbconn = NULL;
-    axis2_ctx_t *conf_ctx_base = NULL; 
-    /*axutil_property_t *property = NULL;*/
     axis2_char_t *db_name = NULL;
     axis2_char_t *sql_stmt1 = NULL;
     axis2_char_t *sql_stmt2 = NULL;
@@ -1306,21 +1300,7 @@ sandesha2_permanent_storage_mgr_create_db(
         }
         axutil_qname_free(qname, env);
     }
-    conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-    /*property = axis2_ctx_get_property(conf_ctx_base, env,
-        AXIS2_IS_SVR_SIDE);
-    if(property && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
-        axutil_property_get_value(property, env)))*/
-    {
-        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
-            "sandesha2_svr_db", NULL);
-    }
-    /*else if(property && 0 == axutil_strcmp(AXIS2_VALUE_FALSE, 
-        axutil_property_get_value(property, env)))
-    {
-        db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
-            "sandesha2_client_db", NULL);
-    }*/
+    db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, "sandesha2_db", NULL);
     rc = sqlite3_open(db_name, &dbconn);
     if(rc != SQLITE_OK)
     {
