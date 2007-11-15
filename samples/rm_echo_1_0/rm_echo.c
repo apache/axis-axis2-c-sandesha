@@ -110,6 +110,7 @@ int main(int argc, char** argv)
 
     /* Setup options */
     options = axis2_options_create(env);
+    axis2_options_set_xml_parser_reset(options, env, AXIS2_FALSE);
     if(endpoint_ref)
         axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_use_separate_listener(options, env, AXIS2_TRUE);
@@ -177,16 +178,18 @@ int main(int argc, char** argv)
     callback1 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback1, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
-    axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback1);
+    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback1);
     wait_on_callback(env, callback1);
 
+    axis2_svc_client_remove_all_headers(svc_client, env);
     payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    axis2_svc_client_send_receive_NON_BLOCKING(svc_client, env, payload, callback2);
-    wait_on_callback(env, callback2);
-    */
+    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback2);
+    wait_on_callback(env, callback2);*/
+    
+    axis2_svc_client_remove_all_headers(svc_client, env);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", seq_key);
