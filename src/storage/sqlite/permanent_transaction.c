@@ -102,7 +102,7 @@ sandesha2_permanent_transaction_create(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *conf_ctx_base = NULL; 
-    axutil_property_t *property = NULL;
+    /*axutil_property_t *property = NULL;*/
 
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_permanent_transaction_impl_t));
@@ -139,18 +139,18 @@ sandesha2_permanent_transaction_create(
         axutil_qname_free(qname, env);
     }
     conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-    property = axis2_ctx_get_property(conf_ctx_base, env, 
+    /*property = axis2_ctx_get_property(conf_ctx_base, env, 
         SANDESHA2_IS_SVR_SIDE);
-    if(!property)
+    if(!property)*/
     {
         db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_svr_db", NULL);
     }
-    else
+    /*else
     {
         db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_client_db", NULL);
-    }
+    }*/
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
     if(rc != SQLITE_OK)
     {

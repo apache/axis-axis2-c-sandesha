@@ -1278,7 +1278,7 @@ sandesha2_permanent_storage_mgr_create_db(
     int rc = -1;
     sqlite3 *dbconn = NULL;
     axis2_ctx_t *conf_ctx_base = NULL; 
-    axutil_property_t *property = NULL;
+    /*axutil_property_t *property = NULL;*/
     axis2_char_t *db_name = NULL;
     axis2_char_t *sql_stmt1 = NULL;
     axis2_char_t *sql_stmt2 = NULL;
@@ -1307,20 +1307,20 @@ sandesha2_permanent_storage_mgr_create_db(
         axutil_qname_free(qname, env);
     }
     conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-    property = axis2_ctx_get_property(conf_ctx_base, env,
+    /*property = axis2_ctx_get_property(conf_ctx_base, env,
         AXIS2_IS_SVR_SIDE);
     if(property && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
-        axutil_property_get_value(property, env)))
+        axutil_property_get_value(property, env)))*/
     {
         db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
             "sandesha2_svr_db", NULL);
     }
-    else if(property && 0 == axutil_strcmp(AXIS2_VALUE_FALSE, 
+    /*else if(property && 0 == axutil_strcmp(AXIS2_VALUE_FALSE, 
         axutil_property_get_value(property, env)))
     {
         db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR,
             "sandesha2_client_db", NULL);
-    }
+    }*/
     rc = sqlite3_open(db_name, &dbconn);
     if(rc != SQLITE_OK)
     {
