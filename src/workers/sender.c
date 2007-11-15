@@ -257,7 +257,7 @@ sandesha2_sender_worker_func(
     env = axutil_init_thread_env(args->env);
     sender = args->impl;
     sender = (sandesha2_sender_t*)sender;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Start:sandesha2_sender_worker_func");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "Start:sandesha2_sender_worker_func");
     conf = axis2_conf_ctx_get_conf(sender->conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
         conf);
@@ -289,9 +289,8 @@ sandesha2_sender_worker_func(
         seq_id = axutil_array_list_get(sender->working_seqs, env, 
             sender->seq_index++);
 
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
-            env);
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
+        qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
         module_desc = axis2_conf_get_module(conf, env, qname);
         sleep_time_param = axis2_module_desc_get_param(module_desc, env, 
             SANDESHA2_SENDER_SLEEP);
@@ -335,7 +334,7 @@ sandesha2_sender_worker_func(
             }
         }
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Exit:sandesha2_sender_worker_func");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "Exit:sandesha2_sender_worker_func");
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif

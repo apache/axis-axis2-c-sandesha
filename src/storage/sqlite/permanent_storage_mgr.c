@@ -382,19 +382,6 @@ sandesha2_permanent_storage_mgr_get_transaction(
 
     axutil_thread_mutex_lock(storage_mgr_impl->mutex);
     axutil_allocator_switch_to_global_pool(env->allocator);
-    /*for (index = axutil_hash_first(storage_mgr_impl->transactions , env); index; 
-        index = axutil_hash_next(env, index))
-    {
-        void *v = NULL;
-        sandesha2_transaction_t *temp = NULL;
-        axutil_hash_this(index, NULL, NULL, &v);
-        temp = (sandesha2_transaction_t *) v;
-        while(sandesha2_permanent_transaction_is_active(temp, env))
-        {
-            AXIS2_SLEEP(1);
-        }
-
-    }*/
     thread_id_key = AXIS2_MALLOC(env->allocator, sizeof(char)*128);
     sprintf(thread_id_key, "%lu", thread_id); 
     transaction = (sandesha2_transaction_t *) axutil_hash_get(
@@ -1306,7 +1293,7 @@ sandesha2_permanent_storage_mgr_create_db(
     {
         axis2_module_desc_t *module_desc = NULL;
         axutil_qname_t *qname = NULL;
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
         module_desc = axis2_conf_get_module(conf, env, qname);
         if(module_desc)
         {

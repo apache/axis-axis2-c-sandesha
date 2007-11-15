@@ -125,7 +125,7 @@ sandesha2_permanent_transaction_create(
     {
         axis2_module_desc_t *module_desc = NULL;
         axutil_qname_t *qname = NULL;
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+        qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
         module_desc = axis2_conf_get_module(conf, env, qname);
         if(module_desc)
         {
@@ -162,11 +162,11 @@ sandesha2_permanent_transaction_create(
         return NULL;
     }
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = sqlite3_exec(trans_impl->dbconn, "BEGIN TRANSACTION;", 0, 0,
+    rc = sqlite3_exec(trans_impl->dbconn, "BEGIN DEFERRED TRANSACTION;", 0, 0,
         &error_msg);
     if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(trans_impl->dbconn, 
-            "BEGIN TRANSACTION", 0, 0, &error_msg, rc, trans_impl->mutex);
+            "BEGIN DEFERRED TRANSACTION;", 0, 0, &error_msg, rc, trans_impl->mutex);
     if(rc != SQLITE_OK )
     {
         axutil_thread_mutex_unlock(trans_impl->mutex);

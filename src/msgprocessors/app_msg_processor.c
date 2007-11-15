@@ -223,9 +223,8 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_op_t *op = NULL;
     int mep = -1;
    
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Start:sandesha2_app_msg_processor_process_in_msg");
  
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
@@ -616,7 +615,7 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr);
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
 
     return AXIS2_SUCCESS;
@@ -658,9 +657,8 @@ sandesha2_app_msg_processor_process_out_msg(
     axis2_msg_ctx_t *req_msg_ctx = NULL;
     axis2_relates_to_t *relates_to = NULL;
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Start:sandesha2_app_msg_processor_process_out_msg");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
   
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
@@ -909,7 +907,7 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     if(!spec_ver)
         spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
+    AXIS2_LOG_INFO(env->log, "Spec version:%s", spec_ver);
     if(1 == msg_number)
     {
         if(!out_seq_bean)
@@ -1041,7 +1039,7 @@ sandesha2_app_msg_processor_process_out_msg(
         sandesha2_app_msg_processor_process_response_msg(env, rm_msg_ctx, 
             internal_seq_id, out_seq_id, msg_number, storage_key, storage_mgr);
     axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);    
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Exit: sandesha2_app_msg_processor_process_out_msg");
     return AXIS2_SUCCESS;
 }
@@ -1081,9 +1079,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_bool_t sent = AXIS2_FALSE;
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_send_ack_if_reqd");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_str, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
@@ -1120,7 +1117,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
     return AXIS2_SUCCESS;
 }
@@ -1155,9 +1152,8 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_char_t *create_seq_msg_store_key = NULL;
     axis2_char_t *ref_msg_store_key = NULL;
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_add_create_seq_msg");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, acks_to, AXIS2_FAILURE);
@@ -1261,7 +1257,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
             "[sandesha2]Engine Resume Send failed");
         return AXIS2_FAILURE;
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Exit:sandesha2_app_msg_processor_add_create_seq_msg");
     return AXIS2_SUCCESS;
 }
@@ -1303,9 +1299,8 @@ sandesha2_app_msg_processor_process_response_msg(
     axis2_bool_t last_msg = AXIS2_FALSE;
     axis2_op_ctx_t *temp_op_ctx = NULL;
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_process_response_msg");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_key, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
@@ -1526,7 +1521,7 @@ sandesha2_app_msg_processor_process_response_msg(
         axis2_msg_ctx_get_current_handler_index(app_msg_ctx, env) + 1);
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(app_msg_ctx, 
         env));
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Exit:sandesha2_app_msg_processor_process_response_msg");
     return axis2_engine_resume_send(engine, env, app_msg_ctx);
 }
@@ -1542,7 +1537,6 @@ sandesha2_app_msg_processor_get_prev_msg_no(
     sandesha2_seq_property_bean_t *next_msg_no_bean = NULL;
     long next_msg_no = -1;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
@@ -1574,9 +1568,8 @@ sandesha2_app_msg_processor_set_next_msg_no(
     axis2_bool_t update = AXIS2_TRUE;
     axis2_char_t str_long[32];
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Start:sandesha2_app_msg_processor_set_next_msg_no");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
@@ -1610,7 +1603,7 @@ sandesha2_app_msg_processor_set_next_msg_no(
     {
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, next_msg_no_bean);
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Exit:sandesha2_app_msg_processor_set_next_msg_no");
     return AXIS2_SUCCESS;
 }

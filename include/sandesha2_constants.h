@@ -512,6 +512,7 @@ extern "C"
 	#define SANDESHA2_SENDER_SLEEP  "SenderSleepTime"
 	#define SANDESHA2_INVOKER_SLEEP  "InvokerSleepTime"
 	#define SANDESHA2_POLLING_WAIT  "PollingWaitTime"
+	#define SANDESHA2_MODULE  "sandesha2"
 /** @} */
 #ifdef __cplusplus
 }
