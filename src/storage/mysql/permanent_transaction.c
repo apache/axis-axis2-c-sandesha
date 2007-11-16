@@ -175,7 +175,7 @@ sandesha2_permanent_transaction_create(
     {
         /*db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
             "sandesha2_client_db", NULL);*/
-        db_name = "sandesha2_client_db";
+        db_name = "sandesha2_svr_db";
     }
     trans_impl->dbconn = mysql_init(trans_impl->dbconn);
     if (!mysql_real_connect(trans_impl->dbconn, server,
