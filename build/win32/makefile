@@ -20,7 +20,7 @@ SANDESHA_DLL = sandesha2
 	     
 #compiler options
 CC = @cl.exe
-CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /w /nologo \
+CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /D "_WIN32_WINNT=0x0400" /w /nologo \
 	/I$(AXIS2_BIN_DIR)\include  /I$(SANDESHASRC)\include 
 
 #linker options 
@@ -31,10 +31,7 @@ LIBS = axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib axis2_http_receive
 
 !if "$(WITH_SQLITE)" == "1"
 SANDESHA2_CODE = $(SANDESHA2_CODE) \
-				$(SANDESHASRC)\src\storage\sqlite\*.c
-CFLAGS = $(CFLAGS) /I$(SQLITE_SRC_DIR)
-LDFLAGS = $(LDFLAGS) /LIBPATH:$(SQLITE_SRC_DIR)
-LIBS = $(LIBS) sqlite3.lib
+		$(SANDESHASRC)\src\storage\sqlite\*.c
 !endif
 
 !if "$(WITH_MYSQL)" == "1"
@@ -96,6 +93,7 @@ intdir:
 
 clean :
 	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
+	@if exist $(SANDESHA2_INTDIR) rmdir /S /Q $(SANDESHA2_INTDIR)
 
 distclean :
 	@if exist $(SANDESHADISTDIR) rmdir /S /Q $(SANDESHADISTDIR)
