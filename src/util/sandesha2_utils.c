@@ -250,7 +250,6 @@ sandesha2_utils_get_array_list_from_string(
     axis2_char_t *temp_str = NULL;
     axutil_array_list_t *ret = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     if(!str || 0 == axutil_strcmp("", str))
     {
         ret = axutil_array_list_create(env, AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
@@ -274,7 +273,7 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array:", str, NULL);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);
@@ -288,7 +287,7 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array:", str, NULL);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);
