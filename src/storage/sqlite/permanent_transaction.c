@@ -96,7 +96,11 @@ sandesha2_permanent_transaction_create(
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     /*axis2_char_t *error_msg = NULL;*/
+#ifdef WIN32
     axis2_char_t *path = "./";
+#elif
+    axis2_char_t *path = "/tmp";
+#endif
     axis2_char_t *db_name = NULL;
     int rc = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
