@@ -28,7 +28,8 @@
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text);
+    axis2_char_t *text,
+    axis2_char_t *seq_key);
 
 static void 
 usage(
@@ -48,6 +49,7 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     axutil_property_t *property = NULL;
     int c;
+    axis2_char_t *seq_key = NULL;
    
     /* Set up the environment */
     /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
@@ -124,15 +126,24 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
+
+    seq_key = axutil_uuid_gen(env);
+    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
+    if(property)
+    {
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY,
+            property);
+    }
+    
     /* Send request */
-    payload = build_om_programatically(env, "ping1");
+    payload = build_om_programatically(env, "ping1", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
     /*AXIS2_SLEEP(MAX_COUNT);*/
     
-    payload = build_om_programatically(env, "ping2");
+    payload = build_om_programatically(env, "ping2", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
@@ -142,7 +153,7 @@ int main(int argc, char** argv)
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", 
         property);
-    payload = build_om_programatically(env, "ping3");
+    payload = build_om_programatically(env, "ping3", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
@@ -167,7 +178,8 @@ int main(int argc, char** argv)
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text)
+    axis2_char_t *text,
+    axis2_char_t *seq)
 {
     axiom_node_t *ping_om_node = NULL;
     axiom_element_t* ping_om_ele = NULL;
@@ -175,11 +187,15 @@ build_om_programatically(
     axiom_element_t* text_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
     axis2_char_t *buffer = NULL;
-    
+    axiom_node_t* seq_om_node = NULL;
+    axiom_element_t * seq_om_ele = NULL;
+
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
     ping_om_ele = axiom_element_create(env, NULL, "ping", ns1, &ping_om_node);
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
+    seq_om_ele = axiom_element_create(env, ping_om_node, "Sequence", ns1, &seq_om_node);
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
+    axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
     buffer = axiom_node_to_string(ping_om_node, env);
     printf("\nSending OM node in XML : %s \n",  buffer); 
