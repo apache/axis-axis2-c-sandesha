@@ -99,13 +99,10 @@ sandesha2_permanent_transaction_create(
     axis2_char_t *user = NULL;
     axis2_char_t *password = NULL;
     axis2_char_t *path = NULL;
-    axis2_char_t *db_name = NULL;
-    int rc = -1;
+    /*int rc = -1;*/
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     sandesha2_property_bean_t *prop_bean = NULL;
-    axis2_ctx_t *conf_ctx_base = NULL; 
-    axutil_property_t *property = NULL;
     axis2_module_desc_t *module_desc = NULL;
     axutil_qname_t *qname = NULL;
 
@@ -162,24 +159,9 @@ sandesha2_permanent_transaction_create(
         }
     }
     axutil_qname_free(qname, env);
-    conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-    property = axis2_ctx_get_property(conf_ctx_base, env, 
-        SANDESHA2_IS_SVR_SIDE);
-    if(!property)
-    {
-        /*db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
-            "sandesha2_svr_db", NULL);*/
-        db_name = "sandesha2_svr_db";
-    }
-    else
-    {
-        /*db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
-            "sandesha2_client_db", NULL);*/
-        db_name = "sandesha2_svr_db";
-    }
     trans_impl->dbconn = mysql_init(trans_impl->dbconn);
     if (!mysql_real_connect(trans_impl->dbconn, server,
-         user, password, db_name, 0, NULL, 0))
+         user, password, SANDESHA2_DB, 0, NULL, 0))
     {
         mysql_close(trans_impl->dbconn);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s\n", 
@@ -188,7 +170,7 @@ sandesha2_permanent_transaction_create(
             AXIS2_FAILURE);
         return NULL;
     }
-    rc = mysql_autocommit(trans_impl->dbconn, 0);
+    /*rc = mysql_autocommit(trans_impl->dbconn, 0);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);
@@ -198,7 +180,7 @@ sandesha2_permanent_transaction_create(
         printf("transaction begin error_msg:%s\n", mysql_error(trans_impl->dbconn));
         sandesha2_transaction_free(&(trans_impl->trans), env);
         return NULL;
-    }
+    }*/
     trans_impl->is_active = AXIS2_TRUE;
     return &(trans_impl->trans);
 }
@@ -262,12 +244,12 @@ sandesha2_permanent_transaction_commit(
     sandesha2_transaction_t *trans,
     const axutil_env_t *env)
 {
-    int rc = -1;
+    /*int rc = -1;*/
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
    
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = mysql_commit(trans_impl->dbconn);
+    /*rc = mysql_commit(trans_impl->dbconn);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);
@@ -276,7 +258,7 @@ sandesha2_permanent_transaction_commit(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
             mysql_error(trans_impl->dbconn));
         printf("commit error_msg:%s\n", mysql_error(trans_impl->dbconn));
-    }
+    }*/
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
     mysql_close(trans_impl->dbconn);
@@ -288,11 +270,11 @@ sandesha2_permanent_transaction_rollback(
     sandesha2_transaction_t *trans,
     const axutil_env_t *env)
 {
-    int rc = -1;
+    /*int rc = -1;*/
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
     axutil_thread_mutex_lock(trans_impl->mutex);
-    rc = mysql_rollback(trans_impl->dbconn);
+    /*rc = mysql_rollback(trans_impl->dbconn);
     if(rc )
     {
         mysql_close(trans_impl->dbconn);
@@ -302,7 +284,7 @@ sandesha2_permanent_transaction_rollback(
             mysql_error(trans_impl->dbconn));
         printf("sql_stmt_rollback:%s\n", "rollback;");
         printf("rollback error_msg:%s\n", mysql_error(trans_impl->dbconn));
-    }
+    }*/
     trans_impl->is_active = AXIS2_FALSE;
     sandesha2_permanent_transaction_release_locks(trans, env);
     mysql_close(trans_impl->dbconn);

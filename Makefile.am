@@ -10,7 +10,7 @@ data_DATA = LICENSE config/module.xml
 
 docs_DATA=
 
-sysconf_DATA=config/axis2.xml
+sysconf_DATA=config/axis2.xml config/init_mysql.sh config/mysql_schema.sh
 
 install-data-hook: 
 	cp -rf xdocs/docs/* $(docsdir)
