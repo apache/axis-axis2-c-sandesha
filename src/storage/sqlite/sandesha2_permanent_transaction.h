@@ -27,7 +27,7 @@
 #include <axutil_error.h>
 #include <axutil_string.h>
 #include <axutil_utils.h>
-#include <sqlite3.h>
+#include "sqlite3.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -30,7 +30,7 @@
 #include <axis2_module_desc.h>
 #include "sandesha2_permanent_bean_mgr.h"
 #include <platforms/axutil_platform_auto_sense.h>
-#include <sqlite3.h>
+#include "sqlite3.h"
 
 typedef struct sandesha2_permanent_transaction_impl 
     sandesha2_permanent_transaction_impl_t;

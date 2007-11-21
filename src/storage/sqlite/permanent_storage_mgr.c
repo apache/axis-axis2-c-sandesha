@@ -228,6 +228,12 @@ sandesha2_permanent_storage_mgr_get_property_string(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_create_db(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
+
+
 static const sandesha2_storage_mgr_ops_t storage_mgr_ops = 
 {
     sandesha2_permanent_storage_mgr_free,
