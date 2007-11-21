@@ -126,10 +126,9 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
    
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] sandesha2_terminate_msg_processor_process_in_msg .........");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
+        "terminate_seq_res_msg_processor_process_in_msg");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
@@ -147,7 +146,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
         sandesha2_terminate_seq_res_get_identifier(term_seq_res, env), env);
     if(!seq_id || 0 == axutil_strlen(seq_id))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "\
             "sequence id");
         return AXIS2_FAILURE;
     }
@@ -156,8 +155,8 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
         env, conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
         AXIS2_FALSE, storage_mgr);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit: sandesha2_terminate_seq_res_msg_processor_process_in_msg");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
+        "terminate_seq_res_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
 }
 
@@ -169,7 +168,6 @@ sandesha2_terminate_seq_res_msg_processor_process_out_msg(
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
     return AXIS2_SUCCESS;

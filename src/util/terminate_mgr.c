@@ -362,7 +362,6 @@ sandesha2_terminate_mgr_terminate_sending_side(
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
     AXIS2_LOG_INFO(env->log, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_terminate_sending_side");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);

@@ -1,1 +1,1 @@
-mysql -u g -p < mysql_schema.sh
+mysql -u g --password=g < mysql_schema.sh

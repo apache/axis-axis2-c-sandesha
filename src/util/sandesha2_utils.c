@@ -260,7 +260,7 @@ sandesha2_utils_get_array_list_from_string(
     {
         axis2_char_t *ret_str = NULL;
 
-        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array", str, NULL);
+        ret_str = axutil_strcat(env, "[sandesha2]Invalid String Array:", str, NULL);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, ret_str);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_STRING_ARRAY, 
             AXIS2_FAILURE);

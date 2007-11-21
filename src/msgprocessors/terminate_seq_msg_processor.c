@@ -171,10 +171,9 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *fault_ctx = NULL;
     axis2_char_t *spec_version = NULL;
   
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] sandesha2_terminate_msg_processor_process_in_msg .........");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2]Entry:sandesha2_terminate_seq_msg_processor_process_in_msg");
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(
@@ -243,8 +242,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_seq_mgr_update_last_activated_time(env, seq_id, storage_mgr);
     */
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit: sandesha2_terminate_msg_processor_process_in_msg");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2]Exit:sandesha2_terminate_seq_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
 }
 
