@@ -309,8 +309,8 @@ sandesha2_sender_worker_worker_func(
     if(!msg_ctx)
     {
         sandesha2_transaction_rollback(transaction, env);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "
-                    "not present in the store");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "\
+            "not present in the store");
         #ifdef AXIS2_SVR_MULTI_THREADED
             AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
         #endif

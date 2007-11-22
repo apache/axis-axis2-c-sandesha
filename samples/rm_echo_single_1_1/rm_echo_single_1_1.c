@@ -176,7 +176,7 @@ int main(int argc, char** argv)
             property);
     }
     
-    /*payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
@@ -189,19 +189,19 @@ int main(int argc, char** argv)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-*/
+
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
     sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
         "sequence1");
     /*sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
         listener_manager);*/
-    AXIS2_SLEEP(4 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
         /*axis2_svc_client_free(svc_client, env);*/

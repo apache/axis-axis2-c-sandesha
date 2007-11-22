@@ -615,8 +615,6 @@ sandesha2_utils_get_internal_seq_id(
 {
     axis2_char_t *ret = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
-
     if(!to && !seq_key)
     {
         return NULL;
@@ -627,7 +625,11 @@ sandesha2_utils_get_internal_seq_id(
     }
     else if(!seq_key)
     {
-        return axutil_strdup(env, to);
+        seq_key = axutil_uuid_gen(env);
+        ret = axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", seq_key, 
+            NULL);
+        return ret;
+        /*return axutil_strdup(env, to);*/
     }
     else
     {

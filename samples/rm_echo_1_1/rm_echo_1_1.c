@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    axis2_bool_t offer = AXIS2_FALSE;
+    axis2_bool_t offer = AXIS2_TRUE;
     axis2_char_t *seq_key = NULL;
     int c;
    

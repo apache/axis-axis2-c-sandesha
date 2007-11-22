@@ -96,11 +96,7 @@ sandesha2_permanent_transaction_create(
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
     /*axis2_char_t *error_msg = NULL;*/
-#ifdef WIN32
     axis2_char_t *path = "./";
-#else
-    axis2_char_t *path = "/tmp";
-#endif
     axis2_char_t *db_name = NULL;
     int rc = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -139,8 +135,7 @@ sandesha2_permanent_transaction_create(
         }
         axutil_qname_free(qname, env);
     }
-    db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, 
-        "sandesha2_db", NULL);
+    db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, SANDESHA2_DB, NULL);
     rc = sqlite3_open(db_name, &(trans_impl->dbconn));
     if(rc != SQLITE_OK)
     {
