@@ -553,6 +553,7 @@ sandesha2_app_msg_processor_process_in_msg (
         /* save the message */
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, 
                         msg_ctx);
+
         invoker_bean = sandesha2_invoker_bean_create_with_data(env, str_key,
                         msg_no, str_seq_id, AXIS2_FALSE);
         sandesha2_invoker_mgr_insert(storage_map_mgr, env, invoker_bean);
@@ -1151,7 +1152,8 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_char_t *msg_id = NULL;
     axis2_char_t *create_seq_msg_store_key = NULL;
     axis2_char_t *ref_msg_store_key = NULL;
-    
+    axis2_op_ctx_t *temp_opctx = NULL;   
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_add_create_seq_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
@@ -1207,6 +1209,9 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     ref_msg_store_key = axutil_uuid_gen(env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, ref_msg_store_key, 
         create_seq_msg);
+
+    temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
+    axis2_op_ctx_increment_ref(temp_opctx, env);
     sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, 
         ref_msg_store_key);
     sandesha2_create_seq_mgr_insert(create_seq_man, env, create_seq_bean);
@@ -1605,6 +1610,7 @@ sandesha2_app_msg_processor_set_next_msg_no(
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Exit:sandesha2_app_msg_processor_set_next_msg_no");
+	
     return AXIS2_SUCCESS;
 }
 
