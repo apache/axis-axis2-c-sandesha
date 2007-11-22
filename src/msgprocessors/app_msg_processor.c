@@ -1432,7 +1432,7 @@ sandesha2_app_msg_processor_process_response_msg(
     /* TODO add_ack_requested */
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     app_msg_entry = sandesha2_sender_bean_create(env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha to_addr = %s ", to_addr);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha to_addr = %s ", to_addr);
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env) &&
        sandesha2_utils_is_single_channel(env, rm_version, to_addr))
     {

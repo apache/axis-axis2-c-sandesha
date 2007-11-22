@@ -256,7 +256,6 @@ sandesha2_seq_mgr_has_seq_timedout(
     long timeout_interval = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, property_key, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
@@ -341,8 +340,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
     axis2_char_t *addr = NULL;
     axis2_endpoint_ref_t *epr = NULL;
    
-    AXIS2_LOG_INFO(env->log, "Start:sandesha2_seq_mgr_setup_new_client_seq");
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "Entry:sandesha2_seq_mgr_setup_new_client_seq");
     AXIS2_PARAM_CHECK(env->error, first_app_msg, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FAILURE);
@@ -424,8 +423,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
                         reply_to_epr, env));
         else
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get"
-                        " request message from the operation context");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get"\
+                " request message from the operation context");
             return AXIS2_FAILURE;
         }        
     }
@@ -502,7 +501,8 @@ sandesha2_seq_mgr_setup_new_client_seq(
             persistent);
     sandesha2_seq_mgr_update_client_side_listener_if_needed(env, first_app_msg,
         anon_uri);
-    AXIS2_LOG_INFO(env->log, "Exit:sandesha2_seq_mgr_setup_new_client_seq");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "Exit:sandesha2_seq_mgr_setup_new_client_seq");
     return AXIS2_SUCCESS;
 }
 
@@ -518,7 +518,6 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(
     axis2_char_t *acks_to = NULL;
     axutil_property_t *property = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, addr_anon_uri, AXIS2_FAILURE);
     
@@ -539,3 +538,4 @@ sandesha2_seq_mgr_update_client_side_listener_if_needed(
     
     return AXIS2_SUCCESS;
 }
+

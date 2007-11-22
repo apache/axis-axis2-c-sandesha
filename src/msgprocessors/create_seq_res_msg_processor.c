@@ -181,9 +181,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_bool_t polling_mode = AXIS2_FALSE;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Entry:sandesha2_create_seq_res_msg_processor_process_in_msg");
    
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
