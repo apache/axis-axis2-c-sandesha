@@ -350,7 +350,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *seq_id,
+    axis2_char_t *internal_seq_id,
     axis2_bool_t svr_side,
     sandesha2_storage_mgr_t *storage_mgr)
 {
@@ -359,16 +359,16 @@ sandesha2_terminate_mgr_terminate_sending_side(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI
         "[sandesha2]Entry:sandesha2_terminate_mgr_terminate_sending_side");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
-        SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
+    seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, 
+        internal_seq_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     
-    sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, seq_id, 
-        svr_side, storage_mgr);
+    sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, 
+        internal_seq_id, svr_side, storage_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_terminate_sending_side");
     return AXIS2_SUCCESS;
