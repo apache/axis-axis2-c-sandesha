@@ -497,8 +497,12 @@ sandesha2_seq_mgr_setup_new_client_seq(
             epr, env);
     if(!axis2_msg_ctx_get_server_side(first_app_msg, env) ||
         !sandesha2_utils_is_anon_uri(env, addr))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Calling function sandesha2_utils_start_sender_for_seq()");
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, int_seq_id, 
             persistent);
+    }
     sandesha2_seq_mgr_update_client_side_listener_if_needed(env, first_app_msg,
         anon_uri);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

@@ -198,7 +198,7 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_char_t *str_key = NULL;
     axis2_char_t *msgs_str = "";
     axis2_char_t msg_num_str[32];
-    sandesha2_invoker_mgr_t *storage_map_mgr = NULL;
+    sandesha2_invoker_mgr_t *invoker_mgr = NULL;
     sandesha2_next_msg_mgr_t *next_mgr = NULL;
     sandesha2_next_msg_bean_t *next_msg_bean = NULL;
     axis2_bool_t in_order_invoke = AXIS2_FALSE;
@@ -225,7 +225,7 @@ sandesha2_app_msg_processor_process_in_msg (
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Start:sandesha2_app_msg_processor_process_in_msg");
+        "[sandesha2] Entry:sandesha2_app_msg_processor_process_in_msg");
  
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(!msg_ctx)
@@ -384,7 +384,16 @@ sandesha2_app_msg_processor_process_in_msg (
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
+        {
             client_seq_key = axutil_property_get_value(property, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Client sequence key:%s found", client_seq_key);
+        }
+        else
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Client sequence key not found");
+        }
         if(client_seq_key)
         {
             if(axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
@@ -393,6 +402,8 @@ sandesha2_app_msg_processor_process_in_msg (
                 soap_version = SANDESHA2_SOAP_VERSION_1_2;
             if(response_envelope)
             {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Client sequence key:%s", client_seq_key);
                 sandesha2_storage_mgr_store_response(storage_mgr, env, 
                     client_seq_key, response_envelope, msg_no, soap_version);
             }
@@ -454,12 +465,12 @@ sandesha2_app_msg_processor_process_in_msg (
     if(!next_msg_bean)
     {
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Sequence does not exist");
+            "[sandesha2]Sequence with seq_id:%s does not exist", str_seq_id);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_EXIST, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    storage_map_mgr = sandesha2_storage_mgr_get_storage_map_mgr(
+    invoker_mgr = sandesha2_storage_mgr_get_storage_map_mgr(
         storage_mgr, env);
     in_order_invoke = sandesha2_property_bean_is_in_order(
         sandesha2_utils_get_property_bean(env, 
@@ -537,7 +548,7 @@ sandesha2_app_msg_processor_process_in_msg (
         }
         /* Adding current seq to the incoming seq List */
         if(!sandesha2_utils_array_list_contains(env,
-                        incoming_seq_list, str_seq_id))
+            incoming_seq_list, str_seq_id))
         {
             axis2_char_t *str_seq_list = NULL;
             axutil_array_list_add(incoming_seq_list, env, str_seq_id);
@@ -545,23 +556,23 @@ sandesha2_app_msg_processor_process_in_msg (
                         incoming_seq_list, SANDESHA2_ARRAY_LIST_STRING);
             /* saving the property. */
             sandesha2_seq_property_bean_set_value(incoming_seq_list_bean, 
-                        env, str_seq_list);
+                env, str_seq_list);
             AXIS2_FREE(env->allocator, str_seq_list);
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
-                        incoming_seq_list_bean);
+                incoming_seq_list_bean);
         }
         /* save the message */
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, 
-                        msg_ctx);
+            msg_ctx);
 
         invoker_bean = sandesha2_invoker_bean_create_with_data(env, str_key,
-                        msg_no, str_seq_id, AXIS2_FALSE);
-        sandesha2_invoker_mgr_insert(storage_map_mgr, env, invoker_bean);
+            msg_no, str_seq_id, AXIS2_FALSE);
+        sandesha2_invoker_mgr_insert(invoker_mgr, env, invoker_bean);
         property = axutil_property_create_with_args(env, 0, 0, 0, 
             AXIS2_VALUE_TRUE);
         /* To avoid performing application processing more than once. */
         sandesha2_msg_ctx_set_property(rm_msg_ctx, env, 
-                        SANDESHA2_APPLICATION_PROCESSING_DONE, property);
+            SANDESHA2_APPLICATION_PROCESSING_DONE, property);
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         /* Start the invoker if stopped */
         sandesha2_utils_start_invoker_for_seq(env, conf_ctx, str_seq_id);
@@ -659,7 +670,7 @@ sandesha2_app_msg_processor_process_out_msg(
     axis2_relates_to_t *relates_to = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Start:sandesha2_app_msg_processor_process_out_msg");
+        "[sandesha2] Entry:sandesha2_app_msg_processor_process_out_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
   
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
@@ -1053,7 +1064,6 @@ sandesha2_app_msg_processor_msg_num_is_in_list(
 {
     axis2_char_t str_long[32];
     
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, list, AXIS2_FALSE);
     
     sprintf(str_long, "%ld", num);
@@ -1081,7 +1091,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_bool_t sent = AXIS2_FALSE;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] sandesha2_app_msg_processor_send_ack_if_reqd");
+        "[Sandesha2] Entry:sandesha2_app_msg_processor_send_ack_if_reqd");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_str, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
@@ -1574,7 +1584,7 @@ sandesha2_app_msg_processor_set_next_msg_no(
     axis2_char_t str_long[32];
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Start:sandesha2_app_msg_processor_set_next_msg_no");
+        "[sandesha2]Entry:sandesha2_app_msg_processor_set_next_msg_no");
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     

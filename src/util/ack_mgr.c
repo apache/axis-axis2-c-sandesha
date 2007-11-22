@@ -245,6 +245,8 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_msg_ctx_set_transport_out_desc(ack_msg_ctx, env, trans_out);
         
         ret_rm_msg = sandesha2_msg_init_init_msg(env, ack_msg_ctx);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Calling function sandesha2_utils_start_sender_for_seq()");
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id, AXIS2_FALSE);
         return ret_rm_msg;
     }

@@ -296,8 +296,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         axis2_char_t *new_msg_store_key = NULL;
         axis2_msg_ctx_t *ref_msg_ctx = NULL;
         
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  
-            "[sandesha2] In Accept .........");
         offerd_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         int_seq_id, SANDESHA2_SEQ_PROP_OFFERED_SEQ);
         if(!offerd_seq_bean)
