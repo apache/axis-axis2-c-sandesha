@@ -349,8 +349,6 @@ sandesha2_ack_mgr_verify_seq_completion(
     int i = 0;
     long start = 1;
     
-    
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, ack_ranges, AXIS2_FALSE);
     
     hash = axutil_hash_make(env);
