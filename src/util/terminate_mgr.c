@@ -539,6 +539,9 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             retrans_bean = axutil_array_list_get(found_list, env, i);
             msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                 retrans_bean, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
+                " sender bean with msg_id %s and internal_seq_id %s", msg_id, 
+                internal_seq_id);
             sandesha2_sender_mgr_remove(retrans_mgr, env, msg_id);
             msg_store_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                         retrans_bean, env);
@@ -567,6 +570,9 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
             msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
                 (sandesha2_rm_bean_t *) create_seq_bean, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
+                " create_seq_bean with msg_id %s and internal_seq_id %s",
+                msg_id, internal_seq_id);
             sandesha2_create_seq_mgr_remove(create_seq_mgr, env, msg_id);
         }
     }
@@ -598,9 +604,15 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                 {
                     highest_in_msg_key_str = 
                         sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] "\
+                        "Removing the message context for the highest in "\
+                        "message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                         highest_in_msg_key_str);
                 }
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
+                    "the sequence property named %s in the sequence %s", name, 
+                    seq_id);
                 sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, seq_id, name);
             }
         }
