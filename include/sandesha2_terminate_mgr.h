@@ -69,7 +69,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
-    axis2_char_t *internal_seq_id,
+    axis2_char_t *seq_id,
     axis2_bool_t svr_side,
     sandesha2_storage_mgr_t *storage_man);
 

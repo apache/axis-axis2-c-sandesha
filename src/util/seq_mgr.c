@@ -87,6 +87,8 @@ sandesha2_seq_mgr_setup_new_seq(
     axis2_char_t *address = NULL;
     axis2_char_t *reply_to_addr = NULL;
 
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_seq");
     seq_id = axutil_uuid_gen(env);
     to = sandesha2_msg_ctx_get_to(create_seq_msg, env);
     if(!to)
@@ -141,10 +143,10 @@ sandesha2_seq_mgr_setup_new_seq(
     }
     address = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
     reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
-                SANDESHA2_SEQ_PROP_REPLY_TO_EPR, address);
+        SANDESHA2_SEQ_PROP_REPLY_TO_EPR, address);
     address = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id, 
-                SANDESHA2_SEQ_PROP_ACKS_TO_EPR, address);
+        SANDESHA2_SEQ_PROP_ACKS_TO_EPR, address);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, received_msg_bean);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
@@ -167,8 +169,8 @@ sandesha2_seq_mgr_setup_new_seq(
     if(create_seq_msg_action == NULL)
     {
         AXIS2_ERROR_SET(env->error, 
-                SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_WSA_ACTION_VALUE, 
-                AXIS2_FAILURE);
+            SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_WSA_ACTION_VALUE, 
+            AXIS2_FAILURE);
         return NULL;
     }
     msg_rm_ns = sandesha2_iom_rm_element_get_namespace_value(
@@ -184,8 +186,8 @@ sandesha2_seq_mgr_setup_new_seq(
     else
     {
         AXIS2_ERROR_SET(env->error, 
-                SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
-                AXIS2_FAILURE);
+            SANDESHA2_ERROR_CREATE_SEQ_MSG_DOES_NOT_HAVE_VALID_RM_NS_VALUE,
+            AXIS2_FAILURE);
         return NULL;
     }
     spec_version_bean = sandesha2_seq_property_bean_create(env);
@@ -196,6 +198,8 @@ sandesha2_seq_mgr_setup_new_seq(
    
     sandesha2_seq_property_mgr_insert(seq_prop_mgr,env, spec_version_bean);
     /* TODO Get the SOAP version from the creaet sequence message */
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_seq");
     return seq_id;
 }
        

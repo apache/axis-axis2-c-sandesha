@@ -553,7 +553,7 @@ sandesha2_app_msg_processor_process_in_msg (
             axis2_char_t *str_seq_list = NULL;
             axutil_array_list_add(incoming_seq_list, env, str_seq_id);
             str_seq_list = sandesha2_utils_array_list_to_string(env, 
-                        incoming_seq_list, SANDESHA2_ARRAY_LIST_STRING);
+                incoming_seq_list, SANDESHA2_ARRAY_LIST_STRING);
             /* saving the property. */
             sandesha2_seq_property_bean_set_value(incoming_seq_list_bean, 
                 env, str_seq_list);
