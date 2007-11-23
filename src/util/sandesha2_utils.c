@@ -77,7 +77,6 @@ sandesha2_utils_remove_soap_body_part(const axutil_env_t *env,
     axiom_element_t *body_element = NULL;
     axiom_element_t *body_rm_element = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, qname, AXIS2_FAILURE);
     
@@ -143,7 +142,6 @@ sandesha2_utils_get_rm_version(
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *rm_version_bean = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, key, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
     
@@ -167,7 +165,6 @@ sandesha2_utils_get_storage_mgr(
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_property_bean_t *prop_bean = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
@@ -205,7 +202,6 @@ sandesha2_utils_get_seq_property(
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, incoming_seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, name, NULL);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, NULL);
@@ -226,7 +222,6 @@ sandesha2_utils_get_property_bean(
 {
     axutil_param_t *param = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
     param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
@@ -318,7 +313,6 @@ sandesha2_utils_array_list_contains(
     axis2_char_t *str)
 {
     int i = 0;
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, list, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, str, AXIS2_FALSE);
     
@@ -340,7 +334,6 @@ sandesha2_utils_array_list_to_string(
     axis2_char_t *list_str = NULL;
     int i = 0, size = 0;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, list, NULL);
     
     list_str = axutil_strdup(env, "[");
@@ -379,7 +372,6 @@ sandesha2_utils_start_invoker_for_seq(
     axutil_property_t *property = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
@@ -412,7 +404,6 @@ sandesha2_utils_start_sender_for_seq(
     axutil_property_t *property = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
@@ -444,7 +435,6 @@ sandesha2_utils_start_polling_mgr(
     axutil_property_t *property = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
     axutil_allocator_switch_to_global_pool(env->allocator);
@@ -478,7 +468,6 @@ sandesha2_utils_get_outgoing_internal_seq_id(
     const axutil_env_t *env,
     axis2_char_t *seq_id)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
     return axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":",
@@ -490,8 +479,6 @@ sandesha2_utils_get_transport_out(const axutil_env_t *env)
 {
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
-    
-    AXIS2_ENV_CHECK(env, NULL);
     
     transport_sender = sandesha2_transport_sender_create(env);
     out_desc = axis2_transport_out_desc_create(env, AXIS2_TRANSPORT_ENUM_HTTP);
@@ -507,7 +494,6 @@ sandesha2_utils_get_inmemory_storage_mgr(
     axutil_property_t *property = NULL;
     axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR);
@@ -542,7 +528,6 @@ sandesha2_utils_get_permanent_storage_mgr(
     axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
    
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR);
@@ -571,7 +556,6 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axutil_env_t *env,
     axis2_char_t *ret = NULL;
     int start_len = 0;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, incoming_seq_id, NULL);
     
     start_str = axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", NULL);
@@ -591,7 +575,6 @@ sandesha2_utils_get_property_bean_from_op(
 {
         axutil_param_t *param = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, op, NULL);
     
     param = axis2_op_get_param(op, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
@@ -663,7 +646,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axutil_stream_t *out_stream = NULL;
     axis2_char_t *transport_to = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
     AXIS2_PARAM_CHECK(env->error, op, NULL);
     
@@ -827,7 +809,6 @@ sandesha2_utils_get_soap_version(
     const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope)
 {
-    AXIS2_ENV_CHECK(env, -1);
     AXIS2_PARAM_CHECK(env->error, envelope, -1);
     
     return axiom_soap_envelope_get_soap_version(envelope, env);
@@ -843,7 +824,6 @@ sandesha2_utils_trim_string(
     axis2_char_t *ret = NULL;
     int len = 0;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, orig_str, NULL);
     
     tmp = orig_str;
@@ -871,7 +851,6 @@ sandesha2_utils_is_retrievable_on_faults(
     axis2_bool_t ret = AXIS2_FALSE;
     axis2_char_t *action = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
     action =  (axis2_char_t*)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
@@ -901,7 +880,6 @@ sandesha2_utils_is_rm_global_msg(
     axiom_node_t *seq_node = NULL;
     axutil_qname_t *qname = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FALSE);
     
     action = (axis2_char_t*)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
@@ -968,7 +946,6 @@ sandesha2_utils_get_seq_id_from_rm_msg_ctx(
     int msg_type = -1;
     axis2_char_t *seq_id = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, NULL);
     
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
@@ -1027,7 +1004,6 @@ sandesha2_utils_stop_invoker(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
     /*TODO */
@@ -1039,7 +1015,6 @@ sandesha2_utils_stop_sender(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
     /*TODO */
@@ -1054,7 +1029,6 @@ sandesha2_utils_stop_polling_mgr(
     sandesha2_polling_mgr_t *polling_mgr = NULL;
     axutil_property_t *property = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
     property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
