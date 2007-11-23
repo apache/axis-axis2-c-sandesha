@@ -197,7 +197,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     }
 
     
-    AXIS2_LOG_TRACEenv->log, AXIS2_LOG_SI, 
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_clean_recv_side_after_invocation");
     return AXIS2_SUCCESS;
 }
@@ -356,7 +356,7 @@ sandesha2_terminate_mgr_terminate_sending_side(
 {
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_terminate_mgr_terminate_sending_side");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
