@@ -127,11 +127,13 @@ sandesha2_permanent_transaction_create(
     {
         axis2_module_desc_t *module_desc = NULL;
         axutil_qname_t *qname = NULL;
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
         axutil_param_t *db_path = NULL;
         axutil_param_t *db_server = NULL;
         axutil_param_t *db_user = NULL;
         axutil_param_t *db_password = NULL;
+
+        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
+
         module_desc = axis2_conf_get_module(conf, env, qname);
         if(module_desc)
         {
