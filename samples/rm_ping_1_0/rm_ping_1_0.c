@@ -52,8 +52,8 @@ int main(int argc, char** argv)
     axis2_char_t *seq_key = NULL;
    
     /* Set up the environment */
-    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
-    /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_DEBUG);*/
+    /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
+    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_DEBUG);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
@@ -136,18 +136,18 @@ int main(int argc, char** argv)
     }
     
     /* Send request */
-    /*payload = build_om_programatically(env, "ping1", seq_key);
+    payload = build_om_programatically(env, "ping1", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
-    payload = NULL;*/
+    payload = NULL;
     /*AXIS2_SLEEP(MAX_COUNT);*/
     
-    /*payload = build_om_programatically(env, "ping2", seq_key);
+    payload = build_om_programatically(env, "ping2", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
-    payload = NULL;*/
+    payload = NULL;
     /*AXIS2_SLEEP(MAX_COUNT);*/
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
