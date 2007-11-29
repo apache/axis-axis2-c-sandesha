@@ -181,8 +181,8 @@ sandesha2_ack_mgr_generate_ack_msg(
                 ack_msg_ctx, env));
         sandesha2_sender_bean_set_resend(ack_bean, env, AXIS2_FALSE);
         sandesha2_sender_bean_set_seq_id(ack_bean, env, seq_id);
+        sandesha2_sender_bean_set_internal_seq_id(ack_bean, env, seq_id);
         sandesha2_sender_bean_set_send(ack_bean, env, AXIS2_TRUE);
-        sandesha2_sender_bean_set_seq_id(ack_bean, env, seq_id);
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
             AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(ack_msg_ctx, env, 

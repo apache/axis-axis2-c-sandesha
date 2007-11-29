@@ -159,6 +159,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     axis2_char_t *wsa_version = NULL;
     axis2_char_t *addr_ns_val = NULL;
     
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_ack_"\
+        "req_msg_processor_process_in_msg");
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     

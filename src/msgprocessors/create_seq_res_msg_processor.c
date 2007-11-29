@@ -276,7 +276,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                         int_seq_id);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, out_seq_bean);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, int_seq_bean);
-    
     accept = sandesha2_create_seq_res_get_accept(csr_part, env);
     if(accept)
     {

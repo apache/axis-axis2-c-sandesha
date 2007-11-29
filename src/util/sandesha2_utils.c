@@ -401,24 +401,23 @@ sandesha2_utils_start_sender_for_seq(
     const axis2_bool_t persistent)
 {
     sandesha2_sender_t *sender = NULL;
-    axutil_property_t *property = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
+    /*property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
                         env, SANDESHA2_SENDER);
     if(property)
-        sender = axutil_property_get_value(property, env);
+        sender = axutil_property_get_value(property, env);*/
         
     if(!sender)
     {
         sender = sandesha2_sender_create(env);
-        property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
+        /*property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
             AXIS2_FALSE, (void *)sandesha2_sender_free_void_arg, sender);
         axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_SENDER, property);
+                        env, SANDESHA2_SENDER, property);*/
     }
     status = sandesha2_sender_run_for_seq(sender, env, conf_ctx, seq_id, 
         persistent);

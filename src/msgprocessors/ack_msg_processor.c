@@ -336,6 +336,8 @@ sandesha2_ack_msg_processor_process_in_msg (
                 ack_range_list, highest_out_msg_no);
             if(completed)
             {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Sequence "\
+                    "%s is completed. So adding terminate msg", out_seq_id); 
                 sandesha2_terminate_mgr_add_terminate_seq_msg(env, 
                     rm_msg_ctx, out_seq_id, int_seq_id, storage_mgr);
             }

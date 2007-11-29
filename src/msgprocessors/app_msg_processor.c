@@ -926,11 +926,15 @@ sandesha2_app_msg_processor_process_out_msg(
             send_create_seq = AXIS2_TRUE;
         if(is_svr_side)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the server "\
+                "sequence with internal sequence id %s", internal_seq_id);
             sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
                 spec_ver, storage_mgr, AXIS2_FALSE);
         }
         else
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the client "\
+                "sequence with internal sequence id %s", internal_seq_id);
             sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
                 spec_ver, storage_mgr, AXIS2_TRUE);
         }
@@ -1241,7 +1245,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     sandesha2_sender_bean_set_time_to_send(create_seq_entry, env, millisecs);
     msg_id = sandesha2_msg_ctx_get_msg_id(create_seq_rm_msg, env);
     sandesha2_sender_bean_set_msg_id(create_seq_entry, env, msg_id);
-    sandesha2_sender_bean_set_seq_id(create_seq_entry, env, 
+    sandesha2_sender_bean_set_internal_seq_id(create_seq_entry, env, 
         internal_seq_id);
     sandesha2_sender_bean_set_send(create_seq_entry, env, AXIS2_TRUE);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
@@ -1442,6 +1446,7 @@ sandesha2_app_msg_processor_process_response_msg(
     /* TODO add_ack_requested */
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     app_msg_entry = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_internal_seq_id(app_msg_entry, env, internal_seq_id);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sandesha to_addr = %s ", to_addr);
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env) &&
        sandesha2_utils_is_single_channel(env, rm_version, to_addr))
@@ -1505,7 +1510,6 @@ sandesha2_app_msg_processor_process_response_msg(
         axis2_msg_ctx_set_property(app_msg_ctx, env, 
            SANDESHA2_SET_SEND_TO_TRUE, property);
     }
-    sandesha2_sender_bean_set_seq_id(app_msg_entry, env, internal_seq_id);
     temp_op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
     axis2_op_ctx_increment_ref(temp_op_ctx, env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);

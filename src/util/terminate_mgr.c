@@ -83,7 +83,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
-    
+   
     if(!sandesha2_terminate_mgr_rcv_side_clean_map)
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
@@ -655,7 +655,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     long send_time = -1;
     sandesha2_terminate_seq_t *terminate_seq = NULL;
     axis2_char_t *seq_id = NULL;
-    axis2_char_t *internal_seq_id = NULL; 
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_add_terminate_seq_msg");
@@ -775,9 +774,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_get_identifier(terminate_seq, 
         env), env);
-    internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
-    sandesha2_sender_bean_set_seq_id(terminate_bean, env, internal_seq_id);
+    sandesha2_sender_bean_set_seq_id(terminate_bean, env, seq_id);
+    sandesha2_sender_bean_set_internal_seq_id(terminate_bean, env, int_seq_id);
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
     sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 

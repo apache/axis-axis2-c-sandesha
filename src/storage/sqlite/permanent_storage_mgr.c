@@ -821,7 +821,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             storage_mgr_impl->msg_ctx_map, key, AXIS2_HASH_KEY_STRING);
     if(msg_ctx)
         return msg_ctx;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrieved from database");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]retrieved from database");
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         storage_mgr_impl->bean_mgr, env, key);
     if (!msg_store_bean) 
