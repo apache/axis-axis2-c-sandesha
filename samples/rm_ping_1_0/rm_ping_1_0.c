@@ -99,7 +99,6 @@ int main(int argc, char** argv)
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
         client_home = "../../deploy";
-
     /* Create service client */
     svc_client = axis2_svc_client_create(env, client_home);
     if (!svc_client)

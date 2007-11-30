@@ -634,8 +634,6 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     axutil_array_list_t *match_list = NULL;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     sandesha2_sender_bean_t *result = NULL;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
-        "permanent_sender_mgr_get_next_msg_to_send");
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
         "permanent_sender_mgr_get_next_msg_to_send");
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
@@ -684,6 +682,8 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
             break;
         }
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
+        "permanent_sender_mgr_get_next_msg_to_send");
     return result;
 }
 

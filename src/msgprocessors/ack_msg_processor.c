@@ -230,6 +230,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property);
                         
     input_bean = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_internal_seq_id(input_bean, env, int_seq_id);
     sandesha2_sender_bean_set_send(input_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_resend(input_bean, env, AXIS2_TRUE);
     retrans_list = sandesha2_sender_mgr_find_by_sender_bean(retrans_mgr, env, 
@@ -262,6 +263,9 @@ sandesha2_ack_msg_processor_process_in_msg (
                 env, retrans_list, j);
             if(retrans_bean)
             {
+                int msg_type = sandesha2_sender_bean_get_msg_type(retrans_bean, env);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2]Removing the sender bean with type %d", msg_type);
                 sandesha2_sender_mgr_remove(retrans_mgr, env, 
                     sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
                         retrans_bean, env));
