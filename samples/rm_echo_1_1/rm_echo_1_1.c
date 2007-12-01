@@ -223,7 +223,7 @@ int main(int argc, char** argv)
     axis2_callback_set_on_error(callback4, rm_echo_callback_on_error);
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
         listener_manager);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    AXIS2_SLEEP(2*SANDESHA2_MAX_COUNT); 
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {

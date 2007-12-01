@@ -543,8 +543,8 @@ sandesha2_permanent_sender_mgr_match(
     long temp_time_to_send = 0;
     axis2_char_t *msg_id = NULL;
     axis2_char_t *temp_msg_id = NULL;
-    axis2_char_t *seq_id = NULL;
-    axis2_char_t *temp_seq_id = NULL;
+    axis2_char_t *internal_seq_id = NULL;
+    axis2_char_t *temp_internal_seq_id = NULL;
     long msg_no = 0;
     long temp_msg_no = 0;
     int msg_type = 0;
@@ -575,13 +575,15 @@ sandesha2_permanent_sender_mgr_match(
     {
         add = AXIS2_FALSE;
     }
-    seq_id = sandesha2_sender_bean_get_seq_id(
+    internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
         (sandesha2_sender_bean_t *) bean, env);
-    temp_seq_id = sandesha2_sender_bean_get_seq_id(
+    temp_internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
         (sandesha2_sender_bean_t *) candidate, 
             env);
-    if(seq_id && temp_seq_id && 0 != axutil_strcmp(
-        seq_id, temp_seq_id))
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "temp_internal_seq_id:%s", 
+        temp_internal_seq_id);
+    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
+        internal_seq_id, temp_internal_seq_id))
     {
         add = AXIS2_FALSE;
     }
@@ -628,9 +630,10 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     axutil_array_list_t *match_list = NULL;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     sandesha2_sender_bean_t *result = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
 
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_get_next_msg_to_send");
     sandesha2_sender_bean_set_send(matcher, env, AXIS2_TRUE);
     time_now = sandesha2_utils_get_current_time_in_millis(env);
     sandesha2_sender_bean_set_time_to_send(matcher, env, time_now);
@@ -660,6 +663,7 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
         bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, 
             env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]dam_msg_type:%d", msg_type);
         if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
         {
             long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
@@ -675,6 +679,8 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
             break;
         }
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_permanent_sender_mgr_get_next_msg_to_send");
     return result;
 }
 
