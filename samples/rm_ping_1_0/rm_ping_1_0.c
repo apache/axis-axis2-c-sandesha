@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define MAX_COUNT 15
+#define MAX_COUNT 10
 
 axiom_node_t *
 build_om_programatically(
@@ -52,8 +52,7 @@ int main(int argc, char** argv)
     axis2_char_t *seq_key = NULL;
    
     /* Set up the environment */
-    /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
-    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_DEBUG);
+    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RMSampleService";

@@ -607,11 +607,7 @@ sandesha2_utils_get_internal_seq_id(
     }
     else if(!seq_key)
     {
-        seq_key = axutil_uuid_gen(env);
-        ret = axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", seq_key, 
-            NULL);
-        return ret;
-        /*return axutil_strdup(env, to);*/
+        return axutil_strdup(env, to);
     }
     else
     {

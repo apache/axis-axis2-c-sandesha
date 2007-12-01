@@ -24,7 +24,7 @@
 #include <sandesha2_client.h>
 #include <ctype.h>
 
-#define MAX_COUNT 5
+#define MAX_COUNT 10
 
 axiom_node_t *
 build_om_programatically(
@@ -51,8 +51,7 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    /*env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);*/
-    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
+    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
@@ -143,14 +142,14 @@ int main(int argc, char** argv)
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    AXIS2_SLEEP(MAX_COUNT);
+    /*AXIS2_SLEEP(MAX_COUNT);*/
     
     payload = build_om_programatically(env, "ping2", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    AXIS2_SLEEP(MAX_COUNT);
+    /*AXIS2_SLEEP(MAX_COUNT);*/
 
     payload = build_om_programatically(env, "ping3", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
@@ -162,7 +161,7 @@ int main(int argc, char** argv)
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
-    AXIS2_SLEEP(MAX_COUNT);
+    /*AXIS2_SLEEP(MAX_COUNT);*/
    
     if (svc_client)
     {

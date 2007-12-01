@@ -763,6 +763,13 @@ sandesha2_app_msg_processor_process_out_msg(
             SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
             seq_key = axutil_property_get_value(property, env);
+        if(!seq_key)
+        {
+            seq_key = axutil_uuid_gen(env);
+            property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
+            axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY, 
+                property);
+        }
         internal_seq_id = sandesha2_utils_get_internal_seq_id(env, 
             to, seq_key);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -923,7 +930,9 @@ sandesha2_app_msg_processor_process_out_msg(
     if(1 == msg_number)
     {
         if(!out_seq_bean)
+        {
             send_create_seq = AXIS2_TRUE;
+        }
         if(is_svr_side)
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the server "\
