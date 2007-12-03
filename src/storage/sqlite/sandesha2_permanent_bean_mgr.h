@@ -92,18 +92,12 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    int (*retrieve_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_retrieve,
-    axis2_char_t *sql_stmt_update,
     axis2_char_t *sql_stmt_insert);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_remove(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    int (*retrieve_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_retrieve,
     axis2_char_t *sql_stmt_remove);
 
 sandesha2_rm_bean_t *AXIS2_CALL
@@ -117,9 +111,6 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_update(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    int (*update_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_retrieve_old_bean,
     axis2_char_t *sql_stmt_update);
 
 axutil_array_list_t *AXIS2_CALL
@@ -128,9 +119,7 @@ sandesha2_permanent_bean_mgr_find(
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     int (*find_func)(void *, int, char **, char **),
-    int (*count_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_find,
-    axis2_char_t *sql_stmt_count);
+    axis2_char_t *sql_stmt_find);
 
 sandesha2_rm_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find_unique(
@@ -138,9 +127,7 @@ sandesha2_permanent_bean_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_rm_bean_t *bean,
     int (*find_func)(void *, int, char **, char **),
-    int (*count_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_find,
-    axis2_char_t *sql_stmt_count);
+    axis2_char_t *sql_stmt_find);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_match(
