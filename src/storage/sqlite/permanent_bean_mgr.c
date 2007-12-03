@@ -860,7 +860,6 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     sqlite3 *dbconn = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Entry:sandesha2_permanent_bean_mgr_remove_msg_store_bean");
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(
@@ -1013,7 +1012,6 @@ sandesha2_permanent_bean_mgr_remove_response(
     sqlite3 *dbconn = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Entry:sandesha2_permanent_bean_mgr_remove_response");
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     dbconn = (sqlite3 *) sandesha2_permanent_storage_mgr_get_dbconn(

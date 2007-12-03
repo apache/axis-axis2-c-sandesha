@@ -106,8 +106,6 @@ sandesha2_permanent_transaction_create(
     axis2_char_t *db_name = NULL;
     /*int rc = -1;*/
 
-    AXIS2_ENV_CHECK(env, NULL);
-    
     trans_impl =  (sandesha2_permanent_transaction_impl_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_permanent_transaction_impl_t));
 
@@ -207,7 +205,6 @@ sandesha2_permanent_transaction_free(
 {
     sandesha2_permanent_transaction_impl_t *trans_impl = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     trans_impl = SANDESHA2_INTF_TO_IMPL(trans);
 
     if(trans_impl->enlisted_beans)

@@ -262,7 +262,6 @@ sandesha2_permanent_storage_mgr_create(
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     axis2_conf_t *conf = NULL;
    
-    AXIS2_ENV_CHECK(env, NULL);
     storage_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_storage_mgr_t));
 
@@ -514,8 +513,6 @@ sandesha2_permanent_storage_mgr_init(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    
     sandesha2_permanent_storage_mgr_set_ctx(storage_mgr, env, conf_ctx);
 
     return AXIS2_SUCCESS;
