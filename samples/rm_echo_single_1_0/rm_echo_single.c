@@ -20,7 +20,6 @@
 #include <axis2_client.h>
 #include <axis2_svc_ctx.h>
 #include <axis2_op_client.h>
-#include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
@@ -58,13 +57,11 @@ int main(int argc, char** argv)
     const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
-    axis2_endpoint_ref_t* reply_to = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
-    axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
@@ -115,14 +112,9 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     
-    /* Seperate listner needs addressing, hence addressing stuff in options */
-    /*axis2_options_set_action(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
     soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
     axis2_options_set_soap_action(options, env, soap_action);
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
-    reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
-    /*axis2_options_set_reply_to(options, env, reply_to);*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -153,11 +145,6 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    listener_manager = axis2_listener_manager_create(env);
-    if (!listener_manager)
-    {
-        return AXIS2_FAILURE;
-    }
     /* Offer sequence */
     offered_seq_id = axutil_uuid_gen(env);
     property = axutil_property_create(env);
