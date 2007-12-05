@@ -262,7 +262,6 @@ sandesha2_sender_worker_func(
         sandesha2_transaction_t *transaction = NULL;
         sandesha2_sender_mgr_t *mgr = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
-        sandesha2_sender_worker_t *sender_worker = NULL;
         axis2_char_t *msg_id = NULL;
 
         transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
@@ -282,14 +281,9 @@ sandesha2_sender_worker_func(
         if(msg_id)
         {
             axis2_bool_t status = AXIS2_TRUE;
-            /* Start a sender worker which will work on this message */
-            sender_worker = sandesha2_sender_worker_create(env, sender->conf_ctx, 
-                msg_id);
-            sandesha2_sender_worker_run(sender_worker, env, 
+            status = sandesha2_sender_worker_send(env, sender->conf_ctx, msg_id, 
                 sender->persistent_msg_ctx);
             AXIS2_SLEEP(sleep_time * 2); 
-            status = sandesha2_sender_worker_get_status(
-                sender_worker, env);
             if(!status)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
