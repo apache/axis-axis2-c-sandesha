@@ -160,7 +160,6 @@ sandesha2_sender_is_sender_started(
     sandesha2_sender_t *sender, 
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     return sender->run_sender;
 }
             
