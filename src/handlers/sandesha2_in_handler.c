@@ -32,11 +32,6 @@
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
 
-/*static const axutil_string_t *AXIS2_CALL
-sandesha2_in_handler_get_name(
-    const struct axis2_handler *handler, 
-    const axutil_env_t *env);*/
-
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
     struct axis2_handler *handler, 
@@ -146,7 +141,7 @@ sandesha2_in_handler_invoke(
     }
     /* 
      * TODO Validate the message
-     * SANDESHA2_MSG_VALIDATOR_VALIDATE(env, rm_msg_ctx, storage_mgr);
+     * sandesha2_msg_validator_validate(env, rm_msg_ctx, storage_mgr);
      */
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
@@ -175,12 +170,4 @@ sandesha2_in_handler_invoke(
    
     return AXIS2_SUCCESS;
 }
-
-/*static const axutil_string_t *AXIS2_CALL
-sandesha2_in_handler_get_name(
-    const struct axis2_handler *handler, 
-    const axutil_env_t *env)
-{
-    return axutil_string_create(env, SANDESHA2_IN_HANDLER_NAME);
-}*/
 

@@ -66,35 +66,6 @@ sandesha2_sender_worker_free(
     sandesha2_sender_worker_t *sender_worker, 
     const axutil_env_t *env);
 
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_worker_stop_sender_worker_for_seq(
-    sandesha2_sender_worker_t *sender_worker, 
-    const axutil_env_t *env, 
-    axis2_char_t *seq_id);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_worker_stop_sending (
-    sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env);
-            
-axis2_bool_t AXIS2_CALL 
-sandesha2_sender_worker_is_sender_worker_started( 
-    sandesha2_sender_worker_t *sender_worker, 
-    const axutil_env_t *env);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_worker_run_for_seq 
-    (sandesha2_sender_worker_t *sender_worker, 
-    const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx, 
-    axis2_char_t *seq_id);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_worker_run (
-    sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env,
-    const axis2_bool_t persistent_msg_ctx);
-
 axis2_status_t
 sandesha2_sender_worker_send(
     axutil_env_t *env,
@@ -107,12 +78,6 @@ void sandesha2_sender_worker_set_transport_out(
     const axutil_env_t *env,
     axis2_transport_out_desc_t *transport_out);
 
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_worker_get_status (
-    sandesha2_sender_worker_t *sender_worker,
-    const axutil_env_t *env);
-
-                        
 /** @} */
 #ifdef __cplusplus
 }

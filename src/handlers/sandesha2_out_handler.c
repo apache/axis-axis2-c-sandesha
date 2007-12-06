@@ -32,11 +32,6 @@
 #include <sandesha2_sender_mgr.h>
 #include <platforms/axutil_platform_auto_sense.h>
 
-axutil_string_t *AXIS2_CALL
-sandesha2_out_handler_get_name(
-    struct axis2_handler *handler, 
-    const axutil_env_t *env);
-
 axis2_status_t AXIS2_CALL
 sandesha2_out_handler_invoke(
     struct axis2_handler *handler, 
@@ -51,8 +46,6 @@ sandesha2_out_handler_create(
     axutil_qname_t *qname) 
 {
     axis2_handler_t *handler = NULL;
-    
-    AXIS2_ENV_CHECK(env, NULL);
     
     handler = axis2_handler_create(env);
     if (!handler)
@@ -89,22 +82,22 @@ sandesha2_out_handler_invoke(
     int msg_type = -1;
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Start: sandesha2_out_handler_invoke");
+        "[sandesha2]Entry: sandesha2_out_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Configuration Context is NULL");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, 
+            AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Axis2 Service is NULL");
+            "[sandesha2]Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -112,15 +105,15 @@ sandesha2_out_handler_invoke(
     if(!axis2_svc_is_module_engaged(svc, env, module_qname))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] RM is not engaged. So return here");
+            "[sandesha2]RM is not engaged. So return here");
         return AXIS2_SUCCESS;
     }
     axutil_qname_free(module_qname, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-        axutil_property_t *property = axutil_property_create_with_args(env, 0, 0, 
-            0, NULL);
+        axutil_property_t *property = axutil_property_create_with_args(env, 0, 
+            0, 0, NULL);
         axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property);
     }
@@ -149,7 +142,7 @@ sandesha2_out_handler_invoke(
         if (!found)
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] RM is not engaged. So return here.");
+                "[sandesha2]RM is not engaged. So return here.");
             return AXIS2_SUCCESS;
         }
     }
@@ -160,7 +153,7 @@ sandesha2_out_handler_invoke(
     if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Application Processing Done. So return here.");
+            "[sandesha2]Application Processing Done. So return here.");
         return AXIS2_SUCCESS; 
     }
     temp_prop = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
@@ -221,7 +214,7 @@ sandesha2_out_handler_invoke(
         /* Message should not be sent in an exception situation */
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Error in processing the message");
+            "[sandesha2]Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -232,16 +225,8 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
         axutil_property_set_value(temp_prop, env, axutil_strdup(
             env,AXIS2_VALUE_FALSE));
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit: "\
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit: "\
         "sandesha2_out_handler_invoke");
     return AXIS2_SUCCESS;
-}
-
-axutil_string_t *AXIS2_CALL
-sandesha2_out_handler_get_name(
-    struct axis2_handler *handler, 
-    const axutil_env_t *env)
-{
-    return axutil_string_create(env, SANDESHA2_OUT_HANDLER_NAME);
 }
 

@@ -149,13 +149,11 @@ sandesha2_utils_get_rm_version(
         storage_mgr, env);
     if(seq_prop_mgr)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came20");
         rm_version_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
             env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
     }
     if(!rm_version_bean)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came21");
         return NULL;
     }
     return sandesha2_seq_property_bean_get_value(rm_version_bean, env);
