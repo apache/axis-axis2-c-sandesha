@@ -805,7 +805,6 @@ sandesha2_msg_creator_finalize_creation(
                     }
                     if(0 == axutil_strcmp(AXIS2_HTTP_CLIENT, key))
                     {
-                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_axis2_http_client");
                         axutil_property_set_own_value(new_prop, env, AXIS2_FALSE);
                     }
                     axutil_hash_set(new_msg_props, key, AXIS2_HASH_KEY_STRING, new_prop);

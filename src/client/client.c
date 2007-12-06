@@ -18,7 +18,6 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
-#include <sandesha2_transaction.h>
 #include "sandesha2_client_constants.h"
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_utils.h>
@@ -48,8 +47,6 @@
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axiom_soap_const.h>
-
-static sandesha2_transaction_t *client_report_transaction = NULL;
 
 /**
  * Caller must free the returned internal_seq_id
@@ -232,14 +229,8 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     sandesha2_create_seq_bean_t *create_seq_bean = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    sandesha2_transaction_t *report_transaction = NULL;
-    axis2_char_t *within_transaction_str = NULL;
     axis2_char_t *out_seq_id = NULL;
-    axis2_bool_t commit = AXIS2_TRUE;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
@@ -252,29 +243,6 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env); 
     create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env); 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    if(client_report_transaction)
-    {
-        report_transaction = client_report_transaction;
-        commit = AXIS2_FALSE;
-    }
-    else
-    {
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
-        if(property)
-            within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-                property, env);
-        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
-            AXIS2_VALUE_TRUE))
-        {
-            within_transaction = AXIS2_TRUE;
-        }
-        if(!within_transaction)
-        {
-            report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
-                env);
-        }
-        client_report_transaction = report_transaction;
-    }
     sandesha2_seq_report_set_internal_seq_id(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
     sandesha2_create_seq_bean_set_internal_seq_id(create_seq_find_bean, 
@@ -329,11 +297,6 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         SANDESHA2_SEQ_STATUS_ESTABLISHED);
     sandesha2_client_fill_outgoing_seq_info(env, seq_report, out_seq_id, 
         seq_prop_mgr);
-    if(report_transaction && commit)
-    {
-         sandesha2_transaction_commit(report_transaction, env);
-         client_report_transaction = NULL;
-    }
     return seq_report;
 }
 
@@ -403,17 +366,11 @@ sandesha2_client_get_report(
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_report_t *sandesha2_report = NULL;
     sandesha2_seq_property_bean_t *internal_seq_find_bean = NULL;
-    axis2_char_t *within_transaction_str = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    sandesha2_transaction_t *report_transaction = NULL;
-    axis2_bool_t rolled_back = AXIS2_FALSE;
     axutil_array_list_t *collection = NULL;
     axutil_array_list_t *svr_completed_msgs_beans = NULL;
     int i = 0, size = 0;
     sandesha2_seq_property_bean_t *svr_completed_msgs_find_bean = NULL;
     axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axis2_bool_t commit = AXIS2_TRUE;
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
@@ -424,33 +381,6 @@ sandesha2_client_get_report(
     sandesha2_report = sandesha2_report_create(env);
     internal_seq_find_bean = sandesha2_seq_property_bean_create(env);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    if(client_report_transaction)
-    {
-        report_transaction = client_report_transaction;
-        commit = AXIS2_FALSE;
-    }
-    else
-    {
-        property = (axutil_property_t *) axis2_ctx_get_property(ctx, env, 
-            SANDESHA2_WITHIN_TRANSACTION);
-        if(property)
-            within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-                property, env);
-        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
-            AXIS2_VALUE_TRUE))
-        {
-            within_transaction = AXIS2_TRUE;
-        }
-        if(AXIS2_TRUE != within_transaction)
-        {
-            if (storage_mgr)
-            {
-                report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
-                    env);
-            }
-        }
-        client_report_transaction = report_transaction;
-    }
     if(internal_seq_find_bean) 
         sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
             SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
@@ -529,12 +459,6 @@ sandesha2_client_get_report(
             seq_id, no_of_msgs);
         status = sandesha2_seq_report_get_seq_status(seq_report, env);
         sandesha2_report_add_to_seq_status_map(sandesha2_report, env, seq_id, status);
-    }
-    if (AXIS2_TRUE != within_transaction && AXIS2_TRUE != rolled_back && 
-        report_transaction != NULL && commit) 
-    {
-        sandesha2_transaction_commit(report_transaction, env);
-        client_report_transaction = NULL;
     }
 	return sandesha2_report;
 }
@@ -1582,13 +1506,8 @@ sandesha2_client_get_incoming_seq_report(
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    sandesha2_transaction_t *report_transaction = NULL;
     axutil_array_list_t *completed_msg_list = NULL;
-    axis2_char_t *within_transaction_str = NULL;
     axis2_char_t status = -1;
-    axis2_bool_t commit = AXIS2_TRUE;
     int i = 0, size = 0;
     
     AXIS2_ENV_CHECK(env, NULL);
@@ -1599,28 +1518,6 @@ sandesha2_client_get_incoming_seq_report(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf); 
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env); 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    if(client_report_transaction)
-    {
-        report_transaction = client_report_transaction;
-        commit = AXIS2_FALSE;
-    }
-    else
-    {
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
-        if(property)
-            within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-                property, env);
-        if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
-            AXIS2_VALUE_TRUE))
-        {
-            within_transaction = AXIS2_TRUE;
-        }
-        if(!within_transaction)
-        {
-            report_transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
-                env);
-        }
-    }
     seq_report = sandesha2_seq_report_create(env);
     completed_msg_list = sandesha2_ack_mgr_get_svr_completed_msgs_list(env, 
         seq_id, seq_prop_mgr);
@@ -1642,8 +1539,6 @@ sandesha2_client_get_incoming_seq_report(
     status = sandesha2_client_get_svr_seq_status(env, seq_id, storage_mgr);
     sandesha2_seq_report_set_seq_status(seq_report, env, 
         status);
-    if(commit)
-        sandesha2_transaction_commit(report_transaction, env);
    
     return seq_report;
 }
@@ -1712,7 +1607,6 @@ sandesha2_client_configure_terminate_seq(
         sandesha2_identifier_t *identifier = NULL;
         sandesha2_seq_property_bean_t *seq_id_bean = NULL;
         axis2_char_t *seq_id = NULL;
-        sandesha2_transaction_t *transaction = NULL;
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, env);
         storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
@@ -1720,17 +1614,10 @@ sandesha2_client_configure_terminate_seq(
         {
             seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                 storage_mgr, env);
-            transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, 
-                env);
         }
         if(seq_prop_mgr)
             seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
-        if(transaction)
-        {
-            sandesha2_transaction_commit(transaction, env);
-            client_report_transaction = NULL;
-        }
         if(!seq_id_bean)
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
@@ -1967,9 +1854,6 @@ sandesha2_client_get_response_envelope(
 {
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     axis2_conf_t *conf = NULL;
-    axis2_char_t *within_transaction_str = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    sandesha2_transaction_t *transaction = NULL;
     axis2_ctx_t *ctx = NULL;
     axutil_property_t *property = NULL;
     axis2_options_t *options = NULL;
@@ -1991,20 +1875,6 @@ sandesha2_client_get_response_envelope(
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    property = (axutil_property_t *) axis2_ctx_get_property(ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION);
-    if(property)
-        within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-            property, env);
-    if(within_transaction_str && 0 == axutil_strcmp(within_transaction_str, 
-        AXIS2_VALUE_TRUE))
-    {
-        within_transaction = AXIS2_TRUE;
-    }
-    if(AXIS2_TRUE != within_transaction)
-    {
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-    }
     response_envelope = sandesha2_storage_mgr_retrieve_response(storage_mgr, env, 
         client_seq_key, msg_no);
     if(response_envelope)
@@ -2013,8 +1883,6 @@ sandesha2_client_get_response_envelope(
         result = axiom_soap_body_get_base_node(body, env);
     sandesha2_storage_mgr_remove_response(storage_mgr, env, client_seq_key, 
         msg_no);
-    sandesha2_transaction_commit(transaction, env);
-    client_report_transaction = NULL;
     return result;
 }
 

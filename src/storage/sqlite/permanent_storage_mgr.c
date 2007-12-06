@@ -70,7 +70,7 @@ typedef struct sandesha2_permanent_storage_mgr
     sandesha2_invoker_mgr_t *invoker_mgr;
     axis2_conf_ctx_t *conf_ctx;
     axis2_char_t *db_name;
-    axutil_hash_t *transactions;
+    axutil_array_list_t *transactions;
     sandesha2_permanent_bean_mgr_t *bean_mgr;
     axutil_hash_t *msg_ctx_map;
     axutil_thread_mutex_t *mutex;
@@ -276,7 +276,7 @@ sandesha2_permanent_storage_mgr_create(
         "Sandesha2MessageMap");
     storage_mgr_impl->conf_ctx = conf_ctx;
     axutil_allocator_switch_to_global_pool(env->allocator);
-    storage_mgr_impl->transactions = axutil_hash_make(env);
+    storage_mgr_impl->transactions = axutil_array_list_create(env, 0);
     axutil_allocator_switch_to_local_pool(env->allocator);
     storage_mgr_impl->bean_mgr = NULL;
     storage_mgr_impl->mutex = axutil_thread_mutex_create(env->allocator,
@@ -325,7 +325,7 @@ sandesha2_permanent_storage_mgr_free(
 
     if(storage_mgr_impl->transactions)
     {
-        axutil_hash_free(storage_mgr_impl->transactions, env);
+        axutil_array_list_free(storage_mgr_impl->transactions, env);
     }
     if(storage_mgr_impl->create_seq_mgr)
     {
@@ -379,32 +379,21 @@ sandesha2_permanent_storage_mgr_get_transaction(
 {
 	sandesha2_transaction_t *transaction = NULL;
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    unsigned long int thread_id;
-    axis2_char_t *thread_id_key = NULL;
 
 	storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-	thread_id = (unsigned long int ) axis2_os_thread_current();
-
 
     axutil_thread_mutex_lock(storage_mgr_impl->mutex);
     axutil_allocator_switch_to_global_pool(env->allocator);
-    thread_id_key = AXIS2_MALLOC(env->allocator, sizeof(char)*128);
-    sprintf(thread_id_key, "%lu", thread_id); 
-    transaction = (sandesha2_transaction_t *) axutil_hash_get(
-        storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
-    while(transaction && sandesha2_permanent_transaction_is_active(transaction, env))
-    {
-        AXIS2_SLEEP(1);
-    }
+    transaction = (sandesha2_transaction_t *) axutil_array_list_get(
+        storage_mgr_impl->transactions, env, 0);
     
     if(!transaction)
     {
         axutil_thread_mutex_unlock(storage_mgr_impl->mutex);
         transaction = 
-            sandesha2_permanent_transaction_create(env, storage_mgr, thread_id);
+            sandesha2_permanent_transaction_create(env, storage_mgr, 0);
         axutil_thread_mutex_lock(storage_mgr_impl->mutex);
-        axutil_hash_set(storage_mgr_impl->transactions, thread_id_key, 
-            AXIS2_HASH_KEY_STRING, transaction);
+        axutil_array_list_add(storage_mgr_impl->transactions, env, transaction);
     }
     axutil_allocator_switch_to_local_pool(env->allocator);
     axutil_thread_mutex_unlock(storage_mgr_impl->mutex);
@@ -418,16 +407,10 @@ sandesha2_permanent_storage_mgr_remove_transaction(
     sandesha2_transaction_t *transaction)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
-    unsigned long int thread_id = -1;
-    axis2_char_t *thread_id_key = AXIS2_MALLOC(env->allocator, 128);
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
-    thread_id = (unsigned long int) sandesha2_permanent_transaction_get_thread_id(
-        transaction, env);
-    sprintf(thread_id_key, "%lu", thread_id); 
     axutil_allocator_switch_to_global_pool(env->allocator);
-    axutil_hash_set(storage_mgr_impl->transactions, thread_id_key, 
-        AXIS2_HASH_KEY_STRING, NULL);
+    axutil_array_list_remove(storage_mgr_impl->transactions, env, 0);
     axutil_allocator_switch_to_local_pool(env->allocator);
 }
 
@@ -850,7 +833,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         axiom_soap_builder_free(soap_builder, env);
         return NULL;
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_soap_envelope:%s", soap_env_str);
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
     axis2_msg_ctx_set_msg_id(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
         msg_store_bean, env));
@@ -1142,14 +1124,11 @@ sandesha2_permanent_storage_mgr_get_dbconn(
 {
     sqlite3* dbconn = NULL;
     sandesha2_transaction_t *transaction = NULL;
-    unsigned long int thread_id = (unsigned long int) axis2_os_thread_current();
-    axis2_char_t thread_id_key[128];
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    sprintf(thread_id_key, "%lu", thread_id);
     axutil_allocator_switch_to_global_pool(env->allocator);
-    transaction = (sandesha2_transaction_t *) axutil_hash_get(
-        storage_mgr_impl->transactions, thread_id_key, AXIS2_HASH_KEY_STRING);
+    transaction = (sandesha2_transaction_t *) axutil_array_list_get(
+        storage_mgr_impl->transactions, env, 0);
     axutil_allocator_switch_to_local_pool(env->allocator);
     if(transaction)
     {
@@ -1277,7 +1256,7 @@ sandesha2_permanent_storage_mgr_create_db(
     axis2_conf_ctx_t *conf_ctx)
 {
     axis2_conf_t *conf = NULL;
-    axis2_char_t *path = "./";
+    axis2_char_t *path = ".";
     int rc = -1;
     sqlite3 *dbconn = NULL;
     axis2_char_t *db_name = NULL;

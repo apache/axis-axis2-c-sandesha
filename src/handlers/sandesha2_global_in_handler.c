@@ -25,7 +25,6 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_ctx.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_msg_processor.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_constants.h>
@@ -101,8 +100,6 @@ sandesha2_global_in_handler_invoke(
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    axis2_char_t *within_transaction_str = NULL;
     axiom_soap_fault_t *fault_part = NULL;
     axis2_char_t *reinjected_msg = AXIS2_FALSE;
     const axutil_string_t *str_soap_action = NULL;
@@ -113,10 +110,7 @@ sandesha2_global_in_handler_invoke(
     axis2_bool_t dropped = AXIS2_FALSE;
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_transaction_t *transaction = NULL;
     axutil_property_t *property = NULL;
-    axis2_bool_t rolled_back = AXIS2_FALSE;
-    AXIS2_ENV_CHECK( env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2]Start:sandesha2_global_in_handler");
    /* This handler needs to identify messages which follow the WSRM 1.0 
@@ -228,38 +222,11 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_FAILURE;
     }
     property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
-    if(property)
-        within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-            property, env);
-    if(within_transaction_str && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
-        within_transaction_str))
-    {
-        within_transaction = AXIS2_TRUE;
-    }
-    if(!within_transaction)
-    {
-        axutil_property_t *prop = NULL;
-        
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
-        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
-    }
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)
     {
         axis2_relates_to_t *relates_to = NULL;
-        if(!within_transaction)
-        {
-            axutil_property_t *prop = NULL;
-            sandesha2_transaction_rollback(transaction, env);
-            prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-                AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
-            axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
-            rolled_back = AXIS2_TRUE;
-            
-        }
         relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
         if(relates_to)
         {
@@ -294,16 +261,6 @@ sandesha2_global_in_handler_invoke(
             rm_msg_ctx, storage_mgr);
     if(dropped)
     {
-        if(!within_transaction)
-        {
-            axutil_property_t *prop = NULL;
-            sandesha2_transaction_rollback(transaction, env);
-            prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-                AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
-            axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-                prop);
-            rolled_back = AXIS2_TRUE;
-        }
         sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx,
                         storage_mgr);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -311,14 +268,6 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS;
     }
     /*Process if global processing possible. - Currently none*/
-    if(!within_transaction && !rolled_back)
-    {
-        axutil_property_t *prop = NULL;
-        sandesha2_transaction_commit(transaction, env);
-        prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-            AXIS2_FALSE, 0, AXIS2_VALUE_FALSE);
-        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
-    }
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[sandesha2] Exit:sandesha2_global_in_handler");
        
     return AXIS2_SUCCESS;

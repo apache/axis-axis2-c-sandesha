@@ -581,7 +581,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Unable to find RM spec version");
+            "[sandesha2]Unable to find RM spec version for seq_id %s", str_seq_id);
         return AXIS2_FAILURE;
     }
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
@@ -1217,11 +1217,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     }
     create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
     axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
-    /* Set that the create sequence message is part of a transaction. */
-    property = axutil_property_create_with_args(env, 0, 0, 0, 
-        AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(create_seq_msg, env, SANDESHA2_WITHIN_TRANSACTION, 
-        property);
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, 
         internal_seq_id, (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(
         create_seq_msg, env), NULL);
@@ -1383,9 +1378,13 @@ sandesha2_app_msg_processor_process_response_msg(
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Unable to find RM spec version");
-        return AXIS2_FAILURE;
+        rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, storage_mgr);
+        if(!rm_version)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Unable to find "\
+                "RM spec version for the internal_seq_id %s", internal_seq_id);
+            return AXIS2_FAILURE;
+        }
     }
     rm_ns_val = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
     

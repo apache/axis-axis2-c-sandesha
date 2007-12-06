@@ -17,7 +17,6 @@
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
@@ -259,25 +258,21 @@ sandesha2_sender_worker_func(
     seq_id = sender->seq_id;
     while(sender->run_sender)
     {
-        sandesha2_transaction_t *transaction = NULL;
         sandesha2_sender_mgr_t *mgr = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
         axis2_char_t *msg_id = NULL;
 
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
             storage_mgr, env);
         mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(mgr, env, seq_id);
         if(!sender_bean)
         {
-            sandesha2_transaction_commit(transaction, env);
             AXIS2_USLEEP(100000);
             continue;
         }
         msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
             sender_bean, env);
-        sandesha2_transaction_commit(transaction, env);
         if(msg_id)
         {
             axis2_bool_t status = AXIS2_TRUE;

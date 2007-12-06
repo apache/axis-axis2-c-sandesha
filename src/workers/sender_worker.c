@@ -17,7 +17,6 @@
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_seq_property_bean.h>
@@ -249,7 +248,6 @@ sandesha2_sender_worker_worker_func(
     sandesha2_sender_worker_args_t *args;
     axutil_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_transaction_t *transaction = NULL;
     sandesha2_sender_bean_t *sender_worker_bean = NULL;
     sandesha2_sender_bean_t *bean1 = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
@@ -280,14 +278,12 @@ sandesha2_sender_worker_worker_func(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         sender_worker->conf_ctx, 
         axis2_conf_ctx_get_conf(sender_worker->conf_ctx, env));
-    transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
         AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, 
             "[sandesha2] sender_worker_bean is NULL");
-        sandesha2_transaction_rollback(transaction, env);
         #ifdef AXIS2_SVR_MULTI_THREADED
             AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
         #endif
@@ -312,7 +308,6 @@ sandesha2_sender_worker_worker_func(
     }
     if(!msg_ctx)
     {
-        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "\
             "not present in the store");
         #ifdef AXIS2_SVR_MULTI_THREADED
@@ -337,9 +332,6 @@ sandesha2_sender_worker_worker_func(
     if(!continue_sending)
     {
         sender_worker->status = AXIS2_FAILURE;
-        /* We commit here since we have cleaned the
-         * sending side data and that need to commited */
-        sandesha2_transaction_commit(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
         #ifdef AXIS2_SVR_MULTI_THREADED
@@ -355,7 +347,6 @@ sandesha2_sender_worker_worker_func(
     if(qualified_for_sending && 0 != axutil_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
-        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
         #ifdef AXIS2_SVR_MULTI_THREADED
@@ -389,7 +380,6 @@ sandesha2_sender_worker_worker_func(
         }
         if(continue_sending)
         {
-            sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
             #ifdef AXIS2_SVR_MULTI_THREADED
@@ -429,7 +419,6 @@ sandesha2_sender_worker_worker_func(
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
     if(transport_sender)
     {
-        sandesha2_transaction_commit(transaction, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION);
         if(property)
@@ -452,7 +441,6 @@ sandesha2_sender_worker_worker_func(
         	successfully_sent = AXIS2_FALSE;
 		}
     }
-    transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION); 
     if(property)
@@ -532,11 +520,6 @@ sandesha2_sender_worker_worker_func(
         axis2_msg_ctx_set_property(msg_ctx, env, 
                     SANDESHA2_WITHIN_TRANSACTION, property);
     }
-    /* TODO make transaction handling effective */
-    if(transaction)
-    {
-        sandesha2_transaction_commit(transaction, env);
-    }
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif
@@ -555,7 +538,6 @@ sandesha2_sender_worker_send(
 {
     sandesha2_sender_worker_t *sender_worker = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_transaction_t *transaction = NULL;
     sandesha2_sender_bean_t *sender_worker_bean = NULL;
     sandesha2_sender_bean_t *bean1 = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
@@ -578,14 +560,12 @@ sandesha2_sender_worker_send(
     
     storage_mgr = sandesha2_utils_get_storage_mgr(env, 
         conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
-    transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
         AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, 
             "[sandesha2] sender_worker_bean is NULL");
-        sandesha2_transaction_rollback(transaction, env);
         return AXIS2_FAILURE;
     }
 
@@ -607,7 +587,6 @@ sandesha2_sender_worker_send(
     }
     if(!msg_ctx)
     {
-        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is "\
             "not present in the store");
         return AXIS2_FAILURE;
@@ -629,9 +608,6 @@ sandesha2_sender_worker_send(
     if(!continue_sending)
     {
         status = AXIS2_FAILURE;
-        /* We commit here since we have cleaned the
-         * sending side data and that need to commited */
-        sandesha2_transaction_commit(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Do not continue sending the message");
         return status;
@@ -644,7 +620,6 @@ sandesha2_sender_worker_send(
     if(qualified_for_sending && 0 != axutil_strcmp(
         qualified_for_sending, AXIS2_VALUE_TRUE))
     {
-        sandesha2_transaction_rollback(transaction, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Message is not qualified for sending");
         return AXIS2_FAILURE;
@@ -675,7 +650,6 @@ sandesha2_sender_worker_send(
         }
         if(continue_sending)
         {
-            sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Continue "\
                 "Sending is true. So returning from Sender Worker");
             return AXIS2_SUCCESS;
@@ -712,7 +686,6 @@ sandesha2_sender_worker_send(
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
     if(transport_sender)
     {
-        sandesha2_transaction_commit(transaction, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_WITHIN_TRANSACTION);
         if(property)
@@ -735,7 +708,6 @@ sandesha2_sender_worker_send(
         	successfully_sent = AXIS2_FALSE;
 		}
     }
-    transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION); 
     if(property)
@@ -816,11 +788,6 @@ sandesha2_sender_worker_send(
             AXIS2_VALUE_FALSE);
         axis2_msg_ctx_set_property(msg_ctx, env, 
                     SANDESHA2_WITHIN_TRANSACTION, property);
-    }
-    /* TODO make transaction handling effective */
-    if(transaction)
-    {
-        sandesha2_transaction_commit(transaction, env);
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_worker_send");        

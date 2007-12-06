@@ -16,7 +16,6 @@
 #include <sandesha2_polling_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_property_bean.h>
@@ -251,7 +250,6 @@ sandesha2_polling_mgr_worker_func(
         int wait_time = 0;
         axis2_conf_t *conf = NULL;
         axis2_module_desc_t *module_desc = NULL;
-        sandesha2_transaction_t *transaction = NULL;
         axis2_status_t status = AXIS2_FAILURE;
 
         conf = axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env);
@@ -265,7 +263,6 @@ sandesha2_polling_mgr_worker_func(
         }
         axutil_qname_free(qname, env);
         AXIS2_SLEEP(wait_time);
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
         next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
                         storage_mgr, env);
          /* Getting the sequences to be polled. if schedule contains any requests, 
@@ -324,7 +321,6 @@ sandesha2_polling_mgr_worker_func(
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "No valid MakeConnection entry is found.");
-            sandesha2_transaction_rollback(transaction, env);
             continue;
         }
         make_conn_seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
@@ -345,7 +341,6 @@ sandesha2_polling_mgr_worker_func(
             ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, storage_mgr);
         if(!make_conn_rm_msg_ctx)
         {
-            sandesha2_transaction_rollback(transaction, env);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "No memory");
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return NULL;
@@ -410,12 +405,7 @@ sandesha2_polling_mgr_worker_func(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]make_connection sending failed");
-            sandesha2_transaction_rollback(transaction, env);
             return NULL;
-        }
-        if(transaction)
-        {
-            sandesha2_transaction_commit(transaction, env);
         }
     }
     return NULL;

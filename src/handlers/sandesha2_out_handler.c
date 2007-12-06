@@ -23,7 +23,6 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_ctx.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_msg_processor.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_constants.h>
@@ -81,14 +80,10 @@ sandesha2_out_handler_invoke(
     axis2_conf_t *conf = NULL;
     axis2_char_t *str_done = NULL;
     axis2_char_t *dummy_msg_str = NULL;
-    axis2_char_t *within_transaction_str = NULL;
-    axis2_bool_t within_transaction = AXIS2_FALSE;
-    axis2_bool_t rolled_back = AXIS2_FALSE;
     axis2_bool_t dummy_msg = AXIS2_FALSE;
     axis2_svc_t *svc = NULL;
     axutil_qname_t *module_qname = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    sandesha2_transaction_t *transaction = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     int msg_type = -1;
@@ -173,24 +168,6 @@ sandesha2_out_handler_invoke(
         SANDESHA2_APPLICATION_PROCESSING_DONE, temp_prop);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION);
-    if(temp_prop)
-        within_transaction_str = (axis2_char_t *) axutil_property_get_value(
-            temp_prop, env);
-    if(within_transaction_str && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, 
-        within_transaction_str))
-    {
-        within_transaction = AXIS2_TRUE;
-    }
-    if(!within_transaction)
-    {
-        axutil_property_t *prop = NULL;
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr, env);
-        prop = axutil_property_create_with_args(env, 0, 0, 0, 
-            AXIS2_VALUE_TRUE);
-        axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION, prop);
-    }
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
@@ -243,34 +220,11 @@ sandesha2_out_handler_invoke(
     {
         /* Message should not be sent in an exception situation */
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
-        /* Rolling back the transaction */
-        if(!within_transaction)
-        {
-            axutil_property_t *prop = NULL;
-            sandesha2_transaction_rollback(transaction, env);
-            prop = axutil_property_create_with_args(env, 0, 0, 0, 
-                AXIS2_VALUE_FALSE);
-            axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-                prop);
-            rolled_back = AXIS2_TRUE;
-        }
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
-    }
-    if(!within_transaction && !rolled_back)
-    {
-        axutil_property_t *prop = NULL;
-        if (transaction)
-        {
-            sandesha2_transaction_commit(transaction, env);
-        }
-        prop = axutil_property_create_with_args(env, 0, 0, 0, 
-            AXIS2_VALUE_FALSE);
-        axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-            prop);
     }
     
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
