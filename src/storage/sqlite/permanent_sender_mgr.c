@@ -397,7 +397,7 @@ sandesha2_permanent_sender_mgr_update(
         sql_update);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_invoker_mgr_update");
+        "[sandesha2]Exit:sandesha2_permanent_sender_mgr_update");
     return ret;
 
     return AXIS2_SUCCESS;
