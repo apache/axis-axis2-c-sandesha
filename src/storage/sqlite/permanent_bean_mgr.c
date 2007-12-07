@@ -516,6 +516,8 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
     int rc = -1;
     axis2_char_t sql_stmt_retrieve[512];
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_retrieve_msg_store_bean");
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
         bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
@@ -553,7 +555,113 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
     if(args)
         AXIS2_FREE(env->allocator, args);
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_retrieve_msg_store_bean");
     return msg_store_bean;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_update_msg_store_bean(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axutil_env_t *env,
+    axis2_char_t *key,
+    sandesha2_msg_store_bean_t *bean)
+{
+    axis2_char_t *sql_stmt_update = NULL;
+    axis2_char_t *error_msg = NULL;
+    int rc = -1;
+    int sql_size = -1;
+	axis2_char_t *msg_id = NULL;
+	axis2_char_t *stored_key = NULL;
+	axis2_char_t *soap_env_str = NULL;
+	int soap_version;
+	axis2_char_t *svc_grp = NULL;
+	axis2_char_t *svc = NULL;
+	axis2_char_t *op  = NULL;
+	AXIS2_TRANSPORT_ENUMS transport_out = -1;
+	axis2_char_t *op_mep = NULL;
+	axis2_char_t *to_url = NULL;
+	axis2_char_t *reply_to = NULL;
+	axis2_char_t *transport_to = NULL;
+	axis2_char_t *execution_chain_str = NULL;
+	sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+	int flow;	
+	axis2_char_t *msg_recv_str = NULL;
+	axis2_bool_t svr_side = AXIS2_FALSE;
+	axis2_char_t *in_msg_store_key = NULL;
+	axis2_char_t *prop_str = NULL;
+	axis2_char_t *action = NULL;
+
+	bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_update_msg_store_bean");
+	msg_id = sandesha2_msg_store_bean_get_msg_id(bean, env);
+	stored_key = sandesha2_msg_store_bean_get_stored_key(bean, env);
+	soap_env_str =  sandesha2_msg_store_bean_get_soap_envelope_str(bean, env);
+	soap_version = sandesha2_msg_store_bean_get_soap_version(bean, env);
+	transport_out = sandesha2_msg_store_bean_get_transport_out(bean, env);
+	op = sandesha2_msg_store_bean_get_op(bean, env);
+    svc = sandesha2_msg_store_bean_get_svc(bean, env);
+	svc_grp = sandesha2_msg_store_bean_get_svc_grp(bean, env);
+    op_mep = sandesha2_msg_store_bean_get_op_mep(bean, env);;
+    to_url = sandesha2_msg_store_bean_get_to_url(bean, env);
+	reply_to = sandesha2_msg_store_bean_get_reply_to(bean, env);
+	transport_to = sandesha2_msg_store_bean_get_transport_to(bean, env);
+	execution_chain_str = sandesha2_msg_store_bean_get_execution_chain_str(bean, env);
+	flow = sandesha2_msg_store_bean_get_flow(bean, env);
+	msg_recv_str = sandesha2_msg_store_bean_get_msg_recv_str(bean, env);
+    svr_side = sandesha2_msg_store_bean_is_svr_side(bean, env);
+	in_msg_store_key = sandesha2_msg_store_bean_get_in_msg_store_key(bean, env);
+	prop_str = sandesha2_msg_store_bean_get_persistent_property_str(bean, env);
+	action = sandesha2_msg_store_bean_get_action(bean, env);
+
+    sql_size = axutil_strlen(msg_id) + axutil_strlen(stored_key) + 
+        axutil_strlen(soap_env_str) + sizeof(int) + sizeof(int) + 
+        axutil_strlen(op) + axutil_strlen(svc) + axutil_strlen(svc_grp) + 
+        axutil_strlen(op_mep) + axutil_strlen(to_url) + axutil_strlen(reply_to) +
+        axutil_strlen(transport_to) + axutil_strlen(execution_chain_str) + sizeof(int) + 
+        axutil_strlen(msg_recv_str) + sizeof(int) + axutil_strlen(in_msg_store_key) +
+        axutil_strlen(prop_str) + axutil_strlen(action) + 512;
+
+    axutil_thread_mutex_lock(bean_mgr_impl->mutex);
+    if(!bean_mgr_impl->dbconn)
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+    if(!bean_mgr_impl->dbconn)
+    {
+        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+        return AXIS2_FALSE;
+    }
+
+    sql_stmt_update = AXIS2_MALLOC(env->allocator, sql_size);
+    sprintf(sql_stmt_update, "update msg set msg_id='%s',"\
+        "soap_env_str='%s', soap_version=%d, transport_out='%d', op='%s',"\
+        "svc='%s', svc_grp='%s', op_mep='%s', to_url='%s',"\
+        "transport_to='%s', reply_to='%s', execution_chain_str='%s',"\
+        "flow=%d, msg_recv_str='%s', svr_side='%d', in_msg_store_key='%s',"\
+        "prop_str='%s', action='%s' where stored_key='%s'", msg_id, 
+        soap_env_str, soap_version, transport_out, op, svc, svc_grp, op_mep, 
+        to_url, transport_to, reply_to, execution_chain_str, flow, 
+        msg_recv_str, svr_side, in_msg_store_key, prop_str, action, key);
+    rc = sqlite3_exec(bean_mgr_impl->dbconn, sql_stmt_update, 0, 0, &error_msg);
+    if(rc == SQLITE_BUSY)
+        rc = sandesha2_permanent_bean_mgr_busy_handler(env, 
+            bean_mgr_impl->dbconn, sql_stmt_update, 0, 0, &error_msg, rc, 
+            bean_mgr_impl->mutex);
+    if( rc != SQLITE_OK )
+    {
+        axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
+        AXIS2_FREE(env->allocator, sql_stmt_update);
+        sqlite3_free(error_msg);
+        return AXIS2_FALSE;
+    }
+    AXIS2_FREE(env->allocator, sql_stmt_update);
+    axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_update_msg_store_bean");
+    return AXIS2_TRUE;
 }
 
 axis2_bool_t AXIS2_CALL

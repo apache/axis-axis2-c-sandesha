@@ -926,7 +926,7 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     if(!spec_ver)
         spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
-    AXIS2_LOG_INFO(env->log, "Spec version:%s", spec_ver);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
     if(1 == msg_number)
     {
         if(!out_seq_bean)
@@ -1131,9 +1131,12 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     }
     ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id, 
         storage_mgr);
-    engine = axis2_engine_create(env, conf_ctx);
-    msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
-    sent = axis2_engine_send(engine, env, msg_ctx);
+    if(ack_rm_msg)
+    {
+        engine = axis2_engine_create(env, conf_ctx);
+        msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
+        sent = axis2_engine_send(engine, env, msg_ctx);
+    }
     if(!sent)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -1178,7 +1181,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_op_ctx_t *temp_opctx = NULL;   
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] sandesha2_app_msg_processor_add_create_seq_msg");
+        "[Sandesha2]Entry:sandesha2_app_msg_processor_add_create_seq_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, acks_to, AXIS2_FAILURE);
@@ -1281,7 +1284,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         return AXIS2_FAILURE;
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] Exit:sandesha2_app_msg_processor_add_create_seq_msg");
+        "[Sandesha2]Exit:sandesha2_app_msg_processor_add_create_seq_msg");
     return AXIS2_SUCCESS;
 }
 
@@ -1337,6 +1340,7 @@ sandesha2_app_msg_processor_process_response_msg(
         internal_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
     out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_internal_seq_id:%s", internal_seq_id);
 
     if (to_bean)
     {

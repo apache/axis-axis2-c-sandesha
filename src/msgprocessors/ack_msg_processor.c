@@ -322,6 +322,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     str_list = sandesha2_utils_array_list_to_string(env, acked_list,
         SANDESHA2_ARRAY_LIST_LONG);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]acked_list:%s", str_list);
     if(completed_bean)
     {
         sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);

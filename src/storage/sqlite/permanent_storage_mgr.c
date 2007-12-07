@@ -214,11 +214,10 @@ sandesha2_permanent_storage_mgr_get_property_string(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_create_db(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx);
-
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axutil_env_t *env);
 
 static const sandesha2_storage_mgr_ops_t storage_mgr_ops = 
 {
@@ -267,11 +266,12 @@ sandesha2_permanent_storage_mgr_create(
     axutil_allocator_switch_to_global_pool(env->allocator);
     storage_mgr_impl->msg_ctx_map = axutil_hash_make(env);
     axutil_allocator_switch_to_local_pool(env->allocator);
-    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
-        return NULL;
     conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     storage_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
         &(storage_mgr_impl->storage_mgr), conf_ctx, NULL);
+    if(!sandesha2_permanent_storage_mgr_create_db(
+        &(storage_mgr_impl->storage_mgr), env))
+        return NULL;
     storage_mgr_impl->create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(
         env, &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(
@@ -469,8 +469,22 @@ sandesha2_permanent_storage_mgr_update_msg_ctx(
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx)
 {
-    return sandesha2_permanent_storage_mgr_store_msg_ctx(storage_mgr, env, key, 
+    sandesha2_msg_store_bean_t *msg_store_bean = NULL;
+    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
+
+    axutil_allocator_switch_to_global_pool(env->allocator);
+    axutil_hash_set(storage_mgr_impl->msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
         msg_ctx);
+    axutil_allocator_switch_to_local_pool(env->allocator);
+    axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_TRUE);
+    msg_store_bean = sandesha2_permanent_storage_mgr_get_msg_store_bean(
+        storage_mgr, env, msg_ctx);
+    sandesha2_msg_store_bean_set_stored_key(msg_store_bean, env, key);
+    sandesha2_permanent_bean_mgr_update_msg_store_bean(storage_mgr_impl->bean_mgr, 
+        env, key, msg_store_bean);
+    return AXIS2_SUCCESS;
+
 }
 
 axis2_status_t AXIS2_CALL
@@ -1153,16 +1167,13 @@ sandesha2_permanent_storage_mgr_get_mutex(
     return storage_mgr_impl->mutex;
 }
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_create_db(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx)
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axutil_env_t *env)
 {
-    axis2_conf_t *conf = NULL;
-    axis2_char_t *path = ".";
     int rc = -1;
     sqlite3 *dbconn = NULL;
-    axis2_char_t *db_name = NULL;
     axis2_char_t *sql_stmt1 = NULL;
     axis2_char_t *sql_stmt2 = NULL;
     axis2_char_t *sql_stmt3 = NULL;
@@ -1171,34 +1182,11 @@ sandesha2_permanent_storage_mgr_create_db(
     axis2_char_t *sql_stmt6 = NULL;
     axis2_char_t *sql_stmt7 = NULL;
     axis2_char_t *error_msg = NULL;
+    sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
 
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    {
-        axis2_module_desc_t *module_desc = NULL;
-        axutil_qname_t *qname = NULL;
-        qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
-        module_desc = axis2_conf_get_module(conf, env, qname);
-        if(module_desc)
-        {
-            axutil_param_t *db_param = NULL;
-            db_param = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
-            if(db_param)
-            {
-                path = (axis2_char_t *) axutil_param_get_value(db_param, env);
-            }
-        }
-        axutil_qname_free(qname, env);
-    }
-    db_name = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, "sandesha2_db", NULL);
-    rc = sqlite3_open(db_name, &dbconn);
-    if(rc != SQLITE_OK)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s"
-            " sqlite error: %s\n", path, sqlite3_errmsg(dbconn));
-        sqlite3_close(dbconn);
-        dbconn = NULL;
-        return AXIS2_FAILURE;
-    }
+    storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
+    dbconn = sandesha2_permanent_bean_mgr_get_dbconn(storage_mgr_impl->bean_mgr, 
+        env);
     sql_stmt1 = "create table if not exists create_seq("\
         "create_seq_msg_id varchar(100) primary key, "\
         "internal_seq_id varchar(200), seq_id varchar(200), "\

@@ -74,8 +74,8 @@
    <parameter name="db_password" locked="false">g</parameter>
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
-    <parameter name="RetransmissionInterval" locked="false">1</parameter>
-    <parameter name="AcknowledgementInterval" locked="false">1</parameter><!-- in seconds-->
+    <parameter name="RetransmissionInterval" locked="false">10</parameter>
+    <parameter name="AcknowledgementInterval" locked="false">10</parameter><!-- in seconds-->
     <parameter name="InactivityTimeout" locked="false">10</parameter>
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>

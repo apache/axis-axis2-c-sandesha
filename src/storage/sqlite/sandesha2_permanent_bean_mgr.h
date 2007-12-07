@@ -143,6 +143,13 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
     axis2_char_t *key);
 
 axis2_bool_t AXIS2_CALL
+sandesha2_permanent_bean_mgr_update_msg_store_bean(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axutil_env_t *env,
+    axis2_char_t *key,
+    sandesha2_msg_store_bean_t *bean);
+
+axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
@@ -180,13 +187,19 @@ sandesha2_permanent_bean_mgr_retrieve_response(
 
 int
 sandesha2_permanent_bean_mgr_busy_handler(
+    const axutil_env_t *env,
     sqlite3* dbconn,
     char *sql_stmt,
     int (*callback_func)(void *, int, char **, char **),
-    void *arg,
+    void *args,
     char **error_msg,
     int rc,
     axutil_thread_mutex_t *mutex);
+
+sqlite3 *
+sandesha2_permanent_bean_mgr_get_dbconn(
+    sandesha2_permanent_bean_mgr_t *bean_mgr,
+    const axutil_env_t *env);
 
 /** @} */
 #ifdef __cplusplus
