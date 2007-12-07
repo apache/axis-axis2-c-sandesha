@@ -247,14 +247,18 @@ sandesha2_permanent_seq_property_mgr_insert(
     axis2_char_t sql_insert[1024];
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
+	axis2_char_t *id  = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *name = NULL;
+	axis2_char_t *value = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_insert");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
-    axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
-    axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
-    axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
+	id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+	seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
+	name = sandesha2_seq_property_bean_get_name(bean, env);
+	value = sandesha2_seq_property_bean_get_value(bean, env);
 
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
 
@@ -333,15 +337,19 @@ sandesha2_permanent_seq_property_mgr_update(
 {
     axis2_char_t sql_update[1024];
     axis2_bool_t ret = AXIS2_FALSE;
+	axis2_char_t *id = NULL;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *name = NULL;
+	axis2_char_t *value	= NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
-    axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
-    axis2_char_t *name = sandesha2_seq_property_bean_get_name(bean, env);
-    axis2_char_t *value = sandesha2_seq_property_bean_get_value(bean, env);
+	id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
+	seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
+	name = sandesha2_seq_property_bean_get_name(bean, env);
+	value = sandesha2_seq_property_bean_get_value(bean, env);
 
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
 

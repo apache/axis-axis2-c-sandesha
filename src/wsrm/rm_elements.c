@@ -603,8 +603,8 @@ sandesha2_rm_elements_get_rm_ns_val(
     axiom_soap_header_t *soap_header = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
+    AXIS2_PARAM_CHECK(env->error, action, NULL);
     
     soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     if(soap_header)
@@ -663,8 +663,8 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
     axiom_soap_header_t *soap_header = NULL;
     
     AXIS2_ENV_CHECK(env, NULL);
-    AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
+    AXIS2_PARAM_CHECK(env->error, action, NULL);
     
     soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     if(soap_header)

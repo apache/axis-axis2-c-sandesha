@@ -334,15 +334,18 @@ sandesha2_permanent_next_msg_mgr_update(
     axis2_char_t sql_update[1024];
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
-
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *ref_msg_key = NULL;
+	axis2_bool_t polling_mode = AXIS2_FALSE;
+	long msg_no;
+	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_next_msg_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
+	seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) bean, 
         env);
-    axis2_char_t *ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-    axis2_bool_t polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
-    long msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
+    ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+	polling_mode = sandesha2_next_msg_bean_is_polling_mode(bean, env);
+    msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
 
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
 

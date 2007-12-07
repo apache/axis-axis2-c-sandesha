@@ -219,15 +219,19 @@ sandesha2_permanent_invoker_mgr_insert(
     axis2_char_t sql_insert[1024];
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_invoker_mgr_t *invoker_mgr_impl = NULL;
-
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+	axis2_char_t *msg_ctx_ref_key  = NULL;
+	long msg_no;
+	axis2_char_t *seq_id = NULL;
+	axis2_bool_t is_invoked = AXIS2_FALSE;
+	
+	AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_invoker_mgr_insert");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *msg_ctx_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
+    msg_ctx_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
         (sandesha2_rm_bean_t *) bean, env);
-    long msg_no = sandesha2_invoker_bean_get_msg_no(bean, env);
-    axis2_char_t *seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
-    axis2_bool_t is_invoked = sandesha2_invoker_bean_is_invoked(bean, env);
+	msg_no= sandesha2_invoker_bean_get_msg_no(bean, env);
+    seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
+    is_invoked = sandesha2_invoker_bean_is_invoked(bean, env);
 
     invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 
@@ -289,15 +293,18 @@ sandesha2_permanent_invoker_mgr_update(
     axis2_char_t *sql_update = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_invoker_mgr_t *invoker_mgr_impl = NULL;
-
+	axis2_char_t *msg_ctx_ref_key = NULL;
+	long msg_no;
+	axis2_char_t *seq_id = NULL;
+	axis2_bool_t is_invoked = AXIS2_FALSE;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_invoker_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *msg_ctx_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
+    msg_ctx_ref_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
         (sandesha2_rm_bean_t *) bean, env);
-    long msg_no = sandesha2_invoker_bean_get_msg_no(bean, env);
-    axis2_char_t *seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
-    axis2_bool_t is_invoked = sandesha2_invoker_bean_is_invoked(bean, env);
+    msg_no = sandesha2_invoker_bean_get_msg_no(bean, env);
+	seq_id = sandesha2_invoker_bean_get_seq_id(bean, env);
+    is_invoked = sandesha2_invoker_bean_is_invoked(bean, env);
 
     invoker_mgr_impl = SANDESHA2_INTF_TO_IMPL(invoker_mgr);
 

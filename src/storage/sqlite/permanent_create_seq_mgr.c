@@ -233,18 +233,21 @@ sandesha2_permanent_create_seq_mgr_insert(
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
     axis2_bool_t ret = AXIS2_FALSE;
     axis2_char_t sql_insert[1024];
+    axis2_char_t *create_seq_msg_id = NULL;
+    axis2_char_t *internal_seq_id =  NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_char_t *create_seq_msg_store_key  = NULL;
+    axis2_char_t *ref_msg_store_key  = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_create_seq_mgr_insert");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
+    create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
         (sandesha2_rm_bean_t *) bean, env);
-    axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
-    axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
-    axis2_char_t *create_seq_msg_store_key = 
-        sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
-    axis2_char_t *ref_msg_store_key = 
-        sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+    internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+    seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+    create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    ref_msg_store_key = sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
 
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
@@ -314,18 +317,20 @@ sandesha2_permanent_create_seq_mgr_update(
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
     axis2_char_t sql_update[1024];
     axis2_bool_t ret = AXIS2_FALSE;
-
+	axis2_char_t *create_seq_msg_id = NULL;
+	axis2_char_t *internal_seq_id  = NULL;
+	axis2_char_t *create_seq_msg_store_key = NULL;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *ref_msg_store_key = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "Entry:[sandesha2]sandesha2_permanent_create_seq_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    axis2_char_t *create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
+    create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
         (sandesha2_rm_bean_t *) bean, env);
-    axis2_char_t *internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
-    axis2_char_t *seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
-    axis2_char_t *create_seq_msg_store_key = 
-        sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
-    axis2_char_t *ref_msg_store_key = 
-        sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
+    internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
+    seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
+    create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
+    ref_msg_store_key = sandesha2_create_seq_bean_get_ref_msg_store_key(bean, env);
 
     seq_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_mgr);
 
