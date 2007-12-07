@@ -368,6 +368,8 @@ sandesha2_permanent_bean_mgr_update(
     axis2_char_t *error_msg = NULL;
     int rc = -1;
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_update");
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
         bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
@@ -392,6 +394,8 @@ sandesha2_permanent_bean_mgr_update(
         return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_update");
     return AXIS2_TRUE;
 }
 
@@ -966,20 +970,27 @@ sandesha2_permanent_bean_mgr_busy_handler(
     axutil_thread_mutex_t *mutex)
 {
     int counter = 0;
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_busy_handler");
     while(rc == SQLITE_BUSY && counter < 10)
     {
         if(*error_msg)
              sqlite3_free(*error_msg);
         counter++;
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]In busy hander");
         /* When this method is invoked, the mutex must have been locked,
            so unlock before going to sleep */
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came30");
         axutil_thread_mutex_unlock(mutex);
-        AXIS2_USLEEP(1000000000);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came31");
+        AXIS2_USLEEP(10000000);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came32");
         /* Sleeping is over, lock again */
         axutil_thread_mutex_lock(mutex);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came33");
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_busy_handler");
     return rc;
 }
 

@@ -251,6 +251,7 @@ sandesha2_sender_worker_send(
             "not present in the store");
         return AXIS2_FAILURE;
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "came20");
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_WITHIN_TRANSACTION);
     if(property)
@@ -262,9 +263,12 @@ sandesha2_sender_worker_send(
         axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_WITHIN_TRANSACTION,
             property);
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "came21");
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
         sender_worker_bean, conf_ctx, storage_mgr);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "came23");
     sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "came24");
     if(!continue_sending)
     {
         status = AXIS2_FAILURE;

@@ -66,7 +66,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     axis2_bool_t seq_timed_out = AXIS2_FALSE;
     axis2_bool_t continue_sending = AXIS2_TRUE;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_msg_retrans_adjuster_adjust_retrans");
     AXIS2_PARAM_CHECK(env->error, retrans_bean, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
@@ -109,6 +110,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
             seq_id, msg_ctx, storage_mgr);
         continue_sending = AXIS2_FALSE;
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_adjust_retrans");
     return continue_sending;
 }
 
@@ -123,8 +126,9 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
     long new_interval = -1;
     long new_time_to_send = 0;
     long time_now = -1;
-    
-    AXIS2_ENV_CHECK(env, NULL);
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_msg_retrans_adjuster_adjust_next_retrans_time");
     AXIS2_PARAM_CHECK(env->error, retrans_bean, NULL);
     AXIS2_PARAM_CHECK(env->error, property_bean, NULL);
     
@@ -141,6 +145,8 @@ sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
     
     new_time_to_send = time_now + new_interval;
     sandesha2_sender_bean_set_time_to_send(retrans_bean, env, new_time_to_send);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_adjust_next_retrans_time");
     return retrans_bean;
 }
 
@@ -172,7 +178,6 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     axutil_property_t *new_property = NULL;
     
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
