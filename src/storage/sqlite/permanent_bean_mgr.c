@@ -209,7 +209,7 @@ sandesha2_permanent_bean_mgr_free(
     const axutil_env_t *env)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_free_impl");
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
 
@@ -223,7 +223,7 @@ sandesha2_permanent_bean_mgr_free(
         AXIS2_FREE(env->allocator, bean_mgr_impl);
         bean_mgr_impl = NULL;
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_permanent_bean_mgr_free_impl");
 }
 
@@ -236,6 +236,8 @@ sandesha2_permanent_bean_mgr_insert(
     axis2_char_t *error_msg = NULL;
     int rc = -1;
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Entry:sandesha2_permanent_bean_mgr_insert");
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
    
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
@@ -261,6 +263,8 @@ sandesha2_permanent_bean_mgr_insert(
         return AXIS2_FALSE;
     }
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2]Exit:sandesha2_permanent_bean_mgr_insert");
     return AXIS2_TRUE;
 }
 
