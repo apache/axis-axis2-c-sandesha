@@ -983,14 +983,10 @@ sandesha2_permanent_bean_mgr_busy_handler(
         counter++;
         /* When this method is invoked, the mutex must have been locked,
            so unlock before going to sleep */
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came30");
         axutil_thread_mutex_unlock(mutex);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came31");
         AXIS2_USLEEP(10000000);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came32");
         /* Sleeping is over, lock again */
         axutil_thread_mutex_lock(mutex);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came33");
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

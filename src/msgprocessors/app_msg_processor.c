@@ -1340,7 +1340,6 @@ sandesha2_app_msg_processor_process_response_msg(
         internal_seq_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
     out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_internal_seq_id:%s", internal_seq_id);
 
     if (to_bean)
     {

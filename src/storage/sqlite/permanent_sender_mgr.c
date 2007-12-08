@@ -330,16 +330,19 @@ sandesha2_permanent_sender_mgr_remove(
     axis2_char_t *msg_id)
 {
     axis2_char_t sql_remove[256];
+    axis2_bool_t ret = AXIS2_FALSE;
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_remove");
     AXIS2_PARAM_CHECK(env->error, msg_id, AXIS2_FALSE);
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
     sprintf(sql_remove, "delete from sender where msg_id='%s'", msg_id);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_remove:%s", sql_remove);
+    ret = sandesha2_permanent_bean_mgr_remove(sender_mgr_impl->bean_mgr, env,
+        sql_remove);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_permanent_sender_mgr_remove");
-    return sandesha2_permanent_bean_mgr_remove(sender_mgr_impl->bean_mgr, env,
-        sql_remove);
+    return ret;
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL

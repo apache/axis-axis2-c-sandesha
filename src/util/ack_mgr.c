@@ -430,13 +430,17 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             sandesha2_msg_ctx_t *ack_rm_msg = NULL;
             sandesha2_iom_rm_part_t *seq_ack = NULL;
             axis2_char_t *msg_ctx_ref_key = NULL;
+            axis2_endpoint_ref_t *to_ref = NULL;
             
             msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                 sender_bean, env);
             msg_ctx1 = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,
                 msg_ctx_ref_key, conf_ctx, AXIS2_FALSE);
-            to = (axis2_char_t*)axis2_endpoint_ref_get_address(
-                axis2_msg_ctx_get_to(msg_ctx1, env), env);
+            to_ref = axis2_msg_ctx_get_to(msg_ctx1, env);
+            if(to_ref)
+                to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_ref, env);
+            else
+                continue;
             if(0 == axutil_strcmp(to, to_str))
                 continue; 
             sandesha2_sender_mgr_remove(retrans_mgr, env, 

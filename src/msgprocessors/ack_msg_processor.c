@@ -334,6 +334,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         long highest_out_msg_no = 0;
         highest_out_msg_no = atol(last_out_msg_no_str);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
         if(highest_out_msg_no > 0)
         {
             axis2_bool_t completed = AXIS2_FALSE;

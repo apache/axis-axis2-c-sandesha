@@ -525,6 +525,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     }
     internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+    if(!internal_seq_id)
+        internal_seq_id = seq_id;
     found_list = sandesha2_sender_mgr_find_by_internal_seq_id(retrans_mgr, env,
         internal_seq_id);
     if(found_list)
@@ -785,7 +787,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                             
     sandesha2_sender_bean_set_resend(terminate_bean, env, AXIS2_FALSE);
     retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
-    
+   
     sandesha2_sender_mgr_insert(retrans_mgr, env, terminate_bean);
     
     terminate_added = sandesha2_seq_property_bean_create(env);
