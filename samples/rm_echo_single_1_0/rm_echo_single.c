@@ -248,7 +248,7 @@ int main(int argc, char** argv)
         printf("\necho client two way single channel invoke FAILED!\n");
     }
     payload = NULL;
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(8 * SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
