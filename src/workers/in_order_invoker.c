@@ -16,7 +16,6 @@
 #include <sandesha2_in_order_invoker.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_transaction.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_property_bean.h>
@@ -252,9 +251,6 @@ sandesha2_in_order_invoker_worker_func(
     
     while(invoker->run_invoker)
     {
-        sandesha2_transaction_t *transaction = NULL;
-        /* Use when transaction handling is done 
-        axis2_bool_t rollbacked = AXIS2_FALSE;*/
         sandesha2_storage_mgr_t *storage_mgr = NULL;
         sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
         sandesha2_invoker_mgr_t *storage_map_mgr = NULL;
@@ -275,8 +271,6 @@ sandesha2_in_order_invoker_worker_func(
                         (storage_mgr, env);
         seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
                         storage_mgr, env);
-        transaction = sandesha2_storage_mgr_get_transaction(storage_mgr,
-                        env);
         all_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
                         env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
                         SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
@@ -299,9 +293,6 @@ sandesha2_in_order_invoker_worker_func(
             axis2_bool_t continue_seq = AXIS2_TRUE;
             
             seq_id = axutil_array_list_get(all_seq_list, env, i);
-            sandesha2_transaction_commit(transaction, env);
-            transaction = sandesha2_storage_mgr_get_transaction(
-                        storage_mgr, env);
             next_msg_bean = sandesha2_next_msg_mgr_retrieve(
                         next_msg_mgr, env, seq_id);
             if(!next_msg_bean)
@@ -357,14 +348,6 @@ sandesha2_in_order_invoker_worker_func(
                     rm_msg_ctx = sandesha2_msg_init_init_msg(env, 
                         msg_to_invoke);
                 else continue;
-                /* have to commit the transaction before invoking. This may get 
-                 * changed when WS-AT is available.
-                 */
-                sandesha2_transaction_commit(transaction, env);
-                property = axutil_property_create_with_args(env, 0, 0, 0, 
-                    AXIS2_VALUE_TRUE);
-                axis2_msg_ctx_set_property(msg_to_invoke, env, 
-                        SANDESHA2_WITHIN_TRANSACTION, property);
                         
                 property = axis2_msg_ctx_get_property(msg_to_invoke, env,
                         SANDESHA2_POST_FAILURE_MESSAGE);
@@ -389,8 +372,6 @@ sandesha2_in_order_invoker_worker_func(
                         return NULL;
                 }
                 invoked = AXIS2_TRUE;
-                transaction = sandesha2_storage_mgr_get_transaction(
-                        storage_mgr, env);
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
                 msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
@@ -427,9 +408,6 @@ sandesha2_in_order_invoker_worker_func(
                         next_msg_bean);
             }
         }
-        sandesha2_transaction_commit(transaction, env);
-        
-        /* TODO make transaction handling effective */
     }
     return NULL;
 }

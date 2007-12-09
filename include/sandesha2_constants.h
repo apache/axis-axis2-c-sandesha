@@ -478,8 +478,6 @@ extern "C"
 
     #define  SANDESHA2_POLLING_MGR "PollingManager"
 	
-	#define SANDESHA2_WITHIN_TRANSACTION  "WithinTransaction"
-	
 	#define SANDESHA2_STORAGE_MGR_PARAMETER   "Sandesha2StorageManager"
 	
 	#define SANDESHA2_POST_FAILURE_MESSAGE  "PostFailureMessage"

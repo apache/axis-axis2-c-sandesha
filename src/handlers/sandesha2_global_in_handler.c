@@ -217,7 +217,6 @@ sandesha2_global_in_handler_invoke(
             "storage manager");
         return AXIS2_FAILURE;
     }
-    property = axis2_ctx_get_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION);
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)

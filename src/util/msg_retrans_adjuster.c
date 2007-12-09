@@ -174,9 +174,6 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axutil_property_t *new_property = NULL;
-    
     
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
@@ -186,13 +183,6 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
-    property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_WITHIN_TRANSACTION);
-    if(property)
-        new_property = axutil_property_clone(property, env);
-    if(new_property)
-        axis2_ctx_set_property(ctx, env, SANDESHA2_WITHIN_TRANSACTION, 
-            new_property);
     /* we have to callback listener here */
     sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
         AXIS2_FALSE, storage_mgr);
