@@ -47,11 +47,9 @@ typedef struct sandesha2_sender_worker_args sandesha2_sender_worker_args_t;
 struct sandesha2_sender_worker_t
 {
 	axis2_conf_ctx_t *conf_ctx;
-    axutil_thread_mutex_t *mutex;
     axis2_char_t *msg_id;
     axis2_msg_ctx_t *msg_ctx;
     axis2_transport_out_desc_t *transport_out;
-    axis2_status_t status;
     axis2_bool_t persistent_msg_ctx;
 };
 
@@ -105,15 +103,10 @@ sandesha2_sender_worker_create(
         return NULL;
 	}
     sender_worker->conf_ctx = conf_ctx;
-    sender_worker->mutex = NULL;
     sender_worker->msg_id = axutil_strdup(env, msg_id);
     sender_worker->msg_ctx = NULL;
     sender_worker->transport_out = NULL;
-    sender_worker->status = AXIS2_FAILURE;
     
-    sender_worker->mutex = axutil_thread_mutex_create(env->allocator,
-                        AXIS2_THREAD_MUTEX_DEFAULT);
-                        
 	return sender_worker;
 }
 
@@ -136,15 +129,10 @@ sandesha2_sender_worker_create_with_msg_ctx(
         return NULL;
 	}
     sender_worker->conf_ctx = conf_ctx;
-    sender_worker->mutex = NULL;
     sender_worker->msg_id = axutil_strdup(env, msg_id);
     sender_worker->msg_ctx = msg_ctx;
     sender_worker->transport_out = NULL;
-    sender_worker->status = AXIS2_FAILURE;
     
-    sender_worker->mutex = axutil_thread_mutex_create(env->allocator,
-                        AXIS2_THREAD_MUTEX_DEFAULT);
-                        
 	return sender_worker;
 }
 
@@ -166,11 +154,6 @@ sandesha2_sender_worker_free(
     /* Do not free this */
     sender_worker->conf_ctx = NULL;
     
-    if(sender_worker->mutex)
-    {
-        axutil_thread_mutex_destroy(sender_worker->mutex);
-        sender_worker->mutex = NULL;
-    }
     if(sender_worker->msg_id)
     {
         AXIS2_FREE(env->allocator, sender_worker->msg_id);
