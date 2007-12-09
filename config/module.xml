@@ -74,14 +74,14 @@
    <parameter name="db_password" locked="false">g</parameter>
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
-    <parameter name="RetransmissionInterval" locked="false">10</parameter>
-    <parameter name="AcknowledgementInterval" locked="false">10</parameter><!-- in seconds-->
-    <parameter name="InactivityTimeout" locked="false">60</parameter>
+    <parameter name="RetransmissionInterval" locked="false">4</parameter><!--In seconds-->
+    <parameter name="AcknowledgementInterval" locked="false">4</parameter><!--In seconds-->
+    <parameter name="InactivityTimeout" locked="false">10</parameter><!--In seconds-->
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
     <parameter name="MessageTypesToDrop" locked="false">none</parameter>
     <parameter name="MaxRetransCount" locked="false">10</parameter>
-    <parameter name="SenderSleepTime" locked="false">100000</parameter><!-- In micro seconds-->
+    <parameter name="SenderSleepTime" locked="false">100000</parameter><!--In micro seconds-->
     <parameter name="InvokerSleepTime" locked="false">1</parameter>
     <parameter name="PollingWaitTime" locked="false">3</parameter>
 

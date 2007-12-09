@@ -316,7 +316,6 @@ sandesha2_property_mgr_load_inactive_timeout(
     axis2_char_t *str2 = NULL;
     int timeout = -1;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, measure, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);

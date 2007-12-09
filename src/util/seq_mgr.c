@@ -260,6 +260,8 @@ sandesha2_seq_mgr_has_seq_timedout(
     long timeout_interval = -1;
     axis2_conf_ctx_t *conf_ctx = NULL;
     
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_seq_mgr_has_seq_timedout");
     AXIS2_PARAM_CHECK(env->error, property_key, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
@@ -278,9 +280,19 @@ sandesha2_seq_mgr_has_seq_timedout(
     last_activated_time = sandesha2_seq_mgr_get_last_activated_time(env, 
         property_key, storage_mgr);
     current_time = sandesha2_utils_get_current_time_in_millis(env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]timeout_interval:%ld", 
+        timeout_interval);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]last_activated_time:%ld", 
+        last_activated_time);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]current_time:%ld", 
+        current_time);
     if(last_activated_time > 0 && ((last_activated_time + timeout_interval) < 
         current_time))
-            seq_timedout = AXIS2_TRUE;
+    {
+        seq_timedout = AXIS2_TRUE;
+    }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_seq_mgr_has_seq_timedout");
     return seq_timedout;
 }
 

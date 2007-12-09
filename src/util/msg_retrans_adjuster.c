@@ -101,7 +101,11 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
             rm_msg_ctx, storage_mgr);
     
     if(AXIS2_TRUE == seq_timed_out)
+    {
         timeout_seq = AXIS2_TRUE;
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Sequence with internal_seq_id %s timed out", int_seq_id);
+    }
         
     if(timeout_seq)
     {
@@ -175,6 +179,8 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_msg_retrans_adjuster_finalize_timedout_seq");
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
@@ -186,6 +192,8 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
         AXIS2_FALSE, storage_mgr);
  
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_finalize_timedout_seq");
     return AXIS2_SUCCESS;
 }
 
