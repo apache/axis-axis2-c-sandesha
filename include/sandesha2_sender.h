@@ -58,19 +58,8 @@ sandesha2_sender_free(
     const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_stop_sender_for_seq(
-    sandesha2_sender_t *sender, 
-    const axutil_env_t *env, 
-    axis2_char_t *seq_id);
-            
-axis2_status_t AXIS2_CALL 
 sandesha2_sender_stop_sending (
     sandesha2_sender_t *sender,
-    const axutil_env_t *env);
-            
-axis2_bool_t AXIS2_CALL 
-sandesha2_sender_is_sender_started( 
-    sandesha2_sender_t *sender, 
     const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 

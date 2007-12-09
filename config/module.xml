@@ -81,7 +81,7 @@
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
     <parameter name="MessageTypesToDrop" locked="false">none</parameter>
     <parameter name="MaxRetransCount" locked="false">10</parameter>
-    <parameter name="SenderSleepTime" locked="false">1</parameter>
+    <parameter name="SenderSleepTime" locked="false">100000</parameter><!-- In micro seconds-->
     <parameter name="InvokerSleepTime" locked="false">1</parameter>
     <parameter name="PollingWaitTime" locked="false">3</parameter>
 
