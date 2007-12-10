@@ -24,5 +24,6 @@ EXTRA_DIST=sandesha2_permanent_bean_mgr.h \
 		sandesha2_permanent_sender_mgr.h \
 		sandesha2_sqls.h \
 		sandesha2_permanent_invoker_mgr.h \
-		sandesha2_permanent_seq_property_mgr.h
+		sandesha2_permanent_seq_property_mgr.h \
+		sqlite3.h
 
