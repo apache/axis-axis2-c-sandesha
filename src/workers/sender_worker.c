@@ -221,9 +221,8 @@ sandesha2_sender_worker_send(
     }
     if(!msg_ctx)
     {
-        /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx is "\
-            "not present in the store");*/
-
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx is "\
+            "not present in the store yet.");
         /*msg_ctx is still not stored so try again later.*/
         return AXIS2_SUCCESS;
     }
