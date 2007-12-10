@@ -221,9 +221,11 @@ sandesha2_sender_worker_send(
     }
     if(!msg_ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx is "\
-            "not present in the store");
-        return AXIS2_FAILURE;
+        /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx is "\
+            "not present in the store");*/
+
+        /*msg_ctx is still not stored so try again later.*/
+        return AXIS2_SUCCESS;
     }
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
         sender_worker_bean, conf_ctx, storage_mgr);
