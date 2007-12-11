@@ -152,7 +152,8 @@ sandesha2_transport_sender_invoke (
     axis2_conf_t *conf = NULL;
     sandesha2_storage_mgr_t *storage_man = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+         "[sandesha2]Entry:sandesha2_transport_sender_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
         
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
@@ -164,7 +165,7 @@ sandesha2_transport_sender_invoke (
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, out_desc);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-                        SANDESHA2_MESSAGE_STORE_KEY);
+        SANDESHA2_MESSAGE_STORE_KEY);
                         
     if(NULL == property || NULL == axutil_property_get_value(property, env))
         return AXIS2_FAILURE;
@@ -178,6 +179,8 @@ sandesha2_transport_sender_invoke (
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,
         property);
     sandesha2_storage_mgr_update_msg_ctx(storage_man, env, key, msg_ctx);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+         "[sandesha2]Exit:sandesha2_transport_sender_invoke");
     return AXIS2_SUCCESS;
 }
 
