@@ -647,6 +647,8 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
         bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, 
             env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", 
+            msg_type);
         if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
         {
             long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);

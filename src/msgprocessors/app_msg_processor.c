@@ -1176,8 +1176,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_engine_t *engine = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *msg_id = NULL;
-    axis2_char_t *create_seq_msg_store_key = NULL;
-    axis2_char_t *ref_msg_store_key = NULL;
     axis2_op_ctx_t *temp_opctx = NULL;   
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
@@ -1223,18 +1221,9 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, 
         internal_seq_id, (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(
         create_seq_msg, env), NULL);
-    create_seq_msg_store_key = axutil_uuid_gen(env);
-    sandesha2_create_seq_bean_set_create_seq_msg_store_key(create_seq_bean, env, 
-        create_seq_msg_store_key); 
-    /* Storing the create_seq_msg_ctx as a reference */
-    ref_msg_store_key = axutil_uuid_gen(env);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, ref_msg_store_key, 
-        create_seq_msg);
 
     temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
     axis2_op_ctx_increment_ref(temp_opctx, env);
-    sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, 
-        ref_msg_store_key);
     sandesha2_create_seq_mgr_insert(create_seq_man, env, create_seq_bean);
     addr_ns_uri = sandesha2_utils_get_seq_property(env, internal_seq_id,
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);

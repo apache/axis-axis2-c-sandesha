@@ -146,14 +146,12 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_update_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    axis2_char_t *key,
     sandesha2_msg_store_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    axis2_char_t *key,
     sandesha2_msg_store_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL

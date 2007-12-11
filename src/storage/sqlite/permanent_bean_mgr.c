@@ -572,7 +572,6 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_update_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    axis2_char_t *key,
     sandesha2_msg_store_bean_t *bean)
 {
     axis2_char_t *sql_stmt_update = NULL;
@@ -650,7 +649,7 @@ sandesha2_permanent_bean_mgr_update_msg_store_bean(
         "prop_str='%s', action='%s' where stored_key='%s'", msg_id, 
         soap_env_str, soap_version, transport_out, op, svc, svc_grp, op_mep, 
         to_url, transport_to, reply_to, execution_chain_str, flow, 
-        msg_recv_str, svr_side, in_msg_store_key, prop_str, action, key);
+        msg_recv_str, svr_side, in_msg_store_key, prop_str, action, stored_key);
     rc = sqlite3_exec(bean_mgr_impl->dbconn, sql_stmt_update, 0, 0, &error_msg);
     if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(env, 
@@ -676,7 +675,6 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    axis2_char_t *key,
     sandesha2_msg_store_bean_t *bean)
 {
     axis2_char_t *sql_stmt_insert = NULL;

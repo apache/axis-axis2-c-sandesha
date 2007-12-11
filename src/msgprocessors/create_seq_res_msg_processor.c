@@ -52,6 +52,7 @@
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq_mgr.h>
+#include <sandesha2_msg_creator.h>
 
 
 /** 
@@ -291,9 +292,9 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_t *addr_ver_bean = NULL;
         axis2_char_t *rm_spec_ver = NULL;
         axis2_char_t *addr_ns_val = NULL;
-        axis2_char_t *ref_msg_store_key = NULL;
+        /*axis2_char_t *ref_msg_store_key = NULL;*/
         axis2_char_t *new_msg_store_key = NULL;
-        axis2_msg_ctx_t *ref_msg_ctx = NULL;
+        /*axis2_msg_ctx_t *ref_msg_ctx = NULL;*/
         
         offerd_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         int_seq_id, SANDESHA2_SEQ_PROP_OFFERED_SEQ);
@@ -335,20 +336,21 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                 polling_mode = sandesha2_utils_is_anon_uri(env, reply_to_addr);
             }
         }
-        /* Storing the referenceMessage of the sending side sequence as the reference message
-         * of the receiving side as well.
-         * This can be used when creating new outgoing messages.
-         */
-        ref_msg_store_key = sandesha2_create_seq_bean_get_ref_msg_store_key(
-            create_seq_bean, env);
-        if(ref_msg_store_key)
         {
-            ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, 
-                env, ref_msg_store_key, conf_ctx, AXIS2_FALSE);
+            sandesha2_msg_ctx_t *create_seq_rm_msg = NULL;
+            axis2_msg_ctx_t *create_seq_msg = NULL;
+            axis2_char_t *acks_to = NULL;
+            acks_to = (axis2_char_t *) axis2_endpoint_ref_get_address(acks_to_epr, env);
+            create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env,
+                rm_msg_ctx, int_seq_id, acks_to, storage_mgr);
+            sandesha2_msg_ctx_set_flow(create_seq_rm_msg, env, 
+                SANDESHA2_MSG_CTX_OUT_FLOW);
+            create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
+            axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
+            new_msg_store_key = axutil_uuid_gen(env);
+            sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 
+                create_seq_msg);
         }
-        new_msg_store_key = axutil_uuid_gen(env);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 
-            ref_msg_ctx);
         sandesha2_next_msg_bean_set_ref_msg_key(next_bean, env, 
             new_msg_store_key);
         sandesha2_next_msg_bean_set_polling_mode(next_bean, env, polling_mode);
