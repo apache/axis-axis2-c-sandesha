@@ -71,7 +71,7 @@ int main(int argc, char** argv)
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_1.log", 
-            AXIS2_LOG_LEVEL_DEBUG);
+            AXIS2_LOG_LEVEL_TRACE);
  
 
     /* Set end point reference of echo service */
