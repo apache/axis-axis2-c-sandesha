@@ -1161,7 +1161,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     sandesha2_create_seq_t *create_seq_part = NULL;
     sandesha2_msg_ctx_t *create_seq_rm_msg = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    sandesha2_create_seq_mgr_t *create_seq_man = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_sender_mgr_t *retrans_mgr = NULL;
     sandesha2_seq_offer_t *seq_offer = NULL;
     axis2_msg_ctx_t *create_seq_msg = NULL;
@@ -1195,9 +1195,18 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         create_seq_rm_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
         storage_mgr, env);
-    create_seq_man = sandesha2_storage_mgr_get_create_seq_mgr(
+    create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(
         storage_mgr, env);
     retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
+    {
+        sandesha2_seq_property_bean_t *to_epr_bean = NULL;
+        axis2_endpoint_ref_t *to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+        axis2_char_t *to_str = (axis2_char_t *)axis2_endpoint_ref_get_address(
+            to_epr, env);
+        to_epr_bean = sandesha2_seq_property_bean_create_with_data(env, 
+            internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR, to_str);
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_epr_bean);
+    }
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, env);
     if(seq_offer)
     {
@@ -1224,7 +1233,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
 
     temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
     axis2_op_ctx_increment_ref(temp_opctx, env);
-    sandesha2_create_seq_mgr_insert(create_seq_man, env, create_seq_bean);
+    sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
     addr_ns_uri = sandesha2_utils_get_seq_property(env, internal_seq_id,
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, storage_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
