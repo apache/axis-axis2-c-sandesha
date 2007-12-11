@@ -153,7 +153,8 @@ sandesha2_polling_mgr_start (
     const axis2_char_t *internal_seq_id)
 {
     sandesha2_storage_mgr_t *storage_mgr = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_polling_mgr_start");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     
     axutil_thread_mutex_lock(polling_mgr->mutex);
@@ -175,6 +176,8 @@ sandesha2_polling_mgr_start (
         internal_seq_id);
     sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
     axutil_thread_mutex_unlock(polling_mgr->mutex);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_polling_mgr_start");
     return AXIS2_SUCCESS;
 }
             
@@ -186,7 +189,6 @@ sandesha2_polling_mgr_run (
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_polling_mgr_args_t *args = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     args = AXIS2_MALLOC(env->allocator, sizeof(
                         sandesha2_polling_mgr_args_t)); 
@@ -223,6 +225,8 @@ sandesha2_polling_mgr_worker_func(
     env = args->env;
     polling_mgr = args->impl;
     storage_mgr = args->storage_mgr;
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_polling_mgr_worker_func");
 
     while(polling_mgr->poll)
     {
@@ -374,7 +378,9 @@ sandesha2_polling_mgr_worker_func(
                 SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
             sandesha2_sender_bean_set_resend(make_conn_sender_bean, env, AXIS2_FALSE);
             sandesha2_sender_bean_set_send(make_conn_sender_bean, env, AXIS2_TRUE);
-            sandesha2_sender_bean_set_seq_id(make_conn_sender_bean, env, seq_id);
+            /*sandesha2_sender_bean_set_seq_id(make_conn_sender_bean, env, seq_id);*/
+            sandesha2_sender_bean_set_internal_seq_id(make_conn_sender_bean, 
+                env, seq_id);
             to = sandesha2_msg_ctx_get_to(make_conn_rm_msg_ctx, env);
             if(to)
             {
@@ -399,6 +405,9 @@ sandesha2_polling_mgr_worker_func(
             sandesha2_sender_mgr_insert(sender_bean_mgr, env, 
                 make_conn_sender_bean);
         }
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Sending the make "\
+            "connection message for the sequence with internal sequence id %s", 
+            seq_id);
         status = sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);
         if(!status)
@@ -408,6 +417,8 @@ sandesha2_polling_mgr_worker_func(
             return NULL;
         }
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_polling_mgr_worker_func");
     return NULL;
 }
 

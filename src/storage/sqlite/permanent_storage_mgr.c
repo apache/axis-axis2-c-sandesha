@@ -1201,7 +1201,8 @@ sandesha2_permanent_storage_mgr_create_db(
         "seq_id varchar(200), wsrm_anon_uri varchar(100), "\
         "to_address varchar(100))";
     sql_stmt4 = "create table if not exists next_msg("\
-        "seq_id varchar(200) primary key, ref_msg_key varchar(100), "\
+        "seq_id varchar(200) primary key, internal_seq_id varchar(200), "\
+        "ref_msg_key varchar(100), "\
         "polling_mode boolean, msg_no long)";
     sql_stmt5 = "create table if not exists seq_property(id varchar(200) ,"\
         "seq_id varchar(200), name varchar(200), value varchar(200))";

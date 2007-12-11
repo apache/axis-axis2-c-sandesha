@@ -288,6 +288,12 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         env);
     return_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
         msg_storage_key, conf_ctx, AXIS2_TRUE);
+    if(!return_msg_ctx)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx not "\
+            "found for the msg_storage_key:%s", msg_storage_key);
+        return AXIS2_FAILURE;
+    }
     return_rm_msg_ctx = sandesha2_msg_init_init_msg(env, return_msg_ctx);
     add_msg_pending_header(env, return_rm_msg_ctx, pending);
     set_transport_properties(env, return_msg_ctx, rm_msg_ctx);

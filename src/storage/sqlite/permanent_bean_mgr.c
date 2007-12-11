@@ -501,7 +501,7 @@ sandesha2_permanent_bean_mgr_find_unique(
         size = axutil_array_list_size(beans, env);
     if( size > 1)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Non-Unique result");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Result is not unique");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NON_UNIQUE_RESULT, 
             AXIS2_FAILURE);
         return NULL;

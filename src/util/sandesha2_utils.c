@@ -438,7 +438,7 @@ sandesha2_utils_start_polling_mgr(
     if(!polling_mgr)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Starting the polling manager");
+            "[sandesha2]Starting the polling manager");
         polling_mgr = sandesha2_polling_mgr_create(env);
         property = axutil_property_create_with_args(env, 0, AXIS2_FALSE,
             (void *)sandesha2_polling_mgr_free_void_arg, polling_mgr);

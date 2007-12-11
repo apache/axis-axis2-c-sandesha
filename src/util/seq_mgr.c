@@ -86,6 +86,7 @@ sandesha2_seq_mgr_setup_new_seq(
     axis2_char_t *spec_version = NULL;
     axis2_char_t *address = NULL;
     axis2_char_t *reply_to_addr = NULL;
+    axis2_char_t *internal_seq_id = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_seq");
@@ -157,6 +158,9 @@ sandesha2_seq_mgr_setup_new_seq(
     next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(storage_mgr, env);
     next_msg_bean = sandesha2_next_msg_bean_create_with_data(env, seq_id, 1); 
                                                     /* 1 will be the next */
+    internal_seq_id = sandesha2_utils_get_outgoing_internal_seq_id(env, seq_id);
+    sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, 
+        internal_seq_id);
     sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
 
     /* Message to invoke. This will apply for only in-order invocations */
