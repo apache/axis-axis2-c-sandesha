@@ -246,7 +246,9 @@ sandesha2_sender_worker_send(
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Message is not qualified for sending");
-        return AXIS2_FAILURE;
+
+        /*return success here to wait till the message is qualified for sending*/
+        return AXIS2_SUCCESS;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
