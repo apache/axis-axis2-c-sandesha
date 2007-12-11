@@ -379,6 +379,7 @@ sandesha2_polling_mgr_worker_func(
             sandesha2_sender_bean_set_resend(make_conn_sender_bean, env, AXIS2_FALSE);
             sandesha2_sender_bean_set_send(make_conn_sender_bean, env, AXIS2_TRUE);
             /*sandesha2_sender_bean_set_seq_id(make_conn_sender_bean, env, seq_id);*/
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]seq_id:%s", seq_id);
             sandesha2_sender_bean_set_internal_seq_id(make_conn_sender_bean, 
                 env, seq_id);
             to = sandesha2_msg_ctx_get_to(make_conn_rm_msg_ctx, env);

@@ -353,12 +353,14 @@ sandesha2_sender_worker_send(
                 msg_stored_key);
         }
     }
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", msg_type);
     if(successfully_sent)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]message of msg_type:%d successfully sent", msg_type);
         if(AXIS2_FALSE == axis2_msg_ctx_get_server_side(msg_ctx, env))
             sandesha2_sender_worker_check_for_sync_res(env, msg_ctx);
     }
-    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
     {
         sandesha2_terminate_seq_t *terminate_seq = NULL;

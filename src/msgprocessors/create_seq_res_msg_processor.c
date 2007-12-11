@@ -340,12 +340,23 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             sandesha2_msg_ctx_t *create_seq_rm_msg = NULL;
             axis2_msg_ctx_t *create_seq_msg = NULL;
             axis2_char_t *acks_to = NULL;
+            axis2_endpoint_ref_t *from = NULL;
             acks_to = (axis2_char_t *) axis2_endpoint_ref_get_address(acks_to_epr, env);
             create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env,
                 rm_msg_ctx, int_seq_id, acks_to, storage_mgr);
             sandesha2_msg_ctx_set_flow(create_seq_rm_msg, env, 
                 SANDESHA2_MSG_CTX_OUT_FLOW);
             create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
+            from = sandesha2_msg_ctx_get_from(rm_msg_ctx, env);
+            if(from)
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]from:%s", 
+                    axis2_endpoint_ref_get_address(from, env));
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]from not set");
+                return AXIS2_FAILURE;
+            }
+            axis2_msg_ctx_set_to(create_seq_msg, env, from);
             axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
             new_msg_store_key = axutil_uuid_gen(env);
             sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 

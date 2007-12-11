@@ -168,7 +168,11 @@ sandesha2_transport_sender_invoke (
         SANDESHA2_MESSAGE_STORE_KEY);
                         
     if(NULL == property || NULL == axutil_property_get_value(property, env))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]SANDESHA2_MESSAGE_STORE_KEY property is NULL");
         return AXIS2_FAILURE;
+    }
     
     key = axutil_property_get_value(property, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
