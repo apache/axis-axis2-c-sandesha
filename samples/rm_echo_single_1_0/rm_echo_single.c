@@ -252,7 +252,7 @@ int main(int argc, char** argv)
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
-        /*axis2_svc_client_free(svc_client, env);*/
+        axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
     

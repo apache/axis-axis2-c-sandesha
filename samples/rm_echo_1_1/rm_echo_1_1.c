@@ -69,7 +69,6 @@ int main(int argc, char** argv)
     axis2_callback_t *callback = NULL;
     axis2_callback_t *callback2 = NULL;
     axis2_callback_t *callback3 = NULL;
-    axis2_callback_t *callback4 = NULL;
     axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
@@ -193,7 +192,7 @@ int main(int argc, char** argv)
             property);
     }
     
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     callback = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
@@ -210,18 +209,11 @@ int main(int argc, char** argv)
         callback2, payload, listener_manager);
     wait_on_callback(env, callback2);
 
-    payload = build_om_payload_for_echo_svc(env, "echo3", seq_key);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
-        callback3, payload, listener_manager);
-    wait_on_callback(env, callback3);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    callback4 = axis2_callback_create(env);
-    axis2_callback_set_on_complete(callback4, rm_echo_callback_on_complete);
-    axis2_callback_set_on_error(callback4, rm_echo_callback_on_error);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3, 
         listener_manager);
     AXIS2_SLEEP(2*SANDESHA2_MAX_COUNT); 
     AXIS2_FREE(env->allocator, seq_key);
@@ -307,7 +299,7 @@ void wait_on_callback(
             /* We are done with the callback */
             return;
         }
-        AXIS2_SLEEP(1); 
+        AXIS2_SLEEP(1);
     }
     return;
 }

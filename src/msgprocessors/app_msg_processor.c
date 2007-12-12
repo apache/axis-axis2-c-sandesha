@@ -225,7 +225,7 @@ sandesha2_app_msg_processor_process_in_msg (
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Entry:sandesha2_app_msg_processor_process_in_msg");
+        "[sandesha2]Entry:sandesha2_app_msg_processor_process_in_msg");
  
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(!msg_ctx)
@@ -297,7 +297,7 @@ sandesha2_app_msg_processor_process_in_msg (
 		    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
-                        AXIS2_FAILURE);
+                AXIS2_FAILURE);
             return AXIS2_FAILURE;
         }
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
@@ -387,12 +387,12 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             client_seq_key = axutil_property_get_value(property, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Client sequence key:%s found", client_seq_key);
+                "[sandesha2]Client sequence key:%s found", client_seq_key);
         }
         else
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Client sequence key not found");
+                "[sandesha2]Client sequence key not found");
         }
         if(client_seq_key)
         {
@@ -403,7 +403,7 @@ sandesha2_app_msg_processor_process_in_msg (
             if(response_envelope)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2] Client sequence key:%s", client_seq_key);
+                    "[sandesha2]Client sequence key:%s", client_seq_key);
                 sandesha2_storage_mgr_store_response(storage_mgr, env, 
                     client_seq_key, response_envelope, msg_no, soap_version);
             }
@@ -427,7 +427,6 @@ sandesha2_app_msg_processor_process_in_msg (
                 highest_msg_id_bean);
         }
     }
-    
     if(msgs_bean)
     {
         msgs_str = sandesha2_seq_property_bean_get_value(msgs_bean, env);
@@ -501,8 +500,8 @@ sandesha2_app_msg_processor_process_in_msg (
         wsa_action) || 0 == axutil_strcmp(
         SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Exit: app_msg_processor"\
-            "::process_in_msg, got WSRM 1.0 last message, aborting");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+            "[sandesha2]Got WSRM 1.0 last message, aborting");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         return AXIS2_SUCCESS;
     }
@@ -598,7 +597,7 @@ sandesha2_app_msg_processor_process_in_msg (
         acks_to_str = sandesha2_seq_property_bean_get_value(acks_to_bean, env); 
     if(!acks_to_str)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] acks_to_str"
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]acks_to_str"
             " seqeunce property is not set correctly");
         return AXIS2_FAILURE;
     }
@@ -628,7 +627,7 @@ sandesha2_app_msg_processor_process_in_msg (
             storage_mgr);
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit: sandesha2_app_msg_processor_process_in_msg");
+        "[sandesha2]Exit:sandesha2_app_msg_processor_process_in_msg");
 
     return AXIS2_SUCCESS;
     

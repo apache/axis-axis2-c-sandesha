@@ -49,6 +49,7 @@
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/SequenceAcknowledgement</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequenceResponse</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/AckRequested</actionMapping>
+        
      </operation>
  
      <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
@@ -64,6 +65,7 @@
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequenceResponse</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequenceResponse</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection</actionMapping>
+        
 
     </operation>
 
@@ -76,7 +78,7 @@
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
     <parameter name="RetransmissionInterval" locked="false">4</parameter><!--In seconds-->
     <parameter name="AcknowledgementInterval" locked="false">4</parameter><!--In seconds-->
-    <parameter name="InactivityTimeout" locked="false">10</parameter><!--In seconds-->
+    <parameter name="InactivityTimeout" locked="false">16</parameter><!--In seconds-->
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
     <parameter name="MessageTypesToDrop" locked="false">none</parameter>

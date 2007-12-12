@@ -67,6 +67,7 @@ int main(int argc, char** argv)
     axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_char_t *seq_key = NULL;
     int c;
    
     /* Set up the environment */
@@ -169,42 +170,27 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    property = axutil_property_create_with_args(env, 3, 0, 0, "sequence1");
+    seq_key = axutil_uuid_gen(env);
+    property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
     if(property)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
     
-    payload = build_om_payload_for_echo_svc(env, "echo1", "sequence1");
+    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\necho client single channel invoke SUCCESSFUL!\n");
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-
-    payload = build_om_payload_for_echo_svc(env, "echo2", "sequence1");
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-        printf("\necho client single channel invoke SUCCESSFUL!\n");
-    payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-
-    payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-        printf("\necho client single channel invoke SUCCESSFUL!\n");
-    payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
     sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
-        "sequence1");
-    /*sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback4, 
-        listener_manager);*/
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
+        seq_key);
+    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
-        /*axis2_svc_client_free(svc_client, env);*/
+        axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
     

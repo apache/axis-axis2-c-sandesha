@@ -1182,6 +1182,8 @@ sandesha2_utils_is_all_msgs_acked_upto(
     client_completed_msgs = sandesha2_utils_get_seq_property(env, 
         internal_seq_id, SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, 
         storage_mgr);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]client_completed_msgs:%s", client_completed_msgs);
     acked_msgs_list = sandesha2_utils_get_array_list_from_string(env, 
         client_completed_msgs);
     for(temp_msg_no = smallest_msg_no; temp_msg_no <= highest_in_msg_no; 

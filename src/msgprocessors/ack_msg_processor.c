@@ -168,7 +168,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Entry:sandesha2_ack_msg_processor_process_in_msg");
+        "[sandesha2]Entry:sandesha2_ack_msg_processor_process_in_msg");
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
     if(!seq_ack)
@@ -357,7 +357,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit:sandesha2_ack_msg_processor_process_in_msg");
+        "[sandesha2]Exit:sandesha2_ack_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
 }
     

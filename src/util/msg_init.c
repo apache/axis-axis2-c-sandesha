@@ -183,7 +183,7 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) seq_ack);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) seq_ack, env);
-        /*add_op_if_null(env, msg_ctx);*/
+        add_op_if_null(env, msg_ctx);
     }
     terminate_seq = sandesha2_rm_elements_get_terminate_seq(rm_elements, env);
     if(terminate_seq)
@@ -214,7 +214,6 @@ populate_rm_msg_ctx(
                 (sandesha2_iom_rm_part_t *) ack_request);
         rm_ns = sandesha2_iom_rm_element_get_namespace_value(
                 (sandesha2_iom_rm_element_t *) ack_request, env);
-        /*add_op_if_null(env, msg_ctx);*/
     }
     close_seq = sandesha2_rm_elements_get_close_seq(rm_elements, env);
     if(close_seq)
@@ -464,11 +463,15 @@ static axis2_bool_t validate_msg(
     return AXIS2_TRUE; 
 }
 
+/**
+ * When a response comes back in MakeConnection back channel it may need an
+ * operation added to the message context.
+ */
 static void add_op_if_null(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
-    /*axis2_op_t *op = NULL;
+    axis2_op_t *op = NULL;
         
     op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(!op)
@@ -485,7 +488,8 @@ static void add_op_if_null(
             return;
         }
         svc = axis2_msg_ctx_get_svc(msg_ctx, env);
-        op = axis2_svc_get_op_with_qname(svc, env, tmp_qname);
+        if(svc)
+            op = axis2_svc_get_op_with_qname(svc, env, tmp_qname);
         if(!op)
         {
             axis2_status_t status = AXIS2_FAILURE;
@@ -517,7 +521,7 @@ static void add_op_if_null(
         }
         axutil_qname_free(tmp_qname, env);
         axis2_msg_ctx_set_op(msg_ctx, env, op);
-    }*/
+    }
 }
 
 
