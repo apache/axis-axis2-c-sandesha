@@ -201,13 +201,13 @@ int main(int argc, char** argv)
 
     wait_on_callback(env, callback);
 
-    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
+    /*payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
     sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
         callback2, payload, listener_manager);
-    wait_on_callback(env, callback2);
+    wait_on_callback(env, callback2);*/
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback3 = axis2_callback_create(env);
@@ -219,7 +219,7 @@ int main(int argc, char** argv)
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
-        /*axis2_svc_client_free(svc_client, env);*/
+        axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
     

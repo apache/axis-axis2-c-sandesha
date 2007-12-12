@@ -982,7 +982,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
         /* When this method is invoked, the mutex must have been locked,
            so unlock before going to sleep */
         axutil_thread_mutex_unlock(mutex);
-        AXIS2_USLEEP(10000000);
+        AXIS2_USLEEP(100000);
         /* Sleeping is over, lock again */
         axutil_thread_mutex_lock(mutex);
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
