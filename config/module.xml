@@ -70,7 +70,7 @@
     </operation>
 
    <!-- Database connection parameters -->
-   <!--parameter name="sandesha2_db" locked="false">/axis2c/deploy</parameter-->
+   <parameter name="sandesha2_db" locked="false">/tmp</parameter>
    <parameter name="db_server" locked="false">localhost</parameter>
    <parameter name="db_user" locked="false">g</parameter>
    <parameter name="db_password" locked="false">g</parameter>
