@@ -1038,6 +1038,13 @@ sandesha2_permanent_bean_mgr_get_dbconn(
         sqlite3_close(dbconn);
         return NULL;
     }
+#if !defined(WIN32)
+    {
+        axis2_char_t permission_str[256];
+        sprintf(permission_str, "chmod 777 %s", dbname); 
+        system(permission_str);
+    }
+#endif
     return dbconn;
 }
 

@@ -92,6 +92,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_conf_ctx_t *conf_ctx,
     const axis2_bool_t persistent);
 
+axis2_status_t AXIS2_CALL
+sandesha2_permanent_storage_mgr_create_db(
+    sandesha2_storage_mgr_t *storage_mgr,
+    const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

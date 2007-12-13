@@ -214,10 +214,10 @@ sandesha2_permanent_storage_mgr_get_property_string(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
-static axis2_status_t AXIS2_CALL
+/*axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_create_db(
     sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
+    const axutil_env_t *env);*/
 
 static const sandesha2_storage_mgr_ops_t storage_mgr_ops = 
 {
@@ -1167,7 +1167,7 @@ sandesha2_permanent_storage_mgr_get_mutex(
     return storage_mgr_impl->mutex;
 }
 
-static axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_create_db(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env)
@@ -1187,26 +1187,26 @@ sandesha2_permanent_storage_mgr_create_db(
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     dbconn = sandesha2_permanent_bean_mgr_get_dbconn(storage_mgr_impl->bean_mgr, 
         env);
-    sql_stmt1 = "create table if not exists create_seq("\
+    sql_stmt1 = "create table create_seq("\
         "create_seq_msg_id varchar(100) primary key, "\
         "internal_seq_id varchar(200), seq_id varchar(200), "\
         "create_seq_msg_store_key varchar(100), ref_msg_store_key varchar(100))";
-    sql_stmt2 = "create table if not exists invoker("\
+    sql_stmt2 = "create table invoker("\
         "msg_ctx_ref_key varchar(100) primary key,"\
         "msg_no long, seq_id varchar(200), is_invoked boolean)";
-    sql_stmt3 = "create table if not exists sender("\
+    sql_stmt3 = "create table sender("\
         "msg_id varchar(100) primary key, msg_ctx_ref_key varchar(100), "\
         "internal_seq_id varchar(200), sent_count int, msg_no long, "\
         "send boolean, resend boolean, time_to_send long, msg_type int, "\
         "seq_id varchar(200), wsrm_anon_uri varchar(100), "\
         "to_address varchar(100))";
-    sql_stmt4 = "create table if not exists next_msg("\
+    sql_stmt4 = "create table next_msg("\
         "seq_id varchar(200) primary key, internal_seq_id varchar(200), "\
         "ref_msg_key varchar(100), "\
         "polling_mode boolean, msg_no long)";
-    sql_stmt5 = "create table if not exists seq_property(id varchar(200) ,"\
+    sql_stmt5 = "create table seq_property(id varchar(200) ,"\
         "seq_id varchar(200), name varchar(200), value varchar(200))";
-    sql_stmt6 = "create table if not exists msg("\
+    sql_stmt6 = "create table msg("\
         "stored_key varchar(200) primary key, msg_id varchar(200), "\
         "soap_env_str text, soap_version int, transport_out varchar(100), "\
         "op varchar(100), svc varchar(100), svc_grp varchar(100), "\
@@ -1215,7 +1215,7 @@ sandesha2_permanent_storage_mgr_create_db(
         "flow int, msg_recv_str varchar(200), svr_side boolean, "\
         "in_msg_store_key varchar(200), prop_str varchar(8192), "\
         "action varchar(200))";
-    sql_stmt7 = "create table if not exists response(seq_id varchar(200), "\
+    sql_stmt7 = "create table response(seq_id varchar(200), "\
         "response_str text, msg_no int, soap_version int)";
     if(dbconn)
     {
@@ -1227,7 +1227,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 "SQL Error: %s", error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt2, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1237,7 +1237,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt3, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1247,7 +1247,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt4, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1257,7 +1257,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt5, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1268,7 +1268,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt6, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1278,7 +1278,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         rc = sqlite3_exec(dbconn, sql_stmt7, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1288,7 +1288,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_FAILURE;
+            /*return AXIS2_FAILURE;*/
         }
         sqlite3_close(dbconn);
     }

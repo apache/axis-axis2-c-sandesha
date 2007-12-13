@@ -101,8 +101,11 @@ mod_sandesha2_init(
     /*storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
     sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);*/
     
-    /*sandesha2_storage_mgr_t *storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
-    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);*/
+    sandesha2_storage_mgr_t *storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
+    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);
+    /*if(!sandesha2_permanent_storage_mgr_create_db(
+        storage_mgr, env))
+        return AXIS2_FAILURE;*/
     
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Module initializing completed");
