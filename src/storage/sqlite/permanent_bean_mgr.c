@@ -1027,6 +1027,7 @@ sandesha2_permanent_bean_mgr_get_dbconn(
     }
     axutil_qname_free(qname, env);
     dbname = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, SANDESHA2_DB, NULL);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]dbname:%s", dbname);
     rc = sqlite3_open(dbname, &(dbconn));
     if(rc != SQLITE_OK)
     {

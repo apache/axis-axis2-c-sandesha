@@ -213,7 +213,7 @@ sandesha2_global_in_handler_invoke(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     if(!storage_mgr)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot get the "\
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Cannot get the "\
             "storage manager");
         return AXIS2_FAILURE;
     }

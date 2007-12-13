@@ -73,13 +73,12 @@ mod_sandesha2_init(
     axutil_param_t *param = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    /*sandesha2_storage_mgr_t *storage_mgr = NULL;*/
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, module_desc, AXIS2_FAILURE);
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] module initializing ..");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Module initializing");
     sandesha2_error_init();
     property_bean = sandesha2_property_mgr_load_properties_from_module_desc(env,
         module_desc);
@@ -99,15 +98,14 @@ mod_sandesha2_init(
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL);
     axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL);
     
-    storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
-    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);
-    
-    /*storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
+    /*storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
     sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);*/
     
-    /* we need to add permenent storage mgr as well */
+    /*sandesha2_storage_mgr_t *storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
+    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);*/
+    
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-        "[sandesha2] module initializing completed");
+        "[sandesha2]Module initializing completed");
     return AXIS2_SUCCESS;
 }
 

@@ -524,16 +524,18 @@ sandesha2_utils_get_permanent_storage_mgr(
     {    
         storage_mgr = axutil_property_get_value(property, env);
     }
-
     else
-    {    
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]storage_mgr not found in the conf_ctx");
         storage_mgr = sandesha2_permanent_storage_mgr_create(env, conf_ctx);
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, 
             AXIS2_FALSE, 0, storage_mgr);
         axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
             property);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Could not create storage_mgr");
     }
-
     return storage_mgr;
 }
 

@@ -1223,7 +1223,8 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table create_seq; SQL Error: %s", error_msg);
+                "[sandesha2]Error creating database table create_seq; "\
+                "SQL Error: %s", error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
             return AXIS2_FAILURE;
@@ -1232,7 +1233,7 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table invoker; SQL Error: %s",
+                "[sandesha2]Error creating database table invoker; SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
@@ -1242,7 +1243,7 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table sender; SQL Error: %s",
+                "[sandesha2]Error creating database table sender; SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
@@ -1252,7 +1253,7 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table next_msg; SQL Error: %s",
+                "[sandesha2]Error creating database table next_msg; SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
@@ -1262,7 +1263,8 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table seq_property; SQL Error: %s",
+                "[sandesha2]Error creating database table seq_property; "\
+                "SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
@@ -1272,7 +1274,7 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table msg; SQL Error: %s",
+                "[sandesha2]Error creating database table msg; SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
@@ -1282,7 +1284,7 @@ sandesha2_permanent_storage_mgr_create_db(
         if( rc != SQLITE_OK )
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                "Error creating database table response; SQL Error: %s",
+                "[sandesha2]Error creating database table response; SQL Error: %s",
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);

@@ -519,7 +519,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
         SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_mgr);
     if(!out_seq_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] seq_id was not"
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]seq_id was not"
             " found. Cannot send the terminate message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID,
             AXIS2_FAILURE);
@@ -545,7 +545,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     if(terminated && 0 == axutil_strcmp(terminated, AXIS2_VALUE_TRUE))
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate was "
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Terminate was "
             "added previously");
         return AXIS2_SUCCESS;
     }
@@ -561,7 +561,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     rm_version = sandesha2_utils_get_rm_version(env, int_seq_id, storage_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cant find the"
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Cant find the"
             " rm_version of the given message");
         return AXIS2_FAILURE;
     }
@@ -612,7 +612,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, int_seq_id, 
         axis2_msg_ctx_get_server_side(msg_ctx, env), storage_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit:sandesha2_terminate_msg_processor_process_out_msg");
+        "[sandesha2]Exit:sandesha2_terminate_msg_processor_process_out_msg");
     return AXIS2_SUCCESS;
 }
 
