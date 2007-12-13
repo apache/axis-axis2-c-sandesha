@@ -168,7 +168,9 @@ sandesha2_utils_get_storage_mgr(
     axis2_char_t *value = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_property_bean_t *prop_bean = NULL;
-    
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_utils_get_storage_mgr");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, conf, NULL);
     
@@ -193,6 +195,8 @@ sandesha2_utils_get_storage_mgr(
         return NULL;
     }
     axutil_allocator_switch_to_local_pool(env->allocator);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_utils_get_storage_mgr");
     return storage_mgr;
 }
                         
@@ -533,8 +537,9 @@ sandesha2_utils_get_permanent_storage_mgr(
             AXIS2_FALSE, 0, storage_mgr);
         axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, 
             property);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Could not create storage_mgr");
+        if(!storage_mgr)
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]Could not create storage_mgr");
     }
     return storage_mgr;
 }

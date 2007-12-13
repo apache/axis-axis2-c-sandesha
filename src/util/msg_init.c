@@ -290,6 +290,8 @@ static axis2_bool_t validate_msg(
     sandesha2_make_connection_t *make_conn = NULL;
     int temp_flow = -1;
 
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:validate_msg");
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -460,6 +462,8 @@ static axis2_bool_t validate_msg(
             }
         }
     }
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:validate_msg");
     return AXIS2_TRUE; 
 }
 
@@ -479,6 +483,9 @@ static void add_op_if_null(
         axis2_svc_t *svc = NULL;
         axutil_qname_t *tmp_qname = NULL;
     
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Message context operation is NULL. So adding default "\
+            "operation");
         tmp_qname = axutil_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
                 NULL);
         if (!tmp_qname)
