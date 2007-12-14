@@ -217,6 +217,8 @@ sandesha2_global_in_handler_invoke(
             "storage manager");
         return AXIS2_FAILURE;
     }
+    if(!sandesha2_permanent_storage_mgr_create_db(storage_mgr, env))
+        return AXIS2_FAILURE;
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)

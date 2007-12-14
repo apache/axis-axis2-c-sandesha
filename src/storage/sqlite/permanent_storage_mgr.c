@@ -269,9 +269,9 @@ sandesha2_permanent_storage_mgr_create(
     conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     storage_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
         &(storage_mgr_impl->storage_mgr), conf_ctx, NULL);
-    if(!sandesha2_permanent_storage_mgr_create_db(
+    /*if(!sandesha2_permanent_storage_mgr_create_db(
         &(storage_mgr_impl->storage_mgr), env))
-        return NULL;
+        return NULL;*/
     storage_mgr_impl->create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(
         env, &(storage_mgr_impl->storage_mgr), conf_ctx);
     storage_mgr_impl->next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(

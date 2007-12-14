@@ -83,12 +83,12 @@ sandesha2_out_handler_invoke(
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry: sandesha2_out_handler_invoke");
+        "[sandesha2]Entry:sandesha2_out_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Configuration Context is NULL");
+            "[sandesha2]Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -161,6 +161,8 @@ sandesha2_out_handler_invoke(
         SANDESHA2_APPLICATION_PROCESSING_DONE, temp_prop);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    if(!sandesha2_permanent_storage_mgr_create_db(storage_mgr, env))
+        return AXIS2_FAILURE;
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
