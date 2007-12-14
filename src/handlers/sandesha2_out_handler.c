@@ -21,6 +21,7 @@
 #include <axutil_property.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_permanent_storage_mgr.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_msg_processor.h>
