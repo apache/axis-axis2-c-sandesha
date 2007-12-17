@@ -266,8 +266,8 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_TRUE);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-        axis2_conf_ctx_get_conf(conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     fault_ctx = sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
         env, rm_msg_ctx, seq_prop_mgr);
     if(fault_ctx)
@@ -293,7 +293,6 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_SUCCESS;
     }
-    dbname = sandesha2_util_get_dbname(env, conf_ctx);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
@@ -806,9 +805,8 @@ sandesha2_app_msg_processor_process_out_msg(
         AXIS2_WSDL_MESSAGE_LABEL_IN);
     /* TODO setting up fault callback */
 
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx,
-        axis2_conf_ctx_get_conf(conf_ctx, env));
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     if(!seq_prop_mgr)
     {

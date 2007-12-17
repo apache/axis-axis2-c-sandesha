@@ -160,9 +160,8 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    storage_mgr = (sandesha2_storage_mgr_t *) sandesha2_utils_get_storage_mgr(
-        env, conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr =sandesha2_permanent_sender_mgr_create(env, dbname);

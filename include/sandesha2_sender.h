@@ -34,47 +34,13 @@ extern "C"
 {
 #endif
 
-typedef struct sandesha2_sender_t sandesha2_sender_t;
-
-AXIS2_EXTERN sandesha2_sender_t * AXIS2_CALL
-sandesha2_sender_create(
-    const axutil_env_t *env);
- 
-/**
- * Frees the sender given as a void pointer. This method would cast the 
- * void parameter to an sender pointer and then call free method.
- * @param sender pointer to sender as a void pointer
- * @param env pointer to environment struct
- * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_sender_free_void_arg(
-    void *sender,
-    const axutil_env_t *env);
-
 axis2_status_t AXIS2_CALL 
-sandesha2_sender_free(
-    sandesha2_sender_t *sender, 
-    const axutil_env_t *env);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_stop_sending (
-    sandesha2_sender_t *sender,
-    const axutil_env_t *env);
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_run_for_seq 
-    (sandesha2_sender_t *sender, 
+sandesha2_sender_run_for_seq(
     const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx, 
     axis2_char_t *seq_id,
     const axis2_bool_t persistent);
             
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_run (
-    sandesha2_sender_t *sender,
-    const axutil_env_t *env);
-                        
 /** @} */
 #ifdef __cplusplus
 }

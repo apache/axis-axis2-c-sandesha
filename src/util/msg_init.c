@@ -297,8 +297,8 @@ static axis2_bool_t validate_msg(
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);

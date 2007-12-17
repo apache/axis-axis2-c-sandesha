@@ -257,9 +257,8 @@ sandesha2_in_order_invoker_worker_func(
     env = axutil_init_thread_env(args->env);
     invoker = args->impl;
     
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, invoker->conf_ctx, 
-        axis2_conf_ctx_get_conf(invoker->conf_ctx, env));
     dbname = sandesha2_util_get_dbname(env, invoker->conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
     invoker_mgr = sandesha2_permanent_invoker_mgr_create(env, dbname);

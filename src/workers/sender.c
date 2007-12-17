@@ -50,18 +50,12 @@
  */
 typedef struct sandesha2_sender_args sandesha2_sender_args_t;
 
-struct sandesha2_sender_t
-{
-	axis2_conf_ctx_t *conf_ctx;
-    axis2_bool_t run_sender;
-    axis2_char_t *seq_id;
-    axis2_bool_t persistent_msg_ctx;
-};
-
 struct sandesha2_sender_args
 {
-    sandesha2_sender_t *impl;
     axutil_env_t *env;
+    axis2_conf_ctx_t *conf_ctx;
+    axis2_char_t *seq_id;
+    axis2_bool_t persistent_msg_ctx;
 };
 
 static void * AXIS2_THREAD_FUNC
@@ -69,106 +63,36 @@ sandesha2_sender_worker_func(
     axutil_thread_t *thd, 
     void *data);
 
-
-AXIS2_EXTERN sandesha2_sender_t* AXIS2_CALL
-sandesha2_sender_create(
-    const axutil_env_t *env)
-{
-    sandesha2_sender_t *sender = NULL;
-    sender =  (sandesha2_sender_t *)AXIS2_MALLOC 
-                        (env->allocator, 
-                        sizeof(sandesha2_sender_t));
-    if(NULL == sender)
-	{
-		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    sender->conf_ctx = NULL;
-    sender->run_sender = AXIS2_FALSE;
-    sender->seq_id = NULL;
-    
-	return sender;
-}
-
-axis2_status_t AXIS2_CALL
-sandesha2_sender_free_void_arg(
-    void *sender,
-    const axutil_env_t *env)
-{
-    sandesha2_sender_t *sender_l = NULL;
-
-    sender_l = (sandesha2_sender_t *) sender;
-    return sandesha2_sender_free(sender_l, env);
-}
-
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_free(
-    sandesha2_sender_t *sender, 
-    const axutil_env_t *env)
-{
-    sender->conf_ctx = NULL;
-	AXIS2_FREE(env->allocator, sender);
-	return AXIS2_SUCCESS;
-}
-
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_stop_sending(
-    sandesha2_sender_t *sender,
-    const axutil_env_t *env)
-{
-    sender->run_sender = AXIS2_FALSE;
-    sandesha2_sender_free(sender, env);
-    return AXIS2_SUCCESS;
-}
-            
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_run_for_seq(
-    sandesha2_sender_t *sender, 
-    const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx, 
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    const axis2_bool_t persistent)
-{
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_sender_run_for_seq");
-    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-   
-    sender->conf_ctx = conf_ctx;
-    sender->run_sender = AXIS2_TRUE;
-    sender->persistent_msg_ctx = persistent;
-    sender->seq_id = seq_id;
-    sandesha2_sender_run(sender, env);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_sender_run_for_seq");
-    return AXIS2_SUCCESS;
-}
-            
-axis2_status_t AXIS2_CALL 
-sandesha2_sender_run (
-    sandesha2_sender_t *sender,
-    const axutil_env_t *env)
+    const axis2_bool_t persistent_msg_ctx)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_sender_args_t *args = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_sender_run");
+        "[sandesha2]Entry:sandesha2_sender_run_for_seq");
     
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t)); 
-    args->impl = sender;
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t));
     args->env = (axutil_env_t*)env;
+    args->conf_ctx = conf_ctx;
+    args->seq_id = seq_id;
+    args->persistent_msg_ctx = persistent_msg_ctx;
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
         sandesha2_sender_worker_func, (void*)args);
     if(!worker_thread)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Thread creation "\
-            "failed for sandesha2_sender_run");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Thread creation failed for sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
     axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_sender_run");
+        "[sandesha2]Exit:sandesha2_sender_run_for_seq");
     return AXIS2_SUCCESS;
 }
 
@@ -180,7 +104,6 @@ sandesha2_sender_worker_func(
     axutil_thread_t *thd, 
     void *data)
 {
-    sandesha2_sender_t *sender = NULL;
     sandesha2_sender_args_t *args;
     axutil_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
@@ -192,19 +115,22 @@ sandesha2_sender_worker_func(
     int sleep_time = 0;
     axutil_qname_t *qname = NULL;
     axutil_param_t *sleep_time_param = NULL;
-    axis2_char_t *seq_id = NULL;
     axis2_char_t *dbname = NULL;
+    axis2_bool_t run_sender = AXIS2_TRUE;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_char_t *seq_id = NULL;
+    axis2_bool_t persistent_msg_ctx = AXIS2_FALSE;
     
     args = (sandesha2_sender_args_t*)data;
     env = axutil_init_thread_env(args->env);
-    sender = args->impl;
-    sender = (sandesha2_sender_t*)sender;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_sender_worker_func");
-    conf = axis2_conf_ctx_get_conf(sender->conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
-        conf);
-    dbname = sandesha2_util_get_dbname(env, sender->conf_ctx);
+    conf_ctx = args->conf_ctx;
+    seq_id = axutil_strdup(env, args->seq_id);
+    persistent_msg_ctx = args->persistent_msg_ctx;
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
@@ -219,8 +145,7 @@ sandesha2_sender_worker_func(
             env));
     }
     axutil_qname_free(qname, env);
-    seq_id = sender->seq_id;
-    while(sender->run_sender)
+    while(run_sender)
     {
         sandesha2_sender_bean_t *sender_bean = NULL;
         axis2_char_t *msg_id = NULL;
@@ -237,14 +162,14 @@ sandesha2_sender_worker_func(
         if(msg_id)
         {
             axis2_bool_t status = AXIS2_TRUE;
-            status = sandesha2_sender_worker_send(env, sender->conf_ctx, msg_id, 
-                sender->persistent_msg_ctx, storage_mgr, seq_prop_mgr, 
+            status = sandesha2_sender_worker_send(env, conf_ctx, msg_id, 
+                persistent_msg_ctx, storage_mgr, seq_prop_mgr, 
                 create_seq_mgr, sender_mgr);
             if(!status)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                     "[sandesha2]Stopping the sender for sequence %s", seq_id);
-                sandesha2_sender_stop_sending(sender, env);
+                run_sender = AXIS2_FALSE;
             }
         }
     }

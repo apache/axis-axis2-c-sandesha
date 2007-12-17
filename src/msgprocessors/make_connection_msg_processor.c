@@ -188,6 +188,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     sandesha2_property_bean_t *prop_bean = NULL;
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     axutil_array_list_t *msgs_not_to_send = NULL;
+    axis2_char_t *dbname = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_make_connection_msg_processor_process_in_msg");
@@ -212,12 +213,10 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     if(msg_ctx)
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(conf_ctx)
-        storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-                        axis2_conf_ctx_get_conf(conf_ctx, env));
+        dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     if(storage_mgr)
     {
-        axis2_char_t *dbname = NULL;
-        dbname = sandesha2_util_get_dbname(env, conf_ctx);
         seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
         create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
         sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);

@@ -188,11 +188,10 @@ sandesha2_ack_msg_processor_process_in_msg (
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-        axis2_conf_ctx_get_conf(conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, conf_ctx); 
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     sandesha2_seq_ack_set_must_understand(seq_ack, env, AXIS2_FALSE);
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
-    dbname = sandesha2_util_get_dbname(env, conf_ctx); 
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);

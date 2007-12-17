@@ -68,8 +68,7 @@ sandesha2_utils_get_rm_version(
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_utils_get_storage_mgr(
     const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    axis2_conf_t *conf);
+    axis2_char_t *dbname);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(
@@ -141,7 +140,7 @@ sandesha2_utils_get_inmemory_storage_mgr(
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_utils_get_permanent_storage_mgr(
     const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx);
+    axis2_char_t *dbname);
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
 sandesha2_utils_get_svr_side_incoming_seq_id(

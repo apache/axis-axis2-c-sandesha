@@ -156,6 +156,7 @@ sandesha2_polling_mgr_start (
     const axis2_char_t *internal_seq_id)
 {
     sandesha2_storage_mgr_t *storage_mgr = NULL;
+    axis2_char_t *dbname = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_polling_mgr_start");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -171,9 +172,8 @@ sandesha2_polling_mgr_start (
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "conf_ctx is NULL");
         return AXIS2_FAILURE;
     }
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, 
-        polling_mgr->conf_ctx, 
-        axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_schedule_polling_request(polling_mgr, env, 
         internal_seq_id);

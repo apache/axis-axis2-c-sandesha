@@ -192,8 +192,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-        axis2_conf_ctx_get_conf(conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
                         
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
                         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
@@ -240,7 +240,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
     create_seq_msg_id = (axis2_char_t *) axis2_relates_to_get_value(relates_to, env);
-    dbname = sandesha2_util_get_dbname(env, conf_ctx);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
@@ -466,7 +465,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                         target_bean);
     if(found_list)
         size = axutil_array_list_size(found_list, env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_size:%d", size);
     for(i = 0; i < size; i++)
     {
         sandesha2_sender_bean_t *tmp_bean = NULL;
@@ -479,7 +477,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_identifier_t *ident = NULL;
         sandesha2_ack_requested_t *ack_req_part = NULL;
        
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1");
         tmp_bean = axutil_array_list_get(found_list, env, i);
         key = sandesha2_sender_bean_get_msg_ctx_ref_key(tmp_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env,

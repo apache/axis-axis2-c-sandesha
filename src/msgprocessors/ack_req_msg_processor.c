@@ -182,9 +182,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_ack_requested_get_identifier(ack_requested, env), env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, 
-        axis2_conf_ctx_get_conf(conf_ctx, env));
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id,
         SANDESHA2_SEQ_PROP_ACKS_TO_EPR);

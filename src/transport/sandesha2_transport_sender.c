@@ -151,6 +151,7 @@ sandesha2_transport_sender_invoke (
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
+    axis2_char_t *dbname = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
          "[sandesha2]Entry:sandesha2_transport_sender_invoke");
@@ -177,7 +178,8 @@ sandesha2_transport_sender_invoke (
     key = axutil_property_get_value(property, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,

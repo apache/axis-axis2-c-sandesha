@@ -244,8 +244,8 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
         SANDESHA2_SEQ_DIRECTION_OUT);
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname); 
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname); 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -408,10 +408,10 @@ sandesha2_client_get_report(
     axis2_char_t *dbname = NULL;
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     if (storage_mgr)
     {
-        dbname = sandesha2_util_get_dbname(env, conf_ctx);
         seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     }
     sandesha2_report = sandesha2_report_create(env);
@@ -1003,8 +1003,8 @@ sandesha2_client_get_seq_id(
         return NULL;
     }
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
@@ -1255,8 +1255,8 @@ sandesha2_client_configure_close_seq(
         return NULL;
     }
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
@@ -1581,8 +1581,8 @@ sandesha2_client_get_incoming_seq_report(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname); 
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname); 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -1688,10 +1688,10 @@ sandesha2_client_configure_terminate_seq(
         sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-        storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+        dbname = sandesha2_util_get_dbname(env, conf_ctx);
+        storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
         if(storage_mgr)
         {
-            dbname = sandesha2_util_get_dbname(env, conf_ctx);
             seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
         }
         if(seq_prop_mgr)
@@ -1952,6 +1952,7 @@ sandesha2_client_get_response_envelope(
     axiom_soap_envelope_t *response_envelope = NULL;
     axiom_soap_body_t *body = NULL;
     axiom_node_t *result = NULL;
+    axis2_char_t *dbname = NULL;
 
     options = (axis2_options_t *) axis2_svc_client_get_options(svc_client, env);
     if(!options)
@@ -1964,7 +1965,8 @@ sandesha2_client_get_response_envelope(
         SANDESHA2_CLIENT_SEQ_KEY);
     client_seq_key = axutil_property_get_value(property, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     response_envelope = sandesha2_storage_mgr_retrieve_response(storage_mgr, env, 
         client_seq_key, msg_no);
