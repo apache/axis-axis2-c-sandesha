@@ -27,7 +27,6 @@
 #include <sandesha2_close_seq.h>
 #include <sandesha2_close_seq_res.h>
 #include <sandesha2_polling_mgr.h>
-#include <sandesha2_inmemory_storage_mgr.h>
 #include <sandesha2_permanent_storage_mgr.h>
 #include <axutil_string.h>
 #include <axis2_conf.h>
@@ -450,39 +449,6 @@ sandesha2_utils_get_transport_out(const axutil_env_t *env)
     out_desc = axis2_transport_out_desc_create(env, AXIS2_TRANSPORT_ENUM_HTTP);
     axis2_transport_out_desc_set_sender(out_desc, env, transport_sender);
     return out_desc;
-}
-
-AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_utils_get_inmemory_storage_mgr(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx)
-{
-    axutil_property_t *property = NULL;
-    axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-    
-    AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
-    
-    property = axis2_ctx_get_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR);
-
-    if(property && axutil_property_get_value(property, env))
-    {
-        sandesha2_storage_mgr_t *storage_mgr = NULL;
-        storage_mgr = (sandesha2_storage_mgr_t*)axutil_property_get_value(
-            property, env);
-        return storage_mgr;
-    }
-    else
-    {
-        /* TODO we need to class load the proper storage mgr */
-        sandesha2_storage_mgr_t *storage_mgr = 
-            sandesha2_inmemory_storage_mgr_create(env, conf_ctx);
-        property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-            AXIS2_FALSE, (void *)sandesha2_storage_mgr_free_void_arg, storage_mgr);
-        axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, 
-            property);
-        return storage_mgr;
-    }
-    return NULL;    
 }
 
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
