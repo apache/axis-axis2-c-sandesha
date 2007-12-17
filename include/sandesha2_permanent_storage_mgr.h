@@ -43,15 +43,10 @@ typedef struct sandesha2_response
  * @{
  */
 
-axutil_thread_mutex_t *
-sandesha2_permanent_storage_mgr_get_mutex(
-    sandesha2_storage_mgr_t *storage_mgr, 
-    const axutil_env_t *env);
-
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_permanent_storage_mgr_create(
-    const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx);
+    const axutil_env_t *env,
+    axis2_char_t *dbname);
 
 void * AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_dbconn(
@@ -78,12 +73,6 @@ sandesha2_permanent_storage_mgr_update_msg_ctx(
     axis2_char_t *key,
     axis2_msg_ctx_t *msg_ctx);
 
-void AXIS2_CALL
-sandesha2_permanent_storage_mgr_remove_transaction(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env,
-    struct sandesha2_transaction *transaction);
-
 axis2_msg_ctx_t * AXIS2_CALL
 sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr, 
@@ -94,8 +83,9 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
 axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_create_db(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
+
 /** @} */
 #ifdef __cplusplus
 }

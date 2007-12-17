@@ -52,48 +52,48 @@ AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr_ops
      */
     void (AXIS2_CALL * 
         free)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env);
 
     axis2_bool_t (AXIS2_CALL *
         insert)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axis2_bool_t (AXIS2_CALL *
         remove)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             axis2_char_t *seq_id);
 
     sandesha2_next_msg_bean_t *(AXIS2_CALL *
         retrieve)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             axis2_char_t *seq_id);
 
     axis2_bool_t (AXIS2_CALL *
         update)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axutil_array_list_t *(AXIS2_CALL *
         find)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     sandesha2_next_msg_bean_t *(AXIS2_CALL *
         find_unique)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env,
             sandesha2_next_msg_bean_t *bean);
 
     axutil_array_list_t *(AXIS2_CALL *
         retrieve_all)(
-            sandesha2_next_msg_mgr_t *next_msg,
+            sandesha2_next_msg_mgr_t *next_msg_mgr,
             const axutil_env_t *env);
 };
 
@@ -105,52 +105,52 @@ AXIS2_DECLARE_DATA struct sandesha2_next_msg_mgr
 AXIS2_EXTERN sandesha2_next_msg_mgr_t * AXIS2_CALL
 sandesha2_next_msg_mgr_create(
     const axutil_env_t *env,
-    axis2_ctx_t *ctx);
+    axis2_char_t *dbname);
 
 void AXIS2_CALL 
 sandesha2_next_msg_mgr_free(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_next_msg_mgr_insert(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_next_msg_mgr_remove(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     axis2_char_t *seq_id);
 
 sandesha2_next_msg_bean_t *AXIS2_CALL
 sandesha2_next_msg_mgr_retrieve(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     axis2_char_t *seq_id);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_next_msg_mgr_update(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
 axutil_array_list_t *AXIS2_CALL
 sandesha2_next_msg_mgr_find(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
 sandesha2_next_msg_bean_t *AXIS2_CALL
 sandesha2_next_msg_mgr_find_unique(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
 axutil_array_list_t *AXIS2_CALL
 sandesha2_next_msg_mgr_retrieve_all(
-    sandesha2_next_msg_mgr_t *next_msg,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env);
 
 

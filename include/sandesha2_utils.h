@@ -25,6 +25,7 @@
   */
 
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_conf.h>
 #include <axiom_soap_envelope.h>
@@ -62,7 +63,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(
     const axutil_env_t *env,
     axis2_char_t *key,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
                         
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_utils_get_storage_mgr(
@@ -75,7 +76,7 @@ sandesha2_utils_get_seq_property(
     const axutil_env_t *env,
     axis2_char_t *id,
     axis2_char_t *name,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(
@@ -215,7 +216,7 @@ sandesha2_utils_is_all_msgs_acked_upto(
     const axutil_env_t *env,
     long highest_in_msg_no,
     axis2_char_t *internal_seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 axis2_status_t AXIS2_CALL
 sandesha2_utils_execute_and_store(
@@ -264,6 +265,11 @@ AXIS2_EXTERN axis2_msg_ctx_t * AXIS2_CALL
 sandesha2_utils_create_out_msg_ctx(
     const axutil_env_t *env,
     axis2_msg_ctx_t *in_msg_ctx);
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+sandesha2_util_get_dbname(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx);
 
 /** @} */
 #ifdef __cplusplus

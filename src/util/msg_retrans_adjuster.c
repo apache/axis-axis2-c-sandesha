@@ -22,6 +22,9 @@
 #include <axutil_property.h>
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_sender_mgr.h>
 
 /******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL
@@ -36,13 +39,16 @@ sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
     int count,
     long initial_interval);
                         
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     const axutil_env_t *env,
     axis2_char_t *int_seq_id,
     axis2_char_t *seq_id,
     axis2_msg_ctx_t *msg_ctx,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr);
 
 /******************************************************************************/
 
@@ -52,7 +58,10 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     const axutil_env_t *env,
     sandesha2_sender_bean_t *sender_bean,
     axis2_conf_ctx_t *conf_ctx, 
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
     axis2_char_t *stored_key = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
@@ -71,12 +80,15 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     AXIS2_PARAM_CHECK(env->error, sender_bean, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
     stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
     if(!stored_key)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Stored Key not"
-            " present in the retransmittable message");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Stored Key not present in the retransmittable message");
         return AXIS2_FALSE;
     }
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
@@ -98,7 +110,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         timeout_seq = AXIS2_TRUE;
     if(rm_msg_ctx)
         seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 
-            rm_msg_ctx, storage_mgr);
+            rm_msg_ctx, seq_prop_mgr, conf_ctx);
     
     if(AXIS2_TRUE == seq_timed_out)
     {
@@ -111,7 +123,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     {
         sandesha2_sender_bean_set_send(sender_bean, env, AXIS2_FALSE);
         sandesha2_msg_retrans_adjuster_finalize_timedout_seq(env, int_seq_id,
-            seq_id, msg_ctx, storage_mgr);
+            seq_id, msg_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, 
+            sender_mgr);
         continue_sending = AXIS2_FALSE;
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -168,13 +181,16 @@ sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
     return interval;
 }
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     const axutil_env_t *env,
     axis2_char_t *int_seq_id,
     axis2_char_t *seq_id,
     axis2_msg_ctx_t *msg_ctx,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
@@ -185,12 +201,15 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
     sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
-        AXIS2_FALSE, storage_mgr);
+        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
  
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_finalize_timedout_seq");

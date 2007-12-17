@@ -26,7 +26,9 @@
 #include <axutil_env.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_msg_ctx.h>
-#include <sandesha2_storage_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_fault_data.h>
 #include <axis2_msg_ctx.h>
 
@@ -45,39 +47,41 @@ sandesha2_msg_ctx_t* AXIS2_CALL
 sandesha2_fault_mgr_check_for_create_seq_refused(
     const axutil_env_t *env,
     axis2_msg_ctx_t *create_seq_msg,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
         
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *app_rm_msg,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
             
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_msg_num_rollover(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_unknown_seq(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr);
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_invalid_ack(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *ack_rm_msg,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_seq_closed(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_get_fault(
@@ -85,7 +89,7 @@ sandesha2_fault_mgr_get_fault(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_fault_data_t *fault_data,
     axis2_char_t *addr_ns_uri,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 /** @} */
 #ifdef __cplusplus

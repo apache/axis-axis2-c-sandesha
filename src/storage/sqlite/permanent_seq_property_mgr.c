@@ -20,7 +20,6 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_rm_bean.h>
 #include <axutil_log.h>
@@ -198,8 +197,7 @@ static const sandesha2_seq_property_mgr_ops_t seq_property_mgr_ops =
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *ctx)
+    axis2_char_t *dbname)
 {
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
     seq_prop_mgr_impl = AXIS2_MALLOC(env->allocator, 
@@ -207,7 +205,7 @@ sandesha2_permanent_seq_property_mgr_create(
 
     seq_prop_mgr_impl->values = NULL;
     seq_prop_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_SEQ_PROPERTY);
+        dbname, SANDESHA2_BEAN_MAP_SEQ_PROPERTY);
     seq_prop_mgr_impl->bean_mgr->ops.match = sandesha2_permanent_seq_property_mgr_match;
     seq_prop_mgr_impl->seq_prop_mgr.ops = seq_property_mgr_ops;
     return &(seq_prop_mgr_impl->seq_prop_mgr);
@@ -315,6 +313,7 @@ sandesha2_permanent_seq_property_mgr_retrieve(
         "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_retrieve");
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, name, AXIS2_FALSE);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]seq_property_name:%s", name);
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     key = sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(env, 
         seq_id, name);

@@ -47,21 +47,27 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr);
                         
 static axis2_status_t
 sandesha2_terminate_mgr_complete_termination_of_recv_side(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr);
                         
 static axis2_status_t
 sandesha2_terminate_mgr_remove_recv_side_properties(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 static axis2_bool_t
 sandesha2_terminate_mgr_is_property_deletable(
@@ -73,37 +79,40 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr)
 {
-    axis2_bool_t in_order_invoke = AXIS2_FALSE;
-    sandesha2_property_bean_t *prop_bean = NULL;
+    /*axis2_bool_t in_order_invoke = AXIS2_FALSE;
+    sandesha2_property_bean_t *prop_bean = NULL;*/
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, next_msg_mgr, AXIS2_FAILURE);
    
-    if(!sandesha2_terminate_mgr_rcv_side_clean_map)
+    /*if(!sandesha2_terminate_mgr_rcv_side_clean_map)
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
         sandesha2_terminate_mgr_rcv_side_clean_map = axutil_hash_make(env);
         axutil_allocator_switch_to_local_pool(env->allocator);
-    }
+    }*/
     
-    prop_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(
+    /*prop_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(
         conf_ctx, env));
     in_order_invoke = sandesha2_property_bean_is_in_order(prop_bean, env);
-    if(!in_order_invoke)
+    if(!in_order_invoke)*/
     {
-        axutil_allocator_switch_to_global_pool(env->allocator);
+        /*axutil_allocator_switch_to_global_pool(env->allocator);
         axutil_hash_set(sandesha2_terminate_mgr_rcv_side_clean_map, seq_id,
             AXIS2_HASH_KEY_STRING, axutil_strdup(env, SANDESHA2_CLEANED_ON_TERMINATE_MSG));
-        axutil_allocator_switch_to_local_pool(env->allocator);
+        axutil_allocator_switch_to_local_pool(env->allocator);*/
         sandesha2_terminate_mgr_clean_recv_side_after_invocation(env, conf_ctx,
-            seq_id, storage_mgr);
+            seq_id, storage_mgr, seq_prop_mgr, next_msg_mgr);
     }
-    else
+    /*else
     {	axis2_char_t *clean_status = NULL;
         axutil_allocator_switch_to_global_pool(env->allocator);
         clean_status = axutil_hash_get(
@@ -124,7 +133,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
                 SANDESHA2_CLEANED_ON_TERMINATE_MSG));
             axutil_allocator_switch_to_local_pool(env->allocator);
         }
-    }
+    }*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg");
     return AXIS2_SUCCESS;
@@ -135,28 +144,31 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr)
 {
-    sandesha2_invoker_mgr_t *invoker_mgr = NULL;
+    /*sandesha2_invoker_mgr_t *invoker_mgr = NULL;
     sandesha2_invoker_bean_t *find_bean = NULL;
     axutil_array_list_t *found_list = NULL;
     int i = 0;
-    axis2_char_t *clean_status = NULL;
+    axis2_char_t *clean_status = NULL;*/
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_terminate_mgr_clean_recv_side_after_invocation");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, next_msg_mgr, AXIS2_FAILURE);
     
-    if(!sandesha2_terminate_mgr_rcv_side_clean_map)
+    /*if(!sandesha2_terminate_mgr_rcv_side_clean_map)
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
         sandesha2_terminate_mgr_rcv_side_clean_map = axutil_hash_make(env);
         axutil_allocator_switch_to_local_pool(env->allocator);
-    }
+    }*/
     
-    invoker_mgr = sandesha2_storage_mgr_get_storage_map_mgr(storage_mgr, env);
+    /*invoker_mgr = sandesha2_storage_mgr_get_storage_map_mgr(storage_mgr, env);
     find_bean = sandesha2_invoker_bean_create(env);
     
     sandesha2_invoker_bean_set_seq_id(find_bean, env, seq_id);
@@ -175,18 +187,18 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
         sandesha2_invoker_mgr_remove(invoker_mgr, env, 
             sandesha2_invoker_bean_get_msg_ctx_ref_key((sandesha2_rm_bean_t *) 
                 map_bean, env));
-    }
-    axutil_allocator_switch_to_global_pool(env->allocator);
+    }*/
+    /*axutil_allocator_switch_to_global_pool(env->allocator);
     clean_status = axutil_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
         seq_id, AXIS2_HASH_KEY_STRING);
-    axutil_allocator_switch_to_local_pool(env->allocator);
+    axutil_allocator_switch_to_local_pool(env->allocator);*/
                     
-    if(clean_status && 0 == axutil_strcmp(clean_status, 
+    /*if(clean_status && 0 == axutil_strcmp(clean_status, 
         SANDESHA2_CLEANED_ON_TERMINATE_MSG))
-    {
+    {*/
         sandesha2_terminate_mgr_complete_termination_of_recv_side(env, conf_ctx, seq_id,
-            storage_mgr);
-    }
+            storage_mgr, seq_prop_mgr, next_msg_mgr);
+    /*}
     else
     {
         axutil_allocator_switch_to_global_pool(env->allocator);
@@ -194,7 +206,7 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
             AXIS2_HASH_KEY_STRING, axutil_strdup(env, 
                 SANDESHA2_CLEANED_AFTER_INVOCATION));
         axutil_allocator_switch_to_local_pool(env->allocator);
-    }
+    }*/
 
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -207,9 +219,10 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr)
 {
-    sandesha2_next_msg_mgr_t *next_mgr = NULL;
     sandesha2_next_msg_bean_t *find_bean = NULL;
     axutil_array_list_t *found_list = NULL;
     axis2_char_t *highest_in_msg_key = NULL;
@@ -220,12 +233,13 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, next_msg_mgr, AXIS2_FAILURE);
     
-    next_mgr = sandesha2_storage_mgr_get_next_msg_mgr(storage_mgr, env);
     find_bean = sandesha2_next_msg_bean_create(env);
     sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
     
-    found_list = sandesha2_next_msg_mgr_find(next_mgr, env, find_bean);
+    found_list = sandesha2_next_msg_mgr_find(next_msg_mgr, env, find_bean);
     if(found_list)
         size = axutil_array_list_size(found_list, env);
     for(i = 0; i < size; i++)
@@ -239,23 +253,24 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
             key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
             if(key)
             {
-                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
+                    conf_ctx);
             }
             seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
                 bean, env);
             if(seq_id)
-                sandesha2_next_msg_mgr_remove(next_mgr, env, seq_id);
+                sandesha2_next_msg_mgr_remove(next_msg_mgr, env, seq_id);
         }
     }
     highest_in_msg_key = sandesha2_utils_get_seq_property(env, seq_id,
-        SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, storage_mgr);
+        SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, seq_prop_mgr);
     if(highest_in_msg_key)
     {
         sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-            highest_in_msg_key);
+            highest_in_msg_key, conf_ctx);
     }
     sandesha2_terminate_mgr_remove_recv_side_properties(env, conf_ctx, seq_id,
-        storage_mgr);
+        storage_mgr, seq_prop_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_complete_termination_of_recv_side");
     return AXIS2_SUCCESS;
@@ -266,9 +281,9 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *all_seq_bean = NULL;
     axutil_array_list_t *found_list = NULL;
     sandesha2_seq_property_bean_t *find_seq_prop_bean = NULL;
@@ -278,8 +293,8 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     all_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         SANDESHA2_SEQ_PROP_ALL_SEQS, SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
     if(all_seq_bean)
@@ -341,7 +356,7 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                         "Removing the message context for the highest in "\
                         "message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                        highest_in_msg_key_str);
+                        highest_in_msg_key_str, conf_ctx);
                 }
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
                     "the sequence property named %s in the sequence %s", name, 
@@ -361,23 +376,27 @@ sandesha2_terminate_mgr_terminate_sending_side(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_terminate_mgr_terminate_sending_side");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, 
         seq_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     
-    sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, 
-        seq_id, svr_side, storage_mgr);
+    sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, seq_id, 
+        svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_terminate_sending_side");
     return AXIS2_SUCCESS;
@@ -388,14 +407,14 @@ sandesha2_terminate_mgr_do_updates_if_needed(
     const axutil_env_t *env,
     axis2_char_t *seq_id,
     sandesha2_seq_property_bean_t *prop_bean,
-    sandesha2_seq_property_mgr_t *prop_mgr)
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_bool_t add_entry_with_seq_id = AXIS2_FALSE;
     axis2_char_t *name = NULL;
     
     AXIS2_PARAM_CHECK(env->error, prop_bean, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     
     name = sandesha2_seq_property_bean_get_name(prop_bean, env);
     if(NULL == name)
@@ -418,8 +437,8 @@ sandesha2_terminate_mgr_do_updates_if_needed(
         sandesha2_seq_property_bean_set_name(new_bean, env, name);
         sandesha2_seq_property_bean_set_value(new_bean, env, 
                         sandesha2_seq_property_bean_get_value(prop_bean, env));
-        sandesha2_seq_property_mgr_insert(prop_mgr, env, new_bean);
-        sandesha2_seq_property_mgr_remove(prop_mgr, env, 
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, new_bean);
+        sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, 
                     sandesha2_seq_property_bean_get_seq_id(prop_bean, env),
                     name);
     }
@@ -455,9 +474,11 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *seq_term_bean = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -465,14 +486,16 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
         SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT, AXIS2_VALUE_TRUE);
     
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, seq_id,
-        svr_side, storage_mgr);
+        svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_time_out_sending_side_seq");
     return AXIS2_SUCCESS;
@@ -484,11 +507,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
-    sandesha2_sender_mgr_t *retrans_mgr = NULL;
-    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     axis2_char_t *out_seq_id = NULL;
     axis2_char_t *internal_seq_id = NULL;
     axutil_array_list_t *found_list = NULL;
@@ -500,13 +523,12 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
-    
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
-    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);    
-    create_seq_mgr = sandesha2_storage_mgr_get_create_seq_mgr(storage_mgr, env);
-    
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
+     
     out_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, storage_mgr);
+        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, seq_prop_mgr);
     if(!svr_side)
     {
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
@@ -516,8 +538,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
         acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
             seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
         addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id, 
-            SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, 
-            storage_mgr);
+            SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
         if(acks_to_bean)
         {
             axis2_char_t *acks_to = NULL;
@@ -528,10 +549,10 @@ sandesha2_terminate_mgr_clean_sending_side_data(
         
     }
     internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
     if(!internal_seq_id)
         internal_seq_id = seq_id;
-    found_list = sandesha2_sender_mgr_find_by_internal_seq_id(retrans_mgr, env,
+    found_list = sandesha2_sender_mgr_find_by_internal_seq_id(sender_mgr, env,
         internal_seq_id);
     if(found_list)
     {
@@ -548,10 +569,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
                 " sender bean with msg_id %s and internal_seq_id %s", msg_id, 
                 internal_seq_id);
-            sandesha2_sender_mgr_remove(retrans_mgr, env, msg_id);
+            sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
             msg_store_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                         retrans_bean, env);
-            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, msg_store_key);
+            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                msg_store_key, conf_ctx);
         }
     }
     
@@ -573,7 +595,8 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             key = sandesha2_create_seq_bean_get_ref_msg_store_key(
                 create_seq_bean, env);
             if(key) 
-               sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+               sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
+                   conf_ctx);
             msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
                 (sandesha2_rm_bean_t *) create_seq_bean, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
@@ -614,7 +637,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                         "Removing the message context for the highest in "\
                         "message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                        highest_in_msg_key_str);
+                        highest_in_msg_key_str, conf_ctx);
                 }
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
                     "the sequence property named %s in the sequence %s", name, 
@@ -634,12 +657,14 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *out_seq_id,
     axis2_char_t *int_seq_id,
-    sandesha2_storage_mgr_t *storage_mgr)
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_msg_ctx_t *terminate_msg_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
-    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *terminated = NULL;
     sandesha2_msg_ctx_t *terminate_rm_msg = NULL;
     axutil_property_t *property = NULL;
@@ -649,7 +674,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_seq_property_bean_t *transport_to_bean = NULL;
     axis2_char_t *key = NULL;
     sandesha2_sender_bean_t *terminate_bean = NULL;
-    sandesha2_sender_mgr_t *retrans_mgr = NULL;
     sandesha2_seq_property_bean_t *terminate_added = NULL;
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_msg_ctx_t *msg_ctx1 = NULL;
@@ -668,11 +692,13 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     AXIS2_PARAM_CHECK(env->error, out_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
     terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         out_seq_id, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
     if(terminated && sandesha2_seq_property_bean_get_value(terminated, env) 
@@ -687,7 +713,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         return AXIS2_SUCCESS;
     }
     terminate_rm_msg = sandesha2_msg_creator_create_terminate_seq_msg(env,
-        rm_msg_ctx, out_seq_id, int_seq_id, storage_mgr);
+        rm_msg_ctx, out_seq_id, int_seq_id, seq_prop_mgr);
     sandesha2_msg_ctx_set_flow(terminate_rm_msg, env, AXIS2_OUT_FLOW);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 
@@ -707,7 +733,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     if(to_epr)
         to_addr = axis2_endpoint_ref_get_address(to_epr, env);
     sandesha2_msg_ctx_set_to(terminate_rm_msg, env, to_epr);
-    rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, storage_mgr);
+    rm_ver = sandesha2_utils_get_rm_version(env, int_seq_id, seq_prop_mgr);
     if(!rm_ver)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the "
@@ -754,10 +780,10 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                 sandesha2_terminate_seq_get_identifier(terminate_seq, 
                 env), env);
             internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
             sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
                 internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx1, env), 
-                    storage_mgr);
+                    storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         }
         return AXIS2_SUCCESS;
     }
@@ -790,9 +816,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         SANDESHA2_MSG_TYPE_TERMINATE_SEQ);
                             
     sandesha2_sender_bean_set_resend(terminate_bean, env, AXIS2_FALSE);
-    retrans_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
-   
-    sandesha2_sender_mgr_insert(retrans_mgr, env, terminate_bean);
+    sandesha2_sender_mgr_insert(sender_mgr, env, terminate_bean);
     
     terminate_added = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_name(terminate_added, env, 

@@ -18,6 +18,11 @@
 #include <sandesha2_terminate_seq_res.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_permanent_seq_property_mgr.h>
+#include <sandesha2_permanent_create_seq_mgr.h>
+#include <sandesha2_permanent_sender_mgr.h>
 #include <sandesha2_constants.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_utils.h>
@@ -125,6 +130,10 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     axis2_char_t *seq_id = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
+    sandesha2_sender_mgr_t *sender_mgr = NULL;
+    axis2_char_t *dbname = NULL;
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
@@ -153,11 +162,23 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     storage_mgr = (sandesha2_storage_mgr_t *) sandesha2_utils_get_storage_mgr(
         env, conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
+    sender_mgr =sandesha2_permanent_sender_mgr_create(env, dbname);
     /* We need to pass here internal seq id isn't it?:damitha
     int internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);*/
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
-        AXIS2_FALSE, storage_mgr);
+        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(create_seq_mgr)
+        sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    if(sender_mgr)
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    if(storage_mgr)
+        sandesha2_storage_mgr_free(storage_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
         "terminate_seq_res_msg_processor_process_in_msg");
     return AXIS2_SUCCESS;
@@ -170,7 +191,6 @@ sandesha2_terminate_seq_res_msg_processor_process_out_msg(
     const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
-    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
     return AXIS2_SUCCESS;

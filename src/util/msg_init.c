@@ -17,6 +17,7 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_permanent_seq_property_mgr.h>
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_ack_mgr.h>
@@ -289,6 +290,7 @@ static axis2_bool_t validate_msg(
     sandesha2_close_seq_res_t *close_seq_res = NULL;
     sandesha2_make_connection_t *make_conn = NULL;
     int temp_flow = -1;
+    axis2_char_t *dbname = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:validate_msg");
@@ -296,7 +298,8 @@ static axis2_bool_t validate_msg(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(storage_mgr, env);
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     create_seq_res = (sandesha2_create_seq_res_t *) 
@@ -415,6 +418,10 @@ static axis2_bool_t validate_msg(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                 " Invalid MakeConnection message. Either Address or Identifier" \
                 " must be present");
+            if(seq_prop_mgr)
+                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+            if(storage_mgr)
+                sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FALSE;
         } 
     }
@@ -445,7 +452,7 @@ static axis2_bool_t validate_msg(
         axis2_char_t *spec_version = NULL;
         axis2_char_t *seq_rm_ns = NULL;
         
-        spec_version = sandesha2_utils_get_rm_version(env, prop_key, storage_mgr);
+        spec_version = sandesha2_utils_get_rm_version(env, prop_key, seq_prop_mgr);
         if(spec_version)
         {
             seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
@@ -458,10 +465,18 @@ static axis2_bool_t validate_msg(
                 AXIS2_ERROR_SET(env->error, 
                     SANDESHA2_ERROR_RM_NS_VALUE_IS_DIFFERENT_FROM_REGISTERED_NS_FOR_SEQ, 
                     AXIS2_FAILURE);
+                if(seq_prop_mgr)
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                if(storage_mgr)
+                    sandesha2_storage_mgr_free(storage_mgr, env);
                 return AXIS2_FALSE;
             }
         }
     }
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(storage_mgr)
+        sandesha2_storage_mgr_free(storage_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:validate_msg");
     return AXIS2_TRUE; 

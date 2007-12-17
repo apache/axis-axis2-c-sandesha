@@ -33,19 +33,15 @@ extern "C"
 {
 #endif
 
-struct sandesha2_storage_mgr;
-struct axis2_conf_ctx;
-
 /** @defgroup sandesha2_permanent_next_msg_mgr Permanat Next Message Manager
   * @ingroup sandesha2
   * @{
   */
 
-AXIS2_EXTERN struct sandesha2_next_msg_mgr * AXIS2_CALL
+struct sandesha2_next_msg_mgr * AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_create(
     const axutil_env_t *env,
-    struct sandesha2_storage_mgr *storage_mgr,
-    struct axis2_conf_ctx *ctx);
+    axis2_char_t *dbname);
 
 /** @} */
 #ifdef __cplusplus

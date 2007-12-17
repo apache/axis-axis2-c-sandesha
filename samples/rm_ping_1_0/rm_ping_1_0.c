@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define MAX_COUNT 15
+#define MAX_COUNT 32
 
 axiom_node_t *
 build_om_programatically(

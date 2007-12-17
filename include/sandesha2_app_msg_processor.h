@@ -25,13 +25,13 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <sandesha2_msg_processor.h>
-#include <sandesha2_storage_mgr.h>
-
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+struct sandesha2_seq_property_mgr;
 
 /** @defgroup sandesha2_app_msg_processor
  * @ingroup sandesha2_msgprocessors
@@ -47,7 +47,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *msg_ctx,
     axis2_char_t *msg_str,
-    sandesha2_storage_mgr_t *mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
 /** @} */
 #ifdef __cplusplus
 }

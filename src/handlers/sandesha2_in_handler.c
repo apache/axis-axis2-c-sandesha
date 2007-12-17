@@ -21,6 +21,7 @@
 #include <axutil_property.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_permanent_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_msg_processor.h>
 #include <sandesha2_ack_msg_processor.h>
@@ -76,7 +77,6 @@ sandesha2_in_handler_invoke(
     axis2_char_t *str_done = NULL;
     axis2_char_t *reinjected_msg = NULL;
     axis2_svc_t *svc = NULL;
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     sandesha2_seq_ack_t *seq_ack = NULL;
@@ -118,13 +118,16 @@ sandesha2_in_handler_invoke(
              sandesha2 inflow handlers */
     }
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    {
         return AXIS2_FAILURE;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
@@ -141,7 +144,7 @@ sandesha2_in_handler_invoke(
     }
     /* 
      * TODO Validate the message
-     * sandesha2_msg_validator_validate(env, rm_msg_ctx, storage_mgr);
+     * sandesha2_msg_validator_validate(env, rm_msg_ctx);
      */
     seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
         env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
@@ -166,8 +169,7 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit: sandesha2_in_handler_invoke");
-   
+        "[sandesha2]Exit:sandesha2_in_handler_invoke");
     return AXIS2_SUCCESS;
 }
 

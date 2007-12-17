@@ -22,6 +22,9 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_invoker_mgr.h>
+#include <sandesha2_permanent_seq_property_mgr.h>
+#include <sandesha2_permanent_next_msg_mgr.h>
+#include <sandesha2_permanent_invoker_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_init.h>
@@ -244,36 +247,44 @@ sandesha2_in_order_invoker_worker_func(
     sandesha2_in_order_invoker_t *invoker = NULL;
     sandesha2_in_order_invoker_args_t *args;
     axutil_env_t *env = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
+    sandesha2_invoker_mgr_t *invoker_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    axis2_char_t *dbname = NULL;
     
     args = (sandesha2_in_order_invoker_args_t*)data;
     env = axutil_init_thread_env(args->env);
     invoker = args->impl;
     
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, invoker->conf_ctx, 
+        axis2_conf_ctx_get_conf(invoker->conf_ctx, env));
+    dbname = sandesha2_util_get_dbname(env, invoker->conf_ctx);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
+    invoker_mgr = sandesha2_permanent_invoker_mgr_create(env, dbname);
     while(invoker->run_invoker)
     {
-        sandesha2_storage_mgr_t *storage_mgr = NULL;
-        sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
-        sandesha2_invoker_mgr_t *storage_map_mgr = NULL;
-        sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
         sandesha2_seq_property_bean_t *all_seq_bean = NULL;
         axutil_array_list_t *all_seq_list = NULL;
         int i = 0;
 
         AXIS2_SLEEP(SANDESHA2_INVOKER_SLEEP_TIME);
         if(!invoker->conf_ctx)
+        {
+            if(seq_prop_mgr)
+                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+            if(next_msg_mgr)
+                sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+            if(invoker_mgr)
+                sandesha2_invoker_mgr_free(invoker_mgr, env);
+            if(storage_mgr)
+                sandesha2_storage_mgr_free(storage_mgr, env);
             return NULL;
-        storage_mgr = sandesha2_utils_get_storage_mgr(env, 
-                        invoker->conf_ctx, 
-                        axis2_conf_ctx_get_conf(invoker->conf_ctx, env));
-        next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
-                        storage_mgr, env);
-        storage_map_mgr = sandesha2_storage_mgr_get_storage_map_mgr
-                        (storage_mgr, env);
-        seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-                        storage_mgr, env);
+        }
         all_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-                        env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
-                        SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
+            env, SANDESHA2_SEQ_PROP_ALL_SEQS, 
+            SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST);
         if(!all_seq_bean)
             continue;
         all_seq_list = sandesha2_utils_get_array_list_from_string(env,
@@ -319,11 +330,19 @@ sandesha2_in_order_invoker_worker_func(
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid message number"
                         " as the Next Message Number.");
+                if(seq_prop_mgr)
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                if(next_msg_mgr)
+                    sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+                if(invoker_mgr)
+                    sandesha2_invoker_mgr_free(invoker_mgr, env);
+                if(storage_mgr)
+                    sandesha2_storage_mgr_free(storage_mgr, env);
                 return data;
             }
             find_bean = sandesha2_invoker_bean_create_with_data(env, NULL,
                         next_msg_no, seq_id, AXIS2_FALSE);
-            st_map_list = sandesha2_invoker_mgr_find(storage_map_mgr,
+            st_map_list = sandesha2_invoker_mgr_find(invoker_mgr,
                         env, find_bean);
             size = axutil_array_list_size(st_map_list, env);
             for(j = 0; j < size; j++)
@@ -369,15 +388,26 @@ sandesha2_in_order_invoker_worker_func(
                     axis2_msg_ctx_set_paused(msg_to_invoke, env, AXIS2_FALSE);
                     status = axis2_engine_resume_receive(engine, env, msg_to_invoke);
                     if(!status)
+                    {
+                        if(seq_prop_mgr)
+                            sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                        if(next_msg_mgr)
+                            sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+                        if(invoker_mgr)
+                            sandesha2_invoker_mgr_free(invoker_mgr, env);
+                        if(storage_mgr)
+                            sandesha2_storage_mgr_free(storage_mgr, env);
                         return NULL;
+                    }
                 }
                 invoked = AXIS2_TRUE;
-                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key);
+                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
+                    invoker->conf_ctx);
                 msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
                 if(msg_ctx)
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr,
-                        env, key);
+                        env, key, invoker->conf_ctx);
                 if(SANDESHA2_MSG_TYPE_APPLICATION == 
                         sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env))
                 {
@@ -387,8 +417,8 @@ sandesha2_in_order_invoker_worker_func(
                     if(sandesha2_seq_get_last_msg(seq, env))
                     {
                         sandesha2_terminate_mgr_clean_recv_side_after_invocation(
-                            env, invoker->conf_ctx, seq_id, 
-                            storage_mgr);
+                            env, invoker->conf_ctx, seq_id, storage_mgr, 
+                            seq_prop_mgr, next_msg_mgr);
                         /* we are done with current seq */
                         continue_seq = AXIS2_FALSE;
                         break;
@@ -409,6 +439,14 @@ sandesha2_in_order_invoker_worker_func(
             }
         }
     }
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(next_msg_mgr)
+        sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+    if(invoker_mgr)
+        sandesha2_invoker_mgr_free(invoker_mgr, env);
+    if(storage_mgr)
+        sandesha2_storage_mgr_free(storage_mgr, env);
     return NULL;
 }
 

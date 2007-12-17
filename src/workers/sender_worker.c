@@ -18,6 +18,7 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_storage_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_sender_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
@@ -165,16 +166,18 @@ sandesha2_sender_worker_free(
 
 axis2_status_t
 sandesha2_sender_worker_send(
-    axutil_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *msg_id,
-    axis2_bool_t persistent_msg_ctx)
+    axis2_bool_t persistent_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
     sandesha2_sender_worker_t *sender_worker = NULL;
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_sender_bean_t *sender_worker_bean = NULL;
     sandesha2_sender_bean_t *bean1 = NULL;
-    sandesha2_sender_mgr_t *sender_mgr = NULL;
     axis2_char_t *key = NULL;
     axutil_property_t *property = NULL;
     axis2_bool_t continue_sending = AXIS2_TRUE;
@@ -192,9 +195,6 @@ sandesha2_sender_worker_send(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_sender_worker_send");        
     
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, 
-        conf_ctx, axis2_conf_ctx_get_conf(conf_ctx, env));
-    sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
@@ -206,7 +206,6 @@ sandesha2_sender_worker_send(
     key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_worker_bean, env);
     if(!msg_ctx)
     {
-        axutil_allocator_switch_to_global_pool(env->allocator);
         if(persistent_msg_ctx)
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -217,7 +216,6 @@ sandesha2_sender_worker_send(
         else
             msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
                 key, conf_ctx, AXIS2_TRUE);
-        axutil_allocator_switch_to_local_pool(env->allocator);
     }
     if(!msg_ctx)
     {
@@ -227,7 +225,8 @@ sandesha2_sender_worker_send(
         return AXIS2_SUCCESS;
     }
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
-        sender_worker_bean, conf_ctx, storage_mgr);
+        sender_worker_bean, conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, 
+        sender_mgr);
     sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
     if(!continue_sending)
     {
@@ -304,7 +303,7 @@ sandesha2_sender_worker_send(
         rm_msg_ctx))
     {
         sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, 
-            storage_mgr);
+            storage_mgr, seq_prop_mgr, sender_mgr);
     }
     
     if(!transport_out) 
@@ -350,7 +349,7 @@ sandesha2_sender_worker_send(
             msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                 bean1, env);
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                msg_stored_key);
+                msg_stored_key, conf_ctx);
         }
     }
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", msg_type);
@@ -376,10 +375,10 @@ sandesha2_sender_worker_send(
                     env), env);
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-                    SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);
+            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
-                storage_mgr);
+                storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         /* We have no more messages for this sequence. So continue send 
          * status is false*/
         status = AXIS2_FAILURE;
@@ -430,19 +429,13 @@ sandesha2_sender_worker_check_for_sync_res(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_sender_worker_check_for_sync_res");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
-    if(!property)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] transport_in property not found");
-        return AXIS2_SUCCESS;
-    }*/
         
     res_msg_ctx = axis2_msg_ctx_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx,
         env), axis2_msg_ctx_get_transport_in_desc(
         msg_ctx, env), axis2_msg_ctx_get_transport_out_desc(msg_ctx,
         env));
-    /* Setting the message as serverSide will let it go through the 
+    /*
+     * Setting the message as serverSide will let it go through the 
      * Message Receiver (may be callback MR).
      */
     axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
@@ -509,7 +502,7 @@ sandesha2_sender_worker_check_for_sync_res(
         else
             axis2_engine_receive(engine, env, res_msg_ctx);        
     }
-    /* To avoid a second passing through incoming handlers at mep_client */
+    /* To avoid a second passing through incoming handlers at mep_client*/
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
         property);

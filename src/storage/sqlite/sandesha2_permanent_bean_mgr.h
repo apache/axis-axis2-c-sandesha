@@ -40,8 +40,6 @@ extern "C"
 typedef struct sandesha2_bean_mgr_args sandesha2_bean_mgr_args_t;
 typedef struct sandesha2_permanent_bean_mgr sandesha2_permanent_bean_mgr_t;
 typedef struct sandesha2_permanent_bean_mgr_ops sandesha2_permanent_bean_mgr_ops_t;
-struct sandesha2_storage_mgr;
-struct axis2_conf_ctx;
 struct sandesha2_response;
 
 AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr_ops
@@ -68,8 +66,7 @@ struct sandesha2_bean_mgr_args
 AXIS2_EXTERN sandesha2_permanent_bean_mgr_t * AXIS2_CALL
 sandesha2_permanent_bean_mgr_create(
     const axutil_env_t *env,
-    struct sandesha2_storage_mgr *storage_mgr,
-    struct axis2_conf_ctx *conf_ctx,
+    axis2_char_t *dbname,
     axis2_char_t *key);
 
 void AXIS2_CALL
@@ -196,8 +193,8 @@ sandesha2_permanent_bean_mgr_busy_handler(
 
 sqlite3 *
 sandesha2_permanent_bean_mgr_get_dbconn(
-    sandesha2_permanent_bean_mgr_t *bean_mgr,
-    const axutil_env_t *env);
+    const axutil_env_t *env,
+    axis2_char_t *dbname);
 
 /** @} */
 #ifdef __cplusplus

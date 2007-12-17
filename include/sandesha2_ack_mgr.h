@@ -32,16 +32,18 @@ extern "C"
 #endif
 
 struct sandesha2_seq_property_mgr;
+struct sandesha2_sender_mgr;
 /** @defgroup sandesha2_ack_mgr
  * @ingroup sandesha2_util
  * @{
  */
 
 AXIS2_EXTERN sandesha2_msg_ctx_t *AXIS2_CALL
-sandesha2_ack_mgr_generate_ack_msg(const axutil_env_t *env,
+sandesha2_ack_mgr_generate_ack_msg(
+    const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
 /**
  * This is used to get the acked messages of a sequence. If this is an outgoing 
@@ -73,7 +75,9 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_ack_mgr_piggyback_acks_if_present(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_sender_mgr *sender_mgr);
 
 /** @} */
 #ifdef __cplusplus

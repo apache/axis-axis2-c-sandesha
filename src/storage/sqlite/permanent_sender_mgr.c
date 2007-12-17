@@ -21,7 +21,6 @@
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_sender_bean.h>
-#include <sandesha2_storage_mgr.h>
 #include <axutil_log.h>
 #include <axutil_hash.h>
 #include <axutil_thread.h>
@@ -232,8 +231,7 @@ static const sandesha2_sender_mgr_ops_t sender_mgr_ops =
 AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
 sandesha2_permanent_sender_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *ctx)
+    axis2_char_t *dbname)
 {
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     
@@ -241,7 +239,7 @@ sandesha2_permanent_sender_mgr_create(
         sizeof(sandesha2_permanent_sender_mgr_t));
 
     sender_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_RETRANSMITTER);
+        dbname, SANDESHA2_BEAN_MAP_RETRANSMITTER);
     sender_mgr_impl->bean_mgr->ops.match = sandesha2_permanent_sender_mgr_match;
     sender_mgr_impl->sender_mgr.ops = sender_mgr_ops;
     return &(sender_mgr_impl->sender_mgr);

@@ -28,12 +28,16 @@
 #include <axutil_string.h>
 #include <axutil_utils.h>
 #include <axis2_conf_ctx.h>
+#include <sandesha2_storage_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+struct sandesha2_seq_property_mgr;
+struct sandesha2_create_seq_mgr;
+struct sandesha2_sender_mgr;
 typedef struct sandesha2_sender_worker_t sandesha2_sender_worker_t;
 
 AXIS2_EXTERN sandesha2_sender_worker_t* AXIS2_CALL
@@ -68,10 +72,14 @@ sandesha2_sender_worker_free(
 
 axis2_status_t
 sandesha2_sender_worker_send(
-    axutil_env_t *env,
+    const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *msg_id,
-    axis2_bool_t persistent_msg_ctx);
+    axis2_bool_t persistent_msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_create_seq_mgr *create_seq_mgr,
+    struct sandesha2_sender_mgr *sender_mgr);
 
 void sandesha2_sender_worker_set_transport_out(
     sandesha2_sender_worker_t *sender_worker,

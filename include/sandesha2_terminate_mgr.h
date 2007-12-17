@@ -42,6 +42,9 @@ extern "C"
 #endif
 
 struct sandesha2_seq_property_mgr;
+struct sandesha2_create_seq_mgr;
+struct sandesha2_sender_mgr;
+struct sandesha2_next_msg_mgr;
 struct sandesha2_seq_property_bean_t;
 
 /** @defgroup sandesha2_terminate_mgr
@@ -56,14 +59,18 @@ sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_next_msg_mgr *next_msg_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_clean_recv_side_after_invocation(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_next_msg_mgr *next_msg_mgr);
                         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_terminate_sending_side(
@@ -71,14 +78,17 @@ sandesha2_terminate_mgr_terminate_sending_side(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_create_seq_mgr *create_seq_mgr,
+    struct sandesha2_sender_mgr *sender_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_do_updates_if_needed(
     const axutil_env_t *env,
     axis2_char_t *seq_id,
     sandesha2_seq_property_bean_t *prop_bean,
-    struct sandesha2_seq_property_mgr *prop_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_time_out_sending_side_seq(
@@ -86,7 +96,10 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *seq_id,
     axis2_bool_t svr_side,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_create_seq_mgr *create_seq_mgr,
+    struct sandesha2_sender_mgr *sender_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_terminate_mgr_add_terminate_seq_msg(
@@ -94,7 +107,10 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *out_seq_id,
     axis2_char_t *int_seq_id,
-    sandesha2_storage_mgr_t *storage_man);
+    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_create_seq_mgr *create_seq_mgr,
+    struct sandesha2_sender_mgr *sender_mgr);
 
 
 /** @} */

@@ -22,8 +22,8 @@
 #include <axis2_const.h>
 #include <axis2_conf_ctx.h>
 #include <axiom_soap_header.h>
-#include <sandesha2_storage_mgr.h>
-#include <sandesha2_permanent_storage_mgr.h>
+/*#include <sandesha2_storage_mgr.h>
+#include <sandesha2_permanent_storage_mgr.h>*/
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_msg_processor.h>
@@ -46,7 +46,7 @@ sandesha2_global_in_handler_invoke(
     const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx);
     
-static axis2_bool_t AXIS2_CALL
+/*static axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
     struct axis2_handler *handler, 
     const axutil_env_t *env,
@@ -59,7 +59,7 @@ sandesha2_global_in_handler_process_dropped_msg(
     struct axis2_handler *handler, 
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_storage_mgr_t *storage_mgr);                                             
+    sandesha2_storage_mgr_t *storage_mgr);*/
 /******************************************************************************/                         
 
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
@@ -102,10 +102,9 @@ sandesha2_global_in_handler_invoke(
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
-    axis2_bool_t dropped = AXIS2_FALSE;
+    /*sandesha2_msg_ctx_t *rm_msg_ctx = NULL;*/
+    /*axis2_bool_t dropped = AXIS2_FALSE;*/
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
     axutil_property_t *property = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -211,15 +210,8 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers */
     }
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, conf_ctx, conf);
-    if(!storage_mgr)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Cannot get the "\
-            "storage manager");
-        return AXIS2_FAILURE;
-    }
-    if(!sandesha2_permanent_storage_mgr_create_db(storage_mgr, env))
-        return AXIS2_FAILURE;
+    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+        return AXIS2_FAILURE;*/
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)
@@ -253,18 +245,17 @@ sandesha2_global_in_handler_invoke(
             }
         }
     }
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    /*rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     if(!isolated_last_msg)
         dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
-            rm_msg_ctx, storage_mgr);
+            rm_msg_ctx);
     if(dropped)
     {
-        sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx,
-                        storage_mgr);
+        sandesha2_global_in_handler_process_dropped_msg(handler, env, rm_msg_ctx);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]msg_ctx dropped. So return here");
         return AXIS2_SUCCESS;
-    }
+    }*/
     /*Process if global processing possible. - Currently none*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_global_in_handler");
@@ -272,7 +263,7 @@ sandesha2_global_in_handler_invoke(
     return AXIS2_SUCCESS;
 }
 
-static axis2_bool_t AXIS2_CALL
+/*static axis2_bool_t AXIS2_CALL
 sandesha2_global_in_handler_drop_if_duplicate(
     struct axis2_handler *handler, 
     const axutil_env_t *env,
@@ -469,5 +460,5 @@ sandesha2_global_in_handler_process_dropped_msg(
         }
     }
     return AXIS2_SUCCESS;
-}
+}*/
 

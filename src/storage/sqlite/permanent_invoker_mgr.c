@@ -17,7 +17,6 @@
 #include "sandesha2_permanent_invoker_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_invoker_mgr.h>
-#include <sandesha2_storage_mgr.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <axutil_log.h>
@@ -25,6 +24,7 @@
 #include <axutil_thread.h>
 #include <axutil_property.h>
 #include <axutil_types.h>
+#include <stdio.h>
 
 /** 
  * @brief Sandesha2 Permanent Invoker Manager Struct Impl
@@ -176,14 +176,13 @@ static const sandesha2_invoker_mgr_ops_t invoker_mgr_ops =
 AXIS2_EXTERN sandesha2_invoker_mgr_t * AXIS2_CALL
 sandesha2_permanent_invoker_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *ctx)
+    axis2_char_t *dbname)
 {
     sandesha2_permanent_invoker_mgr_t *invoker_mgr_impl = NULL;
     invoker_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_invoker_mgr_t));
     invoker_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_STORAGE_MAP);
+        dbname, SANDESHA2_BEAN_MAP_STORAGE_MAP);
     invoker_mgr_impl->bean_mgr->ops.match = 
         sandesha2_permanent_create_invoker_mgr_match;
     invoker_mgr_impl->invoker_mgr.ops = invoker_mgr_ops;

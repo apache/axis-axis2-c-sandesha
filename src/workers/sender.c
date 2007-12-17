@@ -20,7 +20,11 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_sender_mgr.h>
+#include <sandesha2_permanent_seq_property_mgr.h>
+#include <sandesha2_permanent_create_seq_mgr.h>
+#include <sandesha2_permanent_sender_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_sender_worker.h>
@@ -162,7 +166,7 @@ sandesha2_sender_run (
             "failed for sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
-    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);     
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_run");
     return AXIS2_SUCCESS;
@@ -181,12 +185,15 @@ sandesha2_sender_worker_func(
     axutil_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
+    sandesha2_sender_mgr_t *sender_mgr = NULL;
     axis2_conf_t *conf = NULL;
     axis2_module_desc_t *module_desc = NULL;
     int sleep_time = 0;
     axutil_qname_t *qname = NULL;
     axutil_param_t *sleep_time_param = NULL;
     axis2_char_t *seq_id = NULL;
+    axis2_char_t *dbname = NULL;
     
     args = (sandesha2_sender_args_t*)data;
     env = axutil_init_thread_env(args->env);
@@ -197,6 +204,11 @@ sandesha2_sender_worker_func(
     conf = axis2_conf_ctx_get_conf(sender->conf_ctx, env);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, sender->conf_ctx, 
         conf);
+    dbname = sandesha2_util_get_dbname(env, sender->conf_ctx);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
+    sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
+
     qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
     module_desc = axis2_conf_get_module(conf, env, qname);
     sleep_time_param = axis2_module_desc_get_param(module_desc, env, 
@@ -210,13 +222,9 @@ sandesha2_sender_worker_func(
     seq_id = sender->seq_id;
     while(sender->run_sender)
     {
-        sandesha2_sender_mgr_t *sender_mgr = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
         axis2_char_t *msg_id = NULL;
 
-        seq_prop_mgr = sandesha2_storage_mgr_get_seq_property_mgr(
-            storage_mgr, env);
-        sender_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, env);
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(sender_mgr, env, 
             seq_id);
         if(!sender_bean)
@@ -230,7 +238,8 @@ sandesha2_sender_worker_func(
         {
             axis2_bool_t status = AXIS2_TRUE;
             status = sandesha2_sender_worker_send(env, sender->conf_ctx, msg_id, 
-                sender->persistent_msg_ctx);
+                sender->persistent_msg_ctx, storage_mgr, seq_prop_mgr, 
+                create_seq_mgr, sender_mgr);
             if(!status)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -239,11 +248,19 @@ sandesha2_sender_worker_func(
             }
         }
     }
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_sender_worker_func");
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(create_seq_mgr)
+        sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    if(sender_mgr)
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    if(storage_mgr)
+        sandesha2_storage_mgr_free(storage_mgr, env);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_sender_worker_func");
     return NULL;
 }
 

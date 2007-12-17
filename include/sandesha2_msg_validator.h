@@ -27,7 +27,6 @@
 #include <axutil_error.h>
 #include <axutil_string.h>
 #include <axutil_utils.h>
-#include <sandesha2_storage_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 
@@ -35,6 +34,8 @@
 extern "C"
 {
 #endif
+
+struct sandesha2_seq_property_mgr;
 
 /** @defgroup sandesha2_msg_validator 
   * @ingroup sandesha2
@@ -45,7 +46,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_msg_validator_validate_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx, 
-    sandesha2_storage_mgr_t *storage_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
 
 /** @} */

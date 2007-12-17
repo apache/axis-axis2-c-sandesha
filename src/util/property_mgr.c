@@ -129,7 +129,6 @@ sandesha2_property_mgr_load_properties_from_module_desc(
     axis2_char_t *in_order_invoker_str = NULL;
     axis2_char_t *msg_types_str = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, module_desc, NULL);
     
     property_bean = sandesha2_property_bean_create(env);
@@ -343,8 +342,6 @@ sandesha2_property_mgr_load_in_mem_storage_mgr(
     axis2_char_t *value, 
     sandesha2_property_bean_t *property_bean)
 {
- 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
     
@@ -359,7 +356,6 @@ sandesha2_property_mgr_load_perm_storage_mgr(
     axis2_char_t *value, 
     sandesha2_property_bean_t *property_bean)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
     

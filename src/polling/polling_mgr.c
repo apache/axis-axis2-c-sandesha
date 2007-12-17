@@ -20,13 +20,16 @@
 #include <sandesha2_terminate_mgr.h>
 #include <sandesha2_seq_property_bean.h>
 #include <sandesha2_seq_property_mgr.h>
+#include <sandesha2_sender_mgr.h>
+#include <sandesha2_next_msg_mgr.h>
+#include <sandesha2_permanent_seq_property_mgr.h>
+#include <sandesha2_permanent_sender_mgr.h>
+#include <sandesha2_permanent_next_msg_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_msg_creator.h>
-#include <sandesha2_next_msg_mgr.h>
 #include <sandesha2_sender_bean.h>
-#include <sandesha2_sender_mgr.h>
 #include <axis2_addr.h>
 #include <axis2_engine.h>
 #include <axutil_uuid_gen.h>
@@ -216,26 +219,28 @@ sandesha2_polling_mgr_worker_func(
     axutil_thread_t *thd, 
     void *data)
 {
-    sandesha2_polling_mgr_t *polling_mgr = NULL;
-    sandesha2_polling_mgr_args_t *args;
-    sandesha2_storage_mgr_t *storage_mgr;
-    axutil_env_t *env = NULL;
-    
-    args = (sandesha2_polling_mgr_args_t*)data;
-    env = args->env;
-    polling_mgr = args->impl;
-    storage_mgr = args->storage_mgr;
+    axis2_char_t *dbname = NULL; 
+    sandesha2_polling_mgr_args_t *args = (sandesha2_polling_mgr_args_t*)data;
+    axutil_env_t *env = args->env;
+    sandesha2_polling_mgr_t *polling_mgr = args->impl;
+    sandesha2_storage_mgr_t *storage_mgr = args->storage_mgr;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_sender_mgr_t *sender_mgr = NULL;
+    sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_polling_mgr_worker_func");
 
+    dbname = sandesha2_util_get_dbname(env, polling_mgr->conf_ctx);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
+    next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
+
     while(polling_mgr->poll)
     {
-        sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
         sandesha2_next_msg_bean_t *next_msg_bean = NULL;
         sandesha2_msg_ctx_t *ref_rm_msg_ctx = NULL;
         sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
         sandesha2_sender_bean_t *make_conn_sender_bean = NULL;
-        sandesha2_sender_mgr_t *sender_bean_mgr = NULL;
         int size = 0;
         axis2_char_t *seq_id = NULL;
         axis2_char_t *make_conn_seq_id = NULL;
@@ -267,8 +272,6 @@ sandesha2_polling_mgr_worker_func(
         }
         axutil_qname_free(qname, env);
         AXIS2_SLEEP(wait_time);
-        next_msg_mgr = sandesha2_storage_mgr_get_next_msg_mgr(
-                        storage_mgr, env);
          /* Getting the sequences to be polled. if schedule contains any requests, 
           * do the earliest one. else pick one randomly.
           */
@@ -333,7 +336,7 @@ sandesha2_polling_mgr_worker_func(
         ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(next_msg_bean, env);
         seq_prop_key = make_conn_seq_id;
         reply_to = sandesha2_utils_get_seq_property(env, seq_prop_key, 
-            SANDESHA2_SEQ_PROP_REPLY_TO_EPR, storage_mgr);
+            SANDESHA2_SEQ_PROP_REPLY_TO_EPR, seq_prop_mgr);
         if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
             wsrm_anon_reply_to_uri = reply_to;
         ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
@@ -342,11 +345,17 @@ sandesha2_polling_mgr_worker_func(
             ref_rm_msg_ctx = sandesha2_msg_init_init_msg(env, ref_msg_ctx);
         make_conn_rm_msg_ctx = 
             sandesha2_msg_creator_create_make_connection_msg(env, 
-            ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, storage_mgr);
+            ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, seq_prop_mgr);
         if(!make_conn_rm_msg_ctx)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "No memory");
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+            if(seq_prop_mgr)
+                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+            if(sender_mgr)
+                sandesha2_sender_mgr_free(sender_mgr, env);
+            if(next_msg_mgr)
+                sandesha2_next_msg_mgr_free(next_msg_mgr, env);
             return NULL;
         }
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
@@ -392,8 +401,6 @@ sandesha2_polling_mgr_worker_func(
                     address);
             }
         }
-        sender_bean_mgr = sandesha2_storage_mgr_get_retrans_mgr(storage_mgr, 
-            env);
         /* This message should not be sent untils it is qualified. i.e. Till
          * it is sent through the sandesha2_transport_sender
          */
@@ -401,9 +408,9 @@ sandesha2_polling_mgr_worker_func(
             AXIS2_VALUE_FALSE);
         sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
             SANDESHA2_QUALIFIED_FOR_SENDING, property);
-        if(sender_bean_mgr)
+        if(sender_mgr)
         {
-            sandesha2_sender_mgr_insert(sender_bean_mgr, env, 
+            sandesha2_sender_mgr_insert(sender_mgr, env, 
                 make_conn_sender_bean);
         }
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Sending the make "\
@@ -415,9 +422,21 @@ sandesha2_polling_mgr_worker_func(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]make_connection sending failed");
+            if(seq_prop_mgr)
+                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+            if(sender_mgr)
+                sandesha2_sender_mgr_free(sender_mgr, env);
+            if(next_msg_mgr)
+                sandesha2_next_msg_mgr_free(next_msg_mgr, env);
             return NULL;
         }
     }
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(sender_mgr)
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    if(next_msg_mgr)
+        sandesha2_next_msg_mgr_free(next_msg_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_polling_mgr_worker_func");
     return NULL;

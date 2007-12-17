@@ -17,7 +17,6 @@
 #include "sandesha2_permanent_create_seq_mgr.h"
 #include "sandesha2_permanent_bean_mgr.h"
 #include <sandesha2_constants.h>
-#include <sandesha2_storage_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_error.h>
 #include <sandesha2_rm_bean.h>
@@ -26,6 +25,7 @@
 #include <axutil_thread.h>
 #include <axutil_property.h>
 #include <axutil_types.h>
+#include <stdio.h>
 
 /** 
  * @brief Sandesha2 Permanent Create Sequence Manager Struct Impl
@@ -190,15 +190,14 @@ static const sandesha2_create_seq_mgr_ops_t create_seq_mgr_ops =
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *ctx)
+    axis2_char_t *dbname)
 {
     sandesha2_permanent_create_seq_mgr_t *seq_mgr_impl = NULL;
     seq_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_create_seq_mgr_t));
 
     seq_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env, 
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_CREATE_SEQUENCE);
+        dbname, SANDESHA2_BEAN_MAP_CREATE_SEQUENCE);
     seq_mgr_impl->bean_mgr->ops.match = sandesha2_permanent_create_seq_mgr_match;
     seq_mgr_impl->seq_mgr.ops = create_seq_mgr_ops;
     return &(seq_mgr_impl->seq_mgr);

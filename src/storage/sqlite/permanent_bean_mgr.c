@@ -27,7 +27,6 @@
 #include <axutil_hash.h>
 #include <axutil_thread.h>
 #include <axutil_property.h>
-#include <axis2_conf_ctx.h>
 #include <axutil_types.h>
 #include <platforms/axutil_platform_auto_sense.h>
 
@@ -38,10 +37,9 @@
 typedef struct sandesha2_permanent_bean_mgr_impl
 {
     sandesha2_permanent_bean_mgr_t bean_mgr;
-    sandesha2_storage_mgr_t *storage_mgr;
     axutil_thread_mutex_t *mutex;
-    axis2_conf_ctx_t *conf_ctx;
     sqlite3 *dbconn;
+    axis2_char_t *dbname;
 
 }sandesha2_permanent_bean_mgr_impl_t;
 
@@ -186,8 +184,7 @@ sandesha2_permanent_bean_mgr_match(
 AXIS2_EXTERN sandesha2_permanent_bean_mgr_t * AXIS2_CALL
 sandesha2_permanent_bean_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *dbname,
     axis2_char_t *key)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
@@ -195,11 +192,11 @@ sandesha2_permanent_bean_mgr_create(
     bean_mgr_impl = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_bean_mgr_impl_t));
 
-    bean_mgr_impl->conf_ctx = conf_ctx;
     bean_mgr_impl->dbconn = NULL;
-    bean_mgr_impl->storage_mgr = storage_mgr;
-    bean_mgr_impl->mutex = 
-        sandesha2_permanent_storage_mgr_get_mutex(storage_mgr, env);
+    if(dbname)
+        bean_mgr_impl->dbname = axutil_strdup(env, dbname);
+    bean_mgr_impl->mutex = axutil_thread_mutex_create(env->allocator,
+        AXIS2_THREAD_MUTEX_DEFAULT);
     return &(bean_mgr_impl->bean_mgr);
 }
 
@@ -217,6 +214,11 @@ sandesha2_permanent_bean_mgr_free(
     {
         sqlite3_close(bean_mgr_impl->dbconn);
         bean_mgr_impl->dbconn = NULL;
+    }
+    if(bean_mgr_impl->dbname)
+    {
+        AXIS2_FREE(env->allocator, bean_mgr_impl->dbname);
+        bean_mgr_impl->dbname = NULL;
     }
     if(bean_mgr_impl)
     {
@@ -242,8 +244,8 @@ sandesha2_permanent_bean_mgr_insert(
    
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(
-            bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -281,7 +283,8 @@ sandesha2_permanent_bean_mgr_remove(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -325,7 +328,8 @@ sandesha2_permanent_bean_mgr_retrieve(
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
     {
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     }
     if(!bean_mgr_impl->dbconn)
     {
@@ -376,7 +380,8 @@ sandesha2_permanent_bean_mgr_update(
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_update");
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -429,7 +434,8 @@ sandesha2_permanent_bean_mgr_find(
     args->env = (axutil_env_t*)env;
     args->data = NULL;
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -528,7 +534,8 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_retrieve_msg_store_bean");
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -633,7 +640,8 @@ sandesha2_permanent_bean_mgr_update_msg_store_bean(
 
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -736,7 +744,8 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
 
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -789,7 +798,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -839,7 +849,8 @@ sandesha2_permanent_bean_mgr_store_response(
 
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -886,7 +897,8 @@ sandesha2_permanent_bean_mgr_remove_response(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -929,7 +941,8 @@ sandesha2_permanent_bean_mgr_retrieve_response(
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     axutil_thread_mutex_lock(bean_mgr_impl->mutex);
     if(!bean_mgr_impl->dbconn)
-        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(bean_mgr, env);
+        bean_mgr_impl->dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
+            bean_mgr_impl->dbname);
     if(!bean_mgr_impl->dbconn)
     {
         axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -994,40 +1007,13 @@ sandesha2_permanent_bean_mgr_busy_handler(
 
 sqlite3 *
 sandesha2_permanent_bean_mgr_get_dbconn(
-    sandesha2_permanent_bean_mgr_t *bean_mgr,
-    const axutil_env_t *env)
+    const axutil_env_t *env,
+    axis2_char_t *dbname)
 {
-    axis2_conf_t *conf = NULL;
-    axis2_module_desc_t *module_desc = NULL;
-    axutil_qname_t *qname = NULL;
-    axis2_char_t *path = ".";
-    axis2_char_t *dbname = NULL;
     int rc = -1;
     sqlite3 *dbconn = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
-    bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
-    conf_ctx = bean_mgr_impl->conf_ctx;
-    if(conf_ctx)
-        conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
-    else
-    {
-        return NULL;
-    }
-    qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
-    module_desc = axis2_conf_get_module(conf, env, qname);
-    if(module_desc)
-    {
-        axutil_param_t *dbparam = NULL;
-        dbparam = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
-        if(dbparam)
-        {
-            path = (axis2_char_t *) axutil_param_get_value(dbparam, env);
-        }
-    }
-    axutil_qname_free(qname, env);
-    dbname = axutil_strcat(env, path, AXIS2_PATH_SEP_STR, SANDESHA2_DB, NULL);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]dbname:%s", dbname);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]dbname:%s", 
+        dbname);
     rc = sqlite3_open(dbname, &(dbconn));
     if(rc != SQLITE_OK)
     {
@@ -1038,13 +1024,6 @@ sandesha2_permanent_bean_mgr_get_dbconn(
         sqlite3_close(dbconn);
         return NULL;
     }
-#if !defined(WIN32)
-    {
-        axis2_char_t permission_str[256];
-        sprintf(permission_str, "chmod 777 %s", dbname); 
-        system(permission_str);
-    }
-#endif
     return dbconn;
 }
 

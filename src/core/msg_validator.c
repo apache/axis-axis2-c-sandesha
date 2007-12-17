@@ -23,20 +23,19 @@
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_validator_validate_msg(
-        const axutil_env_t *env,
-        sandesha2_msg_ctx_t *rm_msg_ctx, 
-        sandesha2_storage_mgr_t *storage_mgr)
+    const axutil_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx, 
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     int msg_type = -1;
     axis2_char_t *seq_id = NULL;
     
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_CREATE_SEQ != msg_type && 
-                        SANDESHA2_MSG_TYPE_UNKNOWN != msg_type)
+        SANDESHA2_MSG_TYPE_UNKNOWN != msg_type)
     {
         seq_id = sandesha2_utils_get_seq_id_from_rm_msg_ctx(env, rm_msg_ctx);
         if(NULL != seq_id)
@@ -48,10 +47,9 @@ sandesha2_msg_validator_validate_msg(
             axis2_char_t *rm_ns_seq = NULL;
             
             rm_ver_seq = sandesha2_utils_get_seq_property(env, seq_id, 
-                        SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, storage_mgr);
+                SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, seq_prop_mgr);
             addr_ns_seq = sandesha2_utils_get_seq_property(env, seq_id, 
-                        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, 
-                        storage_mgr);
+                SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
             rm_ns_msg = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
             addr_ns_msg = sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env);
             

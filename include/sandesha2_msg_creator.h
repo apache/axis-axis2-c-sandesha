@@ -27,7 +27,7 @@
 #include <axutil_error.h>
 #include <axutil_string.h>
 #include <axutil_utils.h>
-#include <sandesha2_storage_mgr.h>
+#include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
 
@@ -57,7 +57,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_t *application_rm_msg, 
     axis2_char_t *internal_seq_id,
     axis2_char_t *acks_to,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 /**
  * Create a new create_seq_response message.
@@ -72,13 +72,13 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     sandesha2_msg_ctx_t *create_seq_msg,
     axis2_msg_ctx_t *out_msg,
     axis2_char_t *new_seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
  
 /**
  * Create a new close_seq_response message.
  * @param close_seq_msg
  * @param out_msg
- * @param storage_mgr
+ * @param seq_prop_mgr
  * @return
  */
 sandesha2_msg_ctx_t *
@@ -86,7 +86,7 @@ sandesha2_msg_creator_create_close_seq_res_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *close_seq_msg,
     axis2_msg_ctx_t *out_msg,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 
 sandesha2_msg_ctx_t *AXIS2_CALL
@@ -95,7 +95,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_msg_ctx_t *ref_rm_msg,
     axis2_char_t *seq_id,
     axis2_char_t *internal_seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 
 sandesha2_msg_ctx_t *AXIS2_CALL
@@ -103,7 +103,7 @@ sandesha2_msg_creator_create_terminate_seq_res_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg,
     axis2_msg_ctx_t *out_msg,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 /**
  * Adds an ack message to the given application message.
@@ -116,7 +116,7 @@ sandesha2_msg_creator_add_ack_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *app_msg,
     axis2_char_t *seq_id,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 sandesha2_msg_ctx_t *AXIS2_CALL
 sandesha2_msg_creator_create_make_connection_msg(
@@ -124,7 +124,7 @@ sandesha2_msg_creator_create_make_connection_msg(
     sandesha2_msg_ctx_t *ref_rm_msg_ctx, 
     axis2_char_t *make_conn_seq_id,
     axis2_char_t *make_conn_anon_uri,
-    sandesha2_storage_mgr_t *storage_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 /** @} */
 #ifdef __cplusplus

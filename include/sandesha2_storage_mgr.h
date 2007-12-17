@@ -43,7 +43,6 @@ typedef struct sandesha2_storage_mgr sandesha2_storage_mgr_t;
 typedef struct sandesha2_storage_mgr_ops sandesha2_storage_mgr_ops_t;
 struct sandesha2_rm_bean;
 struct sandesha2_sender_mgr;
-struct sandesha2_create_seq_mgr;
 struct sandesha2_invoker_mgr;
 struct sandesha2_seq_property_mgr;
 struct sandesha2_next_msg_mgr;
@@ -62,53 +61,6 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
     axis2_status_t (AXIS2_CALL *
             free_void_arg)(
                 void *storage_mgr,
-                const axutil_env_t *env);
-
-    struct sandesha2_transaction *(AXIS2_CALL *
-            get_transaction)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    void (AXIS2_CALL *
-            enlist_bean)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env,
-                struct sandesha2_rm_bean *rm_bean);
-
-    struct sandesha2_create_seq_mgr *(AXIS2_CALL *
-            get_create_seq_mgr)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    struct sandesha2_next_msg_mgr *(AXIS2_CALL *
-            get_next_msg_mgr)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    struct sandesha2_sender_mgr *(AXIS2_CALL *
-            get_retrans_mgr)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    struct sandesha2_seq_property_mgr *(AXIS2_CALL *
-            get_seq_property_mgr)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    struct sandesha2_invoker_mgr *(AXIS2_CALL *
-            get_storage_map_mgr)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-            set_ctx)(
-                sandesha2_storage_mgr_t *storage_mgr,
-                const axutil_env_t *env,
-                axis2_conf_ctx_t *conf_ctx);
-
-    axis2_conf_ctx_t *(AXIS2_CALL *
-            get_ctx)(
-                sandesha2_storage_mgr_t *storage_mgr,
                 const axutil_env_t *env);
 
     axis2_status_t (AXIS2_CALL *
@@ -143,7 +95,8 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
             remove_msg_ctx)(
                 sandesha2_storage_mgr_t *storage_mgr,
                 const axutil_env_t *env,
-                axis2_char_t *key);
+                axis2_char_t *key,
+                axis2_conf_ctx_t *conf_ctx);
 
     axis2_status_t (AXIS2_CALL *
             init_storage)(
@@ -194,11 +147,6 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr
     const sandesha2_storage_mgr_ops_t *ops;
 };
 
-AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
-sandesha2_storage_mgr_create(
-    const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx);
- 
 /**
  * Frees the storage_mgr given as a void pointer. This method would cast the 
  * void parameter to an storage_mgr pointer and then call free method.
@@ -215,59 +163,6 @@ axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_free(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *envv);
-
-/**
- * get a new transaction for use
- * @param storage_mgr
- * @param env environment object
- * @return newly created sandesha2_transaction object
- */
-struct sandesha2_transaction *AXIS2_CALL
-sandesha2_storage_mgr_get_transaction(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-void AXIS2_CALL
-sandesha2_storage_mgr_enlist_bean(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env,
-    struct sandesha2_rm_bean *rm_bean);
-
-struct sandesha2_create_seq_mgr *AXIS2_CALL
-sandesha2_storage_mgr_get_create_seq_mgr(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-struct sandesha2_next_msg_mgr *AXIS2_CALL
-sandesha2_storage_mgr_get_next_msg_mgr(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-struct sandesha2_sender_mgr *AXIS2_CALL
-sandesha2_storage_mgr_get_retrans_mgr(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-struct sandesha2_seq_property_mgr *AXIS2_CALL
-sandesha2_storage_mgr_get_seq_property_mgr(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-struct sandesha2_invoker_mgr *AXIS2_CALL
-sandesha2_storage_mgr_get_storage_map_mgr(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
-
-axis2_status_t AXIS2_CALL
-sandesha2_storage_mgr_set_ctx(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx);
-
-axis2_conf_ctx_t *AXIS2_CALL
-sandesha2_storage_mgr_get_ctx(
-    sandesha2_storage_mgr_t *storage_mgr,
-    const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_init(
@@ -319,7 +214,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
-    axis2_char_t *key);
+    axis2_char_t *key,
+    axis2_conf_ctx_t *conf_ctx);
 
 axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_init_storage(

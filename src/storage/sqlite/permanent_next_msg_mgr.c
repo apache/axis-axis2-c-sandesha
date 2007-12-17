@@ -20,7 +20,6 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
-#include <sandesha2_storage_mgr.h>
 #include <axutil_log.h>
 #include <axutil_hash.h>
 #include <axutil_thread.h>
@@ -208,8 +207,7 @@ static const sandesha2_next_msg_mgr_ops_t next_msg_mgr_ops =
 AXIS2_EXTERN sandesha2_next_msg_mgr_t * AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_create(
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr,
-    axis2_conf_ctx_t *ctx)
+    axis2_char_t *dbname)
 {
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     next_msg_mgr_impl = AXIS2_MALLOC(env->allocator, 
@@ -222,7 +220,7 @@ sandesha2_permanent_next_msg_mgr_create(
         return NULL;
     }
     next_msg_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
-        storage_mgr, ctx, SANDESHA2_BEAN_MAP_NEXT_MESSAGE);
+        dbname, SANDESHA2_BEAN_MAP_NEXT_MESSAGE);
     next_msg_mgr_impl->bean_mgr->ops.match = sandesha2_permanent_next_msg_mgr_match;
     next_msg_mgr_impl->next_msg_mgr.ops = next_msg_mgr_ops;
 

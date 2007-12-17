@@ -1,2 +1,2 @@
-SUBDIRS = beans inmemory $(WRAPPER_DIR) common
+SUBDIRS = beans $(WRAPPER_DIR) common
 EXTRA_DIST=mysql

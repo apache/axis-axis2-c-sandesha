@@ -36,6 +36,9 @@ extern "C"
 {
 #endif
 
+struct sandesha2_seq_property_mgr;
+struct sandesha2_next_msg_mgr;
+
 /** @defgroup sandesha2_seq_mgr In Memory Sequence Manager
   * @ingroup sandesha2
   * @{
@@ -45,7 +48,8 @@ AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_seq_mgr_setup_new_seq(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *create_seq_msg, 
-    sandesha2_storage_mgr_t *storage_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    struct sandesha2_next_msg_mgr *next_msg_mgr);
        
 /**
  * Takes the internal_seq_id as the param. Not the seq_id
@@ -56,14 +60,15 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_mgr_update_last_activated_time(
     const axutil_env_t *env,
     axis2_char_t *property_key,
-    sandesha2_storage_mgr_t *storage_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
     
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_seq_mgr_has_seq_timedout(
     const axutil_env_t *env,
     axis2_char_t *property_key,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_storage_mgr_t *storage_mgr);
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
+    axis2_conf_ctx_t *conf_ctx);
         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_seq_mgr_setup_new_client_seq(
@@ -71,7 +76,7 @@ sandesha2_seq_mgr_setup_new_client_seq(
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *int_seq_id,
     axis2_char_t *spec_version,
-    sandesha2_storage_mgr_t *storage_mgr,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr,
     const axis2_bool_t persistent);
 
 /** @} */

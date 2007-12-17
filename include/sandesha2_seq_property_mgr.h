@@ -107,7 +107,7 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL
 sandesha2_seq_property_mgr_create(
     const axutil_env_t *env,
-    axis2_ctx_t *ctx);
+    axis2_char_t *dbname);
 
 void AXIS2_CALL 
 sandesha2_seq_property_mgr_free(

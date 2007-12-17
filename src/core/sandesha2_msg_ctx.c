@@ -43,7 +43,7 @@ sandesha2_msg_ctx_create(
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     
     rm_msg_ctx =  (sandesha2_msg_ctx_t *)AXIS2_MALLOC 
-                        (env->allocator, sizeof(sandesha2_msg_ctx_t));
+        (env->allocator, sizeof(sandesha2_msg_ctx_t));
 	
     if(!rm_msg_ctx)
 	{
