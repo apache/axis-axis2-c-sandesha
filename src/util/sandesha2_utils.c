@@ -1396,7 +1396,7 @@ sandesha2_util_get_dbname(
     axis2_conf_t *conf = NULL;
     axis2_module_desc_t *module_desc = NULL;
     axutil_qname_t *qname = NULL;
-    axis2_char_t *dbname = NULL;
+    axis2_char_t *dbname = "./sandesha2_db";
     if(conf_ctx)
         conf = axis2_conf_ctx_get_conf((const axis2_conf_ctx_t *) conf_ctx, env);
     else
