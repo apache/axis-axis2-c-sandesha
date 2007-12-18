@@ -211,11 +211,15 @@ sandesha2_sender_worker_send(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]Retrieving msg_ctx from database");
             msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-                key, conf_ctx, AXIS2_FALSE);
+                key, conf_ctx, AXIS2_TRUE);
         }
         else
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]Retrieving msg_ctx from configuration context");
             msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-                key, conf_ctx, AXIS2_TRUE);
+                key, conf_ctx, AXIS2_FALSE);
+        }
     }
     if(!msg_ctx)
     {

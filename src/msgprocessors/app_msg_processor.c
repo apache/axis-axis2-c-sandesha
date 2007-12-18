@@ -1114,7 +1114,7 @@ sandesha2_app_msg_processor_process_out_msg(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the server "\
                 "sequence with internal sequence id %s", internal_seq_id);
             sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
-                spec_ver, seq_prop_mgr, AXIS2_FALSE);
+                spec_ver, seq_prop_mgr, AXIS2_TRUE);
         }
         else
         {
@@ -1138,7 +1138,7 @@ sandesha2_app_msg_processor_process_out_msg(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the client "\
                 "sequence with internal sequence id %s", internal_seq_id);
             sandesha2_seq_mgr_setup_new_client_seq(env, msg_ctx, internal_seq_id, 
-                spec_ver, seq_prop_mgr, AXIS2_TRUE);
+                spec_ver, seq_prop_mgr, AXIS2_FALSE);
         }
     }
     if(send_create_seq)
