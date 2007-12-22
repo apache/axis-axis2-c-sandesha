@@ -15,7 +15,6 @@
  */
  
 #include <sandesha2_msg_init.h>
-#include <sandesha2_storage_mgr.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_permanent_seq_property_mgr.h>
 #include <sandesha2_spec_specific_consts.h>
@@ -272,12 +271,10 @@ static axis2_bool_t validate_msg(
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_conf_t *conf = NULL;
     axis2_msg_ctx_t *temp_msg_ctx = NULL;
     axis2_char_t *seq_id = NULL;
     axis2_char_t *rm_ns = NULL;
     axis2_char_t *prop_key = NULL;
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_create_seq_t *create_seq = NULL;
     sandesha2_create_seq_res_t *create_seq_res = NULL;
@@ -296,9 +293,7 @@ static axis2_bool_t validate_msg(
         "[sandesha2]Entry:validate_msg");
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
@@ -400,7 +395,7 @@ static axis2_bool_t validate_msg(
         sandesha2_identifier_t *idf = NULL;
         sandesha2_address_t *address = NULL;
         sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
-                SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
+            SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
         idf = sandesha2_make_connection_get_identifier(make_conn, env);
         address = sandesha2_make_connection_get_address(make_conn, env);
         if(idf)
@@ -416,12 +411,10 @@ static axis2_bool_t validate_msg(
             AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_MSG, AXIS2_FAILURE);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                " Invalid MakeConnection message. Either Address or Identifier" \
-                " must be present");
+                "[sandesha2]Invalid MakeConnection message. Either Address "\
+                "or Identifier must be present");
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-            if(storage_mgr)
-                sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FALSE;
         } 
     }
@@ -467,16 +460,12 @@ static axis2_bool_t validate_msg(
                     AXIS2_FAILURE);
                 if(seq_prop_mgr)
                     sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-                if(storage_mgr)
-                    sandesha2_storage_mgr_free(storage_mgr, env);
                 return AXIS2_FALSE;
             }
         }
     }
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-    if(storage_mgr)
-        sandesha2_storage_mgr_free(storage_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:validate_msg");
     return AXIS2_TRUE; 

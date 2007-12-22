@@ -126,10 +126,6 @@ sandesha2_in_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
-    {
-        return AXIS2_FAILURE;
-    }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
 
     if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))

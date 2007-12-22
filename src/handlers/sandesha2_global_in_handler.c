@@ -93,7 +93,6 @@ sandesha2_global_in_handler_invoke(
 {
     
     axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_fault_t *fault_part = NULL;
@@ -102,7 +101,7 @@ sandesha2_global_in_handler_invoke(
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
-    /*sandesha2_msg_ctx_t *rm_msg_ctx = NULL;*/
+    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     /*axis2_bool_t dropped = AXIS2_FALSE;*/
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
     axutil_property_t *property = NULL;
@@ -177,8 +176,8 @@ sandesha2_global_in_handler_invoke(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration"\
-            " Context is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Configuration Context is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -191,7 +190,6 @@ sandesha2_global_in_handler_invoke(
         axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property);
     }
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     
     soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if(!soap_envelope)
@@ -245,8 +243,12 @@ sandesha2_global_in_handler_invoke(
             }
         }
     }
-    /*rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
-    if(!isolated_last_msg)
+    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    {
+        return AXIS2_FAILURE;
+    }
+    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    /*if(!isolated_last_msg)
         dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
             rm_msg_ctx);
     if(dropped)

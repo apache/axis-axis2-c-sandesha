@@ -76,8 +76,10 @@ sandesha2_sender_run_for_seq(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_sender_run_for_seq");
     
+    axutil_allocator_switch_to_global_pool(env->allocator);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t));
-    args->env = (axutil_env_t*)env;
+    args->env = axutil_init_thread_env(env);
+    axutil_allocator_switch_to_local_pool(env->allocator);
     args->conf_ctx = conf_ctx;
     args->seq_id = seq_id;
     args->persistent_msg_ctx = persistent_msg_ctx;
@@ -122,7 +124,8 @@ sandesha2_sender_worker_func(
     axis2_bool_t persistent_msg_ctx = AXIS2_FALSE;
     
     args = (sandesha2_sender_args_t*)data;
-    env = axutil_init_thread_env(args->env);
+    env = args->env;
+    axutil_allocator_switch_to_global_pool(env->allocator);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_sender_worker_func");
     conf_ctx = args->conf_ctx;
@@ -186,6 +189,7 @@ sandesha2_sender_worker_func(
         sandesha2_storage_mgr_free(storage_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_worker_func");
+    axutil_allocator_switch_to_local_pool(env->allocator);
     return NULL;
 }
 

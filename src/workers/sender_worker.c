@@ -223,8 +223,8 @@ sandesha2_sender_worker_send(
     }
     if(!msg_ctx)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_ctx is "\
-            "not present in the store yet.");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]msg_ctx is not present in the store yet.");
         /*msg_ctx is still not stored so try again later.*/
         return AXIS2_SUCCESS;
     }
@@ -296,8 +296,8 @@ sandesha2_sender_worker_send(
         sandesha2_identifier_t *identifier = NULL;
         
         seq = (sandesha2_seq_t*)
-                    sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-                    env, SANDESHA2_MSG_PART_SEQ);
+            sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
+                SANDESHA2_MSG_PART_SEQ);
         identifier = sandesha2_seq_get_identifier(seq, env);
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     }
@@ -317,7 +317,6 @@ sandesha2_sender_worker_send(
     {
         /* This is neccessary to avoid a double free */
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-        /* Consider building soap envelope */
         if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
 		{
         	successfully_sent = AXIS2_TRUE;
