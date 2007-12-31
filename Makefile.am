@@ -45,6 +45,5 @@ bindist: $(bin_PROGRAMS)
 	cp NEWS sandesha2c-bin-${PACKAGE_VERSION}-linux
 	cp NOTICE sandesha2c-bin-${PACKAGE_VERSION}-linux
 	cp README sandesha2c-bin-${PACKAGE_VERSION}-linux
-	cp  sandesha2c-bin-${PACKAGE_VERSION}-linux
 	tar -cf - sandesha2c-bin-${PACKAGE_VERSION}-linux | gzip -c > sandesha2c-bin-${PACKAGE_VERSION}-linux.tar.gz
 	rm -rf sandesha2c-bin-${PACKAGE_VERSION}-linux
