@@ -28,4 +28,15 @@ dist-hook:
 	rm -rf `find $(distdir)/ -type d -name .deps`
 	rm -rf `find $(distdir)/ -type d -name .libs`
 	rm -rf `find $(distdir)/ -type f -name Makefile`
-	cp -r target/docs $(distdir)
+	rm -rf `find $(distdir)/ -type f -name sandesha2c-sample-src-${PACKAGE_VERSION}.tar.gz`
+	rm -rf `find $(distdir)/ -type d -name autom4te.cache`
+	sh dist.sh
+
+bindist: $(bin_PROGRAMS)
+	rm -rf sandesha2c-bin-${PACKAGE_VERSION}-linux
+	sh bindist.sh
+	mkdir sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp -r `pwd`/deploy/* sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp AUTHORS sandesha2c-bin-${PACKAGE_VERSION}-linux
+	tar -cf - sandesha2c-bin-${PACKAGE_VERSION}-linux | gzip -c > sandesha2c-bin-${PACKAGE_VERSION}-linux.tar.gz
+	rm -rf sandesha2c-bin-${PACKAGE_VERSION}-linux
