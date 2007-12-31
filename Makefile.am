@@ -1,5 +1,5 @@
 datadir=$(prefix)/modules/sandesha2
-includedir=$(prefix)/include/sandesha2-0.91
+includedir=$(prefix)/include/sandesha2-0.92
 docsdir=$(prefix)/docs/sandesha2c
 sysconfdir=$(prefix)
 
@@ -10,7 +10,7 @@ data_DATA = LICENSE config/module.xml
 
 docs_DATA=
 
-sysconf_DATA=config/axis2.xml config/init_mysql.sh config/mysql_schema.sh
+sysconf_DATA=config/axis2.xml
 
 install-data-hook: 
 	cp -rf xdocs/docs/* $(docsdir)
