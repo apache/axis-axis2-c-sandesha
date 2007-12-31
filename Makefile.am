@@ -38,5 +38,13 @@ bindist: $(bin_PROGRAMS)
 	mkdir sandesha2c-bin-${PACKAGE_VERSION}-linux
 	cp -r `pwd`/deploy/* sandesha2c-bin-${PACKAGE_VERSION}-linux
 	cp AUTHORS sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp COPYING sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp CREDITS sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp INSTALL sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp LICENSE sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp NEWS sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp NOTICE sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp README sandesha2c-bin-${PACKAGE_VERSION}-linux
+	cp  sandesha2c-bin-${PACKAGE_VERSION}-linux
 	tar -cf - sandesha2c-bin-${PACKAGE_VERSION}-linux | gzip -c > sandesha2c-bin-${PACKAGE_VERSION}-linux.tar.gz
 	rm -rf sandesha2c-bin-${PACKAGE_VERSION}-linux
