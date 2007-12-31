@@ -8,7 +8,7 @@ export SANDESHA2C_HOME
 
 echo "Build Sandesha2C"
 ./autogen.sh
-./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.2
+./configure --prefix=${SANDESHA2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.2
 make
 make install
 make dist
@@ -16,7 +16,7 @@ make dist
 echo "Build samples"
 cd samples
 ./autogen.sh
-./configure --prefix=${AXIS2C_HOME} --with-axis2=${AXIS2C_HOME}/include/axis2-1.2
+./configure --prefix=${SANDESHA2C_HOME} --with-axis2=${AXIS2C_HOME}/include/axis2-1.2
 make
 make install
 make dist
