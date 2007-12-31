@@ -33,7 +33,6 @@ cd xdocs/api
 doxygen doxygenconf
 cd ../..
 cp -r xdocs/api/html target/docs/api/
-cp xdocs/docs/mod_log/module.xml target/docs/docs/mod_log
 cp -r target/docs ${SANDESHA2C_HOME}
 
 cd ${SANDESHA2C_HOME}
