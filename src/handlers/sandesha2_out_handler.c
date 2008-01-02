@@ -119,7 +119,7 @@ sandesha2_out_handler_invoke(
     }
     else
     {
-        int size = -1, i = 0;
+        /*int size = -1, i = 0;
 		axis2_bool_t found = AXIS2_FALSE;
 		axutil_array_list_t *mod_qnames = NULL;
         axutil_qname_t *mod_qname = axutil_qname_create(env, SANDESHA2_MODULE, 
@@ -144,7 +144,7 @@ sandesha2_out_handler_invoke(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]RM is not engaged. So return here.");
             return AXIS2_SUCCESS;
-        }
+        }*/
     }
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
