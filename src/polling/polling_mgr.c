@@ -174,6 +174,8 @@ sandesha2_polling_mgr_start (
     }
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_schedule_polling_request(polling_mgr, env, 
         internal_seq_id);
@@ -234,6 +236,8 @@ sandesha2_polling_mgr_worker_func(
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
 
     while(polling_mgr->poll)
     {
@@ -346,6 +350,8 @@ sandesha2_polling_mgr_worker_func(
         make_conn_rm_msg_ctx = 
             sandesha2_msg_creator_create_make_connection_msg(env, 
             ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, seq_prop_mgr);
+        if(reply_to)
+            AXIS2_FREE(env->allocator, reply_to);
         if(!make_conn_rm_msg_ctx)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "No memory");

@@ -192,6 +192,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
                         env, msg_ctx, seq_prop_mgr);
@@ -218,7 +220,16 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     create_seq_res_msg = sandesha2_msg_creator_create_create_seq_res_msg(env,
         rm_msg_ctx, out_msg_ctx, new_seq_id, seq_prop_mgr);
     axis2_msg_ctx_set_flow(out_msg_ctx, env, AXIS2_OUT_FLOW);
-    
+    if(!create_seq_res_msg)
+    {
+        if(seq_prop_mgr)
+            sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+        if(create_seq_mgr)
+            sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(next_msg_mgr)
+            sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+        return AXIS2_FAILURE;
+    }
     property = axutil_property_create_with_args(env, 0, 0, 0, 
         AXIS2_VALUE_TRUE);
     /* For making sure that this won't be processed again */
@@ -349,6 +360,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE,
         seq_prop_mgr);
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
+    if(addr_ns_uri)
+        AXIS2_FREE(env->allocator, addr_ns_uri);
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(sandesha2_utils_is_anon_uri(env, axis2_endpoint_ref_get_address(to_epr, 

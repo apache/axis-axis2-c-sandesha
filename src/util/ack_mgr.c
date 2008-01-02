@@ -131,6 +131,8 @@ sandesha2_ack_mgr_generate_ack_msg(
             property = axutil_property_create_with_args(env, 0, 0, 0, addr_ns_uri);
             axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_WSA_VERSION, property);
         }
+        if(addr_ns_uri)
+            AXIS2_FREE(env->allocator, addr_ns_uri);
     }
     op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     if(!op_ctx)

@@ -382,6 +382,8 @@ sandesha2_sender_worker_send(
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+        if(internal_seq_id)
+            AXIS2_FREE(env->allocator, internal_seq_id);
         /* We have no more messages for this sequence. So continue send 
          * status is false*/
         status = AXIS2_FAILURE;

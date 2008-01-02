@@ -295,6 +295,8 @@ static axis2_bool_t validate_msg(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
             rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
     create_seq_res = (sandesha2_create_seq_res_t *) 
@@ -445,12 +447,15 @@ static axis2_bool_t validate_msg(
         axis2_char_t *spec_version = NULL;
         axis2_char_t *seq_rm_ns = NULL;
         
-        spec_version = sandesha2_utils_get_rm_version(env, prop_key, seq_prop_mgr);
+        spec_version = sandesha2_utils_get_rm_version(env, prop_key, 
+            seq_prop_mgr);
         if(spec_version)
         {
             seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
                     spec_version);
         }
+        if(spec_version)
+            AXIS2_FREE(env->allocator, spec_version);
         if(seq_rm_ns && rm_ns)
         {
             if(0 != axutil_strcmp(seq_rm_ns, rm_ns))

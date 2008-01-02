@@ -158,7 +158,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     axiom_soap_envelope_t *envelope = NULL;
     axis2_char_t *wsa_version = NULL;
-    axis2_char_t *addr_ns_val = NULL;
     axis2_char_t *dbname = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -193,6 +192,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]acks_to_str"\
             " seqeunce property is not set correctly");
+        if(dbname)
+            AXIS2_FREE(env->allocator, dbname);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(storage_mgr)
@@ -249,8 +250,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         property = NULL;
     }
     
-    addr_ns_val = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
     if(sandesha2_utils_is_anon_uri(env, acks_to_str))
     {
         axis2_engine_t *engine = NULL;
@@ -283,6 +282,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 "[sandesha2]ack sending failed");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, 
                 AXIS2_FAILURE);
+            if(dbname)
+                AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(storage_mgr)
@@ -387,6 +388,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 "[sandesha2]ack sending failed");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, 
                 AXIS2_FAILURE);
+            if(dbname)
+                AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(sender_mgr)
@@ -400,6 +403,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         if(sender_mgr)
             sandesha2_sender_mgr_free(sender_mgr, env);
     }
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(storage_mgr)

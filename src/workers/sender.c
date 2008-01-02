@@ -137,6 +137,8 @@ sandesha2_sender_worker_func(
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
 
     qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
     module_desc = axis2_conf_get_module(conf, env, qname);

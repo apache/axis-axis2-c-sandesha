@@ -1012,6 +1012,8 @@ sandesha2_permanent_storage_mgr_create_db(
         system(permission_str);
     }
     #endif
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     sql_stmt1 = "create table create_seq("\
         "create_seq_msg_id varchar(100) primary key, "\
         "internal_seq_id varchar(200), seq_id varchar(200), "\

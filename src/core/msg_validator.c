@@ -53,15 +53,21 @@ sandesha2_msg_validator_validate_msg(
             rm_ns_msg = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
             addr_ns_msg = sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env);
             
-            if(NULL != rm_ver_seq)
+            if(rm_ver_seq)
+            {
                 rm_ns_seq = sandesha2_spec_specific_consts_get_rm_ns_val(env,
                         rm_ver_seq);
+                if(rm_ver_seq)
+                    AXIS2_FREE(env->allocator, rm_ver_seq);
+            }
             
             if(NULL != rm_ns_seq && 0 != axutil_strcmp(rm_ns_seq, rm_ns_msg))
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Validation"
                         " failed. The RM namespace of the message does not"
                         " match with the sequence");
+                if(addr_ns_seq)
+                    AXIS2_FREE(env->allocator, addr_ns_seq);
                 return AXIS2_FAILURE;
             } 
             if(NULL != addr_ns_seq && 0 != axutil_strcmp(addr_ns_seq, addr_ns_msg))
@@ -69,8 +75,12 @@ sandesha2_msg_validator_validate_msg(
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Validation"
                         " failed. The Addressing namespace of the message does"
                         " not match with the sequence");
+                if(addr_ns_seq)
+                    AXIS2_FREE(env->allocator, addr_ns_seq);
                 return AXIS2_FAILURE;
             }            
+            if(addr_ns_seq)
+                AXIS2_FREE(env->allocator, addr_ns_seq);
             
         }   
     }

@@ -262,6 +262,8 @@ sandesha2_in_order_invoker_worker_func(
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
     invoker_mgr = sandesha2_permanent_invoker_mgr_create(env, dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     while(invoker->run_invoker)
     {
         sandesha2_seq_property_bean_t *all_seq_bean = NULL;

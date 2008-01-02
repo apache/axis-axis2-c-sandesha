@@ -196,6 +196,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env,dbname);
+    if(dbname)
+        AXIS2_FREE(env->allocator, dbname);
     
     ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
     nack_list = sandesha2_seq_ack_get_nack_list(seq_ack, env);
@@ -257,6 +259,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     if(!acked_list)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        if(int_seq_id)
+            AXIS2_FREE(env->allocator, int_seq_id);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
@@ -361,6 +365,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         long highest_out_msg_no = 0;
         highest_out_msg_no = atol(last_out_msg_no_str);
+        if(last_out_msg_no_str)
+            AXIS2_FREE(env->allocator, last_out_msg_no_str);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
         if(highest_out_msg_no > 0)
         {
@@ -377,6 +383,8 @@ sandesha2_ack_msg_processor_process_in_msg (
             }
         }
     }
+    if(int_seq_id)
+        AXIS2_FREE(env->allocator, int_seq_id);
     action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     if(action && 0 == axutil_strcmp(action, 
         sandesha2_spec_specific_consts_get_ack_req_action(env, 
