@@ -629,6 +629,8 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     match_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
         (sandesha2_rm_bean_t *) matcher, sandesha2_sender_find_callback,
         sql_find);
+    if(matcher)
+        sandesha2_sender_bean_free((sandesha2_rm_bean_t *)matcher, env);
 
     /*
      * We either return an application message or an RM message. If we find

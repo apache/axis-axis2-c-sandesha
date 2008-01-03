@@ -226,6 +226,9 @@ sandesha2_sender_worker_send(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]msg_ctx is not present in the store yet.");
         /*msg_ctx is still not stored so try again later.*/
+        if(sender_worker_bean)
+            sandesha2_sender_bean_free((sandesha2_rm_bean_t *) 
+                sender_worker_bean, env);
         return AXIS2_SUCCESS;
     }
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
@@ -237,6 +240,9 @@ sandesha2_sender_worker_send(
         status = AXIS2_FAILURE;
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Do not continue sending the message");
+        if(sender_worker_bean)
+            sandesha2_sender_bean_free(
+                (sandesha2_rm_bean_t *)sender_worker_bean, env);
         return status;
     }
     
@@ -250,6 +256,9 @@ sandesha2_sender_worker_send(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Message is not qualified for sending");
 
+        if(sender_worker_bean)
+            sandesha2_sender_bean_free(
+                (sandesha2_rm_bean_t *)sender_worker_bean, env);
         /*return success here to wait till the message is qualified for sending*/
         return AXIS2_SUCCESS;
     }
@@ -281,6 +290,9 @@ sandesha2_sender_worker_send(
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Continue "\
                 "Sending is true. So returning from Sender Worker");
+            if(sender_worker_bean)
+                sandesha2_sender_bean_free(
+                (sandesha2_rm_bean_t *)sender_worker_bean, env);
             return AXIS2_SUCCESS;
         }
     }
@@ -355,6 +367,11 @@ sandesha2_sender_worker_send(
                 msg_stored_key, conf_ctx);
         }
     }
+    if(bean1)
+        sandesha2_sender_bean_free((sandesha2_rm_bean_t *) bean1, env);
+    if(sender_worker_bean)
+        sandesha2_sender_bean_free((sandesha2_rm_bean_t *)sender_worker_bean, 
+            env);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", msg_type);
     if(successfully_sent)
     {

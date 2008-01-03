@@ -482,6 +482,8 @@ sandesha2_make_connection_msg_processor_process_in_msg (
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                 msg_stored_key, conf_ctx);
         }
+        if(bean1)
+            sandesha2_sender_bean_free((sandesha2_rm_bean_t *)bean1, env);
     }
     msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)

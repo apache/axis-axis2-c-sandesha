@@ -310,6 +310,9 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     }
     create_seq_storage_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                         create_seq_sender_bean, env);
+    if(create_seq_sender_bean)
+        sandesha2_sender_bean_free((sandesha2_rm_bean_t *) 
+            create_seq_sender_bean, env);
     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
         create_seq_storage_key, conf_ctx);
     sandesha2_sender_mgr_remove(sender_mgr, env, create_seq_msg_id);
