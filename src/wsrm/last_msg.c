@@ -158,24 +158,25 @@ sandesha2_last_msg_from_om_node(sandesha2_iom_rm_element_t *last_msg,
     
     last_msg_impl = SANDESHA2_INTF_TO_IMPL(last_msg);
     om_element = axiom_node_get_data_element(om_node, env);
-    if(NULL == om_element)
+    if(!om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     lm_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG, 
-                        last_msg_impl->ns_val, NULL);
-    if(NULL == lm_qname)
+        last_msg_impl->ns_val, NULL);
+    if(!lm_qname)
     {
         return NULL;
     }
     lm_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        lm_qname, om_node, &lm_node);
-    if(NULL == lm_part)
+        lm_qname, om_node, &lm_node);
+    axutil_qname_free(lm_qname, env);
+    if(!lm_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return last_msg;

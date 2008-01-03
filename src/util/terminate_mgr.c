@@ -324,6 +324,8 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
             all_seq_str = sandesha2_utils_array_list_to_string(env, all_seq_list,
                 SANDESHA2_ARRAY_LIST_STRING);
             sandesha2_seq_property_bean_set_value(all_seq_bean, env, all_seq_str);
+            if(all_seq_str)
+                AXIS2_FREE(env->allocator, all_seq_str);
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, all_seq_bean);
         }
     }
@@ -550,7 +552,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
     if(!internal_seq_id)
-        internal_seq_id = seq_id;
+        internal_seq_id = axutil_strdup(env, seq_id);
     found_list = sandesha2_sender_mgr_find_by_internal_seq_id(sender_mgr, env,
         internal_seq_id);
     if(found_list)

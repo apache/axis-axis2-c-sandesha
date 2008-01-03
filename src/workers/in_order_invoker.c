@@ -321,6 +321,7 @@ sandesha2_in_order_invoker_worker_func(
                         SANDESHA2_ARRAY_LIST_STRING);
                 sandesha2_seq_property_bean_set_value(all_seq_bean, env,
                         str_list);
+                AXIS2_FREE(env->allocator, str_list);
                 sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
                         all_seq_bean);
                 continue;

@@ -211,6 +211,7 @@ sandesha2_out_handler_invoke(
     if(msg_processor)
     {
         sandesha2_msg_processor_process_out_msg(msg_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_free(msg_processor, env);
     }
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {

@@ -524,7 +524,7 @@ sandesha2_sender_worker_check_for_sync_res(
         else
             axis2_engine_receive(engine, env, res_msg_ctx);        
     }
-    /* To avoid a second passing through incoming handlers at mep_client*/
+    /* To avoid a second passing through incoming handlers at op_client*/
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
         property);

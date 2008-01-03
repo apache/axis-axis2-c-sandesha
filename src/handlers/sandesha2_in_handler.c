@@ -149,6 +149,7 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_t *ack_proc = NULL;
         ack_proc = sandesha2_ack_msg_processor_create(env);
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
+        sandesha2_msg_processor_free(ack_proc, env);
     }
     ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
         rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
@@ -163,7 +164,10 @@ sandesha2_in_handler_invoke(
     if(msg_processor)
     {
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_free(msg_processor, env);
     }
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_in_handler_invoke");
     return AXIS2_SUCCESS;

@@ -341,6 +341,8 @@ sandesha2_ack_msg_processor_process_in_msg (
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
             no_of_msgs_acked_bean); 
     }
+    if(no_of_msgs_acked_bean)
+        sandesha2_seq_property_bean_free(no_of_msgs_acked_bean, env);
     completed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
         env, out_seq_id, SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES);
     if(!completed_bean && int_seq_id)
@@ -359,6 +361,8 @@ sandesha2_ack_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, completed_bean);
     }
+    if(str_list)
+        AXIS2_FREE(env->allocator, str_list);
     last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
     if(last_out_msg_no_str)

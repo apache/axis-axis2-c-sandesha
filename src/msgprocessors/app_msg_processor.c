@@ -138,7 +138,6 @@ sandesha2_app_msg_processor_create(
     const axutil_env_t *env)
 {
     sandesha2_app_msg_processor_impl_t *msg_proc_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
           
     msg_proc_impl =  (sandesha2_app_msg_processor_impl_t *)AXIS2_MALLOC 
         (env->allocator, 
@@ -176,7 +175,6 @@ sandesha2_app_msg_processor_free (
     const axutil_env_t *env)
 {
     sandesha2_app_msg_processor_impl_t *msg_proc_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_proc_impl = SANDESHA2_INTF_TO_IMPL(msg_processor);
     
     if(msg_processor->ops)
@@ -659,7 +657,8 @@ sandesha2_app_msg_processor_process_in_msg (
             /* saving the property. */
             sandesha2_seq_property_bean_set_value(incoming_seq_list_bean, 
                 env, str_seq_list);
-            AXIS2_FREE(env->allocator, str_seq_list);
+            if(str_seq_list)
+                AXIS2_FREE(env->allocator, str_seq_list);
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
                 incoming_seq_list_bean);
         }
