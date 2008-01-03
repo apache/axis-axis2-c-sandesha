@@ -31,7 +31,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 10
+#define SANDESHA2_MAX_COUNT 8
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3, 
         listener_manager);
-    AXIS2_SLEEP(2*SANDESHA2_MAX_COUNT); 
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {

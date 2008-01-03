@@ -30,7 +30,7 @@
 #include <axis2_addr.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 10
+#define SANDESHA2_MAX_COUNT 8
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -187,7 +187,7 @@ int main(int argc, char** argv)
 
     sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
         seq_key);
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);

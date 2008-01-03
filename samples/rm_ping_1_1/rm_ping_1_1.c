@@ -24,7 +24,7 @@
 #include <sandesha2_client.h>
 #include <ctype.h>
 
-#define MAX_COUNT 10
+#define MAX_COUNT 8
 
 axiom_node_t *
 build_om_programatically(

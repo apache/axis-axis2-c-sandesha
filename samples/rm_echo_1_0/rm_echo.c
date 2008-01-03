@@ -189,7 +189,7 @@ int main(int argc, char** argv)
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
     axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback2);
     wait_on_callback(env, callback2);
-    AXIS2_SLEEP(4 * SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
