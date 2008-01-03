@@ -183,8 +183,19 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                         find_bean);
         if(list)
         {
-            if(0 == axutil_array_list_size(list, env))
+            int i = 0, size = 0;
+            size = axutil_array_list_size(list, env);
+            if(0 == size)
                 valid_seq = AXIS2_FALSE;
+            for(i = 0; i < size; i++)
+            {
+                sandesha2_create_seq_bean_t *create_seq_bean = 
+                    axutil_array_list_get(list, env, i);
+                if(create_seq_bean)
+                    sandesha2_create_seq_bean_free((sandesha2_rm_bean_t *) 
+                        create_seq_bean, env);
+            }
+            axutil_array_list_free(list, env);
         }
         else
             valid_seq = AXIS2_FALSE;        
