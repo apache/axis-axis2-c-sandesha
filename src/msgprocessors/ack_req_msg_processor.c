@@ -350,8 +350,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                     old_ack_bean, env);
                 /*char *msg_id = sandesha2_sender_bean_get_msg_id(old_ack_bean, env);*/
                 sandesha2_sender_mgr_remove(sender_mgr, env, 
-                    sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-                        old_ack_bean, env));
+                    sandesha2_sender_bean_get_msg_id(old_ack_bean, env));
                 /* Removing the message from the storage */
                 msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                     old_ack_bean, env);

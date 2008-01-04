@@ -175,8 +175,8 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_match(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate)
+    void *bean,
+    void *candidate)
 {
     return bean_mgr->ops.match(bean_mgr, env, bean, candidate);
 }
@@ -310,7 +310,7 @@ sandesha2_permanent_bean_mgr_remove(
     return AXIS2_TRUE;
 }
 
-sandesha2_rm_bean_t *AXIS2_CALL
+void *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
@@ -320,7 +320,7 @@ sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
     sandesha2_bean_mgr_args_t *args = NULL;
     axis2_char_t *error_msg = NULL;
-    sandesha2_rm_bean_t *bean = NULL;
+    void *bean = NULL;
     int rc = -1;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_permanent_bean_mgr_retrieve");
@@ -357,7 +357,7 @@ sandesha2_permanent_bean_mgr_retrieve(
         return AXIS2_FALSE;
     }
     if(args->data)
-        bean = (sandesha2_rm_bean_t *) args->data;
+        bean = (void *) args->data;
     if(args)
         AXIS2_FREE(env->allocator, args);
     axutil_thread_mutex_unlock(bean_mgr_impl->mutex);
@@ -412,7 +412,7 @@ axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
+    void *bean,
     int (*find_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find)
 {
@@ -466,8 +466,8 @@ sandesha2_permanent_bean_mgr_find(
         size = axutil_array_list_size(data_array, env);
     for(i = 0; i < size; i++)
     {
-        sandesha2_rm_bean_t *candidate = NULL;
-        candidate = (sandesha2_rm_bean_t *) axutil_array_list_get(data_array, 
+        void *candidate = NULL;
+        candidate = (void *) axutil_array_list_get(data_array, 
             env, i);
          if(!candidate)
             continue;
@@ -487,18 +487,18 @@ sandesha2_permanent_bean_mgr_find(
     return beans;
 }
 
-sandesha2_rm_bean_t *AXIS2_CALL
+void *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find_unique(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
+    void *bean,
     int (*find_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find)
 {
     sandesha2_permanent_bean_mgr_impl_t *bean_mgr_impl = NULL;
     axutil_array_list_t *beans = NULL;
     int size = 0;
-    sandesha2_rm_bean_t *ret = NULL;
+    void *ret = NULL;
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     bean_mgr_impl = SANDESHA2_INTF_TO_IMPL(bean_mgr);
     beans = sandesha2_permanent_bean_mgr_find(bean_mgr, env, bean, find_func, 

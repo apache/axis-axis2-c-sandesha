@@ -36,7 +36,6 @@
 #include <axutil_array_list.h>
 #include <axis2_engine.h>
 #include <sandesha2_msg_creator.h>
-#include <sandesha2_rm_bean.h>
 #include <axis2_transport_out_desc.h>
 
 axutil_hash_t *sandesha2_terminate_mgr_rcv_side_clean_map = NULL;
@@ -182,11 +181,10 @@ sandesha2_terminate_mgr_clean_recv_side_after_invocation(
         
         map_bean = axutil_array_list_get(found_list, env, i);
         msg_store_key = sandesha2_invoker_bean_get_msg_ctx_ref_key(
-            (sandesha2_rm_bean_t *) map_bean, env);
+            map_bean, env);
         sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, msg_store_key);
         sandesha2_invoker_mgr_remove(invoker_mgr, env, 
-            sandesha2_invoker_bean_get_msg_ctx_ref_key((sandesha2_rm_bean_t *) 
-                map_bean, env));
+            sandesha2_invoker_bean_get_msg_ctx_ref_key(map_bean, env));
     }*/
     /*axutil_allocator_switch_to_global_pool(env->allocator);
     clean_status = axutil_hash_get(sandesha2_terminate_mgr_rcv_side_clean_map,
@@ -256,8 +254,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
                     conf_ctx);
             }
-            seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
-                bean, env);
+            seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
             if(seq_id)
                 sandesha2_next_msg_mgr_remove(next_msg_mgr, env, seq_id);
         }
@@ -565,8 +562,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             axis2_char_t *msg_id = NULL;
             
             retrans_bean = axutil_array_list_get(found_list, env, i);
-            msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-                retrans_bean, env);
+            msg_id = sandesha2_sender_bean_get_msg_id(retrans_bean, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
                 " sender bean with msg_id %s and internal_seq_id %s", msg_id, 
                 internal_seq_id);
@@ -599,7 +595,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
                    conf_ctx);
             msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-                (sandesha2_rm_bean_t *) create_seq_bean, env);
+                create_seq_bean, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
                 " create_seq_bean with msg_id %s and internal_seq_id %s",
                 msg_id, internal_seq_id);

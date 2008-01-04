@@ -192,8 +192,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 sandesha2_create_seq_bean_t *create_seq_bean = 
                     axutil_array_list_get(list, env, i);
                 if(create_seq_bean)
-                    sandesha2_create_seq_bean_free((sandesha2_rm_bean_t *) 
-                        create_seq_bean, env);
+                    sandesha2_create_seq_bean_free(create_seq_bean, env);
             }
             axutil_array_list_free(list, env);
         }
@@ -217,7 +216,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 
                 next_bean = axutil_array_list_get(list, env, i);
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(
-                    (sandesha2_rm_bean_t *) next_bean, env);
+                    next_bean, env);
                 if(0 == axutil_strcmp(seq_id, tmp_id))
                 {
                     contains = AXIS2_TRUE;

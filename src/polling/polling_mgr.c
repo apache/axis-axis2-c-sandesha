@@ -334,8 +334,7 @@ sandesha2_polling_mgr_worker_func(
                 "No valid MakeConnection entry is found.");
             continue;
         }
-        make_conn_seq_id = sandesha2_next_msg_bean_get_seq_id((sandesha2_rm_bean_t *) 
-            next_msg_bean, env);
+        make_conn_seq_id = sandesha2_next_msg_bean_get_seq_id(next_msg_bean, env);
         /* Create a MakeConnection message */
         ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(next_msg_bean, env);
         seq_prop_key = make_conn_seq_id;

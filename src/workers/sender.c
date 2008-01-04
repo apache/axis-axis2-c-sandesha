@@ -162,8 +162,7 @@ sandesha2_sender_worker_func(
             AXIS2_USLEEP(sleep_time);
             continue;
         }
-        msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-            sender_bean, env);
+        msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
         if(msg_id)
         {
             axis2_bool_t status = AXIS2_TRUE;
@@ -177,6 +176,9 @@ sandesha2_sender_worker_func(
                 run_sender = AXIS2_FALSE;
             }
         }
+        if(sender_bean)
+            sandesha2_sender_bean_free(sender_bean, env); 
+
     }
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);

@@ -19,7 +19,6 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_error.h>
-#include <sandesha2_rm_bean.h>
 #include <axutil_log.h>
 #include <axutil_hash.h>
 #include <axutil_thread.h>
@@ -173,8 +172,8 @@ static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate);
+    void *bean,
+    void *candidate);
 
 static const sandesha2_create_seq_mgr_ops_t create_seq_mgr_ops = 
 {
@@ -242,7 +241,7 @@ sandesha2_permanent_create_seq_mgr_insert(
         "[sandesha2]Entry:sandesha2_permanent_create_seq_mgr_insert");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-        (sandesha2_rm_bean_t *) bean, env);
+        bean, env);
     internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
     seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
     create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
@@ -325,7 +324,7 @@ sandesha2_permanent_create_seq_mgr_update(
         "Entry:[sandesha2]sandesha2_permanent_create_seq_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     create_seq_msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
-        (sandesha2_rm_bean_t *) bean, env);
+        bean, env);
     internal_seq_id = sandesha2_create_seq_bean_get_internal_seq_id(bean, env);
     seq_id = sandesha2_create_seq_bean_get_seq_id(bean, env);
     create_seq_msg_store_key = sandesha2_create_seq_bean_get_create_seq_msg_store_key(bean, env);
@@ -360,7 +359,7 @@ sandesha2_permanent_create_seq_mgr_find(
     sql_find = "select create_seq_msg_id,internal_seq_id,"\
         "seq_id,create_seq_msg_store_key, ref_msg_store_key from create_seq;";
     ret = sandesha2_permanent_bean_mgr_find(seq_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_create_seq_find_callback,
+        (void *)bean, sandesha2_create_seq_find_callback,
         sql_find);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "Exit:[sandesha2]sandesha2_permanent_create_seq_mgr_find");
@@ -380,7 +379,7 @@ sandesha2_permanent_create_seq_mgr_find_unique(
     sql_find = "select create_seq_msg_id,internal_seq_id,"\
         "seq_id,create_seq_msg_store_key, ref_msg_store_key from create_seq;";
     return (sandesha2_create_seq_bean_t *) sandesha2_permanent_bean_mgr_find_unique(
-        seq_mgr_impl->bean_mgr, env, (sandesha2_rm_bean_t *) bean, 
+        seq_mgr_impl->bean_mgr, env, (void *)bean, 
         sandesha2_create_seq_find_callback, sql_find);
 }
 
@@ -388,9 +387,11 @@ static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_create_seq_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate)
+    void *bean1,
+    void *candidate1)
 {
+    sandesha2_create_seq_bean_t *bean = (sandesha2_create_seq_bean_t *)bean1;
+    sandesha2_create_seq_bean_t *candidate = (sandesha2_create_seq_bean_t *)candidate1;
     axis2_bool_t equal = AXIS2_TRUE;
     axis2_char_t *msg_id = NULL;
     axis2_char_t *temp_msg_id = NULL;

@@ -5,8 +5,7 @@ libsandesha2_storage_beans_la_SOURCES = invoker_bean.c \
 				create_seq_bean.c \
 				next_msg_bean.c \
 				sender_bean.c \
-				seq_property_bean.c \
-				rm_bean.c
+				seq_property_bean.c 
 
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \

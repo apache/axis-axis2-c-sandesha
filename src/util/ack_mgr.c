@@ -342,8 +342,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             if(0 == axutil_strcmp(to, to_str))
                 continue; 
             sandesha2_sender_mgr_remove(sender_mgr, env, 
-                sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-                    sender_bean, env));
+                sandesha2_sender_bean_get_msg_id(sender_bean, env));
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                 msg_ctx_ref_key, conf_ctx);
             ack_rm_msg = sandesha2_msg_init_init_msg(env, msg_ctx1);

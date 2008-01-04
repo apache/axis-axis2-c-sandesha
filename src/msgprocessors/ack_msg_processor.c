@@ -298,8 +298,7 @@ sandesha2_ack_msg_processor_process_in_msg (
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                     "[sandesha2]Removing the sender bean with type %d", msg_type);
                 sandesha2_sender_mgr_remove(sender_mgr, env, 
-                    sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-                        retrans_bean, env));
+                    sandesha2_sender_bean_get_msg_id(retrans_bean, env));
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env,
                     sandesha2_sender_bean_get_msg_ctx_ref_key(retrans_bean, 
                         env), conf_ctx);

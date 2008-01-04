@@ -21,7 +21,6 @@
 #include <sandesha2_error.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_seq_property_mgr.h>
-#include <sandesha2_rm_bean.h>
 #include <axutil_log.h>
 #include <axutil_hash.h>
 #include <axutil_thread.h>
@@ -163,8 +162,8 @@ static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_prop,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate);
+    void *bean,
+    void *candidate);
 
 axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_retrieve_all(
@@ -375,7 +374,7 @@ sandesha2_permanent_seq_property_mgr_find(
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     sql_find = "select seq_id, name,value from seq_property";
     ret = sandesha2_permanent_bean_mgr_find(seq_prop_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_find_callback,
+        bean, sandesha2_seq_property_find_callback,
         sql_find);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_find");
@@ -395,7 +394,7 @@ sandesha2_permanent_seq_property_mgr_find_unique(
     sql_find = "select seq_id, name,value from seq_property";
     return (sandesha2_seq_property_bean_t *) 
         sandesha2_permanent_bean_mgr_find_unique(seq_prop_mgr_impl->bean_mgr, 
-        env, (sandesha2_rm_bean_t *) bean, sandesha2_seq_property_find_callback,
+        env, bean, sandesha2_seq_property_find_callback,
         sql_find);
 }
 
@@ -403,9 +402,13 @@ static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_match(
     sandesha2_permanent_bean_mgr_t *seq_prop_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate)
+    void *bean1,
+    void *candidate1)
 {
+    sandesha2_seq_property_bean_t *bean = 
+        (sandesha2_seq_property_bean_t *) bean1;
+    sandesha2_seq_property_bean_t *candidate = 
+        (sandesha2_seq_property_bean_t *) candidate1;
     axis2_bool_t equal = AXIS2_TRUE;
     axis2_char_t *seq_id = NULL;
     axis2_char_t *temp_seq_id = NULL;

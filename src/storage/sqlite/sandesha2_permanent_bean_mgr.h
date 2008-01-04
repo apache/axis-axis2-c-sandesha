@@ -28,7 +28,6 @@
 #include <axutil_string.h>
 #include <axutil_utils.h>
 #include <axutil_array_list.h>
-#include <sandesha2_rm_bean.h>
 #include <sandesha2_msg_store_bean.h>
 #include "sqlite3.h"
 
@@ -48,8 +47,8 @@ AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr_ops
             match) (
                 sandesha2_permanent_bean_mgr_t *bean_mgr,
                 const axutil_env_t *env,
-                sandesha2_rm_bean_t *bean,
-                sandesha2_rm_bean_t *candidate);
+                void *bean,
+                void *candidate);
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr
@@ -97,7 +96,7 @@ sandesha2_permanent_bean_mgr_remove(
     const axutil_env_t *env,
     axis2_char_t *sql_stmt_remove);
 
-sandesha2_rm_bean_t *AXIS2_CALL
+void *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
@@ -114,15 +113,15 @@ axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
+    void *bean,
     int (*find_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find);
 
-sandesha2_rm_bean_t *AXIS2_CALL
+void *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find_unique(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
+    void *bean,
     int (*find_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find);
 
@@ -130,8 +129,8 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_bean_mgr_match(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate);
+    void *bean,
+    void *candidate);
 
 sandesha2_msg_store_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(

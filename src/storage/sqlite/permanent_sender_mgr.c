@@ -206,8 +206,8 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_match(
     sandesha2_permanent_bean_mgr_t *sender_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate);
+    void *bean,
+    void *candidate);
 
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
@@ -291,7 +291,7 @@ sandesha2_permanent_sender_mgr_insert(
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_insert");
     
 	AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
+    msg_id = sandesha2_sender_bean_get_msg_id(bean, 
         env);
 	msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
 	internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
@@ -396,7 +396,7 @@ sandesha2_permanent_sender_mgr_update(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) bean, 
+    msg_id = sandesha2_sender_bean_get_msg_id(bean, 
         env);
     msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
     internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
@@ -450,10 +450,10 @@ sandesha2_permanent_sender_mgr_find_by_internal_seq_id(
         "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
         "wsrm_anon_uri, to_address from sender;";
     ret = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_sender_find_callback,
+        bean, sandesha2_sender_find_callback,
         sql_find);
     if(bean)
-        sandesha2_sender_bean_free((sandesha2_rm_bean_t *) bean, env);
+        sandesha2_sender_bean_free(bean, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_permanent_sender_mgr_find_by_internal_seq_id");
     return ret;
@@ -475,7 +475,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
         "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
         "wsrm_anon_uri, to_address from sender;";
     ret = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) bean, sandesha2_sender_find_callback,
+        bean, sandesha2_sender_find_callback,
         sql_find);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_permanent_sender_mgr_find_by_sender_bean");
@@ -496,7 +496,7 @@ sandesha2_permanent_sender_mgr_find_unique(
         "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
         "wsrm_anon_uri, to_address from sender;";
     return (sandesha2_sender_bean_t *) sandesha2_permanent_bean_mgr_find(
-        sender_mgr_impl->bean_mgr, env, (sandesha2_rm_bean_t *) bean, 
+        sender_mgr_impl->bean_mgr, env, (void *) bean, 
         sandesha2_sender_find_callback, sql_find);
 }
 
@@ -504,9 +504,11 @@ axis2_bool_t AXIS2_CALL
 sandesha2_permanent_sender_mgr_match(
     sandesha2_permanent_bean_mgr_t *sender_mgr,
     const axutil_env_t *env,
-    sandesha2_rm_bean_t *bean,
-    sandesha2_rm_bean_t *candidate)
+    void *bean1,
+    void *candidate1)
 {
+    sandesha2_sender_bean_t *bean = (sandesha2_sender_bean_t *) bean1;
+    sandesha2_sender_bean_t *candidate = (sandesha2_sender_bean_t *) candidate1;
     axis2_bool_t add = AXIS2_TRUE;
     axis2_char_t *ref_key = NULL;
     axis2_char_t *temp_ref_key = NULL;
@@ -627,10 +629,10 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
         "time_to_send, msg_type, seq_id, wsrm_anon_uri, "\
         "to_address from sender;";
     match_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
-        (sandesha2_rm_bean_t *) matcher, sandesha2_sender_find_callback,
+        matcher, sandesha2_sender_find_callback,
         sql_find);
     if(matcher)
-        sandesha2_sender_bean_free((sandesha2_rm_bean_t *)matcher, env);
+        sandesha2_sender_bean_free(matcher, env);
 
     /*
      * We either return an application message or an RM message. If we find
@@ -668,7 +670,7 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
             do_free = AXIS2_FALSE;
         }
         if(bean && do_free)
-            sandesha2_sender_bean_free((sandesha2_rm_bean_t *)bean, env);
+            sandesha2_sender_bean_free(bean, env);
     }
     if(match_list)
         axutil_array_list_free(match_list, env);

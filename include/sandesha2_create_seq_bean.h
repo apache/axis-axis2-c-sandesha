@@ -21,7 +21,6 @@
 #include <axutil_env.h>
 #include <axutil_utils.h>
 #include <axutil_utils_defines.h>
-#include <sandesha2_rm_bean.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -29,12 +28,6 @@ extern "C"
 #endif
 
 typedef struct sandesha2_create_seq_bean sandesha2_create_seq_bean_t;
-struct sandesha2_transaction;
-
-AXIS2_DECLARE_DATA struct sandesha2_create_seq_bean
-{
-    sandesha2_rm_bean_t rm_bean;
-};
 
 /* constructors 
  */
@@ -51,23 +44,12 @@ sandesha2_create_seq_bean_create_with_data(
 
 void AXIS2_CALL 
 sandesha2_create_seq_bean_free  (
-    sandesha2_rm_bean_t *create_seq_bean,
-    const axutil_env_t *env);
-
-struct sandesha2_rm_bean * AXIS2_CALL
-sandesha2_create_seq_bean_get_base( 
-    sandesha2_rm_bean_t* create_seq,
-    const axutil_env_t *env);
-
-void AXIS2_CALL
-sandesha2_create_seq_bean_set_base (
     sandesha2_create_seq_bean_t *create_seq_bean,
-    const axutil_env_t *env, 
-    struct sandesha2_rm_bean* rm_bean);
+    const axutil_env_t *env);
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_create_seq_bean_get_create_seq_msg_id  (
-    sandesha2_rm_bean_t *create_seq_bean,
+    sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env);
 
 void AXIS2_CALL 
@@ -119,28 +101,6 @@ sandesha2_create_seq_bean_set_ref_msg_store_key(
     sandesha2_create_seq_bean_t *create_seq_bean,
 	const axutil_env_t *env, 
     axis2_char_t *ref_msg_store_key);
-
-void AXIS2_CALL
-sandesha2_create_seq_bean_set_id( 
-    sandesha2_rm_bean_t *create_seq_bean,
-	const axutil_env_t *env, 
-    long id);
-
-long AXIS2_CALL
-sandesha2_create_seq_bean_get_id( 
-    sandesha2_rm_bean_t *create_seq_bean,
-	const axutil_env_t *env);
-
-void AXIS2_CALL
-sandesha2_create_seq_bean_set_transaction( 
-    sandesha2_rm_bean_t *create_seq_bean,
-	const axutil_env_t *env, 
-    struct sandesha2_transaction *transaction);
-
-struct sandesha2_transaction *AXIS2_CALL
-sandesha2_create_seq_bean_get_transaction( 
-    sandesha2_rm_bean_t *create_seq_bean,
-	const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

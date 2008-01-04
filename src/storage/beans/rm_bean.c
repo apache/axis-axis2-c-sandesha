@@ -24,8 +24,6 @@
 typedef struct sandesha2_rm_bean_impl
 {
     sandesha2_rm_bean_t rm_bean;
-	long id;
-    sandesha2_transaction_t *transaction;
 } sandesha2_rm_bean_impl_t;
 
 #define SANDESHA2_INTF_TO_IMPL(rm_bean) ((sandesha2_rm_bean_impl_t *) rm_bean)
@@ -33,10 +31,6 @@ static const sandesha2_rm_bean_ops_t rm_bean_ops =
 {
     sandesha2_rm_bean_free,
     NULL,
-    sandesha2_rm_bean_set_id,
-    sandesha2_rm_bean_get_id,
-    sandesha2_rm_bean_set_transaction,
-    sandesha2_rm_bean_get_transaction,
     NULL
 };
 
@@ -44,7 +38,6 @@ AXIS2_EXTERN sandesha2_rm_bean_t* AXIS2_CALL
 sandesha2_rm_bean_create(const axutil_env_t *env)
 {
 	sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	rm_bean_impl = (sandesha2_rm_bean_impl_t *)AXIS2_MALLOC(env->allocator,
 	    sizeof(sandesha2_rm_bean_impl_t));
 	if(!rm_bean_impl)
@@ -73,55 +66,4 @@ sandesha2_rm_bean_get_base(
 {
     return rm_bean->ops.get_base(rm_bean, env);
 }
-
-axis2_char_t *AXIS2_CALL
-sandesha2_rm_bean_get_key(
-    sandesha2_rm_bean_t *rm_bean,
-    const axutil_env_t *env)
-{
-    return rm_bean->ops.get_key(rm_bean, env);
-}
-
-void AXIS2_CALL
-sandesha2_rm_bean_set_id( 
-    sandesha2_rm_bean_t *rm_bean,
-	const axutil_env_t *env, 
-    long id)
-{
-    sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
-    rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);
-    rm_bean_impl->id = id;
-}
-
-long AXIS2_CALL
-sandesha2_rm_bean_get_id( 
-    sandesha2_rm_bean_t *rm_bean,
-	const axutil_env_t *env)
-{
-    sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
-    rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);
-    return rm_bean_impl->id;
-}
-
-void AXIS2_CALL
-sandesha2_rm_bean_set_transaction( 
-    sandesha2_rm_bean_t *rm_bean,
-	const axutil_env_t *env, 
-    sandesha2_transaction_t *transaction)
-{
-    sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
-    rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);
-    rm_bean_impl->transaction = transaction;
-}
-
-sandesha2_transaction_t *AXIS2_CALL
-sandesha2_rm_bean_get_transaction( 
-    sandesha2_rm_bean_t *rm_bean,
-	const axutil_env_t *env)
-{
-    sandesha2_rm_bean_impl_t *rm_bean_impl = NULL;
-    rm_bean_impl = SANDESHA2_INTF_TO_IMPL(rm_bean);
-    return rm_bean_impl->transaction;
-}
-
 

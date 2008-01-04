@@ -349,8 +349,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
      * 1. A message being sent by the Sender thread.
      * 2. A message being sent as a reply to an make_connection.
      */
-    msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-        sender_bean, env);
+    msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
     /*if(msg_id)
     {
         sandesha2_sender_worker_t *sender_worker = NULL;
@@ -473,8 +472,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         {
             axis2_char_t *msg_stored_key = NULL;
             
-            msg_id = sandesha2_sender_bean_get_msg_id((sandesha2_rm_bean_t *) 
-                bean1, env);
+            msg_id = sandesha2_sender_bean_get_msg_id(bean1, env);
             sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
             /* Removing the message from the storage */
             msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
@@ -483,7 +481,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
                 msg_stored_key, conf_ctx);
         }
         if(bean1)
-            sandesha2_sender_bean_free((sandesha2_rm_bean_t *)bean1, env);
+            sandesha2_sender_bean_free(bean1, env);
     }
     msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
     if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
