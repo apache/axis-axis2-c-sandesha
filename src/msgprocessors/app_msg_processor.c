@@ -738,11 +738,14 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     if(back_channel_free)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]back_channel_free true");
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             seq_prop_mgr);
     }
     else if(sandesha2_utils_is_single_channel(env, rm_version, acks_to_str))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]is_single_channel true");
         /* Do nothing */
     } 
     else
@@ -957,7 +960,8 @@ sandesha2_app_msg_processor_process_out_msg(
                 axutil_property_t *spec_ver_prop = NULL;
                 spec_ver_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
                     SANDESHA2_CLIENT_RM_SPEC_VERSION);
-                spec_ver = axutil_property_get_value(spec_ver_prop, env);
+                spec_ver = axutil_strdup(env, axutil_property_get_value(
+                    spec_ver_prop, env));
             }
             if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd
                 (env, spec_ver))
@@ -1329,7 +1333,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_bool_t sent = AXIS2_FALSE;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] Entry:sandesha2_app_msg_processor_send_ack_if_reqd");
+        "[Sandesha2]Entry:sandesha2_app_msg_processor_send_ack_if_reqd");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_str, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
@@ -1370,7 +1374,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
+        "[Sandesha2]Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
     return AXIS2_SUCCESS;
 }
                     	

@@ -894,7 +894,9 @@ sandesha2_msg_creator_add_ack_msg(
     axis2_msg_ctx_t *msg_ctx = NULL;
     axutil_array_list_t *ack_range_list = NULL;
     int i = 0, size = 0;
-
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:sandesha2_msg_creator_add_ack_msg");
     envelope = sandesha2_msg_ctx_get_soap_envelope(app_msg, env);
     if(!envelope)
     {
@@ -971,6 +973,8 @@ sandesha2_msg_creator_add_ack_msg(
     uuid = axutil_uuid_gen(env);
     sandesha2_msg_ctx_set_msg_id(app_msg, env, uuid);
 
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:sandesha2_msg_creator_add_ack_msg");
     return AXIS2_SUCCESS;
         
 }
