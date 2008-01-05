@@ -129,6 +129,8 @@ sandesha2_utils_get_current_time_in_millis(
     millis = millis + seconds;
 
     return millis;*/
+    if(tp)
+        AXIS2_FREE(env->allocator, tp);
     return seconds;
 }
 

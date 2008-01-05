@@ -601,11 +601,19 @@ sandesha2_rm_elements_get_rm_ns_val(
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
             soap_header, env, SANDESHA2_SPEC_2005_02_NS_URI);
         if(headers && 0 < axutil_array_list_size(headers, env))
+        {
+            if(headers)
+                axutil_array_list_free(headers, env);
             return SANDESHA2_SPEC_2005_02_NS_URI;
+        }
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
             soap_header, env, SANDESHA2_SPEC_2006_08_NS_URI);                
         if(headers && 0 < axutil_array_list_size(headers, env))
+        {
+            if(headers)
+                axutil_array_list_free(headers, env);
             return SANDESHA2_SPEC_2006_08_NS_URI;
+        }
     }
     if(!action)
         return NULL;
