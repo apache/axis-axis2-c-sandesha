@@ -53,8 +53,6 @@ sandesha2_rm_elements_create(
     axis2_char_t *addr_ns_val)
 {
     sandesha2_rm_elements_t *rm_elements = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
-    
     rm_elements =  (sandesha2_rm_elements_t *)AXIS2_MALLOC 
         (env->allocator, sizeof(sandesha2_rm_elements_t));
     if(!rm_elements)
@@ -86,11 +84,15 @@ sandesha2_rm_elements_free(
     sandesha2_rm_elements_t *rm_elements, 
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     if(rm_elements->addr_ns_val)
     {
         AXIS2_FREE(env->allocator, rm_elements->addr_ns_val);
         rm_elements->addr_ns_val = NULL;
+    }
+    if(rm_elements->rm_ns_val)
+    {
+        AXIS2_FREE(env->allocator, rm_elements->rm_ns_val);
+        rm_elements->rm_ns_val = NULL;
     }
 	AXIS2_FREE(env->allocator, rm_elements);
 	return AXIS2_SUCCESS;
@@ -136,22 +138,21 @@ sandesha2_rm_elements_from_soap_envelope(
     axis2_char_t *rm_ns_val = NULL;
     axis2_char_t *addr_ns_val = NULL;
     
-    
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
     
     soap_version = axiom_soap_envelope_get_soap_version(soap_envelope, env);
     
-    rm_elements->rm_ns_val = sandesha2_rm_elements_get_rm_ns_val(rm_elements,
-                        env, soap_envelope, action);
+    rm_elements->rm_ns_val = axutil_strdup(env, 
+        sandesha2_rm_elements_get_rm_ns_val(rm_elements, env, soap_envelope, 
+            action));
                         
     if(!rm_elements->rm_ns_val)
         return AXIS2_SUCCESS;
         
-    rm_elements->addr_ns_val =  
-            sandesha2_rm_elements_get_addr_ns_val_from_env(
-                        rm_elements, env, soap_envelope, action);
+    rm_elements->addr_ns_val =  axutil_strdup(env, 
+        sandesha2_rm_elements_get_addr_ns_val_from_env(rm_elements, env, 
+            soap_envelope, action));
     if(!rm_elements->addr_ns_val)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the"
@@ -326,8 +327,6 @@ sandesha2_rm_elements_to_soap_envelope(
     axiom_soap_body_t *soap_body = NULL;
     axiom_node_t *body_node = NULL;
     
-    
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
     
     soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
@@ -392,8 +391,6 @@ sandesha2_rm_elements_get_create_seq(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->create_seq;
 }
             
@@ -403,7 +400,6 @@ sandesha2_rm_elements_set_create_seq(
     const axutil_env_t *env,
     sandesha2_create_seq_t *create_seq)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, create_seq, AXIS2_FAILURE);
     rm_elements->create_seq = create_seq;
     return AXIS2_SUCCESS;
@@ -414,8 +410,6 @@ sandesha2_rm_elements_get_create_seq_res(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->create_seq_res;
 }
             
@@ -425,7 +419,6 @@ sandesha2_rm_elements_set_create_seq_res(
     const axutil_env_t *env,
     sandesha2_create_seq_res_t *create_seq_res)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, create_seq_res, AXIS2_FAILURE);
     rm_elements->create_seq_res = create_seq_res;
     return AXIS2_SUCCESS;
@@ -436,8 +429,6 @@ sandesha2_rm_elements_get_seq(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->seq;
 }
             
@@ -447,7 +438,6 @@ sandesha2_rm_elements_set_seq(
     const axutil_env_t *env,
     sandesha2_seq_t *seq)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq, AXIS2_FAILURE);
     rm_elements->seq = seq;
     return AXIS2_SUCCESS;
@@ -458,8 +448,6 @@ sandesha2_rm_elements_get_seq_ack(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->seq_ack;
 }
             
@@ -469,7 +457,6 @@ sandesha2_rm_elements_set_seq_ack(
     const axutil_env_t *env,
     sandesha2_seq_ack_t *seq_ack)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_ack, AXIS2_FAILURE);
     rm_elements->seq_ack = seq_ack;
     return AXIS2_SUCCESS;
@@ -480,8 +467,6 @@ sandesha2_rm_elements_get_terminate_seq(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->terminate_seq;
 }
             
@@ -491,7 +476,6 @@ sandesha2_rm_elements_set_terminate_seq(
     const axutil_env_t *env,
     sandesha2_terminate_seq_t *terminate_seq)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, terminate_seq, AXIS2_FAILURE);
     rm_elements->terminate_seq = terminate_seq;
     return AXIS2_SUCCESS;
@@ -502,8 +486,6 @@ sandesha2_rm_elements_get_terminate_seq_res(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->terminate_seq_res;
 }
             
@@ -513,7 +495,6 @@ sandesha2_rm_elements_set_terminate_seq_res(
     const axutil_env_t *env,
     sandesha2_terminate_seq_res_t *terminate_seq_res)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, terminate_seq_res, AXIS2_FAILURE);
     rm_elements->terminate_seq_res = terminate_seq_res;
     return AXIS2_SUCCESS;
@@ -524,8 +505,6 @@ sandesha2_rm_elements_get_ack_requested(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->ack_requested;
 }
             
@@ -535,7 +514,6 @@ sandesha2_rm_elements_set_ack_requested(
     const axutil_env_t *env,
     sandesha2_ack_requested_t *ack_requested)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, ack_requested, AXIS2_FAILURE);
     rm_elements->ack_requested = ack_requested;
     return AXIS2_SUCCESS;
@@ -546,8 +524,6 @@ sandesha2_rm_elements_get_close_seq(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->close_seq;
 }
             
@@ -557,7 +533,6 @@ sandesha2_rm_elements_set_close_seq(
     const axutil_env_t *env,
     sandesha2_close_seq_t *close_seq)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, close_seq, AXIS2_FAILURE);
     rm_elements->close_seq = close_seq;
     return AXIS2_SUCCESS;
@@ -568,8 +543,6 @@ sandesha2_rm_elements_get_close_seq_res(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->close_seq_res;
 }
             
@@ -579,7 +552,6 @@ sandesha2_rm_elements_set_close_seq_res(
     const axutil_env_t *env,
     sandesha2_close_seq_res_t *close_seq_res)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, close_seq_res, AXIS2_FAILURE);
     rm_elements->close_seq_res = close_seq_res;
     return AXIS2_SUCCESS;
@@ -590,8 +562,6 @@ sandesha2_rm_elements_get_addr_ns_val(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->addr_ns_val;
 }
 
@@ -600,8 +570,6 @@ sandesha2_rm_elements_get_make_connection(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->make_connection;
 }
 
@@ -610,8 +578,6 @@ sandesha2_rm_elements_get_msg_pending(
     sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-    
     return rm_elements->msg_pending;
 }
 
@@ -624,7 +590,6 @@ sandesha2_rm_elements_get_rm_ns_val(
 {
     axiom_soap_header_t *soap_header = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
     AXIS2_PARAM_CHECK(env->error, action, NULL);
     
@@ -684,7 +649,6 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
 {
     axiom_soap_header_t *soap_header = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, soap_envelope, NULL);
     AXIS2_PARAM_CHECK(env->error, action, NULL);
     

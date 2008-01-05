@@ -311,9 +311,9 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
+    /*axis2_ctx_t *ctx = NULL;
+    axutil_property_t *prop = NULL;*/
     axis2_msg_ctx_t *temp_msg_ctx = NULL;
-    axutil_property_t *prop = NULL;
     axis2_char_t *rm_version = NULL;
     axis2_char_t *rm_ns_value = NULL;
     axis2_char_t *addressing_ns_value = NULL;
@@ -399,17 +399,19 @@ sandesha2_msg_creator_create_create_seq_res_msg(
                 rm_version);*/
     soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
-    ctx = axis2_msg_ctx_get_base(out_msg, env);
+    /*ctx = axis2_msg_ctx_get_base(out_msg, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
     {
-       axutil_property_set_value(prop, env, addressing_ns_value); 
+        axutil_property_set_value(prop, env, axutil_strdup(env, 
+            addressing_ns_value)); 
     }
     else
     {
-        prop = axutil_property_create_with_args(env, 0, 0, 0, addressing_ns_value);
+        prop = axutil_property_create_with_args(env, 0, 0, 0, axutil_strdup(env, 
+            addressing_ns_value));
         axis2_ctx_set_property(ctx, env, AXIS2_WSA_VERSION, prop);
-    }
+    }*/
     if(addressing_ns_value)
         AXIS2_FREE(env->allocator, addressing_ns_value);
     new_msg_id = axutil_uuid_gen(env);

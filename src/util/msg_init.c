@@ -263,6 +263,8 @@ populate_rm_msg_ctx(
         sandesha2_msg_ctx_set_addr_ns_val(rm_msg_ctx, env, 
                 addressing_ns_value);
     }
+    if(rm_elements)
+        sandesha2_rm_elements_free(rm_elements, env);
     return AXIS2_SUCCESS;
 }
 

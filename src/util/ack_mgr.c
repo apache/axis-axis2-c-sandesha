@@ -50,7 +50,7 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_op_t *ack_op = NULL;
     axis2_op_t *ref_op = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
-    axis2_char_t *addr_ns_uri = NULL;
+    /*axis2_char_t *addr_ns_uri = NULL;*/
     axutil_property_t *property = NULL;
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
@@ -117,7 +117,7 @@ sandesha2_ack_mgr_generate_ack_msg(
     /* Adding the sequence acknowledgement part */
     sandesha2_msg_creator_add_ack_msg(env, ack_rm_msg, seq_id, seq_prop_mgr);
     axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-    addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id, 
+    /*addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
     if(addr_ns_uri)
     {
@@ -133,7 +133,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         }
         if(addr_ns_uri)
             AXIS2_FREE(env->allocator, addr_ns_uri);
-    }
+    }*/
     op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     if(!op_ctx)
     {
