@@ -155,7 +155,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
-    /* RM Version 1.1 */
+    /* RM Version 1.0 */
     property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)

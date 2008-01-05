@@ -29,10 +29,16 @@
 #include <sandesha2_client_constants.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 4
+#define SANDESHA2_MAX_COUNT 8
 void 
 usage(
     axis2_char_t *prog_name);
+
+axiom_node_t *build_om_programatically(
+    const axutil_env_t * env,
+    const axis2_char_t * image_name,
+    const axis2_char_t * to_save_name,
+    axis2_bool_t optimized);
 
 int main(int argc, char** argv)
 {
@@ -41,26 +47,25 @@ int main(int argc, char** argv)
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
-    axis2_svc_ctx_t *svc_ctx = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
-    axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
+    axutil_string_t *soap_action = NULL;
     int c;
     const axis2_char_t *image_name = "../resources/axis2.jpg";
+    axis2_char_t *seq_key = NULL;
+    axis2_bool_t optimized = AXIS2_TRUE;
+    axis2_char_t *offered_seq_id = NULL;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_mtom_1_0.log", 
-            AXIS2_LOG_LEVEL_TRACE);
+        AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:9090/axis2/services/RMSampleService";*/
     address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
-
         switch (c)
         {
             case 'a':
@@ -92,9 +97,10 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_enable_mtom(options, env, AXIS2_TRUE); 
-    /* Seperate listner needs addressing, hence addressing stuff in options */
-    /*axis2_options_set_action(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");*/
+
+    soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
+    axis2_options_set_soap_action(options, env, soap_action);
+    axis2_options_set_action(options, env, "urn:wsrm:EchoString");
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
@@ -127,10 +133,14 @@ int main(int argc, char** argv)
 
     /* Offer sequence */
     offered_seq_id = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, offered_seq_id);
+    property = axutil_property_create(env);
     if(property)
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID,
-            property);
+    {
+        axutil_property_set_value(property, env, axutil_strdup(env, 
+            offered_seq_id));
+        axis2_options_set_property(options, env, 
+            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
+    }
     property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
     if(property)
@@ -138,56 +148,14 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    svc_ctx = axis2_svc_client_get_svc_ctx(svc_client, env);
-    conf_ctx = axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, "4");
-    
+
+    seq_key = axutil_uuid_gen(env);
+    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     if(property)
     {
-        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY,
             property);
     }
-    /*payload = build_om_payload_for_mtom(env, image_name, "test1.jpg");
-    result = axis2_svc_client_send_receive(svc_client, env, payload);
-    if(result)
-    {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
-            printf("\nReceived OM : %s\n", om_str);
-        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-
-        AXIS2_FREE(env->allocator, om_str);
-        result = NULL;
-    }
-    else
-    {
-        printf("\necho client two way single channel invoke FAILED!\n");
-    }
-
-    property = axutil_property_create_with_args(env, 0, 0, 0, "4");
-    if(property)
-    {
-        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
-            property);
-    }
-    payload = build_om_payload_for_mtom(env, image_name, "test2.jpg");
-    result = axis2_svc_client_send_receive(svc_client, env, payload);
-    if(result)
-    {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
-            printf("\nReceived OM : %s\n", om_str);
-        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-
-        AXIS2_FREE(env->allocator, om_str);
-        result = NULL;
-    }
-    else
-    {
-        printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
 
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
@@ -195,7 +163,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    payload = build_om_payload_for_mtom(env, image_name, "test3.jpg");
+    payload = build_om_programatically(env, image_name, "test3.jpg", optimized);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", 
         property);
@@ -216,14 +184,62 @@ int main(int argc, char** argv)
         printf("\necho client two way single channel invoke FAILED!\n");
     }
 
-    AXIS2_SLEEP(2 * SANDESHA2_MAX_COUNT); 
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     if (svc_client)
     {
-        /*axis2_svc_client_free(svc_client, env);*/
+        axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
     
     return 0;
+}
+
+/* build SOAP request message content using OM */
+axiom_node_t *
+build_om_programatically(
+    const axutil_env_t * env,
+    const axis2_char_t * image_name,
+    const axis2_char_t * to_save_name,
+    axis2_bool_t optimized)
+{
+    axiom_node_t *mtom_om_node = NULL;
+    axiom_element_t *mtom_om_ele = NULL;
+    axiom_node_t *image_om_node = NULL;
+    axiom_element_t *image_om_ele = NULL;
+    axiom_node_t *file_om_node = NULL;
+    axiom_element_t *file_om_ele = NULL;
+    axiom_node_t *data_om_node = NULL;
+    axiom_text_t *data_text = NULL;
+    axiom_namespace_t *ns1 = NULL;
+    axis2_char_t *om_str = NULL;
+
+    axiom_data_handler_t *data_handler = NULL;
+
+    ns1 =
+        axiom_namespace_create(env, "http://ws.apache.org/axis2/c/samples/mtom",
+                               "ns1");
+    mtom_om_ele =
+        axiom_element_create(env, NULL, "mtomSample", ns1, &mtom_om_node);
+
+    file_om_ele =
+        axiom_element_create(env, mtom_om_node, "fileName", ns1, &file_om_node);
+    axiom_element_set_text(file_om_ele, env, to_save_name, file_om_node);
+
+    image_om_ele =
+        axiom_element_create(env, mtom_om_node, "image", ns1, &image_om_node);
+
+    data_handler = axiom_data_handler_create(env, image_name, "image/jpeg");
+    data_text =
+        axiom_text_create_with_data_handler(env, image_om_node, data_handler,
+                                            &data_om_node);
+    axiom_text_set_optimize(data_text, env, optimized);
+    om_str = axiom_node_to_string(mtom_om_node, env);
+    if (om_str)
+    {
+        printf("%s", om_str);
+        AXIS2_FREE(env->allocator, om_str);
+    }
+    return mtom_om_node;
 }
 
 void 

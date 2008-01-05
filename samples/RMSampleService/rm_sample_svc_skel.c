@@ -122,7 +122,7 @@ rm_sample_svc_invoke(
                 return NULL;
             }
             if (axutil_strcmp(op_name, "mtomSample") == 0)
-                return rm_sample_svc_mtom(env, node);
+                return rm_sample_svc_mtom(env, node, msg_ctx);
         }
     }
     return NULL;

@@ -21,7 +21,6 @@
 #include <axis2_svc_ctx.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_op_client.h>
-#include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
@@ -66,7 +65,6 @@ int main(int argc, char** argv)
     axis2_callback_t *callback1 = NULL;
     axis2_callback_t *callback2 = NULL;
     axutil_property_t *property = NULL;
-    axis2_listener_manager_t *listener_manager = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
     int c;
@@ -161,11 +159,6 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    listener_manager = axis2_listener_manager_create(env);
-    if (!listener_manager)
-    {
-        return AXIS2_FAILURE;
-    }
     seq_key = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     if(property)
