@@ -254,7 +254,6 @@ sandesha2_permanent_bean_mgr_remove(
     const axutil_env_t *env,
     axis2_char_t *sql_stmt_remove)
 {
-    sandesha2_bean_mgr_args_t *args = NULL;
     axis2_char_t *error_msg = NULL;
     int rc = -1;
     axutil_thread_mutex_lock(bean_mgr->mutex);
@@ -266,8 +265,6 @@ sandesha2_permanent_bean_mgr_remove(
         axutil_thread_mutex_unlock(bean_mgr->mutex);
         return AXIS2_FALSE;
     }
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_bean_mgr_args_t));
-    args->env = env;
     rc = sqlite3_exec(bean_mgr->dbconn, sql_stmt_remove, 0, 0, &error_msg);
     if(rc == SQLITE_BUSY)
         rc = sandesha2_permanent_bean_mgr_busy_handler(env, 

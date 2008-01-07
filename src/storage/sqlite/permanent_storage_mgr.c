@@ -293,7 +293,6 @@ sandesha2_permanent_storage_mgr_update_msg_ctx(
     sandesha2_permanent_bean_mgr_update_msg_store_bean(storage_mgr_impl->bean_mgr, 
         env, msg_store_bean);
     return AXIS2_SUCCESS;
-
 }
 
 axis2_status_t AXIS2_CALL
@@ -712,6 +711,8 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     sandesha2_msg_store_bean_set_svr_side(bean, env, 
         axis2_msg_ctx_get_server_side(msg_ctx, env));
     sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, soap_str);
+    if(xml_writer)
+        axiom_xml_writer_free(xml_writer, env);
     sandesha2_msg_store_bean_set_soap_version(bean, env, soap_version);
     sandesha2_msg_store_bean_set_msg_id(bean, env, (axis2_char_t *) 
         axis2_msg_ctx_get_msg_id(msg_ctx, env));
@@ -923,6 +924,8 @@ sandesha2_permanent_storage_mgr_store_response(
 
     sandesha2_permanent_bean_mgr_store_response(storage_mgr_impl->bean_mgr, 
         env, seq_id, response_str, msg_no, soap_version);
+    if(xml_writer)
+        axiom_xml_writer_free(xml_writer, env);
     return AXIS2_SUCCESS;
 }
 	

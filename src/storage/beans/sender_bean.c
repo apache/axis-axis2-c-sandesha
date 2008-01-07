@@ -137,6 +137,11 @@ sandesha2_sender_bean_free (
 		AXIS2_FREE(env->allocator, sender_bean->wsrm_anon_uri);
 		sender_bean->wsrm_anon_uri = NULL;
 	}
+	if(sender_bean->to_address)
+	{
+		AXIS2_FREE(env->allocator, sender_bean->to_address);
+		sender_bean->to_address = NULL;
+	}
     if(sender_bean)
     {
         AXIS2_FREE(env->allocator, sender_bean);

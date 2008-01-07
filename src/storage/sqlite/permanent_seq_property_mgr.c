@@ -260,6 +260,8 @@ sandesha2_permanent_seq_property_mgr_insert(
 
     sprintf(sql_insert, "insert into seq_property(id, seq_id, name, value) "\
         "values('%s', '%s', '%s', '%s')", id, seq_id, name, value);
+    if(id)
+        AXIS2_FREE(env->allocator, id);
     ret = sandesha2_permanent_bean_mgr_insert(seq_prop_mgr_impl->bean_mgr, env, 
         sql_insert);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -352,6 +354,8 @@ sandesha2_permanent_seq_property_mgr_update(
 
     sprintf(sql_update, "update seq_property set seq_id='%s', name='%s',"\
         "value='%s' where id='%s'", seq_id, name, value, id);
+    if(id)
+        AXIS2_FREE(env->allocator, id);
     ret = sandesha2_permanent_bean_mgr_update(seq_prop_mgr_impl->bean_mgr, env, 
         sql_update);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
