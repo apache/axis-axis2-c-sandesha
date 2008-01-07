@@ -458,48 +458,128 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
     const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    int i = 0;
-    int size = 0;
-    int match_list_size = 0;
-    axutil_array_list_t *match_list = NULL;
+    axis2_bool_t add_where = AXIS2_FALSE;
+    axis2_char_t *msg_id = NULL;
+	axis2_char_t *msg_ctx_ref_key = NULL;
+	axis2_char_t *internal_seq_id = NULL;
+	int sent_count = 0;
+	long msg_no = 0;
+	axis2_bool_t resend = AXIS2_FALSE;
+	axis2_bool_t send = AXIS2_FALSE;
+	long time_to_send = 0;
+	int msg_type = 0;
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *wsrm_anon_uri  = NULL;
+	axis2_char_t *to_address = NULL;
     axutil_array_list_t *find_list = NULL;
-    axis2_char_t *sql_find = NULL;
+    axis2_char_t sql_find[1024];
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_permanent_sender_mgr_find_by_sender_bean");
     sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
-    sql_find = "select msg_id, msg_ctx_ref_key, internal_seq_id,"\
-        "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
-        "wsrm_anon_uri, to_address from sender;";
-    find_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
-        sandesha2_sender_find_callback, sql_find);
-    if(find_list)
-        size = axutil_array_list_size(find_list, env);
-    if(!bean)
+    if(bean)
     {
-        return find_list;
+        msg_id = sandesha2_sender_bean_get_msg_id(bean, 
+            env);
+        msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
+        internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
+        sent_count= sandesha2_sender_bean_get_sent_count(bean, env);
+        msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
+        send = sandesha2_sender_bean_is_send(bean, env);
+        resend = sandesha2_sender_bean_is_resend(bean, env);
+        time_to_send = sandesha2_sender_bean_get_time_to_send(bean, env);
+        msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
+        seq_id = sandesha2_sender_bean_get_seq_id(bean, env);
+        wsrm_anon_uri = sandesha2_sender_bean_get_wsrm_anon_uri(bean, env);
+        to_address = sandesha2_sender_bean_get_to_address(bean, env);
     }
-    match_list = axutil_array_list_create(env, 0);
-    for(i = 0; i < size; i++)
+    sprintf(sql_find, "select msg_id, msg_ctx_ref_key, internal_seq_id,"\
+        "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
+        "wsrm_anon_uri, to_address from sender");
+    if(msg_ctx_ref_key)
     {
-        void *candidate = NULL;
-        candidate = (void *) axutil_array_list_get(find_list, env, i);
-        if(sandesha2_permanent_sender_mgr_match(sender_mgr, env, bean, 
-            candidate))
+        sprintf(sql_find + axutil_strlen(sql_find), 
+            " where msg_ctx_ref_key='%s'", msg_ctx_ref_key);
+        add_where = AXIS2_TRUE;
+    }
+    if(time_to_send > 0)
+    {
+        if(!add_where)
         {
-            match_list_size++;
-            axutil_array_list_add(match_list, env, candidate);
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where time_to_send <= %ld", time_to_send);
         }
         else
-        {
-            sandesha2_sender_bean_free(candidate, env);
-        }
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and time_to_send <= %ld", time_to_send);
     }
-    if(find_list)
-        axutil_array_list_free(find_list, env);
+    if(msg_id)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where msg_id = '%s'", msg_id);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and msg_id = '%s'", msg_id);
+    }
+    if(internal_seq_id)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where internal_seq_id = '%s'", internal_seq_id);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and internal_seq_id = '%s'", internal_seq_id);
+    }
+    if(msg_no > 0)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where msg_no = %ld", msg_no);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and msg_no = %ld", msg_no);
+    }
+    if(msg_type != SANDESHA2_MSG_TYPE_UNKNOWN)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where  msg_type= %d", msg_type);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and msg_type = %d", msg_type);
+    }
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where send = %d", send);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and  send = %d", send);
+    }
+    sprintf(sql_find + axutil_strlen(sql_find), ";");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find_by_sender_bean:%s", sql_find);  
+    find_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
+        sandesha2_sender_find_callback, sql_find);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Exit:sandesha2_permanent_sender_mgr_find_by_sender_bean");
-    return match_list;
+    return find_list;
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
