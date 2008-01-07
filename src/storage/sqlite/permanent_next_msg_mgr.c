@@ -180,13 +180,6 @@ sandesha2_permanent_next_msg_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
-static axis2_bool_t AXIS2_CALL
-sandesha2_permanent_next_msg_mgr_match(
-    sandesha2_next_msg_mgr_t *next_msg_mgr,
-    const axutil_env_t *env,
-    sandesha2_next_msg_bean_t *bean,
-    sandesha2_next_msg_bean_t *candidate);
-
 axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_retrieve_all(
     sandesha2_next_msg_mgr_t *next_msg_mgr,
@@ -271,8 +264,6 @@ sandesha2_permanent_next_msg_mgr_insert(
 
 	seq_id = sandesha2_next_msg_bean_get_seq_id(bean, 
         env);
-	internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(
-        bean, env);
 	internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(
         bean, env);
 	ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
@@ -378,49 +369,64 @@ sandesha2_permanent_next_msg_mgr_find(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean)
 {
-    int i = 0;
-    int size = 0;
-    int match_list_size = 0;
-    axutil_array_list_t *match_list = NULL;
+    axis2_bool_t add_where = AXIS2_FALSE;
+    axis2_char_t sql_find[1024];
+	axis2_char_t *seq_id = NULL;
+	axis2_char_t *internal_seq_id = NULL;
+	long msg_no = 0;
     axutil_array_list_t *find_list = NULL;
-    axis2_char_t *sql_find = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_next_msg_mgr_find");
-    sql_find = "select seq_id,internal_seq_id,ref_msg_key, polling_mode,"\
-        "msg_no from next_msg";
-    find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
-        env, sandesha2_next_msg_find_callback, sql_find);
-    if(find_list)
-        size = axutil_array_list_size(find_list, env);
-    if(!bean)
+    if(bean)
     {
-        return find_list;
+        seq_id = sandesha2_next_msg_bean_get_seq_id(bean, 
+            env);
+        internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(
+            bean, env);
+        msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(bean, env);
     }
-    match_list = axutil_array_list_create(env, 0);
-    for(i = 0; i < size; i++)
+    sprintf(sql_find, "select seq_id,internal_seq_id,ref_msg_key, polling_mode,"\
+        "msg_no from next_msg");
+    if(msg_no > 0)
     {
-        sandesha2_next_msg_bean_t *candidate = NULL;
-        candidate = (sandesha2_next_msg_bean_t *) 
-            axutil_array_list_get(find_list, env, i);
-        if(sandesha2_permanent_next_msg_mgr_match(next_msg_mgr, env, bean, 
-            candidate))
+        sprintf(sql_find + axutil_strlen(sql_find), 
+            " where msg_no=%ld", msg_no);
+        add_where = AXIS2_TRUE;
+    }
+    if(seq_id)
+    {
+        if(!add_where)
         {
-            match_list_size++;
-            axutil_array_list_add(match_list, env, candidate);
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where seq_id='%s'", seq_id);
         }
         else
-        {
-            sandesha2_next_msg_bean_free(candidate, env);
-        }
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and seq_id='%s'", seq_id);
     }
-    if(find_list)
-        axutil_array_list_free(find_list, env);
+    if(internal_seq_id)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), 
+                " where internal_seq_id='%s'", internal_seq_id);
+        }
+        else
+            sprintf(sql_find + axutil_strlen(sql_find),
+                " and internal_seq_id='%s'", internal_seq_id);
+    }
+    sprintf(sql_find + axutil_strlen(sql_find), ";");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "next_msg_mgr_find:%s", sql_find);  
+    find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
+        env, sandesha2_next_msg_find_callback, sql_find);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_permanent_next_msg_mgr_find");
-    return match_list;
+    return find_list;
 }
 
 sandesha2_next_msg_bean_t *AXIS2_CALL
@@ -429,45 +435,18 @@ sandesha2_permanent_next_msg_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean)
 {
-    int i = 0;
     int size = 0;
-    int match_list_size = 0;
     sandesha2_next_msg_bean_t *result = NULL;
-    axutil_array_list_t *match_list = axutil_array_list_create(env, 0);
     axutil_array_list_t *find_list = NULL;
-    axis2_char_t *sql_find = NULL;
-    sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
-    sql_find = "select seq_id,internal_seq_id,ref_msg_key,polling_mode,msg_no "\
-        "from next_msg";
-    find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
-        env, sandesha2_next_msg_find_callback, sql_find);
+    find_list = sandesha2_permanent_next_msg_mgr_find(next_msg_mgr, env, bean); 
     if(find_list)
         size = axutil_array_list_size(find_list, env);
-    for(i = 0; i < size; i++)
-    {
-        sandesha2_next_msg_bean_t *candidate = NULL;
-        candidate = (sandesha2_next_msg_bean_t *) 
-            axutil_array_list_get(find_list, env, i);
-        if(sandesha2_permanent_next_msg_mgr_match(next_msg_mgr, env, 
-            bean, candidate))
-        {
-            match_list_size++;
-            axutil_array_list_add(match_list, env, candidate);
-        }
-        else
-        {
-            sandesha2_next_msg_bean_free(candidate, env);
-        }
-    }
+    if(size == 1)
+        result = (sandesha2_next_msg_bean_t *) axutil_array_list_get(
+            find_list, env, 0);
     if(find_list)
         axutil_array_list_free(find_list, env);
-    if(match_list_size == 1)
-       result = (sandesha2_next_msg_bean_t *) axutil_array_list_get(
-        match_list, env, 0);
-    if(match_list)
-        axutil_array_list_free(match_list, env);
     return result;
 }
 
@@ -483,50 +462,5 @@ sandesha2_permanent_next_msg_mgr_retrieve_all(
         "msg_no from next_msg";
     return (axutil_array_list_t *) sandesha2_next_msg_mgr_find(
         next_msg_mgr, env, NULL);
-}
-
-static axis2_bool_t AXIS2_CALL
-sandesha2_permanent_next_msg_mgr_match(
-    sandesha2_next_msg_mgr_t *next_msg_mgr,
-    const axutil_env_t *env,
-    sandesha2_next_msg_bean_t *bean,
-    sandesha2_next_msg_bean_t *candidate)
-{
-    axis2_bool_t equal = AXIS2_TRUE;
-    long next_msg_no = 0;
-    long temp_next_msg_no = 0;
-    axis2_char_t *seq_id = NULL;
-    axis2_char_t *temp_seq_id = NULL;
-    axis2_char_t *internal_seq_id = NULL;
-    axis2_char_t *temp_internal_seq_id = NULL;
-    sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
-         "[sandesha2]Entry:sandesha2_permanent_next_msg_mgr_match");
-    next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
-    next_msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(
-        (sandesha2_next_msg_bean_t *) bean, env);
-    temp_next_msg_no = sandesha2_next_msg_bean_get_next_msg_no_to_process(
-        (sandesha2_next_msg_bean_t *) candidate, env);
-    if(next_msg_no > 0 && (next_msg_no != temp_next_msg_no))
-    {
-        equal = AXIS2_FALSE;
-    }
-    seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
-    temp_seq_id = sandesha2_next_msg_bean_get_seq_id(candidate, env);
-    if(seq_id && temp_seq_id && 0 != axutil_strcmp(seq_id, temp_seq_id))
-    {
-        equal = AXIS2_FALSE;
-    }
-    internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(bean, env);
-    temp_internal_seq_id = sandesha2_next_msg_bean_get_internal_seq_id(
-        candidate, env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
-        internal_seq_id, temp_internal_seq_id))
-    {
-        equal = AXIS2_FALSE;
-    }
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
-        "[sandesha2]Exit:sandesha2_permanent_next_msg_mgr_match");
-    return equal;
 }
 
