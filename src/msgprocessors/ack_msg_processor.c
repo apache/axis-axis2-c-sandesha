@@ -362,6 +362,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     if(str_list)
         AXIS2_FREE(env->allocator, str_list);
+    if(completed_bean)
+        sandesha2_seq_property_bean_free(completed_bean, env);
     last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
         SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
     if(last_out_msg_no_str)

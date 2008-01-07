@@ -316,12 +316,11 @@ sandesha2_utils_array_list_to_string(
         axutil_array_list_t *list, 
         int type)
 {
-    axis2_char_t *list_str = NULL;
+    axis2_char_t *list_str = AXIS2_MALLOC(env->allocator, 
+        1024 * sizeof(axis2_char_t));
     int i = 0, size = 0;
     
     AXIS2_PARAM_CHECK(env->error, list, NULL);
-    
-    list_str = axutil_strdup(env, "[");
     size = axutil_array_list_size(list, env);
     for(i = 0; i < size; i++)
     {
@@ -329,22 +328,20 @@ sandesha2_utils_array_list_to_string(
         {
             axis2_char_t *element = axutil_array_list_get(list, env, i);
             if(0 == i)
-                list_str = axutil_strcat(env, list_str, element, NULL);
-            list_str = axutil_strcat(env, list_str, ",", element, NULL);
+                sprintf(list_str, "[%s", element);
+            sprintf(list_str + axutil_strlen(list_str), ",%s", element);
         }
         else if(SANDESHA2_ARRAY_LIST_LONG == type)
         {
             long *element = axutil_array_list_get(list, env, i);
-            axis2_char_t value[32];
-            sprintf(value, "%ld", *element);
             if(0 == i)
-                list_str = axutil_strcat(env, list_str, value, NULL);
-            list_str = axutil_strcat(env, list_str, ",", value, NULL);
+                sprintf(list_str, "[%ld", *element);
+            sprintf(list_str + axutil_strlen(list_str), ",%ld", *element);
         } 
     }
-    list_str = axutil_strcat(env, list_str, "]", NULL);
-    
+    sprintf(list_str + axutil_strlen(list_str), "]");
     return list_str;
+
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        

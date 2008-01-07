@@ -189,6 +189,8 @@ sandesha2_identifier_from_om_node(
     }
     ident_part = axiom_element_get_first_child_with_qname(om_element, env,
                         ident_qname, om_node, &ident_node);
+    if(ident_qname)
+        axutil_qname_free(ident_qname, env);
     if(NULL == ident_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
