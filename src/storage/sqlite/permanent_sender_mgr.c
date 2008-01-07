@@ -202,13 +202,6 @@ sandesha2_permanent_sender_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_sender_bean_t *bean);
 
-static axis2_bool_t AXIS2_CALL
-sandesha2_permanent_sender_mgr_match(
-    sandesha2_sender_mgr_t *sender_mgr,
-    const axutil_env_t *env,
-    sandesha2_sender_bean_t *bean,
-    sandesha2_sender_bean_t *candidate);
-
 sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender_mgr,
@@ -588,147 +581,20 @@ sandesha2_permanent_sender_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_sender_bean_t *bean)
 {
-    int i = 0;
     int size = 0;
-    int match_list_size = 0;
     sandesha2_sender_bean_t *result = NULL;
-    axutil_array_list_t *match_list = NULL;
     axutil_array_list_t *find_list = NULL;
-    axis2_char_t *sql_find = NULL;
-    sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
-    sender_mgr_impl = SANDESHA2_INTF_TO_IMPL(sender_mgr);
-    sql_find = "select msg_ctx_ref_key, internal_seq_id, "\
-        "sent_count, msg_no, send, resend, time_to_send, msg_type, seq_id, "\
-        "wsrm_anon_uri, to_address from sender;";
-    find_list = sandesha2_permanent_bean_mgr_find(
-        sender_mgr_impl->bean_mgr, env, sandesha2_sender_find_callback, 
-        sql_find);
+    find_list = sandesha2_permanent_sender_mgr_find_by_sender_bean(sender_mgr, 
+        env, bean);
     if(find_list)
         size = axutil_array_list_size(find_list, env);
-    match_list = axutil_array_list_create(env, 0);
-    for(i = 0; i < size; i++)
-    {
-        void *candidate = NULL;
-        candidate = (void *) axutil_array_list_get(find_list, env, i);
-        if(sandesha2_permanent_sender_mgr_match(sender_mgr, env, bean, 
-            candidate))
-        {
-            match_list_size++;
-            axutil_array_list_add(match_list, env, candidate);
-        }
-        else
-        {
-            sandesha2_sender_bean_free(candidate, env);
-        }
-    }
+    if(size == 1)
+       result = (sandesha2_sender_bean_t *) axutil_array_list_get(find_list, 
+           env, 0);
     if(find_list)
         axutil_array_list_free(find_list, env);
-    if(match_list_size == 1)
-       result = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, 
-           env, 0);
-    if(match_list)
-        axutil_array_list_free(match_list, env);
     return result; 
-}
-
-static axis2_bool_t AXIS2_CALL
-sandesha2_permanent_sender_mgr_match(
-    sandesha2_sender_mgr_t *sender_mgr,
-    const axutil_env_t *env,
-    sandesha2_sender_bean_t *bean,
-    sandesha2_sender_bean_t *candidate)
-{
-    axis2_bool_t add = AXIS2_TRUE;
-    axis2_char_t *ref_key = NULL;
-    axis2_char_t *temp_ref_key = NULL;
-    long time_to_send = 0;
-    long temp_time_to_send = 0;
-    axis2_char_t *msg_id = NULL;
-    axis2_char_t *temp_msg_id = NULL;
-    axis2_char_t *internal_seq_id = NULL;
-    axis2_char_t *temp_internal_seq_id = NULL;
-    long msg_no = 0;
-    long temp_msg_no = 0;
-    int msg_type = 0;
-    int temp_msg_type = 0;
-    axis2_bool_t is_send = AXIS2_FALSE;
-    axis2_bool_t temp_is_send = AXIS2_FALSE;
-    
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_permanent_sender_mgr_match");
-    ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(ref_key && temp_ref_key && 0 != axutil_strcmp(ref_key, temp_ref_key))
-    {
-        add = AXIS2_FALSE;
-    }
-    time_to_send = sandesha2_sender_bean_get_time_to_send(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_time_to_send = sandesha2_sender_bean_get_time_to_send(
-        (sandesha2_sender_bean_t *) candidate, env);
-    /*if(time_to_send > 0 && (time_to_send != temp_time_to_send))*/
-    if(time_to_send > 0 && (time_to_send < temp_time_to_send))
-    {
-        add = AXIS2_FALSE;
-    }
-    msg_id = sandesha2_sender_bean_get_msg_id(bean, env);
-    temp_msg_id = sandesha2_sender_bean_get_msg_id(candidate, env);
-    if(msg_id && temp_msg_id && 0 != axutil_strcmp(msg_id, temp_msg_id))
-    {
-        add = AXIS2_FALSE;
-    }
-    internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(internal_seq_id && temp_internal_seq_id && 0 != axutil_strcmp(
-                internal_seq_id, temp_internal_seq_id))
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Internal_seq_id %s does "\
-            "not match with temp internal_seq_id %s", internal_seq_id, 
-            temp_internal_seq_id);
-        add = AXIS2_FALSE;
-    }
-    msg_no = sandesha2_sender_bean_get_msg_no(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_msg_no = sandesha2_sender_bean_get_msg_no(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(msg_no > 0 && (msg_no != temp_msg_no))
-    {
-        add = AXIS2_FALSE;
-    }
-    msg_type = sandesha2_sender_bean_get_msg_type(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_msg_type = sandesha2_sender_bean_get_msg_type(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(msg_type != SANDESHA2_MSG_TYPE_UNKNOWN  && (msg_type != temp_msg_type))
-    {
-        add = AXIS2_FALSE;
-    }
-    is_send = sandesha2_sender_bean_is_send(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_is_send = sandesha2_sender_bean_is_send(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(is_send != temp_is_send)
-    {
-        add = AXIS2_FALSE;
-    }
-    /* Do not use the is_resend flag to match messages, as it can stop us from
-     * detecting RM messages during 'get_next_msg_to_send'*/
-    /*is_resend = sandesha2_sender_bean_is_resend(
-        (sandesha2_sender_bean_t *) bean, env);
-    temp_is_resend = sandesha2_sender_bean_is_resend(
-        (sandesha2_sender_bean_t *) candidate, env);
-    if(is_resend != temp_is_resend)
-    {
-        add = AXIS2_FALSE;
-    }*/
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_sender_mgr_match");
-    return add;
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
