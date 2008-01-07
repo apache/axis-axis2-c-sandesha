@@ -204,7 +204,6 @@ sandesha2_seq_from_om_node(
     axiom_node_t *lm_node = NULL;
     axutil_qname_t *lm_qname = NULL; 
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_node, NULL);
     
     seq_impl = SANDESHA2_INTF_TO_IMPL(seq);
@@ -237,6 +236,8 @@ sandesha2_seq_from_om_node(
     }
     lm_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         lm_qname, seq_node, &lm_node);
+    if(lm_qname)
+        axutil_qname_free(lm_qname, env);
     if(lm_part)
     {
         seq_impl->last_msg = sandesha2_last_msg_create(env, 

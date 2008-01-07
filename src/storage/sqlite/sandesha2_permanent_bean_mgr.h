@@ -41,21 +41,6 @@ typedef struct sandesha2_permanent_bean_mgr sandesha2_permanent_bean_mgr_t;
 typedef struct sandesha2_permanent_bean_mgr_ops sandesha2_permanent_bean_mgr_ops_t;
 struct sandesha2_response;
 
-AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr_ops
-{
-    axis2_bool_t (AXIS2_CALL *
-            match) (
-                sandesha2_permanent_bean_mgr_t *bean_mgr,
-                const axutil_env_t *env,
-                void *bean,
-                void *candidate);
-};
-
-AXIS2_DECLARE_DATA struct sandesha2_permanent_bean_mgr
-{
-    sandesha2_permanent_bean_mgr_ops_t ops;
-};
-
 struct sandesha2_bean_mgr_args
 {
     const axutil_env_t *env;
@@ -113,24 +98,8 @@ axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_find(
     sandesha2_permanent_bean_mgr_t *bean_mgr,
     const axutil_env_t *env,
-    void *bean,
     int (*find_func)(void *, int, char **, char **),
     axis2_char_t *sql_stmt_find);
-
-void *AXIS2_CALL
-sandesha2_permanent_bean_mgr_find_unique(
-    sandesha2_permanent_bean_mgr_t *bean_mgr,
-    const axutil_env_t *env,
-    void *bean,
-    int (*find_func)(void *, int, char **, char **),
-    axis2_char_t *sql_stmt_find);
-
-axis2_bool_t AXIS2_CALL
-sandesha2_permanent_bean_mgr_match(
-    sandesha2_permanent_bean_mgr_t *bean_mgr,
-    const axutil_env_t *env,
-    void *bean,
-    void *candidate);
 
 sandesha2_msg_store_bean_t *AXIS2_CALL
 sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(

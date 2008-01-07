@@ -180,12 +180,12 @@ sandesha2_permanent_next_msg_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean);
 
-axis2_bool_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_match(
-    sandesha2_permanent_bean_mgr_t *next_msg_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
-    void *bean,
-    void *candidate);
+    sandesha2_next_msg_bean_t *bean,
+    sandesha2_next_msg_bean_t *candidate);
 
 axutil_array_list_t *AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_retrieve_all(
@@ -221,7 +221,6 @@ sandesha2_permanent_next_msg_mgr_create(
     }
     next_msg_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
         dbname, SANDESHA2_BEAN_MAP_NEXT_MESSAGE);
-    next_msg_mgr_impl->bean_mgr->ops.match = sandesha2_permanent_next_msg_mgr_match;
     next_msg_mgr_impl->next_msg_mgr.ops = next_msg_mgr_ops;
 
     return &(next_msg_mgr_impl->next_msg_mgr);
@@ -379,20 +378,49 @@ sandesha2_permanent_next_msg_mgr_find(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean)
 {
+    int i = 0;
+    int size = 0;
+    int match_list_size = 0;
+    axutil_array_list_t *match_list = NULL;
+    axutil_array_list_t *find_list = NULL;
     axis2_char_t *sql_find = NULL;
-    axutil_array_list_t *ret = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_permanent_next_msg_mgr_find");
     sql_find = "select seq_id,internal_seq_id,ref_msg_key, polling_mode,"\
         "msg_no from next_msg";
-    ret = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, env, 
-        bean, sandesha2_next_msg_find_callback,
-        sql_find);
+    find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
+        env, sandesha2_next_msg_find_callback, sql_find);
+    if(find_list)
+        size = axutil_array_list_size(find_list, env);
+    if(!bean)
+    {
+        return find_list;
+    }
+    match_list = axutil_array_list_create(env, 0);
+    for(i = 0; i < size; i++)
+    {
+        sandesha2_next_msg_bean_t *candidate = NULL;
+        candidate = (sandesha2_next_msg_bean_t *) 
+            axutil_array_list_get(find_list, env, i);
+        if(sandesha2_permanent_next_msg_mgr_match(next_msg_mgr, env, bean, 
+            candidate))
+        {
+            match_list_size++;
+            axutil_array_list_add(match_list, env, candidate);
+        }
+        else
+        {
+            sandesha2_next_msg_bean_free(candidate, env);
+        }
+    }
+    if(find_list)
+        axutil_array_list_free(find_list, env);
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_permanent_next_msg_mgr_find");
-    return ret;
+    return match_list;
 }
 
 sandesha2_next_msg_bean_t *AXIS2_CALL
@@ -401,17 +429,46 @@ sandesha2_permanent_next_msg_mgr_find_unique(
     const axutil_env_t *env,
     sandesha2_next_msg_bean_t *bean)
 {
+    int i = 0;
+    int size = 0;
+    int match_list_size = 0;
+    sandesha2_next_msg_bean_t *result = NULL;
+    axutil_array_list_t *match_list = axutil_array_list_create(env, 0);
+    axutil_array_list_t *find_list = NULL;
     axis2_char_t *sql_find = NULL;
-    sandesha2_next_msg_bean_t *ret = NULL;
     sandesha2_permanent_next_msg_mgr_t *next_msg_mgr_impl = NULL;
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
     next_msg_mgr_impl = SANDESHA2_INTF_TO_IMPL(next_msg_mgr);
     sql_find = "select seq_id,internal_seq_id,ref_msg_key,polling_mode,msg_no "\
         "from next_msg";
-    ret = (sandesha2_next_msg_bean_t *) sandesha2_permanent_bean_mgr_find_unique(
-        next_msg_mgr_impl->bean_mgr, env, bean, 
-        sandesha2_next_msg_find_callback, sql_find);
-    return ret;
+    find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
+        env, sandesha2_next_msg_find_callback, sql_find);
+    if(find_list)
+        size = axutil_array_list_size(find_list, env);
+    for(i = 0; i < size; i++)
+    {
+        sandesha2_next_msg_bean_t *candidate = NULL;
+        candidate = (sandesha2_next_msg_bean_t *) 
+            axutil_array_list_get(find_list, env, i);
+        if(sandesha2_permanent_next_msg_mgr_match(next_msg_mgr, env, 
+            bean, candidate))
+        {
+            match_list_size++;
+            axutil_array_list_add(match_list, env, candidate);
+        }
+        else
+        {
+            sandesha2_next_msg_bean_free(candidate, env);
+        }
+    }
+    if(find_list)
+        axutil_array_list_free(find_list, env);
+    if(match_list_size == 1)
+       result = (sandesha2_next_msg_bean_t *) axutil_array_list_get(
+        match_list, env, 0);
+    if(match_list)
+        axutil_array_list_free(match_list, env);
+    return result;
 }
 
 axutil_array_list_t *AXIS2_CALL
@@ -428,15 +485,13 @@ sandesha2_permanent_next_msg_mgr_retrieve_all(
         next_msg_mgr, env, NULL);
 }
 
-axis2_bool_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_match(
-    sandesha2_permanent_bean_mgr_t *next_msg_mgr,
+    sandesha2_next_msg_mgr_t *next_msg_mgr,
     const axutil_env_t *env,
-    void *bean1,
-    void *candidate1)
+    sandesha2_next_msg_bean_t *bean,
+    sandesha2_next_msg_bean_t *candidate)
 {
-    sandesha2_next_msg_bean_t *bean = (sandesha2_next_msg_bean_t *)bean1;
-    sandesha2_next_msg_bean_t *candidate = (sandesha2_next_msg_bean_t *)candidate1;
     axis2_bool_t equal = AXIS2_TRUE;
     long next_msg_no = 0;
     long temp_next_msg_no = 0;

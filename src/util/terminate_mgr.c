@@ -785,6 +785,15 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
                 internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx1, env), 
                     storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+            terminate_added = sandesha2_seq_property_bean_create(env);
+            sandesha2_seq_property_bean_set_name(terminate_added, env, 
+                SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
+            sandesha2_seq_property_bean_set_seq_id(terminate_added, env, 
+                out_seq_id);
+            sandesha2_seq_property_bean_set_value(terminate_added, env, 
+                AXIS2_VALUE_TRUE);
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
+                terminate_added);
             if(internal_seq_id)
                 AXIS2_FREE(env->allocator, internal_seq_id);
         }
@@ -831,7 +840,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_seq_property_bean_set_seq_id(terminate_added, env, out_seq_id);
     sandesha2_seq_property_bean_set_value(terminate_added, env, 
         AXIS2_VALUE_TRUE);
-                        
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
     
     msg_ctx1 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
