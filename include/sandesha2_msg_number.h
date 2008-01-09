@@ -66,6 +66,11 @@ AXIS2_DECLARE_DATA struct sandesha2_msg_number
     sandesha2_msg_number_ops_t *ops;
 };
 
+axis2_status_t AXIS2_CALL
+sandesha2_msg_number_free_void_arg(
+    void *msg_num,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
 sandesha2_msg_number_create(
 						const axutil_env_t *env,

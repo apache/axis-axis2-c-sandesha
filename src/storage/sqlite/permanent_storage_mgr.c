@@ -211,6 +211,11 @@ sandesha2_permanent_storage_mgr_free(
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
+    if(storage_mgr_impl->bean_mgr)
+    {
+        sandesha2_permanent_bean_mgr_free(storage_mgr_impl->bean_mgr, env);
+        storage_mgr_impl->bean_mgr = NULL;
+    }
     if(storage_mgr_impl)
     {
         AXIS2_FREE(env->allocator, storage_mgr_impl);

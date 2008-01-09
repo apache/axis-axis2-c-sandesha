@@ -166,8 +166,18 @@ sandesha2_seq_free (
         AXIS2_FREE(env->allocator, seq_impl->ns_val);
         seq_impl->ns_val = NULL;
     }
-    seq_impl->identifier = NULL;
-    seq_impl->msg_num = NULL;
+    if(seq_impl->identifier)
+    {
+        sandesha2_identifier_free_void_arg(
+            (sandesha2_iom_rm_element_t *)seq_impl->identifier, env);
+        seq_impl->identifier = NULL;
+    }
+    if(seq_impl->msg_num)
+    {
+        sandesha2_last_msg_free_void_arg(
+            (sandesha2_iom_rm_element_t *)seq_impl->msg_num, env);
+        seq_impl->msg_num = NULL;
+    }
     if(seq_impl->last_msg)
     {
         sandesha2_last_msg_free_void_arg(

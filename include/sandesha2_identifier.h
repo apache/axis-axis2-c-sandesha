@@ -49,6 +49,11 @@ AXIS2_DECLARE_DATA struct sandesha2_identifier
     sandesha2_iom_rm_element_t element;
 };
 
+axis2_status_t AXIS2_CALL
+sandesha2_identifier_free_void_arg(
+    void *identifier,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
 sandesha2_identifier_create(
     const axutil_env_t *env, 

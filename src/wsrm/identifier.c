@@ -115,6 +115,16 @@ sandesha2_identifier_create(
 	return &(identifier_impl->identifier);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_identifier_free_void_arg(
+    void *identifier,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *identifier_l = NULL;
+
+    identifier_l = (sandesha2_iom_rm_element_t *) identifier;
+    return sandesha2_identifier_free(identifier_l, env);
+}
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_identifier_free (

@@ -671,14 +671,16 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
                         soap_header, env, AXIS2_WSA_NAMESPACE);
         if(headers && 0 < axutil_array_list_size(headers, env))
+        {
+            axutil_array_list_free(headers, env);
             return AXIS2_WSA_NAMESPACE;
+        }
             
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
                         soap_header, env, AXIS2_WSA_NAMESPACE_SUBMISSION); 
         if(headers && 0 < axutil_array_list_size(headers, env))
         {
-            if(headers)
-                axutil_array_list_free(headers, env);
+            axutil_array_list_free(headers, env);
             return AXIS2_WSA_NAMESPACE_SUBMISSION;
         }
         if(headers)

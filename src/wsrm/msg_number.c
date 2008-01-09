@@ -132,6 +132,16 @@ sandesha2_msg_number_create(
 	return &(msg_number_impl->msg_number);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_msg_number_free_void_arg(
+    void *msg_num,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *msg_num_l = NULL;
+
+    msg_num_l = (sandesha2_iom_rm_element_t *) msg_num;
+    return sandesha2_msg_number_free(msg_num_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
 sandesha2_msg_number_free (
