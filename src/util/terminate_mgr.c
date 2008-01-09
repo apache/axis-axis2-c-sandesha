@@ -843,6 +843,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
     
     msg_ctx1 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
+    if(terminate_rm_msg)
+        sandesha2_msg_ctx_free(terminate_rm_msg, env);
     transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx1, env);
     
     property = axutil_property_create_with_args(env, 0, 0,

@@ -258,24 +258,28 @@ sandesha2_ack_range_to_om_node(
         return NULL;
     }
     /*lower_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_LOWER,
-                        lower_str, rm_ns);*/
+        lower_str, rm_ns);*/
     lower_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_LOWER,
-                        lower_str, NULL);
-    if(NULL == lower_attr)
+        lower_str, NULL);
+    if(lower_str)
+        AXIS2_FREE(env->allocator, lower_str);
+    if(!lower_attr)
     {
         return NULL;
     }
     /*upper_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_UPPER,
-                        upper_str, rm_ns);*/
+        upper_str, rm_ns);*/
     upper_attr = axiom_attribute_create(env, SANDESHA2_WSRM_COMMON_UPPER,
-                        upper_str, NULL);
-    if(NULL == upper_attr)
+        upper_str, NULL);
+    if(upper_str)
+        AXIS2_FREE(env->allocator, upper_str);
+    if(!upper_attr)
     {
         return NULL;
     }
     ar_element = axiom_element_create(env, (axiom_node_t*)om_node, 
-                        SANDESHA2_WSRM_COMMON_ACK_RANGE, rm_ns, &ar_node);
-    if(NULL == ar_element)
+        SANDESHA2_WSRM_COMMON_ACK_RANGE, rm_ns, &ar_node);
+    if(!ar_element)
     {
         return NULL;
     }
