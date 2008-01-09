@@ -83,7 +83,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_rm_elements_free(
     sandesha2_rm_elements_t *rm_elements, 
     const axutil_env_t *env)
-{
+{ 
     if(rm_elements->addr_ns_val)
     {
         AXIS2_FREE(env->allocator, rm_elements->addr_ns_val);
@@ -676,7 +676,13 @@ sandesha2_rm_elements_get_addr_ns_val_from_env(
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
                         soap_header, env, AXIS2_WSA_NAMESPACE_SUBMISSION); 
         if(headers && 0 < axutil_array_list_size(headers, env))
+        {
+            if(headers)
+                axutil_array_list_free(headers, env);
             return AXIS2_WSA_NAMESPACE_SUBMISSION;
+        }
+        if(headers)
+            axutil_array_list_free(headers, env);
 
         soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
         soap_header_element = axiom_node_get_data_element(soap_header_node, 

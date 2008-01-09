@@ -88,6 +88,81 @@ sandesha2_msg_store_bean_free (
     sandesha2_msg_store_bean_t *msg_store_bean,
 	const axutil_env_t *env)
 {
+    if(msg_store_bean->msg_id)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->msg_id);
+        msg_store_bean->msg_id = NULL;
+    }
+    if(msg_store_bean->stored_key)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->stored_key);
+        msg_store_bean->stored_key = NULL;
+    }
+    if(msg_store_bean->soap_env_str)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->soap_env_str);
+        msg_store_bean->soap_env_str = NULL;
+    }
+    if(msg_store_bean->op)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->op);
+        msg_store_bean->op = NULL;
+    }
+    if(msg_store_bean->svc)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->svc);
+        msg_store_bean->svc = NULL;
+    }
+    if(msg_store_bean->svc_grp)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->svc_grp);
+        msg_store_bean->svc_grp = NULL;
+    }
+    if(msg_store_bean->op_mep)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->op_mep);
+        msg_store_bean->op_mep = NULL;
+    }
+    if(msg_store_bean->to_url)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->to_url);
+        msg_store_bean->to_url = NULL;
+    }
+    if(msg_store_bean->reply_to)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->reply_to);
+        msg_store_bean->reply_to = NULL;
+    }
+    if(msg_store_bean->transport_to)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->transport_to);
+        msg_store_bean->transport_to = NULL;
+    }
+    if(msg_store_bean->execution_chain_str)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->execution_chain_str);
+        msg_store_bean->execution_chain_str = NULL;
+    }
+    if(msg_store_bean->msg_recv_str)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->msg_recv_str);
+        msg_store_bean->msg_recv_str = NULL;
+    }
+    if(msg_store_bean->in_msg_store_key)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->in_msg_store_key);
+        msg_store_bean->in_msg_store_key = NULL;
+    }
+    if(msg_store_bean->persistent_property_str)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->persistent_property_str);
+        msg_store_bean->persistent_property_str = NULL;
+    }
+    if(msg_store_bean->action)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->action);
+        msg_store_bean->action = NULL;
+    }
     if(msg_store_bean)
     {
         AXIS2_FREE(env->allocator, msg_store_bean);

@@ -51,6 +51,11 @@ AXIS2_DECLARE_DATA struct sandesha2_close_seq_res
     sandesha2_iom_rm_part_t part;
 };
 
+axis2_status_t AXIS2_CALL
+sandesha2_close_seq_res_free_void_arg(
+    void *close_seq_res,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_close_seq_res_t* AXIS2_CALL
 sandesha2_close_seq_res_create(
    const axutil_env_t *env, 

@@ -48,6 +48,11 @@ AXIS2_DECLARE_DATA struct sandesha2_last_msg
     sandesha2_iom_rm_element_t element;
 };
     
+axis2_status_t AXIS2_CALL
+sandesha2_last_msg_free_void_arg(
+    void *last_msg,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
 sandesha2_last_msg_create(
     const axutil_env_t *env, 

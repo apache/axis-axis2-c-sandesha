@@ -200,6 +200,11 @@ sandesha2_permanent_bean_mgr_free(
         AXIS2_FREE(env->allocator, bean_mgr->dbname);
         bean_mgr->dbname = NULL;
     }
+    if(bean_mgr->mutex)
+    {
+        axutil_thread_mutex_destroy(bean_mgr->mutex);
+        bean_mgr->mutex = NULL;
+    }
     if(bean_mgr)
     {
         AXIS2_FREE(env->allocator, bean_mgr);

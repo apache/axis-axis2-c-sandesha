@@ -137,6 +137,16 @@ sandesha2_create_seq_create(
 	return &(create_seq_impl->create_seq);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_create_seq_free_void_arg(
+    void *create_seq,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *create_seq_l = NULL;
+
+    create_seq_l = (sandesha2_iom_rm_element_t *) create_seq;
+    return sandesha2_create_seq_free(create_seq_l, env);
+}
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_free (
@@ -144,7 +154,6 @@ sandesha2_create_seq_free (
     const axutil_env_t *env)
 {
     sandesha2_create_seq_impl_t *create_seq_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     create_seq_impl = SANDESHA2_INTF_TO_IMPL(create_seq);
     
     if(create_seq_impl->rm_ns_val)

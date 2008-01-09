@@ -127,6 +127,11 @@ sandesha2_create_seq_bean_free  (
 		AXIS2_FREE(env->allocator, create_seq_bean->create_seq_msg_store_key);
 		create_seq_bean->create_seq_msg_store_key = NULL;
 	}
+	if(create_seq_bean->ref_msg_store_key)
+	{
+		AXIS2_FREE(env->allocator, create_seq_bean->ref_msg_store_key);
+		create_seq_bean->ref_msg_store_key = NULL;
+	}
     if(create_seq_bean)
     {
         AXIS2_FREE(env->allocator, create_seq_bean);

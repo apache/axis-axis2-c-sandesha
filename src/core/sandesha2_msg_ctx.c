@@ -86,6 +86,20 @@ sandesha2_msg_ctx_free(
     }
     if(rm_msg_ctx->msg_parts)
     {
+        axutil_hash_index_t *hi = NULL;
+        for(hi = axutil_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
+                        hi = axutil_hash_next(env, hi))
+        {
+            sandesha2_iom_rm_part_t *part = NULL;
+            void *key = NULL;
+            void *value = NULL;
+
+            axutil_hash_this(hi, (const void **) &key, NULL, &value);
+            part = (sandesha2_iom_rm_part_t*)value;
+            if(key)
+                AXIS2_FREE(env->allocator, key);
+            sandesha2_iom_rm_part_free(part, env);
+        }
         axutil_hash_free(rm_msg_ctx->msg_parts, env);
         rm_msg_ctx->msg_parts = NULL;
     }

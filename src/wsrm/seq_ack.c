@@ -145,6 +145,16 @@ sandesha2_seq_ack_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 	return &(seq_ack_impl->seq_ack);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_seq_ack_free_void_arg(
+    void *seq,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *seq_l = NULL;
+
+    seq_l = (sandesha2_iom_rm_element_t *) seq;
+    return sandesha2_seq_ack_free(seq_l, env);
+}
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_seq_ack_free (

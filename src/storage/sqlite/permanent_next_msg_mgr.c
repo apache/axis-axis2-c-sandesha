@@ -420,7 +420,6 @@ sandesha2_permanent_next_msg_mgr_find(
                 " and internal_seq_id='%s'", internal_seq_id);
     }
     sprintf(sql_find + axutil_strlen(sql_find), ";");
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "next_msg_mgr_find:%s", sql_find);  
     find_list = sandesha2_permanent_bean_mgr_find(next_msg_mgr_impl->bean_mgr, 
         env, sandesha2_next_msg_find_callback, sql_find);
 

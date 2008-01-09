@@ -108,13 +108,23 @@ sandesha2_last_msg_create(
 	return &(last_msg_impl->last_msg);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_last_msg_free_void_arg(
+    void *last_msg,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *last_msg_l = NULL;
+
+    last_msg_l = (sandesha2_iom_rm_element_t *) last_msg;
+    return sandesha2_last_msg_free(last_msg_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
-sandesha2_last_msg_free (sandesha2_iom_rm_element_t *last_msg, 
-                        const axutil_env_t *env)
+sandesha2_last_msg_free (
+    sandesha2_iom_rm_element_t *last_msg, 
+    const axutil_env_t *env)
 {
     sandesha2_last_msg_impl_t *last_msg_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     last_msg_impl = SANDESHA2_INTF_TO_IMPL(last_msg);
     
     if(NULL != last_msg_impl->ns_val)

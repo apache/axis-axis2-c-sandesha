@@ -125,6 +125,16 @@ sandesha2_close_seq_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 	return &(close_seq_impl->close_seq);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_close_seq_free_void_arg(
+    void *seq,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *seq_l = NULL;
+
+    seq_l = (sandesha2_iom_rm_element_t *) seq;
+    return sandesha2_close_seq_free(seq_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
 sandesha2_close_seq_free (

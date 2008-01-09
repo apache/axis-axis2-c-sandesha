@@ -149,7 +149,6 @@ sandesha2_seq_free_void_arg(
     const axutil_env_t *env)
 {
     sandesha2_iom_rm_element_t *seq_l = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     seq_l = (sandesha2_iom_rm_element_t *) seq;
     return sandesha2_seq_free(seq_l, env);
@@ -161,9 +160,7 @@ sandesha2_seq_free (
 	const axutil_env_t *env)
 {
     sandesha2_seq_impl_t *seq_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     seq_impl = SANDESHA2_INTF_TO_IMPL(seq);
-    
     if(seq_impl->ns_val)
     {
         AXIS2_FREE(env->allocator, seq_impl->ns_val);
@@ -171,7 +168,22 @@ sandesha2_seq_free (
     }
     seq_impl->identifier = NULL;
     seq_impl->msg_num = NULL;
-    seq_impl->last_msg = NULL;
+    if(seq_impl->last_msg)
+    {
+        sandesha2_last_msg_free_void_arg(
+            (sandesha2_iom_rm_element_t *)seq_impl->last_msg, env);
+        seq_impl->last_msg = NULL;
+    }
+    if(seq_impl->seq.part.element.ops)
+    {
+        AXIS2_FREE(env->allocator, seq_impl->seq.part.element.ops);
+        seq_impl->seq.part.element.ops = NULL;
+    }
+    if(seq_impl->seq.part.ops)
+    {
+        AXIS2_FREE(env->allocator, seq_impl->seq.part.ops);
+        seq_impl->seq.part.ops = NULL;
+    }
     if(seq->ops)
         AXIS2_FREE(env->allocator, seq->ops);
     

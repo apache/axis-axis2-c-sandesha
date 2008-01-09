@@ -67,10 +67,11 @@ sandesha2_msg_number_free (sandesha2_iom_rm_element_t *msg_num,
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
-sandesha2_msg_number_create(const axutil_env_t *env,  axis2_char_t *ns_val)
+sandesha2_msg_number_create(
+    const axutil_env_t *env,  
+    axis2_char_t *ns_val)
 {
     sandesha2_msg_number_impl_t *msg_number_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
     if(AXIS2_FALSE == sandesha2_msg_number_is_namespace_supported(
@@ -133,11 +134,11 @@ sandesha2_msg_number_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_msg_number_free (sandesha2_iom_rm_element_t *msg_num, 
-						const axutil_env_t *env)
+sandesha2_msg_number_free (
+    sandesha2_iom_rm_element_t *msg_num, 
+	const axutil_env_t *env)
 {
     sandesha2_msg_number_impl_t *msg_number_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     msg_number_impl = SANDESHA2_INTF_TO_IMPL(msg_num);
     
     if(NULL != msg_number_impl->ns_val)
@@ -166,7 +167,6 @@ sandesha2_msg_number_get_namespace_value (sandesha2_iom_rm_element_t *msg_num,
 						const axutil_env_t *env)
 {
 	sandesha2_msg_number_impl_t *msg_number_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	
 	msg_number_impl = SANDESHA2_INTF_TO_IMPL(msg_num);
 	return msg_number_impl->ns_val;
@@ -174,8 +174,9 @@ sandesha2_msg_number_get_namespace_value (sandesha2_iom_rm_element_t *msg_num,
 
 
 void* AXIS2_CALL 
-sandesha2_msg_number_from_om_node(sandesha2_iom_rm_element_t *msg_num,
-                    	const axutil_env_t *env, axiom_node_t *om_node)
+sandesha2_msg_number_from_om_node(
+    sandesha2_iom_rm_element_t *msg_num,
+    const axutil_env_t *env, axiom_node_t *om_node)
 {
 	sandesha2_msg_number_impl_t *msg_number_impl = NULL;
     axiom_element_t *om_element = NULL;
@@ -184,33 +185,34 @@ sandesha2_msg_number_from_om_node(sandesha2_iom_rm_element_t *msg_num,
     axutil_qname_t *mn_qname = NULL;
     axis2_char_t *mn_str = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     msg_number_impl = SANDESHA2_INTF_TO_IMPL(msg_num);
     om_element = axiom_node_get_data_element(om_node, env);
-    if(NULL == om_element)
+    if(!om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
                         AXIS2_FAILURE);
         return NULL;
     }
     mn_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_MSG_NUMBER, 
-                        msg_number_impl->ns_val, NULL);
-    if(NULL == mn_qname)
+        msg_number_impl->ns_val, NULL);
+    if(!mn_qname)
     {
         return NULL;
     }
     mn_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        mn_qname, om_node, &mn_node);
-    if(NULL == mn_part)
+        mn_qname, om_node, &mn_node);
+    if(mn_qname)
+        axutil_qname_free(mn_qname, env);
+    if(!mn_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
                         AXIS2_FAILURE);
         return NULL;
     }
     mn_str = axiom_element_get_text(mn_part, env, mn_node);
-    if(NULL == mn_str)
+    if(!mn_str)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
                         AXIS2_FAILURE);

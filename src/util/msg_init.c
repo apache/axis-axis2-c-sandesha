@@ -135,7 +135,7 @@ populate_rm_msg_ctx(
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
-        addressing_ns = (axis2_char_t *) axutil_property_get_value(prop, env);
+        addressing_ns = axutil_strdup(env, axutil_property_get_value(prop, env));
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
@@ -143,6 +143,8 @@ populate_rm_msg_ctx(
     }
     if(addressing_ns)
         rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
+    if(addressing_ns)
+        AXIS2_FREE(env->allocator, addressing_ns);
     if(!rm_elements)
         return AXIS2_FAILURE;
     envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);

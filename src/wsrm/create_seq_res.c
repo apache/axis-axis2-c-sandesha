@@ -144,6 +144,16 @@ sandesha2_create_seq_res_create(const axutil_env_t *env,  axis2_char_t *rm_ns_va
 	return &(create_seq_res_impl->create_seq_res);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_create_seq_res_free_void_arg(
+    void *seq,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *seq_l = NULL;
+
+    seq_l = (sandesha2_iom_rm_element_t *) seq;
+    return sandesha2_create_seq_res_free(seq_l, env);
+}
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_res_free (

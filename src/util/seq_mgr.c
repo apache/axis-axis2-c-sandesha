@@ -221,7 +221,7 @@ sandesha2_seq_mgr_update_last_activated_time(
     
     last_activated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             property_key, SANDESHA2_SEQ_PROP_LAST_ACTIVATED_TIME);
-    if(last_activated_bean == NULL)
+    if(!last_activated_bean)
     {
         added = AXIS2_TRUE;
         last_activated_bean = sandesha2_seq_property_bean_create(env);
@@ -240,6 +240,10 @@ sandesha2_seq_mgr_update_last_activated_time(
     else
     {
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, last_activated_bean);
+    }
+    if(last_activated_bean)
+    {
+        sandesha2_seq_property_bean_free(last_activated_bean, env);
     }
     return AXIS2_SUCCESS;
 }

@@ -50,6 +50,11 @@ AXIS2_DECLARE_DATA struct sandesha2_terminate_seq
     sandesha2_iom_rm_part_t part;
 };
 
+axis2_status_t AXIS2_CALL
+sandesha2_terminate_seq_free_void_arg(
+    void *terminate_seq,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_terminate_seq_t* AXIS2_CALL
 sandesha2_terminate_seq_create(
     const axutil_env_t *env,

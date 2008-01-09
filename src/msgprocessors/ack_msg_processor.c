@@ -254,11 +254,28 @@ sandesha2_ack_msg_processor_process_in_msg (
     sandesha2_sender_bean_set_resend(input_bean, env, AXIS2_TRUE);
     retrans_list = sandesha2_sender_mgr_find_by_sender_bean(sender_mgr, env, 
         input_bean);
-   
+    if(input_bean)
+    {
+        sandesha2_sender_bean_free(input_bean, env);
+    }
     acked_list = axutil_array_list_create(env, 0);
     if(!acked_list)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        if(retrans_list)
+        {
+            int size = 0;
+            int j = 0;
+            size = axutil_array_list_size(retrans_list, env);
+            for(j = 0; j < size; j++)
+            {
+                sandesha2_sender_bean_t *temp = 
+                    axutil_array_list_get(retrans_list, env, j);
+                if(temp)
+                    sandesha2_sender_bean_free(temp, env);
+            }
+            axutil_array_list_free(retrans_list, env);
+        }
         if(int_seq_id)
             AXIS2_FREE(env->allocator, int_seq_id);
         if(seq_prop_mgr)
@@ -273,6 +290,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
     }
+
     if(ack_range_list)
         size = axutil_array_list_size(ack_range_list, env);
     for(i = 0; i < size; i++)
@@ -307,6 +325,20 @@ sandesha2_ack_msg_processor_process_in_msg (
             *add_no = (long)j;
             axutil_array_list_add(acked_list, env, add_no);
         }
+    }
+    if(retrans_list)
+    {
+        int size = 0;
+        int j = 0;
+        size = axutil_array_list_size(retrans_list, env);
+        for(j = 0; j < size; j++)
+        {
+            sandesha2_sender_bean_t *temp = 
+                axutil_array_list_get(retrans_list, env, j);
+            if(temp)
+                sandesha2_sender_bean_free(temp, env);
+        }
+        axutil_array_list_free(retrans_list, env);
     }
     for(i = 0; i < axutil_array_list_size(nack_list, env); i++)
     {
@@ -354,6 +386,17 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     str_list = sandesha2_utils_array_list_to_string(env, acked_list,
         SANDESHA2_ARRAY_LIST_LONG);
+    if(acked_list)
+    {
+        int j = 0, size = 0;
+        size = axutil_array_list_size(acked_list, env);
+        for(j = 0; j < size; j++)
+        {
+            void *temp = axutil_array_list_get(acked_list, env, j);
+            AXIS2_FREE(env->allocator, temp);
+        }
+        axutil_array_list_free(acked_list, env);
+    }
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]acked_list:%s", str_list);
     if(completed_bean)
     {
