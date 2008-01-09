@@ -441,8 +441,8 @@ static axis2_bool_t validate_msg(
                 env, seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
         if(internal_seq_id_bean)
         {
-            prop_key = sandesha2_seq_property_bean_get_value(
-                    internal_seq_id_bean, env);
+            prop_key = axutil_strdup(env, sandesha2_seq_property_bean_get_value(
+                    internal_seq_id_bean, env));
         }
     }
     rm_ns = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
@@ -453,6 +453,11 @@ static axis2_bool_t validate_msg(
         
         spec_version = sandesha2_utils_get_rm_version(env, prop_key, 
             seq_prop_mgr);
+        if(prop_key)
+        {
+            AXIS2_FREE(env->allocator, prop_key);
+            prop_key = NULL;
+        }
         if(spec_version)
         {
             seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
@@ -473,6 +478,8 @@ static axis2_bool_t validate_msg(
             }
         }
     }
+    if(prop_key)
+        AXIS2_FREE(env->allocator, prop_key);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

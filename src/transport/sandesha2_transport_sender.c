@@ -147,6 +147,7 @@ sandesha2_transport_sender_invoke (
 {
     axutil_property_t *property = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
+    axis2_transport_out_desc_t *temp_out_desc = NULL;
     axis2_char_t *key = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
@@ -163,6 +164,9 @@ sandesha2_transport_sender_invoke (
     if(NULL == property || NULL == axutil_property_get_value(property, env))
         return AXIS2_FAILURE;
     out_desc = axutil_property_get_value(property, env);
+    temp_out_desc = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
+    if(temp_out_desc)
+        axis2_transport_out_desc_free(temp_out_desc, env);
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, out_desc);
     
     property = axis2_msg_ctx_get_property(msg_ctx, env, 

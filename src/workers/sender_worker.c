@@ -516,7 +516,9 @@ sandesha2_sender_worker_check_for_sync_res(
             res_envelope))
             axis2_engine_receive_fault(engine, env, res_msg_ctx);
         else
-            axis2_engine_receive(engine, env, res_msg_ctx);        
+            axis2_engine_receive(engine, env, res_msg_ctx);
+        if(engine)
+            axis2_engine_free(engine, env);
     }
     /* To avoid a second passing through incoming handlers at op_client*/
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);

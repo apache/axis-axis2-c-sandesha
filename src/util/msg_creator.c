@@ -619,6 +619,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     }
     temp_msg_id = axutil_uuid_gen(env);
     axis2_msg_ctx_set_message_id(terminate_seq_msg_ctx, env, temp_msg_id);
+    AXIS2_FREE(env->allocator, temp_msg_id);
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env);
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);

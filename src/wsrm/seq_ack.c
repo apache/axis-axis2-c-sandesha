@@ -79,7 +79,6 @@ AXIS2_EXTERN sandesha2_seq_ack_t* AXIS2_CALL
 sandesha2_seq_ack_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 {
     sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
     if(AXIS2_FALSE == sandesha2_seq_ack_is_namespace_supported(
@@ -162,7 +161,6 @@ sandesha2_seq_ack_free (
     const axutil_env_t *env)
 {
     sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
     
     if(NULL != seq_ack_impl->ns_val)
@@ -200,7 +198,6 @@ sandesha2_seq_ack_get_namespace_value (
     const axutil_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	return seq_ack_impl->ns_val;
@@ -223,7 +220,6 @@ sandesha2_seq_ack_from_om_node(
     axiom_namespace_t *rm_ns = NULL;
     axis2_char_t *prefix = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, sa_node, NULL);
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
@@ -252,6 +248,8 @@ sandesha2_seq_ack_from_om_node(
     }
     ack_iter = axiom_element_get_children_with_qname(sa_part, env, 
         ack_range_qname, sa_node);
+    if(ack_range_qname)
+        axutil_qname_free(ack_range_qname, env);
     if(!ack_iter)
     {
         return NULL;
@@ -375,7 +373,6 @@ sandesha2_seq_ack_to_om_node(
     int i = 0;
     axis2_char_t *rm_spec_ver = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
@@ -477,7 +474,6 @@ sandesha2_seq_ack_is_namespace_supported(
     const axutil_env_t *env, axis2_char_t *namespace)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
     if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
@@ -497,7 +493,6 @@ sandesha2_seq_ack_get_identifier(
     const axutil_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	
@@ -511,7 +506,6 @@ sandesha2_seq_ack_set_identifier(
     sandesha2_identifier_t *identifier)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	seq_ack_impl->identifier = identifier;
@@ -524,7 +518,6 @@ sandesha2_seq_ack_get_nack_list(
     const axutil_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	
@@ -538,7 +531,6 @@ sandesha2_seq_ack_set_ack_final(
     sandesha2_ack_final_t *ack_final)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	seq_ack_impl->ack_final = ack_final;
@@ -551,7 +543,6 @@ sandesha2_seq_ack_get_ack_range_list(
     const axutil_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	
@@ -565,7 +556,6 @@ sandesha2_seq_ack_add_ack_range(
     sandesha2_ack_range_t *ack_range)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	axutil_array_list_add(seq_ack_impl->ack_range_list, env, ack_range);
@@ -578,7 +568,6 @@ sandesha2_seq_ack_is_must_understand(
     const axutil_env_t *env)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FALSE);
 	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	return seq_ack_impl->must_understand;
@@ -591,8 +580,6 @@ sandesha2_seq_ack_set_must_understand(
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
     
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-	
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
 	seq_ack_impl->must_understand = mu;
  	return AXIS2_SUCCESS;
@@ -602,13 +589,13 @@ sandesha2_seq_ack_set_must_understand(
 static axis2_status_t AXIS2_CALL
 sandesha2_seq_ack_to_soap_env(
     sandesha2_iom_rm_part_t *seq_ack,
-    const axutil_env_t *env, axiom_soap_envelope_t *envelope)
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *envelope)
 {
 	sandesha2_seq_ack_impl_t *seq_ack_impl = NULL;
     axiom_soap_header_t *soap_header = NULL;
     axutil_qname_t *seq_ack_qname = NULL;
     
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
     
 	seq_ack_impl = SANDESHA2_INTF_TO_IMPL(seq_ack);
@@ -616,16 +603,17 @@ sandesha2_seq_ack_to_soap_env(
     /**
      * Remove if old exists
      */
-    seq_ack_qname = axutil_qname_create(env, 
-                        SANDESHA2_WSRM_COMMON_SEQ_ACK,
-                        seq_ack_impl->ns_val, NULL);
-    if(NULL == seq_ack_qname)
+    seq_ack_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK,
+        seq_ack_impl->ns_val, NULL);
+    if(!seq_ack_qname)
     {
         return AXIS2_FAILURE;
     }
     axiom_soap_header_remove_header_block(soap_header, env, seq_ack_qname);
+    if(seq_ack_qname)
+        axutil_qname_free(seq_ack_qname, env);
     sandesha2_seq_ack_to_om_node((sandesha2_iom_rm_element_t*)seq_ack, env, 
-                        soap_header);
+        soap_header);
 	return AXIS2_SUCCESS;
 }
 

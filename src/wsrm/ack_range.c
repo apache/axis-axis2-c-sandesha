@@ -119,10 +119,21 @@ sandesha2_ack_range_create(
 	return &(ack_range_impl->ack_range);
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_ack_range_free_void_arg(
+    void *ack_range,
+    const axutil_env_t *env)
+{
+    sandesha2_iom_rm_element_t *ack_range_l = NULL;
+
+    ack_range_l = (sandesha2_iom_rm_element_t *) ack_range;
+    return sandesha2_ack_range_free(ack_range_l, env);
+}
 
 axis2_status_t AXIS2_CALL 
-sandesha2_ack_range_free (sandesha2_iom_rm_element_t *ack_range, 
-						const axutil_env_t *env)
+sandesha2_ack_range_free (
+    sandesha2_iom_rm_element_t *ack_range, 
+	const axutil_env_t *env)
 {
     sandesha2_ack_range_impl_t *ack_range_impl = NULL;
 	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

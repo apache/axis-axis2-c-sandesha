@@ -271,7 +271,11 @@ sandesha2_ack_mgr_verify_seq_completion(
             break;
         }
         if(sandesha2_ack_range_get_upper_value(ack_range, env) >= last_msg_no)
+        {
+            if(hash)
+                axutil_hash_free(hash, env);
             return AXIS2_TRUE;
+        }
         start = sandesha2_ack_range_get_upper_value(ack_range, env) + 1;        
     }
     if(hash)

@@ -196,6 +196,8 @@ sandesha2_out_handler_invoke(
                 msg_processor = (sandesha2_msg_processor_t *) 
                 sandesha2_app_msg_processor_create(env); /* rm intended msg */
             }
+            if(req_rm_msg_ctx)
+                sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
         }
         else if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
@@ -217,6 +219,8 @@ sandesha2_out_handler_invoke(
     {
         /* Message should not be sent in an exception situation */
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        if(rm_msg_ctx)
+            sandesha2_msg_ctx_free(rm_msg_ctx, env);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Error in processing the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
@@ -229,6 +233,8 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
         axutil_property_set_value(temp_prop, env, axutil_strdup(
             env,AXIS2_VALUE_FALSE));
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_out_handler_invoke");
     return AXIS2_SUCCESS;

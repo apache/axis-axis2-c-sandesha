@@ -47,6 +47,11 @@ AXIS2_DECLARE_DATA struct sandesha2_ack_range
     sandesha2_iom_rm_element_t element;
 };
 
+axis2_status_t AXIS2_CALL
+sandesha2_ack_range_free_void_arg(
+    void *ack_range,
+    const axutil_env_t *env);
+
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
     const axutil_env_t *env, 
