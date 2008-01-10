@@ -194,7 +194,9 @@ sandesha2_transport_sender_invoke (
     if(storage_mgr)
         sandesha2_storage_mgr_free(storage_mgr, env);
     if(msg_ctx)
+    {
         axis2_msg_ctx_free(msg_ctx, env);
+    }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
          "[sandesha2]Exit:sandesha2_transport_sender_invoke");
     return AXIS2_SUCCESS;

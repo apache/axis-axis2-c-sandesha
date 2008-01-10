@@ -231,8 +231,7 @@ sandesha2_out_handler_invoke(
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
-        axutil_property_set_value(temp_prop, env, axutil_strdup(
-            env,AXIS2_VALUE_FALSE));
+        axutil_property_set_value(temp_prop, env, AXIS2_VALUE_FALSE);
     if(rm_msg_ctx)
         sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

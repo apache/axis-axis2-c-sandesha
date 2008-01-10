@@ -30,7 +30,7 @@
 #include <axis2_addr.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 8
+#define SANDESHA2_SLEEP 12
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL

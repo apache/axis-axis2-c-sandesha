@@ -839,6 +839,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                             
     sandesha2_sender_bean_set_resend(terminate_bean, env, AXIS2_FALSE);
     sandesha2_sender_mgr_insert(sender_mgr, env, terminate_bean);
+    if(terminate_bean)
+        sandesha2_sender_bean_free(terminate_bean, env);
     
     terminate_added = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_name(terminate_added, env, 

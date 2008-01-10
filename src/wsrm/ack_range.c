@@ -187,28 +187,13 @@ sandesha2_ack_range_from_om_node(
     axiom_node_t *om_node)
 {
 	sandesha2_ack_range_impl_t *ack_range_impl = NULL;
-    axutil_qname_t *low_qname = NULL;
-    axutil_qname_t *upper_qname = NULL;
     axiom_element_t *om_element = NULL;
     axis2_char_t *lower_str = NULL;
     axis2_char_t *upper_str = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     ack_range_impl = SANDESHA2_INTF_TO_IMPL(ack_range);
-    low_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LOWER, 
-                        ack_range_impl->ns_val, ack_range_impl->prefix);
-    if(!low_qname)
-    {
-        return NULL;
-    }
-    upper_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_UPPER,
-                        ack_range_impl->ns_val, ack_range_impl->prefix);
-    if(!upper_qname)
-    {
-        return NULL;
-    }
     om_element = axiom_node_get_data_element(om_node, env);
     if(!om_element)
     {

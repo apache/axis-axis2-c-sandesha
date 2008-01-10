@@ -289,6 +289,8 @@ sandesha2_sender_worker_send(
                 "Sending is true. So returning from Sender Worker");
             if(sender_worker_bean)
                 sandesha2_sender_bean_free(sender_worker_bean, env);
+            if(rm_msg_ctx)
+                sandesha2_msg_ctx_free(rm_msg_ctx, env);
             return AXIS2_SUCCESS;
         }
     }
@@ -399,6 +401,8 @@ sandesha2_sender_worker_send(
          * status is false*/
         status = AXIS2_FAILURE;
     }
+    /*if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_worker_send");        
     return status;
