@@ -196,7 +196,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         AXIS2_FREE(env->allocator, dbname);
     
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
-                        env, msg_ctx, seq_prop_mgr);
+        env, msg_ctx, seq_prop_mgr);
     if(fault_rm_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
@@ -205,6 +205,13 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_rm_msg_ctx, env));
+        if(fault_rm_msg_ctx)
+            sandesha2_msg_ctx_free(fault_rm_msg_ctx, env);
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+            engine = NULL;
+        }
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -341,6 +348,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, seq_prop_mgr);
     engine = axis2_engine_create(env, conf_ctx);
     axis2_engine_send(engine, env, out_msg_ctx);
+    if(engine)
+        axis2_engine_free(engine, env);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         new_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
     if(!to_bean)

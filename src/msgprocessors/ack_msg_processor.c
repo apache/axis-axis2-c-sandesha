@@ -231,6 +231,9 @@ sandesha2_ack_msg_processor_process_in_msg (
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        sandesha2_msg_ctx_free(fault_msg_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
     }
     fault_msg_ctx = sandesha2_fault_mgr_check_for_invalid_ack(env, rm_msg_ctx, 
          seq_prop_mgr);
@@ -241,6 +244,9 @@ sandesha2_ack_msg_processor_process_in_msg (
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
              fault_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        sandesha2_msg_ctx_free(fault_msg_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
     }
     if(int_seq_id)
         sandesha2_seq_mgr_update_last_activated_time(env, int_seq_id, 

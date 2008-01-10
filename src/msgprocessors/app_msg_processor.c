@@ -282,12 +282,20 @@ sandesha2_app_msg_processor_process_in_msg (
                 "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                 AXIS2_FAILURE);
+            if(fault_ctx)
+                sandesha2_msg_ctx_free(fault_ctx, env);
+            if(engine)
+                axis2_engine_free(engine, env);
             if(dbname)
                 AXIS2_FREE(env->allocator, dbname);
             if(storage_mgr)
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
         }
+        if(fault_ctx)
+            sandesha2_msg_ctx_free(fault_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(dbname)
             AXIS2_FREE(env->allocator, dbname);
@@ -320,6 +328,10 @@ sandesha2_app_msg_processor_process_in_msg (
                 "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                 AXIS2_FAILURE);
+            if(fault_ctx)
+                sandesha2_msg_ctx_free(fault_ctx, env);
+            if(engine)
+                axis2_engine_free(engine, env);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(create_seq_mgr)
@@ -332,6 +344,10 @@ sandesha2_app_msg_processor_process_in_msg (
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
         }
+        if(fault_ctx)
+            sandesha2_msg_ctx_free(fault_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -361,6 +377,10 @@ sandesha2_app_msg_processor_process_in_msg (
                 "[sandesha2]An error occured while sending the fault");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_FAULT,
                 AXIS2_FAILURE);
+            if(fault_ctx)
+                sandesha2_msg_ctx_free(fault_ctx, env);
+            if(engine)
+                axis2_engine_free(engine, env);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(create_seq_mgr)
@@ -373,6 +393,10 @@ sandesha2_app_msg_processor_process_in_msg (
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
         }
+        if(fault_ctx)
+            sandesha2_msg_ctx_free(fault_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -1336,7 +1360,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_ack_requested_t *ack_requested = NULL;
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
-    axis2_engine_t *engine = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_bool_t sent = AXIS2_FALSE;
 
@@ -1370,9 +1393,14 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         seq_prop_mgr);
     if(ack_rm_msg)
     {
+        axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
         msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
         sent = axis2_engine_send(engine, env, msg_ctx);
+        if(ack_rm_msg)
+            sandesha2_msg_ctx_free(ack_rm_msg, env);
+        if(engine)
+            axis2_engine_free(engine, env);
     }
     if(!sent)
     {

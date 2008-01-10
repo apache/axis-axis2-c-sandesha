@@ -232,6 +232,9 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
             "[sandesha2] Send fault occurred");
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_ctx, env));
+        sandesha2_msg_ctx_free(fault_ctx, env);
+        if(engine)
+            axis2_engine_free(engine, env);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -493,8 +496,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     /* end test code */
     
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, env));
-    axis2_engine_send(engine, env, out_msg_ctx);
-    
+    axis2_engine_send(engine, env, out_msg_ctx); 
     op_ctx = axis2_msg_ctx_get_op_ctx(out_msg_ctx, env);
     if(to_epr)
     {
@@ -512,6 +514,8 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     }
+    if(engine)
+        axis2_engine_free(engine, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
         "terminate_seq_msg_processor_add_terminate_seq_res");
     return AXIS2_SUCCESS;

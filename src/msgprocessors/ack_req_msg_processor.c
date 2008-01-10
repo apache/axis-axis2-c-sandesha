@@ -282,6 +282,11 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 "[sandesha2]ack sending failed");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, 
                 AXIS2_FAILURE);
+            if(engine)
+            {
+                axis2_engine_free(engine, env);
+                engine = NULL;
+            }
             if(dbname)
                 AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
@@ -290,6 +295,11 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
         }        
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+            engine = NULL;
+        }
     }
     else
     {
@@ -338,6 +348,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                         
         found_list = sandesha2_sender_mgr_find_by_sender_bean(sender_mgr, env, 
             find_bean);
+        if(find_bean)
+            sandesha2_sender_bean_free(find_bean, env);
         if(found_list)
         {
             int i = 0;
@@ -387,6 +399,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 "[sandesha2]ack sending failed");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, 
                 AXIS2_FAILURE);
+            if(engine)
+                axis2_engine_free(engine, env);
             if(dbname)
                 AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
@@ -397,6 +411,8 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
         }
+        if(engine)
+            axis2_engine_free(engine, env);
         sandesha2_utils_start_sender_for_seq(env, conf_ctx, seq_id, AXIS2_FALSE);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(sender_mgr)

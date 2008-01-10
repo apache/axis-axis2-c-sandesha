@@ -180,7 +180,14 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     {
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send(engine, env, sandesha2_msg_ctx_get_msg_ctx(
-                        fault_rm_msg_ctx, env));
+            fault_rm_msg_ctx, env));
+        if(fault_rm_msg_ctx)
+            sandesha2_msg_ctx_free(fault_rm_msg_ctx, env);
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+            engine = NULL;
+        }
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -230,6 +237,8 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     
     engine = axis2_engine_create(env, conf_ctx);
     axis2_engine_send(engine, env, close_seq_res_msg);
+    if(engine)
+        axis2_engine_free(engine, env);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

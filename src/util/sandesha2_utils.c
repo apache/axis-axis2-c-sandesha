@@ -1172,6 +1172,8 @@ sandesha2_utils_execute_and_store(
     {
         status = axis2_engine_send(engine, env, msg_ctx);
     }
+    if(engine)
+        axis2_engine_free(engine, env);
     return status;
 }
 

@@ -762,12 +762,18 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     if(axis2_msg_ctx_get_server_side(msg_ctx, env) &&
        sandesha2_utils_is_single_channel(env, rm_ver, to_addr))
     {
-        axis2_msg_ctx_t *msg_ctx1 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
-        axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx1, env), env, AXIS2_TRUE);
+        axis2_msg_ctx_t *msg_ctx2 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
+        axis2_bool_t is_svr_side = axis2_msg_ctx_get_server_side(msg_ctx2, env);
+        axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx2, env), env, AXIS2_TRUE);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx, env), env, AXIS2_TRUE);
         engine = axis2_engine_create(env, conf_ctx);
-        axis2_engine_send(engine, env, msg_ctx1);
+        axis2_engine_send(engine, env, msg_ctx2);
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+            engine = NULL;
+        }
         /* Clean sending side data */
         {
             sandesha2_terminate_seq_t *terminate_seq = NULL;
@@ -783,8 +789,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
                 SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
             sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-                internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx1, env), 
-                    storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                internal_seq_id, is_svr_side, storage_mgr, seq_prop_mgr, 
+                create_seq_mgr, sender_mgr);
             terminate_added = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(terminate_added, env, 
                 SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
@@ -871,6 +877,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     }
     engine = axis2_engine_create(env, conf_ctx);
     status = axis2_engine_send(engine, env, msg_ctx1);
+    if(engine)
+        axis2_engine_free(engine, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_add_terminate_seq_msg");
     return status;
