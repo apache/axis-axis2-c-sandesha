@@ -83,6 +83,7 @@ int main(int argc, char** argv)
 
     /* Setup options */
     options = axis2_options_create(env);
+    axis2_options_set_xml_parser_reset(options, env, AXIS2_FALSE);
     if(endpoint_ref)
         axis2_options_set_to(options, env, endpoint_ref);
     /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
