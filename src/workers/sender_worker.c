@@ -442,7 +442,7 @@ sandesha2_sender_worker_check_for_sync_res(
 {
     axutil_property_t *property = NULL;
     axis2_msg_ctx_t *res_msg_ctx = NULL;
-    axis2_op_ctx_t *req_op_ctx = NULL;
+    /*axis2_op_ctx_t *req_op_ctx = NULL;*/
     axiom_soap_envelope_t *res_envelope = NULL;
     axis2_char_t *soap_ns_uri = NULL;
    
@@ -474,7 +474,7 @@ sandesha2_sender_worker_check_for_sync_res(
         msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 
         axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
-    req_op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    /*req_op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(req_op_ctx)
     {
         axis2_ctx_t *ctx = NULL;
@@ -494,7 +494,7 @@ sandesha2_sender_worker_check_for_sync_res(
         }
     }
     axis2_msg_ctx_set_doing_rest(res_msg_ctx, env, axis2_msg_ctx_get_doing_rest(
-        msg_ctx, env));
+        msg_ctx, env));*/
     soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
          AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
@@ -528,6 +528,10 @@ sandesha2_sender_worker_check_for_sync_res(
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
         property);
+    axis2_op_ctx_t *op_ctx = NULL;
+    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    if(op_ctx)
+        axis2_op_ctx_free(op_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_sender_worker_check_for_sync_res");
     return AXIS2_SUCCESS;
