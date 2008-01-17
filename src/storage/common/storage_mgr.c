@@ -94,9 +94,11 @@ sandesha2_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    int msg_type)
 {
-     return storage_mgr->ops->remove_msg_ctx(storage_mgr, env, key, conf_ctx);
+     return storage_mgr->ops->remove_msg_ctx(storage_mgr, env, key, conf_ctx, 
+         msg_type);
 }
 
 axis2_status_t AXIS2_CALL

@@ -252,7 +252,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
             if(key)
             {
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
-                    conf_ctx);
+                    conf_ctx, -1);
             }
             seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
             if(seq_id)
@@ -264,7 +264,7 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     if(highest_in_msg_key)
     {
         sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-            highest_in_msg_key, conf_ctx);
+            highest_in_msg_key, conf_ctx, -1);
         if(highest_in_msg_key)
             AXIS2_FREE(env->allocator, highest_in_msg_key);
     }
@@ -357,7 +357,7 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                         "Removing the message context for the highest in "\
                         "message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                        highest_in_msg_key_str, conf_ctx);
+                        highest_in_msg_key_str, conf_ctx, -1);
                 }
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
                     "the sequence property named %s in the sequence %s", name, 
@@ -570,7 +570,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             msg_store_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                         retrans_bean, env);
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                msg_store_key, conf_ctx);
+                msg_store_key, conf_ctx, -1);
         }
     }
     
@@ -593,7 +593,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                 create_seq_bean, env);
             if(key) 
                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
-                   conf_ctx);
+                   conf_ctx, -1);
             msg_id = sandesha2_create_seq_bean_get_create_seq_msg_id(
                 create_seq_bean, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing the"\
@@ -636,7 +636,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                         "Removing the message context for the highest in "\
                         "message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                        highest_in_msg_key_str, conf_ctx);
+                        highest_in_msg_key_str, conf_ctx, -1);
                 }
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
                     "the sequence property named %s in the sequence %s", name, 

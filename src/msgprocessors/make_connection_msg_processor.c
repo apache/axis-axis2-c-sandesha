@@ -478,7 +478,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
             msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                 bean1, env);
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                msg_stored_key, conf_ctx);
+                msg_stored_key, conf_ctx, -1);
         }
         if(bean1)
             sandesha2_sender_bean_free(bean1, env);

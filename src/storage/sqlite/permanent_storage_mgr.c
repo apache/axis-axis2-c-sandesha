@@ -42,6 +42,7 @@
 #include <axiom_xml_reader.h>
 #include <axiom_stax_builder.h>
 #include <axiom_soap_builder.h>
+#include <platforms/axutil_platform_auto_sense.h>
 
 /** 
  * @brief Sandesha2 Permanent Storage Manager Struct Impl
@@ -99,7 +100,8 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx);
+    axis2_conf_ctx_t *conf_ctx,
+    int msg_type);
 
 axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_init_storage(
@@ -253,6 +255,7 @@ sandesha2_permanent_storage_mgr_store_msg_ctx(
         if(property)
         {
             msg_ctx_map = axutil_property_get_value(property, env);
+
             axutil_hash_set(msg_ctx_map, axutil_strdup(env, key), 
                 AXIS2_HASH_KEY_STRING, msg_ctx);
         }
@@ -287,8 +290,10 @@ sandesha2_permanent_storage_mgr_update_msg_ctx(
         {
             msg_ctx_map = axutil_property_get_value(property, env);
             if(msg_ctx_map)
+            {
                 axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
                     msg_ctx);
+            }
         }
     }
 
@@ -308,12 +313,14 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    int msg_type)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     {
         void *entry = NULL;
+        axis2_msg_ctx_t *msg_ctx = NULL;
         axutil_property_t *property = NULL;
         axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
         axutil_hash_t *msg_ctx_map = NULL;
@@ -323,14 +330,24 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
         {
             msg_ctx_map = axutil_property_get_value(property, env);
             if(msg_ctx_map)
+            {
                 entry = axutil_hash_get(msg_ctx_map, key, AXIS2_HASH_KEY_STRING);
+                msg_ctx = (axis2_msg_ctx_t *) entry;
+            }
             if(entry)
             {
                 axis2_op_ctx_t *op_ctx = NULL;
                 op_ctx = 
-                    axis2_msg_ctx_get_op_ctx((axis2_msg_ctx_t *) entry, env);
+                    axis2_msg_ctx_get_op_ctx(msg_ctx, env);
                 axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
                 axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, NULL);
+                if(msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
+                    msg_type !=SANDESHA2_MSG_TYPE_CREATE_SEQ)
+                {
+                    axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
+                    axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
+                    axis2_msg_ctx_free(msg_ctx, env);
+                }
             }
         }
     }

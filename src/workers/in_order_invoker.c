@@ -404,12 +404,12 @@ sandesha2_in_order_invoker_worker_func(
                 }
                 invoked = AXIS2_TRUE;
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
-                    invoker->conf_ctx);
+                    invoker->conf_ctx, -1);
                 msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(
                     storage_mgr, env, key, invoker->conf_ctx, AXIS2_FALSE);
                 if(msg_ctx)
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr,
-                        env, key, invoker->conf_ctx);
+                        env, key, invoker->conf_ctx, -1);
                 if(SANDESHA2_MSG_TYPE_APPLICATION == 
                         sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env))
                 {

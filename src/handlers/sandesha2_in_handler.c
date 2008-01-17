@@ -128,16 +128,16 @@ sandesha2_in_handler_invoke(
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
 
-    if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
+    /*if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
-        /* Message should not be sent in an exception situation */
+        // Message should not be sent in an exception situation
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Cannot initialize the message");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_INIT_MSG, 
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
-    }
+    }*/
     /* 
      * TODO Validate the message
      * sandesha2_msg_validator_validate(env, rm_msg_ctx);

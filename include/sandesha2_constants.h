@@ -471,7 +471,7 @@ extern "C"
 	#define SANDESHA2_PERMANENT_STORAGE_MGR  "persistent"
 	
     #define SANDESHA2_MSG_CTX_MAP  "msg_ctx_map"
-	
+    
 	#define SANDESHA2_DEFAULT_STORAGE_MGR "persistent"
 	
 	#define SANDESHA2_SENDER  "Sender"

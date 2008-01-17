@@ -537,7 +537,7 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_identifier_t *identifier = NULL;
 
     ref_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env);
-    axis2_msg_ctx_set_keep_alive(ref_msg_ctx, env, AXIS2_TRUE);
+    /*axis2_msg_ctx_set_keep_alive(ref_msg_ctx, env, AXIS2_TRUE);*/
     if(!ref_msg_ctx)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX,

@@ -367,7 +367,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
                     old_ack_bean, env);
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                    msg_stored_key, conf_ctx);
+                    msg_stored_key, conf_ctx, -1);
             }
         }
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, time_to_send); 

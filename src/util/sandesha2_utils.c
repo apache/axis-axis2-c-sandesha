@@ -650,7 +650,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         env));
     axutil_allocator_switch_to_local_pool(env->allocator);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
-     axis2_op_ctx_add_msg_ctx(op_ctx, env, new_msg);
+    /*axis2_op_ctx_add_msg_ctx(op_ctx, env, new_msg);*/
     
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
                         sandesha2_utils_get_soap_version(env, 
@@ -1382,8 +1382,8 @@ sandesha2_utils_create_out_msg_ctx(
 
      axis2_msg_ctx_set_is_soap_11(new_msg_ctx, env,
              axis2_msg_ctx_get_is_soap_11(in_msg_ctx, env));
-     axis2_msg_ctx_set_keep_alive(new_msg_ctx, env,
-             axis2_msg_ctx_is_keep_alive(in_msg_ctx, env));
+     /*axis2_msg_ctx_set_keep_alive(new_msg_ctx, env,
+             axis2_msg_ctx_is_keep_alive(in_msg_ctx, env));*/
 
     axis2_msg_ctx_set_charset_encoding(new_msg_ctx, env,
         axis2_msg_ctx_get_charset_encoding(in_msg_ctx, env));

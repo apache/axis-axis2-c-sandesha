@@ -131,6 +131,8 @@ populate_rm_msg_ctx(
     /* If client side and the addressing version is not set. 
      * Assuming the default addressing version.
      */
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Entry:populate_rm_msg_ctx");
     if(msg_ctx)
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
@@ -267,6 +269,8 @@ populate_rm_msg_ctx(
     }
     if(rm_elements)
         sandesha2_rm_elements_free(rm_elements, env);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2]Exit:populate_rm_msg_ctx");
     return AXIS2_SUCCESS;
 }
 
