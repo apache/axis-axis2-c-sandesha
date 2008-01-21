@@ -137,11 +137,8 @@ sandesha2_rm_elements_from_soap_envelope(
     axis2_char_t *rm_ns_val = NULL;
     axis2_char_t *addr_ns_val = NULL;
     
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1"); 
     AXIS2_PARAM_CHECK(env->error, soap_envelope, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2"); 
     AXIS2_PARAM_CHECK(env->error, action, AXIS2_FAILURE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3"); 
     
     soap_version = axiom_soap_envelope_get_soap_version(soap_envelope, env);
     

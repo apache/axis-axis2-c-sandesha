@@ -482,7 +482,6 @@ sandesha2_sender_worker_check_for_sync_res(
         free_msg = AXIS2_TRUE;
         if(!res_envelope)
         {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came99");
             return AXIS2_SUCCESS;
         }
     }

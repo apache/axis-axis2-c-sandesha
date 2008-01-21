@@ -165,7 +165,6 @@ sandesha2_out_handler_invoke(
         return AXIS2_FAILURE;
     }
     /* Getting rm message */ 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came0"); 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
     if(NULL != temp_prop)
