@@ -48,8 +48,7 @@ sandesha2_fault_mgr_check_for_create_seq_refused (
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, create_seq_msg);
-    create_seq = (sandesha2_create_seq_t*)sandesha2_msg_ctx_get_msg_part(
-                        rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+    create_seq = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
     
     if(NULL == create_seq)
     {
@@ -95,10 +94,9 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
     AXIS2_PARAM_CHECK(env->error, app_rm_msg, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
-    sequence = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(
-                        app_rm_msg, env, SANDESHA2_MSG_PART_SEQ);
-    msg_num = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(sandesha2_seq_get_msg_num(
-                        sequence, env), env);
+    sequence = sandesha2_msg_ctx_get_sequence(app_rm_msg, env);
+    msg_num = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(
+        sequence, env), env);
     seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_get_identifier(sequence, env), env);
                         
@@ -279,8 +277,7 @@ sandesha2_fault_mgr_check_for_invalid_ack(
     
     if(SANDESHA2_MSG_TYPE_ACK != sandesha2_msg_ctx_get_msg_type(ack_rm_msg, env))
         return NULL;
-    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(ack_rm_msg, 
-                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq_ack = sandesha2_msg_ctx_get_seq_ack(ack_rm_msg, env);
     ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
     if(ack_range_list)
     {
@@ -324,9 +321,9 @@ sandesha2_fault_mgr_check_for_invalid_ack(
                         SANDESHA2_SOAP_FAULT_SUBCODE_INVALID_ACKNOWLEDGEMENT);
         dummy_ele = axiom_element_create(env, NULL, "dummy_ele", NULL, 
                         &dummy_node);
-        sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)seq_ack, env, dummy_node);
+        sandesha2_seq_ack_to_om_node(seq_ack, env, dummy_node);
         qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
-                        NULL, NULL);
+            NULL, NULL);
         detail_ele = axiom_element_get_first_child_with_qname(dummy_ele, env,
                         qname, dummy_node, &detail_node);
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
@@ -433,8 +430,7 @@ sandesha2_fault_mgr_get_fault(
         sandesha2_create_seq_t *create_seq = NULL;
         axis2_endpoint_ref_t *epr = NULL;
         
-        create_seq = (sandesha2_create_seq_t *)sandesha2_msg_ctx_get_msg_part(
-                        rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+        create_seq = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
         epr =  sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                         sandesha2_create_seq_get_acks_to(create_seq, env), 
                         env), env);

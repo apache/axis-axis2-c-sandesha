@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
+#include <axutil_env.h>
 
 
 #ifdef __cplusplus
@@ -35,53 +35,48 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_msg_number_ops sandesha2_msg_number_ops_t;
-typedef struct sandesha2_msg_number sandesha2_msg_number_t;
+typedef struct sandesha2_msg_number_t sandesha2_msg_number_t;
  
 /**
  * @brief Message Number ops struct
  * Encapsulator struct for ops of sandesha2_msg_number
  */
-AXIS2_DECLARE_DATA struct sandesha2_msg_number_ops
-{
-    long (AXIS2_CALL *
-        get_msg_num)
-            (sandesha2_msg_number_t *msg_number,
-            const axutil_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_msg_num)
-            (sandesha2_msg_number_t *msg_number,
-            const axutil_env_t *env, 
-            long value);
-};
 
 /**
  * @brief sandesha2_msg_number
  *    sandesha2_msg_number
  */
-AXIS2_DECLARE_DATA struct sandesha2_msg_number
-{
-    sandesha2_iom_rm_element_t element;
-    sandesha2_msg_number_ops_t *ops;
-};
+
+AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
+sandesha2_msg_number_create(
+    const axutil_env_t *env,
+    axis2_char_t *ns_value);
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_number_free_void_arg(
     void *msg_num,
     const axutil_env_t *env);
 
-AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
-sandesha2_msg_number_create(
-						const axutil_env_t *env,
-					    axis2_char_t *ns_value);
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_number_free(
+    sandesha2_msg_number_t *msg_num, 
+	const axutil_env_t *env);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_MSG_NUMBER_SET_MSG_NUM(msg_number, env, value) \
-    ((msg_number)->ops->set_msg_num (msg_number, env, value))
-#define SANDESHA2_MSG_NUMBER_GET_MSG_NUM(msg_number, env) \
-    ((msg_number)->ops->get_msg_num (msg_number, env))
-/************************** End of function macros ****************************/
+axis2_char_t* AXIS2_CALL 
+sandesha2_msg_number_get_namespace_value(
+    sandesha2_msg_number_t *msg_num,
+	const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_msg_number_set_msg_num(
+    sandesha2_msg_number_t *msg_num,
+   	const axutil_env_t *env, 
+    long value);
+                    	
+long AXIS2_CALL
+sandesha2_msg_number_get_msg_num(
+    sandesha2_msg_number_t *msg_num,
+   	const axutil_env_t *env);
 
 /** @} */
 #ifdef __cplusplus

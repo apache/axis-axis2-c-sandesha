@@ -23,7 +23,6 @@
   */
 
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_error.h>
 
 
@@ -37,16 +36,12 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_msg_pending sandesha2_msg_pending_t;
+typedef struct sandesha2_msg_pending_t sandesha2_msg_pending_t;
  
 /**
  * @brief sandesha2_msg_pending
  *    sandesha2_msg_pending
  */
-AXIS2_DECLARE_DATA struct sandesha2_msg_pending
-{
-    sandesha2_iom_rm_part_t part;
-};
 
 AXIS2_EXTERN sandesha2_msg_pending_t* AXIS2_CALL
 sandesha2_msg_pending_create(
@@ -57,6 +52,11 @@ axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_free_void_arg(
     void *msg_pending,
     const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_msg_pending_free (
+    sandesha2_msg_pending_t *msg_pending, 
+	const axutil_env_t *env);								
                     	
 axis2_bool_t AXIS2_CALL
 sandesha2_msg_pending_is_pending(
@@ -71,10 +71,26 @@ sandesha2_msg_pending_set_pending(
 
 axis2_status_t AXIS2_CALL
 sandesha2_msg_pending_to_soap_envelope(
-    sandesha2_iom_rm_part_t *msg_pending,
+    sandesha2_msg_pending_t *msg_pending,
     const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);
 
+axis2_char_t* AXIS2_CALL 
+sandesha2_msg_pending_get_namespace_value (
+    sandesha2_msg_pending_t *msg_pending,
+	const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_msg_pending_from_om_node(
+    sandesha2_msg_pending_t *msg_pending,
+    const axutil_env_t *env, 
+    axiom_node_t *msg_pending_node);
+
+axiom_node_t* AXIS2_CALL 
+sandesha2_msg_pending_to_om_node(
+    sandesha2_msg_pending_t *msg_pending,
+    const axutil_env_t *env, 
+    void *header_node);
 
 /** @} */
 #ifdef __cplusplus

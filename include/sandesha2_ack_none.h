@@ -24,7 +24,6 @@
 
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
 
@@ -37,20 +36,26 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_ack_none sandesha2_ack_none_t;
+typedef struct sandesha2_ack_none_t sandesha2_ack_none_t;
  
 /**
  * @brief sandesha2_ack_none
  *    sandesha2_ack_none
  */
-AXIS2_DECLARE_DATA struct sandesha2_ack_none
-{
-    sandesha2_iom_rm_element_t element;
-};    
 AXIS2_EXTERN sandesha2_ack_none_t * AXIS2_CALL
 sandesha2_ack_none_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_ack_none_free(
+    sandesha2_ack_none_t *ack_none, 
+    const axutil_env_t *env);								
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_ack_none_get_namespace_value(
+    sandesha2_ack_none_t *ack_none,
+	const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

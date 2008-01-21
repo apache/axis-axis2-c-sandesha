@@ -19,7 +19,16 @@
 #include <axiom_soap_const.h>
 #include <sandesha2_iom_rm_part.h>
 #include <stdio.h>
-
+#include <sandesha2_close_seq.h>
+#include <sandesha2_close_seq_res.h>
+#include <sandesha2_create_seq.h>
+#include <sandesha2_create_seq_res.h>
+#include <sandesha2_make_connection.h>
+#include <sandesha2_msg_pending.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
 
 /** 
  * @brief Msg Ctx struct impl
@@ -33,6 +42,17 @@ struct sandesha2_msg_ctx_t
     axis2_char_t *addr_ns_val;
     axis2_char_t *spec_ver;
 	axis2_msg_ctx_t *msg_ctx;
+    sandesha2_close_seq_t *close_seq;
+    sandesha2_close_seq_res_t *close_seq_res;
+    sandesha2_create_seq_t *create_seq;
+    sandesha2_create_seq_res_t *create_seq_res;
+    sandesha2_make_connection_t *make_connection;
+    sandesha2_msg_pending_t *msg_pending;
+    sandesha2_seq_ack_t *seq_ack;
+    sandesha2_seq_t *seq;
+    sandesha2_terminate_seq_t *terminate_seq;
+    sandesha2_terminate_seq_res_t *terminate_seq_res;
+    sandesha2_ack_requested_t *ack_requested;
 };
 
 AXIS2_EXTERN sandesha2_msg_ctx_t* AXIS2_CALL
@@ -55,6 +75,17 @@ sandesha2_msg_ctx_create(
     rm_msg_ctx->msg_parts = NULL;
     rm_msg_ctx->msg_ctx = NULL;
     rm_msg_ctx->spec_ver = NULL;
+    rm_msg_ctx->create_seq = NULL;
+    rm_msg_ctx->create_seq_res = NULL;
+    rm_msg_ctx->close_seq = NULL;
+    rm_msg_ctx->close_seq_res = NULL;
+    rm_msg_ctx->terminate_seq = NULL;
+    rm_msg_ctx->terminate_seq_res = NULL;
+    rm_msg_ctx->make_connection = NULL;
+    rm_msg_ctx->msg_pending = NULL;
+    rm_msg_ctx->seq = NULL;
+    rm_msg_ctx->seq_ack = NULL;
+    rm_msg_ctx->ack_requested = NULL;
     
     rm_msg_ctx->msg_parts = axutil_hash_make(env);
     rm_msg_ctx->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
@@ -84,24 +115,60 @@ sandesha2_msg_ctx_free(
         AXIS2_FREE(env->allocator, rm_msg_ctx->spec_ver);
         rm_msg_ctx->spec_ver = NULL;
     }
-    if(rm_msg_ctx->msg_parts)
+    if(rm_msg_ctx->close_seq)
     {
-        axutil_hash_index_t *hi = NULL;
-        for(hi = axutil_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
-                        hi = axutil_hash_next(env, hi))
-        {
-            sandesha2_iom_rm_part_t *part = NULL;
-            void *key = NULL;
-            void *value = NULL;
-
-            axutil_hash_this(hi, (const void **) &key, NULL, &value);
-            part = (sandesha2_iom_rm_part_t*)value;
-            if(key)
-                AXIS2_FREE(env->allocator, key);
-            sandesha2_iom_rm_part_free(part, env);
-        }
-        axutil_hash_free(rm_msg_ctx->msg_parts, env);
-        rm_msg_ctx->msg_parts = NULL;
+        sandesha2_close_seq_free(rm_msg_ctx->close_seq, env);
+        rm_msg_ctx->close_seq = NULL;
+    }
+    if(rm_msg_ctx->close_seq_res)
+    {
+        sandesha2_close_seq_res_free(rm_msg_ctx->close_seq_res, env);
+        rm_msg_ctx->close_seq_res = NULL;
+    }
+    if(rm_msg_ctx->create_seq)
+    {
+        sandesha2_create_seq_free(rm_msg_ctx->create_seq, env);
+        rm_msg_ctx->create_seq = NULL;
+    }
+    if(rm_msg_ctx->create_seq_res)
+    {
+        sandesha2_create_seq_res_free(rm_msg_ctx->create_seq_res, env);
+        rm_msg_ctx->create_seq_res = NULL;
+    }
+    if(rm_msg_ctx->make_connection)
+    {
+        sandesha2_make_connection_free(rm_msg_ctx->make_connection, env);
+        rm_msg_ctx->make_connection = NULL;
+    }
+    if(rm_msg_ctx->msg_pending)
+    {
+        sandesha2_msg_pending_free(rm_msg_ctx->msg_pending, env);
+        rm_msg_ctx->msg_pending = NULL;
+    }
+    if(rm_msg_ctx->seq_ack)
+    {
+        sandesha2_seq_ack_free(rm_msg_ctx->seq_ack, env);
+        rm_msg_ctx->seq_ack = NULL;
+    }
+    if(rm_msg_ctx->seq)
+    {
+        sandesha2_seq_free(rm_msg_ctx->seq, env);
+        rm_msg_ctx->seq = NULL;
+    }
+    if(rm_msg_ctx->terminate_seq)
+    {
+        sandesha2_terminate_seq_free(rm_msg_ctx->terminate_seq, env);
+        rm_msg_ctx->terminate_seq = NULL;
+    }
+    if(rm_msg_ctx->terminate_seq_res)
+    {
+        sandesha2_terminate_seq_res_free(rm_msg_ctx->terminate_seq_res, env);
+        rm_msg_ctx->terminate_seq = NULL;
+    }
+    if(rm_msg_ctx->ack_requested)
+    {
+        sandesha2_ack_requested_free(rm_msg_ctx->ack_requested, env);
+        rm_msg_ctx->ack_requested = NULL;
     }
 	AXIS2_FREE(env->allocator, rm_msg_ctx);
 	return AXIS2_SUCCESS;
@@ -133,7 +200,6 @@ sandesha2_msg_ctx_add_soap_envelope(
     const axutil_env_t *env)
 {
     int soap_ver = AXIOM_SOAP11;
-    axutil_hash_index_t *hi = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
     
     if(AXIS2_FALSE == axis2_msg_ctx_get_is_soap_11(rm_msg_ctx->msg_ctx, env))
@@ -147,15 +213,53 @@ sandesha2_msg_ctx_add_soap_envelope(
                         soap_envelope);
     }
     
-    for(hi = axutil_hash_first(rm_msg_ctx->msg_parts, env); NULL != hi;
-                        hi = axutil_hash_next(env, hi))
+    if(rm_msg_ctx->close_seq)
     {
-        sandesha2_iom_rm_part_t *part = NULL;
-        void *value = NULL;
-
-        axutil_hash_this(hi, NULL, NULL, &value);
-        part = (sandesha2_iom_rm_part_t*)value;
-        sandesha2_iom_rm_part_to_soap_envelope(part, env, soap_envelope);
+        sandesha2_close_seq_to_soap_envelope(rm_msg_ctx->close_seq, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->close_seq_res)
+    {
+        sandesha2_close_seq_res_to_soap_envelope(rm_msg_ctx->close_seq_res, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->create_seq)
+    {
+        sandesha2_create_seq_to_soap_envelope(rm_msg_ctx->create_seq, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->create_seq_res)
+    {
+        sandesha2_create_seq_res_to_soap_envelope(rm_msg_ctx->create_seq_res, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->make_connection)
+    {
+        sandesha2_make_connection_to_soap_envelope(rm_msg_ctx->make_connection, 
+            env, soap_envelope);
+    }
+    if(rm_msg_ctx->msg_pending)
+    {
+        sandesha2_msg_pending_to_soap_envelope(rm_msg_ctx->msg_pending, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->seq_ack)
+    {
+        sandesha2_seq_ack_to_soap_envelope(rm_msg_ctx->seq_ack, env, soap_envelope);
+    }
+    if(rm_msg_ctx->seq)
+    {
+        sandesha2_seq_to_soap_envelope(rm_msg_ctx->seq, env, soap_envelope);
+    }
+    if(rm_msg_ctx->terminate_seq)
+    {
+        sandesha2_terminate_seq_to_soap_envelope(rm_msg_ctx->terminate_seq, env, 
+            soap_envelope);
+    }
+    if(rm_msg_ctx->terminate_seq_res)
+    {
+        sandesha2_terminate_seq_res_to_soap_envelope(rm_msg_ctx->terminate_seq_res, 
+            env, soap_envelope);
     }
     return AXIS2_SUCCESS;
 }
@@ -176,36 +280,7 @@ sandesha2_msg_ctx_set_msg_type (
     rm_msg_ctx->msg_type = msg_type;
     return AXIS2_SUCCESS;
 }
-            
-axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_part (
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axutil_env_t *env, int part_id,
-    sandesha2_iom_rm_part_t *part)
-{
-    axis2_char_t *part_id_str = NULL;
-    AXIS2_PARAM_CHECK(env->error, part, AXIS2_FAILURE);
-    
-    part_id_str = AXIS2_MALLOC(env->allocator, 32 * sizeof(axis2_char_t));
-    sprintf(part_id_str, "%d", part_id);
-    axutil_hash_set(rm_msg_ctx->msg_parts, part_id_str, AXIS2_HASH_KEY_STRING,
-                        (const void*)part);
-    return AXIS2_SUCCESS;
-}
-            
-sandesha2_iom_rm_part_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_part(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axutil_env_t *env, 
-    int part_id)
-{
-    axis2_char_t part_id_str[32];
-    
-    sprintf(part_id_str, "%d", part_id);
-    return axutil_hash_get(rm_msg_ctx->msg_parts, part_id_str, 
-                        AXIS2_HASH_KEY_STRING);
-}
-    
+                          
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_from(
     sandesha2_msg_ctx_t *rm_msg_ctx,
@@ -539,5 +614,225 @@ sandesha2_msg_ctx_reset_http_out_transport_info(
     if(!rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
     return axis2_msg_ctx_reset_http_out_transport_info(rm_msg_ctx->msg_ctx, env);
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_create_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_create_seq_t *create_seq)
+{
+    AXIS2_PARAM_CHECK(env->error, create_seq, AXIS2_FAILURE);
+    
+    rm_msg_ctx->create_seq = create_seq;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_create_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_create_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->create_seq;
+}
+ 
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_create_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_create_seq_res_t *create_seq_res)
+{
+    AXIS2_PARAM_CHECK(env->error, create_seq_res, AXIS2_FAILURE);
+    
+    rm_msg_ctx->create_seq_res = create_seq_res;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_create_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_create_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->create_seq_res;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_close_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_close_seq_t *close_seq)
+{
+    AXIS2_PARAM_CHECK(env->error, close_seq, AXIS2_FAILURE);
+    
+    rm_msg_ctx->close_seq = close_seq;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_close_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_close_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->close_seq;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_close_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_close_seq_res_t *close_seq_res)
+{
+    AXIS2_PARAM_CHECK(env->error, close_seq_res, AXIS2_FAILURE);
+    
+    rm_msg_ctx->close_seq_res = close_seq_res;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_close_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_close_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->close_seq_res;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_terminate_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_terminate_seq_t *terminate_seq)
+{
+    AXIS2_PARAM_CHECK(env->error, terminate_seq, AXIS2_FAILURE);
+    
+    rm_msg_ctx->terminate_seq = terminate_seq;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_terminate_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_terminate_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->terminate_seq;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_terminate_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_terminate_seq_res_t *terminate_seq_res)
+{
+    AXIS2_PARAM_CHECK(env->error, terminate_seq_res, AXIS2_FAILURE);
+    
+    rm_msg_ctx->terminate_seq_res = terminate_seq_res;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_terminate_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_terminate_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->terminate_seq_res;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_make_connection(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_make_connection_t *make_connection)
+{
+    AXIS2_PARAM_CHECK(env->error, make_connection, AXIS2_FAILURE);
+    
+    rm_msg_ctx->make_connection = make_connection;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_make_connection_t *AXIS2_CALL
+sandesha2_msg_ctx_get_make_connection(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->make_connection;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_pending(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_msg_pending_t *msg_pending)
+{
+    AXIS2_PARAM_CHECK(env->error, msg_pending, AXIS2_FAILURE);
+    
+    rm_msg_ctx->msg_pending = msg_pending;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_msg_pending_t *AXIS2_CALL
+sandesha2_msg_ctx_get_msg_pending(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->msg_pending;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_sequence(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_seq_t *seq)
+{
+    AXIS2_PARAM_CHECK(env->error, seq, AXIS2_FAILURE);
+    
+    rm_msg_ctx->seq = seq;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_sequence(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->seq;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_seq_ack(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_seq_ack_t *seq_ack)
+{
+    AXIS2_PARAM_CHECK(env->error, seq_ack, AXIS2_FAILURE);
+    
+    rm_msg_ctx->seq_ack = seq_ack;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_seq_ack_t *AXIS2_CALL
+sandesha2_msg_ctx_get_seq_ack(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->seq_ack;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_ack_requested(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_ack_requested_t *ack_requested)
+{
+    AXIS2_PARAM_CHECK(env->error, ack_requested, AXIS2_FAILURE);
+    
+    rm_msg_ctx->ack_requested = ack_requested;
+    return AXIS2_SUCCESS;
+}
+ 
+sandesha2_ack_requested_t *AXIS2_CALL
+sandesha2_msg_ctx_get_ack_requested(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env)
+{
+    return rm_msg_ctx->ack_requested;
 }
 

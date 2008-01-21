@@ -25,7 +25,6 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_identifier.h>
 #include <sandesha2_error.h>
 
@@ -40,16 +39,12 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_close_seq_res sandesha2_close_seq_res_t;
+typedef struct sandesha2_close_seq_res_t sandesha2_close_seq_res_t;
  
 /**
  * @brief sandesha2_close_seq_res
  *    sandesha2_close_seq_res
  */
-AXIS2_DECLARE_DATA struct sandesha2_close_seq_res
-{
-    sandesha2_iom_rm_part_t part;
-};
 
 axis2_status_t AXIS2_CALL
 sandesha2_close_seq_res_free_void_arg(
@@ -61,6 +56,11 @@ sandesha2_close_seq_res_create(
    const axutil_env_t *env, 
    axis2_char_t *ns_value);
   
+axis2_status_t AXIS2_CALL 
+sandesha2_close_seq_res_free(
+    sandesha2_close_seq_res_t *close_seq_res, 
+	const axutil_env_t *env);
+
 axis2_status_t AXIS2_CALL                 
 sandesha2_close_seq_res_set_identifier(
     sandesha2_close_seq_res_t *close_seq_res,
@@ -70,6 +70,17 @@ sandesha2_close_seq_res_set_identifier(
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_close_seq_res_get_identifier(
     sandesha2_close_seq_res_t *close_seq_res,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_close_seq_res_to_soap_env(
+    sandesha2_close_seq_res_t *close_seq_res,
+    const axutil_env_t *env,
+    axiom_soap_envelope_t *envelope);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_close_seq_res_get_namespace_value (
+    sandesha2_close_seq_res_t *close_seq_res, 
     const axutil_env_t *env);
 
 /** @} */

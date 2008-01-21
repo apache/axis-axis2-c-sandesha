@@ -22,8 +22,7 @@
   * @brief 
   */
 
-#include <sandesha2_iom_rm_element.h>
-
+#include <axutil_env.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -34,21 +33,27 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_ack_final sandesha2_ack_final_t;
+typedef struct sandesha2_ack_final_t sandesha2_ack_final_t;
  
 /**
  * @brief sandesha2_ack_final
  *    sandesha2_ack_final
  */
-AXIS2_DECLARE_DATA struct sandesha2_ack_final
-{
-    sandesha2_iom_rm_element_t element;
-};
           
 AXIS2_EXTERN sandesha2_ack_final_t* AXIS2_CALL
 sandesha2_ack_final_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_ack_final_free(
+    sandesha2_ack_final_t *ack_final, 
+    const axutil_env_t *env);								
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_ack_final_get_namespace_value(
+    sandesha2_ack_final_t *ack_final,
+	const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

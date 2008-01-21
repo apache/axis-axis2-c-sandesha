@@ -330,7 +330,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             axis2_msg_ctx_t *msg_ctx1 = NULL;
             axis2_char_t *to = NULL;
             sandesha2_msg_ctx_t *ack_rm_msg = NULL;
-            sandesha2_iom_rm_part_t *seq_ack = NULL;
+            sandesha2_seq_ack_t *seq_ack = NULL;
             axis2_char_t *msg_ctx_ref_key = NULL;
             axis2_endpoint_ref_t *to_ref = NULL;
             
@@ -357,10 +357,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                     " ack message entry");
                 return AXIS2_FAILURE;
             }
-            seq_ack = (sandesha2_iom_rm_part_t *)sandesha2_msg_ctx_get_msg_part(
-                ack_rm_msg, env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
-            sandesha2_msg_ctx_set_msg_part(rm_msg_ctx, env, 
-                SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT, seq_ack);
+            seq_ack = sandesha2_msg_ctx_get_seq_ack(ack_rm_msg, env);
+            sandesha2_msg_ctx_set_seq_ack(rm_msg_ctx, env, seq_ack);
             sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
             break;
         }

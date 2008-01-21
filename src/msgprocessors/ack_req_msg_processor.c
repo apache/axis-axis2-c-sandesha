@@ -164,8 +164,7 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         "[sandesha2]Entry:sandesha2_ack_req_msg_processor_process_in_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
-    ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
-        rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
+    ack_requested = sandesha2_msg_ctx_get_ack_requested(rm_msg_ctx, env);
     if(!ack_requested)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 

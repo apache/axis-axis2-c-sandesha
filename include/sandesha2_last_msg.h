@@ -24,7 +24,6 @@
 
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
 
@@ -37,16 +36,12 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_last_msg sandesha2_last_msg_t;
+typedef struct sandesha2_last_msg_t sandesha2_last_msg_t;
  
 /**
  * @brief sandesha2_last_msg
  *    sandesha2_last_msg
  */
-AXIS2_DECLARE_DATA struct sandesha2_last_msg
-{
-    sandesha2_iom_rm_element_t element;
-};
     
 axis2_status_t AXIS2_CALL
 sandesha2_last_msg_free_void_arg(
@@ -57,6 +52,16 @@ AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
 sandesha2_last_msg_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_last_msg_free(
+    sandesha2_last_msg_t *last_msg, 
+    const axutil_env_t *env);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_last_msg_get_namespace_value(
+    sandesha2_last_msg_t *last_msg,
+	const axutil_env_t *env);
 
 /** @} */
 #ifdef __cplusplus

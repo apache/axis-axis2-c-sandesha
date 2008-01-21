@@ -21,156 +21,113 @@
  * @brief Accept struct impl
  *	Sandesha2 IOM Accept
  */
-typedef struct sandesha2_accept_impl sandesha2_accept_impl_t;  
   
-struct sandesha2_accept_impl
+struct sandesha2_accept_t 
 {
-    sandesha2_accept_t accept;
 	sandesha2_acks_to_t *acks_to;
 	axis2_char_t *rm_ns_val;
     axis2_char_t *addr_ns_val;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(accept) ((sandesha2_accept_impl_t *)(accept))
-
 /***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
-sandesha2_accept_get_namespace_value (sandesha2_iom_rm_element_t *accept,
-						const axutil_env_t *env);
     
 void* AXIS2_CALL 
-sandesha2_accept_from_om_node(sandesha2_iom_rm_element_t *accept,
-                    	const axutil_env_t *env, axiom_node_t *om_node);
+sandesha2_accept_from_om_node(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
-sandesha2_accept_to_om_node(sandesha2_iom_rm_element_t *accept,
-                    	const axutil_env_t *env, void *om_node);
+sandesha2_accept_to_om_node(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
-sandesha2_accept_is_namespace_supported(sandesha2_iom_rm_element_t *accept,
-                    	const axutil_env_t *env, axis2_char_t *namespace);
-     
-axis2_status_t AXIS2_CALL 
-sandesha2_accept_free (sandesha2_iom_rm_element_t *accept, const axutil_env_t *env);								
-
+sandesha2_accept_is_namespace_supported(
+   	const axutil_env_t *env, 
+    axis2_char_t *namespace);
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_accept_t* AXIS2_CALL
-sandesha2_accept_create(const axutil_env_t *env,  axis2_char_t *rm_ns_val, 
-					    axis2_char_t *addr_ns_val)
+sandesha2_accept_create(
+    const axutil_env_t *env,  
+    axis2_char_t *rm_ns_val, 
+	axis2_char_t *addr_ns_val)
 {
-    sandesha2_accept_impl_t *accept_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
+    sandesha2_accept_t *accept = NULL;
     AXIS2_PARAM_CHECK(env->error, rm_ns_val, NULL);
     AXIS2_PARAM_CHECK(env->error, addr_ns_val, NULL);
     
-    if(AXIS2_FALSE == sandesha2_accept_is_namespace_supported(
-                        (sandesha2_iom_rm_element_t*)accept_impl,
-						env, rm_ns_val))
+    if(AXIS2_FALSE == sandesha2_accept_is_namespace_supported(env, rm_ns_val))
 	{
 		AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, 
-							AXIS2_FAILURE);
+	        AXIS2_FAILURE);
 		return NULL;
 	}
-    accept_impl =  (sandesha2_accept_impl_t *)AXIS2_MALLOC 
-                        (env->allocator, sizeof(sandesha2_accept_impl_t));
+    accept =  (sandesha2_accept_t *)AXIS2_MALLOC(env->allocator, sizeof(sandesha2_accept_t));
 	
-    if(NULL == accept_impl)
+    if(NULL == accept)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    accept_impl->rm_ns_val = NULL;
-    accept_impl->addr_ns_val = NULL;
-    accept_impl->acks_to = NULL;
-    accept_impl->accept.element.ops = NULL;
+    accept->rm_ns_val = NULL;
+    accept->addr_ns_val = NULL;
+    accept->acks_to = NULL;
     
-    accept_impl->accept.element.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_iom_rm_element_ops_t));
-    if(NULL == accept_impl->accept.element.ops)
-	{
-		sandesha2_accept_free((sandesha2_iom_rm_element_t*)accept_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
+    accept->rm_ns_val = (axis2_char_t *)axutil_strdup(env ,rm_ns_val);
+    accept->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
+    accept->acks_to = NULL;
     
-    accept_impl->rm_ns_val = (axis2_char_t *)axutil_strdup(env ,rm_ns_val);
-    accept_impl->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
-    accept_impl->acks_to = NULL;
-    
-    accept_impl->accept.element.ops->get_namespace_value = 
-                        sandesha2_accept_get_namespace_value;
-    accept_impl->accept.element.ops->from_om_node = sandesha2_accept_from_om_node;
-    accept_impl->accept.element.ops->to_om_node = sandesha2_accept_to_om_node;
-    accept_impl->accept.element.ops->is_namespace_supported = 
-    					sandesha2_accept_is_namespace_supported;
-    accept_impl->accept.element.ops->free = sandesha2_accept_free;
-                        
-	return &(accept_impl->accept);
+	return accept;
 }
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_accept_free (sandesha2_iom_rm_element_t *accept, 
-                        const axutil_env_t *env)
+sandesha2_accept_free(
+    sandesha2_accept_t *accept, 
+    const axutil_env_t *env)
 {
-    sandesha2_accept_impl_t *accept_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
-    
-    if(NULL != accept_impl->addr_ns_val)
+    if(NULL != accept->addr_ns_val)
     {
-        AXIS2_FREE(env->allocator, accept_impl->addr_ns_val);
-        accept_impl->addr_ns_val = NULL;
+        AXIS2_FREE(env->allocator, accept->addr_ns_val);
+        accept->addr_ns_val = NULL;
     }
-    if(NULL != accept_impl->rm_ns_val)
+    if(NULL != accept->rm_ns_val)
     {
-        AXIS2_FREE(env->allocator, accept_impl->rm_ns_val);
-        accept_impl->rm_ns_val = NULL;
-    }
-    if(NULL != accept_impl->accept.element.ops)
-    {
-        AXIS2_FREE(env->allocator, accept_impl->accept.element.ops);
-        accept_impl->accept.element.ops = NULL;
-    }
-    if(NULL != accept->ops)
-    {
-        AXIS2_FREE(env->allocator, accept->ops);
-        accept->ops = NULL;
+        AXIS2_FREE(env->allocator, accept->rm_ns_val);
+        accept->rm_ns_val = NULL;
     }
         
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(accept));
+	AXIS2_FREE(env->allocator, accept);
 	return AXIS2_SUCCESS;
 }
 
 axis2_char_t* AXIS2_CALL 
-sandesha2_accept_get_namespace_value (sandesha2_iom_rm_element_t *accept,
-						const axutil_env_t *env)
+sandesha2_accept_get_namespace_value(
+    sandesha2_accept_t *accept,
+	const axutil_env_t *env)
 {
-	sandesha2_accept_impl_t *accept_impl = NULL;
-	accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
-	return accept_impl->rm_ns_val;
+	return accept->rm_ns_val;
 }
 
 
 void* AXIS2_CALL 
 sandesha2_accept_from_om_node(
-    sandesha2_iom_rm_element_t *accept,
+    sandesha2_accept_t *accept,
     const axutil_env_t *env, 
     axiom_node_t *om_node)
 {
-	sandesha2_accept_impl_t *accept_impl = NULL;
     axutil_qname_t *accept_qname = NULL;
     axiom_node_t *child_om_node = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *accept_part = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
     accept_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ACCEPT, 
-                        accept_impl->rm_ns_val, NULL);
+                        accept->rm_ns_val, NULL);
     if(NULL == accept_qname)
     {
         return NULL;
@@ -190,14 +147,13 @@ sandesha2_accept_from_om_node(
                         AXIS2_FAILURE);
         return NULL;
     }
-    accept_impl->acks_to = sandesha2_acks_to_create(env, NULL, 
-                        accept_impl->rm_ns_val, accept_impl->addr_ns_val);
-    if(NULL == accept_impl->acks_to)
+    accept->acks_to = sandesha2_acks_to_create(env, NULL, 
+                        accept->rm_ns_val, accept->addr_ns_val);
+    if(NULL == accept->acks_to)
     {
         return NULL;
     }
-    if(!sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *)accept_impl->acks_to, env, 
-                        child_om_node))
+    if(!sandesha2_acks_to_from_om_node(accept->acks_to, env, child_om_node))
     {
         return NULL;
     }
@@ -206,24 +162,23 @@ sandesha2_accept_from_om_node(
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_accept_to_om_node(sandesha2_iom_rm_element_t *accept,
-                    	const axutil_env_t *env, void *om_node)
+sandesha2_accept_to_om_node(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    void *om_node)
 {
-	sandesha2_accept_impl_t *accept_impl = NULL;
     axiom_namespace_t *rm_namespace = NULL;
     axiom_element_t *accept_element = NULL;
     axiom_node_t *accept_node = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
-    if(NULL == accept_impl->acks_to)
+    if(NULL == accept->acks_to)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
-                        AXIS2_FAILURE);
+             AXIS2_FAILURE);
         return NULL;
     }
-    rm_namespace = axiom_namespace_create(env, accept_impl->rm_ns_val,
+    rm_namespace = axiom_namespace_create(env, accept->rm_ns_val,
                         SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
     if(NULL == rm_namespace)
     {
@@ -236,16 +191,35 @@ sandesha2_accept_to_om_node(sandesha2_iom_rm_element_t *accept,
     {
         return NULL;
     }
-    sandesha2_iom_rm_element_to_om_node((sandesha2_iom_rm_element_t *)
-            accept_impl->acks_to, env, accept_node);
+    sandesha2_acks_to_to_om_node(accept->acks_to, env, accept_node);
     axiom_node_add_child((axiom_node_t*)om_node, env, accept_node);
 
     return (axiom_node_t*)om_node;
 }
 
+axis2_status_t AXIS2_CALL
+sandesha2_accept_set_acks_to(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    sandesha2_acks_to_t *acks_to)
+{
+    /* TODO free old acks_to ?*/
+    accept->acks_to = acks_to;
+    return AXIS2_SUCCESS;
+}
+
+sandesha2_acks_to_t * AXIS2_CALL
+sandesha2_accept_get_acks_to(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env)
+{
+    return accept->acks_to;
+}
+
 axis2_bool_t AXIS2_CALL 
-sandesha2_accept_is_namespace_supported(sandesha2_iom_rm_element_t *accept,
-                    	const axutil_env_t *env, axis2_char_t *namespace)
+sandesha2_accept_is_namespace_supported(
+   	const axutil_env_t *env, 
+    axis2_char_t *namespace)
 {
     if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
@@ -258,27 +232,4 @@ sandesha2_accept_is_namespace_supported(sandesha2_iom_rm_element_t *accept,
     return AXIS2_FALSE;
 }
 
-axis2_status_t AXIS2_CALL
-sandesha2_accept_set_acks_to(
-    sandesha2_accept_t *accept,
-    const axutil_env_t *env, 
-    sandesha2_acks_to_t *acks_to)
-{
-	sandesha2_accept_impl_t *accept_impl = NULL;
-    
-    accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
-    /* TODO free old acks_to ?*/
-    accept_impl->acks_to = acks_to;
-    return AXIS2_SUCCESS;
-}
 
-
-sandesha2_acks_to_t * AXIS2_CALL
-sandesha2_accept_get_acks_to(
-    sandesha2_accept_t *accept,
-    const axutil_env_t *env)
-{
-	sandesha2_accept_impl_t *accept_impl = NULL;
-    accept_impl = SANDESHA2_INTF_TO_IMPL(accept);
-    return accept_impl->acks_to;
-} 

@@ -23,7 +23,6 @@
   */
 
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_identifier.h>
 #include <sandesha2_msg_number.h>
 #include <sandesha2_last_msg.h>
@@ -40,16 +39,12 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_seq sandesha2_seq_t;
+typedef struct sandesha2_seq_t sandesha2_seq_t;
  
 /**
  * @brief sandesha2_seq
  *    sandesha2_seq
  */
-AXIS2_DECLARE_DATA struct sandesha2_seq
-{
-    sandesha2_iom_rm_part_t part;
-};
 
 AXIS2_EXTERN sandesha2_seq_t* AXIS2_CALL
 sandesha2_seq_create(
@@ -60,6 +55,16 @@ axis2_status_t AXIS2_CALL
 sandesha2_seq_free_void_arg(
     void *seq,
     const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_seq_free (
+    sandesha2_seq_t *seq, 
+	const axutil_env_t *env);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_seq_get_namespace_value (
+    sandesha2_seq_t *seq,
+	const axutil_env_t *env);    
                     	
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_seq_get_identifier(
@@ -104,6 +109,23 @@ sandesha2_seq_set_must_understand(
     sandesha2_seq_t *seq,
     const axutil_env_t *env, axis2_bool_t mu);
 
+axis2_status_t AXIS2_CALL
+sandesha2_seq_to_soap_env(
+    sandesha2_seq_t *seq,
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *envelope);
+                    	
+void* AXIS2_CALL 
+sandesha2_seq_from_om_node(
+    sandesha2_seq_t *seq,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+
+axiom_node_t* AXIS2_CALL 
+sandesha2_seq_to_om_node(
+    sandesha2_seq_t *seq,
+    const axutil_env_t *env, 
+    void *om_node);
 
 /** @} */
 #ifdef __cplusplus

@@ -194,9 +194,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         "[sandesha2]Entry:sandesha2_make_connection_msg_processor_process_in_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
 
-    make_conn = (sandesha2_make_connection_t*)
-        sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-                SANDESHA2_MSG_PART_MAKE_CONNECTION);
+    make_conn = sandesha2_msg_ctx_get_make_connection(rm_msg_ctx, env);
     if(!make_conn)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -446,8 +444,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         axis2_char_t *seq_id = NULL;
         sandesha2_identifier_t *identifier = NULL;
         
-        seq = (sandesha2_seq_t*) sandesha2_msg_ctx_get_msg_part(return_rm_msg_ctx, 
-            env, SANDESHA2_MSG_PART_SEQ);
+        seq = sandesha2_msg_ctx_get_sequence(return_rm_msg_ctx, env);
         identifier = sandesha2_seq_get_identifier(seq, env);
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     }
@@ -491,9 +488,8 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         axis2_conf_ctx_t *conf_ctx = NULL;
         axis2_char_t *int_seq_id = NULL;
         
-        terminate_seq = (sandesha2_terminate_seq_t*)
-            sandesha2_msg_ctx_get_msg_part(return_rm_msg_ctx, env, 
-                SANDESHA2_MSG_PART_TERMINATE_SEQ);
+        terminate_seq = sandesha2_msg_ctx_get_terminate_seq(return_rm_msg_ctx, 
+            env);
         seq_id = sandesha2_identifier_get_identifier(
             sandesha2_terminate_seq_get_identifier(terminate_seq, 
                 env), env);
@@ -539,8 +535,7 @@ add_msg_pending_header(
     if(msg_pending)
     {
         sandesha2_msg_pending_set_pending(msg_pending, env, pending);
-        sandesha2_msg_pending_to_soap_envelope((sandesha2_iom_rm_part_t *)
-            msg_pending, env, soap_env);
+        sandesha2_msg_pending_to_soap_envelope(msg_pending, env, soap_env);
     }
 }
 

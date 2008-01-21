@@ -1137,8 +1137,7 @@ sandesha2_client_send_ack_request_with_svc_client(
     identifier = sandesha2_identifier_create(env, rm_ns_value);
     sandesha2_identifier_set_identifier(identifier, env, out_seq_id);
     sandesha2_ack_requested_set_identifier(ack_requested, env, identifier);
-    sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *) 
-            ack_requested, env, dummy_envelope);
+    sandesha2_ack_requested_to_soap_envelope(ack_requested, env, dummy_envelope);
     header = axiom_soap_envelope_get_header(dummy_envelope, env);
     node = axiom_soap_header_get_base_node(header, env);
     element = axiom_node_get_data_element(node, env);
@@ -1326,8 +1325,7 @@ sandesha2_client_configure_close_seq(
     identifier = sandesha2_identifier_create(env, rm_ns_value);
     sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_close_seq_set_identifier(close_seq, env, identifier);
-    sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *) close_seq, 
-            env, dummy_envelope);
+    sandesha2_close_seq_to_soap_envelope(close_seq, env, dummy_envelope);
 
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -1764,8 +1762,8 @@ sandesha2_client_configure_terminate_seq(
         {
             sandesha2_terminate_seq_set_identifier(terminate_seq, env, 
                 identifier);
-            sandesha2_iom_rm_part_to_soap_envelope((sandesha2_iom_rm_part_t *)  
-                terminate_seq, env, dummy_envelope);
+            sandesha2_terminate_seq_to_soap_envelope(terminate_seq, env, 
+                dummy_envelope);
         }
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);

@@ -307,9 +307,7 @@ sandesha2_sender_worker_send(
         axis2_char_t *seq_id = NULL;
         sandesha2_identifier_t *identifier = NULL;
         
-        seq = (sandesha2_seq_t*)
-            sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-                SANDESHA2_MSG_PART_SEQ);
+        seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         identifier = sandesha2_seq_get_identifier(seq, env);
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     }
@@ -370,9 +368,7 @@ sandesha2_sender_worker_send(
         axis2_conf_ctx_t *conf_ctx = NULL;
         axis2_char_t *internal_seq_id = NULL;
         
-        terminate_seq = (sandesha2_terminate_seq_t*)
-                    sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-                    SANDESHA2_MSG_PART_TERMINATE_SEQ);
+        terminate_seq = sandesha2_msg_ctx_get_terminate_seq(rm_msg_ctx, env);
         seq_id = sandesha2_identifier_get_identifier(
                     sandesha2_terminate_seq_get_identifier(terminate_seq, 
                     env), env);
@@ -441,8 +437,7 @@ sandesha2_sender_worker_is_ack_already_piggybacked(
 {
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     
-    if(sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, env, 
-        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT))
+    if(sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env))
         return AXIS2_TRUE;
     
     return AXIS2_FALSE;

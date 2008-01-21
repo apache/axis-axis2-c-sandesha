@@ -28,8 +28,17 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_endpoint_ref.h>
 #include <axis2_relates_to.h>
-#include <sandesha2_iom_rm_part.h>
-
+#include <sandesha2_create_seq.h>
+#include <sandesha2_create_seq_res.h>
+#include <sandesha2_close_seq.h>
+#include <sandesha2_close_seq_res.h>
+#include <sandesha2_terminate_seq.h>
+#include <sandesha2_terminate_seq_res.h>
+#include <sandesha2_make_connection.h>
+#include <sandesha2_msg_pending.h>
+#include <sandesha2_seq.h>
+#include <sandesha2_seq_ack.h>
+#include <sandesha2_ack_requested.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -75,19 +84,6 @@ sandesha2_msg_ctx_set_msg_type (
     const axutil_env_t *env, 
     int msg_type);
             
-axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_msg_part (
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axutil_env_t *env, 
-    int part_id,
-    sandesha2_iom_rm_part_t *part);
-        
-sandesha2_iom_rm_part_t *AXIS2_CALL
-sandesha2_msg_ctx_get_msg_part(
-    sandesha2_msg_ctx_t *rm_msg_ctx,
-    const axutil_env_t *env, 
-    int part_id);
-    
 axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_msg_ctx_get_from(
     sandesha2_msg_ctx_t *rm_msg_ctx,
@@ -268,6 +264,127 @@ sandesha2_msg_ctx_set_http_out_transport_info(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_msg_ctx_reset_http_out_transport_info(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_create_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_create_seq_t *create_seq);
+
+sandesha2_create_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_create_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_create_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_create_seq_res_t *create_seq_res);
+
+sandesha2_create_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_create_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_close_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_close_seq_t *close_seq);
+
+sandesha2_close_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_close_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_close_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_close_seq_res_t *close_seq_res);
+
+sandesha2_close_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_close_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_terminate_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_terminate_seq_t *terminate_seq);
+
+sandesha2_terminate_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_terminate_seq(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_terminate_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_terminate_seq_res_t *terminate_seq_res);
+
+sandesha2_terminate_seq_res_t *AXIS2_CALL
+sandesha2_msg_ctx_get_terminate_seq_res(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_make_connection(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_make_connection_t *make_connection);
+
+sandesha2_make_connection_t *AXIS2_CALL
+sandesha2_msg_ctx_get_make_connection(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_msg_pending(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_msg_pending_t *msg_pending);
+
+sandesha2_msg_pending_t *AXIS2_CALL
+sandesha2_msg_ctx_get_msg_pending(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_sequence(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_seq_t *seq);
+
+sandesha2_seq_t *AXIS2_CALL
+sandesha2_msg_ctx_get_sequence(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_seq_ack(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_seq_ack_t *seq_ack);
+
+sandesha2_seq_ack_t *AXIS2_CALL
+sandesha2_msg_ctx_get_seq_ack(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_ack_requested(
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axutil_env_t *env,
+    sandesha2_ack_requested_t *ack_requested);
+ 
+sandesha2_ack_requested_t *AXIS2_CALL
+sandesha2_msg_ctx_get_ack_requested(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axutil_env_t *env);
 

@@ -135,8 +135,7 @@ sandesha2_global_in_handler_invoke(
                 axiom_node_t *seq_node = NULL;
                 sequence = sandesha2_seq_create(env, SANDESHA2_SPEC_2005_02_NS_URI);
                 seq_node = axiom_soap_header_get_base_node(header, env);
-                sandesha2_iom_rm_element_from_om_node((sandesha2_iom_rm_element_t *) 
-                    sequence, env, seq_node);
+                sandesha2_seq_from_om_node(sequence, env, seq_node);
                 if(sandesha2_seq_get_last_msg(sequence, env))
                     last_msg_header = AXIS2_TRUE;
                  
@@ -259,6 +258,8 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS;
     }*/
     /*Process if global processing possible. - Currently none*/
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_global_in_handler");
        
@@ -285,13 +286,12 @@ sandesha2_global_in_handler_drop_if_duplicate(
         long msg_no = -1;
         axis2_char_t *seq_id = NULL;
         
-        sequence = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-            env, SANDESHA2_MSG_PART_SEQ);
+        sequence = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         if(sequence)
         {
             seq_id = sandesha2_identifier_get_identifier(
                         sandesha2_seq_get_identifier(sequence, env), env);
-            msg_no = SANDESHA2_MSG_NUMBER_GET_MSG_NUM(sandesha2_seq_get_msg_num(
+            msg_no = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(
                         sequence, env), env);
         }
         if(seq_id && 0 < msg_no)
@@ -433,8 +433,7 @@ sandesha2_global_in_handler_process_dropped_msg(
         sandesha2_seq_t *sequence = NULL;
         axis2_char_t *seq_id = NULL;
         
-        sequence = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-            env, SANDESHA2_MSG_PART_SEQ);
+        sequence = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         if(sequence)
             seq_id = sandesha2_identifier_get_identifier(
                 sandesha2_seq_get_identifier(sequence, env), env);

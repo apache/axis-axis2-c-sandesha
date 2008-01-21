@@ -723,8 +723,11 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, int_seq_id,
         SANDESHA2_SEQ_PROP_TO_EPR);
     if(to_bean)
+    {
         to_epr = axis2_endpoint_ref_create(env, 
             sandesha2_seq_property_bean_get_value(to_bean, env));
+        sandesha2_seq_property_bean_free(to_bean, env);
+    }
     /*if(!to_epr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] To EPR has an "
@@ -780,9 +783,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             axis2_char_t *seq_id = NULL;
             axis2_char_t *internal_seq_id = NULL;
             
-            terminate_seq = (sandesha2_terminate_seq_t*)
-                sandesha2_msg_ctx_get_msg_part(terminate_rm_msg, env, 
-                SANDESHA2_MSG_PART_TERMINATE_SEQ);
+            terminate_seq = sandesha2_msg_ctx_get_terminate_seq(terminate_rm_msg, env);
             seq_id = sandesha2_identifier_get_identifier(
                 sandesha2_terminate_seq_get_identifier(terminate_seq, 
                 env), env);
@@ -822,9 +823,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         sandesha2_msg_ctx_get_msg_id(terminate_rm_msg, env));
     sandesha2_sender_bean_set_send(terminate_bean, env, AXIS2_TRUE);
 
-    terminate_seq = (sandesha2_terminate_seq_t*)
-        sandesha2_msg_ctx_get_msg_part(terminate_rm_msg, env, 
-        SANDESHA2_MSG_PART_TERMINATE_SEQ);
+    terminate_seq = sandesha2_msg_ctx_get_terminate_seq(terminate_rm_msg, env);
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_get_identifier(terminate_seq, 
         env), env);

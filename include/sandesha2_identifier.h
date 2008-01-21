@@ -25,7 +25,6 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
 
@@ -38,21 +37,22 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_identifier sandesha2_identifier_t;
+typedef struct sandesha2_identifier_t sandesha2_identifier_t;
 
 /**
  * @brief sandesha2_identifier
  *    sandesha2_identifier
  */
-AXIS2_DECLARE_DATA struct sandesha2_identifier
-{
-    sandesha2_iom_rm_element_t element;
-};
 
 axis2_status_t AXIS2_CALL
 sandesha2_identifier_free_void_arg(
     void *identifier,
     const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_identifier_free (
+    sandesha2_identifier_t *identifier, 
+    const axutil_env_t *env);	
 
 AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
 sandesha2_identifier_create(
@@ -70,6 +70,21 @@ sandesha2_identifier_set_identifier(
     const axutil_env_t *env, 
     axis2_char_t *str_id);
 
+axis2_char_t* AXIS2_CALL 
+sandesha2_identifier_get_namespace_value (
+    sandesha2_identifier_t *identifier,
+    const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_identifier_from_om_node(
+    sandesha2_identifier_t *identifier,
+    const axutil_env_t *env, axiom_node_t *om_node);
+
+axiom_node_t* AXIS2_CALL 
+sandesha2_identifier_to_om_node(
+    sandesha2_identifier_t *identifier,
+    const axutil_env_t *env, 
+    void *om_node);
 
 /** @} */
 #ifdef __cplusplus

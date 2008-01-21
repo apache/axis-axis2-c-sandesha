@@ -22,7 +22,6 @@
   * @brief 
   */
 
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_identifier.h>
 #include <sandesha2_msg_number.h>
 #include <sandesha2_error.h>
@@ -37,22 +36,23 @@ extern "C"
  * @{
  */
 
-typedef struct sandesha2_ack_requested sandesha2_ack_requested_t;
+typedef struct sandesha2_ack_requested_t sandesha2_ack_requested_t;
  
 /**
  * @brief sandesha2_ack_requested
  *    sandesha2_ack_requested
  */
-AXIS2_DECLARE_DATA struct sandesha2_ack_requested
-{
-    sandesha2_iom_rm_part_t part;
-};
 
 AXIS2_EXTERN sandesha2_ack_requested_t* AXIS2_CALL
 sandesha2_ack_requested_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
                     	
+axis2_status_t AXIS2_CALL 
+sandesha2_ack_requested_free(
+    sandesha2_ack_requested_t *ack_requested, 
+	const axutil_env_t *env);
+
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_ack_requested_get_identifier(
     sandesha2_ack_requested_t *ack_requested,
@@ -86,6 +86,22 @@ sandesha2_ack_requested_set_must_understand(
     const axutil_env_t *env, 
     axis2_bool_t mu);
                     	
+axis2_char_t* AXIS2_CALL 
+sandesha2_ack_requested_get_namespace_value(
+    sandesha2_ack_requested_t *ack_requested,
+    const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_ack_requested_from_om_node(
+    sandesha2_ack_requested_t *ack_requested,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+
+axis2_status_t AXIS2_CALL
+sandesha2_ack_requested_to_soap_envelope(
+   sandesha2_ack_requested_t *ack_requested,
+   const axutil_env_t *env, 
+   axiom_soap_envelope_t *envelope);
 
 /** @} */
 #ifdef __cplusplus

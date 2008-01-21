@@ -25,7 +25,6 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_element.h>
 #include <axis2_endpoint_ref.h>
 
 
@@ -38,22 +37,23 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_address sandesha2_address_t;
+typedef struct sandesha2_address_t sandesha2_address_t;
 
 /**
  * @brief sandesha2_address
  *    sandesha2_address
  */
-AXIS2_DECLARE_DATA struct sandesha2_address
-{
-    sandesha2_iom_rm_element_t element;
-};
     
 AXIS2_EXTERN sandesha2_address_t* AXIS2_CALL
 sandesha2_address_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value,
     axis2_endpoint_ref_t *epr);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_address_free (
+    sandesha2_address_t *address, 
+    const axutil_env_t *env);
 
 axis2_endpoint_ref_t * AXIS2_CALL                    	
 sandesha2_address_get_epr(
@@ -66,11 +66,10 @@ sandesha2_address_set_epr(
    	const axutil_env_t *env, 
     axis2_endpoint_ref_t *epr);
 
-axis2_status_t AXIS2_CALL 
-sandesha2_address_free (
-    sandesha2_iom_rm_element_t *address, 
-    const axutil_env_t *env);								
-
+axis2_char_t* AXIS2_CALL 
+sandesha2_address_get_namespace_value (
+    sandesha2_address_t *address,
+    const axutil_env_t *env);
 
 /** @} */
 #ifdef __cplusplus

@@ -168,8 +168,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
     if(dbname)
         AXIS2_FREE(env->allocator, dbname);
-    close_seq = (sandesha2_close_seq_t*)sandesha2_msg_ctx_get_msg_part(
-        rm_msg_ctx, env, SANDESHA2_MSG_PART_CLOSE_SEQ);
+    close_seq = sandesha2_msg_ctx_get_close_seq(rm_msg_ctx, env);
     
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_close_seq_get_identifier(close_seq, env), env);
@@ -217,16 +216,13 @@ sandesha2_close_seq_msg_processor_process_in_msg (
                         axis2_msg_ctx_get_soap_envelope(msg_ctx, env)));
     axis2_msg_ctx_set_soap_envelope(ack_msg_ctx, env, envelope);
     
-    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(ack_rm_msg, 
-                        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq_ack = sandesha2_msg_ctx_get_seq_ack(ack_rm_msg, env);
     close_seq_res_msg = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
     
     close_seq_res_rm_msg = sandesha2_msg_creator_create_close_seq_res_msg(env, 
         rm_msg_ctx, close_seq_res_msg, seq_prop_mgr);
     
-    sandesha2_msg_ctx_set_msg_part(close_seq_res_rm_msg, env, 
-                        SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT,
-                        (sandesha2_iom_rm_part_t*)seq_ack);
+    sandesha2_msg_ctx_set_seq_ack(close_seq_res_rm_msg, env, seq_ack);
     sandesha2_msg_ctx_set_flow(close_seq_res_rm_msg, env, AXIS2_OUT_FLOW);
     property = axutil_property_create_with_args(env, 0, 0, 0, 
         AXIS2_VALUE_TRUE);

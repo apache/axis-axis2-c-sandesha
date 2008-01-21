@@ -23,7 +23,6 @@
   */
 
 #include <axiom_soap_envelope.h>
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_identifier.h>
 #include <sandesha2_address.h>
 #include <sandesha2_error.h>
@@ -39,16 +38,12 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_make_connection sandesha2_make_connection_t;
+typedef struct sandesha2_make_connection_t sandesha2_make_connection_t;
  
 /**
  * @brief sandesha2_make_connection
  *    sandesha2_make_connection
  */
-AXIS2_DECLARE_DATA struct sandesha2_make_connection
-{
-    sandesha2_iom_rm_part_t part;
-};
 
 AXIS2_EXTERN sandesha2_make_connection_t* AXIS2_CALL
 sandesha2_make_connection_create(
@@ -60,6 +55,11 @@ sandesha2_make_connection_free_void_arg(
     void *make_conn,
     const axutil_env_t *env);
                     	
+axis2_status_t AXIS2_CALL 
+sandesha2_make_connection_free(
+    sandesha2_make_connection_t *make_conn, 
+	const axutil_env_t *env);
+
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_make_connection_get_identifier(
     sandesha2_make_connection_t *make_conn,
@@ -81,7 +81,30 @@ sandesha2_make_connection_set_address(
     sandesha2_make_connection_t *make_conn,
     const axutil_env_t *env, 
     sandesha2_address_t *address);
+
+axis2_status_t AXIS2_CALL
+sandesha2_make_connection_to_soap_envelope(
+    sandesha2_make_connection_t *make_conn,
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *envelope);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_make_connection_get_namespace_value (
+    sandesha2_make_connection_t *make_conn,
+	const axutil_env_t *env);
                     	
+void* AXIS2_CALL 
+sandesha2_make_connection_from_om_node(
+    sandesha2_make_connection_t *make_conn,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+
+axiom_node_t* AXIS2_CALL 
+sandesha2_make_connection_to_om_node(
+    sandesha2_make_connection_t *make_conn,
+    const axutil_env_t *env, 
+    void *om_node);
+
 /** @} */
 #ifdef __cplusplus
 }

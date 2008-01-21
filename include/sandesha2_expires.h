@@ -24,7 +24,6 @@
 
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
 
@@ -37,8 +36,24 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_expires sandesha2_expires_t;
- 
+typedef struct sandesha2_expires_t sandesha2_expires_t;
+struct axiom_node;
+
+/**
+ * @brief sandesha2_expires
+ *    sandesha2_expires
+ */
+    
+AXIS2_EXTERN sandesha2_expires_t* AXIS2_CALL
+sandesha2_expires_create(
+    const axutil_env_t *env, 
+    axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_expires_free (
+    sandesha2_expires_t *expires, 
+	const axutil_env_t *env);
+
 axis2_char_t *AXIS2_CALL
 sandesha2_expires_get_duration(
     sandesha2_expires_t *expires,
@@ -50,20 +65,23 @@ sandesha2_expires_set_duration(
     const axutil_env_t *env, 
     axis2_char_t *duration);
 
-/**
- * @brief sandesha2_expires
- *    sandesha2_expires
- */
-AXIS2_DECLARE_DATA struct sandesha2_expires
-{
-    sandesha2_iom_rm_element_t element;
-};
-    
-AXIS2_EXTERN sandesha2_expires_t* AXIS2_CALL
-sandesha2_expires_create(
-    const axutil_env_t *env, 
-    axis2_char_t *ns_value);
+axis2_char_t* AXIS2_CALL 
+sandesha2_expires_get_namespace_value (
+    sandesha2_expires_t *expires,
+	const axutil_env_t *env);
 
+void* AXIS2_CALL 
+sandesha2_expires_from_om_node(
+    sandesha2_expires_t *expires,
+    const axutil_env_t *env, 
+    struct axiom_node *om_node);
+    
+struct axiom_node* AXIS2_CALL 
+sandesha2_expires_to_om_node(
+    sandesha2_expires_t *expires,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }

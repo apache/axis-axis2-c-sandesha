@@ -414,8 +414,7 @@ sandesha2_in_order_invoker_worker_func(
                         sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env))
                 {
                     sandesha2_seq_t *seq = NULL;
-                    seq = (sandesha2_seq_t*)sandesha2_msg_ctx_get_msg_part(
-                            rm_msg_ctx, env, SANDESHA2_MSG_PART_SEQ);
+                    seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
                     if(sandesha2_seq_get_last_msg(seq, env))
                     {
                         sandesha2_terminate_mgr_clean_recv_side_after_invocation(

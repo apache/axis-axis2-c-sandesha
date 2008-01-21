@@ -5,6 +5,7 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                identifier.c\
                                address.c\
                                acks_to.c\
+							   nack.c\
                                accept.c\
                                ack_none.c\
                                ack_range.c\
@@ -12,7 +13,6 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                fault_code.c\
                                msg_number.c\
                                last_msg.c\
-                               nack.c\
                                ack_requested.c\
                                close_seq.c\
                                close_seq_res.c\
@@ -25,8 +25,6 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                terminate_seq.c\
                                terminate_seq_res.c\
                                rm_elements.c \
-                               iom_rm_element.c \
-                               iom_rm_part.c \
 							   msg_pending.c \
 							   make_connection.c
 

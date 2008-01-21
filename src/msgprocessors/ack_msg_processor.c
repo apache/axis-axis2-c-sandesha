@@ -175,8 +175,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_ack_msg_processor_process_in_msg");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
     if(!seq_ack)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sequence"

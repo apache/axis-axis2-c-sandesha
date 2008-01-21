@@ -97,8 +97,7 @@ sandesha2_seq_mgr_setup_new_seq(
         return NULL; 
     }
     reply_to = sandesha2_msg_ctx_get_reply_to(create_seq_msg, env);
-    create_seq = (sandesha2_create_seq_t *) sandesha2_msg_ctx_get_msg_part(
-            create_seq_msg, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+    create_seq = sandesha2_msg_ctx_get_create_seq(create_seq_msg, env);
     if(!create_seq)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Create Sequence Part is NULL");
@@ -173,8 +172,7 @@ sandesha2_seq_mgr_setup_new_seq(
             AXIS2_FAILURE);
         return NULL;
     }
-    msg_rm_ns = sandesha2_iom_rm_element_get_namespace_value(
-            (sandesha2_iom_rm_element_t *) create_seq, env);
+    msg_rm_ns = sandesha2_create_seq_get_namespace_value(create_seq, env);
     if(0 == axutil_strcmp(SANDESHA2_SPEC_2005_02_NS_URI, msg_rm_ns))
     {
         spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0);

@@ -16,143 +16,104 @@
  
 #include <sandesha2_ack_final.h>
 #include <sandesha2_constants.h>
+#include <axiom_node.h>
+#include <axiom_element.h>
+#include <sandesha2_error.h>
 /** 
  * @brief AckFinal struct impl
- *	Sandesha2 IOM AckFinal
+ *	Sandesha2 AckFinal
  */
-typedef struct sandesha2_ack_final_impl sandesha2_ack_final_impl_t;  
-  
-struct sandesha2_ack_final_impl
+struct sandesha2_ack_final_t
 {
-	sandesha2_ack_final_t ack_final;
 	axis2_char_t *ns_val;
 };
 
-#define SANDESHA2_INTF_TO_IMPL(ack_final) \
-						((sandesha2_ack_final_impl_t *)(ack_final))
-
 /***************************** Function headers *******************************/
-axis2_char_t* AXIS2_CALL 
-sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
-						const axutil_env_t *env);
-    
 void* AXIS2_CALL 
-sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, axiom_node_t *om_node);
+sandesha2_ack_final_from_om_node(
+    sandesha2_ack_final_t *ack_final,
+   	const axutil_env_t *env, 
+    axiom_node_t *om_node);
     
 axiom_node_t* AXIS2_CALL 
-sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, void *om_node);
+sandesha2_ack_final_to_om_node(
+    sandesha2_ack_final_t *ack_final,
+   	const axutil_env_t *env, void *om_node);
                     	
 axis2_bool_t AXIS2_CALL 
-sandesha2_ack_final_is_namespace_supported(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, axis2_char_t *namespace);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_ack_final_free (sandesha2_iom_rm_element_t *ack_final, 
-                        const axutil_env_t *env);								
+sandesha2_ack_final_is_namespace_supported(
+    const axutil_env_t *env, 
+    axis2_char_t *namespace);
 
 /***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_final_t* AXIS2_CALL
-sandesha2_ack_final_create(const axutil_env_t *env,  axis2_char_t *ns_val)
+sandesha2_ack_final_create(
+    const axutil_env_t *env,
+    axis2_char_t *ns_val)
 {
-    sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
+    sandesha2_ack_final_t *ack_final = NULL;
     AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
-    if(AXIS2_FALSE == sandesha2_ack_final_is_namespace_supported(
-                        (sandesha2_iom_rm_element_t*)ack_final_impl,
-                        env, ns_val))
+    if(AXIS2_FALSE == sandesha2_ack_final_is_namespace_supported(env, ns_val))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, 
-                            AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }    
-    ack_final_impl =  (sandesha2_ack_final_impl_t *)AXIS2_MALLOC 
-                        (env->allocator, sizeof(sandesha2_ack_final_impl_t));
+    ack_final =  (sandesha2_ack_final_t *)AXIS2_MALLOC 
+        (env->allocator, sizeof(sandesha2_ack_final_t));
 	
-    if(NULL == ack_final_impl)
+    if(NULL == ack_final)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    ack_final_impl->ns_val = NULL;
-    ack_final_impl->ack_final.element.ops = NULL;
-     
-    ack_final_impl->ack_final.element.ops = AXIS2_MALLOC(env->allocator,
-        sizeof(sandesha2_iom_rm_element_ops_t));
-    if(NULL == ack_final_impl->ack_final.element.ops)
-	{
-		sandesha2_ack_final_free((sandesha2_iom_rm_element_t*)ack_final_impl,
-                        env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    ack_final_impl->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
+    ack_final->ns_val = NULL;
+    ack_final->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
-    ack_final_impl->ack_final.element.ops->get_namespace_value = 
-                        sandesha2_ack_final_get_namespace_value;
-    ack_final_impl->ack_final.element.ops->from_om_node = 
-    					sandesha2_ack_final_from_om_node;
-    ack_final_impl->ack_final.element.ops->to_om_node = 
-    					sandesha2_ack_final_to_om_node;
-    ack_final_impl->ack_final.element.ops->is_namespace_supported = 
-    					sandesha2_ack_final_is_namespace_supported;
-    ack_final_impl->ack_final.element.ops->free = sandesha2_ack_final_free;
-                        
-	return &(ack_final_impl->ack_final);
+	return ack_final;
 }
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_ack_final_free (sandesha2_iom_rm_element_t *ack_final, 
-                        const axutil_env_t *env)
+sandesha2_ack_final_free(
+    sandesha2_ack_final_t *ack_final, 
+    const axutil_env_t *env)
 {
-    sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
-    
-    if(NULL != ack_final_impl->ns_val)
+    if(NULL != ack_final->ns_val)
     {
-        AXIS2_FREE(env->allocator, ack_final_impl->ns_val);
-        ack_final_impl->ns_val = NULL;
+        AXIS2_FREE(env->allocator, ack_final->ns_val);
+        ack_final->ns_val = NULL;
     }
-    if(NULL != ack_final_impl->ack_final.element.ops)
-    {
-        AXIS2_FREE(env->allocator, ack_final_impl->ack_final.element.ops);
-        ack_final_impl->ack_final.element.ops = NULL;
-    }
-	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(ack_final));
+	AXIS2_FREE(env->allocator, ack_final);
 	return AXIS2_SUCCESS;
 }
 
 axis2_char_t* AXIS2_CALL 
-sandesha2_ack_final_get_namespace_value (sandesha2_iom_rm_element_t *ack_final,
-						const axutil_env_t *env)
+sandesha2_ack_final_get_namespace_value(
+    sandesha2_ack_final_t *ack_final,
+	const axutil_env_t *env)
 {
-	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-	ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
-	return ack_final_impl->ns_val;
+	return ack_final->ns_val;
 }
 
 
 void* AXIS2_CALL 
-sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, axiom_node_t *om_node)
+sandesha2_ack_final_from_om_node(
+    sandesha2_ack_final_t *ack_final,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node)
 {
-	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
     axutil_qname_t *final_qname = NULL;
     axiom_element_t *om_element = NULL;
     axiom_element_t *final_part = NULL;
     axiom_node_t *final_part_node = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
     final_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_FINAL, 
-                        ack_final_impl->ns_val, NULL);
+        ack_final->ns_val, NULL);
     if(NULL == final_qname)
     {
         return NULL;
@@ -161,15 +122,15 @@ sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, 
-                        AXIS2_FAILURE); 
+            AXIS2_FAILURE); 
         return NULL;
     }
     final_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        final_qname, om_node, &final_part_node);  
+        final_qname, om_node, &final_part_node);  
     if(NULL == final_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return ack_final;
@@ -177,38 +138,33 @@ sandesha2_ack_final_from_om_node(sandesha2_iom_rm_element_t *ack_final,
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_ack_final_to_om_node(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, void *om_node)
+sandesha2_ack_final_to_om_node(
+    sandesha2_ack_final_t *ack_final,
+    const axutil_env_t *env, void *om_node)
 {
-	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
 	axiom_namespace_t *rm_ns = NULL;
 	axiom_element_t *af_element = NULL;
 	axiom_node_t *af_node = NULL;
     
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
-	rm_ns = axiom_namespace_create(env, ack_final_impl->ns_val,
-                        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+	rm_ns = axiom_namespace_create(env, ack_final->ns_val,
+        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
     if(NULL == rm_ns)
     {
         return NULL;
     }
     af_element = axiom_element_create(env, NULL, SANDESHA2_WSRM_COMMON_FINAL,
-                        rm_ns, &af_node);
+        rm_ns, &af_node);
     axiom_node_add_child((axiom_node_t*)om_node, env, af_node);
     return (axiom_node_t*)om_node;
 }
 
 axis2_bool_t AXIS2_CALL 
-sandesha2_ack_final_is_namespace_supported(sandesha2_iom_rm_element_t *ack_final,
-                    	const axutil_env_t *env, axis2_char_t *namespace)
+sandesha2_ack_final_is_namespace_supported(
+    const axutil_env_t *env, 
+    axis2_char_t *namespace)
 {
-	sandesha2_ack_final_impl_t *ack_final_impl = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
-    ack_final_impl = SANDESHA2_INTF_TO_IMPL(ack_final);
     if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;

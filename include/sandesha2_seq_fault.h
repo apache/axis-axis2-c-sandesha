@@ -24,7 +24,6 @@
 
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 #include <sandesha2_fault_code.h>
 
@@ -39,21 +38,22 @@ extern "C"
  * @{
  */
     
-typedef struct sandesha2_seq_fault sandesha2_seq_fault_t;
- 
+typedef struct sandesha2_seq_fault_t sandesha2_seq_fault_t;
+struct axiom_node;
 /**
  * @brief sandesha2_seq_fault
  *    sandesha2_seq_fault
  */
-AXIS2_DECLARE_DATA struct sandesha2_seq_fault
-{
-    sandesha2_iom_rm_element_t element;
-};
     
 AXIS2_EXTERN sandesha2_seq_fault_t* AXIS2_CALL
 sandesha2_seq_fault_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_seq_fault_free(
+    sandesha2_seq_fault_t *seq_fault, 
+	const axutil_env_t *env);
 
 sandesha2_fault_code_t * AXIS2_CALL
 sandesha2_seq_fault_get_fault_code(
@@ -66,7 +66,22 @@ sandesha2_seq_fault_set_fault_code(
     const axutil_env_t *env, 
     sandesha2_fault_code_t *fault_code);
 
+axis2_char_t* AXIS2_CALL 
+sandesha2_seq_fault_get_namespace_value(
+    sandesha2_seq_fault_t *seq_fault,
+	const axutil_env_t *env);
 
+void* AXIS2_CALL 
+sandesha2_seq_fault_from_om_node(
+    sandesha2_seq_fault_t *seq_fault,
+   	const axutil_env_t *env, 
+    struct axiom_node *om_node);
+
+struct axiom_node* AXIS2_CALL 
+sandesha2_seq_fault_to_om_node(
+    sandesha2_seq_fault_t *seq_fault,
+   	const axutil_env_t *env, 
+    void *om_node);
 
 /** @} */
 #ifdef __cplusplus

@@ -177,8 +177,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
         "[sandesha2] Start:sandesha2_create_seq_msg_processor_process_in_msg");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    create_seq_part = (sandesha2_create_seq_t*)sandesha2_msg_ctx_get_msg_part(
-                        rm_msg_ctx, env, SANDESHA2_MSG_PART_CREATE_SEQ);
+    create_seq_part = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
     if(!create_seq_part)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]create_seq_part"
@@ -243,9 +242,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     sandesha2_msg_ctx_set_property(create_seq_res_msg, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE, property); 
     
-    create_seq_res_part = (sandesha2_create_seq_res_t*)
-        sandesha2_msg_ctx_get_msg_part(create_seq_res_msg, 
-        env, SANDESHA2_MSG_PART_CREATE_SEQ_RESPONSE);
+    create_seq_res_part = sandesha2_msg_ctx_get_create_seq_res(
+        create_seq_res_msg, env);
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, 
                         env);
     /* Offer processing */ 

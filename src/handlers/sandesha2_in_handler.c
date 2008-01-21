@@ -142,8 +142,7 @@ sandesha2_in_handler_invoke(
      * TODO Validate the message
      * sandesha2_msg_validator_validate(env, rm_msg_ctx);
      */
-    seq_ack = (sandesha2_seq_ack_t*)sandesha2_msg_ctx_get_msg_part(rm_msg_ctx, 
-        env, SANDESHA2_MSG_PART_SEQ_ACKNOWLEDGEMENT);
+    seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
     if(seq_ack)
     {
         sandesha2_msg_processor_t *ack_proc = NULL;
@@ -151,8 +150,7 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
         sandesha2_msg_processor_free(ack_proc, env);
     }
-    ack_requested = (sandesha2_ack_requested_t*)sandesha2_msg_ctx_get_msg_part(
-        rm_msg_ctx, env, SANDESHA2_MSG_PART_ACK_REQUEST);
+    ack_requested = sandesha2_msg_ctx_get_ack_requested(rm_msg_ctx, env);
     if(ack_requested)
     {
         sandesha2_ack_requested_set_must_understand(ack_requested, env, 

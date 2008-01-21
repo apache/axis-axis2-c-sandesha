@@ -141,8 +141,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
-    term_seq_res = (sandesha2_terminate_seq_res_t*)sandesha2_msg_ctx_get_msg_part(
-        rm_msg_ctx, env, SANDESHA2_MSG_PART_TERMINATE_SEQ_RESPONSE);
+    term_seq_res = sandesha2_msg_ctx_get_terminate_seq_res(rm_msg_ctx, env);
     if(!term_seq_res)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate "

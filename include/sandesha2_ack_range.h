@@ -22,8 +22,8 @@
   * @brief 
   */
 
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
+#include <axutil_env.h>
 
 
 #ifdef __cplusplus
@@ -35,22 +35,13 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_ack_range_ops sandesha2_ack_range_ops_t;
-typedef struct sandesha2_ack_range sandesha2_ack_range_t;
+typedef struct sandesha2_ack_range_t sandesha2_ack_range_t;
  
 /**
  * @brief sandesha2_ack_range
  *    sandesha2_ack_range
  */
-AXIS2_DECLARE_DATA struct sandesha2_ack_range
-{
-    sandesha2_iom_rm_element_t element;
-};
 
-axis2_status_t AXIS2_CALL
-sandesha2_ack_range_free_void_arg(
-    void *ack_range,
-    const axutil_env_t *env);
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
@@ -58,6 +49,16 @@ sandesha2_ack_range_create(
     axis2_char_t *ns_value,
     axis2_char_t *prefix);
                          	
+axis2_status_t AXIS2_CALL
+sandesha2_ack_range_free_void_arg(
+    void *ack_range,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL 
+sandesha2_ack_range_free(
+    sandesha2_ack_range_t *ack_range, 
+	const axutil_env_t *env);
+
 long AXIS2_CALL
 sandesha2_ack_range_get_lower_value(
     sandesha2_ack_range_t *ack_range,
@@ -80,6 +81,10 @@ sandesha2_ack_range_set_upper_value(
     const axutil_env_t *env, 
     long value);
                     
+axis2_char_t* AXIS2_CALL 
+sandesha2_ack_range_get_namespace_value(
+    sandesha2_ack_range_t *ack_range,
+	const axutil_env_t *env);
 /** @} */
 #ifdef __cplusplus
 }

@@ -23,7 +23,6 @@
   */
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
-#include <sandesha2_iom_rm_element.h>
 #include <sandesha2_error.h>
 
 
@@ -36,48 +35,33 @@ extern "C"
  * @ingroup sandesha2_wsrm
  * @{
  */
-typedef struct sandesha2_nack_ops sandesha2_nack_ops_t;
-typedef struct sandesha2_nack sandesha2_nack_t;
+typedef struct sandesha2_nack_t sandesha2_nack_t;
  
 /**
  * @brief Nack ops struct
  * Encapsulator struct for ops of sandesha2_nack
  */
-AXIS2_DECLARE_DATA struct sandesha2_nack_ops
-{
-    long (AXIS2_CALL *
-        get_nack_num)
-            (sandesha2_nack_t *element,
-            const axutil_env_t *env);
-
-    axis2_status_t (AXIS2_CALL *
-        set_nack_num)
-            (sandesha2_nack_t *element,
-            const axutil_env_t *env,
-            long value);
-};
 
 /**
  * @brief sandesha2_nack
  *    sandesha2_nack
  */
-AXIS2_DECLARE_DATA struct sandesha2_nack
-{
-    sandesha2_iom_rm_element_t element;
-    sandesha2_nack_ops_t *ops;
-};
 
 AXIS2_EXTERN sandesha2_nack_t* AXIS2_CALL
 sandesha2_nack_create(
-						const axutil_env_t *env,
-					    axis2_char_t *ns_value);
+    const axutil_env_t *env,
+    axis2_char_t *ns_value);
 
-/************************** Start of function macros **************************/
-#define SANDESHA2_NACK_SET_NACK_NUM(nack, env, value) \
-    ((nack)->ops->set_nack_num (nack, env, acks_to))
-#define SANDESHA2_NACK_GET_NACK_NUM(nack, env) \
-    ((nack)->ops->get_nack_num (nack, env))
-/************************** End of function macros ****************************/
+axis2_status_t AXIS2_CALL 
+sandesha2_nack_free(
+    sandesha2_nack_t *nack, 
+	const axutil_env_t *env);
+
+axis2_char_t* AXIS2_CALL 
+sandesha2_nack_get_namespace_value(
+    sandesha2_nack_t *nack,
+	const axutil_env_t *env);
+
 /** @} */
 #ifdef __cplusplus
 }
