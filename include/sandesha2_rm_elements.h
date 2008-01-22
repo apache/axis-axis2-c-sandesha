@@ -54,8 +54,7 @@ typedef struct sandesha2_rm_elements_t sandesha2_rm_elements_t;
 
 AXIS2_EXTERN sandesha2_rm_elements_t* AXIS2_CALL
 sandesha2_rm_elements_create(
-    const axutil_env_t *env,
-    axis2_char_t *addr_ns_uri);
+    const axutil_env_t *env);
  
 axis2_status_t AXIS2_CALL 
 sandesha2_rm_elements_from_soap_envelope(
@@ -170,20 +169,13 @@ sandesha2_rm_elements_set_close_seq_res(
     sandesha2_close_seq_res_t *close_seq_res);
     
 axis2_char_t* AXIS2_CALL 
-sandesha2_rm_elements_get_addr_ns_val(
-    sandesha2_rm_elements_t *rm_elements,
-    const axutil_env_t *env);
-
-axis2_char_t* AXIS2_CALL 
 sandesha2_rm_elements_get_rm_ns_val(
-    sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
     axis2_char_t *action);
 
 axis2_char_t* AXIS2_CALL 
 sandesha2_rm_elements_get_addr_ns_val_from_env(
-    sandesha2_rm_elements_t *rm_elements,
     const axutil_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
     axis2_char_t *action);

@@ -36,7 +36,6 @@
  */
 struct sandesha2_msg_ctx_t
 {
-    axutil_hash_t *msg_parts;
     int msg_type;
     axis2_char_t *rm_ns_val;
     axis2_char_t *addr_ns_val;
@@ -72,7 +71,6 @@ sandesha2_msg_ctx_create(
 	}
     rm_msg_ctx->rm_ns_val = NULL;
     rm_msg_ctx->addr_ns_val = NULL;
-    rm_msg_ctx->msg_parts = NULL;
     rm_msg_ctx->msg_ctx = NULL;
     rm_msg_ctx->spec_ver = NULL;
     rm_msg_ctx->create_seq = NULL;
@@ -87,7 +85,6 @@ sandesha2_msg_ctx_create(
     rm_msg_ctx->seq_ack = NULL;
     rm_msg_ctx->ack_requested = NULL;
     
-    rm_msg_ctx->msg_parts = axutil_hash_make(env);
     rm_msg_ctx->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
     rm_msg_ctx->msg_ctx = msg_ctx;
 

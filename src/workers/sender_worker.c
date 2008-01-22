@@ -410,8 +410,8 @@ sandesha2_sender_worker_send(
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
         axis2_msg_ctx_free(msg_ctx, env);
     }*/
-    /*if(rm_msg_ctx)
-        sandesha2_msg_ctx_free(rm_msg_ctx, env);*/
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_worker_send");        
     return status;

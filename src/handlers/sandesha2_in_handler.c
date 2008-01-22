@@ -127,7 +127,6 @@ sandesha2_in_handler_invoke(
         return AXIS2_FAILURE;
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
-
     /*if(!AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         // Message should not be sent in an exception situation

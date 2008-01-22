@@ -124,6 +124,8 @@ sandesha2_address_from_om_node(
     } 
     addr_part = axiom_element_get_first_child_with_qname(om_element, env, 
             addr_qname, om_node, &addr_node);
+    if(addr_qname)
+        axutil_qname_free(addr_qname, env);
     if(!addr_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

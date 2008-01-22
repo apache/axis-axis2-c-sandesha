@@ -100,9 +100,21 @@ sandesha2_seq_ack_free (
         AXIS2_FREE(env->allocator, seq_ack->ns_val);
         seq_ack->ns_val = NULL;
     }
-    seq_ack->identifier = NULL;
-    seq_ack->ack_none = NULL;
-    seq_ack->ack_final = NULL;
+    if(seq_ack->identifier)
+    {
+        sandesha2_identifier_free(seq_ack->identifier, env);
+        seq_ack->identifier = NULL;
+    }
+    if(seq_ack->ack_none)
+    {
+        sandesha2_ack_none_free(seq_ack->ack_none, env);
+        seq_ack->ack_none = NULL;
+    }
+    if(seq_ack->ack_final)
+    {
+        sandesha2_ack_final_free(seq_ack->ack_final, env);
+        seq_ack->ack_final = NULL;
+    }
     seq_ack->must_understand = AXIS2_FALSE;
 
     if(NULL != seq_ack->ack_range_list)
@@ -210,6 +222,8 @@ sandesha2_seq_ack_from_om_node(
     }
     nack_iter = axiom_element_get_children_with_qname(sa_part, env, nack_qname, 
         sa_node);
+    if(nack_qname)
+        axutil_qname_free(nack_qname, env);
     if(!nack_iter)
     {
         return NULL;

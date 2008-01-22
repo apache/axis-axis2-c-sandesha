@@ -109,7 +109,6 @@ populate_rm_msg_ctx(
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_char_t *addressing_ns = NULL;
-    axis2_char_t *addressing_ns_value = NULL;
     axis2_char_t *rm_ns = NULL;
     axis2_char_t *action = NULL;
     axutil_property_t *prop = NULL;
@@ -137,22 +136,13 @@ populate_rm_msg_ctx(
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
-        addressing_ns = axutil_strdup(env, axutil_property_get_value(prop, env));
+        addressing_ns = axutil_property_get_value(prop, env);
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
-        addressing_ns = axutil_strdup(env, AXIS2_WSA_NAMESPACE);
+        addressing_ns = AXIS2_WSA_NAMESPACE;
     }
-    if(addressing_ns)
-        rm_elements = sandesha2_rm_elements_create(env, addressing_ns);
-    if(addressing_ns)
-        AXIS2_FREE(env->allocator, addressing_ns);
-    if(!rm_elements)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Could not create rm_elements");
-        return AXIS2_FAILURE;
-    }
+    rm_elements = sandesha2_rm_elements_create(env);
     envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     action = (axis2_char_t*)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     sandesha2_rm_elements_from_soap_envelope(rm_elements, env, envelope, action);
@@ -249,12 +239,10 @@ populate_rm_msg_ctx(
         add_op_if_null(env, msg_ctx);
     }
     sandesha2_msg_ctx_set_rm_ns_val(rm_msg_ctx, env, rm_ns);
-    addressing_ns_value = sandesha2_rm_elements_get_addr_ns_val(
-            rm_elements, env);
-    if(addressing_ns_value)
+    if(addressing_ns)
     {
         sandesha2_msg_ctx_set_addr_ns_val(rm_msg_ctx, env, 
-                addressing_ns_value);
+                addressing_ns);
     }
     if(rm_elements)
         sandesha2_rm_elements_free(rm_elements, env);

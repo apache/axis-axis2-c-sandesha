@@ -235,6 +235,8 @@ sandesha2_property_mgr_load_properties_from_module_desc(
         if(0 < max_retrans_count)
             sandesha2_property_bean_set_max_retrans_count(property_bean, env, 
                 max_retrans_count);
+        if(str)
+            AXIS2_FREE(env->allocator, str);
     }
 
     return property_bean;
@@ -258,6 +260,8 @@ sandesha2_property_mgr_load_exp_backoff(
     else
         sandesha2_property_bean_set_exp_backoff(property_bean, env, 
             AXIS2_FALSE);
+    if(str)
+        AXIS2_FREE(env->allocator, str);
     return AXIS2_SUCCESS;
 }
                         
@@ -280,6 +284,8 @@ sandesha2_property_mgr_load_retrans_int(
     if(0 < retrans_int)
         sandesha2_property_bean_set_retrans_interval(property_bean, env, 
                     retrans_int);
+    if(str)
+        AXIS2_FREE(env->allocator, str);
     return AXIS2_SUCCESS;
 }
                         
@@ -301,6 +307,8 @@ sandesha2_property_mgr_load_ack_int(
         ack_int = atoi(str);
     if(0 < ack_int)
         sandesha2_property_bean_set_ack_interval(property_bean, env, ack_int);
+    if(str)
+        AXIS2_FREE(env->allocator, str);
     return AXIS2_SUCCESS;
 }
 
@@ -333,6 +341,10 @@ sandesha2_property_mgr_load_inactive_timeout(
             sandesha2_property_bean_set_inactive_timeout_interval(property_bean,
                 env, timeout);
     }
+    if(str)
+        AXIS2_FREE(env->allocator, str);
+    if(str2)
+        AXIS2_FREE(env->allocator, str2);
     return AXIS2_SUCCESS;
 }
 
@@ -381,7 +393,8 @@ sandesha2_property_mgr_load_in_order_invocation(
         sandesha2_property_bean_set_in_order(property_bean, env, AXIS2_TRUE);
     else
         sandesha2_property_bean_set_in_order(property_bean, env, AXIS2_FALSE);
-    
+    if(str)
+        AXIS2_FREE(env->allocator, str);
     return AXIS2_SUCCESS;
 }
 
@@ -417,6 +430,8 @@ sandesha2_property_mgr_load_msg_types_to_drop(
             }
         }
     }
+    if(str)
+        AXIS2_FREE(env->allocator, str);
     return AXIS2_SUCCESS;
 }
 

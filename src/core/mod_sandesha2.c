@@ -55,9 +55,8 @@ mod_sandesha2_create(
     module = AXIS2_MALLOC(env->allocator, 
         sizeof(axis2_module_t));
 
-    
-    module->ops = AXIS2_MALLOC(
-        env->allocator, sizeof(axis2_module_ops_t));
+    /*module->ops = AXIS2_MALLOC(
+        env->allocator, sizeof(axis2_module_ops_t));*/
     module->ops = &mod_sandesha2_ops_var;
     return module;
 }

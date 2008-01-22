@@ -317,6 +317,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                         
     found_list = sandesha2_sender_mgr_find_by_sender_bean(sender_mgr, env, 
         find_bean);
+    if(find_bean)
+        sandesha2_sender_bean_free(find_bean, env);
     for(i = 0; i < axutil_array_list_size(found_list, env); i++)
     {
         sandesha2_sender_bean_t *sender_bean = NULL;
