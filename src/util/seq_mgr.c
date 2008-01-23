@@ -317,6 +317,7 @@ sandesha2_seq_mgr_get_last_activated_time(
         value = sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
         if(value)
             last_activated_time = atol(value);
+        sandesha2_seq_property_bean_free(seq_prop_bean, env);
     }
     return last_activated_time;
 }
