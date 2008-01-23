@@ -28,25 +28,11 @@ struct sandesha2_terminate_seq_res_t
 	sandesha2_identifier_t *identifier;
 	axis2_char_t *ns_val;
 };
-
-/***************************** Function headers *******************************/
-    
-void* AXIS2_CALL 
-sandesha2_terminate_seq_res_from_om_node(
-    sandesha2_terminate_seq_res_t *terminate_seq_res,
-    const axutil_env_t *env, axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_terminate_seq_res_to_om_node(
-    sandesha2_terminate_seq_res_t *terminate_seq_res,
-    const axutil_env_t *env, void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_terminate_seq_res_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_terminate_seq_res_t* AXIS2_CALL
 sandesha2_terminate_seq_res_create(
@@ -229,7 +215,7 @@ sandesha2_terminate_seq_res_to_soap_envelope(
 	return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_terminate_seq_res_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

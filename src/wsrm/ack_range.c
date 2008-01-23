@@ -31,27 +31,11 @@ struct sandesha2_ack_range_t
 	axis2_char_t *ns_val;
     axis2_char_t *prefix;
 };
-
-/***************************** Function headers *******************************/
-    
-void* AXIS2_CALL 
-sandesha2_ack_range_from_om_node(
-    sandesha2_ack_range_t *ack_range,
-   	const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_ack_range_to_om_node(
-    sandesha2_ack_range_t *ack_range,
-   	const axutil_env_t *env, 
-    void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_range_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_range_t* AXIS2_CALL 
 sandesha2_ack_range_create(
@@ -267,7 +251,7 @@ sandesha2_ack_range_set_upper_value(
  	return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_range_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

@@ -25,6 +25,7 @@
 #include <sandesha2_identifier.h>
 #include <sandesha2_msg_number.h>
 #include <sandesha2_error.h>
+#include <axiom_node.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -102,6 +103,12 @@ sandesha2_ack_requested_to_soap_envelope(
    sandesha2_ack_requested_t *ack_requested,
    const axutil_env_t *env, 
    axiom_soap_envelope_t *envelope);
+
+axiom_node_t* AXIS2_CALL 
+sandesha2_ack_requested_to_om_node(
+    sandesha2_ack_requested_t *element,
+    const axutil_env_t *env, 
+    void *om_node);
 
 /** @} */
 #ifdef __cplusplus

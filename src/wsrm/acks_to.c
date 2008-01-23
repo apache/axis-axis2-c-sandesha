@@ -29,26 +29,11 @@ struct sandesha2_acks_to_t
 	axis2_char_t *rm_ns_val;
 };
 
-/***************************** Function headers *******************************/
-    
-void* AXIS2_CALL 
-sandesha2_acks_to_from_om_node(
-    sandesha2_acks_to_t *acks_to,
-    const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_acks_to_to_om_node(
-    sandesha2_acks_to_t *acks_to,
-   	const axutil_env_t *env, 
-    void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_acks_to_is_namespace_supported(
    	const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_acks_to_t* AXIS2_CALL
 sandesha2_acks_to_create(
@@ -213,7 +198,7 @@ sandesha2_acks_to_set_address (
     return AXIS2_SUCCESS;
 }
     
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_acks_to_is_namespace_supported(
    	const axutil_env_t *env, 
     axis2_char_t *namespace)

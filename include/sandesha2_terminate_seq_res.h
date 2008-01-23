@@ -82,6 +82,19 @@ axis2_char_t* AXIS2_CALL
 sandesha2_terminate_seq_res_get_namespace_value (
     sandesha2_terminate_seq_res_t *terminate_seq_res,
 	const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_terminate_seq_res_from_om_node(
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_terminate_seq_res_to_om_node(
+    sandesha2_terminate_seq_res_t *terminate_seq_res,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }

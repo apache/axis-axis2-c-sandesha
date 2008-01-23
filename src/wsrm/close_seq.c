@@ -27,24 +27,11 @@ struct sandesha2_close_seq_t
 	sandesha2_identifier_t *identifier;
 	axis2_char_t *ns_val;
 };
-
-/***************************** Function headers *******************************/
-void* AXIS2_CALL 
-sandesha2_close_seq_from_om_node(
-    sandesha2_close_seq_t *close_seq,
-    const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_close_seq_to_om_node(
-    sandesha2_close_seq_t *close_seq,
-    const axutil_env_t *env, void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_close_seq_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_close_seq_t* AXIS2_CALL
 sandesha2_close_seq_create(
@@ -229,7 +216,7 @@ sandesha2_close_seq_to_soap_envelope(
 	return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_close_seq_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

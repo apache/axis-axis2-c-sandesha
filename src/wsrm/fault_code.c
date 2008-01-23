@@ -28,26 +28,11 @@ struct sandesha2_fault_code_t
 	axis2_char_t *str_fault_code;
 	axis2_char_t *ns_val;
 };
-
-/***************************** Function headers *******************************/
-void* AXIS2_CALL 
-sandesha2_fault_code_from_om_node(
-    sandesha2_fault_code_t *fault_code,
-    const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_fault_code_to_om_node(
-    sandesha2_fault_code_t *fault_code,
-    const axutil_env_t *env, 
-    void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_fault_code_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_fault_code_t* AXIS2_CALL
 sandesha2_fault_code_create(
@@ -216,7 +201,7 @@ sandesha2_fault_code_set_fault_code(
 	return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_fault_code_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

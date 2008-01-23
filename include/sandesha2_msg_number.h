@@ -24,6 +24,7 @@
 
 #include <sandesha2_error.h>
 #include <axutil_env.h>
+#include <axiom_node.h>
 
 
 #ifdef __cplusplus
@@ -77,6 +78,19 @@ long AXIS2_CALL
 sandesha2_msg_number_get_msg_num(
     sandesha2_msg_number_t *msg_num,
    	const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_msg_number_from_om_node(
+    sandesha2_msg_number_t *msg_num,
+   	const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_msg_number_to_om_node(
+    sandesha2_msg_number_t *msg_num,
+   	const axutil_env_t *env, 
+    void *om_node);
+
 
 /** @} */
 #ifdef __cplusplus

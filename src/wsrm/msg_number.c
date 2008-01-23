@@ -31,24 +31,10 @@ struct sandesha2_msg_number_t
 	axis2_char_t *ns_val;
 };
 
-/***************************** Function headers *******************************/
-    
-void* AXIS2_CALL 
-sandesha2_msg_number_from_om_node(
-    sandesha2_msg_number_t *msg_num,
-   	const axutil_env_t *env, axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_msg_number_to_om_node(
-    sandesha2_msg_number_t *msg_num,
-   	const axutil_env_t *env, void *om_node);
-
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_msg_number_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
 sandesha2_msg_number_create(
@@ -221,7 +207,7 @@ sandesha2_msg_number_set_msg_num(
  	return AXIS2_SUCCESS;
 }
     
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_msg_number_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

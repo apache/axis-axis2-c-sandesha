@@ -30,13 +30,7 @@ struct sandesha2_ack_requested_t
 	axis2_bool_t must_understand;
 	axis2_char_t *ns_val;
 };
- 
-static axiom_node_t* AXIS2_CALL 
-sandesha2_ack_requested_to_om_node(
-    sandesha2_ack_requested_t *element,
-    const axutil_env_t *env, 
-    void *om_node);
-                    	
+ 	
 static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_requested_is_namespace_supported(
     const axutil_env_t *env, 
@@ -156,8 +150,7 @@ sandesha2_ack_requested_from_om_node(
     return ack_requested;
 }
 
-
-static axiom_node_t* AXIS2_CALL 
+axiom_node_t* AXIS2_CALL 
 sandesha2_ack_requested_to_om_node(
     sandesha2_ack_requested_t *ack_requested,
     const axutil_env_t *env, 

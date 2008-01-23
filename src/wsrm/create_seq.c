@@ -32,7 +32,7 @@ struct sandesha2_create_seq_t
 	axis2_char_t *addr_ns_val;
 };
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
@@ -309,7 +309,7 @@ sandesha2_create_seq_to_soap_envelope(
 	return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

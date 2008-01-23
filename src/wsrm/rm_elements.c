@@ -343,7 +343,7 @@ sandesha2_rm_elements_to_soap_envelope(
     }
     if(rm_elements->close_seq_res)
     {
-        sandesha2_close_seq_to_om_node(rm_elements->close_seq_res, env, 
+        sandesha2_close_seq_res_to_om_node(rm_elements->close_seq_res, env, 
             body_node);
     }
     if(rm_elements->make_connection)

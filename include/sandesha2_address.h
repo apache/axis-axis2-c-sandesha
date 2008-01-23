@@ -71,6 +71,18 @@ sandesha2_address_get_namespace_value (
     sandesha2_address_t *address,
     const axutil_env_t *env);
 
+void* AXIS2_CALL 
+sandesha2_address_from_om_node(
+    sandesha2_address_t *address,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_address_to_om_node(
+    sandesha2_address_t *address,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }

@@ -28,27 +28,11 @@ struct sandesha2_address_t
 	axis2_endpoint_ref_t *epr;
 	axis2_char_t *ns_val;
 };
-
-/***************************** Function headers *******************************/
-    
-void* AXIS2_CALL 
-sandesha2_address_from_om_node(
-    sandesha2_address_t *address,
-    const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_address_to_om_node(
-    sandesha2_address_t *address,
-    const axutil_env_t *env, 
-    void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+/*static axis2_bool_t AXIS2_CALL 
 sandesha2_address_is_namespace_supported(
    	const axutil_env_t *env, 
-    axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
+    axis2_char_t *namespace);*/
 
 AXIS2_EXTERN sandesha2_address_t* AXIS2_CALL
 sandesha2_address_create(
@@ -206,7 +190,7 @@ sandesha2_address_set_epr(
     return AXIS2_SUCCESS;
 }
 
-axis2_bool_t AXIS2_CALL 
+/*static axis2_bool_t AXIS2_CALL 
 sandesha2_address_is_namespace_supported(
    	const axutil_env_t *env, 
     axis2_char_t *namespace)
@@ -220,6 +204,6 @@ sandesha2_address_is_namespace_supported(
         return AXIS2_TRUE;
     }
     return AXIS2_FALSE;
-}
+}*/
 
 

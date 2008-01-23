@@ -25,6 +25,7 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <sandesha2_error.h>
+#include <axiom_node.h>
 
 
 #ifdef __cplusplus
@@ -56,6 +57,19 @@ axis2_char_t* AXIS2_CALL
 sandesha2_ack_none_get_namespace_value(
     sandesha2_ack_none_t *ack_none,
 	const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_ack_none_from_om_node(
+    sandesha2_ack_none_t *ack_none,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_ack_none_to_om_node(
+    sandesha2_ack_none_t *ack_none,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }

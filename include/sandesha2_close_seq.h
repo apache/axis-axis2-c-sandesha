@@ -83,6 +83,18 @@ sandesha2_close_seq_get_namespace_value (
     sandesha2_close_seq_t *close_seq,
 	const axutil_env_t *env);
 
+void* AXIS2_CALL 
+sandesha2_close_seq_from_om_node(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_close_seq_to_om_node(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }
