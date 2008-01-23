@@ -110,7 +110,7 @@ sandesha2_seq_set_must_understand(
     const axutil_env_t *env, axis2_bool_t mu);
 
 axis2_status_t AXIS2_CALL
-sandesha2_seq_to_soap_env(
+sandesha2_seq_to_soap_envelope(
     sandesha2_seq_t *seq,
     const axutil_env_t *env, 
     axiom_soap_envelope_t *envelope);

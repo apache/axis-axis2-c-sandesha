@@ -73,7 +73,7 @@ sandesha2_close_seq_res_get_identifier(
     const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
-sandesha2_close_seq_res_to_soap_env(
+sandesha2_close_seq_res_to_soap_envelope(
     sandesha2_close_seq_res_t *close_seq_res,
     const axutil_env_t *env,
     axiom_soap_envelope_t *envelope);
