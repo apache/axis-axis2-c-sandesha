@@ -33,11 +33,12 @@ extern "C"
 {
 #endif
 
+struct sandesha2_next_msg_mgr;
+
 /** @defgroup sandesha2_permanent_next_msg_mgr Permanat Next Message Manager
   * @ingroup sandesha2
   * @{
   */
-
 struct sandesha2_next_msg_mgr * AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_create(
     const axutil_env_t *env,
