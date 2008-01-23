@@ -39,7 +39,7 @@ struct sandesha2_next_msg_mgr;
   * @ingroup sandesha2
   * @{
   */
-struct sandesha2_next_msg_mgr * AXIS2_CALL
+AXIS2_EXTERN struct sandesha2_next_msg_mgr * AXIS2_CALL
 sandesha2_permanent_next_msg_mgr_create(
     const axutil_env_t *env,
     axis2_char_t *dbname);
