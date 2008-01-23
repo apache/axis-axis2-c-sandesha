@@ -35,7 +35,7 @@ typedef struct sandesha2_permanent_next_msg_mgr
     sandesha2_next_msg_mgr_t next_msg_mgr;
     sandesha2_permanent_bean_mgr_t *bean_mgr;
     axutil_array_list_t *values;
-}sandesha2_permanent_next_msg_mgr_t;
+} sandesha2_permanent_next_msg_mgr_t;
 
 #define SANDESHA2_INTF_TO_IMPL(next_msg_mgr) \
     ((sandesha2_permanent_next_msg_mgr_t *) next_msg_mgr)

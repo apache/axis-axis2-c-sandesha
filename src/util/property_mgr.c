@@ -59,18 +59,6 @@ sandesha2_property_mgr_load_inactive_timeout(
     sandesha2_property_bean_t *property_bean);
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-sandesha2_property_mgr_load_in_mem_storage_mgr(
-    const axutil_env_t *env, 
-    axis2_char_t *value, 
-    sandesha2_property_bean_t *property_bean);
-
-AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-sandesha2_property_mgr_load_perm_storage_mgr(
-    const axutil_env_t *env, 
-    axis2_char_t *value, 
-    sandesha2_property_bean_t *property_bean);
-                        
-AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 sandesha2_property_mgr_load_in_order_invocation(
     const axutil_env_t *env, 
     axis2_char_t *value, 
@@ -98,10 +86,6 @@ sandesha2_property_mgr_load_properties_from_def_values(
     sandesha2_property_bean_set_inactive_timeout_interval_with_units(
         property_bean, env, SANDESHA2_DEF_VAL_INACTIVETIMEOUT,
         SANDESHA2_DEF_VAL_INACTIVETIMEOUT_MEASURE);
-    sandesha2_property_bean_set_in_mem_storage_mgr(property_bean, env,
-        SANDESHA2_DEF_VAL_IN_MEMORY_STORAGE_MGR);
-    sandesha2_property_bean_set_permanent_storage_mgr(property_bean, env,
-        SANDESHA2_DEF_VAL_PERM_STORAGE_MGR);
     sandesha2_property_bean_set_in_order(property_bean, env,
         SANDESHA2_DEF_VAL_INORDER_INVOCATION);
     sandesha2_property_bean_set_msg_types_to_drop(property_bean, env, NULL);
@@ -124,8 +108,6 @@ sandesha2_property_mgr_load_properties_from_module_desc(
     axis2_char_t *retrans_int_str = NULL;
     axis2_char_t *ack_int_str = NULL;
     axis2_char_t *inactive_timeout_str = NULL;
-    axis2_char_t *in_mem_mgr_str = NULL;
-    axis2_char_t *perm_mgr_str = NULL;
     axis2_char_t *in_order_invoker_str = NULL;
     axis2_char_t *msg_types_str = NULL;
     
@@ -176,24 +158,6 @@ sandesha2_property_mgr_load_properties_from_module_desc(
         
         sandesha2_property_mgr_load_inactive_timeout(env, inactive_timeout_str, 
             inactive_to_measure_str, property_bean);
-    }
-
-    param = axis2_module_desc_get_param(module_desc, env, 
-       SANDESHA2_PROPERTIES_IN_MEMORY_STORAGE_MGR);
-    if(param)
-    {
-        in_mem_mgr_str = axutil_param_get_value(param, env);
-        sandesha2_property_mgr_load_in_mem_storage_mgr(env, in_mem_mgr_str, 
-            property_bean);        
-    }
-
-    param = axis2_module_desc_get_param(module_desc, env, 
-        SANDESHA2_PROPERTIES_PERM_STORAGE_MGR);
-    if(param)
-    {
-        perm_mgr_str = axutil_param_get_value(param, env);
-        sandesha2_property_mgr_load_perm_storage_mgr(env, perm_mgr_str, 
-            property_bean);        
     }
 
     param = axis2_module_desc_get_param(module_desc, env, 
@@ -348,35 +312,6 @@ sandesha2_property_mgr_load_inactive_timeout(
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-sandesha2_property_mgr_load_in_mem_storage_mgr(
-    const axutil_env_t *env, 
-    axis2_char_t *value, 
-    sandesha2_property_bean_t *property_bean)
-{
-    AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
-    
-    sandesha2_property_bean_set_in_mem_storage_mgr(property_bean, env, value);
-    
-    return AXIS2_SUCCESS;
-}
-
-AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-sandesha2_property_mgr_load_perm_storage_mgr(
-    const axutil_env_t *env, 
-    axis2_char_t *value, 
-    sandesha2_property_bean_t *property_bean)
-{
-    AXIS2_PARAM_CHECK(env->error, value, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, property_bean, AXIS2_FAILURE);
-    
-    sandesha2_property_bean_set_permanent_storage_mgr(property_bean, env, 
-        value);
-    
-    return AXIS2_SUCCESS;
-}
-                        
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 sandesha2_property_mgr_load_in_order_invocation(
     const axutil_env_t *env, 

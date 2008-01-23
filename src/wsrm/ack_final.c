@@ -16,8 +16,6 @@
  
 #include <sandesha2_ack_final.h>
 #include <sandesha2_constants.h>
-#include <axiom_node.h>
-#include <axiom_element.h>
 #include <sandesha2_error.h>
 /** 
  * @brief AckFinal struct impl
@@ -27,25 +25,11 @@ struct sandesha2_ack_final_t
 {
 	axis2_char_t *ns_val;
 };
-
-/***************************** Function headers *******************************/
-void* AXIS2_CALL 
-sandesha2_ack_final_from_om_node(
-    sandesha2_ack_final_t *ack_final,
-   	const axutil_env_t *env, 
-    axiom_node_t *om_node);
-    
-axiom_node_t* AXIS2_CALL 
-sandesha2_ack_final_to_om_node(
-    sandesha2_ack_final_t *ack_final,
-   	const axutil_env_t *env, void *om_node);
-                    	
-axis2_bool_t AXIS2_CALL 
+                   	
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_final_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace);
-
-/***************************** End of function headers ************************/
 
 AXIS2_EXTERN sandesha2_ack_final_t* AXIS2_CALL
 sandesha2_ack_final_create(
@@ -160,7 +144,7 @@ sandesha2_ack_final_to_om_node(
     return (axiom_node_t*)om_node;
 }
 
-axis2_bool_t AXIS2_CALL 
+static axis2_bool_t AXIS2_CALL 
 sandesha2_ack_final_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)

@@ -17,7 +17,6 @@
 #include <sandesha2_constants.h>
 #include <axutil_hash.h>
 #include <axiom_soap_const.h>
-#include <sandesha2_iom_rm_part.h>
 #include <stdio.h>
 #include <sandesha2_close_seq.h>
 #include <sandesha2_close_seq_res.h>

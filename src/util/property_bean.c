@@ -29,8 +29,6 @@ struct sandesha2_property_bean_t
     long ack_interval;
     long retrans_interval;
     axis2_bool_t is_exp_backoff;
-    axis2_char_t *in_mem_storage_mgr;
-    axis2_char_t *permanent_storage_mgr;
     axis2_char_t *storage_mgr;
     axis2_bool_t is_in_order;
     axutil_array_list_t *msg_types_to_drop;
@@ -56,8 +54,6 @@ sandesha2_property_bean_create(
     bean->ack_interval = 0;
     bean->retrans_interval = 0;
     bean->is_exp_backoff = 0;
-    bean->in_mem_storage_mgr = NULL;
-    bean->permanent_storage_mgr= NULL;
     bean->storage_mgr= NULL;
     bean->is_in_order = AXIS2_FALSE;
     bean->msg_types_to_drop = NULL;
@@ -92,15 +88,10 @@ sandesha2_property_bean_free(
         AXIS2_FREE(env->allocator, bean->db_path);
         bean->db_path = NULL;
     }
-    if(bean->in_mem_storage_mgr)
+    if(bean->storage_mgr)
     {
-        AXIS2_FREE(env->allocator, bean->in_mem_storage_mgr);
-        bean->in_mem_storage_mgr = NULL;
-    }
-    if(bean->permanent_storage_mgr)
-    {
-        AXIS2_FREE(env->allocator, bean->permanent_storage_mgr);
-        bean->permanent_storage_mgr = NULL;
+        AXIS2_FREE(env->allocator, bean->storage_mgr);
+        bean->storage_mgr = NULL;
     }
 	AXIS2_FREE(env->allocator, bean);
 	return AXIS2_SUCCESS;
@@ -209,42 +200,6 @@ sandesha2_property_bean_set_exp_backoff(
     return AXIS2_SUCCESS;
 }
             
-axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_in_mem_storage_mgr(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env)
-{
-    return bean->in_mem_storage_mgr;
-}
-            
-axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_in_mem_storage_mgr(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env, axis2_char_t *manager)
-{
-    AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->in_mem_storage_mgr = axutil_strdup(env, manager);
-    return AXIS2_SUCCESS;
-}
-            
-axis2_char_t* AXIS2_CALL
-sandesha2_property_bean_get_permanent_storage_mgr(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env)
-{
-    return bean->permanent_storage_mgr;
-}
-            
-axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_permanent_storage_mgr(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env, axis2_char_t *manager)
-{
-    AXIS2_PARAM_CHECK(env->error, manager, AXIS2_FAILURE);
-    bean->permanent_storage_mgr = axutil_strdup(env, manager);
-    return AXIS2_SUCCESS;
-}
- 
 axis2_char_t* AXIS2_CALL
 sandesha2_property_bean_get_storage_mgr(
     sandesha2_property_bean_t *bean,

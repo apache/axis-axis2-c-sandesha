@@ -69,6 +69,18 @@ sandesha2_accept_get_namespace_value(
     sandesha2_accept_t *accept,
 	const axutil_env_t *env);
 
+void* AXIS2_CALL 
+sandesha2_accept_from_om_node(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_accept_to_om_node(
+    sandesha2_accept_t *accept,
+    const axutil_env_t *env, 
+    void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }

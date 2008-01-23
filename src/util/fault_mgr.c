@@ -21,7 +21,6 @@
 #include <axutil_hash.h>
 #include <axis2_core_utils.h>
 #include <axiom_soap_const.h>
-#include <sandesha2_iom_rm_part.h>
 #include <sandesha2_create_seq.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_seq.h>

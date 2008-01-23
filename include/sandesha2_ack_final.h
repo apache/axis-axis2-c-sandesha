@@ -23,6 +23,8 @@
   */
 
 #include <axutil_env.h>
+#include <axiom_node.h>
+#include <axiom_element.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -54,6 +56,18 @@ axis2_char_t* AXIS2_CALL
 sandesha2_ack_final_get_namespace_value(
     sandesha2_ack_final_t *ack_final,
 	const axutil_env_t *env);
+
+void* AXIS2_CALL 
+sandesha2_ack_final_from_om_node(
+    sandesha2_ack_final_t *ack_final,
+   	const axutil_env_t *env, 
+    axiom_node_t *om_node);
+    
+axiom_node_t* AXIS2_CALL 
+sandesha2_ack_final_to_om_node(
+    sandesha2_ack_final_t *ack_final,
+   	const axutil_env_t *env, void *om_node);
+ 
 /** @} */
 #ifdef __cplusplus
 }
