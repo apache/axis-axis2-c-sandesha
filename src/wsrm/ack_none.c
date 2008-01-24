@@ -106,12 +106,16 @@ sandesha2_ack_none_from_om_node(
     om_element = axiom_node_get_data_element(om_node, env);
     if(NULL == om_element)
     {
+        if(none_qname)
+            axutil_qname_free(none_qname, env);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
             AXIS2_FAILURE);
         return NULL;
     }
     none_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        none_qname, om_node, &none_node);
+        none_qname, om_node, &none_node);
+    if(none_qname)
+        axutil_qname_free(none_qname, env);
     if(NULL == none_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

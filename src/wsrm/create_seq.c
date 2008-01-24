@@ -155,6 +155,8 @@ sandesha2_create_seq_from_om_node(
     }
     offer_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         offer_qname, seq_node, &offer_node);
+    if(offer_qname)
+        axutil_qname_free(offer_qname, env);
     if(offer_part)
     {
         create_seq->seq_offer = sandesha2_seq_offer_create(env, 
@@ -177,6 +179,8 @@ sandesha2_create_seq_from_om_node(
     }
     expires_part = axiom_element_get_first_child_with_qname(seq_part, env, 
         expires_qname, seq_node, &expires_node);
+    if(expires_qname)
+        axutil_qname_free(expires_qname, env);
     if(expires_part)
     {
         create_seq->expires = sandesha2_expires_create(env, 
@@ -306,6 +310,8 @@ sandesha2_create_seq_to_soap_envelope(
         envelope, env), env);
     sandesha2_create_seq_to_om_node((sandesha2_create_seq_t*)create_seq, 
         env, body_node);
+    if(create_seq_qname)
+        axutil_qname_free(create_seq_qname, env);
 	return AXIS2_SUCCESS;
 }
 

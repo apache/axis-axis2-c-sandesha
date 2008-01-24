@@ -124,7 +124,8 @@ sandesha2_last_msg_from_om_node(
     }
     lm_part = axiom_element_get_first_child_with_qname(om_element, env,
         lm_qname, om_node, &lm_node);
-    axutil_qname_free(lm_qname, env);
+    if(lm_qname)
+        axutil_qname_free(lm_qname, env);
     if(!lm_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

@@ -110,11 +110,11 @@ sandesha2_expires_from_om_node(
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     exp_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_EXPIRES, 
-                        expires->ns_val, NULL); 
+        expires->ns_val, NULL); 
     if(NULL == exp_qname)
     {
         return NULL;
@@ -123,11 +123,13 @@ sandesha2_expires_from_om_node(
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     exp_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        exp_qname, om_node, &exp_node);
+        exp_qname, om_node, &exp_node);
+    if(exp_qname)
+        axutil_qname_free(exp_qname, env);
     if(NULL == exp_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

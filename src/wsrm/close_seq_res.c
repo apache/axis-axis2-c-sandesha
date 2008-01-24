@@ -214,9 +214,10 @@ sandesha2_close_seq_res_to_soap_envelope(
     }
     sandesha2_utils_remove_soap_body_part(env, envelope, close_seq_qname);
     body_node = axiom_soap_body_get_base_node(axiom_soap_envelope_get_body(
-                        envelope, env), env);
-    sandesha2_close_seq_res_to_om_node((sandesha2_close_seq_res_t*)close_seq_res,
-                        env, body_node);
+        envelope, env), env);
+    sandesha2_close_seq_res_to_om_node(close_seq_res, env, body_node);
+    if(close_seq_qname)
+        axutil_qname_free(close_seq_qname, env);
 	return AXIS2_SUCCESS;
 }
 

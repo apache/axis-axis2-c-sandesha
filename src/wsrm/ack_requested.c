@@ -133,6 +133,8 @@ sandesha2_ack_requested_from_om_node(
     }
     msg_num_part = axiom_element_get_first_child_with_qname(requested_part, env, 
         msg_num_qname, requested_node, &msg_num_node);
+    if(msg_num_qname)
+        axutil_qname_free(msg_num_qname, env);
     if(msg_num_part)
     {
         ack_requested->msg_num = sandesha2_msg_number_create(env, 
@@ -212,8 +214,9 @@ sandesha2_ack_requested_to_soap_envelope(
         return AXIS2_FAILURE;
     } 
     axiom_soap_header_remove_header_block(soap_header, env, requested_qname);
-    sandesha2_ack_requested_to_om_node((sandesha2_ack_requested_t*)
-     ack_requested, env, soap_header);
+    sandesha2_ack_requested_to_om_node(ack_requested, env, soap_header);
+    if(requested_qname)
+        axutil_qname_free(requested_qname, env);
 	return AXIS2_SUCCESS;
 }
 

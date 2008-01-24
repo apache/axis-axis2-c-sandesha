@@ -110,28 +110,30 @@ sandesha2_nack_from_om_node(
     if(NULL == om_element)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     nack_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_NACK,
-                        nack->ns_val, NULL);
+        nack->ns_val, NULL);
     if(NULL == nack_qname)
     {
         return NULL;
     }
     nack_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        nack_qname, om_node, &nack_node);
+        nack_qname, om_node, &nack_node);
+    if(nack_qname)
+        axutil_qname_free(nack_qname, env);
     if(NULL == nack_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     nack_text = axiom_element_get_text(nack_part, env, nack_node);
     if(NULL == nack_text)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     return nack;

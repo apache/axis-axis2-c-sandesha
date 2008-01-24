@@ -112,7 +112,7 @@ sandesha2_accept_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     accept_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ACCEPT, 
-                        accept->rm_ns_val, NULL);
+        accept->rm_ns_val, NULL);
     if(NULL == accept_qname)
     {
         return NULL;
@@ -120,20 +120,24 @@ sandesha2_accept_from_om_node(
     om_element = axiom_node_get_data_element(om_node, env); 
     if(NULL == om_element)
     {
+        if(accept_qname)
+            axutil_qname_free(accept_qname, env);
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, 
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     accept_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        accept_qname, om_node, &child_om_node); 
+        accept_qname, om_node, &child_om_node); 
+    if(accept_qname)
+        axutil_qname_free(accept_qname, env);
     if(NULL == accept_part || NULL == child_om_node)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+            AXIS2_FAILURE);
         return NULL;
     }
     accept->acks_to = sandesha2_acks_to_create(env, NULL, 
-                        accept->rm_ns_val, accept->addr_ns_val);
+        accept->rm_ns_val, accept->addr_ns_val);
     if(NULL == accept->acks_to)
     {
         return NULL;

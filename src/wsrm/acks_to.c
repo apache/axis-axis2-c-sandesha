@@ -126,6 +126,8 @@ sandesha2_acks_to_from_om_node(
     }
     acks_to_part = axiom_element_get_first_child_with_qname(om_element, env,
         acks_to_qname, om_node, &acks_to_node);
+    if(acks_to_qname)
+        axutil_qname_free(acks_to_qname, env);
     if(NULL == acks_to_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

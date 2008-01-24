@@ -121,6 +121,8 @@ sandesha2_fault_code_from_om_node(
     }
     fault_part = axiom_element_get_first_child_with_qname(om_element, env,
         fault_qname, om_node, &fault_node);
+    if(fault_qname)
+        axutil_qname_free(fault_qname, env);
     if(NULL == fault_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,

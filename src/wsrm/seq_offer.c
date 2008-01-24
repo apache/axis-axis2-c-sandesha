@@ -118,6 +118,8 @@ sandesha2_seq_offer_from_om_node(
     }
     so_part = axiom_element_get_first_child_with_qname(om_element, env,
         so_qname, om_node, &so_node);
+    if(so_qname)
+        axutil_qname_free(so_qname, env);
     if(NULL == so_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -139,6 +141,8 @@ sandesha2_seq_offer_from_om_node(
     }
     exp_part = axiom_element_get_first_child_with_qname(so_part, env,
         exp_qname, so_node, &exp_node); 
+    if(exp_qname)
+        axutil_qname_free(exp_qname, env);
     if(NULL != exp_part)
     {
         seq_offer->expires = sandesha2_expires_create(env, 

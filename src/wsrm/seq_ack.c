@@ -260,6 +260,8 @@ sandesha2_seq_ack_from_om_node(
         }
         af_part = axiom_element_get_first_child_with_qname(sa_part, env, 
             af_qname, sa_node, &af_node);
+        if(af_qname)
+            axutil_qname_free(af_qname, env);
         if(af_part)
         {
             seq_ack->ack_final = sandesha2_ack_final_create(env, 
@@ -282,12 +284,10 @@ sandesha2_seq_ack_from_om_node(
             seq_ack->ns_val, NULL);
         an_part = axiom_element_get_first_child_with_qname(sa_part, env,
             an_qname, sa_node, &an_node);
+        if(an_qname)
+            axutil_qname_free(an_qname, env);
         if(an_part)
         {
-            if(!an_qname)
-            {
-                return NULL;
-            }
             seq_ack->ack_none = sandesha2_ack_none_create(env, 
                 seq_ack->ns_val);
             if(!seq_ack->ack_none)

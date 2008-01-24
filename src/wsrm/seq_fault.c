@@ -119,6 +119,8 @@ sandesha2_seq_fault_from_om_node(
     }
     sf_part = axiom_element_get_first_child_with_qname(om_element, env,
         sf_qname, om_node, &sf_node);
+    if(sf_qname)
+        axutil_qname_free(sf_qname, env);
     if(NULL == sf_part)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
@@ -132,7 +134,9 @@ sandesha2_seq_fault_from_om_node(
         return NULL;
     }
     fc_part = axiom_element_get_first_child_with_qname(om_element, env,
-        sf_qname, sf_node, &fc_node);
+        fc_qname, sf_node, &fc_node);
+    if(fc_qname)
+        axutil_qname_free(fc_qname, env);
     if(NULL != fc_part)
     {
         seq_fault->fault_code = sandesha2_fault_code_create(env, 

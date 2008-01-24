@@ -154,6 +154,8 @@ sandesha2_create_seq_res_from_om_node(
     }
     exp_part = axiom_element_get_first_child_with_qname(csr_part, env, 
         exp_qname, csr_node, &exp_node);
+    if(exp_qname)
+        axutil_qname_free(exp_qname, env);
     if(exp_part)
     {
         create_seq_res->expires = sandesha2_expires_create(env, 
@@ -175,6 +177,8 @@ sandesha2_create_seq_res_from_om_node(
     } 
     acc_part = axiom_element_get_first_child_with_qname(csr_part, env, 
         acc_qname, csr_node, &acc_node);
+    if(acc_qname)
+        axutil_qname_free(acc_qname, env);
     if(acc_part)
     {
         create_seq_res->accept = sandesha2_accept_create(env, 
@@ -310,9 +314,11 @@ sandesha2_create_seq_res_to_soap_envelope(
     }
     sandesha2_utils_remove_soap_body_part(env, envelope, create_seq_res_qname);
     body_node = axiom_soap_body_get_base_node(axiom_soap_envelope_get_body(
-                        envelope, env), env);
+        envelope, env), env);
     sandesha2_create_seq_res_to_om_node((sandesha2_create_seq_res_t*)
         create_seq_res, env, body_node);
+    if(create_seq_res_qname)
+        axutil_qname_free(create_seq_res_qname, env);
     return AXIS2_SUCCESS;
 }
 

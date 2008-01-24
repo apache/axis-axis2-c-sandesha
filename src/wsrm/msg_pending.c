@@ -126,6 +126,8 @@ sandesha2_msg_pending_from_om_node(
     }
     pending_attr = axiom_element_get_attribute(msg_pending_element, env, 
         pending_qname);
+    if(pending_qname)
+        axutil_qname_free(pending_qname, env);
     if(!pending_attr)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "MessagePending header must" \
@@ -237,7 +239,9 @@ sandesha2_msg_pending_to_soap_envelope(
     }
     axiom_soap_header_remove_header_block(soap_header, env, msg_pending_qname);
     sandesha2_msg_pending_to_om_node((sandesha2_msg_pending_t*)msg_pending, 
-            env, soap_header);
+        env, soap_header);
+    if(msg_pending_qname)
+        axutil_qname_free(msg_pending_qname, env);
 	return AXIS2_SUCCESS;
 }
 

@@ -212,6 +212,8 @@ sandesha2_terminate_seq_res_to_soap_envelope(
                         envelope, env), env);  
     sandesha2_terminate_seq_res_to_om_node((sandesha2_terminate_seq_res_t*)
                         terminate_seq_res, env, body_node);
+    if(tsr_qname)
+        axutil_qname_free(tsr_qname, env);
 	return AXIS2_SUCCESS;
 }
 

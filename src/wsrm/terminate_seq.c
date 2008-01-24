@@ -207,6 +207,8 @@ sandesha2_terminate_seq_to_soap_envelope(
     body_node = axiom_soap_body_get_base_node(axiom_soap_envelope_get_body(
         envelope, env), env);  
     sandesha2_terminate_seq_to_om_node(terminate_seq, env, body_node);
+    if(ts_qname)
+        axutil_qname_free(ts_qname, env);
 	return AXIS2_SUCCESS;
 }
 

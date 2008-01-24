@@ -213,6 +213,8 @@ sandesha2_close_seq_to_soap_envelope(
     body_node = axiom_soap_body_get_base_node(axiom_soap_envelope_get_body(
         envelope, env), env);  
     sandesha2_close_seq_to_om_node(close_seq, env, body_node);
+    if(close_seq_qname)
+        axutil_qname_free(close_seq_qname, env);
 	return AXIS2_SUCCESS;
 }
 
