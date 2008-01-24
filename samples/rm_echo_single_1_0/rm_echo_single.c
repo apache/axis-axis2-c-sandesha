@@ -197,12 +197,6 @@ int main(int argc, char** argv)
     }
     payload = NULL;
    
-    property = axutil_property_create_with_args(env, 0, 0, 0, "12");
-    if(property)
-    {
-        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
-            property);
-    }
     payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
 
@@ -223,12 +217,6 @@ int main(int argc, char** argv)
     }
     payload = NULL;
 
-    property = axutil_property_create_with_args(env, 0, 0, 0, "12");
-    if(property)
-    {
-        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
-            property);
-    }
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
     payload = build_om_payload_for_echo_svc(env, "echo3", "sequence1");
@@ -251,6 +239,8 @@ int main(int argc, char** argv)
     payload = NULL;
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
+    if(offered_seq_id)
+        AXIS2_FREE(env->allocator, offered_seq_id);
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
