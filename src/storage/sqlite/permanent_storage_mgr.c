@@ -266,6 +266,8 @@ sandesha2_permanent_storage_mgr_store_msg_ctx(
     sandesha2_msg_store_bean_set_stored_key(msg_store_bean, env, key);
     sandesha2_permanent_bean_mgr_insert_msg_store_bean(storage_mgr_impl->bean_mgr, 
         env, msg_store_bean);
+    if(msg_store_bean)
+        sandesha2_msg_store_bean_free(msg_store_bean, env);
     return AXIS2_SUCCESS;
 }
 			

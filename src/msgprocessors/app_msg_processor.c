@@ -227,7 +227,7 @@ sandesha2_app_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     sandesha2_seq_property_bean_t *to_bean = NULL;
     axis2_char_t *acks_to_str = NULL;
-    axis2_endpoint_ref_t *acks_to = NULL;
+    /*axis2_endpoint_ref_t *acks_to = NULL;*/
     axis2_bool_t back_channel_free = AXIS2_FALSE;
     axis2_op_t *op = NULL;
     int mep = -1;
@@ -752,9 +752,11 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_invoker_mgr_free(invoker_mgr, env);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
+        if(acks_to_bean)
+            sandesha2_seq_property_bean_free(acks_to_bean, env);
         return AXIS2_FAILURE;
     }
-    acks_to = axis2_endpoint_ref_create(env, acks_to_str);
+    /*acks_to = axis2_endpoint_ref_create(env, acks_to_str);*/
     mep = axis2_op_get_axis_specific_mep_const(op, env);
     back_channel_free = (reply_to_addr && !sandesha2_utils_is_anon_uri(env, 
         reply_to_addr)) || AXIS2_MEP_CONSTANT_IN_ONLY == mep;
@@ -785,6 +787,8 @@ sandesha2_app_msg_processor_process_in_msg (
     if(rm_version)
         AXIS2_FREE(env->allocator, rm_version);
 
+    if(acks_to_bean)
+        sandesha2_seq_property_bean_free(acks_to_bean, env);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

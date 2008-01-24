@@ -28,8 +28,6 @@ struct sandesha2_msg_store_bean_t
 	axis2_char_t * stored_key;
     axis2_char_t * msg_id;
     axis2_char_t * soap_env_str;
-	int soap_version;
-	AXIS2_TRANSPORT_ENUMS transport_out;
     axis2_char_t * op;
     axis2_char_t * svc;
 	axis2_char_t * svc_grp;
@@ -38,19 +36,20 @@ struct sandesha2_msg_store_bean_t
     axis2_char_t * reply_to;
 	axis2_char_t * transport_to;
 	axis2_char_t * execution_chain_str;
-	int flow;
 	axis2_char_t * msg_recv_str;
-	axis2_bool_t svr_side;
 	axis2_char_t * in_msg_store_key;
 	axis2_char_t * persistent_property_str;
 	axis2_char_t * action;
+	int soap_version;
+	AXIS2_TRANSPORT_ENUMS transport_out;
+	int flow;
+	axis2_bool_t svr_side;
 };
 	
 AXIS2_EXTERN sandesha2_msg_store_bean_t* AXIS2_CALL
 sandesha2_msg_store_bean_create(const axutil_env_t *env)
 {
 	sandesha2_msg_store_bean_t *msg_store_bean = NULL;
-	AXIS2_ENV_CHECK(env, NULL);
 
 	msg_store_bean = (sandesha2_msg_store_bean_t*) AXIS2_MALLOC(env->allocator,
 	    sizeof(sandesha2_msg_store_bean_t));
@@ -63,8 +62,6 @@ sandesha2_msg_store_bean_create(const axutil_env_t *env)
     msg_store_bean->stored_key = NULL;
     msg_store_bean->msg_id = NULL;
     msg_store_bean->soap_env_str = NULL;
-	msg_store_bean->soap_version = -1;
-	msg_store_bean->transport_out = -1;
     msg_store_bean->op = NULL;
     msg_store_bean->svc = NULL;
 	msg_store_bean->svc_grp = NULL;
@@ -73,12 +70,14 @@ sandesha2_msg_store_bean_create(const axutil_env_t *env)
 	msg_store_bean->reply_to = NULL;
 	msg_store_bean->transport_to = NULL;
 	msg_store_bean->execution_chain_str = NULL;
-	msg_store_bean->flow = -1;
 	msg_store_bean->msg_recv_str = NULL;
-	msg_store_bean->svr_side = -1;
 	msg_store_bean->in_msg_store_key = NULL;
 	msg_store_bean->persistent_property_str = NULL;
 	msg_store_bean->action = NULL;
+	msg_store_bean->soap_version = -1;
+	msg_store_bean->transport_out = -1;
+	msg_store_bean->flow = -1;
+	msg_store_bean->svr_side = -1;
 
     return msg_store_bean;
 }

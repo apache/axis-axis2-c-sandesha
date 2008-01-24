@@ -454,7 +454,7 @@ sandesha2_sender_worker_check_for_sync_res(
     axis2_msg_ctx_t *res_msg_ctx = NULL;
     axiom_soap_envelope_t *res_envelope = NULL;
     axis2_char_t *soap_ns_uri = NULL;
-    /*axis2_svc_ctx_t *svc_ctx = NULL;*/
+    axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
     axis2_svc_t *svc = NULL;
     axis2_op_t *op = NULL;
@@ -518,7 +518,7 @@ sandesha2_sender_worker_check_for_sync_res(
             op_name_str = axutil_qname_to_string(qname, env);
         }
         op_mep_str = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
-        if((op_name_str || op_mep_str) && svc)
+        if((op_name_str || op_mep_str))
         {
             axis2_op_t *op = NULL;
             if(op_name_str)
@@ -563,7 +563,7 @@ sandesha2_sender_worker_check_for_sync_res(
         }
     }
     /* Setting contexts TODO is this necessary? */
-    svc_grp = axis2_msg_ctx_get_svc_grp(res_msg_ctx, env);
+    /*svc_grp = axis2_msg_ctx_get_svc_grp(res_msg_ctx, env);
     if(svc_grp)
     {
         axis2_svc_grp_ctx_t *svc_grp_ctx = axis2_svc_grp_ctx_create(env, 
@@ -582,7 +582,7 @@ sandesha2_sender_worker_check_for_sync_res(
             axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, svc_ctx);
         }
         
-    }
+    }*/
     op = axis2_msg_ctx_get_op(res_msg_ctx, env);
     if(op)
     {
@@ -611,10 +611,10 @@ sandesha2_sender_worker_check_for_sync_res(
     else
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "AXIS2_TRANSPORT_IN NULL");*/
 
-    /*svc_ctx = axis2_msg_ctx_get_svc_ctx(msg_ctx, env);
+    svc_ctx = axis2_msg_ctx_get_svc_ctx(msg_ctx, env);
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, svc_ctx);
     axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, 
-        axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));*/
+        axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
 
     if(res_envelope)
     {
