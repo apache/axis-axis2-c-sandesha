@@ -6,5 +6,5 @@ AXIS2_BIN_DIR = E:\axis2c\build\axis2c-bin-1.2.0-win32
 #CRUNTIME Library (Use /MD or /MT )
 CRUNTIME=/MD
 # Visual Studio version
-VC_VERSION_2005_OR_ABOVE=1
+EMBED_MANIFEST=1
 
