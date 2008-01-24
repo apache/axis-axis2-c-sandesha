@@ -317,36 +317,45 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
     int msg_type)
 {
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
+    axis2_msg_ctx_t *msg_ctx = NULL;
+    axutil_property_t *property = NULL;
+    axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+    axutil_hash_t *msg_ctx_map = NULL;
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
-    {
-        void *entry = NULL;
-        axis2_msg_ctx_t *msg_ctx = NULL;
-        axutil_property_t *property = NULL;
-        axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-        axutil_hash_t *msg_ctx_map = NULL;
 
-        property = axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
-        if(property)
+    property = axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
+    if(property)
+    {
+        msg_ctx_map = axutil_property_get_value(property, env);
+        if(msg_ctx_map)
         {
-            msg_ctx_map = axutil_property_get_value(property, env);
-            if(msg_ctx_map)
+            axutil_hash_index_t *i = NULL;
+            for (i = axutil_hash_first(msg_ctx_map, env); i; i = 
+                axutil_hash_next(env, i))
             {
-                entry = axutil_hash_get(msg_ctx_map, key, AXIS2_HASH_KEY_STRING);
-                msg_ctx = (axis2_msg_ctx_t *) entry;
-            }
-            if(entry)
-            {
-                axis2_op_ctx_t *op_ctx = NULL;
-                op_ctx = 
-                    axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-                axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
-                axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, NULL);
-                if(msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
-                    msg_type !=SANDESHA2_MSG_TYPE_CREATE_SEQ)
+                const void *k = NULL;
+                void *v = NULL;
+                axis2_char_t *key_l = NULL;
+
+                axutil_hash_this(i, &k, NULL, &v);
+                key_l = (axis2_char_t *) k;
+                if (0 == axutil_strcmp(key, key_l))
                 {
-                    axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
-                    axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
-                    axis2_msg_ctx_free(msg_ctx, env);
+                    msg_ctx = (axis2_msg_ctx_t *) v;
+                    axis2_op_ctx_t *op_ctx = NULL;
+                    op_ctx = 
+                        axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+                    axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
+                    axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
+                        NULL);
+                    AXIS2_FREE(env->allocator, key_l);
+                    if(msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
+                        msg_type !=SANDESHA2_MSG_TYPE_CREATE_SEQ)
+                    {
+                        axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
+                        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
+                        axis2_msg_ctx_free(msg_ctx, env);
+                    } 
                 }
             }
         }

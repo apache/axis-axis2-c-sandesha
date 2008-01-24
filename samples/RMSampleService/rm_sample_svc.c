@@ -58,35 +58,24 @@ rm_sample_svc_echo (
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
         return NULL;
     }
-    else
-    {
-        axiom_xml_writer_t *writer = NULL;
-        axiom_output_t *om_output = NULL;
-        axis2_char_t *buffer = NULL;
-  
-        writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0,
-            AXIS2_XML_PARSER_TYPE_BUFFER);
-        om_output = axiom_output_create (env, writer);
-
-        axiom_node_serialize (node, env, om_output);
-        buffer = axiom_xml_writer_get_xml(writer, env);
-    }
-
-    element = axiom_node_get_data_element(node, env);
+    /*element = axiom_node_get_data_element(node, env);
     qname = axutil_qname_create(env, "Text", ns, NULL);
     text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
             qname, node, &text_parent_node);
-    axutil_qname_free(qname, env);
+    axutil_qname_free(qname, env);*/
+    text_parent_node = axiom_node_get_first_element(node, env);
     if (!text_parent_node) /* 'text' node */
     {
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, 
+            AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
         return NULL;
     }
     
     text_node = axiom_node_get_first_child(text_parent_node, env);
     if (!text_node) /* actual text to echo */
     {
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, 
+            AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
         return NULL;
     }
     

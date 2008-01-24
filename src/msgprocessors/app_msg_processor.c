@@ -521,6 +521,12 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
                 highest_msg_id_bean);
         }
+        if(highest_msg_no_bean)
+            sandesha2_seq_property_bean_free(highest_msg_no_bean, env);
+        if(highest_msg_key_bean)
+            sandesha2_seq_property_bean_free(highest_msg_key_bean, env);
+        if(highest_msg_id_bean)
+            sandesha2_seq_property_bean_free(highest_msg_id_bean, env);
     }
     if(highest_in_msg_no_str)
         AXIS2_FREE(env->allocator, highest_in_msg_no_str);
