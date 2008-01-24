@@ -526,6 +526,8 @@ sandesha2_sender_worker_check_for_sync_res(
                 axutil_qname_t *op_qname = axutil_qname_create_from_string(env, 
                     op_name_str);
                 op = axis2_svc_get_op_with_qname(svc, env, op_qname);
+                if(op_qname)
+                    axutil_qname_free(op_qname, env);
             }
             if(!op && op_mep_str && svc)
             {

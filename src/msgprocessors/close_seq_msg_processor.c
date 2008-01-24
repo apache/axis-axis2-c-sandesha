@@ -166,8 +166,6 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     close_seq = sandesha2_msg_ctx_get_close_seq(rm_msg_ctx, env);
     
     seq_id = sandesha2_identifier_get_identifier(

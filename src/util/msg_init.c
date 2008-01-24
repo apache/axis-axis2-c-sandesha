@@ -280,8 +280,6 @@ static axis2_bool_t validate_msg(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     create_seq = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
     create_seq_res = sandesha2_msg_ctx_get_create_seq_res(rm_msg_ctx, env);
     terminate_seq = sandesha2_msg_ctx_get_terminate_seq(rm_msg_ctx, env);
@@ -474,11 +472,11 @@ static void add_op_if_null(
             "[sandesha2]Message context operation is NULL. So adding default "\
             "operation");
         tmp_qname = axutil_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
-                NULL);
+            NULL);
         if (!tmp_qname)
         {
             AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, 
-                    AXIS2_FAILURE);
+                AXIS2_FAILURE);
             return;
         }
         svc = axis2_msg_ctx_get_svc(msg_ctx, env);
@@ -513,7 +511,8 @@ static void add_op_if_null(
                 op = NULL;
             }
         }
-        axutil_qname_free(tmp_qname, env);
+        if(tmp_qname)
+            axutil_qname_free(tmp_qname, env);
         axis2_msg_ctx_set_op(msg_ctx, env, op);
     }
 }

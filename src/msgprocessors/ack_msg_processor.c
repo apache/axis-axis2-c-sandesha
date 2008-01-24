@@ -195,8 +195,6 @@ sandesha2_ack_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env,dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     
     ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
     nack_list = sandesha2_seq_ack_get_nack_list(seq_ack, env);

@@ -191,8 +191,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]acks_to_str"\
             " seqeunce property is not set correctly");
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(storage_mgr)
@@ -286,8 +284,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 axis2_engine_free(engine, env);
                 engine = NULL;
             }
-            if(dbname)
-                AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(storage_mgr)
@@ -400,8 +396,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
                 AXIS2_FAILURE);
             if(engine)
                 axis2_engine_free(engine, env);
-            if(dbname)
-                AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(sender_mgr)
@@ -417,8 +411,6 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         if(sender_mgr)
             sandesha2_sender_mgr_free(sender_mgr, env);
     }
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(storage_mgr)

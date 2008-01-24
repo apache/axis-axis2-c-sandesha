@@ -286,8 +286,6 @@ sandesha2_app_msg_processor_process_in_msg (
                 sandesha2_msg_ctx_free(fault_ctx, env);
             if(engine)
                 axis2_engine_free(engine, env);
-            if(dbname)
-                AXIS2_FREE(env->allocator, dbname);
             if(storage_mgr)
                 sandesha2_storage_mgr_free(storage_mgr, env);
             return AXIS2_FAILURE;
@@ -297,8 +295,6 @@ sandesha2_app_msg_processor_process_in_msg (
         if(engine)
             axis2_engine_free(engine, env);
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_SUCCESS;
@@ -307,8 +303,6 @@ sandesha2_app_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
     invoker_mgr = sandesha2_permanent_invoker_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
     sandesha2_seq_set_must_understand(seq, env, AXIS2_FALSE);
     str_seq_id = sandesha2_identifier_get_identifier(
@@ -861,16 +855,12 @@ sandesha2_app_msg_processor_process_out_msg(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]seq_prop_mgr is NULL");
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
     }
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     is_svr_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);

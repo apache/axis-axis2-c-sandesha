@@ -219,8 +219,6 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
         sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     }
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     int_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
     if(int_seq_bean)

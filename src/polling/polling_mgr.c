@@ -174,8 +174,6 @@ sandesha2_polling_mgr_start (
     }
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
     sandesha2_polling_mgr_schedule_polling_request(polling_mgr, env, 
         internal_seq_id);
@@ -236,8 +234,6 @@ sandesha2_polling_mgr_worker_func(
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
 
     while(polling_mgr->poll)
     {
@@ -274,7 +270,8 @@ sandesha2_polling_mgr_worker_func(
         {
             wait_time = AXIS2_ATOI(axutil_param_get_value(wait_time_param, env));
         }
-        axutil_qname_free(qname, env);
+        if(qname)
+            axutil_qname_free(qname, env);
         AXIS2_SLEEP(wait_time);
          /* Getting the sequences to be polled. if schedule contains any requests, 
           * do the earliest one. else pick one randomly.

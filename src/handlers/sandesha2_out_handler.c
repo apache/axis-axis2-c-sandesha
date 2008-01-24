@@ -104,11 +104,14 @@ sandesha2_out_handler_invoke(
     module_qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
     if(!axis2_svc_is_module_engaged(svc, env, module_qname))
     {
+        if(module_qname)
+            axutil_qname_free(module_qname, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]RM is not engaged. So return here");
         return AXIS2_SUCCESS;
     }
-    axutil_qname_free(module_qname, env);
+    if(module_qname)
+        axutil_qname_free(module_qname, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);

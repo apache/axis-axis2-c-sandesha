@@ -218,8 +218,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     fault_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, 
         rm_msg_ctx, seq_id, seq_prop_mgr, create_seq_mgr, next_msg_mgr);
     if(fault_ctx)
@@ -564,8 +562,6 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     to_address = (axis2_char_t*)axis2_endpoint_ref_get_address(
         axis2_msg_ctx_get_to(msg_ctx, env), env);
     property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
@@ -594,9 +590,10 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
         SANDESHA2_SEQ_PROP_TERMINATE_ADDED, seq_prop_mgr);
     old_op = axis2_msg_ctx_get_op(msg_ctx, env);
     
-    qname = axutil_qname_create(env, "temp", NULL, NULL);
-    
+    qname = axutil_qname_create(env, "temp", NULL, NULL); 
     out_in_op = axis2_op_create_with_qname(env, qname);
+    if(qname)
+        axutil_qname_free(qname, env);
     axis2_op_set_msg_exchange_pattern(out_in_op, env, AXIS2_MEP_URI_OUT_IN);
     axis2_op_set_in_flow(out_in_op, env, 
          axis2_op_get_in_flow(old_op, env));

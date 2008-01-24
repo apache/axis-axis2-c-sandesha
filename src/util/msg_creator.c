@@ -127,7 +127,8 @@ sandesha2_msg_creator_create_create_seq_msg(
      */
     qname = axutil_qname_create(env, "CreateSequenceOperation", NULL, NULL);
     create_seq_op = axis2_op_create_with_qname(env, qname);
-    axutil_qname_free(qname, env);
+    if(qname)
+        axutil_qname_free(qname, env);
 
     create_seq_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
             application_rm_msg, create_seq_op);
@@ -994,7 +995,8 @@ sandesha2_msg_creator_create_make_connection_msg(
     }
     qname = axutil_qname_create(env, "MakeConnectionOperation", NULL, NULL);
     make_conn_op = axis2_op_create_with_qname(env, qname);
-    axutil_qname_free(qname, env);
+    if(qname)
+        axutil_qname_free(qname, env);
     make_conn_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, 
         ref_rm_msg_ctx, make_conn_op);
     if(make_conn_msg_ctx)

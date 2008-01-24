@@ -191,8 +191,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     
     fault_rm_msg_ctx = sandesha2_fault_mgr_check_for_create_seq_refused(
         env, msg_ctx, seq_prop_mgr);

@@ -1417,10 +1417,11 @@ sandesha2_util_get_dbname(
         dbparam = axis2_module_desc_get_param(module_desc, env, SANDESHA2_DB);
         if(dbparam)
         {
-            dbname = axutil_strdup(env, axutil_param_get_value(dbparam, env));
+            dbname = axutil_param_get_value(dbparam, env);
         }
     }
-    axutil_qname_free(qname, env);
+    if(qname)
+        axutil_qname_free(qname, env);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dbname:%s", dbname);
     return dbname;
 }

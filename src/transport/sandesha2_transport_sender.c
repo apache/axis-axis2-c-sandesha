@@ -184,8 +184,6 @@ sandesha2_transport_sender_invoke (
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING,

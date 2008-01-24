@@ -496,6 +496,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axutil_qname_t *op_qname = axutil_qname_create_from_string(env, 
                 op_name_str);
             op = axis2_svc_get_op_with_qname(svc, env, op_qname);
+            if(op_qname)
+                axutil_qname_free(op_qname, env);
         }
         if(!op && op_mep_str && svc)
         {
@@ -1058,8 +1060,6 @@ sandesha2_permanent_storage_mgr_create_db(
         system(permission_str);
     }
     #endif
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     sql_stmt1 = "create table create_seq("\
         "create_seq_msg_id varchar(100) primary key, "\
         "internal_seq_id varchar(200), seq_id varchar(200), "\

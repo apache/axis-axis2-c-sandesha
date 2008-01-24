@@ -209,8 +209,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             "[sandesha2]Create Sequence Response part is null");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING,
             AXIS2_FAILURE);
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
@@ -224,8 +222,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             "[sandesha2]New sequence id is null");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID,
             AXIS2_FAILURE);
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
@@ -237,8 +233,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             " sequence message. relates_to part is not available");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_RELATES_TO,
             AXIS2_FAILURE);
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
@@ -253,8 +247,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Create Sequence entry not found");
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
@@ -273,8 +265,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             "[sandesha2]Internal sequence id is not set");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_SEQ_ID,
             AXIS2_FAILURE);
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
@@ -294,8 +284,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Create sequence entry not found");
-        if(dbname)
-            AXIS2_FREE(env->allocator, dbname);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
@@ -348,8 +336,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2]No offered sequence entry. But an accept was received");
-            if(dbname)
-                AXIS2_FREE(env->allocator, dbname);
             if(seq_prop_mgr)
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(create_seq_mgr)
@@ -422,8 +408,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                     "[sandesha2]to_seq_bean is NULL");
-                if(dbname)
-                    AXIS2_FREE(env->allocator, dbname);
                 if(seq_prop_mgr)
                     sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
                 if(create_seq_mgr)
@@ -479,8 +463,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
     }
-    if(dbname)
-        AXIS2_FREE(env->allocator, dbname);
     target_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_internal_seq_id(target_bean, env, internal_seq_id);
     sandesha2_sender_bean_set_send(target_bean, env, AXIS2_FALSE);
