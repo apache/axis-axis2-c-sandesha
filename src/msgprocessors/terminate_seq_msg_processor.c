@@ -511,6 +511,8 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     }
     if(engine)
         axis2_engine_free(engine, env);
+    if(out_rm_msg)
+        sandesha2_msg_ctx_free(out_rm_msg, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
         "terminate_seq_msg_processor_add_terminate_seq_res");
     return AXIS2_SUCCESS;

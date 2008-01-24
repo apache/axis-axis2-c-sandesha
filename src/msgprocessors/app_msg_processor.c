@@ -1540,6 +1540,8 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_msg_ctx_set_transport_out_desc(create_seq_msg, env, trans_out);
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(create_seq_msg, 
         env));
+    if(create_seq_rm_msg)
+        sandesha2_msg_ctx_free(create_seq_rm_msg, env);
     if(!axis2_engine_resume_send(engine, env, create_seq_msg))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 

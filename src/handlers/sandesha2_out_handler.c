@@ -230,8 +230,8 @@ sandesha2_out_handler_invoke(
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
         axutil_property_set_value(temp_prop, env, AXIS2_VALUE_FALSE);
-    /*if(rm_msg_ctx)
-        sandesha2_msg_ctx_free(rm_msg_ctx, env);*/
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_out_handler_invoke");
     return AXIS2_SUCCESS;

@@ -241,6 +241,8 @@ sandesha2_close_seq_msg_processor_process_in_msg (
         sandesha2_create_seq_mgr_free(create_seq_mgr, env);
     if(next_msg_mgr)
         sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+    if(close_seq_res_rm_msg)
+        sandesha2_msg_ctx_free(close_seq_res_rm_msg, env);
     return AXIS2_SUCCESS;
 }
     
