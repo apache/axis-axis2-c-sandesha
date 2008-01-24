@@ -216,12 +216,25 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 next_bean = axutil_array_list_get(list, env, i);
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(
                     next_bean, env);
+                if(contains)
+                {
+                    if(next_bean)
+                        sandesha2_next_msg_bean_free(next_bean, env);
+                    continue;
+                }
                 if(0 == axutil_strcmp(seq_id, tmp_id))
                 {
+                    if(next_bean)
+                        sandesha2_next_msg_bean_free(next_bean, env);
                     contains = AXIS2_TRUE;
-                    break;
+                }
+                else
+                {
+                    if(next_bean)
+                        sandesha2_next_msg_bean_free(next_bean, env);
                 }
             }
+            axutil_array_list_free(list, env);
         }
         if(contains)
             valid_seq = AXIS2_TRUE;
@@ -251,6 +264,8 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                         rm_ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
         detail_ele = axiom_element_create_with_qname(env, NULL, qname, 
                         &detail_node);
+        if(qname)
+            axutil_qname_free(qname, env);
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
         sandesha2_fault_data_set_reason(fault_data, env, "A sequence with the" \
                         " given sequenceID has NOT been established");
@@ -325,6 +340,8 @@ sandesha2_fault_mgr_check_for_invalid_ack(
             NULL, NULL);
         detail_ele = axiom_element_get_first_child_with_qname(dummy_ele, env,
                         qname, dummy_node, &detail_node);
+        if(qname)
+            axutil_qname_free(qname, env);
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
         sandesha2_fault_data_set_reason(fault_data, env, reason);
         return sandesha2_fault_mgr_get_fault(env, ack_rm_msg, fault_data,

@@ -628,6 +628,8 @@ sandesha2_utils_create_new_related_msg_ctx(
         
         svc_qname = axutil_qname_create(env, "AnonymousRMService", NULL, NULL);
         axis_svc = axis2_svc_create_with_qname(env, svc_qname);
+        if(svc_qname)
+            axutil_qname_free(svc_qname, env);
         
         svc_grp = axis2_msg_ctx_get_svc_grp(new_msg, env);
         axis2_svc_set_parent(axis_svc, env, axis2_msg_ctx_get_svc_grp(new_msg,
@@ -810,12 +812,16 @@ sandesha2_utils_is_rm_global_msg(
                         SANDESHA2_SPEC_2005_02_NS_URI, NULL);
         seq_element = axiom_element_get_first_child_with_qname(header_element, 
                         env, qname, header_node, &seq_node);
+        if(qname)
+            axutil_qname_free(qname, env);
         if(!seq_element)
         {
             qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
                         SANDESHA2_SPEC_2006_08_NS_URI, NULL);
             seq_element = axiom_element_get_first_child_with_qname(
                         header_element, env, qname, header_node, &seq_node);
+            if(qname)
+                axutil_qname_free(qname, env);
         }
     }
     if(seq_element)

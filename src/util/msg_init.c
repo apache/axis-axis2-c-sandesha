@@ -409,6 +409,7 @@ static axis2_bool_t validate_msg(
         {
             prop_key = axutil_strdup(env, sandesha2_seq_property_bean_get_value(
                     internal_seq_id_bean, env));
+            sandesha2_seq_property_bean_free(internal_seq_id_bean, env);
         }
     }
     rm_ns = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);

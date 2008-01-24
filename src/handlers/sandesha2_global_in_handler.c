@@ -93,18 +93,18 @@ sandesha2_global_in_handler_invoke(
 {
     
     axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
+    /*axis2_ctx_t *ctx = NULL;*/
+    /*axis2_char_t *reinjected_msg = AXIS2_FALSE;*/
+    /*axis2_bool_t dropped = AXIS2_FALSE;*/
+    /*axutil_property_t *property = NULL;*/
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_fault_t *fault_part = NULL;
-    axis2_char_t *reinjected_msg = AXIS2_FALSE;
     const axutil_string_t *str_soap_action = NULL;
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
-    /*axis2_bool_t dropped = AXIS2_FALSE;*/
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
-    axutil_property_t *property = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_global_in_handler");
@@ -180,7 +180,7 @@ sandesha2_global_in_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    ctx = axis2_msg_ctx_get_base(msg_ctx, env);
+    /*ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -188,7 +188,7 @@ sandesha2_global_in_handler_invoke(
             0, 0, NULL);
         axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
             property);
-    }
+    }*/
     
     soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if(!soap_envelope)
@@ -197,16 +197,16 @@ sandesha2_global_in_handler_invoke(
             "is NULL");
         return AXIS2_FAILURE;
     }
-    property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
+    /*property = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
     if(property)
         reinjected_msg = (axis2_char_t *) axutil_property_get_value(property, env); 
     if(reinjected_msg && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Detected"\
              " reinjected_msg. So return here.");
-        return AXIS2_SUCCESS; /* Reinjected Messages are not processed by 
-                                 sandesha2 inflow handlers */
-    }
+        return AXIS2_SUCCESS; // Reinjected Messages are not processed by 
+                                 sandesha2 inflow handlers
+    }*/
     /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
         return AXIS2_FAILURE;*/
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(

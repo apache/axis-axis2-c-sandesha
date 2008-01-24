@@ -442,6 +442,8 @@ sandesha2_terminate_mgr_do_updates_if_needed(
         sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, 
                     sandesha2_seq_property_bean_get_seq_id(prop_bean, env),
                     name);
+        if(new_bean)
+            sandesha2_seq_property_bean_free(new_bean, env);
     }
     return AXIS2_SUCCESS;
 }
