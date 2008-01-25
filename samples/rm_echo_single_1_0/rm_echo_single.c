@@ -180,7 +180,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    /*payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
+    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
     {
@@ -217,7 +217,7 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
+    }
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
