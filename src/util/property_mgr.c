@@ -94,6 +94,8 @@ sandesha2_property_mgr_load_properties_from_def_values(
         SANDESHA2_DEF_VAL_MAX_RETR_COUNT);
     sandesha2_property_mgr_load_msg_types_to_drop(env, 
         SANDESHA2_DEF_VAL_MSG_TYPES_TO_DROP, property_bean);
+    sandesha2_property_bean_set_terminate_delay(property_bean, env,
+        SANDESHA2_TERMINATE_DELAY);
     return property_bean;
 }
 
@@ -203,6 +205,23 @@ sandesha2_property_mgr_load_properties_from_module_desc(
             AXIS2_FREE(env->allocator, str);
     }
 
+    param = axis2_module_desc_get_param(module_desc, env, 
+        SANDESHA2_PROPERTIES_TERMINATE_DELAY);
+    if(param)
+    {
+        int terminate_delay = -1;
+        axis2_char_t *terminate_delay_str = axutil_param_get_value(param, env);
+        axis2_char_t *str = sandesha2_utils_trim_string(env, terminate_delay_str);
+        if(str)
+            terminate_delay = atoi(str);
+        else
+            terminate_delay = SANDESHA2_TERMINATE_DELAY;
+        if(0 < terminate_delay)
+            sandesha2_property_bean_set_terminate_delay(property_bean, env, 
+                terminate_delay);
+        if(str)
+            AXIS2_FREE(env->allocator, str);
+    }
     return property_bean;
 }
 

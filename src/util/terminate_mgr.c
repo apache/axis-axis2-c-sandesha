@@ -703,6 +703,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     long send_time = -1;
     sandesha2_terminate_seq_t *terminate_seq = NULL;
     axis2_char_t *seq_id = NULL;
+    int terminate_delay = -1;
+    sandesha2_property_bean_t *property_bean = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_terminate_mgr_add_terminate_seq_msg");
@@ -833,8 +835,12 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     terminate_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, 
         terminate_msg_ctx);
+    property_bean = sandesha2_utils_get_property_bean(env, 
+        axis2_conf_ctx_get_conf(conf_ctx, env));
+    terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, 
+        env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) +
-        SANDESHA2_TERMINATE_DELAY;
+        terminate_delay;
     sandesha2_sender_bean_set_time_to_send(terminate_bean, env, send_time);
     sandesha2_sender_bean_set_msg_id(terminate_bean, env, 
         sandesha2_msg_ctx_get_msg_id(terminate_rm_msg, env));

@@ -366,6 +366,8 @@ extern "C"
 	#define SANDESHA2_PROPERTIES_INACTIVETIMEOUT  "InactivityTimeout"
 		
 	#define SANDESHA2_PROPERTIES_INACTIVETIMEOUT_MEASURE  "InactivityTimeoutMeasure"
+	
+    #define SANDESHA2_PROPERTIES_TERMINATE_DELAY  "TerminateDelay"
 		
 	#define SANDESHA2_PROPERTIES_STORAGE_MGR  "StorageManager"
 		

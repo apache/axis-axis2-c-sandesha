@@ -33,6 +33,7 @@ struct sandesha2_property_bean_t
     axis2_bool_t is_in_order;
     axutil_array_list_t *msg_types_to_drop;
     int max_retrans_count;
+    int terminate_delay;
     axis2_char_t *db_path;
 };
 
@@ -58,6 +59,7 @@ sandesha2_property_bean_create(
     bean->is_in_order = AXIS2_FALSE;
     bean->msg_types_to_drop = NULL;
     bean->max_retrans_count = 0;
+    bean->terminate_delay = 0;
     bean->db_path = NULL;
     
 	return bean;
@@ -285,6 +287,25 @@ sandesha2_property_bean_set_max_retrans_count(
     bean->max_retrans_count = count;
     return AXIS2_SUCCESS;
 }
+
+int AXIS2_CALL
+sandesha2_property_bean_get_terminate_delay (
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env)
+{
+    return bean->terminate_delay;
+}
+            
+axis2_status_t AXIS2_CALL
+sandesha2_property_bean_set_terminate_delay(
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env, 
+    int delay)
+{
+    bean->terminate_delay = delay;
+    return AXIS2_SUCCESS;
+}
+
 
 axis2_char_t *AXIS2_CALL
 sandesha2_property_bean_get_db_path(
