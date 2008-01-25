@@ -544,8 +544,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_conf_t *conf = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
-    axis2_options_t *options = NULL;
-    axis2_svc_t *svc = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axutil_property_t *property = NULL;
@@ -566,9 +564,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     in_desc = axis2_msg_ctx_get_transport_in_desc(ref_msg, env);
     
     new_msg = axis2_msg_ctx_create(env, conf_ctx, in_desc, out_desc);
-       
-    options = axis2_options_create(env);
-    axis2_msg_ctx_set_options(new_msg, env, options);
     svc_grp = axis2_msg_ctx_get_svc_grp(ref_msg, env); 
     if(svc_grp)
     {
@@ -583,7 +578,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         {
             axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
             svc_grp_ctx = axis2_svc_grp_ctx_create(env, 
-                        axis2_msg_ctx_get_svc_grp(ref_msg, env), conf_ctx);
+                axis2_msg_ctx_get_svc_grp(ref_msg, env), conf_ctx);
             axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, svc_grp_ctx);
         }
     }
@@ -605,16 +600,16 @@ sandesha2_utils_create_new_related_msg_ctx(
         if(axis2_msg_ctx_get_svc_ctx(ref_msg, env))
         {
             axis2_msg_ctx_set_svc_ctx(new_msg, env, 
-                        axis2_msg_ctx_get_svc_ctx(ref_msg, env));
+                axis2_msg_ctx_get_svc_ctx(ref_msg, env));
             axis2_msg_ctx_set_svc_ctx_id(new_msg, env, 
-                        axis2_msg_ctx_get_svc_ctx_id(ref_msg, env));
+                axis2_msg_ctx_get_svc_ctx_id(ref_msg, env));
         }
         else
         {
             axis2_svc_ctx_t *svc_ctx =  NULL;
             svc_ctx = axis2_svc_ctx_create(env, 
-                        axis2_msg_ctx_get_svc(ref_msg, env),
-                        axis2_msg_ctx_get_svc_grp_ctx(new_msg, env));
+                axis2_msg_ctx_get_svc(ref_msg, env),
+                axis2_msg_ctx_get_svc_grp_ctx(new_msg, env));
             axis2_msg_ctx_set_svc_ctx(new_msg, env, svc_ctx);
         }
     }
@@ -633,29 +628,18 @@ sandesha2_utils_create_new_related_msg_ctx(
         
         svc_grp = axis2_msg_ctx_get_svc_grp(new_msg, env);
         axis2_svc_set_parent(axis_svc, env, axis2_msg_ctx_get_svc_grp(new_msg,
-                        env));
-         axis2_svc_grp_add_svc(svc_grp, env, axis_svc);
+            env));
+        axis2_svc_grp_add_svc(svc_grp, env, axis_svc);
         svc_grp_ctx = axis2_msg_ctx_get_svc_grp_ctx(new_msg, env);
         svc_ctx = axis2_svc_ctx_create(env, axis_svc, svc_grp_ctx);
     }
-    axis2_msg_ctx_set_op(new_msg, env, op);
-    svc = axis2_msg_ctx_get_svc(new_msg, env);
-    
-    if(svc && op)
-    {
-        axis2_svc_add_op(svc, env, op);
-        axis2_op_set_parent(op, env, svc);
-    }
-    
-    /*axutil_allocator_switch_to_global_pool(env->allocator);*/
     op_ctx = axis2_op_ctx_create(env, op, axis2_msg_ctx_get_svc_ctx(new_msg, 
         env));
-    /*axutil_allocator_switch_to_local_pool(env->allocator);*/
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
     
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
-                        sandesha2_utils_get_soap_version(env, 
-                        axis2_msg_ctx_get_soap_envelope(ref_msg, env)));
+        sandesha2_utils_get_soap_version(env, 
+        axis2_msg_ctx_get_soap_envelope(ref_msg, env)));
     axis2_msg_ctx_set_soap_envelope(new_msg, env, soap_env);
     
     transport_to = axis2_msg_ctx_get_transport_url(ref_msg, env);
@@ -673,7 +657,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         if(req_msg)
         {
             property = axis2_msg_ctx_get_property(req_msg, env, 
-                        AXIS2_WSA_VERSION);
+                AXIS2_WSA_VERSION);
             if(property)
                 addr_ver = axutil_property_get_value(property, env);
         }

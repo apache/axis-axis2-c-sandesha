@@ -543,8 +543,9 @@ sandesha2_terminate_mgr_clean_sending_side_data(
         {
             axis2_char_t *acks_to = NULL;
             acks_to = sandesha2_seq_property_bean_get_value(acks_to_bean, env);
-        if(sandesha2_utils_is_anon_uri(env, acks_to))
+            if(sandesha2_utils_is_anon_uri(env, acks_to))
                 stop_listner_for_async = AXIS2_TRUE;
+            sandesha2_seq_property_bean_free(acks_to_bean, env);
         }
         
     }
@@ -573,7 +574,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                         retrans_bean, env);
             sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                 msg_store_key, conf_ctx, -1);
+            if(retrans_bean)
+                sandesha2_sender_bean_free(retrans_bean, env);
         }
+        if(found_list)
+            axutil_array_list_free(found_list, env);
     }
     
     find_create_seq_bean = sandesha2_create_seq_bean_create(env);
@@ -602,8 +607,14 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                 " create_seq_bean with msg_id %s and internal_seq_id %s",
                 msg_id, internal_seq_id);
             sandesha2_create_seq_mgr_remove(create_seq_mgr, env, msg_id);
+            if(create_seq_bean)
+                sandesha2_create_seq_bean_free(create_seq_bean, env);
         }
     }
+    if(find_create_seq_bean)
+        sandesha2_create_seq_bean_free(find_create_seq_bean, env);
+    if(found_list)
+        axutil_array_list_free(found_list, env);
     
     find_seq_prop_bean = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, internal_seq_id);
@@ -645,8 +656,12 @@ sandesha2_terminate_mgr_clean_sending_side_data(
                     seq_id);
                 sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, seq_id, name);
             }
+            if(seq_prop_bean)
+                sandesha2_seq_property_bean_free(seq_prop_bean, env);
         }
     }
+    if(found_list)
+        axutil_array_list_free(found_list, env);
     if(out_seq_id)
         AXIS2_FREE(env->allocator, out_seq_id);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

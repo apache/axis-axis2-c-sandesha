@@ -50,7 +50,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_op_t *ack_op = NULL;
     axis2_op_t *ref_op = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
-    /*axis2_char_t *addr_ns_uri = NULL;*/
     axutil_property_t *property = NULL;
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
@@ -77,7 +76,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     }
     ack_op = axis2_op_create(env);
     axis2_op_set_msg_exchange_pattern(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);
-    
     ref_op = axis2_msg_ctx_get_op(ref_msg, env);
     if(ref_op)
     {
@@ -96,7 +94,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     }
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg,
         ack_op);
-    
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
         AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     if(property)

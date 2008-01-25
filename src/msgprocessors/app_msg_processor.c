@@ -554,6 +554,8 @@ sandesha2_app_msg_processor_process_in_msg (
             msgs_str = axutil_strdup(env, msg_num_str);
         sandesha2_seq_property_bean_set_value(msgs_bean, env, msgs_str);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, msgs_bean);
+        if(msgs_str)
+            AXIS2_FREE(env->allocator, msgs_str);
     }
     next_msg_bean = sandesha2_next_msg_mgr_retrieve(next_msg_mgr, env,
        str_seq_id);
