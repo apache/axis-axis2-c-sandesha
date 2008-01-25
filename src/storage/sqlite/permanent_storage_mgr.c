@@ -341,10 +341,10 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
 
                 axutil_hash_this(i, &k, NULL, &v);
                 key_l = (axis2_char_t *) k;
-                if (0 == axutil_strcmp(key, key_l))
+                if(0 == axutil_strcmp(key, key_l))
                 {
-                    msg_ctx = (axis2_msg_ctx_t *) v;
                     axis2_op_ctx_t *op_ctx = NULL;
+                    msg_ctx = (axis2_msg_ctx_t *) v;
                     op_ctx = 
                         axis2_msg_ctx_get_op_ctx(msg_ctx, env);
                     axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
@@ -625,6 +625,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 axis2_msg_ctx_set_property(msg_ctx, env, key, property);
             }
     }
+    if(msg_store_bean)
+        sandesha2_msg_store_bean_free(msg_store_bean, env);
     return msg_ctx;
 }
 
