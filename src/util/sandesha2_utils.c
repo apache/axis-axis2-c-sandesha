@@ -995,7 +995,10 @@ sandesha2_utils_get_ack_range_list(
          axutil_array_list_add(ack_ranges, env, ack_range);
          completed = AXIS2_TRUE;
     }
-    /*axutil_array_list_free(sorted_msg_no_list, env);*/
+    if(sorted_msg_no_list)
+    {
+        axutil_array_list_free(sorted_msg_no_list, env);
+    }
     return ack_ranges;
 }
 
@@ -1022,7 +1025,10 @@ get_sorted_msg_no_list(
         temp_str = strtok(NULL, delim);
     }
     sorted_msg_no_list = sandesha2_utils_sort(env, msg_numbers);
-    /*axutil_array_list_free(msg_numbers, env);*/
+    if(msg_numbers)
+    {
+        axutil_array_list_free(msg_numbers, env);
+    }
     AXIS2_FREE(env->allocator, dup_str);
     return sorted_msg_no_list;
 }

@@ -918,6 +918,8 @@ sandesha2_msg_creator_add_ack_msg(
             seq_bean, env); 
     ack_range_list = sandesha2_utils_get_ack_range_list(env, msg_no_list, 
             rm_ns_value);
+    if(seq_bean)
+        sandesha2_seq_property_bean_free(seq_bean, env);
     if(ack_range_list)
         size = axutil_array_list_size(ack_range_list, env);
     for(i = 0; i < size; i++)
@@ -927,6 +929,8 @@ sandesha2_msg_creator_add_ack_msg(
         ack_range = axutil_array_list_get(ack_range_list, env, i);
         sandesha2_seq_ack_add_ack_range(seq_ack, env, ack_range);
     }
+    if(ack_range_list)
+        axutil_array_list_free(ack_range_list, env);
     seq_closed_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
             SANDESHA2_SEQ_PROP_SEQ_CLOSED);
     if(seq_closed_bean)
@@ -946,6 +950,8 @@ sandesha2_msg_creator_add_ack_msg(
             sandesha2_seq_ack_set_ack_final(seq_ack, env, ack_final);
         }
     }
+    if(seq_closed_bean)
+        sandesha2_seq_property_bean_free(seq_closed_bean, env);
     sandesha2_msg_ctx_set_seq_ack(app_msg, env, seq_ack);
     soap_header = axiom_soap_envelope_get_header(envelope, env);
     sandesha2_seq_ack_to_om_node(seq_ack, env, soap_header);

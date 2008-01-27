@@ -83,7 +83,11 @@ sandesha2_terminate_seq_free (
         AXIS2_FREE(env->allocator, terminate_seq->ns_val);
         terminate_seq->ns_val = NULL;
     }
-    terminate_seq->identifier = NULL;
+    if(terminate_seq->identifier)
+    {
+        sandesha2_identifier_free(terminate_seq->identifier, env);
+        terminate_seq->identifier = NULL;
+    }
 	AXIS2_FREE(env->allocator, terminate_seq);
 	return AXIS2_SUCCESS;
 }

@@ -789,9 +789,11 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     sandesha2_msg_store_bean_set_action(bean, env, action);
     prop_str = sandesha2_permanent_storage_mgr_get_property_string(env, msg_ctx);
     if (prop_str)
+    {
         sandesha2_msg_store_bean_set_persistent_property_str(bean, env, 
             prop_str);
-    
+        AXIS2_FREE(env->allocator, prop_str);
+    }
     /* setting the request message if this a response message.*/
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(op_ctx)
