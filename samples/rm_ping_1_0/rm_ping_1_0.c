@@ -197,8 +197,11 @@ build_om_programatically(
     axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
     buffer = axiom_node_to_string(ping_om_node, env);
-    printf("\nSending OM node in XML : %s \n",  buffer); 
-
+    if(buffer)
+    {
+        printf("\nSending OM node in XML : %s \n",  buffer);
+        AXIS2_FREE(env->allocator, buffer);
+    }
     return ping_om_node;
 }
 

@@ -112,43 +112,6 @@ sandesha2_out_handler_invoke(
     }
     if(module_qname)
         axutil_qname_free(module_qname, env);
-    if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
-    {
-        axis2_ctx_t *conf_ctx_base = axis2_conf_ctx_get_base(conf_ctx, env);
-        axutil_property_t *property = axutil_property_create_with_args(env, 0, 
-            0, 0, NULL);
-        axis2_ctx_set_property(conf_ctx_base, env, SANDESHA2_IS_SVR_SIDE, 
-            property);
-    }
-    else
-    {
-        /*int size = -1, i = 0;
-		axis2_bool_t found = AXIS2_FALSE;
-		axutil_array_list_t *mod_qnames = NULL;
-        axutil_qname_t *mod_qname = axutil_qname_create(env, SANDESHA2_MODULE, 
-            NULL, NULL);
-		mod_qnames = (axutil_array_list_t *)axis2_svc_get_all_module_qnames(svc, 
-            env);
-        size = axutil_array_list_size(mod_qnames, env);
-        
-        for (i = 0; i < size; i++)
-        {
-            axutil_qname_t *qname = NULL;
-            qname = axutil_array_list_get(mod_qnames, env, i);
-            if (qname)
-            {
-                found = axutil_qname_equals(mod_qname, env, qname);
-                if (found)
-                    break;
-            }
-        }
-        if (!found)
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2]RM is not engaged. So return here.");
-            return AXIS2_SUCCESS;
-        }*/
-    }
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)

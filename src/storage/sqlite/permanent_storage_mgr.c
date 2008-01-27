@@ -293,8 +293,8 @@ sandesha2_permanent_storage_mgr_update_msg_ctx(
             msg_ctx_map = axutil_property_get_value(property, env);
             if(msg_ctx_map)
             {
-                axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
-                    msg_ctx);
+                axutil_hash_set(msg_ctx_map, axutil_strdup(env, key), 
+                    AXIS2_HASH_KEY_STRING, msg_ctx);
             }
         }
     }

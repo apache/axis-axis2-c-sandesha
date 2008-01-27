@@ -1126,7 +1126,7 @@ sandesha2_utils_execute_and_store(
         SANDESHA2_MSG_TYPE_CREATE_SEQ);
     /* Message will be stored in the sandesha2_transport_sender */
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST,
-        AXIS2_FALSE, 0, storage_key);
+        AXIS2_TRUE, 0, storage_key);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, 
         property);
     

@@ -281,9 +281,9 @@ rm_echo_callback_on_complete(
         if(!ret_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "Stub invoke FAILED: Error code:%d :: %s", 
-                    env->error->error_number, 
-                    AXIS2_ERROR_GET_MESSAGE(env->error));
+                "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, 
+                AXIS2_ERROR_GET_MESSAGE(env->error));
             printf("echo stub invoke FAILED!\n");
             status = AXIS2_FAILURE;
         }
@@ -292,7 +292,10 @@ rm_echo_callback_on_complete(
             axis2_char_t *om_str = NULL;
             om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
+            {
                 printf("\nReceived OM : %s\n", om_str);
+                AXIS2_FREE(env->allocator, om_str);
+            }
             printf("\necho client invoke SUCCESSFUL!\n");
         }
     }    

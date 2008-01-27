@@ -63,9 +63,12 @@ sandesha2_ack_mgr_generate_ack_msg(
     acks_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
         seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
     if(acks_to_bean)
+    {
         acks_to = axis2_endpoint_ref_create(env, 
             sandesha2_seq_property_bean_get_value(acks_to_bean, 
                 env));
+        sandesha2_seq_property_bean_free(acks_to_bean, env);
+    }
     if(acks_to)
         acks_to_str = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     if(!acks_to_str)
