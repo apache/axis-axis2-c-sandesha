@@ -450,7 +450,7 @@ sandesha2_sender_worker_check_for_sync_res(
     sandesha2_storage_mgr_t *storage_mgr,
     int msg_type)
 {
-    /*axutil_property_t *property = NULL;*/
+    axutil_property_t *property = NULL;
     axis2_msg_ctx_t *res_msg_ctx = NULL;
     axiom_soap_envelope_t *res_envelope = NULL;
     axis2_char_t *soap_ns_uri = NULL;
@@ -473,6 +473,15 @@ sandesha2_sender_worker_check_for_sync_res(
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
+    if(res_envelope && msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
+    {
+        axiom_soap_envelope_increment_ref(res_envelope, env);
+        /* To avoid a second passing through incoming handlers at op_client*/
+        property = axutil_property_create_with_args(env, 0, 0, 0, 
+            AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
+            property);
+    }
     if(!res_envelope)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -565,26 +574,6 @@ sandesha2_sender_worker_check_for_sync_res(
         }
     }
     /* Setting contexts TODO is this necessary? */
-    /*svc_grp = axis2_msg_ctx_get_svc_grp(res_msg_ctx, env);
-    if(svc_grp)
-    {
-        axis2_svc_grp_ctx_t *svc_grp_ctx = axis2_svc_grp_ctx_create(env, 
-            svc_grp, conf_ctx);
-        axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, svc_grp_ctx);
-    }
-    svc = axis2_msg_ctx_get_svc(res_msg_ctx, env);
-    if(svc)
-    {
-        axis2_svc_grp_ctx_t *svc_grp_ctx = axis2_msg_ctx_get_svc_grp_ctx(
-            res_msg_ctx, env);
-        axis2_svc_ctx_t *svc_ctx = axis2_svc_ctx_create(env, svc, svc_grp_ctx);
-        if(svc_ctx)
-        {
-            axis2_svc_ctx_set_parent(svc_ctx, env, svc_grp_ctx);
-            axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, svc_ctx);
-        }
-        
-    }*/
     op = axis2_msg_ctx_get_op(res_msg_ctx, env);
     if(op)
     {
@@ -602,16 +591,6 @@ sandesha2_sender_worker_check_for_sync_res(
      * Message Receiver (may be callback MR).
      */
     axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
-    /*property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_TRANSPORT_IN);
-    if(property)
-    {
-		axutil_property_t *temp_prop = NULL;
-        temp_prop = axutil_property_clone(property, env);
-        axis2_msg_ctx_set_property(res_msg_ctx, env, AXIS2_TRANSPORT_IN, 
-            temp_prop);
-    }
-    else
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "AXIS2_TRANSPORT_IN NULL");*/
 
     svc_ctx = axis2_msg_ctx_get_svc_ctx(msg_ctx, env);
     axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, svc_ctx);
@@ -624,7 +603,6 @@ sandesha2_sender_worker_check_for_sync_res(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Response envelope found");
         axis2_msg_ctx_set_soap_envelope(res_msg_ctx, env, res_envelope);
-       
         engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, 
             env));
         if(AXIS2_TRUE == sandesha2_sender_worker_is_fault_envelope(env, 
@@ -637,13 +615,8 @@ sandesha2_sender_worker_check_for_sync_res(
     }
     if(free_msg)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_msg_type1:%d", msg_type);
         axiom_soap_envelope_free(res_envelope, env);
     }
-    /* To avoid a second passing through incoming handlers at op_client*/
-    /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, 
-        property);*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_sender_worker_check_for_sync_res");
     return AXIS2_SUCCESS;

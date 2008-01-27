@@ -1393,6 +1393,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
         msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
         sent = axis2_engine_send(engine, env, msg_ctx);
         if(ack_rm_msg)
             sandesha2_msg_ctx_free(ack_rm_msg, env);
@@ -1491,7 +1492,7 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         create_seq_msg, env), NULL);
 
     temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
-    axis2_op_ctx_increment_ref(temp_opctx, env);
+    /*axis2_op_ctx_increment_ref(temp_opctx, env);*/
     sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
     addr_ns_uri = sandesha2_utils_get_seq_property(env, internal_seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);

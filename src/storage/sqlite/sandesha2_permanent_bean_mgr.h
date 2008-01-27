@@ -156,8 +156,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
     int (*callback_func)(void *, int, char **, char **),
     void *args,
     char **error_msg,
-    int rc,
-    axutil_thread_mutex_t *mutex);
+    int rc);
 
 sqlite3 *
 sandesha2_permanent_bean_mgr_get_dbconn(

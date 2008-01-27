@@ -343,6 +343,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_seq_mgr_update_last_activated_time(env, new_seq_id, seq_prop_mgr);
     engine = axis2_engine_create(env, conf_ctx);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
     axis2_engine_send(engine, env, out_msg_ctx);
     if(engine)
         axis2_engine_free(engine, env);

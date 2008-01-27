@@ -351,13 +351,19 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
                     axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
                         NULL);
                     AXIS2_FREE(env->allocator, key_l);
-                    if(msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
-                        msg_type !=SANDESHA2_MSG_TYPE_CREATE_SEQ)
+                    if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
+                    {
+                        axiom_soap_envelope_t *soap_envelope = 
+                            axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+                        axiom_soap_envelope_free(soap_envelope, env);
+                        axis2_op_ctx_free(op_ctx, env);
+                    }
+                    else if(msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
                     {
                         axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
                         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
-                        axis2_msg_ctx_free(msg_ctx, env);
-                    } 
+                        axis2_op_ctx_free(op_ctx, env);
+                    }
                 }
             }
         }

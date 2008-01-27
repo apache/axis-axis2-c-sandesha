@@ -176,6 +176,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     if(fault_rm_msg_ctx)
     {
         engine = axis2_engine_create(env, conf_ctx);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
         axis2_engine_send(engine, env, sandesha2_msg_ctx_get_msg_ctx(
             fault_rm_msg_ctx, env));
         if(fault_rm_msg_ctx)
@@ -230,6 +231,7 @@ sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_msg_ctx_add_soap_envelope(close_seq_res_rm_msg, env);
     
     engine = axis2_engine_create(env, conf_ctx);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
     axis2_engine_send(engine, env, close_seq_res_msg);
     if(engine)
         axis2_engine_free(engine, env);

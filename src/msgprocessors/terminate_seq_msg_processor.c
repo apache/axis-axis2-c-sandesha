@@ -489,6 +489,7 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     /* end test code */
     
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, env));
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
     axis2_engine_send(engine, env, out_msg_ctx); 
     op_ctx = axis2_msg_ctx_get_op_ctx(out_msg_ctx, env);
     if(to_epr)
