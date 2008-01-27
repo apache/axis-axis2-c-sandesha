@@ -127,8 +127,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
             sender_mgr);
         continue_sending = AXIS2_FALSE;
     }
-    /*if(rm_msg_ctx)
-        sandesha2_msg_ctx_free(rm_msg_ctx, env);*/
+    if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_adjust_retrans");
     return continue_sending;

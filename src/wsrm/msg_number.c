@@ -82,7 +82,7 @@ sandesha2_msg_number_free (
     sandesha2_msg_number_t *msg_number, 
 	const axutil_env_t *env)
 {
-    if(NULL != msg_number->ns_val)
+    if(msg_number->ns_val)
     {
         AXIS2_FREE(env->allocator, msg_number->ns_val);
         msg_number->ns_val = NULL;

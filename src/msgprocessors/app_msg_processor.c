@@ -832,7 +832,6 @@ sandesha2_app_msg_processor_process_out_msg(
     axiom_soap_envelope_t *soap_env = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
     sandesha2_seq_property_bean_t *out_seq_bean = NULL;
-    axis2_char_t *msg_id = NULL;
     axis2_char_t *op_name = NULL;
     axis2_char_t *to_addr = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
@@ -1284,9 +1283,12 @@ sandesha2_app_msg_processor_process_out_msg(
             AXIOM_SOAP12);
         sandesha2_msg_ctx_set_soap_envelope(rm_msg_ctx, env, soap_env);
     }
-    msg_id = axutil_uuid_gen(env);
     if(!sandesha2_msg_ctx_get_msg_id(rm_msg_ctx, env))
+    {
+        axis2_char_t *msg_id = NULL;
+        msg_id = axutil_uuid_gen(env);
         sandesha2_msg_ctx_set_msg_id(rm_msg_ctx, env, msg_id);
+    }
         
     if(is_svr_side)
     {
