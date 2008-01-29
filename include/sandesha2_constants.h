@@ -449,6 +449,8 @@ extern "C"
 
 	#define SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC  "Sandesha2OriginalTransportSender"
 	
+    #define SANDESHA2_ORIGINAL_MSG_RECV  "Sandesha2OriginalMessageReceiver"
+	
 	#define SANDESHA2_SET_SEND_TO_TRUE  "Sandesha2SetSendToTrue"
 	
 	#define SANDESHA2_MESSAGE_TYPE  "Sandesha2MessageType"

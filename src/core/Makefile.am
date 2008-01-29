@@ -3,7 +3,7 @@ prglib_LTLIBRARIES = libsandesha2.la
 
 libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
                           mod_sandesha2.c\
-                          msg_validator.c
+                          msg_validator.c 
 
 INCLUDES = -I$(top_builddir)/include \
             @AXIS2INC@ \

@@ -33,9 +33,8 @@ struct sandesha2_transport_sender_impl
 };
 
 #define SANDESHA2_INTF_TO_IMPL(transport_sender) \
-                        ((sandesha2_transport_sender_impl_t *)(transport_sender))
+    ((sandesha2_transport_sender_impl_t *)(transport_sender))
 
-/***************************** Function headers *******************************/
 axis2_status_t AXIS2_CALL
 sandesha2_transport_sender_init(
     axis2_transport_sender_t *transport_sender,
@@ -60,8 +59,6 @@ sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender,
     const axutil_env_t *env);								
 
-/***************************** End of function headers ************************/
-
 static const axis2_transport_sender_ops_t sandesha2_transport_sender_ops_var = {
     sandesha2_transport_sender_init,
     sandesha2_transport_sender_invoke,
@@ -74,25 +71,12 @@ sandesha2_transport_sender_create(
     const axutil_env_t *env)
 {
     sandesha2_transport_sender_impl_t *transport_sender_impl = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
-    
     transport_sender_impl =  (sandesha2_transport_sender_impl_t *)
-                        AXIS2_MALLOC (env->allocator, 
-                        sizeof(sandesha2_transport_sender_impl_t));
-	
-    if(NULL == transport_sender_impl)
+        AXIS2_MALLOC (env->allocator, 
+        sizeof(sandesha2_transport_sender_impl_t));
+    if(!transport_sender_impl)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-        
-    transport_sender_impl->transport_sender.ops = AXIS2_MALLOC(env->allocator,
-                        sizeof(axis2_transport_sender_ops_t));
-    if(NULL == transport_sender_impl->transport_sender.ops)
-	{
-		sandesha2_transport_sender_free((axis2_transport_sender_t*)
-                        transport_sender_impl, env);
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
     transport_sender_impl->transport_sender.ops = &sandesha2_transport_sender_ops_var; 
@@ -105,8 +89,6 @@ sandesha2_transport_sender_free(
     axis2_transport_sender_t *transport_sender, 
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-       
 	AXIS2_FREE(env->allocator, SANDESHA2_INTF_TO_IMPL(transport_sender));
 }
 
@@ -117,10 +99,8 @@ sandesha2_transport_sender_init(
     axis2_conf_ctx_t *conf_ctx,
     axis2_transport_out_desc_t *transport_out)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, transport_out, AXIS2_FAILURE);
-    
     /* we have nothing to do here */
     return AXIS2_SUCCESS;
 }
@@ -131,9 +111,7 @@ sandesha2_transport_sender_clean_up(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-        
     /* we have nothing to do here */
     return AXIS2_SUCCESS;
 }
@@ -157,10 +135,8 @@ sandesha2_transport_sender_invoke (
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
          "[sandesha2]Entry:sandesha2_transport_sender_invoke");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-        
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
-                        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC);
-                        
+        SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC);
     if(NULL == property || NULL == axutil_property_get_value(property, env))
         return AXIS2_FAILURE;
     out_desc = axutil_property_get_value(property, env);

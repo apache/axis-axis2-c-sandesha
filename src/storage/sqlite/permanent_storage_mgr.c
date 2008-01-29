@@ -341,8 +341,6 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
 
                 axutil_hash_this(i, &k, NULL, &v);
                 key_l = (axis2_char_t *) k;
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "key:%s", key);
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "key_l:%s", key_l);
                 if(0 == axutil_strcmp(key, key_l))
                 {
                     axis2_op_ctx_t *op_ctx = NULL;

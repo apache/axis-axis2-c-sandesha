@@ -618,6 +618,11 @@ sandesha2_sender_worker_check_for_sync_res(
     {
         axiom_soap_envelope_free(res_envelope, env);
     }
+    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ)
+    {
+        axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(res_msg_ctx, env);
+        axis2_op_ctx_free(op_ctx, env);
+    }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Exit:sandesha2_sender_worker_check_for_sync_res");
     return AXIS2_SUCCESS;

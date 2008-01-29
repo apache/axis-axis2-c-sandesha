@@ -55,6 +55,7 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq_mgr.h>
 #include <sandesha2_msg_creator.h>
+#include <sandesha2_msg_recv.h>
 
 
 /** 
@@ -560,8 +561,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
-    /*if(op_ctx)
-        axis2_op_ctx_free(op_ctx, env);*/
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)
