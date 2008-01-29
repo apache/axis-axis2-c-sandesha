@@ -27,6 +27,7 @@
 #include <axis2_conf_ctx.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_terminate_mgr.h>
+#include <sandesha2_polling_mgr.h>
 
 /** 
  * @brief Terminate Sequence Response Message Processor struct impl
@@ -138,9 +139,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
         "terminate_seq_res_msg_processor_process_in_msg");
-    
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    
     term_seq_res = sandesha2_msg_ctx_get_terminate_seq_res(rm_msg_ctx, env);
     if(!term_seq_res)
     {

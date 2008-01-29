@@ -1500,10 +1500,12 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     }
     create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
     axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
+    str_key = axutil_uuid_gen(env);
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, 
         internal_seq_id, (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(
         create_seq_msg, env), NULL);
-
+    sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, 
+        str_key);
     temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
     /*axis2_op_ctx_increment_ref(temp_opctx, env);*/
     sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
@@ -1518,7 +1520,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         cs_epr = axis2_endpoint_ref_create(env, anon_uri);
         axis2_msg_ctx_set_reply_to(create_seq_msg, env, cs_epr);
     }
-    str_key = axutil_uuid_gen(env);
     create_seq_entry = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(create_seq_entry, env, str_key);
     millisecs = sandesha2_utils_get_current_time_in_millis(env);

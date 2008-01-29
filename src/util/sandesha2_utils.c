@@ -671,6 +671,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     
     out_stream = axis2_msg_ctx_get_transport_out_stream(ref_msg, 
         env);
+    /*out_stream = axutil_stream_create_basic(env);*/
     axis2_msg_ctx_set_transport_out_stream(new_msg, env, out_stream);
     property = axis2_msg_ctx_get_property(ref_msg, env, 
         AXIS2_TRANSPORT_IN);
@@ -689,8 +690,8 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(property)
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_HEADERS, 
             axutil_property_clone(property, env));
-    axis2_msg_ctx_set_execution_chain(new_msg, env, 
-        axis2_msg_ctx_get_execution_chain(ref_msg, env));
+    /*axis2_msg_ctx_set_execution_chain(new_msg, env, 
+        axis2_msg_ctx_get_execution_chain(ref_msg, env));*/
     paused_phase_name = (axis2_char_t*)axis2_msg_ctx_get_paused_phase_name(
         ref_msg, env);
     axis2_msg_ctx_set_paused_phase_name(new_msg, env, paused_phase_name);

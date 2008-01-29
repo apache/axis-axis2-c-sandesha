@@ -425,6 +425,9 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             axis2_msg_ctx_set_to(create_seq_msg, env, to);
             axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
             new_msg_store_key = axutil_uuid_gen(env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2]Storing msg_ctx with msg_id:%s", 
+                axis2_msg_ctx_get_msg_id(create_seq_msg, env));
             sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, 
                 create_seq_msg);
             if(create_seq_rm_msg)
@@ -557,6 +560,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+    /*if(op_ctx)
+        axis2_op_ctx_free(op_ctx, env);*/
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

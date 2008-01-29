@@ -598,6 +598,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             create_seq_bean = axutil_array_list_get(found_list, env, i);
             key = sandesha2_create_seq_bean_get_ref_msg_store_key(
                 create_seq_bean, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_key:%s", key);
             if(key) 
                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
                    conf_ctx, -1);

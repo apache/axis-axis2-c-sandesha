@@ -341,28 +341,37 @@ sandesha2_permanent_storage_mgr_remove_msg_ctx(
 
                 axutil_hash_this(i, &k, NULL, &v);
                 key_l = (axis2_char_t *) k;
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "key:%s", key);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "key_l:%s", key_l);
                 if(0 == axutil_strcmp(key, key_l))
                 {
                     axis2_op_ctx_t *op_ctx = NULL;
                     msg_ctx = (axis2_msg_ctx_t *) v;
                     op_ctx = 
                         axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-                    axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
-                    axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
-                        NULL);
-                    AXIS2_FREE(env->allocator, key_l);
                     if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
                     {
                         axiom_soap_envelope_t *soap_envelope = 
                             axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+                        axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
                         axiom_soap_envelope_free(soap_envelope, env);
                         axis2_op_ctx_free(op_ctx, env);
+                        axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
+                            NULL);
+                        AXIS2_FREE(env->allocator, key_l);
                     }
                     else if(msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
                     {
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2]Removing msg_ctx with msg_id:%s", 
+                            axis2_msg_ctx_get_msg_id(msg_ctx, env));
+                        axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_FALSE);
                         axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
                         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
                         axis2_op_ctx_free(op_ctx, env);
+                        axutil_hash_set(msg_ctx_map, key, AXIS2_HASH_KEY_STRING, 
+                            NULL);
+                        AXIS2_FREE(env->allocator, key_l);
                     }
                 }
             }
@@ -631,8 +640,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 axis2_msg_ctx_set_property(msg_ctx, env, key, property);
             }
     }
-    if(msg_store_bean)
-        sandesha2_msg_store_bean_free(msg_store_bean, env);
+    /*if(msg_store_bean)
+        sandesha2_msg_store_bean_free(msg_store_bean, env);*/
     return msg_ctx;
 }
 

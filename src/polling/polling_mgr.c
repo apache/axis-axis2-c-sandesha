@@ -83,7 +83,6 @@ sandesha2_polling_mgr_create(
     const axutil_env_t *env)
 {
     sandesha2_polling_mgr_t *polling_mgr = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
     
     polling_mgr =  (sandesha2_polling_mgr_t *)AXIS2_MALLOC 
         (env->allocator, 
@@ -108,7 +107,6 @@ sandesha2_polling_mgr_free_void_arg(
     const axutil_env_t *env)
 {
     sandesha2_polling_mgr_t *polling_mgr_l = NULL;
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     polling_mgr_l = (sandesha2_polling_mgr_t *) polling_mgr;
     return sandesha2_polling_mgr_free(polling_mgr_l, env);
@@ -119,7 +117,6 @@ sandesha2_polling_mgr_free(
     sandesha2_polling_mgr_t *polling_mgr, 
     const axutil_env_t *env)
 {
-	AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     /* Do not free this */
     polling_mgr->conf_ctx = NULL;
     
@@ -142,8 +139,6 @@ sandesha2_polling_mgr_stop_polling (
     sandesha2_polling_mgr_t *polling_mgr,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
     sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_FALSE);
     return AXIS2_SUCCESS;
 }
