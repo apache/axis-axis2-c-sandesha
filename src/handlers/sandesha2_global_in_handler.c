@@ -103,7 +103,7 @@ sandesha2_global_in_handler_invoke(
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
+    /*sandesha2_msg_ctx_t *rm_msg_ctx = NULL;*/
     axis2_bool_t isolated_last_msg = AXIS2_FALSE;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -207,8 +207,6 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS; // Reinjected Messages are not processed by 
                                  sandesha2 inflow handlers
     }*/
-    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
-        return AXIS2_FAILURE;*/
     fault_part = axiom_soap_body_get_fault(axiom_soap_envelope_get_body(
                         soap_envelope, env), env);
     if(fault_part)
@@ -242,11 +240,11 @@ sandesha2_global_in_handler_invoke(
             }
         }
     }
-    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
     }
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);*/
     /*if(!isolated_last_msg)
         dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
             rm_msg_ctx);
@@ -258,8 +256,8 @@ sandesha2_global_in_handler_invoke(
         return AXIS2_SUCCESS;
     }*/
     /*Process if global processing possible. - Currently none*/
-    if(rm_msg_ctx)
-        sandesha2_msg_ctx_free(rm_msg_ctx, env);
+    /*if(rm_msg_ctx)
+        sandesha2_msg_ctx_free(rm_msg_ctx, env);*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_global_in_handler");
        

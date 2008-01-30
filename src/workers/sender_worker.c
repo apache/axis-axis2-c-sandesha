@@ -389,13 +389,15 @@ sandesha2_sender_worker_send(
         msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
     {
         axis2_char_t *msg_stored_key = NULL;
-        msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 
-        sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
-        /* Removing the message from the storage */
-        msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
-            bean1, env);
-        sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-            msg_stored_key, conf_ctx, -1);
+        if(bean1)
+        {
+            msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 
+            sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
+            msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
+                bean1, env);
+            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
+                msg_stored_key, conf_ctx, -1);
+        }
     }
     if(bean1)
         sandesha2_sender_bean_free(bean1, env);
