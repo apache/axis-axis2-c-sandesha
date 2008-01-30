@@ -55,7 +55,6 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq_mgr.h>
 #include <sandesha2_msg_creator.h>
-#include <sandesha2_msg_recv.h>
 
 
 /** 
