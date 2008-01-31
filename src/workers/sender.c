@@ -43,7 +43,7 @@
 #include <axiom_soap_body.h>
 #include <platforms/axutil_platform_auto_sense.h>
 #include <axutil_types.h>
-/*#include <axutil_thread.h>*/
+#include <axutil_thread.h>
 
 /** 
  * @brief Sender struct impl
@@ -123,11 +123,11 @@ sandesha2_sender_worker_func(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_char_t *seq_id = NULL;
     axis2_bool_t persistent_msg_ctx = AXIS2_FALSE;
-    /*axutil_thread_mutex_t *mutex = NULL;*/
+    axutil_thread_mutex_t *mutex = NULL;
     
     args = (sandesha2_sender_args_t*)data;
     env = args->env;
-    /*mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);*/
+    mutex = axutil_thread_mutex_create(env->allocator, AXIS2_THREAD_MUTEX_DEFAULT);
     axutil_allocator_switch_to_global_pool(env->allocator);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_sender_worker_func");
@@ -157,8 +157,10 @@ sandesha2_sender_worker_func(
         sandesha2_sender_bean_t *sender_bean = NULL;
         axis2_char_t *msg_id = NULL;
 
+        axutil_thread_mutex_lock(mutex);
         sender_bean = sandesha2_sender_mgr_get_next_msg_to_send(sender_mgr, env, 
             seq_id);
+        axutil_thread_mutex_unlock(mutex);
         if(!sender_bean)
         {
             AXIS2_USLEEP(sleep_time);
@@ -168,9 +170,11 @@ sandesha2_sender_worker_func(
         if(msg_id)
         {
             axis2_bool_t status = AXIS2_TRUE;
+            axutil_thread_mutex_lock(mutex);
             status = sandesha2_sender_worker_send(env, conf_ctx, msg_id, 
                 persistent_msg_ctx, storage_mgr, seq_prop_mgr, 
                 create_seq_mgr, sender_mgr);
+            axutil_thread_mutex_unlock(mutex);
             if(!status)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -181,6 +185,8 @@ sandesha2_sender_worker_func(
         if(sender_bean)
             sandesha2_sender_bean_free(sender_bean, env); 
     }
+    if(mutex)
+        axutil_thread_mutex_destroy(mutex);
     #ifdef AXIS2_SVR_MULTI_THREADED
         AXIS2_THREAD_POOL_EXIT_THREAD(env->thread_pool, thd);
     #endif
