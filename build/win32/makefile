@@ -15,9 +15,8 @@ SANDESHASRC = ..\..
 SANDESHADISTDIR = ..\sandesha2
 SANDESHA2_INTDIR = .\int.msvc
 SANDESHA_DLL = sandesha2
+SANDESHA_CLIENT = sandesha2_client
 
- 
-	     
 #compiler options
 CC = @cl.exe
 CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /D "_WIN32_WINNT=0x0400" /w /nologo \
@@ -25,22 +24,23 @@ CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT" /D "_WIN3
 
 #linker options 
 LD = @link.exe
-LDFLAGS = /nologo /LIBPATH:$(AXIS2_BIN_DIR)\lib /LIBPATH:$(SANDESHADISTDIR)\modules\sandesha2
+LDFLAGS = /nologo /LIBPATH:$(AXIS2_BIN_DIR)\lib /LIBPATH:$(SANDESHADISTDIR)\modules\sandesha2 \
+	/LIBPATH:$(SANDESHADISTDIR)\lib
 LIBS = axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib axis2_http_receiver.lib axis2_http_sender.lib
 
 
-!if "$(WITH_SQLITE)" == "1"
-SANDESHA2_CODE = $(SANDESHA2_CODE) \
-		$(SANDESHASRC)\src\storage\sqlite\*.c
-!endif
-
-!if "$(WITH_MYSQL)" == "1"
-SANDESHA2_CODE = $(SANDESHA2_CODE) \
-		 $(SANDESHASRC)\src\storage\mysql\*.c
-CFLAGS = $(CFLAGS) /I$(MYSQL_BIN_DIR)\include
-LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt
-LIBS =$(LIBS) libmysql.lib
-!endif
+#!if "$(WITH_SQLITE)" == "1"
+#SANDESHA2_CODE = $(SANDESHA2_CODE) \
+#		$(SANDESHASRC)\src\storage\sqlite\*.c
+#!endif
+#
+#!if "$(WITH_MYSQL)" == "1"
+#SANDESHA2_CODE = $(SANDESHA2_CODE) \
+#		 $(SANDESHASRC)\src\storage\mysql\*.c
+#CFLAGS = $(CFLAGS) /I$(MYSQL_BIN_DIR)\include
+#LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt
+#LIBS =$(LIBS) libmysql.lib
+#!endif
 
 #debug symbols
 !if "$(DEBUG)" == "1"
@@ -70,6 +70,7 @@ _VC_MANIFEST_EMBED_DLL= if exist $@.manifest $(MT) -nologo -manifest $@.manifest
 distdir:
 	if not exist $(SANDESHADISTDIR) mkdir $(SANDESHADISTDIR)
 	if not exist $(SANDESHADISTDIR)\modules\sandesha2 mkdir $(SANDESHADISTDIR)\modules\sandesha2
+	if not exist $(SANDESHADISTDIR)\lib mkdir $(SANDESHADISTDIR)\lib
 	if not exist $(SANDESHADISTDIR)\include mkdir $(SANDESHADISTDIR)\include
 	if not exist $(SANDESHADISTDIR)\samples mkdir $(SANDESHADISTDIR)\samples
 	if not exist $(SANDESHADISTDIR)\bin\samples mkdir $(SANDESHADISTDIR)\bin\samples
@@ -77,6 +78,7 @@ distdir:
 	if not exist $(SANDESHADISTDIR)\services\RMSampleService mkdir $(SANDESHADISTDIR)\services\RMSampleService
 	if not exist $(SANDESHADISTDIR)\config mkdir $(SANDESHADISTDIR)\config
 	if not exist $(SANDESHADISTDIR)\docs mkdir $(SANDESHADISTDIR)\docs
+
 
 intdir:
 	if not exist $(SANDESHA2_INTDIR) mkdir $(SANDESHA2_INTDIR)
@@ -106,8 +108,6 @@ copy_extra:
 	@copy $(SANDESHASRC)\README $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\INSTALL $(SANDESHADISTDIR)
 	@copy $(SANDESHASRC)\NEWS $(SANDESHADISTDIR)
-#	@copy $(SANDESHASRC)\docs\docs\* $(SANDESHADISTDIR)\docs
-#	@xcopy /E $(SANDESHASRC)\docs\api $(SANDESHADISTDIR)\docs
 	if exist $(SANDESHASRC)\docs xcopy /E /I /Y $(SANDESHASRC)\docs $(SANDESHADISTDIR)\docs
 
 copy_samples:
@@ -122,34 +122,28 @@ copy_include:
 SANDESHA2_CODE = $(SANDESHASRC)\src
 
 SANDESHA2_INTDIR1 = $(SANDESHA2_INTDIR)\src\core
-SANDESHA2_INTDIR2 = $(SANDESHA2_INTDIR)\src\client
+SANDESHA2_INTDIR2 = $(SANDESHA2_INTDIR)\src\storage\sqlite
 SANDESHA2_INTDIR3 = $(SANDESHA2_INTDIR)\src\storage\beans
-#SANDESHA2_INTDIR4 = $(SANDESHA2_INTDIR)\src\storage\inmemory
-SANDESHA2_INTDIR5 = $(SANDESHA2_INTDIR)\src\storage\common
-SANDESHA2_INTDIR6 = $(SANDESHA2_INTDIR)\src\transport
-SANDESHA2_INTDIR7 = $(SANDESHA2_INTDIR)\src\polling
-SANDESHA2_INTDIR8 = $(SANDESHA2_INTDIR)\src\msgprocessors
-SANDESHA2_INTDIR9 = $(SANDESHA2_INTDIR)\src\handlers
-SANDESHA2_INTDIR10 = $(SANDESHA2_INTDIR)\src\util
-SANDESHA2_INTDIR11 = $(SANDESHA2_INTDIR)\src\workers
-SANDESHA2_INTDIR12 = $(SANDESHA2_INTDIR)\src\wsrm
-#SANDESHA2_INTDIR13 = $(SANDESHA2_INTDIR)\src\storage\mysql
-SANDESHA2_INTDIR14 = $(SANDESHA2_INTDIR)\src\storage\sqlite
-
+SANDESHA2_INTDIR4 = $(SANDESHA2_INTDIR)\src\storage\common
+SANDESHA2_INTDIR5 = $(SANDESHA2_INTDIR)\src\transport
+SANDESHA2_INTDIR6 = $(SANDESHA2_INTDIR)\src\polling
+SANDESHA2_INTDIR7 = $(SANDESHA2_INTDIR)\src\msgprocessors
+SANDESHA2_INTDIR8 = $(SANDESHA2_INTDIR)\src\handlers
+SANDESHA2_INTDIR9 = $(SANDESHA2_INTDIR)\src\util
+SANDESHA2_INTDIR10 = $(SANDESHA2_INTDIR)\src\workers
+SANDESHA2_INTDIR11 = $(SANDESHA2_INTDIR)\src\wsrm
 
 SANDESHA2_OBJS = $(SANDESHA2_INTDIR1)\*.obj \
 		 $(SANDESHA2_INTDIR2)\*.obj \
 		 $(SANDESHA2_INTDIR3)\*.obj \
+		 $(SANDESHA2_INTDIR4)\*.obj \
 		 $(SANDESHA2_INTDIR5)\*.obj \
 		 $(SANDESHA2_INTDIR6)\*.obj \
 		 $(SANDESHA2_INTDIR7)\*.obj \
 		 $(SANDESHA2_INTDIR8)\*.obj \
 		 $(SANDESHA2_INTDIR9)\*.obj \
 		 $(SANDESHA2_INTDIR10)\*.obj \
-		 $(SANDESHA2_INTDIR11)\*.obj \
-		 $(SANDESHA2_INTDIR12)\*.obj 
-
-		  
+		 $(SANDESHA2_INTDIR11)\*.obj 
 
 
 $(SANDESHA2_INTDIR1) :
@@ -161,7 +155,8 @@ $(SANDESHA2_INTDIR2) :
 $(SANDESHA2_INTDIR3) :
 	if not exist $(SANDESHA2_INTDIR3) mkdir $(SANDESHA2_INTDIR3)
 
-#$(SANDESHA2_INTDIR4) :	if not exist $(SANDESHA2_INTDIR4) mkdir $(SANDESHA2_INTDIR4)
+$(SANDESHA2_INTDIR4) :	
+	if not exist $(SANDESHA2_INTDIR4) mkdir $(SANDESHA2_INTDIR4)
 
 $(SANDESHA2_INTDIR5) :
 	if not exist $(SANDESHA2_INTDIR5) mkdir $(SANDESHA2_INTDIR5)
@@ -184,75 +179,43 @@ $(SANDESHA2_INTDIR10) :
 $(SANDESHA2_INTDIR11) :
 	if not exist $(SANDESHA2_INTDIR11) mkdir $(SANDESHA2_INTDIR11)
 
-$(SANDESHA2_INTDIR12) :
-	if not exist $(SANDESHA2_INTDIR12) mkdir $(SANDESHA2_INTDIR12)
-
-#$(SANDESHA2_INTDIR13) : if not exist $(SANDESHA2_INTDIR13) mkdir $(SANDESHA2_INTDIR13)
-
-$(SANDESHA2_INTDIR14) :
-	if not exist $(SANDESHA2_INTDIR14) mkdir $(SANDESHA2_INTDIR14)
-
-
 {$(SANDESHA2_CODE)\core}.c{$(SANDESHA2_INTDIR1)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR1)\ /c $<
 
-{$(SANDESHA2_CODE)\client}.c{$(SANDESHA2_INTDIR2)}.obj ::
+{$(SANDESHA2_CODE)\storage\sqlite}.c{$(SANDESHA2_INTDIR2)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR2)\ /c $<
 
 {$(SANDESHA2_CODE)\storage\beans}.c{$(SANDESHA2_INTDIR3)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR3)\ /c $<
 
-#{$(SANDESHA2_CODE)\storage\inmemory}.c{$(SANDESHA2_INTDIR4)}.obj :: $(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR4)\ /c $<
+{$(SANDESHA2_CODE)\storage\common}.c{$(SANDESHA2_INTDIR4)}.obj ::
+	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR4)\ /c $<
 
-{$(SANDESHA2_CODE)\storage\common}.c{$(SANDESHA2_INTDIR5)}.obj ::
+{$(SANDESHA2_CODE)\transport}.c{$(SANDESHA2_INTDIR5)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR5)\ /c $<
 
-{$(SANDESHA2_CODE)\transport}.c{$(SANDESHA2_INTDIR6)}.obj ::
+{$(SANDESHA2_CODE)\polling}.c{$(SANDESHA2_INTDIR6)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR6)\ /c $<
 
-{$(SANDESHA2_CODE)\polling}.c{$(SANDESHA2_INTDIR7)}.obj ::
+{$(SANDESHA2_CODE)\msgprocessors}.c{$(SANDESHA2_INTDIR7)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR7)\ /c $<
 
-{$(SANDESHA2_CODE)\msgprocessors}.c{$(SANDESHA2_INTDIR8)}.obj ::
+{$(SANDESHA2_CODE)\handlers}.c{$(SANDESHA2_INTDIR8)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR8)\ /c $<
 
-{$(SANDESHA2_CODE)\handlers}.c{$(SANDESHA2_INTDIR9)}.obj ::
+{$(SANDESHA2_CODE)\util}.c{$(SANDESHA2_INTDIR9)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR9)\ /c $<
 
-{$(SANDESHA2_CODE)\util}.c{$(SANDESHA2_INTDIR10)}.obj ::
+{$(SANDESHA2_CODE)\workers}.c{$(SANDESHA2_INTDIR10)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR10)\ /c $<
 
-{$(SANDESHA2_CODE)\workers}.c{$(SANDESHA2_INTDIR11)}.obj ::
+{$(SANDESHA2_CODE)\wsrm}.c{$(SANDESHA2_INTDIR11)}.obj ::
 	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR11)\ /c $<
 
-{$(SANDESHA2_CODE)\wsrm}.c{$(SANDESHA2_INTDIR12)}.obj ::
-	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR12)\ /c $<
 
-#{$(SANDESHA2_CODE)\storage\mysql}.c{$(SANDESHA2_INTDIR13)}.obj :: $(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR13)\ /c $<
-
-{$(SANDESHA2_CODE)\storage\sqlite}.c{$(SANDESHA2_INTDIR14)}.obj ::
-	$(CC) $(CFLAGS) /Fo$(SANDESHA2_INTDIR14)\ /c $<
-
-
-!if "$(WITH_SQLITE)" == "1"
 $(SANDESHA2_OBJS) : $(SANDESHA2_INTDIR1) $(SANDESHA2_INTDIR2) $(SANDESHA2_INTDIR3) \
-	$(SANDESHA2_INTDIR5) $(SANDESHA2_INTDIR6) $(SANDESHA2_INTDIR7) $(SANDESHA2_INTDIR8) $(SANDESHA2_INTDIR9) \
-	$(SANDESHA2_INTDIR10) $(SANDESHA2_INTDIR11) $(SANDESHA2_INTDIR12) $(SANDESHA2_INTDIR14)
-
-SANDESHA2_OBJS = $(SANDESHA2_OBJS) \
-		 $(SANDESHA2_INTDIR14)\*.obj 
-
-!endif
-
-!if "$(WITH_MYSQL)" == "1"
-
-$(SANDESHA2_OBJS) : $(SANDESHA2_INTDIR1) $(SANDESHA2_INTDIR2) $(SANDESHA2_INTDIR3) $(SANDESHA2_INTDIR4) \
-	$(SANDESHA2_INTDIR5) $(SANDESHA2_INTDIR6) $(SANDESHA2_INTDIR7) $(SANDESHA2_INTDIR8) $(SANDESHA2_INTDIR9) \
-	$(SANDESHA2_INTDIR10) $(SANDESHA2_INTDIR11) $(SANDESHA2_INTDIR12) $(SANDESHA2_INTDIR13)
-
-SANDESHA2_OBJS = $(SANDESHA2_OBJS) \
-		 $(SANDESHA2_INTDIR13)\*.obj 
-!endif
+	$(SANDESHA2_INTDIR4) $(SANDESHA2_INTDIR5) $(SANDESHA2_INTDIR6) $(SANDESHA2_INTDIR7) \
+	$(SANDESHA2_INTDIR8) $(SANDESHA2_INTDIR9) $(SANDESHA2_INTDIR10) $(SANDESHA2_INTDIR11)
 
 $(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll : $(SANDESHA2_OBJS)
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_OBJS) /DLL /OUT:$(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll \
@@ -266,6 +229,21 @@ copy_xml:
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\
 	
 
+### Sandesha2 Client
+SANDESHA2_CLIENT_INTDIR = $(SANDESHA2_INTDIR)\src\client
+
+$(SANDESHA2_CLIENT_INTDIR) :
+	if not exist $(SANDESHA2_CLIENT_INTDIR) mkdir $(SANDESHA2_CLIENT_INTDIR)
+
+$(SANDESHADISTDIR)\lib\$(SANDESHA_CLIENT).dll : $(SANDESHA2_CLIENT_INTDIR) 
+	$(CC) $(CFLAGS) $(SANDESHASRC)\src\client\*.c /Fo$(SANDESHA2_CLIENT_INTDIR)\ /c
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_CLIENT_INTDIR)\*.obj $(SANDESHA2_OBJS) \
+	/IMPLIB:$(SANDESHADISTDIR)\lib\$(SANDESHA_CLIENT).lib /DLL \
+	/OUT:$(SANDESHADISTDIR)\lib\$(SANDESHA_CLIENT).dll
+	-@$(_VC_MANIFEST_EMBED_EXE)
+
+sandesha2_client: $(SANDESHADISTDIR)\lib\$(SANDESHA_CLIENT).dll
+	
 ### sample clients
 
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0.exe :
@@ -287,7 +265,7 @@ rm_ping_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_1.exe
 
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_0\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0\*.obj $(SANDESHA_DLL).lib \
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
 	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
@@ -297,21 +275,22 @@ rm_echo_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_1\*.obj \
-	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 rm_echo_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe
 
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_mtom_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\*.obj $(SANDESHA_DLL).lib \
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
 	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 rm_mtom_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe
 
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\*.obj $(SANDESHA_DLL).lib \
+	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\*.obj \
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
 	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 rm_echo_single_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe
@@ -319,14 +298,14 @@ rm_echo_single_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\*.obj \
-	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 rm_echo_single_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe
 
 $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_report.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_report\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_report\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_report\*.obj \
-	$(SANDESHA_DLL).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_report.exe
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_report.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
 rm_report: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_report.exe
@@ -347,21 +326,6 @@ all_services: RMSampleService
 
 samples: all_clients all_services
 
-dist: clean distdir intdir sandesha2 copy_samples samples copy_xml copy_include copy_extra
+dist: clean distdir intdir sandesha2 sandesha2_client copy_samples samples copy_xml copy_include copy_extra
 
 dist_no_samples: clean distdir intdir sandesha2 copy_xml copy_include copy_extra
-
-	 
-
-
-	
-
-
-
-
-
-
-	
-
-
-
