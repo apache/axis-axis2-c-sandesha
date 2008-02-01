@@ -69,11 +69,8 @@
 
     </operation>
 
-   <!-- Database connection parameters -->
+   <!-- Database name parameter -->
    <parameter name="sandesha2_db" locked="false">/tmp/sandesha2_db</parameter>
-   <parameter name="db_server" locked="false">localhost</parameter>
-   <parameter name="db_user" locked="false">g</parameter>
-   <parameter name="db_password" locked="false">g</parameter>
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
     <parameter name="RetransmissionInterval" locked="false">4</parameter><!--In seconds-->
@@ -85,6 +82,6 @@
     <parameter name="SenderSleepTime" locked="false">100000</parameter><!--In micro seconds-->
     <parameter name="InvokerSleepTime" locked="false">1</parameter>
     <parameter name="PollingWaitTime" locked="false">3</parameter>
-    <parameter name="TerminateDelay" locked="false">4</parameter>
+    <parameter name="TerminateDelay" locked="false">2</parameter>
 
 </module>
