@@ -32,23 +32,6 @@
 
 #define SANDESHA2_SLEEP 12
 
-/* on_complete callback function */
-axis2_status_t AXIS2_CALL
-rm_echo_callback_on_complete(
-    struct axis2_callback *callback,
-    const axutil_env_t *env);
-
-/* on_error callback function */
-axis2_status_t AXIS2_CALL
-rm_echo_callback_on_error(
-    struct axis2_callback *callback,
-    const axutil_env_t *env,
-    int exception);
-
-void wait_on_callback(
-    const axutil_env_t *env,
-    axis2_callback_t *callback);
-
 static void 
 usage(
     axis2_char_t *prog_name);
@@ -195,82 +178,6 @@ int main(int argc, char** argv)
     }
     
     return 0;
-}
-
-axis2_status_t AXIS2_CALL
-rm_echo_callback_on_complete(
-    struct axis2_callback *callback,
-    const axutil_env_t *env)
-{
-   /** SOAP response has arrived here; get the soap envelope 
-     from the callback object and do whatever you want to do with it */
-   
-   axiom_soap_envelope_t *soap_envelope = NULL;
-   axiom_node_t *ret_node = NULL;
-   axis2_status_t status = AXIS2_SUCCESS;
-   
-   soap_envelope = axis2_callback_get_envelope(callback, env);
-   
-   if (!soap_envelope)
-   {
-       AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-            " %d :: %s", env->error->error_number,
-            AXIS2_ERROR_GET_MESSAGE(env->error));
-      printf("echo stub invoke FAILED!\n");
-      status = AXIS2_FAILURE;
-   }
-    else
-    {
-        ret_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
-    
-        if(!ret_node)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "Stub invoke FAILED: Error code:%d :: %s", 
-                    env->error->error_number, 
-                    AXIS2_ERROR_GET_MESSAGE(env->error));
-            printf("echo stub invoke FAILED!\n");
-            status = AXIS2_FAILURE;
-        }
-        else
-        {
-            axis2_char_t *om_str = NULL;
-            om_str = axiom_node_to_string(ret_node, env);
-            if (om_str)
-                printf("\nReceived OM : %s\n", om_str);
-            printf("\necho client invoke SUCCESSFUL!\n");
-        }
-    }    
-    return status;
-}
-
-axis2_status_t AXIS2_CALL
-rm_echo_callback_on_error(
-    struct axis2_callback *callback,
-    const axutil_env_t *env,
-    int exception)
-{
-   /** take necessary action on error */
-   printf("\nEcho client invoke FAILED. Error code:%d ::%s", exception, 
-         AXIS2_ERROR_GET_MESSAGE(env->error));
-   return AXIS2_SUCCESS;
-}
-
-void wait_on_callback(
-    const axutil_env_t *env,
-    axis2_callback_t *callback)
-{
-    /** Wait till callback is complete. Simply keep the parent thread running
-       until our on_complete or on_error is invoked */
-    while(1)
-    {
-        if (axis2_callback_get_complete(callback, env))
-        {
-            /* We are done with the callback */
-            break;
-        }
-    }
-    return;
 }
 
 static void 
