@@ -142,14 +142,12 @@ int main(int argc, char** argv)
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    /*AXIS2_SLEEP(MAX_COUNT);*/
     
     payload = build_om_programatically(env, "ping2", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
     payload = NULL;
-    /*AXIS2_SLEEP(MAX_COUNT);*/
 
     payload = build_om_programatically(env, "ping3", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
