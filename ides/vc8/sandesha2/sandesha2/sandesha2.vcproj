@@ -24,7 +24,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="copy .\..\..\..\..\config\axis2.xml  $(AXIS2C_HOME)"
+				CommandLine=""
 				ExcludedFromBuild="false"
 			/>
 			<Tool
@@ -44,8 +44,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../../../../include;$(AXIS2C_HOME)\include;$(SQLITE3_HOME);"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SANDESHA2_EXPORTS;AXIS2_DECLARE_EXPORT;_CRT_SECURE_NO_DEPRECATE;"
+				AdditionalIncludeDirectories="./../../../../include;$(AXIS2C_SRC)\include;$(AXIS2C_SRC)\util\include;$(AXIS2C_SRC)\axiom\include;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SANDESHA2_EXPORTS;AXIS2_DECLARE_EXPORT;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0400;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -102,7 +102,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy .\..\..\..\..\config\module.xml $(AXIS2C_HOME)\modules\sandesha2"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -252,14 +252,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\src\wsrm\iom_rm_element.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\wsrm\iom_rm_part.c"
-						>
-					</File>
-					<File
 						RelativePath="..\..\..\..\src\wsrm\last_msg.c"
 						>
 					</File>
@@ -311,143 +303,51 @@
 				<Filter
 					Name="storage"
 					>
-					<File
-						RelativePath="..\..\..\..\src\storage\create_seq_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\invoker_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\next_msg_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\sender_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\seq_property_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\storage_mgr.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\src\storage\transaction.c"
-						>
-					</File>
 					<Filter
-						Name="inmemory"
+						Name="sqlite"
 						>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_bean_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\msg_store_bean.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_create_seq_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_bean_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_invoker_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_create_seq_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_next_msg_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_invoker_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_sender_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_next_msg_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_seq_property_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_sender_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_storage_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_seq_property_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\inmemory_transaction.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\permanent_storage_mgr.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\inmemory\sandesha2_inmemory_bean_mgr.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="mysql"
-						>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\msg_store_bean.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\sandesha2_sqls.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_bean_mgr.c"
+							RelativePath="..\..\..\..\src\storage\sqlite\sqlite3.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_create_seq_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_invoker_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_next_msg_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_sender_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_seq_property_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_storage_mgr.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\permanent_transaction.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_bean_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_create_seq_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_invoker_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_next_msg_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_sender_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_seq_property_mgr.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_permanent_transaction.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\src\storage\mysql\sandesha2_sqls.h"
+							RelativePath="..\..\..\..\src\storage\sqlite\sqlite3.h"
 							>
 						</File>
 					</Filter>
@@ -467,15 +367,39 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\src\storage\beans\rm_bean.c"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\src\storage\beans\sender_bean.c"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\src\storage\beans\seq_property_bean.c"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="common"
+						>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\create_seq_mgr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\invoker_mgr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\next_msg_mgr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\sender_mgr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\seq_property_mgr.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\src\storage\common\storage_mgr.c"
 							>
 						</File>
 					</Filter>
