@@ -24,7 +24,7 @@
 #include <sandesha2_client.h>
 #include <ctype.h>
 
-#define MAX_COUNT 8
+#define MAX_COUNT 4
 
 axiom_node_t *
 build_om_programatically(
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
-    AXIS2_SLEEP(MAX_COUNT);
+    AXIS2_SLEEP(8 * MAX_COUNT);
    
     if (svc_client)
     {
