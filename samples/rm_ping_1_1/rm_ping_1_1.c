@@ -163,8 +163,8 @@ int main(int argc, char** argv)
    
     if (svc_client)
     {
-        /*axis2_svc_client_free(svc_client, env);
-        svc_client = NULL;*/
+        axis2_svc_client_free(svc_client, env);
+        svc_client = NULL;
     }
     return 0;
 }
