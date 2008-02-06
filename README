@@ -43,66 +43,35 @@
     <!-- Phases  -->
     <!-- ================================================= -->
     <phaseOrder type="inflow">
-        <!--  System pre defined phases       -->
-        <phase name="TransportIn"/>
+        <!-- System pre defined phases       -->
+        <phase name="Transport"/>
         <phase name="PreDispatch"/>
-        <phase name="Dispatch">
-            <handler name="AddressingBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="RequestURIBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="SOAPActionBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-             <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="axis2_engine">
-                <order phase="Dispatch"/>
-            </handler>
-        </phase>
-        <phase name="PostDispatch">
-             <handler name="DispatchPostConditionsEvaluator"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-            <handler name="InstanceDispatcher"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-            <handler name="SOAPProcessingModelChecker"
-                     class="axis2_engine">
-                <order phase="PostDispatch"/>
-            </handler>
-        </phase>
-        <!--  System pre defined phases       -->
-        <!--   After Postdispatch phase module author or or service author can add any phase he want      -->
+        <phase name="Dispatch"/>
+        <phase name="PostDispatch"/>
+        <!-- End system pre defined phases       -->
+        <!-- After PostDispatch phase, module or service author can add any phase as required  -->
+        <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
         <phase name="RMPhase"/>
     </phaseOrder>
     <phaseOrder type="outflow">
-        <!--      user can add his own phases to this area  -->
-	    <phase name="RMPhase"/>
+        <!-- User defined phases could be added here -->
+        <phase name="RMPhase"/>
+        <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
         <!--system predefined phase-->
-        <!--these phase will run irrespective of the service-->
-        <!--phase name="PolicyDetermination"/-->
-        <!--phase name="MessageOut"/-->
+        <phase name="MessageOut"/>
     </phaseOrder>
     <phaseOrder type="INfaultflow">
-        <!--      user can add his own phases to this area  -->
+        <!-- User defined phases could be added here -->
         <!--phase name="userphase1"/-->
-	    <phase name="RMPhase"/>
+        <phase name="RMPhase"/>
     </phaseOrder>
     <phaseOrder type="Outfaultflow">
-        <!--      user can add his own phases to this area  -->
+        <!-- User defined phases could be added here -->
         <phase name="RMPhase"/>
-        <phase name="MessageOut"/>
         <!--phase name="userphase1"/-->
-        <!--phase name="PolicyDetermination"/-->
+        <phase name="MessageOut"/>
     </phaseOrder>
 
 In the services xml file for the service which require RM enabled
@@ -112,26 +81,4 @@ If you need all services in the engine RM enabled add the above entry into
 axis2.xml.
 
 You can use samples in the samples folder for testing.
-
-Known Issues
-
-Please keep in mind the following when using Sandesha2/C with Axis2/C.
-
-1. Comment the line no:295 in src/core/transport/http/receiver/http_svr_thread.c
-   axutil_free_thread_env(thread_env);
-
-2. Comment the line no:299 in src/core/transport/http/receiver/http_svr_thread.c
-    axutil_thread_pool_exit_thread(env->thread_pool, thd);
-
-3.  property = axutil_property_create(env);
-    axutil_property_set_scope(property, env, AXIS2_SCOPE_REQUEST);
-    axutil_property_set_free_func(property, env, axis2_http_client_free_void_arg);
-    axutil_property_set_value(property, env, sender->client);
-    axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HTTP_CLIENT, property);
-
-4. If for some reason RM sequences seems not executing properly the reason could
-   be the database is corrupted for some reason. Try rerunning the  the database
-   scripts to clean the database.
-
-Some of the above changes may lead to memory leaks in Axis2/C. 
 

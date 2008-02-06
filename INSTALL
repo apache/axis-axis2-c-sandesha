@@ -2,7 +2,7 @@ SANDESHA2 INSTALL
 =================
 1. Installing Sandesha2/C source release on Linux
 
-    - This version of Sandesha2/C depends on Axis2/C 1.1
+    - This version of Sandesha2/C depends on Axis2/C 1.3
         - Download Axis2/C from http://ws.apache.org/axis2/c/download.cgi and
           install.
     - Go to Sandesha2/C source directory
@@ -10,8 +10,11 @@ SANDESHA2 INSTALL
         ./configure --prefix=<axis2c_deploy_path> --enable-static=no --with-axis2=<axis2c_include_path>
     - Run make and make install
 
-    This will install the Sandesha2/C as a module in Axis2/C in <axis2c_deploy_path>/modules folder. The module
-    folder contains the Sandesha2/C libraries and the module.xml file.
+    This install the Sandesha2/C as a module in Axis2/C in <axis2c_deploy_path>/modules folder. The module
+    folder contains the Sandesha2/C libraries and the module.xml file. At the same time this copy the
+    Sandesha2/C include files into <axis2c_deploy_path>/include folder. Also the Sandesha2/C client library
+    which will be needed to be linked with some client applications using Sandesha2/C client, is
+    installed into <axis2c_deploy_path>/lib folder
 
     -To Install samples
         - Go samples directory
@@ -38,30 +41,24 @@ SANDESHA2 INSTALL
         + - include ( header files)
         + - bin (database scripts)
         + - bin/samples ( sample executables)
-        + - lib (some libs to run sandesha clients)
+        + - lib (some libs to run Sandesha2/C clients)
 
     To deploy Sandesha2/C in Axis2/C running environment copy the modules/sandesha2 into <axis2c_deploy_path>/modules folder.
-    Do the necessary changes to the <axis2c_deploy_path>/axis2.xml to run Sandesha2/C(Refer to the sample config/axis2.xml
-    for help).
+    Also copy the lib/libsandesha2_client.so into <axis2c_deploy_path>/lib folder. Do the necessary changes to the 
+    <axis2c_deploy_path>/axis2.xml to run Sandesha2/C(Refer to the sample config/axis2.xml for help).
 
-    To Run the samples copy all the libs inside the lib folder to <axis2c_deploy_path>/lib folder.
-    Copy the sample service inside services directory to <axis2c_deploy_path>/services folder.
+    To Run the samples copy the sample service inside services directory to <axis2c_deploy_path>/services folder.
 
 
 3 Installing Sandesha2/C on WIN32
 
     1. Building from source distribution
 
-    i. You need to have unziped Axis2/C 1.1 release binary to some folder.
-    ii. Sandesha2/C can be used with one of following two database systems.
-            (sqlite, MySql) 
-        So install one of above database systems on your machine.
-    iii. On your cmd.exe cd to <sandesha2 src>\build\win32
+    i. You need to have unzipped Axis2/C 1.3 release binary to some folder.
+    ii. On your cmd.exe cd to <sandesha2 src>\build\win32
       Edit configure.in file with your binary locations.
-      To select MySql have your configure.in entry  WITH_MYSQL = 1.
-      To Select Sqlite have your configure.in entry WITH_SQLITE = 1.
-    iv. To set necessary environment variables on command line run vcvars32.bat file.
-    v. Run nmake dist command on command line. This will build the sandesha2 binary and samples
+    iii. To set necessary environment variables on command line run vcvars32.bat file.
+    iv. Run nmake dist command on command line. This will build the sandesha2 binary and samples
        to a directory sandesha2 in <sandesha2 src>\build\sandesha2.
 
 
@@ -80,41 +77,27 @@ SANDESHA2 INSTALL
                + - source files of samples in folders
         |
         + - include ( header files)
+        + - lib (some dll's to run Sandesha2/C clients)
 
         
     copy Sandesha2 directory ( containing sandesha2 dll and module.xml ) to <AXIS2C_HOME>\modules directory.
     copy RMSampleService directory in samples\bin directory to <AXIS2C_HOME>\services directory
-    copy axis2.xml file in Sandesha2 directory to <AXIS2C_HOME>
+    copy axis2.xml file in Sandesha2 directory to <AXIS2C_HOME>. Copy the lib/sandesha2_client.dll into <AXIS2C_HOME>/lib 
+    folder
 
     Now you should be able to run the samples.
 
  Note: 1.
-        Sandesha2/C has two main storage mechanisms call in-memory and persistent. The persistent storage could use
-        either sqlite or MySQL as it's database manager.
-        By default sandesha2 use the persistent storage with sqlite as the database. 
-        It is assumed that sqlite3.h in /usr/include include directory. If you have different include path for
-        sqlite3.h then add the configure option --with-sqlite=<sqlite include file path> to the configure options
-        above. If is assumed that libsqlite3.so is in the /usr/lib folder
-        To run samples in persistent/sqlite mode copy sandesha2c/config/sqlite_schema.sh/.bat to a directory where you
-        will create your sqlite database file and execute it to create the database schema. sqlite3 is an embedded 
-        database which need no configuration. If you use Axis2/C Apache2 module instead of simple_axis2_server make 
-        sure that Apache2 user can access the sqlite database files sandesha2_svr_db and sandesha2_client_db.
+        Sandesha2 internally uses an Sqlite3 embedded database. You need to provide where to create this database in 
+        module.xml file as following.
 
-        if you want to use the in-memory storage instead, change the entry in the sandesha2_constants.h
-        file.
-            #define SANDESHA2_DEFAULT_STORAGE_MGR "persistent" as
-            #define SANDESHA2_DEFAULT_STORAGE_MGR "inmemory".
+        <parameter name="sandesha2_db" locked="false"><path>/sandesha2_db</parameter>
 
-        Or you can change the following entry in the module.xml file.
-            <parameter name="StorageManager" locked="false">inmemory</parameter>
-            <parameter name="StorageManager" locked="false">persistent</parameter>
+        If you use Axis2/C Apache2 module instead of simple_axis2_server make 
+        sure that Apache2 user can access the above database file.
 
-        If you want to use persistent storage with MySQL then add the option --with-mysql=<MySQL include file path>
-        to the configure options above. It is assumed that libmysqlclient.so is in /usr/lib folder. It is recommended
-        to use MySQL database for any serious use. It is not included as the default database because of licensing issues.
-        To run samples in persistent/mysql mode run sandesha2c/config/mysql_schema.sh and sandesha2c/config/init_mysql.sh
-        to create the database schema. The database parameters for MySQL should
-        be included in module.xml. The defaults for server, user and password are localhost, g,g.
+        If you do not provide the above database parameter, be aware that Sandesha2/C will create the database file
+        named sandesha2_db in the current folder.
 
       2.
        Sandesha2/C module is installed into <axis2c_deploy_path>/modules/sandesha2c directory. The installed module contain
