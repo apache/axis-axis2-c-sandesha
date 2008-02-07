@@ -28,20 +28,6 @@ LDFLAGS = /nologo /LIBPATH:$(AXIS2_BIN_DIR)\lib /LIBPATH:$(SANDESHADISTDIR)\modu
 	/LIBPATH:$(SANDESHADISTDIR)\lib
 LIBS = axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib axis2_http_receiver.lib axis2_http_sender.lib
 
-
-#!if "$(WITH_SQLITE)" == "1"
-#SANDESHA2_CODE = $(SANDESHA2_CODE) \
-#		$(SANDESHASRC)\src\storage\sqlite\*.c
-#!endif
-#
-#!if "$(WITH_MYSQL)" == "1"
-#SANDESHA2_CODE = $(SANDESHA2_CODE) \
-#		 $(SANDESHASRC)\src\storage\mysql\*.c
-#CFLAGS = $(CFLAGS) /I$(MYSQL_BIN_DIR)\include
-#LDFLAGS = $(LDFLAGS) /LIBPATH:$(MYSQL_BIN_DIR)\lib\opt
-#LIBS =$(LIBS) libmysql.lib
-#!endif
-
 #debug symbols
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
@@ -328,4 +314,4 @@ samples: all_clients all_services
 
 dist: clean distdir intdir sandesha2 sandesha2_client copy_samples samples copy_xml copy_include copy_extra
 
-dist_no_samples: clean distdir intdir sandesha2 copy_xml copy_include copy_extra
+dist_no_samples: clean distdir intdir sandesha2 sandesha2_client copy_xml copy_include copy_extra
