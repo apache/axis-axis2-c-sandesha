@@ -1,10 +1,7 @@
-WITH_MYSQL = 0
-WITH_SQLITE = 1
-MYSQL_BIN_DIR = "C:\Program Files\MySQL\MySQL Server 5.0"
 AXIS2_BIN_DIR = E:\axis2c\build\axis2c-bin-1.2.0-win32
 
 #CRUNTIME Library (Use /MD or /MT )
 CRUNTIME=/MD
-# Visual Studio version
+# Embed Manifest
 EMBED_MANIFEST=1
 
