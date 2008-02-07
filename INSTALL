@@ -39,7 +39,6 @@ SANDESHA2 INSTALL
         + - services (Contain sample service)
         |
         + - include ( header files)
-        + - bin (database scripts)
         + - bin/samples ( sample executables)
         + - lib (some libs to run Sandesha2/C clients)
 
