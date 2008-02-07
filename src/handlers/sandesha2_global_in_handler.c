@@ -240,11 +240,7 @@ sandesha2_global_in_handler_invoke(
             }
         }
     }
-    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
-    {
-        return AXIS2_FAILURE;
-    }
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);*/
+    /*rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);*/
     /*if(!isolated_last_msg)
         dropped = sandesha2_global_in_handler_drop_if_duplicate(handler, env, 
             rm_msg_ctx);

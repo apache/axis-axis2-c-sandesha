@@ -126,10 +126,10 @@ sandesha2_out_handler_invoke(
     axis2_msg_ctx_set_property(msg_ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE, temp_prop);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
-    }
+    }*/
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);

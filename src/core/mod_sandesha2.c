@@ -72,7 +72,6 @@ mod_sandesha2_init(
     axutil_param_t *param = NULL;
     axis2_conf_t *conf = NULL;
     axis2_ctx_t *ctx = NULL;
-    /*sandesha2_storage_mgr_t *storage_mgr = NULL;*/
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:mod_sandesha2_init");
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
@@ -97,14 +96,10 @@ mod_sandesha2_init(
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL);
     axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL);
     
-    /*storage_mgr = sandesha2_utils_get_inmemory_storage_mgr(env, conf_ctx);
-    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);*/
-    
-    /*sandesha2_storage_mgr_t *storage_mgr = sandesha2_utils_get_permanent_storage_mgr(env, conf_ctx);
-    sandesha2_storage_mgr_init_storage(storage_mgr, env, module_desc);
     if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
-        return AXIS2_FAILURE;*/
-    
+    {
+        return AXIS2_FAILURE;
+    }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:mod_sandesha2_init");
     return AXIS2_SUCCESS;
 }

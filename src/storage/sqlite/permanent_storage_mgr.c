@@ -1068,6 +1068,12 @@ sandesha2_permanent_storage_mgr_create_db(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_permanent_storage_mgr_create_db");
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    if(AXIS2_SUCCESS == axutil_file_handler_access(dbname, AXIS2_F_OK))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Database %s already created.", dbname);
+        return AXIS2_SUCCESS;
+    }
     dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
         dbname);
     #if !defined(WIN32)
@@ -1117,7 +1123,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 "SQL Error: %s", error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            return AXIS2_SUCCESS;
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt2, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1127,7 +1133,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt3, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1137,7 +1143,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt4, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1147,7 +1153,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt5, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1158,7 +1164,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt6, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1168,7 +1174,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         rc = sqlite3_exec(dbconn, sql_stmt7, NULL, 0, &error_msg);
         if( rc != SQLITE_OK )
@@ -1178,7 +1184,7 @@ sandesha2_permanent_storage_mgr_create_db(
                 error_msg);
             sqlite3_free(error_msg);
             sqlite3_close(dbconn);
-            /*return AXIS2_FAILURE;*/
+            return AXIS2_FAILURE;
         }
         sqlite3_close(dbconn);
     }
