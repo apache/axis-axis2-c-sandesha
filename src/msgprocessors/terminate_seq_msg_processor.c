@@ -590,7 +590,6 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     terminated = sandesha2_utils_get_seq_property(env, int_seq_id,
         SANDESHA2_SEQ_PROP_TERMINATE_ADDED, seq_prop_mgr);
     old_op = axis2_msg_ctx_get_op(msg_ctx, env);
-    axis2_op_set_msg_exchange_pattern(old_op, env, AXIS2_MEP_URI_OUT_IN);
     
     qname = axutil_qname_create(env, "temp", NULL, NULL); 
     out_in_op = axis2_op_create_with_qname(env, qname);
@@ -701,9 +700,9 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
         AXIS2_FREE(env->allocator, out_seq_id);
     sandesha2_seq_property_bean_set_value(term_added, env, AXIS2_VALUE_TRUE); 
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, term_added);
-    /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, int_seq_id, 
+    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, int_seq_id, 
         axis2_msg_ctx_get_server_side(msg_ctx, env), storage_mgr, seq_prop_mgr,
-        create_seq_mgr, sender_mgr);*/
+        create_seq_mgr, sender_mgr);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

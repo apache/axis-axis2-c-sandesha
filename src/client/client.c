@@ -1616,6 +1616,10 @@ sandesha2_client_get_incoming_seq_report(
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(next_msg_mgr)
         sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+    if(seq_prop_mgr)
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    if(next_msg_mgr)
+        sandesha2_next_msg_mgr_free(next_msg_mgr, env);
     if(storage_mgr)
         sandesha2_storage_mgr_free(storage_mgr, env);
     return seq_report;

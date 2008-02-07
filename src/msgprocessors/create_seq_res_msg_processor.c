@@ -55,7 +55,6 @@
 #include <sandesha2_msg_init.h>
 #include <sandesha2_seq_mgr.h>
 #include <sandesha2_msg_creator.h>
-#include <sandesha2_polling_mgr.h>
 
 
 /** 
@@ -437,13 +436,12 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_next_msg_bean_set_ref_msg_key(next_bean, env, 
             new_msg_store_key);
         sandesha2_next_msg_bean_set_polling_mode(next_bean, env, polling_mode);
-        sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);
         /* If polling_mode is true, starting the polling manager */
         if(polling_mode)
         {
-            sandesha2_polling_mgr_start(env, storage_mgr, seq_prop_mgr, 
-                sender_mgr, next_msg_mgr, conf_ctx, internal_seq_id);
+            sandesha2_utils_start_polling_mgr(env, conf_ctx, internal_seq_id);
         }
+        sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);
         
         spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, 
             offered_seq_id, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, rm_spec_ver);

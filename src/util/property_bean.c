@@ -34,7 +34,6 @@ struct sandesha2_property_bean_t
     axutil_array_list_t *msg_types_to_drop;
     int max_retrans_count;
     int terminate_delay;
-    int polling_wait_time;
     axis2_char_t *db_path;
 };
 
@@ -61,7 +60,6 @@ sandesha2_property_bean_create(
     bean->msg_types_to_drop = NULL;
     bean->max_retrans_count = 0;
     bean->terminate_delay = 0;
-    bean->polling_wait_time = 0;
     bean->db_path = NULL;
     
 	return bean;
@@ -308,23 +306,6 @@ sandesha2_property_bean_set_terminate_delay(
     return AXIS2_SUCCESS;
 }
 
-int AXIS2_CALL
-sandesha2_property_bean_get_polling_wait_time (
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env)
-{
-    return bean->polling_wait_time;
-}
-            
-axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_polling_wait_time(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env, 
-    int wait_time)
-{
-    bean->polling_wait_time = wait_time;
-    return AXIS2_SUCCESS;
-}
 
 axis2_char_t *AXIS2_CALL
 sandesha2_property_bean_get_db_path(

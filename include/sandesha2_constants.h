@@ -430,8 +430,6 @@ extern "C"
 	#define SANDESHA2_CLIENT_SLEEP_TIME  4 /* 32 16 */
 
 	#define SANDESHA2_TERMINATE_DELAY  4 /* In seconds */
-	
-    #define SANDESHA2_POLLING_WAIT_TIME  2 /* In seconds */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 

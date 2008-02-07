@@ -204,16 +204,7 @@ sandesha2_property_bean_set_terminate_delay(
     const axutil_env_t *env, 
     int delay);
 
-int AXIS2_CALL
-sandesha2_property_bean_get_polling_wait_time (
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env);
-            
-axis2_status_t AXIS2_CALL
-sandesha2_property_bean_set_polling_wait_time(
-    sandesha2_property_bean_t *bean,
-    const axutil_env_t *env, 
-    int wait_time);                       
+                       
 /** @} */
 #ifdef __cplusplus
 }

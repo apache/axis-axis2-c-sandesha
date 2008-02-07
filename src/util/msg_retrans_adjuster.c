@@ -26,6 +26,7 @@
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_sender_mgr.h>
 
+/******************************************************************************/
 sandesha2_sender_bean_t * AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(
     const axutil_env_t *env, 
@@ -49,11 +50,8 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     sandesha2_create_seq_mgr_t *create_seq_mgr,
     sandesha2_sender_mgr_t *sender_mgr);
 
-static sandesha2_sender_bean_t * AXIS2_CALL
-sandesha2_msg_retrans_adjuster_adjust_polling(
-    const axutil_env_t *env, 
-    sandesha2_sender_bean_t *sender_bean, 
-    sandesha2_property_bean_t *property_bean);
+/******************************************************************************/
+
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_adjust_retrans(
@@ -73,7 +71,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     sandesha2_property_bean_t *property_bean = NULL;
     int max_attempts = -1;
     int sent_count = -1;
-    int msg_type = -1;
     axis2_bool_t timeout_seq = AXIS2_FALSE;
     axis2_bool_t seq_timed_out = AXIS2_FALSE;
     axis2_bool_t continue_sending = AXIS2_TRUE;
@@ -105,21 +102,12 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         axis2_conf_ctx_get_conf(conf_ctx, env));
     sent_count = sandesha2_sender_bean_get_sent_count(sender_bean, env) + 1;
     sandesha2_sender_bean_set_sent_count(sender_bean, env, sent_count);
-    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
-    if(msg_type == SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG)
-    {
-        sandesha2_msg_retrans_adjuster_adjust_polling(env, sender_bean,
-            property_bean);
-    }
-    else
-    {
-        sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(env, sender_bean,
-            property_bean);
-        max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, 
-            env);
-        if(max_attempts > 0 &&  sent_count > max_attempts)
-            timeout_seq = AXIS2_TRUE;
-    }
+    sandesha2_msg_retrans_adjuster_adjust_next_retrans_time(env, sender_bean,
+        property_bean);
+    max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, 
+        env);
+    if(max_attempts > 0 &&  sent_count > max_attempts)
+        timeout_seq = AXIS2_TRUE;
     if(rm_msg_ctx)
         seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, 
             rm_msg_ctx, seq_prop_mgr, conf_ctx);
@@ -144,29 +132,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_adjust_retrans");
     return continue_sending;
-}
-
-static sandesha2_sender_bean_t * AXIS2_CALL
-sandesha2_msg_retrans_adjuster_adjust_polling(
-    const axutil_env_t *env, 
-    sandesha2_sender_bean_t *sender_bean, 
-    sandesha2_property_bean_t *property_bean)
-{
-    long interval = -1;
-    long time_now = -1;
-    long new_time_to_send = 0;
-   
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_msg_retrans_adjuster_adjust_polling");
-    AXIS2_PARAM_CHECK(env->error, sender_bean, NULL);
-    AXIS2_PARAM_CHECK(env->error, property_bean, NULL);
-    interval = sandesha2_property_bean_get_polling_wait_time(property_bean, env);
-    time_now = sandesha2_utils_get_current_time_in_millis(env);
-    new_time_to_send = time_now + interval;
-    sandesha2_sender_bean_set_time_to_send(sender_bean, env, new_time_to_send);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_msg_retrans_adjuster_adjust_polling");
-    return sender_bean;
 }
 
 sandesha2_sender_bean_t * AXIS2_CALL
