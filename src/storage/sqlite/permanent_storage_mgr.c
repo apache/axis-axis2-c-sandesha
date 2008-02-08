@@ -42,7 +42,7 @@
 #include <axiom_xml_reader.h>
 #include <axiom_stax_builder.h>
 #include <axiom_soap_builder.h>
-#include <platforms/axutil_platform_auto_sense.h>
+#include <axutil_file_handler.h>
 
 /** 
  * @brief Sandesha2 Permanent Storage Manager Struct Impl
