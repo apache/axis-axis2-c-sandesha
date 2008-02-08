@@ -19,6 +19,7 @@
 #include <sandesha2_property_mgr.h>
 #include <sandesha2_utils.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_permanent_storage_mgr.h>
 
 /******************************************************************************/
 axis2_status_t AXIS2_CALL
