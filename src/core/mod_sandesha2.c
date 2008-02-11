@@ -97,10 +97,10 @@ mod_sandesha2_init(
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL);
     axis2_ctx_set_property(ctx, env, SANDESHA2_PERMANENT_STORAGE_MGR, NULL);
     
-    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
-    }
+    }*/
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:mod_sandesha2_init");
     return AXIS2_SUCCESS;
 }

@@ -95,10 +95,10 @@ sandesha2_in_handler_invoke(
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    /*if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
+    if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
-    }*/
+    }
     ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     temp_prop = axis2_ctx_get_property(ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE);
