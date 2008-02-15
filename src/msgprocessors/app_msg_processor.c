@@ -1475,11 +1475,14 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     {
         sandesha2_seq_property_bean_t *to_epr_bean = NULL;
         axis2_endpoint_ref_t *to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
-        axis2_char_t *to_str = (axis2_char_t *)axis2_endpoint_ref_get_address(
-            to_epr, env);
-        to_epr_bean = sandesha2_seq_property_bean_create_with_data(env, 
-            internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR, to_str);
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_epr_bean);
+        if(to_epr)
+        {
+            axis2_char_t *to_str = 
+                (axis2_char_t *)axis2_endpoint_ref_get_address(to_epr, env);
+            to_epr_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR, to_str);
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_epr_bean);
+        }
     }
     seq_offer = sandesha2_create_seq_get_seq_offer(create_seq_part, env);
     if(seq_offer)
