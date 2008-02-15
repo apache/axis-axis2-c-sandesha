@@ -66,7 +66,7 @@ sandesha2_property_bean_create(
 }
 
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_property_bean_free(
     sandesha2_property_bean_t *bean, 
     const axutil_env_t *env)
@@ -96,10 +96,10 @@ sandesha2_property_bean_free(
         bean->storage_mgr = NULL;
     }
 	AXIS2_FREE(env->allocator, bean);
-	return AXIS2_SUCCESS;
+	return;
 }
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_property_bean_free_void_arg(
     void *arg, 
     const axutil_env_t *env)

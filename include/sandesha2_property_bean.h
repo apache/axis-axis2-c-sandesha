@@ -183,12 +183,12 @@ sandesha2_property_bean_set_db_path(
     const axutil_env_t *env,
     axis2_char_t *db_path);
 
-axis2_status_t AXIS2_CALL 
+void AXIS2_CALL 
 sandesha2_property_bean_free(
     sandesha2_property_bean_t *bean, 
     const axutil_env_t *env);								
 
-axis2_status_t AXIS2_CALL
+void AXIS2_CALL
 sandesha2_property_bean_free_void_arg(
     void *arg,
     const axutil_env_t *env);
