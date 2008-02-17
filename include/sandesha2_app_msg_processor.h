@@ -32,6 +32,8 @@ extern "C"
 #endif
 
 struct sandesha2_seq_property_mgr;
+struct sandesha2_sender_mgr;
+struct sandesha2_storage_mgr;
 
 /** @defgroup sandesha2_app_msg_processor
  * @ingroup sandesha2_msgprocessors
@@ -47,6 +49,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *msg_ctx,
     axis2_char_t *msg_str,
+    struct sandesha2_storage_mgr *storage_mgr,
+    struct sandesha2_sender_mgr *sender_mgr,
     struct sandesha2_seq_property_mgr *seq_prop_mgr);
 /** @} */
 #ifdef __cplusplus

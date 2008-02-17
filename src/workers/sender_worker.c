@@ -358,7 +358,8 @@ sandesha2_sender_worker_send(
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]message of msg_type:%d successfully sent", msg_type);
-        if(AXIS2_FALSE == axis2_msg_ctx_get_server_side(msg_ctx, env))
+        if(AXIS2_FALSE == axis2_msg_ctx_get_server_side(msg_ctx, env) ||
+            msg_type == SANDESHA2_MSG_TYPE_ACK)
             sandesha2_sender_worker_check_for_sync_res(env, msg_ctx, 
                 storage_mgr, msg_type);
     }

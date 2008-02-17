@@ -236,6 +236,8 @@ extern "C"
 	#define SANDESHA2_SEQ_PROP_OUT_SEQ_ID  "OutSequenceId"
 
 	#define SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID  "TempSequenceId"
+	
+    #define SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID  "SpecialIntSequenceId"
 
 	#define SANDESHA2_SEQ_PROP_REPLY_TO_EPR  "ReplyToEPR"
 

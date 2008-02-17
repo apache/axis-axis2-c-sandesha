@@ -313,6 +313,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     accept = sandesha2_create_seq_res_get_accept(csr_part, env);
     if(accept)
     {
+        sandesha2_seq_property_bean_t *special_int_seq_bean = NULL;
         sandesha2_seq_property_bean_t *offerd_seq_bean = NULL;
         axis2_char_t *offered_seq_id = NULL;
         axis2_endpoint_ref_t *acks_to_epr = NULL;
@@ -350,6 +351,14 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         }
         offered_seq_id = sandesha2_seq_property_bean_get_value(offerd_seq_bean,
                         env);
+        special_int_seq_bean = sandesha2_seq_property_bean_create_with_data(env, 
+            offered_seq_id, SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID, internal_seq_id);
+        if(special_int_seq_bean)
+        {
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, 
+                special_int_seq_bean);
+            sandesha2_seq_property_bean_free(special_int_seq_bean, env);
+        }
         acks_to_epr = sandesha2_address_get_epr(sandesha2_acks_to_get_address(
                         sandesha2_accept_get_acks_to(accept, env), env), env);
         acks_to_bean = sandesha2_seq_property_bean_create(env);
