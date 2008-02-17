@@ -158,9 +158,16 @@ rm_sample_svc_ping (
         writer = axiom_xml_writer_create_for_memory(env, NULL, AXIS2_TRUE, 0,
             AXIS2_XML_PARSER_TYPE_BUFFER);
         om_output = axiom_output_create (env, writer);
-
+        if (!om_output)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Could not create om_output");
+            axiom_xml_writer_free(writer, env);
+            writer = NULL;
+            return;
+        }
         axiom_node_serialize (node, env, om_output);
         buffer = axiom_xml_writer_get_xml(writer, env);
+        axiom_output_free(om_output, env);
     }
 
     element = axiom_node_get_data_element(node, env);
