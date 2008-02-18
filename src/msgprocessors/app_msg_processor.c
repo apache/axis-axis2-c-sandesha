@@ -330,6 +330,8 @@ sandesha2_app_msg_processor_process_in_msg (
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(create_seq_mgr)
                 sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+            if(sender_mgr)
+                sandesha2_sender_mgr_free(sender_mgr, env);
             if(next_msg_mgr)
                 sandesha2_next_msg_mgr_free(next_msg_mgr, env);
             if(invoker_mgr)
@@ -347,6 +349,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -379,6 +383,8 @@ sandesha2_app_msg_processor_process_in_msg (
                 sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
             if(create_seq_mgr)
                 sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+            if(sender_mgr)
+                sandesha2_sender_mgr_free(sender_mgr, env);
             if(next_msg_mgr)
                 sandesha2_next_msg_mgr_free(next_msg_mgr, env);
             if(invoker_mgr)
@@ -396,6 +402,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -421,6 +429,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -569,6 +579,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -613,6 +625,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -663,6 +677,8 @@ sandesha2_app_msg_processor_process_in_msg (
                     sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
                 if(create_seq_mgr)
                     sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                if(sender_mgr)
+                    sandesha2_sender_mgr_free(sender_mgr, env);
                 if(next_msg_mgr)
                     sandesha2_next_msg_mgr_free(next_msg_mgr, env);
                 if(invoker_mgr)
@@ -715,6 +731,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -745,6 +763,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         if(create_seq_mgr)
             sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
         if(next_msg_mgr)
             sandesha2_next_msg_mgr_free(next_msg_mgr, env);
         if(invoker_mgr)
@@ -792,6 +812,8 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)
         sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    if(sender_mgr)
+        sandesha2_sender_mgr_free(sender_mgr, env);
     if(next_msg_mgr)
         sandesha2_next_msg_mgr_free(next_msg_mgr, env);
     if(invoker_mgr)
