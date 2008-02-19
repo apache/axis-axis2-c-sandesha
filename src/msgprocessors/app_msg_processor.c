@@ -1438,7 +1438,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
      */
     if(int_seq_bean)
     {
-        axis2_status_t status = AXIS2_FAILURE;
         axis2_transport_out_desc_t *transport_out = NULL;
         long send_time = -1;
         axis2_char_t *key = NULL;
