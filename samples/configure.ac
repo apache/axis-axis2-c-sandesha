@@ -84,8 +84,10 @@ AC_CONFIG_FILES([Makefile \
     rm_echo_1_0/Makefile \
     rm_echo_1_1/Makefile \
     rm_echo_single_1_0/Makefile \
+    rm_echo_single_1_0_large_sequence/Makefile \
     rm_echo_single_1_1/Makefile \
     rm_ping_1_0/Makefile \
+    rm_ping_1_0_large_sequence/Makefile \
     rm_ping_1_1/Makefile \
     rm_mtom_1_0/Makefile \
     rm_report/Makefile \
