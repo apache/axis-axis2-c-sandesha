@@ -735,6 +735,8 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     }
     terminate_rm_msg = sandesha2_msg_creator_create_terminate_seq_msg(env,
         rm_msg_ctx, out_seq_id, int_seq_id, seq_prop_mgr);
+    if(!terminate_rm_msg)
+        return AXIS2_FAILURE;
     sandesha2_msg_ctx_set_flow(terminate_rm_msg, env, AXIS2_OUT_FLOW);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     sandesha2_msg_ctx_set_property(terminate_rm_msg, env, 

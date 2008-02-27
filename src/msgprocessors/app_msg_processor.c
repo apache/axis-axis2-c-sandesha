@@ -1553,10 +1553,10 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env,
         rm_msg_ctx, internal_seq_id, acks_to, seq_prop_mgr);
-    sandesha2_msg_ctx_set_flow(create_seq_rm_msg, env, 
-        SANDESHA2_MSG_CTX_OUT_FLOW);
     if(!create_seq_rm_msg)
         return AXIS2_FAILURE;
+    sandesha2_msg_ctx_set_flow(create_seq_rm_msg, env, 
+        SANDESHA2_MSG_CTX_OUT_FLOW);
     create_seq_part = sandesha2_msg_ctx_get_create_seq(create_seq_rm_msg, env);
     {
         sandesha2_seq_property_bean_t *to_epr_bean = NULL;

@@ -397,6 +397,25 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             acks_to = (axis2_char_t *) axis2_endpoint_ref_get_address(acks_to_epr, env);
             create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env,
                 rm_msg_ctx, internal_seq_id, acks_to, seq_prop_mgr);
+            if(!create_seq_rm_msg)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2]create_seq_rm_msg is NULL");
+                if(seq_prop_mgr)
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                if(create_seq_mgr)
+                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                if(sender_mgr)
+                    sandesha2_sender_mgr_free(sender_mgr, env);
+                if(next_msg_mgr)
+                    sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+                if(storage_mgr)
+                    sandesha2_storage_mgr_free(storage_mgr, env);
+                if(create_seq_rm_msg)
+                    sandesha2_msg_ctx_free(create_seq_rm_msg, env);
+                return AXIS2_FAILURE;
+
+            }
             sandesha2_msg_ctx_set_flow(create_seq_rm_msg, env, 
                 SANDESHA2_MSG_CTX_OUT_FLOW);
             create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);

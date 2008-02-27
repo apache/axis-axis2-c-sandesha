@@ -432,6 +432,8 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     out_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
     out_rm_msg = sandesha2_msg_creator_create_terminate_seq_res_msg(env, 
         rm_msg_ctx, out_msg_ctx, seq_prop_mgr);
+    if(!out_rm_msg)
+        return AXIS2_FAILURE;
     ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id,
         seq_prop_mgr);
     if(ack_rm_msg)
