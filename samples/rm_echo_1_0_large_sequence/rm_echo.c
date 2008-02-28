@@ -167,7 +167,7 @@ int main(int argc, char** argv)
             property);
     }
     int i = 0;
-    for(i = 1; i < 100; i++)
+    for(i = 1; i < 10; i++)
     {
         axis2_char_t echo_str[7];
         sprintf(echo_str, "%s%d", "echo", i);

@@ -82,6 +82,7 @@ AC_SUBST(DICLIENT_DIR)
 AC_CONFIG_FILES([Makefile \
     RMSampleService/Makefile \
     rm_echo_1_0/Makefile \
+    rm_echo_1_0_large_sequence/Makefile \
     rm_echo_1_1/Makefile \
     rm_echo_single_1_0/Makefile \
     rm_echo_single_1_0_large_sequence/Makefile \
