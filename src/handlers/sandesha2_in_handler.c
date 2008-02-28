@@ -37,6 +37,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
+#include <sandesha2_app_msg_processor.h>
 
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(

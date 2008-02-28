@@ -178,8 +178,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *out_seq_bean = NULL;
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     sandesha2_accept_t *accept = NULL;
-    axutil_array_list_t *found_list = NULL;
-    int i = 0, size = 0;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_bool_t polling_mode = AXIS2_FALSE;
     axis2_char_t *dbname = NULL;

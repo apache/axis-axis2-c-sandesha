@@ -81,7 +81,6 @@ sandesha2_global_in_handler_invoke(
     const axis2_char_t *wsa_action = NULL;
     const axis2_char_t *soap_action = NULL;
     axis2_bool_t is_rm_global_msg = AXIS2_FALSE;
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_global_in_handler");
@@ -138,7 +137,7 @@ sandesha2_global_in_handler_invoke(
 
                     property = axutil_property_create_with_args(env, 0, 0, 0, 
                         AXIS2_VALUE_TRUE);
-                    axis2_ctx_set_property(msg_ctx, env, 
+                    axis2_msg_ctx_set_property(msg_ctx, env, 
                         SANDESHA2_ISOLATED_LAST_MSG, property);
                 }
             }
