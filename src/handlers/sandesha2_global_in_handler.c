@@ -399,7 +399,7 @@ sandesha2_global_in_handler_drop_if_duplicate(
                     sandesha2_app_msg_processor_send_ack_if_reqd(env, 
                         rm_msg_ctx, bean_value, storage_mgr, sender_mgr, 
                         seq_prop_mgr);
-                    sandesha2_app_msg_processor_free(app_msg_processor, env);
+                    sandesha2_msg_processor_free(app_msg_processor, env);
                 }
             }
         }        
@@ -477,7 +477,7 @@ sandesha2_global_in_handler_process_dropped_msg(
                 app_msg_processor = sandesha2_app_msg_processor_create(env);
                 sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, 
                     rcvd_msgs_str, storage_mgr, sender_mgr, seq_prop_mgr);
-                sandesha2_app_msg_processor_free(app_msg_processor, env);
+                sandesha2_msg_processor_free(app_msg_processor, env);
             }
         }
     }
