@@ -68,6 +68,7 @@ int main(int argc, char** argv)
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
     int c;
+    int i = 0;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_1_0.log", 
@@ -166,7 +167,6 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
-    int i = 0;
     for(i = 1; i < 10; i++)
     {
         axis2_char_t echo_str[7];
