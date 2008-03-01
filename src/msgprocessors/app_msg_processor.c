@@ -1369,17 +1369,21 @@ sandesha2_app_msg_processor_process_out_msg(
 static axis2_bool_t AXIS2_CALL 
 sandesha2_app_msg_processor_msg_num_is_in_list(
     const axutil_env_t *env, 
-    axis2_char_t *list,
+    axis2_char_t *str_list,
     long num)
 {
+    axutil_array_list_t *list = NULL;
     axis2_char_t str_long[32];
     
-    AXIS2_PARAM_CHECK(env->error, list, AXIS2_FALSE);
-    
+    AXIS2_PARAM_CHECK(env->error, str_list, AXIS2_FALSE);
     sprintf(str_long, "%ld", num);
-    if(strstr(list, str_long))
-        return AXIS2_TRUE;
-        
+    list = sandesha2_utils_get_array_list_from_string(env, str_list);
+    if(list)
+    {
+        if(axutil_array_list_contains(list, env, str_long))
+            return AXIS2_TRUE;
+        axutil_array_list_free(list, env);
+    }
     return AXIS2_FALSE;
 }
 
