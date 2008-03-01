@@ -153,7 +153,7 @@ int main(int argc, char** argv)
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
         printf("\nping client invoke SUCCESSFUL!\n");
-    sleep(32); 
+    sleep(64); 
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 

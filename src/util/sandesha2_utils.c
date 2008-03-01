@@ -678,11 +678,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(property)
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_IN, 
             axutil_property_clone(property, env));
-    property = axis2_msg_ctx_get_property(ref_msg, env, 
-        AXIS2_HTTP_OUT_TRANSPORT_INFO);
-    if(property)
-        axis2_msg_ctx_set_property(new_msg, env, AXIS2_HTTP_OUT_TRANSPORT_INFO, 
-            axutil_property_clone(property, env));
     axis2_msg_ctx_set_http_out_transport_info(new_msg, env, 
         axis2_msg_ctx_get_http_out_transport_info(ref_msg, env));
     property = axis2_msg_ctx_get_property(ref_msg, env, 

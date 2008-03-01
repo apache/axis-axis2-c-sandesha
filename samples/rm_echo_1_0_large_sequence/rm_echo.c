@@ -167,7 +167,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
-    for(i = 1; i < 10; i++)
+    for(i = 1; i < 100; i++)
     {
         axis2_char_t echo_str[7];
         sprintf(echo_str, "%s%d", "echo", i);
@@ -181,7 +181,7 @@ int main(int argc, char** argv)
     axis2_svc_client_remove_all_headers(svc_client, env);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload = build_om_payload_for_echo_svc(env, "echo10", seq_key);
+    payload = build_om_payload_for_echo_svc(env, "echo100", seq_key);
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);

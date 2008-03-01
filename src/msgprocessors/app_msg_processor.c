@@ -1908,12 +1908,12 @@ sandesha2_app_msg_processor_process_response_msg(
     }
     temp_op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
     axis2_op_ctx_increment_ref(temp_op_ctx, env);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
-    sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_entry);
-    
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
     axis2_msg_ctx_set_property(app_msg_ctx, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING, property);
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
+    sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_entry);
+    
     trs_sender = axis2_transport_out_desc_get_sender(
         axis2_msg_ctx_get_transport_out_desc(app_msg_ctx, env), env);
     if(trs_sender)
