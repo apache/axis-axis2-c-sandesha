@@ -27,6 +27,7 @@
 #include <axutil_string.h>
 #include <axutil_uuid_gen.h>
 #include <axis2_addr.h>
+#include <axis2_core_utils.h>
 #include <axutil_property.h>
 #include <axutil_array_list.h>
 #include <sandesha2_msg_init.h>
@@ -117,23 +118,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     /* Adding the sequence acknowledgement part */
     sandesha2_msg_creator_add_ack_msg(env, ack_rm_msg, seq_id, seq_prop_mgr);
     axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-    /*addr_ns_uri = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
-    if(addr_ns_uri)
-    {
-        property = axis2_msg_ctx_get_property(ack_msg_ctx, env, AXIS2_WSA_VERSION);
-        if(property)
-        {
-            axutil_property_set_value(property, env, addr_ns_uri);
-        }
-        else
-        {
-            property = axutil_property_create_with_args(env, 0, 0, 0, addr_ns_uri);
-            axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_WSA_VERSION, property);
-        }
-        if(addr_ns_uri)
-            AXIS2_FREE(env->allocator, addr_ns_uri);
-    }*/
     op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     if(!op_ctx)
     {

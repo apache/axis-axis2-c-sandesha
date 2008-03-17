@@ -400,9 +400,10 @@ sandesha2_ack_msg_processor_process_in_msg (
         }
         axutil_array_list_free(acked_list, env);
     }
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]acked_list:%s", str_list);
-    if(completed_bean)
+    if(completed_bean && str_list)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]acked_list:%s", 
+            str_list);
         sandesha2_seq_property_bean_set_value(completed_bean, env, str_list);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, completed_bean);
     }
