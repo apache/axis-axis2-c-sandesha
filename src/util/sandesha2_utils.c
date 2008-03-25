@@ -648,8 +648,8 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(property)
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_IN, 
             axutil_property_clone(property, env));
-    axis2_msg_ctx_set_http_out_transport_info(new_msg, env, 
-        axis2_msg_ctx_get_http_out_transport_info(ref_msg, env));
+    axis2_msg_ctx_set_out_transport_info(new_msg, env, 
+        axis2_msg_ctx_get_out_transport_info(ref_msg, env));
     axis2_msg_ctx_set_charset_encoding(new_msg, env,
         axis2_msg_ctx_get_charset_encoding(ref_msg, env));
     property = axis2_msg_ctx_get_property(ref_msg, env, 
@@ -1319,8 +1319,8 @@ sandesha2_utils_create_out_msg_ctx(
 
     out_stream = axis2_msg_ctx_get_transport_out_stream(in_msg_ctx, env);
     axis2_msg_ctx_set_transport_out_stream(new_msg_ctx, env, out_stream);
-    axis2_msg_ctx_set_http_out_transport_info(new_msg_ctx, env,
-        axis2_msg_ctx_get_http_out_transport_info(in_msg_ctx, env));
+    axis2_msg_ctx_set_out_transport_info(new_msg_ctx, env,
+        axis2_msg_ctx_get_out_transport_info(in_msg_ctx, env));
 
     /* Setting the charater set encoding */
     doing_rest =  axis2_msg_ctx_get_doing_rest(in_msg_ctx, env);

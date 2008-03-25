@@ -553,18 +553,18 @@ set_transport_properties(
     axutil_stream_t *out_stream = NULL;
     if(make_conn_msg_ctx && return_msg_ctx)
     {
-        axis2_http_out_transport_info_t *out_info = NULL;
-        axis2_http_out_transport_info_t *temp_out_info = NULL;
+        axis2_out_transport_info_t *out_info = NULL;
+        axis2_out_transport_info_t *temp_out_info = NULL;
         out_stream = sandesha2_msg_ctx_get_transport_out_stream(make_conn_msg_ctx, 
             env);
         axis2_msg_ctx_set_transport_out_stream(return_msg_ctx, env, out_stream);
-        temp_out_info = (axis2_http_out_transport_info_t *) 
-            axis2_msg_ctx_get_http_out_transport_info(return_msg_ctx, env);
+        temp_out_info = (axis2_out_transport_info_t *) 
+            axis2_msg_ctx_get_out_transport_info(return_msg_ctx, env);
         if(!temp_out_info)
         {
-            out_info = (axis2_http_out_transport_info_t *) 
-                sandesha2_msg_ctx_get_http_out_transport_info(make_conn_msg_ctx, env);
-            axis2_msg_ctx_set_http_out_transport_info(return_msg_ctx, env, out_info);
+            out_info = (axis2_out_transport_info_t *) 
+                sandesha2_msg_ctx_get_out_transport_info(make_conn_msg_ctx, env);
+            axis2_msg_ctx_set_out_transport_info(return_msg_ctx, env, out_info);
         }
     }
 }

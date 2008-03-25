@@ -580,36 +580,36 @@ sandesha2_msg_ctx_set_transport_out_stream(
         stream);
 }
 
-AXIS2_EXTERN struct axis2_http_out_transport_info *AXIS2_CALL
-sandesha2_msg_ctx_get_http_out_transport_info(
+AXIS2_EXTERN struct axis2_out_transport_info *AXIS2_CALL
+sandesha2_msg_ctx_get_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axutil_env_t *env)
 {
     if(!rm_msg_ctx->msg_ctx)
         return NULL;
-    return axis2_msg_ctx_get_http_out_transport_info(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_get_out_transport_info(rm_msg_ctx->msg_ctx, env);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_set_http_out_transport_info(
+sandesha2_msg_ctx_set_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axutil_env_t *env,
-    struct axis2_http_out_transport_info *http_out_transport_info)
+    struct axis2_out_transport_info *out_transport_info)
 {
     if(!rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
-    return axis2_msg_ctx_set_http_out_transport_info(rm_msg_ctx->msg_ctx, 
-        env, http_out_transport_info);
+    return axis2_msg_ctx_set_out_transport_info(rm_msg_ctx->msg_ctx, 
+        env, out_transport_info);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_msg_ctx_reset_http_out_transport_info(
+sandesha2_msg_ctx_reset_out_transport_info(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axutil_env_t *env)
 {
     if(!rm_msg_ctx->msg_ctx)
         return AXIS2_FAILURE;
-    return axis2_msg_ctx_reset_http_out_transport_info(rm_msg_ctx->msg_ctx, env);
+    return axis2_msg_ctx_reset_out_transport_info(rm_msg_ctx->msg_ctx, env);
 }
 
 axis2_status_t AXIS2_CALL
