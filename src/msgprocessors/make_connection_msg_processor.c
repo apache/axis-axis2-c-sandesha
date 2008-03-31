@@ -133,7 +133,7 @@ static sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     const axutil_env_t *env,
     const axis2_char_t *seq_id,
-    axis2_bool_t **pending,
+    axis2_bool_t *pending,
     axis2_char_t *dbname);
 
 static axis2_status_t AXIS2_CALL 
@@ -573,7 +573,7 @@ static sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     const axutil_env_t *env,
     const axis2_char_t *seq_id,
-    axis2_bool_t **pending,
+    axis2_bool_t *pending,
     axis2_char_t *dbname)
 {
     int i = 0;
