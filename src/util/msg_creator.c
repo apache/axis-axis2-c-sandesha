@@ -141,7 +141,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     axis2_conf_ctx_register_op_ctx(ctx, env, create_seq_msg_id, create_seq_op_ctx);
     axutil_allocator_switch_to_local_pool(env->allocator);*/
     app_msg_op_desc = axis2_msg_ctx_get_op(application_msg_ctx, env);
-    create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
+    /*create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);*/
     if(app_msg_op_desc)
     {
         axutil_array_list_t *outflow = NULL;
@@ -166,7 +166,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         new_inflow = axis2_phases_info_copy_flow(env, inflow);
         axis2_op_set_in_flow(create_seq_op, env, new_inflow);
     }
-    axis2_msg_ctx_set_op(create_seq_msg_ctx, env, create_seq_op);
+    /*axis2_msg_ctx_set_op(create_seq_msg_ctx, env, create_seq_op);*/
     property = axis2_msg_ctx_get_property(application_msg_ctx, env, 
         AXIS2_TARGET_EPR);
     if(property)
