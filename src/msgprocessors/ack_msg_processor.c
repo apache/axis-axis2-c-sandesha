@@ -169,7 +169,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     axis2_char_t *str_list = NULL;
     axis2_char_t *last_out_msg_no_str = NULL;
     axis2_bool_t added = AXIS2_FALSE;
-    const axis2_char_t *action = NULL;
+    /*const axis2_char_t *action = NULL;*/
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
     axis2_char_t *dbname = NULL;
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -437,13 +437,21 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
     if(int_seq_id)
         AXIS2_FREE(env->allocator, int_seq_id);
-    action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
-    if(action && 0 == axutil_strcmp(action, 
-        sandesha2_spec_specific_consts_get_ack_req_action(env, 
-            sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env))))
+    /*action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+    if(action)
     {
-        sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
-    }
+        axis2_char_t *temp_spec_ver = NULL;
+        axis2_char_t *temp_action = NULL;
+        
+        temp_spec_ver = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
+        temp_action = sandesha2_spec_specific_consts_get_ack_req_action(env, 
+                temp_spec_ver);
+        if(!axutil_strcmp(action, temp_action))
+        {
+            sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+        }
+    }*/
+    sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)
