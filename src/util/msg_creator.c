@@ -962,9 +962,13 @@ sandesha2_msg_creator_add_ack_msg(
     soap_header = axiom_soap_envelope_get_header(envelope, env);
     sandesha2_seq_ack_to_om_node(seq_ack, env, soap_header);
 
-    ack_req_action = sandesha2_spec_specific_consts_get_seq_ack_action(env, 
+    ack_req_action = sandesha2_msg_ctx_get_wsa_action(app_msg, env);
+    if((!ack_req_action) || (axutil_strcmp(ack_req_action, "") == 0))
+    {
+        ack_req_action = sandesha2_spec_specific_consts_get_seq_ack_action(env, 
             rm_version);
-    sandesha2_msg_ctx_set_wsa_action(app_msg, env, ack_req_action); 
+        sandesha2_msg_ctx_set_wsa_action(app_msg, env, ack_req_action); 
+    }
     temp_action = 
         sandesha2_spec_specific_consts_get_seq_ack_soap_action(env, 
                 rm_version);
@@ -1103,4 +1107,5 @@ sandesha2_msg_creator_create_make_connection_msg(
     }
     return NULL;
 }
+
 

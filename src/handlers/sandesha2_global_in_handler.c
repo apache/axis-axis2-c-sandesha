@@ -96,6 +96,15 @@ sandesha2_global_in_handler_invoke(
     str_soap_action = axis2_msg_ctx_get_soap_action(msg_ctx, env);
     soap_action = axutil_string_get_buffer(str_soap_action, env);
     wsa_action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+    if(wsa_action && !axutil_strcmp(wsa_action, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE))
+    {
+        axutil_property_t *property = NULL;
+        property = axutil_property_create_with_args(env, 0, 0, 0, 
+            AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(msg_ctx, env, 
+            SANDESHA2_ISOLATED_LAST_MSG, property);
+        return AXIS2_SUCCESS;
+    }
     if(!soap_action && !wsa_action)
     {
         axiom_soap_envelope_t *envelope = NULL;
@@ -227,5 +236,6 @@ sandesha2_global_in_handler_invoke(
        
     return AXIS2_SUCCESS;
 }
+
 
 

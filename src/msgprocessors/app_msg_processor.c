@@ -620,6 +620,8 @@ sandesha2_app_msg_processor_process_in_msg (
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
             "[sandesha2]Got WSRM 1.0 last message, aborting");
+        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
+            storage_mgr, sender_mgr, seq_prop_mgr);
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -2029,4 +2031,5 @@ sandesha2_app_msg_processor_set_next_msg_no(
 	
     return AXIS2_SUCCESS;
 }
+
 
