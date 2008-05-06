@@ -261,7 +261,7 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-    axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_TRUE);
+    /*axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_TRUE);*/
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
@@ -1208,22 +1208,20 @@ sandesha2_app_msg_processor_process_out_msg(
         }
         else
         {
-            {
-                axutil_property_t *property = NULL;
-                axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
-                axutil_hash_t *msg_ctx_map = NULL;
+            axutil_property_t *property = NULL;
+            axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+            axutil_hash_t *msg_ctx_map = NULL;
 
-                property = axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
-                if(!property)
-                {
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                        "[sandesha2]msg_ctx_map not found in the conf_ctx");
-                    msg_ctx_map = axutil_hash_make(env);
-                    property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                        AXIS2_TRUE, axutil_hash_free_void_arg, msg_ctx_map);
-                    axis2_ctx_set_property(ctx, env, SANDESHA2_MSG_CTX_MAP,
-                        property);
-                }
+            property = axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
+            if(!property)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                    "[sandesha2]msg_ctx_map not found in the conf_ctx");
+                msg_ctx_map = axutil_hash_make(env);
+                property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                    AXIS2_TRUE, axutil_hash_free_void_arg, msg_ctx_map);
+                axis2_ctx_set_property(ctx, env, SANDESHA2_MSG_CTX_MAP,
+                    property);
             }
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Starting the client "\
                 "sequence with internal sequence id %s", internal_seq_id);
@@ -1544,7 +1542,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     axis2_engine_t *engine = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *msg_id = NULL;
-    axis2_op_ctx_t *temp_opctx = NULL;   
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2]Entry:sandesha2_app_msg_processor_add_create_seq_msg");
@@ -1602,8 +1599,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         create_seq_msg, env), NULL);
     sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, 
         str_key);
-    temp_opctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
-    /*axis2_op_ctx_increment_ref(temp_opctx, env);*/
     sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
     addr_ns_uri = sandesha2_utils_get_seq_property(env, internal_seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
@@ -1697,7 +1692,9 @@ sandesha2_app_msg_processor_process_response_msg(
     axis2_bool_t last_msg = AXIS2_FALSE;
     axis2_op_ctx_t *temp_op_ctx = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    
+    int mep = -1;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] sandesha2_app_msg_processor_process_response_msg");
     AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
@@ -1707,6 +1704,7 @@ sandesha2_app_msg_processor_process_response_msg(
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
     app_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(app_msg_ctx, env);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
         internal_seq_id, SANDESHA2_SEQ_PROP_TO_EPR);
     reply_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
@@ -1884,8 +1882,7 @@ sandesha2_app_msg_processor_process_response_msg(
             seq_prop_mgr);
         if(req_rm_msg_ctx)
             sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
-        engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, 
-            env));
+        engine = axis2_engine_create(env, conf_ctx);
         return axis2_engine_resume_send(engine, env, msg_ctx);
     }
     if(rm_version)
@@ -1913,10 +1910,37 @@ sandesha2_app_msg_processor_process_response_msg(
            SANDESHA2_SET_SEND_TO_TRUE, property);
     }
     temp_op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
-    axis2_op_ctx_increment_ref(temp_op_ctx, env);
+    /**
+     * In RM one way out only(from client application side) we need to keep the
+     * operation context of the application message context marked as in-use.
+     * Otherwise when client send the next application message and free the
+     * previous op_client this op_ctx is freed.
+     */
+    mep = axis2_op_get_axis_specific_mep_const(axis2_op_ctx_get_op(temp_op_ctx,
+        env), env);
+    if(AXIS2_MEP_CONSTANT_OUT_ONLY == mep)
+    {
+        axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
+        axutil_property_t *temp_prop =
+            axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
+        if(temp_prop)
+        {
+            axis2_op_ctx_set_in_use(temp_op_ctx, env, AXIS2_TRUE);
+        }
+    }
+
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
     axis2_msg_ctx_set_property(app_msg_ctx, env, 
         SANDESHA2_QUALIFIED_FOR_SENDING, property);
+    /**
+     * When we store application message context as below it should be noted
+     * that at Sandesha2/C client application side this is actually stored in
+     * in-memory whereas in the web service side it is actually stored in
+     * database only. In RM one way scenario since we call
+     * axis2_op_ctx_set_in_use() for the operation context of the application
+     * message in few lines above we need to free that operation context in the
+     * sandesha2_storage_mgr_remove_msg_ctx() function.
+     */
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
     sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_entry);
     
@@ -1940,8 +1964,7 @@ sandesha2_app_msg_processor_process_response_msg(
     }
     axis2_msg_ctx_set_current_handler_index(app_msg_ctx, env, 
         axis2_msg_ctx_get_current_handler_index(app_msg_ctx, env) + 1);
-    engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(app_msg_ctx, 
-        env));
+    engine = axis2_engine_create(env, conf_ctx);
     status = axis2_engine_resume_send(engine, env, app_msg_ctx);
     if(engine)
         axis2_engine_free(engine, env);

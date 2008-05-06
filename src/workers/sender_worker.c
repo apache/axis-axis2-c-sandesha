@@ -358,10 +358,8 @@ sandesha2_sender_worker_send(
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]message of msg_type:%d successfully sent", msg_type);
-        if(AXIS2_FALSE == axis2_msg_ctx_get_server_side(msg_ctx, env) ||
-            msg_type == SANDESHA2_MSG_TYPE_ACK)
-            sandesha2_sender_worker_check_for_sync_res(env, msg_ctx, 
-                storage_mgr, msg_type);
+        sandesha2_sender_worker_check_for_sync_res(env, msg_ctx, 
+            storage_mgr, msg_type);
     }
     if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
     {
@@ -403,17 +401,6 @@ sandesha2_sender_worker_send(
     if(bean1)
         sandesha2_sender_bean_free(bean1, env);
 
-    /*if(msg_ctx && msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
-        msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
-    {
-        axis2_op_ctx_t *op_ctx = NULL;
-        op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-        if(op_ctx)
-            axis2_op_ctx_free(op_ctx, env);
-        axis2_msg_ctx_set_keep_alive(msg_ctx, env, AXIS2_FALSE);
-        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_FALSE);
-        axis2_msg_ctx_free(msg_ctx, env);
-    }*/
     if(rm_msg_ctx)
         sandesha2_msg_ctx_free(rm_msg_ctx, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -464,12 +451,13 @@ sandesha2_sender_worker_check_for_sync_res(
     axis2_op_t *op = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
-    axis2_bool_t free_msg = AXIS2_FALSE;
+    axis2_bool_t svr_side = AXIS2_FALSE;
    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2]Entry:sandesha2_sender_worker_check_for_sync_res");
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-
+    
+    svr_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     if(!msg_ctx)
         return AXIS2_SUCCESS;
     soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
@@ -477,8 +465,14 @@ sandesha2_sender_worker_check_for_sync_res(
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
-    if(res_envelope && msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
+    if(res_envelope && msg_type == SANDESHA2_MSG_TYPE_APPLICATION && !svr_side)
     {
+        /* When service client is freed by the application client operation
+         * context and hence msg_ctx and therefore soap envelope is freed.
+         * To avoid that we increment the soap envelope. This soap envelope
+         * will be freed when we free the application op_ctx below.
+         */
+
         axiom_soap_envelope_increment_ref(res_envelope, env);
         /* To avoid a second passing through incoming handlers at op_client*/
         property = axutil_property_create_with_args(env, 0, 0, 0, 
@@ -492,11 +486,30 @@ sandesha2_sender_worker_check_for_sync_res(
             "[sandesha2]Response envelope not found");
         res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx,
             soap_ns_uri);
-        free_msg = AXIS2_TRUE;
         if(!res_envelope)
         {
+            if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type ==
+                SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type ==
+                SANDESHA2_MSG_TYPE_ACK)
+            {
+                /* These are Sandesha2/C created messages. Also because there is 
+                 * no response for these messages we can deduce that they are
+                 * one way messages. So this is the only place we can free the
+                 * corresponding operation context.
+                 */
+                axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx,
+                    env);
+                axis2_op_ctx_free(op_ctx, env);
+            }
             return AXIS2_SUCCESS;
         }
+    }
+    if(svr_side)
+    {
+        /* We check and process the sync response only in the application client 
+         * side.
+         */
+        return AXIS2_SUCCESS;
     }
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -617,11 +630,15 @@ sandesha2_sender_worker_check_for_sync_res(
         if(engine)
             axis2_engine_free(engine, env);
     }
-    if(free_msg)
+    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type ==
+        SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type == SANDESHA2_MSG_TYPE_ACK)
     {
-        axiom_soap_envelope_free(res_envelope, env);
+        axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx,
+            env);
+        axis2_op_ctx_free(op_ctx, env);
     }
-    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ)
+    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type == 
+            SANDESHA2_MSG_TYPE_APPLICATION)
     {
         axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(res_msg_ctx, env);
         axis2_op_ctx_free(op_ctx, env);
