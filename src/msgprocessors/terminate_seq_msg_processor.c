@@ -168,7 +168,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
-    sandesha2_seq_ack_t *seq_ack = NULL;
     sandesha2_terminate_seq_t *term_seq = NULL;
     axis2_char_t *seq_id = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -181,24 +180,17 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     axis2_char_t *spec_version = NULL;
     axis2_char_t *dbname = NULL;
   
-    AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_terminate_seq_msg_processor_process_in_msg");
+    AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
+
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     
-    seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
-    
-    if(seq_ack)
-    {
-        sandesha2_msg_processor_t *ack_processor = NULL;
-        ack_processor = sandesha2_ack_msg_processor_create(env);
-        sandesha2_msg_processor_process_in_msg(ack_processor, env, rm_msg_ctx);
-    }
     term_seq = sandesha2_msg_ctx_get_terminate_seq(rm_msg_ctx, env);
     if(!term_seq)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate "
-            "Sequence part is not available");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Terminate Sequence part is not available");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, 
             AXIS2_FAILURE);
         return AXIS2_FAILURE;
@@ -207,8 +199,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         sandesha2_terminate_seq_get_identifier(term_seq, env), env);
     if(!seq_id || 0 == axutil_strlen(seq_id))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "
-            "sequence id");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid sequence id");
         return AXIS2_FAILURE;
     }
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);

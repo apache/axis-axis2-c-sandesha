@@ -232,6 +232,7 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_op_t *op = NULL;
     int mep = -1;
     axis2_char_t *dbname = NULL;
+    axis2_char_t *last_out_msg_no_str = NULL;
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -618,10 +619,44 @@ sandesha2_app_msg_processor_process_in_msg (
         wsa_action) || 0 == axutil_strcmp(
         SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
     {
+        sandesha2_seq_ack_t *seq_ack = NULL;
+
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
             "[sandesha2]Got WSRM 1.0 last message, aborting");
-        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr, sender_mgr, seq_prop_mgr);
+        /*sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
+            storage_mgr, sender_mgr, seq_prop_mgr);*/
+
+        seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
+        if(seq_ack)
+        {
+            /* If there is a sequence acknowledgement element present in the sequence we will check
+             * whether the sequence is completed. If so send a terminate sequence message.
+             */
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "last_msg_no:%ld", msg_no);
+            if(msg_no > 0) /* msg_no is the current message number */
+            {
+                axis2_bool_t completed = AXIS2_FALSE;
+                axutil_array_list_t *ack_range_list = NULL;
+
+                ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
+                completed = sandesha2_ack_mgr_verify_seq_completion(env, 
+                    ack_range_list, msg_no);
+                if(completed)
+                {
+                    axis2_char_t *int_seq_id = NULL;
+
+                    int_seq_id = sandesha2_utils_get_seq_property(env, str_seq_id, 
+                        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2]Sequence %s is completed. So adding terminate msg", 
+                            str_seq_id); 
+                    sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
+                        str_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
+                        create_seq_mgr, sender_mgr);
+                }
+            }
+        }
+
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
@@ -790,6 +825,9 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     if(back_channel_free)
     {
+        /* MEP is in only or duplex mode anonymous reply to address.
+         * That means we can send an acknowledgment message in the http back channel.
+         */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]back_channel_free true");
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
@@ -797,11 +835,16 @@ sandesha2_app_msg_processor_process_in_msg (
     }
     else if(sandesha2_utils_is_single_channel(env, rm_version, acks_to_str))
     {
+        /* This means acknowledgment address is anomymous and RM version is 1.0.
+         * In other words single channel duplex mode. In this case we do not send the
+         * acknowledgment message here. Instead we send it in the message out path.
+         * See sandesha2_app_msg_processor_process_response_msg() code.
+         */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]is_single_channel true");
-        /* Do nothing */
     } 
     else
     {
+        /* This is most probably dual channel duplex mode. */
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
             storage_mgr, sender_mgr, seq_prop_mgr);
     }
@@ -1114,7 +1157,7 @@ sandesha2_app_msg_processor_process_out_msg(
     {
         sandesha2_seq_property_bean_t *res_highest_msg_key_bean = NULL;
         sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
-        
+       
         res_highest_msg_key_bean = sandesha2_seq_property_bean_create_with_data(
             env, internal_seq_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY,
             storage_key);
@@ -1883,7 +1926,10 @@ sandesha2_app_msg_processor_process_response_msg(
         if(req_rm_msg_ctx)
             sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
-        return axis2_engine_resume_send(engine, env, msg_ctx);
+        status = axis2_engine_resume_send(engine, env, msg_ctx);
+        if(engine)
+            axis2_engine_free(engine, env);
+        return status;
     }
     if(rm_version)
         AXIS2_FREE(env->allocator, rm_version);
