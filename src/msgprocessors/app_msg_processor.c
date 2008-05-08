@@ -630,30 +630,39 @@ sandesha2_app_msg_processor_process_in_msg (
         seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
         if(seq_ack)
         {
+            axis2_char_t *int_seq_id = NULL;
+            
             /* If there is a sequence acknowledgement element present in the sequence we will check
              * whether the sequence is completed. If so send a terminate sequence message.
              */
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "last_msg_no:%ld", msg_no);
-            if(msg_no > 0) /* msg_no is the current message number */
+            int_seq_id = sandesha2_utils_get_seq_property(env, str_seq_id, 
+                    SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+            last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
+                SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
+            if(last_out_msg_no_str)
             {
-                axis2_bool_t completed = AXIS2_FALSE;
-                axutil_array_list_t *ack_range_list = NULL;
-
-                ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
-                completed = sandesha2_ack_mgr_verify_seq_completion(env, 
-                    ack_range_list, msg_no);
-                if(completed)
+                long highest_out_msg_no = 0;
+                highest_out_msg_no = atol(last_out_msg_no_str);
+                if(last_out_msg_no_str)
+                    AXIS2_FREE(env->allocator, last_out_msg_no_str);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
+                if(highest_out_msg_no > 0)
                 {
-                    axis2_char_t *int_seq_id = NULL;
+                    axis2_bool_t completed = AXIS2_FALSE;
+                    axutil_array_list_t *ack_range_list = NULL;
 
-                    int_seq_id = sandesha2_utils_get_seq_property(env, str_seq_id, 
-                        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                            "[sandesha2]Sequence %s is completed. So adding terminate msg", 
-                            str_seq_id); 
-                    sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
-                        str_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
-                        create_seq_mgr, sender_mgr);
+                    ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
+                    completed = sandesha2_ack_mgr_verify_seq_completion(env, 
+                        ack_range_list, highest_out_msg_no);
+                    if(completed)
+                    {
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                                "[sandesha2]Sequence %s is completed. So adding terminate msg", 
+                                str_seq_id); 
+                        sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
+                            str_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
+                            create_seq_mgr, sender_mgr);
+                    }
                 }
             }
         }
