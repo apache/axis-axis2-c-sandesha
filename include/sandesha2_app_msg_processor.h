@@ -44,6 +44,12 @@ AXIS2_EXTERN sandesha2_msg_processor_t* AXIS2_CALL
 sandesha2_app_msg_processor_create(
     const axutil_env_t *env);
                         
+long AXIS2_CALL                 
+sandesha2_app_msg_processor_get_prev_msg_no(
+    const axutil_env_t *env,
+    axis2_char_t *internal_seq_id,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
+
 axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_send_ack_if_reqd(
     const axutil_env_t *env,

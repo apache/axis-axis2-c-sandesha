@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <sandesha2_terminate_seq_msg_processor.h>
+#include <sandesha2_app_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_sender_mgr.h>
@@ -246,8 +247,69 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     spec_version = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
     if(AXIS2_TRUE == sandesha2_spec_specific_consts_is_term_seq_res_reqd(env, 
             spec_version))
+    {
         sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(env, 
             rm_msg_ctx, seq_id, seq_prop_mgr);
+    }
+    else
+    {
+        sandesha2_seq_ack_t *seq_ack = NULL;
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1****************************");
+        seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
+        if(seq_ack)
+        {
+            axis2_char_t *int_seq_id = NULL;
+            axis2_char_t *out_seq_id = NULL;
+            axis2_char_t *last_out_msg_no_str = NULL;
+            long highest_out_msg_no = 0;
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2****************************");
+            
+            /* If there is a sequence acknowledgement element present in the sequence we will check
+             * whether the sequence is completed. If so send a terminate sequence message.
+             */
+            out_seq_id = sandesha2_identifier_get_identifier(
+                sandesha2_seq_ack_get_identifier(seq_ack, env), env);
+            int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
+                    SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+            last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
+                SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
+            if(last_out_msg_no_str)
+            {
+                highest_out_msg_no = atol(last_out_msg_no_str);
+                if(last_out_msg_no_str)
+                    AXIS2_FREE(env->allocator, last_out_msg_no_str);
+            }
+            else
+            {
+                highest_out_msg_no = sandesha2_app_msg_processor_get_prev_msg_no(env, 
+                    int_seq_id, seq_prop_mgr);
+            }
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%d****************************", highest_out_msg_no);
+            if(highest_out_msg_no > 0)
+            {
+                axis2_bool_t completed = AXIS2_FALSE;
+                axutil_array_list_t *ack_range_list = NULL;
+
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
+
+                ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
+                completed = sandesha2_ack_mgr_verify_seq_completion(env, 
+                    ack_range_list, highest_out_msg_no);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3****************************");
+                if(completed)
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came4****************************");
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2]Sequence %s is completed. So adding terminate msg", 
+                            out_seq_id); 
+                    sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
+                        out_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
+                        create_seq_mgr, sender_mgr);
+                }
+            }
+        }
+    }
     sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(env, conf_ctx, 
         storage_mgr, seq_id, rm_msg_ctx, seq_prop_mgr, create_seq_mgr, 
         sender_mgr);

@@ -114,12 +114,6 @@ sandesha2_app_msg_processor_process_response_msg(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_sender_mgr_t *sender_mgr);
 
-static long AXIS2_CALL                 
-sandesha2_app_msg_processor_get_prev_msg_no(
-    const axutil_env_t *env,
-    axis2_char_t *internal_seq_id,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr);
-
 static axis2_status_t AXIS2_CALL                 
 sandesha2_app_msg_processor_set_next_msg_no(
     const axutil_env_t *env,
@@ -233,7 +227,7 @@ sandesha2_app_msg_processor_process_in_msg (
     axis2_op_t *op = NULL;
     int mep = -1;
     axis2_char_t *dbname = NULL;
-    axis2_char_t *last_out_msg_no_str = NULL;
+    /*axis2_char_t *last_out_msg_no_str = NULL;*/
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
@@ -620,61 +614,10 @@ sandesha2_app_msg_processor_process_in_msg (
         wsa_action) || 0 == axutil_strcmp(
         SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
     {
-        sandesha2_seq_ack_t *seq_ack = NULL;
-
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
             "[sandesha2]Got WSRM 1.0 last message, aborting");
-        /*sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr, sender_mgr, seq_prop_mgr);*/
-
-        seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
-        if(seq_ack)
-        {
-            axis2_char_t *int_seq_id = NULL;
-            axis2_char_t *out_seq_id = NULL;
-            long highest_out_msg_no = 0;
-            
-            /* If there is a sequence acknowledgement element present in the sequence we will check
-             * whether the sequence is completed. If so send a terminate sequence message.
-             */
-            out_seq_id = sandesha2_identifier_get_identifier(
-                sandesha2_seq_ack_get_identifier(seq_ack, env), env);
-            int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
-                    SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
-            last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
-                SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
-            if(last_out_msg_no_str)
-            {
-                highest_out_msg_no = atol(last_out_msg_no_str);
-                if(last_out_msg_no_str)
-                    AXIS2_FREE(env->allocator, last_out_msg_no_str);
-            }
-            else
-            {
-                highest_out_msg_no = sandesha2_app_msg_processor_get_prev_msg_no(env, 
-                    int_seq_id, seq_prop_mgr);
-            }
-            if(highest_out_msg_no > 0)
-            {
-                axis2_bool_t completed = AXIS2_FALSE;
-                axutil_array_list_t *ack_range_list = NULL;
-
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
-
-                ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
-                completed = sandesha2_ack_mgr_verify_seq_completion(env, 
-                    ack_range_list, highest_out_msg_no);
-                if(completed)
-                {
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                            "[sandesha2]Sequence %s is completed. So adding terminate msg", 
-                            out_seq_id); 
-                    sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
-                        out_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
-                        create_seq_mgr, sender_mgr);
-                }
-            }
-        }
+        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
+            storage_mgr, sender_mgr, seq_prop_mgr);
 
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         if(seq_prop_mgr)
@@ -2039,7 +1982,7 @@ sandesha2_app_msg_processor_process_response_msg(
 }
 
 
-static long AXIS2_CALL                 
+long AXIS2_CALL                 
 sandesha2_app_msg_processor_get_prev_msg_no(
     const axutil_env_t *env,
     axis2_char_t *internal_seq_id,
