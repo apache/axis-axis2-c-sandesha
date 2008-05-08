@@ -1184,9 +1184,13 @@ sandesha2_permanent_storage_mgr_create_db(
             return AXIS2_FAILURE;
         }
         sqlite3_close(dbconn);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Created the database %s successfully", dbname);
     }
     else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Database %s creation failed", dbname);
         return AXIS2_FAILURE;
+    }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_permanent_storage_mgr_create_db");
     return AXIS2_SUCCESS;
