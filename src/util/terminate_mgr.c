@@ -792,9 +792,15 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     {
         axis2_msg_ctx_t *msg_ctx2 = NULL;
         axis2_bool_t is_svr_side = AXIS2_FALSE;
+        sandesha2_seq_t *req_seq = NULL;
+        axis2_char_t *incoming_seq_id = NULL;
 
         /* Send an acknowledgement message with the terminate message sequence. */
-        sandesha2_msg_creator_add_ack_msg(env, rm_msg_ctx, out_seq_id, seq_prop_mgr);
+
+        req_seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
+        incoming_seq_id = sandesha2_identifier_get_identifier(
+            sandesha2_terminate_seq_get_identifier(req_seq, env), env);
+        sandesha2_msg_creator_add_ack_msg(env, rm_msg_ctx, incoming_seq_id, seq_prop_mgr);
         msg_ctx2 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
         is_svr_side = axis2_msg_ctx_get_server_side(msg_ctx2, env);
         axis2_op_ctx_set_response_written(axis2_msg_ctx_get_op_ctx(msg_ctx2, env), env, AXIS2_TRUE);
