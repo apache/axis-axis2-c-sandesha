@@ -631,11 +631,14 @@ sandesha2_app_msg_processor_process_in_msg (
         if(seq_ack)
         {
             axis2_char_t *int_seq_id = NULL;
+            axis2_char_t *out_seq_id = NULL;
             
             /* If there is a sequence acknowledgement element present in the sequence we will check
              * whether the sequence is completed. If so send a terminate sequence message.
              */
-            int_seq_id = sandesha2_utils_get_seq_property(env, str_seq_id, 
+            out_seq_id = sandesha2_identifier_get_identifier(
+                sandesha2_seq_ack_get_identifier(seq_ack, env), env);
+            int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
                     SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
             last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
                 SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
@@ -658,9 +661,9 @@ sandesha2_app_msg_processor_process_in_msg (
                     {
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                                 "[sandesha2]Sequence %s is completed. So adding terminate msg", 
-                                str_seq_id); 
+                                out_seq_id); 
                         sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, 
-                            str_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
+                            out_seq_id, int_seq_id, storage_mgr, seq_prop_mgr, 
                             create_seq_mgr, sender_mgr);
                     }
                 }
