@@ -46,6 +46,7 @@
 #include <sandesha2_ack_mgr.h>
 #include <sandesha2_msg_creator.h>
 #include <sandesha2_client_constants.h>
+#include <sandesha2_terminate_mgr.h>
 
 #include <axis2_const.h>
 #include <axis2_msg_ctx.h>
