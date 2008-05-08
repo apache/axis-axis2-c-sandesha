@@ -428,7 +428,6 @@ sandesha2_ack_msg_processor_process_in_msg (
 
             completed = sandesha2_ack_mgr_verify_seq_completion(env, 
                 ack_range_list, highest_out_msg_no);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came10***********************");
             to = sandesha2_msg_ctx_get_to(rm_msg_ctx, env);
             if(to)
             {
@@ -436,7 +435,6 @@ sandesha2_ack_msg_processor_process_in_msg (
             }
             if(completed && sandesha2_utils_is_anon_uri(env, to_address))
             {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came11***********************");
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "[sandesha2]Sequence %s is completed. So adding terminate msg", 
                         out_seq_id); 

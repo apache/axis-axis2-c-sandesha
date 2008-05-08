@@ -255,7 +255,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     {
         sandesha2_seq_ack_t *seq_ack = NULL;
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1****************************");
         seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
         if(seq_ack)
         {
@@ -263,7 +262,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
             axis2_char_t *out_seq_id = NULL;
             axis2_char_t *last_out_msg_no_str = NULL;
             long highest_out_msg_no = 0;
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2****************************");
             
             /* If there is a sequence acknowledgement element present in the sequence we will check
              * whether the sequence is completed. If so send a terminate sequence message.
@@ -285,7 +283,6 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                 highest_out_msg_no = sandesha2_app_msg_processor_get_prev_msg_no(env, 
                     int_seq_id, seq_prop_mgr);
             }
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%d****************************", highest_out_msg_no);
             if(highest_out_msg_no > 0)
             {
                 axis2_bool_t completed = AXIS2_FALSE;
@@ -296,10 +293,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                 ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
                 completed = sandesha2_ack_mgr_verify_seq_completion(env, 
                     ack_range_list, highest_out_msg_no);
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3****************************");
                 if(completed)
                 {
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came4****************************");
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                             "[sandesha2]Sequence %s is completed. So adding terminate msg", 
                             out_seq_id); 
