@@ -431,7 +431,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             to = sandesha2_msg_ctx_get_to(rm_msg_ctx, env);
             if(to)
             {
-                to_address = axis2_endpoint_ref_get_address(to, env);
+                to_address = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
             }
             if(completed && sandesha2_utils_is_anon_uri(env, to_address))
             {
