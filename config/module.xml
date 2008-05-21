@@ -74,11 +74,11 @@
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
     <parameter name="RetransmissionInterval" locked="false">4</parameter><!--In seconds-->
-    <parameter name="InactivityTimeout" locked="false">16</parameter><!--In seconds-->
+    <parameter name="InactivityTimeout" locked="false">64</parameter><!--In seconds-->
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>
     <parameter name="MessageTypesToDrop" locked="false">none</parameter>
-    <parameter name="MaxRetransCount" locked="false">10</parameter>
+    <parameter name="MaxRetransCount" locked="false">100</parameter>
     <parameter name="SenderSleepTime" locked="false">100000</parameter><!--In micro seconds-->
     <parameter name="InvokerSleepTime" locked="false">1</parameter>
     <parameter name="PollingWaitTime" locked="false">2</parameter>

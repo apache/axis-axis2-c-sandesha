@@ -496,9 +496,9 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
         SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT, AXIS2_VALUE_TRUE);
     
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, seq_id,
         svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_time_out_sending_side_seq");
     return AXIS2_SUCCESS;
@@ -598,7 +598,6 @@ sandesha2_terminate_mgr_clean_sending_side_data(
             create_seq_bean = axutil_array_list_get(found_list, env, i);
             key = sandesha2_create_seq_bean_get_ref_msg_store_key(
                 create_seq_bean, env);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_key:%s", key);
             if(key) 
                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
                    conf_ctx, -1);

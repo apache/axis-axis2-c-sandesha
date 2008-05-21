@@ -856,6 +856,7 @@ sandesha2_app_msg_processor_process_out_msg(
     long msg_number = -1;
     axis2_char_t *dummy_msg_str = NULL;
     axis2_bool_t dummy_msg = AXIS2_FALSE;
+    axis2_bool_t seq_timed_out = AXIS2_FALSE;
     sandesha2_seq_property_bean_t *res_highest_msg_bean = NULL;
     axis2_char_t msg_number_str[32];
     axis2_bool_t send_create_seq = AXIS2_FALSE;
@@ -869,6 +870,7 @@ sandesha2_app_msg_processor_process_out_msg(
     axis2_msg_ctx_t *req_msg_ctx = NULL;
     axis2_relates_to_t *relates_to = NULL;
     axis2_char_t *dbname = NULL;
+    sandesha2_seq_property_bean_t *seq_timeout_bean = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_app_msg_processor_process_out_msg");
@@ -894,6 +896,7 @@ sandesha2_app_msg_processor_process_out_msg(
     }
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
+
     is_svr_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
@@ -1032,6 +1035,34 @@ sandesha2_app_msg_processor_process_out_msg(
                 AXIS2_FREE(env->allocator, spec_ver);
         }
     }
+
+    seq_timeout_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_seq_id, 
+            SANDESHA2_SEQ_PROP_SEQ_TIMED_OUT);
+    if(seq_timeout_bean && sandesha2_seq_property_bean_get_value(seq_timeout_bean, env) 
+        && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, sandesha2_seq_property_bean_get_value(seq_timeout_bean, 
+                env)))
+    {
+        axis2_char_t *temp_int_seq_id = sandesha2_seq_property_bean_get_seq_id(seq_timeout_bean, env);
+        axis2_char_t *temp_name = sandesha2_seq_property_bean_get_name(seq_timeout_bean, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Removing the sequence property named %s in the sequence %s", temp_name, 
+                temp_int_seq_id);
+        sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, temp_int_seq_id, temp_name);
+
+        if(internal_seq_id)
+                AXIS2_FREE(env->allocator, internal_seq_id);
+        if(seq_prop_mgr)
+            sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+        if(create_seq_mgr)
+            sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        if(sender_mgr)
+            sandesha2_sender_mgr_free(sender_mgr, env);
+        if(storage_mgr)
+            sandesha2_storage_mgr_free(storage_mgr, env);
+        /* We should halt the system here. Otherwise application client keep on sending messages. */
+        exit(AXIS2_FAILURE);
+    }
+
     property = axis2_msg_ctx_get_property(msg_ctx, env, 
         SANDESHA2_CLIENT_MESSAGE_NUMBER);
     if(property)
@@ -1076,6 +1107,7 @@ sandesha2_app_msg_processor_process_out_msg(
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
     }
+
     if(msg_num_lng > 0)
         msg_number = msg_num_lng;
     else if(system_msg_num > 0)

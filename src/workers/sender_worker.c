@@ -327,7 +327,6 @@ sandesha2_sender_worker_send(
     {
         /* This is neccessary to avoid a double free */
         axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_msg_id:%s", msg_id);
         if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
 		{
         	successfully_sent = AXIS2_TRUE;
