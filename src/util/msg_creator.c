@@ -317,10 +317,12 @@ sandesha2_msg_creator_create_create_seq_msg(
 
 /**
  * Create a new create_seq_response message.
+ * @param env axis2 environment struct
  * @param create_seq_msg
  * @param out_msg
  * @param new_seq_id
- * @return
+ * @param seq_prop_mgr
+ * @return sandesha2_msg_ctx_t
  */
 sandesha2_msg_ctx_t *
 sandesha2_msg_creator_create_create_seq_res_msg(
@@ -353,30 +355,29 @@ sandesha2_msg_creator_create_create_seq_res_msg(
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Entry:sandesha2_msg_creator_create_create_seq_res_msg");
+
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(temp_msg_ctx, env);
     cs = sandesha2_msg_ctx_get_create_seq(create_seq_msg, env);
     rm_version = sandesha2_utils_get_rm_version(env, new_seq_id, seq_prop_mgr);
     if(!rm_version)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "Cannot find rm version of given message");
-        AXIS2_ERROR_SET(env->error, 
-            SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
-            AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot find rm version of given message");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_FIND_RM_VERSION_OF_GIVEN_MSG, 
+                AXIS2_FAILURE);
         return NULL;
     }
+
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
     addressing_ns_value = sandesha2_utils_get_seq_property(env, new_seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
     if(!addressing_ns_value)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "Cannot find addressing namespace value");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot find addressing namespace value");
         return NULL;
     }
-    create_seq_res = sandesha2_create_seq_res_create(env, rm_ns_value, 
-        addressing_ns_value);
+
+    create_seq_res = sandesha2_create_seq_res_create(env, rm_ns_value, addressing_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
     sandesha2_identifier_set_identifier(identifier, env, new_seq_id);
     sandesha2_create_seq_res_set_identifier(create_seq_res, env, identifier);
@@ -386,41 +387,57 @@ sandesha2_msg_creator_create_create_seq_res_msg(
         axis2_char_t *out_seq_id = NULL;
         sandesha2_identifier_t *temp_identifier = NULL;
         
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Offer present");
+
         temp_identifier = sandesha2_seq_offer_get_identifier(offer, env);
         out_seq_id = sandesha2_identifier_get_identifier(temp_identifier, env);
-        if(out_seq_id && 0 != axutil_strcmp("", out_seq_id))
+        if(out_seq_id && axutil_strcmp("", out_seq_id))
         {
             sandesha2_accept_t *accept = NULL;
             axis2_endpoint_ref_t *acks_to_epr = NULL;
             sandesha2_acks_to_t *acks_to = NULL;
             sandesha2_address_t *address = NULL;
 
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] out_seq_id present");
+
             accept = sandesha2_accept_create(env, rm_ns_value, addressing_ns_value);
-            acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
-            address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
-            acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
-            sandesha2_address_set_epr(address, env, acks_to_epr);
-            sandesha2_acks_to_set_address(acks_to, env, address);
-            sandesha2_accept_set_acks_to(accept, env, acks_to);
-            sandesha2_create_seq_res_set_accept(create_seq_res, env, accept);
+            if(accept)
+            {
+                acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
+                address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
+                acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
+                sandesha2_address_set_epr(address, env, acks_to_epr);
+                sandesha2_acks_to_set_address(acks_to, env, address);
+                sandesha2_accept_set_acks_to(accept, env, acks_to);
+                sandesha2_create_seq_res_set_accept(create_seq_res, env, accept);
+            }
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Could not create accept element");
+                return NULL;
+            }
         }
     }
+
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(create_seq_msg, env); 
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
     envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
     temp_soap_body = axiom_soap_envelope_get_body(envelope, env);
     temp_om_node = axiom_soap_body_get_base_node(temp_soap_body, env);
     sandesha2_create_seq_res_to_om_node(create_seq_res, env, temp_om_node);
-    temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(
-            env, rm_version);
+    temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(env, rm_version);
     if(rm_version)
+    {
         AXIS2_FREE(env->allocator, rm_version);
+    }
+
     axis2_msg_ctx_set_wsa_action(out_msg, env, temp_action);
-    /*temp_action = 
-        sandesha2_spec_specific_consts_get_create_seq_res_action(env, 
-                rm_version);*/
+
+    /*temp_action = sandesha2_spec_specific_consts_get_create_seq_res_action(env, rm_version);*/
+
     soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
+
     /*ctx = axis2_msg_ctx_get_base(out_msg, env);
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
@@ -434,21 +451,26 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             addressing_ns_value));
         axis2_ctx_set_property(ctx, env, AXIS2_WSA_VERSION, prop);
     }*/
+
     if(addressing_ns_value)
+    {
         AXIS2_FREE(env->allocator, addressing_ns_value);
+    }
+
     new_msg_id = axutil_uuid_gen(env);
     axis2_msg_ctx_set_message_id(out_msg, env, new_msg_id);
     axis2_msg_ctx_set_soap_envelope(out_msg, env, envelope);
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     sandesha2_msg_creator_init_creation(env, temp_msg_ctx,out_msg);
     create_seq_res_rm_msg_ctx = sandesha2_msg_init_init_msg(env, out_msg);
-    sandesha2_msg_ctx_set_create_seq_res(create_seq_res_rm_msg_ctx, env, 
-        create_seq_res);
+    sandesha2_msg_ctx_set_create_seq_res(create_seq_res_rm_msg_ctx, env, create_seq_res);
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     sandesha2_msg_creator_finalize_creation(env, temp_msg_ctx, out_msg);
     axis2_msg_ctx_set_server_side(temp_msg_ctx, env, AXIS2_TRUE);
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2] Exit:sandesha2_msg_creator_create_create_seq_res_msg");
+            "[sandesha2] Exit:sandesha2_msg_creator_create_create_seq_res_msg");
+
     return create_seq_res_rm_msg_ctx;
 }
  

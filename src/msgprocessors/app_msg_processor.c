@@ -91,8 +91,13 @@ sandesha2_app_msg_processor_msg_num_is_in_list(
     axis2_char_t *list,
     long num);
                   	
-static axis2_status_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_app_msg_processor_check_for_create_seq_response(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *create_seq_msg_ctx);
+
+static axis2_status_t AXIS2_CALL
+sandesha2_app_msg_processor_process_create_seq_response(
     const axutil_env_t *env, 
     axis2_msg_ctx_t *create_seq_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);
@@ -1027,6 +1032,8 @@ sandesha2_app_msg_processor_process_out_msg(
 
         request_msg_no = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(req_seq, env), env);
         internal_seq_id = sandesha2_utils_get_outgoing_internal_seq_id(env, incoming_seq_id);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_incoming_seq_id:%s", incoming_seq_id); 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_int_seq_id3:%s", internal_seq_id); 
 
         /* Deciding whether this is the last message. We assume it is if it 
          * relates to a message which arrived with the LastMessage flag on it.
@@ -1067,12 +1074,13 @@ sandesha2_app_msg_processor_process_out_msg(
             axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY, 
                 property);
         }
-        internal_seq_id = sandesha2_utils_get_internal_seq_id(env, 
-            to, seq_key);
-        property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_LAST_MESSAGE);
+        internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);
+        property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_LAST_MESSAGE);
         if(property)
+        {
             last_app_msg = axutil_property_get_value(property, env);
+        }
+
         if(last_app_msg && 0 == axutil_strcmp(last_app_msg, AXIS2_VALUE_TRUE))
         {
             axis2_char_t *spec_ver = NULL;
@@ -1237,6 +1245,7 @@ sandesha2_app_msg_processor_process_out_msg(
     out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_seq_id, 
             SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_int_seq_id2:%s", internal_seq_id); 
     if(is_svr_side)
     {
         axis2_char_t *incoming_seq_id = NULL;
@@ -1723,6 +1732,11 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     }
 
     create_seq_msg = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg, env);
+    if(!create_seq_msg)
+    {
+        return AXIS2_FAILURE;
+    }
+
     axis2_msg_ctx_set_relates_to(create_seq_msg, env, NULL);
     str_key = axutil_uuid_gen(env);
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, internal_seq_id, 
@@ -1783,8 +1797,11 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     /*if(!axis2_engine_resume_send(engine, env, create_seq_msg))*/
     if(axis2_engine_send(engine, env, create_seq_msg))
     {
-        status = sandesha2_app_msg_processor_check_for_create_seq_response(env, create_seq_msg, 
-                storage_mgr);
+        if(sandesha2_app_msg_processor_check_for_create_seq_response(env, create_seq_msg))
+        {    
+            /*status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg, 
+                storage_mgr);*/
+        }
     }
     else
     {
@@ -1807,14 +1824,21 @@ sandesha2_app_msg_processor_add_create_seq_msg(
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Transport sender invoke failed");
             }
         }
-        status = sandesha2_app_msg_processor_check_for_create_seq_response(env, create_seq_msg, 
-            storage_mgr);
-        if(!status)
+        if(sandesha2_app_msg_processor_check_for_create_seq_response(env, create_seq_msg))
         {
-            break;
+            status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg, 
+                storage_mgr);
+        
+            if(!status)
+            {
+                break;
+            }
         }
         out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_seq_id, 
             SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3*********************************");
+
     }
 
     create_seq_op_ctx = axis2_msg_ctx_get_op_ctx(create_seq_msg, env);
@@ -1828,8 +1852,54 @@ sandesha2_app_msg_processor_add_create_seq_msg(
     return status;
 }
 
-static axis2_status_t AXIS2_CALL
+static axis2_bool_t AXIS2_CALL
 sandesha2_app_msg_processor_check_for_create_seq_response(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *create_seq_msg_ctx)
+{
+    axiom_soap_envelope_t *res_envelope = NULL;
+    axis2_char_t *soap_ns_uri = NULL;
+    axis2_bool_t svr_side = AXIS2_FALSE;
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Entry:sandesha2_app_msg_processor_check_for_create_seq_response");
+    
+    AXIS2_PARAM_CHECK(env->error, create_seq_msg_ctx, AXIS2_FAILURE);
+    
+    svr_side = axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env);
+    soap_ns_uri = axis2_msg_ctx_get_is_soap_11(create_seq_msg_ctx, env) ?
+         AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+         AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
+    res_envelope = axis2_msg_ctx_get_response_soap_envelope(create_seq_msg_ctx, env);
+    if(!res_envelope)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+        res_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
+                create_seq_msg_ctx, soap_ns_uri);
+        if(!res_envelope)
+        {
+            /* There is no response message context. Therefore it can be deduced that this is one 
+             * way message. So return.
+             */
+            return AXIS2_FALSE;
+        }
+    }
+
+    if(svr_side)
+    {
+        /* We check and process the sync response only in the application client 
+         * side.
+         */
+        return AXIS2_FALSE;
+    }
+
+    return AXIS2_TRUE;
+}
+
+static axis2_status_t AXIS2_CALL
+sandesha2_app_msg_processor_process_create_seq_response(
     const axutil_env_t *env, 
     axis2_msg_ctx_t *create_seq_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr)
@@ -1845,19 +1915,12 @@ sandesha2_app_msg_processor_check_for_create_seq_response(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_conf_t *conf = NULL;
     axis2_op_ctx_t *create_seq_res_op_ctx = NULL;
-    axis2_bool_t svr_side = AXIS2_FALSE;
    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
-        "[sandesha2] Entry:sandesha2_app_msg_processor_check_for_create_seq_response");
+        "[sandesha2] Entry:sandesha2_app_msg_processor_process_create_seq_response");
     
     AXIS2_PARAM_CHECK(env->error, create_seq_msg_ctx, AXIS2_FAILURE);
     
-    if(!create_seq_msg_ctx)
-    {
-        return AXIS2_SUCCESS;
-    }
-
-    svr_side = axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env);
     soap_ns_uri = axis2_msg_ctx_get_is_soap_11(create_seq_msg_ctx, env) ?
          AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
          AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
@@ -1865,24 +1928,19 @@ sandesha2_app_msg_processor_check_for_create_seq_response(
     res_envelope = axis2_msg_ctx_get_response_soap_envelope(create_seq_msg_ctx, env);
     if(!res_envelope)
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Response envelope not found");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
         res_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
                 create_seq_msg_ctx, soap_ns_uri);
         if(!res_envelope)
         {
-            /* There is no response message context. Therefore it can be deduced that this is one 
-             * way message. So return.
+            /* There is no response message context. But in single channel duplex scenario there should be
+             * an CSR in the back channel. So return failure.
              */
-            return AXIS2_SUCCESS;
-        }
-    }
 
-    if(svr_side)
-    {
-        /* We check and process the sync response only in the application client 
-         * side.
-         */
-        return AXIS2_SUCCESS;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+            return AXIS2_FAILURE;
+        }
     }
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(create_seq_msg_ctx, env);
@@ -2020,7 +2078,7 @@ sandesha2_app_msg_processor_check_for_create_seq_response(
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
-        "[sandesha2]Exit:sandesha2_app_msg_processor_check_for_create_seq_response");
+        "[sandesha2] Exit:sandesha2_app_msg_processor_process_create_seq_response");
     return AXIS2_SUCCESS;
 }
 
