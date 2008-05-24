@@ -205,8 +205,7 @@ sandesha2_in_handler_invoke(
             AXIS2_FALSE);
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
-    msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
-        rm_msg_ctx);
+    msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
     if(msg_processor)
     {
         sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);

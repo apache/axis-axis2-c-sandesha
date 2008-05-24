@@ -270,6 +270,11 @@ sandesha2_util_get_dbname(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
 
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_fault_envelope(
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *soap_envelope);
+
 /** @} */
 #ifdef __cplusplus
 }

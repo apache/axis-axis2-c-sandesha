@@ -1071,8 +1071,9 @@ sandesha2_permanent_storage_mgr_create_db(
             "[sandesha2]Database %s already created.", dbname);
         return AXIS2_SUCCESS;
     }
-    dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, 
-        dbname);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]dbname:%s", dbname);
+    dbconn = sandesha2_permanent_bean_mgr_get_dbconn(env, dbname);
+
     #if !defined(WIN32)
     {
         axis2_char_t permission_str[256];
@@ -1080,6 +1081,7 @@ sandesha2_permanent_storage_mgr_create_db(
         system(permission_str);
     }
     #endif
+
     sql_stmt1 = "create table create_seq("\
         "create_seq_msg_id varchar(100) primary key, "\
         "internal_seq_id varchar(200), seq_id varchar(200), "\
