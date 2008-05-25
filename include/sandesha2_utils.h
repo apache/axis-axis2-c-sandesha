@@ -275,6 +275,16 @@ sandesha2_util_is_fault_envelope(
     const axutil_env_t *env, 
     axiom_soap_envelope_t *soap_envelope);
 
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_ack_already_piggybacked(
+    const axutil_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_piggybackable_msg_type(
+    const axutil_env_t *env, 
+    int msg_type);
+
 /** @} */
 #ifdef __cplusplus
 }

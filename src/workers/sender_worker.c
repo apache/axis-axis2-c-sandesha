@@ -232,9 +232,8 @@ sandesha2_sender_worker_send(
             sandesha2_sender_bean_free(sender_worker_bean, env);
         return AXIS2_SUCCESS;
     }
-    continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env,
-        sender_worker_bean, conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, 
-        sender_mgr);
+    continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, sender_worker_bean, 
+            conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
     sandesha2_sender_mgr_update(sender_mgr, env, sender_worker_bean);
     if(!continue_sending)
     {
@@ -263,6 +262,8 @@ sandesha2_sender_worker_send(
     }
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     
+    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
+
     prop_bean = sandesha2_utils_get_property_bean(env, 
         axis2_conf_ctx_get_conf(conf_ctx, env));
     if(prop_bean)
@@ -300,7 +301,6 @@ sandesha2_sender_worker_send(
      *  This method is not implemented yet
      *  update_msg(sender_worker, env, msg_xtx);
      */
-    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
     {
         sandesha2_seq_t *seq = NULL;
@@ -310,6 +310,7 @@ sandesha2_sender_worker_send(
         seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         identifier = sandesha2_seq_get_identifier(seq, env);
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
+        return AXIS2_SUCCESS;
     }
     if(sandesha2_sender_worker_is_piggybackable_msg_type(sender_worker, env,
         msg_type) && AXIS2_FALSE  == 
@@ -386,15 +387,15 @@ sandesha2_sender_worker_send(
     if(!resend && msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
         msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_type:%d*****************************", msg_type);
         axis2_char_t *msg_stored_key = NULL;
         if(bean1)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2*****************************");
             msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 
             sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
-            msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(
-                bean1, env);
-            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-                msg_stored_key, conf_ctx, -1);
+            msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean1, env);
+            sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, msg_stored_key, conf_ctx, -1);
         }
     }
     if(bean1)

@@ -1410,3 +1410,31 @@ sandesha2_util_is_fault_envelope(
     return AXIS2_FALSE;
 }
 
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_ack_already_piggybacked(
+    const axutil_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx)
+{
+    AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
+    
+    if(sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env))
+    {
+        return AXIS2_TRUE;
+    }
+    
+    return AXIS2_FALSE;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_piggybackable_msg_type(
+    const axutil_env_t *env, 
+    int msg_type)
+{
+    if(SANDESHA2_MSG_TYPE_ACK == msg_type)
+    {
+        return AXIS2_FALSE;
+    }
+
+    return AXIS2_TRUE;
+}
+
