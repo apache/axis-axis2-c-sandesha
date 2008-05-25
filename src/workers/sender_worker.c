@@ -487,9 +487,7 @@ sandesha2_sender_worker_check_for_sync_res(
             soap_ns_uri);
         if(!res_envelope)
         {
-            if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type ==
-                SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type ==
-                SANDESHA2_MSG_TYPE_ACK)
+            if(msg_type == SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type == SANDESHA2_MSG_TYPE_ACK)
             {
                 /* These are Sandesha2/C created messages. Also because there is 
                  * no response for these messages we can deduce that they are
@@ -634,15 +632,13 @@ sandesha2_sender_worker_check_for_sync_res(
             axis2_engine_free(engine, env);
         }
     }
-    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type ==
-        SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type == SANDESHA2_MSG_TYPE_ACK)
+    if(msg_type == SANDESHA2_MSG_TYPE_TERMINATE_SEQ || msg_type == SANDESHA2_MSG_TYPE_ACK)
     {
         axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx,
             env);
         axis2_op_ctx_free(op_ctx, env);
     }
-    if(msg_type == SANDESHA2_MSG_TYPE_CREATE_SEQ || msg_type == 
-            SANDESHA2_MSG_TYPE_APPLICATION)
+    if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
     {
         axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(res_msg_ctx, env);
         axis2_op_ctx_free(op_ctx, env);

@@ -318,8 +318,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, int_seq_bean);
     accept = sandesha2_create_seq_res_get_accept(csr_part, env);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1*********************************");
-
     if(accept)
     {
         sandesha2_seq_property_bean_t *special_int_seq_bean = NULL;
@@ -342,8 +340,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         axis2_msg_ctx_t *create_seq_msg = NULL;
         axis2_char_t *acks_to = NULL;
         
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2*********************************");
-
         next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
         offerd_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env,
                         internal_seq_id, SANDESHA2_SEQ_PROP_OFFERED_SEQ);

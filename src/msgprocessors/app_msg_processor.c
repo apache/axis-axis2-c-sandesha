@@ -1794,13 +1794,12 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         sandesha2_msg_ctx_free(create_seq_rm_msg, env);
     }
 
-    /*if(!axis2_engine_resume_send(engine, env, create_seq_msg))*/
     if(axis2_engine_send(engine, env, create_seq_msg))
     {
         if(sandesha2_app_msg_processor_check_for_create_seq_response(env, create_seq_msg))
         {    
-            /*status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg, 
-                storage_mgr);*/
+            status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg, 
+                storage_mgr);
         }
     }
     else
@@ -1837,7 +1836,6 @@ sandesha2_app_msg_processor_add_create_seq_msg(
         out_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_seq_id, 
             SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3*********************************");
 
     }
 
