@@ -860,8 +860,8 @@ sandesha2_app_msg_processor_process_in_msg (
          * That means we can send an acknowledgment message in the http back channel.
          */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Back channel is free");
-        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr, sender_mgr, seq_prop_mgr);
+        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, storage_mgr, 
+                sender_mgr, seq_prop_mgr);
     }
     else if(sandesha2_utils_is_single_channel(env, rm_version, acks_to_str))
     {
@@ -876,8 +876,8 @@ sandesha2_app_msg_processor_process_in_msg (
     {
         /* This is most probably dual channel duplex mode. */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Most probably dual channel duplex mode.");
-        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, 
-            storage_mgr, sender_mgr, seq_prop_mgr);
+        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, storage_mgr, 
+                sender_mgr, seq_prop_mgr);
     }
     if(rm_version)
         AXIS2_FREE(env->allocator, rm_version);
@@ -1559,111 +1559,119 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_bool_t sent = AXIS2_FALSE;
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] Entry:sandesha2_app_msg_processor_send_ack_if_reqd");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[Sandesha2] Entry:sandesha2_app_msg_processor_send_ack_if_reqd");
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_str, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+
     seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
-    seq_id = sandesha2_identifier_get_identifier(
-        sandesha2_seq_get_identifier(seq, env), env);
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx,
-        env), env);
+    seq_id = sandesha2_identifier_get_identifier(sandesha2_seq_get_identifier(seq, env), env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env), env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] cont_ctx is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] cont_ctx is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+
     ack_requested = sandesha2_msg_ctx_get_ack_requested(rm_msg_ctx, env);
     if(ack_requested)
     {
-        sandesha2_ack_requested_set_must_understand(ack_requested, env, 
-            AXIS2_FALSE);
+        sandesha2_ack_requested_set_must_understand(ack_requested, env, AXIS2_FALSE);
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
-    ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id, 
-        seq_prop_mgr);
+
+    ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, seq_id, seq_prop_mgr);
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
-    int_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-        seq_id, SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID);
+    int_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
+            SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID);
+
     /* Following code block send the ack messages through sender. If we comment this
      * it will be sent directly avoiding the sender. We will enter this block only 
      * in application client side when sequence offer is on.
      */
     if(int_seq_bean)
     {
-        axis2_transport_out_desc_t *transport_out = NULL;
+        axis2_endpoint_ref_t *reply_to_epr = NULL;
         long send_time = -1;
         axis2_char_t *key = NULL;
         axutil_property_t *property = NULL;
         sandesha2_sender_bean_t *ack_bean = NULL;
         axis2_char_t *int_seq_id = NULL;
+
         key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, 
-            ack_msg_ctx);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
-        sandesha2_sender_bean_set_msg_id(ack_bean, env, 
-            sandesha2_msg_ctx_get_msg_id(ack_rm_msg, env));
+        sandesha2_sender_bean_set_msg_id(ack_bean, env, sandesha2_msg_ctx_get_msg_id(ack_rm_msg, env));
         sandesha2_sender_bean_set_send(ack_bean, env, AXIS2_TRUE);
         int_seq_id = sandesha2_seq_property_bean_get_value(int_seq_bean, env);
         sandesha2_sender_bean_set_internal_seq_id(ack_bean, env, int_seq_id);
         sandesha2_sender_bean_set_seq_id(ack_bean, env, seq_id);
-        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
-        sandesha2_msg_ctx_set_property(ack_rm_msg, env, 
-            SANDESHA2_QUALIFIED_FOR_SENDING, property);
-        sandesha2_sender_bean_set_msg_type(ack_bean, env, 
-            SANDESHA2_MSG_TYPE_ACK);
+        /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_FALSE);
+        sandesha2_msg_ctx_set_property(ack_rm_msg, env, SANDESHA2_QUALIFIED_FOR_SENDING, property);*/
+        sandesha2_sender_bean_set_msg_type(ack_bean, env, SANDESHA2_MSG_TYPE_ACK);
         sandesha2_sender_bean_set_resend(ack_bean, env, AXIS2_FALSE);
         sandesha2_sender_mgr_insert(sender_mgr, env, ack_bean);
+
         if(ack_bean)
+        {
             sandesha2_sender_bean_free(ack_bean, env);
-        transport_out = axis2_msg_ctx_get_transport_out_desc(ack_msg_ctx, env);
-        property = axutil_property_create_with_args(env, 0, 0,
-            axis2_transport_out_desc_free_void_arg, transport_out);
-        axis2_msg_ctx_set_property(ack_msg_ctx, env, 
-            SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
-        property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, key);
-        axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, 
-            property);
-        property = axutil_property_create_with_args(env, 0, 0, 0, 
-            AXIS2_VALUE_TRUE);
-        axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, 
-            property);
-        axis2_msg_ctx_set_transport_out_desc(ack_msg_ctx, env, 
-            sandesha2_utils_get_transport_out(env));
-        {                
-            axis2_endpoint_ref_t *reply_to_epr = NULL;
-            reply_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
-            if(reply_to_epr)
-                axis2_msg_ctx_set_reply_to(ack_msg_ctx, env, reply_to_epr);
         }
+
+        /*transport_out = axis2_msg_ctx_get_transport_out_desc(ack_msg_ctx, env);
+        property = axutil_property_create_with_args(env, 0, 0, 
+                axis2_transport_out_desc_free_void_arg, transport_out);
+
+        axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, property);
+        axis2_msg_ctx_set_transport_out_desc(ack_msg_ctx, env, sandesha2_utils_get_transport_out(env));*/
+        property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, key);
+        axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
+
+        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
+
+        reply_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+
+        if(reply_to_epr)
+        {
+            axis2_msg_ctx_set_reply_to(ack_msg_ctx, env, reply_to_epr);
+        }
+
         sandesha2_seq_property_bean_free(int_seq_bean, env);
     }
+
     if(ack_rm_msg)
     {
         axis2_engine_t *engine = NULL;
+
         engine = axis2_engine_create(env, conf_ctx);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] axis2_engine_send");
+
         sent = axis2_engine_send(engine, env, ack_msg_ctx);
         if(ack_rm_msg)
+        {
             sandesha2_msg_ctx_free(ack_rm_msg, env);
+        }
         if(engine)
+        {
             axis2_engine_free(engine, env);
+        }
     }
+
     if(!sent)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[Sandesha2]Engine Send failed");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[Sandesha2] Engine Send failed");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SENDING_ACK, AXIS2_FAILURE);
+
         return AXIS2_FAILURE;
     }
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2]Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[Sandesha2] Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
     return AXIS2_SUCCESS;
 }
                     	

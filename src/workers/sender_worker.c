@@ -312,6 +312,11 @@ sandesha2_sender_worker_send(
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
         return AXIS2_SUCCESS;
     }
+    if(msg_type == SANDESHA2_MSG_TYPE_ACK)
+    {
+        return AXIS2_SUCCESS;
+    }
+
     if(sandesha2_sender_worker_is_piggybackable_msg_type(sender_worker, env,
         msg_type) && AXIS2_FALSE  == 
         sandesha2_sender_worker_is_ack_already_piggybacked(sender_worker, env,
