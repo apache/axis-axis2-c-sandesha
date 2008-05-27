@@ -51,6 +51,7 @@ struct sandesha2_msg_ctx_t
     sandesha2_terminate_seq_t *terminate_seq;
     sandesha2_terminate_seq_res_t *terminate_seq_res;
     sandesha2_ack_requested_t *ack_requested;
+    axis2_bool_t is_server_side;
 };
 
 AXIS2_EXTERN sandesha2_msg_ctx_t* AXIS2_CALL
@@ -86,6 +87,7 @@ sandesha2_msg_ctx_create(
     
     rm_msg_ctx->msg_type = SANDESHA2_MSG_TYPE_UNKNOWN;
     rm_msg_ctx->msg_ctx = msg_ctx;
+    rm_msg_ctx->is_server_side = AXIS2_FALSE;
 
 	return rm_msg_ctx;
 }
@@ -830,5 +832,22 @@ sandesha2_msg_ctx_get_ack_requested(
     const axutil_env_t *env)
 {
     return rm_msg_ctx->ack_requested;
+}
+
+axis2_bool_t AXIS2_CALL
+sandesha2_msg_ctx_get_server_side(
+    const sandesha2_msg_ctx_t * rm_msg_ctx,
+    const axutil_env_t * env)
+{
+    return axis2_msg_ctx_get_server_side(rm_msg_ctx->msg_ctx, env);
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_server_side(
+    const sandesha2_msg_ctx_t * rm_msg_ctx,
+    const axutil_env_t * env,
+    const axis2_bool_t server_side)
+{
+    return axis2_msg_ctx_set_server_side(rm_msg_ctx->msg_ctx, env, server_side);
 }
 

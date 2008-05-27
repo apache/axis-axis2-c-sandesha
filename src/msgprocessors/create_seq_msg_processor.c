@@ -322,7 +322,6 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_set_seq_id(out_seq_bean, env, internal_seq_id);
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, offer_seq_id);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] new_seq_id:%s", new_seq_id); 
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] dam_int_seq_id1:%s", internal_seq_id); 
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, out_seq_bean);
             internal_seq_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(internal_seq_bean, env, 

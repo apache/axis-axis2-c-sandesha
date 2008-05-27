@@ -904,10 +904,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     }
 
     msg_ctx1 = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg, env);
-    if(terminate_rm_msg)
-    {
-        sandesha2_msg_ctx_free(terminate_rm_msg, env);
-    }
 
     /*transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx1, env);
     
@@ -930,12 +926,23 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
         axis2_msg_ctx_set_reply_to(msg_ctx1, env, reply_to_epr);
     }
 
+    if(!sandesha2_util_is_ack_already_piggybacked(env, terminate_rm_msg))
+    {
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, terminate_rm_msg, storage_mgr, seq_prop_mgr, 
+                sender_mgr);
+    }
+
     engine = axis2_engine_create(env, conf_ctx);
 
     status = axis2_engine_send(engine, env, msg_ctx1);
     if(engine)
     {
         axis2_engine_free(engine, env);
+    }
+
+    if(terminate_rm_msg)
+    {
+        sandesha2_msg_ctx_free(terminate_rm_msg, env);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

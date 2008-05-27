@@ -304,7 +304,6 @@ sandesha2_in_handler_drop_if_duplicate(
                     temp = axutil_array_list_get(msg_no_list, env, i);
                     if(atol(temp) == msg_no)
                     {
-                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came4*************");
                         drop = AXIS2_TRUE;
                     }
                 }

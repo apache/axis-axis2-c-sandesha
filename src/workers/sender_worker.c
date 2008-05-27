@@ -396,7 +396,6 @@ sandesha2_sender_worker_send(
         axis2_char_t *msg_stored_key = NULL;
         if(bean1)
         {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2*****************************");
             msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 
             sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
             msg_stored_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean1, env);

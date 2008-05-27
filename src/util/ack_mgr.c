@@ -311,7 +311,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
         timenow = sandesha2_utils_get_current_time_in_millis(env);
         sender_bean = axutil_array_list_get(found_list, env, i);
         
-        if(sandesha2_sender_bean_get_time_to_send(sender_bean, env) > timenow)
+        /*if(sandesha2_sender_bean_get_time_to_send(sender_bean, env) > timenow)*/
         {
             axis2_msg_ctx_t *msg_ctx1 = NULL;
             axis2_char_t *to = NULL;
@@ -329,7 +329,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                 to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_ref, env);
             else
                 continue;
-            if(0 == axutil_strcmp(to, to_str))
+            if(axutil_strcmp(to, to_str))
                 continue; 
             sandesha2_sender_mgr_remove(sender_mgr, env, 
                 sandesha2_sender_bean_get_msg_id(sender_bean, env));
@@ -343,6 +343,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                     " ack message entry");
                 return AXIS2_FAILURE;
             }
+
             seq_ack = sandesha2_msg_ctx_get_seq_ack(ack_rm_msg, env);
             sandesha2_msg_ctx_set_seq_ack(rm_msg_ctx, env, seq_ack);
             sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);

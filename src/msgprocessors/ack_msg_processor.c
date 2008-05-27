@@ -488,7 +488,8 @@ sandesha2_ack_msg_processor_process_in_msg (
         AXIS2_FREE(env->allocator, int_seq_id);
     }
 
-    sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+    /*sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);*/
+
     if(seq_prop_mgr)
     {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
