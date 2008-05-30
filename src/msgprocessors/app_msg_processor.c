@@ -162,8 +162,7 @@ sandesha2_app_msg_processor_create(
 {
     sandesha2_app_msg_processor_impl_t *msg_proc_impl = NULL;
           
-    msg_proc_impl =  (sandesha2_app_msg_processor_impl_t *)AXIS2_MALLOC 
-        (env->allocator, 
+    msg_proc_impl =  (sandesha2_app_msg_processor_impl_t *)AXIS2_MALLOC (env->allocator, 
         sizeof(sandesha2_app_msg_processor_impl_t));
 	
     if(!msg_proc_impl)
