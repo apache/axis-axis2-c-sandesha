@@ -1322,16 +1322,11 @@ sandesha2_app_msg_processor_process_out_msg(
 
     if(last_msg)
     {
-        sandesha2_seq_property_bean_t *res_highest_msg_key_bean = NULL;
         sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
        
-        res_highest_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
-                rms_internal_sequence_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY, storage_key);
-
         res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
                 rms_internal_sequence_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, msg_number_str);
 
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_highest_msg_key_bean);
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_last_msg_key_bean);
     }
 
@@ -1418,15 +1413,7 @@ sandesha2_app_msg_processor_process_out_msg(
             send_create_seq = AXIS2_TRUE;
         }
 
-        if(is_svr_side)
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "Starting the server sequence with rms internal sequence id %s", 
-                    rms_internal_sequence_id);
-            sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
-                    seq_prop_mgr, AXIS2_TRUE);
-        }
-        else
+        if(!is_svr_side)
         {
             axutil_property_t *property = NULL;
             axis2_ctx_t *ctx = axis2_conf_ctx_get_base(conf_ctx, env);
@@ -1435,21 +1422,23 @@ sandesha2_app_msg_processor_process_out_msg(
             property = axis2_ctx_get_property(ctx, env, SANDESHA2_MSG_CTX_MAP);
             if(!property)
             {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                    "[sandesha2]msg_ctx_map not found in the conf_ctx");
-                msg_ctx_map = axutil_hash_make(env);
-                property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                    AXIS2_TRUE, axutil_hash_free_void_arg, msg_ctx_map);
-                axis2_ctx_set_property(ctx, env, SANDESHA2_MSG_CTX_MAP,
-                    property);
-            }
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "Starting the client sequence with rms internal sequence id %s", 
-                    rms_internal_sequence_id);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2]msg_ctx_map not found in the conf_ctx");
 
-            sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, 
-                    spec_ver, seq_prop_mgr, AXIS2_FALSE);
+                msg_ctx_map = axutil_hash_make(env);
+                property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION, AXIS2_TRUE, 
+                        axutil_hash_free_void_arg, msg_ctx_map);
+
+                axis2_ctx_set_property(ctx, env, SANDESHA2_MSG_CTX_MAP, property);
+            }
         }
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "Starting the rms sequence with rms rms internal sequence id %s", 
+                rms_internal_sequence_id);
+
+        sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
+                seq_prop_mgr);
     }
 
     if(send_create_seq)
@@ -1526,6 +1515,7 @@ sandesha2_app_msg_processor_process_out_msg(
                     acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         }
     }
+
     soap_env = sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env);
     if(!soap_env)
     {
@@ -1533,6 +1523,7 @@ sandesha2_app_msg_processor_process_out_msg(
             AXIOM_SOAP12);
         sandesha2_msg_ctx_set_soap_envelope(rm_msg_ctx, env, soap_env);
     }
+
     if(!sandesha2_msg_ctx_get_msg_id(rm_msg_ctx, env))
     {
         axis2_char_t *msg_id = NULL;
@@ -1551,8 +1542,11 @@ sandesha2_app_msg_processor_process_out_msg(
         ctx = axis2_op_ctx_get_base(op_ctx, env);
         property = axis2_ctx_get_property(ctx, env, SANDESHA2_ACK_WRITTEN);
         if(property)
+        {
             written = axutil_property_get_value(property, env);
-        if(!written || 0 != axutil_strcmp(written, AXIS2_VALUE_TRUE))
+        }
+
+        if(!written || axutil_strcmp(written, AXIS2_VALUE_TRUE))
         {
             if (op_ctx)
             {
@@ -1563,6 +1557,7 @@ sandesha2_app_msg_processor_process_out_msg(
 
     op_name = axutil_qname_get_localpart(axis2_op_get_qname( axis2_op_ctx_get_op(
         axis2_msg_ctx_get_op_ctx(msg_ctx, env), env), env), env);
+
     if (to_epr)
     {
         to_addr = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);

@@ -283,8 +283,6 @@ extern "C"
 
     #define SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO "HighestOutRelatesTo"
 		
-	#define SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY  "HighestOutMsgKey"
-		
 	#define SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO  "LastOutMessage"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_NO  "LastInMessage"
