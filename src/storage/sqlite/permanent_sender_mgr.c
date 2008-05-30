@@ -514,13 +514,16 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
         if(!add_where)
         {
             add_where = AXIS2_TRUE;
-            sprintf(sql_find + axutil_strlen(sql_find), 
-                " where internal_seq_id = '%s'", internal_seq_id);
+            sprintf(sql_find + axutil_strlen(sql_find), " where internal_seq_id = '%s'", 
+                    internal_seq_id);
         }
         else
-            sprintf(sql_find + axutil_strlen(sql_find),
-                " and internal_seq_id = '%s'", internal_seq_id);
+        {
+            sprintf(sql_find + axutil_strlen(sql_find), " and internal_seq_id = '%s'", 
+                    internal_seq_id);
+        }
     }
+    
     if(msg_no > 0)
     {
         if(!add_where)
@@ -622,6 +625,7 @@ sandesha2_permanent_sender_mgr_get_next_msg_to_send(
     {
         sprintf(sql_find + axutil_strlen(sql_find), "and internal_seq_id='%s'", seq_id);
     }
+
     sprintf(sql_find + axutil_strlen(sql_find), " and send=%d", AXIS2_TRUE);
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find:%s", sql_find);  

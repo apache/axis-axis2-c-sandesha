@@ -54,8 +54,8 @@ sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name)
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name)
 {
     return seq_prop_mgr->ops.retrieve(seq_prop_mgr, env, seq_id, name);
 }

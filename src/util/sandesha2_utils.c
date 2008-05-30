@@ -178,8 +178,8 @@ sandesha2_utils_get_storage_mgr(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(
     const axutil_env_t *env,
-    axis2_char_t *incoming_seq_id,
-    axis2_char_t *name,
+    const axis2_char_t *incoming_seq_id,
+    const axis2_char_t *name,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_char_t *value = NULL;
@@ -189,13 +189,13 @@ sandesha2_utils_get_seq_property(
     AXIS2_PARAM_CHECK(env->error, name, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
-    seq_prop_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-        env, incoming_seq_id, name);
+    seq_prop_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, incoming_seq_id, name);
     if(!seq_prop_bean)
+    {
         return NULL;
+    }
 
-    value = axutil_strdup(env, sandesha2_seq_property_bean_get_value(
-        seq_prop_bean, env));
+    value = axutil_strdup(env, sandesha2_seq_property_bean_get_value(seq_prop_bean, env));
     sandesha2_seq_property_bean_free(seq_prop_bean, env);
     return value;
 }
@@ -356,8 +356,8 @@ sandesha2_utils_start_sender_for_seq(
     AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     
-    return sandesha2_sender_run_for_seq(env, conf_ctx, seq_id, 
-        persistent);
+    /*return sandesha2_sender_run_for_seq(env, conf_ctx, seq_id, persistent);*/
+    return AXIS2_SUCCESS;
 }
  
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        

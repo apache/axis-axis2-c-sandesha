@@ -79,10 +79,10 @@ sandesha2_sender_worker_check_for_sync_res(
     sandesha2_storage_mgr_t *storage_mgr,
     int msg_type);
 
-static axis2_bool_t AXIS2_CALL
+/*static axis2_bool_t AXIS2_CALL
 sandesha2_sender_worker_is_fault_envelope(
     const axutil_env_t *env, 
-    axiom_soap_envelope_t *soap_envelope);
+    axiom_soap_envelope_t *soap_envelope);*/
 
 axis2_status_t AXIS2_CALL 
 sandesha2_sender_worker_free(
@@ -322,7 +322,7 @@ sandesha2_sender_worker_send(
         sandesha2_sender_worker_is_ack_already_piggybacked(sender_worker, env,
         rm_msg_ctx))
     {
-        sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, 
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx,
             storage_mgr, seq_prop_mgr, sender_mgr);
     }
     

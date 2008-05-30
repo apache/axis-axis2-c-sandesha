@@ -71,8 +71,8 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr_ops
             retrieve)(
                 sandesha2_seq_property_mgr_t *seq_property,
                 const axutil_env_t *env,
-                axis2_char_t *seq_id,
-                axis2_char_t *name);
+                const axis2_char_t *seq_id,
+                const axis2_char_t *name);
 
     axis2_bool_t (AXIS2_CALL *
             update)(
@@ -131,8 +131,8 @@ sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_seq_property_mgr_retrieve(
     sandesha2_seq_property_mgr_t *seq_property,
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name);
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_seq_property_mgr_update(

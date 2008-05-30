@@ -137,8 +137,8 @@ sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_retrieve(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name);
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name);
 
 axis2_bool_t AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_update(
@@ -171,8 +171,8 @@ sandesha2_permanent_seq_property_mgr_get_id_with_bean(
 static axis2_char_t *
 sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name);
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name);
 
 static const sandesha2_seq_property_mgr_ops_t seq_property_mgr_ops = 
 {
@@ -294,8 +294,8 @@ sandesha2_seq_property_bean_t *AXIS2_CALL
 sandesha2_permanent_seq_property_mgr_retrieve(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name)
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name)
 {
     axis2_char_t *key = NULL;
     axis2_char_t sql_retrieve[1024];
@@ -453,8 +453,8 @@ sandesha2_permanent_seq_property_mgr_retrieve_all(
 static axis2_char_t *
 sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
-    axis2_char_t *name)
+    const axis2_char_t *seq_id,
+    const axis2_char_t *name)
 {
     axis2_char_t *id = NULL;
 

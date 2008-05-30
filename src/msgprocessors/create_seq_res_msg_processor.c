@@ -167,8 +167,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_create_seq_bean_t *create_seq_bean = NULL;
     axis2_char_t *internal_seq_id = NULL;
-    sandesha2_sender_bean_t *create_seq_sender_bean = NULL;
-    axis2_char_t *create_seq_storage_key = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_seq_property_bean_t *out_seq_bean = NULL;
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;

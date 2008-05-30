@@ -75,12 +75,13 @@ sandesha2_create_seq_msg_processor_process_out_msg(
     const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
     
-static void AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
     const axutil_env_t *env, 
     axis2_char_t *seq_id,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_create_seq_mgr_t *create_seq_mgr);
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_seq_property_mgr_t *seq_property_mgr);
 
 static axis2_bool_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_offer_accepted(
@@ -305,7 +306,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
              * internal_seq_bean, and out_seq_bean.
              */
             sandesha2_create_seq_msg_processor_create_seq_msg_already_received(env, offer_seq_id, 
-                rm_msg_ctx, create_seq_mgr);
+                rm_msg_ctx, create_seq_mgr, seq_prop_mgr);
 
             create_seq_bean = sandesha2_create_seq_bean_create(env);
             sandesha2_create_seq_bean_set_seq_id(create_seq_bean, env, offer_seq_id);
@@ -323,6 +324,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_set_value(out_seq_bean, env, offer_seq_id);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] new_seq_id:%s", new_seq_id); 
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, out_seq_bean);
+
             internal_seq_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(internal_seq_bean, env, 
                     SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
@@ -453,14 +455,16 @@ sandesha2_create_seq_msg_processor_process_out_msg(
     return AXIS2_SUCCESS;
 }
 
-static void AXIS2_CALL 
+static axis2_status_t AXIS2_CALL 
 sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
     const axutil_env_t *env, 
     axis2_char_t *seq_id,
     sandesha2_msg_ctx_t *rm_msg_ctx,
-    sandesha2_create_seq_mgr_t *create_seq_mgr)
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_seq_property_mgr_t *seq_property_mgr)
 {
-    sandesha2_create_seq_bean_t *find_bean = NULL;
+    sandesha2_seq_property_bean_t *find_seq_property_bean = NULL;
+    sandesha2_create_seq_bean_t *find_create_seq_bean = NULL;
     axutil_array_list_t *list = NULL;
     int size = 0;
     
@@ -468,8 +472,8 @@ sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FALSE);
     
-    find_bean = sandesha2_create_seq_bean_create_with_data(env, NULL, NULL, seq_id);
-    list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, find_bean);
+    find_create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, NULL, NULL, seq_id);
+    list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, find_create_seq_bean);
     
     if(list)
     {
@@ -495,8 +499,8 @@ sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
         axutil_array_list_free(list, env);
     }
 
-    find_bean = sandesha2_seq_property_bean_create_with_data(env, NULL, NULL, seq_id);
-    list = sandesha2_seq_property_mgr_find(create_seq_mgr, env, find_bean);
+    find_seq_property_bean = sandesha2_seq_property_bean_create_with_data(env, NULL, NULL, seq_id);
+    list = sandesha2_seq_property_mgr_find(seq_property_mgr, env, find_seq_property_bean);
     
     if(list)
     {
@@ -513,40 +517,45 @@ sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
             if(seq_prop_bean)
             {
                 axis2_char_t *internal_seq_id = NULL;
-                axutil_array_list_t *temp_list = NULL;
-                int temp_size = 0;
-                sandesha2_seq_property_bean_t *temp_find_bean = NULL;
+                axis2_char_t *name = NULL;
 
-                internal_seq_id = sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
+                name = sandesha2_seq_property_bean_get_name(seq_prop_bean, env);
+                if(!axutil_strcmp(name, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID))
+                {
+                    axutil_array_list_t *temp_list = NULL;
+                    int temp_size = 0;
+                    sandesha2_seq_property_bean_t *temp_find_bean = NULL;
 
-                sandesha2_seq_property_bean_free(seq_prop_bean, env);
+                    internal_seq_id = sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
 
-                temp_find_bean = sandesha2_seq_property_bean_create_with_data(env, NULL, NULL, internal_seq_id);
-                temp_list = sandesha2_seq_property_mgr_find(create_seq_mgr, env, temp_find_bean);
+                    temp_find_bean = sandesha2_seq_property_bean_create_with_data(env, NULL, NULL, internal_seq_id);
+                    temp_list = sandesha2_seq_property_mgr_find(seq_property_mgr, env, temp_find_bean);
                 
-                if(temp_list)
-                {
-                    temp_size = axutil_array_list_size(list, env);
-                }
-                if(temp_list && 0 < temp_size)
-                {
-                    int j = 0;
-                    sandesha2_seq_property_bean_t *temp_seq_prop_bean = NULL;
-                   
-                    for(j = 0; j < temp_size; j++)
+                    if(temp_list)
                     {
-                        temp_seq_prop_bean = (sandesha2_seq_property_bean_t *) axutil_array_list_get(temp_list, env, i);
-                        if(temp_seq_prop_bean)
+                        temp_size = axutil_array_list_size(list, env);
+                    }
+                    if(temp_list && 0 < temp_size)
+                    {
+                        int j = 0;
+                        sandesha2_seq_property_bean_t *temp_seq_prop_bean = NULL;
+                   
+                        for(j = 0; j < temp_size; j++)
                         {
-                            sandesha2_seq_property_bean_free(temp_seq_prop_bean, env);
+                            temp_seq_prop_bean = (sandesha2_seq_property_bean_t *) axutil_array_list_get(temp_list, env, i);
+                            if(temp_seq_prop_bean)
+                            {
+                                sandesha2_seq_property_bean_free(temp_seq_prop_bean, env);
+                            }
                         }
                     }
-                }
 
-                if(temp_list)
-                {
-                    axutil_array_list_free(temp_list, env);
+                    if(temp_list)
+                    {
+                        axutil_array_list_free(temp_list, env);
+                    }
                 }
+                sandesha2_seq_property_bean_free(seq_prop_bean, env);
             }
         }
     }
@@ -555,6 +564,8 @@ sandesha2_create_seq_msg_processor_create_seq_msg_already_received(
     {
         axutil_array_list_free(list, env);
     }
+
+    return AXIS2_SUCCESS;
 }
 
 

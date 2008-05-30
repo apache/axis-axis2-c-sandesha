@@ -73,8 +73,8 @@ sandesha2_utils_get_storage_mgr(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(
     const axutil_env_t *env,
-    axis2_char_t *id,
-    axis2_char_t *name,
+    const axis2_char_t *id,
+    const axis2_char_t *name,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
