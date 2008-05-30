@@ -230,7 +230,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     }
 
     int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
-            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
 
     fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, rm_msg_ctx, out_seq_id, 
             seq_prop_mgr, create_seq_mgr, next_msg_mgr);

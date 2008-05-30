@@ -379,7 +379,7 @@ sandesha2_sender_worker_send(
                     env), env);
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             internal_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);

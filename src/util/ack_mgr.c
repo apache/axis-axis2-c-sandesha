@@ -157,7 +157,7 @@ sandesha2_ack_mgr_get_client_completed_msgs_list(
     
     /* First trying to get it from the internal sequence id.*/
     internal_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-            seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+            seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     if(internal_seq_bean != NULL)
     {
         internal_seq_id = sandesha2_seq_property_bean_get_value(

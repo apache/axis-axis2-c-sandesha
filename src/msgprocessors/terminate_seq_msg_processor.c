@@ -281,7 +281,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                     env), env);
 
         int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
-                SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+                SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
 
         last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
             SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
@@ -402,8 +402,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         if(highest_in_msg_num_str)
             AXIS2_FREE(env->allocator, highest_in_msg_num_str);
     }
-    rec_side_int_seq_id = sandesha2_utils_get_outgoing_internal_seq_id(env,
-        seq_id);
+    rec_side_int_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, seq_id);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]rec_side_int_seq_id:%s", 
         rec_side_int_seq_id);
     if(0 == highest_in_msg_num)
@@ -446,7 +445,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]add_rec_side_term:%d",
         add_rec_side_term);
     out_seq_id = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id,
-        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]out_seq_id:%s",
         out_seq_id);
     if(add_rec_side_term && highest_out_msg_num > 0 &&
@@ -639,9 +638,9 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
     if(property)
         seq_key = axutil_property_get_value(property, env);
-    int_seq_id = sandesha2_utils_get_internal_seq_id(env, to_address, seq_key);
+    int_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to_address, seq_key);
     out_seq_id = sandesha2_utils_get_seq_property(env, int_seq_id, 
-        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
     if(!out_seq_id)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]seq_id was not"

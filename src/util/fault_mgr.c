@@ -175,7 +175,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         sandesha2_create_seq_bean_t *find_bean = NULL;
         axutil_array_list_t *list = NULL;
         find_bean = sandesha2_create_seq_bean_create(env);
-        sandesha2_create_seq_bean_set_seq_id(find_bean, env, seq_id);
+        sandesha2_create_seq_bean_set_rms_sequence_id(find_bean, env, seq_id);
         list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
                         find_bean);
         if(find_bean)

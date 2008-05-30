@@ -213,7 +213,7 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
     AXIS2_PARAM_CHECK(env->error, seq_key, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
-    internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
     return (sandesha2_seq_report_t *) 
         sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(env, 
         internal_seq_id, conf_ctx);
@@ -251,8 +251,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     sandesha2_seq_report_set_internal_seq_id(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
-    sandesha2_create_seq_bean_set_internal_seq_id(create_seq_find_bean, 
-        env, internal_seq_id);
+    sandesha2_create_seq_bean_set_rms_internal_sequence_id(create_seq_find_bean, env, internal_seq_id);
     create_seq_bean = sandesha2_create_seq_mgr_find_unique(create_seq_mgr, env, 
         create_seq_find_bean);
 	/* if data is not available seq has to be terminated or timedOut.*/
@@ -306,7 +305,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             sandesha2_storage_mgr_free(storage_mgr, env);
         return seq_report;
     }
-    out_seq_id = sandesha2_create_seq_bean_get_seq_id(create_seq_bean, env);
+    out_seq_id = sandesha2_create_seq_bean_get_rms_sequence_id(create_seq_bean, env);
     if(!out_seq_id)
     {
         sandesha2_seq_report_set_internal_seq_id(seq_report, env, 
@@ -419,7 +418,7 @@ sandesha2_client_get_report(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     if(internal_seq_find_bean) 
         sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     if (seq_prop_mgr)
     {
         collection = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, 
@@ -1011,7 +1010,7 @@ sandesha2_client_get_seq_id(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-            internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+            internal_seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
     if(!seq_id_bean)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
@@ -1196,7 +1195,7 @@ sandesha2_client_get_internal_seq_id(
     axis2_char_t *to,
     axis2_char_t *seq_key)
 {
-    return (axis2_char_t *) sandesha2_utils_get_internal_seq_id(env, to, seq_key);
+    return (axis2_char_t *) sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
 }
 
 static axiom_soap_envelope_t *
@@ -1242,7 +1241,7 @@ sandesha2_client_configure_close_seq(
     property = (axutil_property_t *) axis2_options_get_property(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     seq_key = axutil_property_get_value(property, env);
-    internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
 
     seq_report = sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             env, internal_seq_id, conf_ctx);
@@ -1264,7 +1263,7 @@ sandesha2_client_configure_close_seq(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-            internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+            internal_seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
     if(!seq_id_bean)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 
@@ -1354,7 +1353,7 @@ sandesha2_client_is_seq_terminated(
     sandesha2_seq_property_bean_set_value(internal_seq_find_bean, env, 
             internal_seq_id);
     sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-           SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+           SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     internal_seq_bean = sandesha2_seq_property_mgr_find_unique(seq_prop_mgr, 
             env, internal_seq_find_bean);
     if(!internal_seq_bean)
@@ -1399,7 +1398,7 @@ sandesha2_client_is_seq_timedout(
     sandesha2_seq_property_bean_set_value(internal_seq_find_bean, env, 
             internal_seq_id);
     sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-           SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+           SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     internal_seq_bean = sandesha2_seq_property_mgr_find_unique(seq_prop_mgr, 
             env, internal_seq_find_bean);
     if(!internal_seq_bean)
@@ -1441,7 +1440,7 @@ sandesha2_client_fill_terminated_outgoing_seq_info(
     sandesha2_seq_property_bean_set_value(internal_seq_find_bean, env, 
             internal_seq_id);
     sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-           SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+           SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     internal_seq_bean = sandesha2_seq_property_mgr_find_unique(seq_prop_mgr, 
             env, internal_seq_find_bean);
     if(!internal_seq_bean)
@@ -1479,7 +1478,7 @@ sandesha2_client_fill_timedout_outgoing_seq_info(
     sandesha2_seq_property_bean_set_value(internal_seq_find_bean, env, 
             internal_seq_id);
     sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-           SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+           SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     internal_seq_bean = sandesha2_seq_property_mgr_find_UNIQUE(seq_prop_mgr, 
             env, internal_seq_find_bean);
     if(!internal_seq_bean)
@@ -1561,7 +1560,7 @@ sandesha2_client_generate_internal_seq_id_for_the_client_side(
     axis2_char_t *to_epr,
     axis2_char_t *seq_key)
 {
-    return sandesha2_utils_get_internal_seq_id(env, to_epr, seq_key); 
+    return sandesha2_utils_get_client_rms_internal_sequence_id(env, to_epr, seq_key); 
 }
 
 static sandesha2_seq_report_t *
@@ -1657,7 +1656,7 @@ sandesha2_client_configure_terminate_seq(
         SANDESHA2_CLIENT_SEQ_KEY);
     if(property)
         seq_key = axutil_property_get_value(property, env);
-    internal_seq_id = sandesha2_utils_get_internal_seq_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
 
     seq_report = sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             env, internal_seq_id, conf_ctx);
@@ -1696,7 +1695,7 @@ sandesha2_client_configure_terminate_seq(
         }
         if(seq_prop_mgr)
             seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-                internal_seq_id, SANDESHA2_SEQ_PROP_OUT_SEQ_ID);
+                internal_seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
         if(!seq_id_bean)
         {
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_ID_BEAN_NOT_SET, 

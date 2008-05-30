@@ -282,7 +282,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     }
     int_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-        seq_id, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID);
+        seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
     if(int_seq_bean)
         internal_seq_id = sandesha2_seq_property_bean_get_value(int_seq_bean, env);
 
@@ -500,7 +500,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
                 env), env);
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
         int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-            SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
         sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
             int_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
                 storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
