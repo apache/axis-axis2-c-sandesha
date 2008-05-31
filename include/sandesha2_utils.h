@@ -124,9 +124,9 @@ sandesha2_utils_start_polling_mgr(
     const axis2_char_t *internal_seq_id);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_outgoing_internal_seq_id(
+sandesha2_utils_get_rms_internal_sequence_id(
     const axutil_env_t *env,
-    axis2_char_t *seq_id);
+    axis2_char_t *rmd_seq_id);
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
 sandesha2_utils_get_transport_out(
@@ -142,20 +142,20 @@ sandesha2_utils_get_permanent_storage_mgr(
     const axutil_env_t *env,
     axis2_char_t *dbname);
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+/*AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
 sandesha2_utils_get_svr_side_incoming_seq_id(
     const axutil_env_t *env,
-    axis2_char_t *incoming_seq_id);
+    axis2_char_t *incoming_seq_id);*/
 
 /**
  * Caller must free the returned string.
  * @param to
  * @param seq_key
  *
- * @return internal_seq_id
+ * @return rms_internal_seq_id
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_internal_seq_id(
+sandesha2_utils_get_client_rms_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *to,
     axis2_char_t *seq_key);

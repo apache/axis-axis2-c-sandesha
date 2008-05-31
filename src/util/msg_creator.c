@@ -401,8 +401,6 @@ sandesha2_msg_creator_create_create_seq_res_msg(
                 acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
                 address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
                 acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
-                sandesha2_address_set_epr(address, env, acks_to_epr);
-                sandesha2_acks_to_set_address(acks_to, env, address);
                 sandesha2_accept_set_acks_to(accept, env, acks_to);
                 sandesha2_create_seq_res_set_accept(create_seq_res, env, accept);
             }

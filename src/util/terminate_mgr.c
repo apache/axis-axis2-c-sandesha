@@ -485,7 +485,7 @@ sandesha2_terminate_mgr_is_property_deletable(
         deletable = AXIS2_FALSE;
     if(0 == axutil_strcasecmp(name, SANDESHA2_SEQ_PROP_NO_OF_OUTGOING_MSGS_ACKED))
         deletable = AXIS2_FALSE;
-    if(0 == axutil_strcasecmp(name, SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID))
+    if(0 == axutil_strcasecmp(name, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID))
         deletable = AXIS2_FALSE;
     if(0 == axutil_strcasecmp(name, SANDESHA2_SEQ_PROP_SEQ_TERMINATED))
         deletable = AXIS2_FALSE;
@@ -556,7 +556,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
      
     out_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_OUT_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
     if(!svr_side)
     {
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
@@ -575,7 +575,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
         
     }
     internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
     if(!internal_seq_id)
         internal_seq_id = axutil_strdup(env, seq_id);
     found_list = sandesha2_sender_mgr_find_by_internal_seq_id(sender_mgr, env,
@@ -607,7 +607,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     }
     
     find_create_seq_bean = sandesha2_create_seq_bean_create(env);
-    sandesha2_create_seq_bean_set_internal_seq_id(find_create_seq_bean, env,
+    sandesha2_create_seq_bean_set_rms_internal_sequence_id(find_create_seq_bean, env,
         internal_seq_id);
     found_list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
         find_create_seq_bean);
@@ -849,7 +849,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                         terminate_seq, env), env);
 
             internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-                    SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, seq_prop_mgr);
+                    SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
 
             sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_seq_id, 
                     is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);

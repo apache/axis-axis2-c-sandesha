@@ -399,14 +399,13 @@ sandesha2_utils_start_polling_mgr(
                    
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_outgoing_internal_seq_id(
+sandesha2_utils_get_rms_internal_sequence_id(
     const axutil_env_t *env,
-    axis2_char_t *seq_id)
+    axis2_char_t *rmd_sequence_id)
 {
-    AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
+    AXIS2_PARAM_CHECK(env->error, rmd_sequence_id, NULL);
     
-    return axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":",
-        seq_id, NULL);
+    return axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", rmd_sequence_id, NULL);
 }
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
@@ -432,9 +431,10 @@ sandesha2_utils_get_permanent_storage_mgr(
     return storage_mgr;
 }
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
-sandesha2_utils_get_svr_side_incoming_seq_id(const axutil_env_t *env,
-                        axis2_char_t *incoming_seq_id)
+/*AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+sandesha2_utils_get_svr_side_incoming_seq_id(
+        const axutil_env_t *env,
+        axis2_char_t *incoming_seq_id)
 {
     axis2_char_t *start_str = NULL;
     axis2_char_t *ret = NULL;
@@ -449,7 +449,7 @@ sandesha2_utils_get_svr_side_incoming_seq_id(const axutil_env_t *env,
     ret = axutil_strdup(env, (incoming_seq_id + start_len * sizeof(axis2_char_t)));
     
     return ret;    
-}
+}*/
 
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
@@ -475,7 +475,7 @@ sandesha2_utils_get_property_bean_from_op(
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_internal_seq_id(
+sandesha2_utils_get_client_rms_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *to,
     axis2_char_t *seq_key)
