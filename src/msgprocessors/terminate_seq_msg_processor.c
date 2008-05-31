@@ -168,7 +168,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_terminate_seq_t *term_seq = NULL;
-    axis2_char_t *seq_id = NULL;
+    axis2_char_t *rmd_sequence_id = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -196,9 +196,9 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    seq_id = sandesha2_identifier_get_identifier(sandesha2_terminate_seq_get_identifier(
+    rmd_sequence_id = sandesha2_identifier_get_identifier(sandesha2_terminate_seq_get_identifier(
                 term_seq, env), env);
-    if(!seq_id || 0 == axutil_strlen(seq_id))
+    if(!rmd_sequence_id || 0 == axutil_strlen(rmd_sequence_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid sequence id");
         return AXIS2_FAILURE;
@@ -211,7 +211,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
-    fault_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, rm_msg_ctx, seq_id, seq_prop_mgr, 
+    fault_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr, 
             create_seq_mgr, next_msg_mgr);
 
     if(fault_ctx)
@@ -254,7 +254,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
 
     /*term_rcvd_bean = sandesha2_seq_property_bean_create(env);
-    sandesha2_seq_property_bean_set_seq_id(term_rcvd_bean, env, seq_id);
+    sandesha2_seq_property_bean_set_seq_id(term_rcvd_bean, env, rmd_sequence_id);
     sandesha2_seq_property_bean_set_name(term_rcvd_bean, env, SANDESHA2_SEQ_PROP_TERMINATE_RECEIVED);
     sandesha2_seq_property_bean_set_value(term_rcvd_bean, env, AXIS2_VALUE_TRUE);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, term_rcvd_bean);*/
@@ -262,28 +262,28 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     spec_version = sandesha2_msg_ctx_get_rm_spec_ver(rm_msg_ctx, env);
     if(sandesha2_spec_specific_consts_is_term_seq_res_reqd(env, spec_version))
     {
-        sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(env, rm_msg_ctx, seq_id, 
+        sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(env, rm_msg_ctx, rmd_sequence_id, 
                 seq_prop_mgr);
     }
 
     seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
     if(seq_ack)
     {
-        axis2_char_t *int_seq_id = NULL;
-        axis2_char_t *out_seq_id = NULL;
+        axis2_char_t *rms_internal_sequence_id = NULL;
+        axis2_char_t *rms_sequence_id = NULL;
         axis2_char_t *last_out_msg_no_str = NULL;
         long highest_out_msg_no = 0;
         
         /* If there is a sequence acknowledgement element present in the sequence we will check
          * whether the sequence is completed. If so send a terminate sequence message.
          */
-        out_seq_id = sandesha2_identifier_get_identifier(sandesha2_seq_ack_get_identifier(seq_ack, 
-                    env), env);
+        rms_sequence_id = sandesha2_identifier_get_identifier(sandesha2_seq_ack_get_identifier(
+                    seq_ack, env), env);
 
-        int_seq_id = sandesha2_utils_get_seq_property(env, out_seq_id, 
+        rms_internal_sequence_id = sandesha2_utils_get_seq_property(env, rms_sequence_id, 
                 SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
 
-        last_out_msg_no_str = sandesha2_utils_get_seq_property(env, int_seq_id,
+        last_out_msg_no_str = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id,
             SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
 
         if(last_out_msg_no_str)
@@ -296,8 +296,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         }
         else
         {
-            highest_out_msg_no = sandesha2_app_msg_processor_get_prev_msg_no(env, int_seq_id, 
-                    seq_prop_mgr);
+            highest_out_msg_no = sandesha2_app_msg_processor_get_prev_msg_no(env, 
+                    rms_internal_sequence_id, seq_prop_mgr);
         }
 
         if(highest_out_msg_no > 0)
@@ -314,25 +314,25 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
             if(completed)
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                        "[sandesha2]Sequence %s is completed. So adding terminate msg", out_seq_id); 
-                sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, out_seq_id, 
-                        int_seq_id, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                        "[sandesha2]Sequence %s is completed. So adding terminate msg", rms_sequence_id); 
+                sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, rms_sequence_id, 
+                        rms_internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
             }
         }
     }
     else
     {
         sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(env, conf_ctx, storage_mgr, 
-                seq_id, rm_msg_ctx, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                rmd_sequence_id, rm_msg_ctx, seq_prop_mgr, create_seq_mgr, sender_mgr);
     }
 
-    sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx, seq_id, storage_mgr, 
+    sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx, rmd_sequence_id, storage_mgr, 
             seq_prop_mgr, next_msg_mgr);
 
-    /*transmit_bean = sandesha2_seq_property_bean_create_with_data(env, seq_id,
+    /*transmit_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id,
         SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, transmit_bean);
-    sandesha2_seq_mgr_update_last_activated_time(env, seq_id, storage_mgr);
+    sandesha2_seq_mgr_update_last_activated_time(env, rmd_sequence_id, storage_mgr);
     */
 
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
