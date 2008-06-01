@@ -500,3 +500,67 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_seq_mgr_setup_temporary_rms_sequence(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *first_app_msg,
+    axis2_char_t *rms_internal_sequence_id,
+    axis2_char_t *spec_version,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
+{
+    axis2_char_t *addr_ns_val = NULL;
+    axutil_property_t *property = NULL;
+    sandesha2_seq_property_bean_t *addr_ns_bean = NULL;
+    sandesha2_seq_property_bean_t *spec_version_bean = NULL;
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_seq_mgr_setup_temporary_rms_sequence");
+
+    AXIS2_PARAM_CHECK(env->error, first_app_msg, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, rms_internal_sequence_id, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    
+    property = axis2_msg_ctx_get_property(first_app_msg, env, AXIS2_WSA_VERSION);
+    if(property)
+    {
+        addr_ns_val = axutil_property_get_value(property, env);
+    }
+
+    if(!addr_ns_val)
+    {
+        axis2_op_ctx_t *op_ctx = NULL;
+        axis2_msg_ctx_t *req_msg_ctx = NULL;
+
+        op_ctx = axis2_msg_ctx_get_op_ctx(first_app_msg, env);
+        req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+
+        if(req_msg_ctx)
+        {
+            property = axis2_msg_ctx_get_property(req_msg_ctx, env, AXIS2_WSA_VERSION);
+            if(property)
+            {
+                addr_ns_val = axutil_property_get_value(property, env);
+            }
+        }
+    }
+
+    if(!addr_ns_val)
+    {
+        addr_ns_val = AXIS2_WSA_NAMESPACE;
+    }
+        
+    addr_ns_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id, 
+            SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, addr_ns_val);
+
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, addr_ns_bean);
+    
+    spec_version_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id, 
+            SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, spec_version);
+
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_version_bean);
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_seq_mgr_setup_temporary_rms_sequence");
+
+    return AXIS2_SUCCESS;
+}
+

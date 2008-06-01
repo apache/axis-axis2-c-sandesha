@@ -384,7 +384,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         acks_to = (axis2_char_t *) axis2_endpoint_ref_get_address(acks_to_epr, env);
         create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env, rm_msg_ctx, 
-                rms_internal_sequence_id, acks_to, NULL, NULL, seq_prop_mgr);
+                rms_internal_sequence_id, acks_to, seq_prop_mgr);
 
         if(!create_seq_rm_msg)
         {
@@ -485,6 +485,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             sandesha2_utils_start_polling_mgr(env, conf_ctx, rms_internal_sequence_id);
         }
 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came3");
         sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);
         
         spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 

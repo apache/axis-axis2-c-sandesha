@@ -78,6 +78,14 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
     axis2_char_t *spec_version,
     struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_seq_mgr_setup_temporary_rms_sequence(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *first_app_msg,
+    axis2_char_t *rms_internal_sequence_id,
+    axis2_char_t *spec_version,
+    struct sandesha2_seq_property_mgr *seq_prop_mgr);
+
 /** @} */
 #ifdef __cplusplus
 }

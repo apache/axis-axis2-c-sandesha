@@ -115,8 +115,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_msg_ctx_t *msg_ctx,
     axis2_char_t *internal_seq_id,
     axis2_char_t *acks_to,
-    axis2_char_t *spec_version,
-    axis2_char_t *addr_ns_value,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_create_seq_mgr_t *create_seq_mgr,
@@ -345,6 +343,7 @@ sandesha2_app_msg_processor_process_in_msg (
     seq = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
     sandesha2_seq_set_must_understand(seq, env, AXIS2_FALSE);
     rmd_sequence_id = sandesha2_identifier_get_identifier(sandesha2_seq_get_identifier(seq, env), env);
+    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "rmd_sequence_id:%s", rmd_sequence_id);
     fault_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env,rm_msg_ctx, rmd_sequence_id, seq_prop_mgr, 
             create_seq_mgr, next_msg_mgr);
     if(fault_ctx)
@@ -1396,9 +1395,8 @@ sandesha2_app_msg_processor_process_out_msg(
         }
 
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
-
-        sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
-                seq_prop_mgr);
+        sandesha2_seq_mgr_setup_temporary_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
+            seq_prop_mgr);
 
         if(send_create_seq)
         {
@@ -1498,9 +1496,12 @@ sandesha2_app_msg_processor_process_out_msg(
                  */
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "acks_to:%s", acks_to);
                 sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, rms_internal_sequence_id, 
-                        acks_to, spec_ver, addr_ns_uri, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                        acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
             }
         }
+        sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
+                seq_prop_mgr);
+        
     }
 
     /* A dummy message is a one which will not be processed as a actual 
@@ -1816,8 +1817,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *rms_internal_sequence_id,
     axis2_char_t *acks_to,
-    axis2_char_t *spec_version,
-    axis2_char_t *addr_ns_value,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_create_seq_mgr_t *create_seq_mgr,
@@ -1850,14 +1849,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
   
-    if(addr_ns_value)
-    {
-        addr_ns_uri = axutil_strdup(env, addr_ns_value);
-    }
-
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
+
     create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env, rm_msg_ctx, rms_internal_sequence_id, 
-            acks_to, spec_version, addr_ns_value, seq_prop_mgr);
+            acks_to, seq_prop_mgr);
+
     if(!create_seq_rm_msg)
     {
         return AXIS2_FAILURE;
