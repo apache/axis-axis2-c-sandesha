@@ -1283,69 +1283,11 @@ sandesha2_app_msg_processor_process_out_msg(
     {
         msg_number = 1;
     }
-    
-    /* A dummy message is a one which will not be processed as a actual 
-     * application message. The RM handlers will simply let these go.
-     */
-    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
-    if(property)
-    {
-        dummy_msg_str = axutil_property_get_value(property, env);
-    }
-
-    if(dummy_msg_str && 0 == axutil_strcmp(dummy_msg_str, AXIS2_VALUE_TRUE))
-    {
-        dummy_msg = AXIS2_TRUE;
-    }
-
-    if(!dummy_msg)
-    {
-        sandesha2_app_msg_processor_set_next_msg_no(env, rms_internal_sequence_id, msg_number, seq_prop_mgr);
-    }
-
-    sprintf(msg_number_str, "%ld", msg_number); 
-    res_highest_msg_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id, 
-            SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER, msg_number_str);
-
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_highest_msg_bean);
-    if(res_highest_msg_bean)
-    {
-        sandesha2_seq_property_bean_free(res_highest_msg_bean, env);
-    }
-
-    relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
-    if(relates_to)
-    {
-        sandesha2_seq_property_bean_t *response_relates_to_bean = NULL; 
-        const axis2_char_t *relates_to_value = axis2_relates_to_get_value(relates_to, env);
-
-        response_relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, 
-                rms_internal_sequence_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO, 
-                (axis2_char_t *) relates_to_value);
-
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, response_relates_to_bean);
-    }
-
-    storage_key = axutil_uuid_gen(env);
-
-    if(last_msg)
-    {
-        sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
-       
-        res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
-                rms_internal_sequence_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, msg_number_str);
-
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_last_msg_key_bean);
-    }
-
-    rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-            rms_internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
     if(is_svr_side)
     {
         sandesha2_seq_property_bean_t *rmd_to_bean = NULL;
-        sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
-
+        
         rmd_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
                 SANDESHA2_SEQ_PROP_TO_EPR);
         if(rmd_to_bean)
@@ -1358,61 +1300,12 @@ sandesha2_app_msg_processor_process_out_msg(
             property = axutil_property_create_with_args(env, 0, 0, 0, rmd_to);
             axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_SEQ_PROP_TO_EPR, property);
         }
-       
-        spec_ver_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
-                SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-
-        if(req_rm_msg_ctx)
-        {
-            sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
-        }
-        if(!spec_ver_bean)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Invalid spec version");
-            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION,
-                AXIS2_FAILURE);
-            if(rms_internal_sequence_id)
-            {
-                AXIS2_FREE(env->allocator, rms_internal_sequence_id);
-            }
-            if(seq_prop_mgr)
-            {
-                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-            }
-            if(create_seq_mgr)
-            {
-                sandesha2_create_seq_mgr_free(create_seq_mgr, env);
-            }
-            if(sender_mgr)
-            {
-                sandesha2_sender_mgr_free(sender_mgr, env);
-            }
-            if(storage_mgr)
-            {
-                sandesha2_storage_mgr_free(storage_mgr, env);
-            }
-
-            return AXIS2_FAILURE;
-        }
-
-        spec_ver = sandesha2_seq_property_bean_get_value(spec_ver_bean, env);
-    }
-    else
-    {
-        property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
-        if(property)
-        {
-            spec_ver = axutil_property_get_value(property, env);
-        }
     }
 
-    if(!spec_ver)
-    {
-        spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
-    }
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
+
+    rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
+            rms_internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
     if(1 == msg_number)
     {
@@ -1441,6 +1334,66 @@ sandesha2_app_msg_processor_process_out_msg(
             }
         }
 
+        /* Determine spec version */
+        if(is_svr_side)
+        {
+            sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
+           
+            spec_ver_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
+                    SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
+
+            if(req_rm_msg_ctx)
+            {
+                sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
+            }
+            if(!spec_ver_bean)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Invalid spec version");
+                AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION,
+                    AXIS2_FAILURE);
+                if(rms_internal_sequence_id)
+                {
+                    AXIS2_FREE(env->allocator, rms_internal_sequence_id);
+                }
+                if(seq_prop_mgr)
+                {
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                }
+                if(create_seq_mgr)
+                {
+                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                }
+                if(sender_mgr)
+                {
+                    sandesha2_sender_mgr_free(sender_mgr, env);
+                }
+                if(storage_mgr)
+                {
+                    sandesha2_storage_mgr_free(storage_mgr, env);
+                }
+
+                return AXIS2_FAILURE;
+            }
+
+            spec_ver = sandesha2_seq_property_bean_get_value(spec_ver_bean, env);
+        }
+        else
+        {
+            property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
+            if(property)
+            {
+                spec_ver = axutil_property_get_value(property, env);
+            }
+        } /* End of determining spec version */
+
+        if(!spec_ver)
+        {
+            spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
+        }
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
+
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "Starting the rms sequence with rms rms internal sequence id %s", 
                 rms_internal_sequence_id);
@@ -1454,9 +1407,10 @@ sandesha2_app_msg_processor_process_out_msg(
         sandesha2_seq_property_bean_t *create_seq_added = NULL;
         axis2_char_t *addr_ns_uri = NULL;
         axis2_char_t *anon_uri = NULL;
-       
+
         create_seq_added = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rms_internal_sequence_id, 
                 SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT);
+
 
         addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
                 SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
@@ -1515,13 +1469,70 @@ sandesha2_app_msg_processor_process_out_msg(
                     }
                 }
             }
+
+
             /**
              * else if()
              * TODO handle acks_to == anon_uri case
              */
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "acks_to:%s", acks_to);
             sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, rms_internal_sequence_id, 
                     acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         }
+    }
+
+    /* A dummy message is a one which will not be processed as a actual 
+     * application message. The RM handlers will simply let these go.
+     */
+    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
+    if(property)
+    {
+        dummy_msg_str = axutil_property_get_value(property, env);
+    }
+
+    if(dummy_msg_str && 0 == axutil_strcmp(dummy_msg_str, AXIS2_VALUE_TRUE))
+    {
+        dummy_msg = AXIS2_TRUE;
+    }
+
+    if(!dummy_msg)
+    {
+        sandesha2_app_msg_processor_set_next_msg_no(env, rms_internal_sequence_id, msg_number, seq_prop_mgr);
+    }
+
+    sprintf(msg_number_str, "%ld", msg_number); 
+    res_highest_msg_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id, 
+            SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER, msg_number_str);
+
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_highest_msg_bean);
+    if(res_highest_msg_bean)
+    {
+        sandesha2_seq_property_bean_free(res_highest_msg_bean, env);
+    }
+
+    relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
+    if(relates_to)
+    {
+        sandesha2_seq_property_bean_t *response_relates_to_bean = NULL; 
+        const axis2_char_t *relates_to_value = axis2_relates_to_get_value(relates_to, env);
+
+        response_relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                rms_internal_sequence_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO, 
+                (axis2_char_t *) relates_to_value);
+
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, response_relates_to_bean);
+    }
+
+    storage_key = axutil_uuid_gen(env);
+
+    if(last_msg)
+    {
+        sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
+       
+        res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                rms_internal_sequence_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, msg_number_str);
+
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, res_last_msg_key_bean);
     }
 
     soap_env = sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env);
