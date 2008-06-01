@@ -1333,102 +1333,96 @@ sandesha2_app_msg_processor_process_out_msg(
                 axis2_ctx_set_property(ctx, env, SANDESHA2_MSG_CTX_MAP, property);
             }
         }
-
-        /* Determine spec version */
-        if(is_svr_side)
-        {
-            sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
-           
-            spec_ver_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
-                    SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-
-            if(req_rm_msg_ctx)
+            /* Determine spec version */
+            if(is_svr_side)
             {
-                sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
+                sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
+               
+                spec_ver_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
+                        SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
+
+                if(req_rm_msg_ctx)
+                {
+                    sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
+                }
+                if(!spec_ver_bean)
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2] Invalid spec version");
+                    AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION,
+                        AXIS2_FAILURE);
+                    if(rms_internal_sequence_id)
+                    {
+                        AXIS2_FREE(env->allocator, rms_internal_sequence_id);
+                    }
+                    if(seq_prop_mgr)
+                    {
+                        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                    }
+                    if(create_seq_mgr)
+                    {
+                        sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                    }
+                    if(sender_mgr)
+                    {
+                        sandesha2_sender_mgr_free(sender_mgr, env);
+                    }
+                    if(storage_mgr)
+                    {
+                        sandesha2_storage_mgr_free(storage_mgr, env);
+                    }
+
+                    return AXIS2_FAILURE;
+                }
+
+                spec_ver = sandesha2_seq_property_bean_get_value(spec_ver_bean, env);
             }
-            if(!spec_ver_bean)
+            else
             {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2] Invalid spec version");
-                AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION,
-                    AXIS2_FAILURE);
-                if(rms_internal_sequence_id)
+                property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
+                if(property)
                 {
-                    AXIS2_FREE(env->allocator, rms_internal_sequence_id);
+                    spec_ver = axutil_property_get_value(property, env);
                 }
-                if(seq_prop_mgr)
-                {
-                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-                }
-                if(create_seq_mgr)
-                {
-                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
-                }
-                if(sender_mgr)
-                {
-                    sandesha2_sender_mgr_free(sender_mgr, env);
-                }
-                if(storage_mgr)
-                {
-                    sandesha2_storage_mgr_free(storage_mgr, env);
-                }
+            } /* End of determining spec version */
 
-                return AXIS2_FAILURE;
-            }
-
-            spec_ver = sandesha2_seq_property_bean_get_value(spec_ver_bean, env);
-        }
-        else
-        {
-            property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
-            if(property)
+            if(!spec_ver)
             {
-                spec_ver = axutil_property_get_value(property, env);
+                spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
             }
-        } /* End of determining spec version */
 
-        if(!spec_ver)
-        {
-            spec_ver = sandesha2_spec_specific_consts_get_default_spec_version(env);
-        }
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Spec version:%s", spec_ver);
-
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "Starting the rms sequence with rms rms internal sequence id %s", 
-                rms_internal_sequence_id);
-
-        sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
-                seq_prop_mgr);
+            sandesha2_seq_mgr_setup_new_rms_sequence(env, msg_ctx, rms_internal_sequence_id, spec_ver, 
+                    seq_prop_mgr);
     }
 
     if(send_create_seq)
     {
         sandesha2_seq_property_bean_t *create_seq_added = NULL;
-        axis2_char_t *addr_ns_uri = NULL;
-        axis2_char_t *anon_uri = NULL;
 
         create_seq_added = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rms_internal_sequence_id, 
                 SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT);
 
-
-        addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
-                SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
-
-        anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-        if(addr_ns_uri)
-        {
-            AXIS2_FREE(env->allocator, addr_ns_uri);
-        }
-
         if(!create_seq_added)
         {
             axis2_char_t *acks_to = NULL;
+            axis2_char_t *addr_ns_uri = NULL;
+            axis2_char_t *anon_uri = NULL;
             
             create_seq_added = sandesha2_seq_property_bean_create_with_data(env, 
                     rms_internal_sequence_id, SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT, AXIS2_VALUE_TRUE);
 
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, create_seq_added);
+
+            addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
+                    SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+
+            anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
+            if(addr_ns_uri)
+            {
+                AXIS2_FREE(env->allocator, addr_ns_uri);
+            }
 
             if(axis2_msg_ctx_get_svc_ctx(msg_ctx, env))
             {
