@@ -384,7 +384,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         
         acks_to = (axis2_char_t *) axis2_endpoint_ref_get_address(acks_to_epr, env);
         create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env, rm_msg_ctx, 
-                rms_internal_sequence_id, acks_to, seq_prop_mgr);
+                rms_internal_sequence_id, acks_to, NULL, NULL, seq_prop_mgr);
 
         if(!create_seq_rm_msg)
         {

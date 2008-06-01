@@ -57,6 +57,7 @@
 #include <axiom_soap_const.h>
 #include <axiom_soap_body.h>
 #include <axis2_http_transport_utils.h>
+#include <axis2_addr.h>
 
 /** 
  * @brief Application Message Processor struct impl
@@ -114,6 +115,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_msg_ctx_t *msg_ctx,
     axis2_char_t *internal_seq_id,
     axis2_char_t *acks_to,
+    axis2_char_t *spec_version,
+    axis2_char_t *addr_ns_value,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_create_seq_mgr_t *create_seq_mgr,
@@ -1415,14 +1418,38 @@ sandesha2_app_msg_processor_process_out_msg(
 
                 sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, create_seq_added);
 
-                addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
-                        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+                /*addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
+                        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);*/
+                property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_WSA_VERSION);
+                if(property)
+                {
+                    addr_ns_uri = axutil_property_get_value(property, env);
+                }
+
+                if(!addr_ns_uri)
+                {
+                    axis2_op_ctx_t *op_ctx = NULL;
+                    axis2_msg_ctx_t *req_msg_ctx = NULL;
+
+                    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+                    req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+
+                    if(req_msg_ctx)
+                    {
+                        property = axis2_msg_ctx_get_property(req_msg_ctx, env, AXIS2_WSA_VERSION);
+                        if(property)
+                        {
+                            addr_ns_uri = axutil_property_get_value(property, env);
+                        }
+                    }
+                }
+
+                if(!addr_ns_uri)
+                {
+                    addr_ns_uri = AXIS2_WSA_NAMESPACE;
+                }
 
                 anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
-                if(addr_ns_uri)
-                {
-                    AXIS2_FREE(env->allocator, addr_ns_uri);
-                }
 
                 if(axis2_msg_ctx_get_svc_ctx(msg_ctx, env))
                 {
@@ -1471,7 +1498,7 @@ sandesha2_app_msg_processor_process_out_msg(
                  */
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "acks_to:%s", acks_to);
                 sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, rms_internal_sequence_id, 
-                        acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                        acks_to, spec_ver, addr_ns_uri, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
             }
         }
     }
@@ -1785,14 +1812,16 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
                     	
 static axis2_status_t AXIS2_CALL
 sandesha2_app_msg_processor_send_create_seq_msg(
-     const axutil_env_t *env,
-     sandesha2_msg_ctx_t *rm_msg_ctx,
-     axis2_char_t *rms_internal_sequence_id,
-     axis2_char_t *acks_to,
-     sandesha2_storage_mgr_t *storage_mgr,
-     sandesha2_seq_property_mgr_t *seq_prop_mgr,
-     sandesha2_create_seq_mgr_t *create_seq_mgr,
-     sandesha2_sender_mgr_t *sender_mgr)
+    const axutil_env_t *env,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    axis2_char_t *rms_internal_sequence_id,
+    axis2_char_t *acks_to,
+    axis2_char_t *spec_version,
+    axis2_char_t *addr_ns_value,
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    sandesha2_create_seq_mgr_t *create_seq_mgr,
+    sandesha2_sender_mgr_t *sender_mgr)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq_part = NULL;
@@ -1820,10 +1849,15 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     AXIS2_PARAM_CHECK(env->error, create_seq_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
-    
+  
+    if(addr_ns_value)
+    {
+        addr_ns_uri = axutil_strdup(env, addr_ns_value);
+    }
+
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     create_seq_rm_msg = sandesha2_msg_creator_create_create_seq_msg(env, rm_msg_ctx, rms_internal_sequence_id, 
-            acks_to, seq_prop_mgr);
+            acks_to, spec_version, addr_ns_value, seq_prop_mgr);
     if(!create_seq_rm_msg)
     {
         return AXIS2_FAILURE;
@@ -1877,8 +1911,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, create_sequence_msg_store_key);
     sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
 
-    addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
-            SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+    if(!addr_ns_uri)
+    {
+        addr_ns_uri = sandesha2_utils_get_seq_property(env, rms_internal_sequence_id, 
+                SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+    }
 
     anon_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addr_ns_uri);
     if(addr_ns_uri)

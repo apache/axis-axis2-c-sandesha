@@ -80,6 +80,8 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_t *application_rm_msg, 
     axis2_char_t *internal_seq_id,
     axis2_char_t *acks_to,
+    axis2_char_t *spec_version,
+    axis2_char_t *addr_ns_value,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_msg_ctx_t *application_msg_ctx = NULL;
@@ -108,6 +110,16 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_address_t *temp_address = NULL;
     sandesha2_acks_to_t *temp_acks_to = NULL;
     axutil_property_t *property = NULL;
+
+    if(spec_version)
+    {
+        rm_version = axutil_strdup(env, spec_version);
+    }
+
+    if(addr_ns_value)
+    {
+        addressing_ns_value = axutil_strdup(env, addr_ns_value);
+    }
 
     application_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(application_rm_msg, env);
     if(!application_msg_ctx)
@@ -199,7 +211,10 @@ sandesha2_msg_creator_create_create_seq_msg(
     }
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);
 
-    rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, seq_prop_mgr);
+    if(!rm_version)
+    {
+        rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, seq_prop_mgr);
+    }
 
     if(!rm_version)
     {
@@ -209,8 +224,11 @@ sandesha2_msg_creator_create_create_seq_msg(
     }
 
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
-    addressing_ns_value = sandesha2_utils_get_seq_property(env, internal_seq_id, 
-        SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+    if(!addressing_ns_value)
+    {
+        addressing_ns_value = sandesha2_utils_get_seq_property(env, internal_seq_id, 
+            SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
+    }
 
     create_seq_part = sandesha2_create_seq_create(env, addressing_ns_value, rm_ns_value);
 
