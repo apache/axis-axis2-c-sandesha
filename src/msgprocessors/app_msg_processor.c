@@ -455,10 +455,6 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_t *highest_msg_key_bean = NULL;
         sandesha2_seq_property_bean_t *highest_msg_id_bean = NULL;
         const axis2_char_t *msg_id = NULL;
-        /*axiom_soap_envelope_t *response_envelope = NULL;*/
-        /*int soap_version = -1;*/
-        axutil_property_t *property = NULL;
-        axis2_char_t *client_seq_key = NULL;
         
         highest_in_msg_no = msg_no;
         msg_id = axis2_msg_ctx_get_msg_id(msg_ctx, env);
@@ -475,34 +471,7 @@ sandesha2_app_msg_processor_process_in_msg (
             highest_in_msg_key_str, conf_ctx, -1);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
             highest_in_msg_key_str, msg_ctx);
-        /*response_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);*/
-        property = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_CLIENT_SEQ_KEY);
-        if(property)
-        {
-            client_seq_key = axutil_property_get_value(property, env);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2]Client sequence key:%s found", client_seq_key);
-        }
-        else
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2]Client sequence key not found");
-        }
-        /*if(client_seq_key)
-        {
-            if(axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
-                soap_version = SANDESHA2_SOAP_VERSION_1_1;
-            else
-                soap_version = SANDESHA2_SOAP_VERSION_1_2;
-            if(response_envelope)
-            {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2]Client sequence key:%s", client_seq_key);
-                sandesha2_storage_mgr_store_response(storage_mgr, env, 
-                    client_seq_key, response_envelope, msg_no, soap_version);
-            }
-        }*/
+
         if(highest_in_msg_no_str)
         {
             sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
