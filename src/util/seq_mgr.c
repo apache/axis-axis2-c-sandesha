@@ -77,10 +77,13 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
     axis2_char_t *address = NULL;
     axis2_char_t *reply_to_addr = NULL;
     axis2_char_t *rms_internal_sequence_id = NULL;
+    axis2_bool_t is_svr_side = AXIS2_FALSE;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_rmd_sequence");
 
+    is_svr_side = sandesha2_msg_ctx_get_server_side(create_seq_msg, env);
     rmd_sequence_id = axutil_uuid_gen(env);
+
     to = sandesha2_msg_ctx_get_to(create_seq_msg, env);
     if(!to)
     {
@@ -151,7 +154,7 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
 
     next_msg_bean = sandesha2_next_msg_bean_create_with_data(env, rmd_sequence_id, 1); 
                                                     /* 1 will be the next */
-    rms_internal_sequence_id = sandesha2_utils_get_rms_internal_sequence_id(env, rmd_sequence_id);
+    rms_internal_sequence_id = sandesha2_utils_get_rms_internal_sequence_id(env, is_svr_side, rmd_sequence_id);
     sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, rms_internal_sequence_id);
     sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
 
@@ -506,12 +509,14 @@ sandesha2_seq_mgr_setup_temporary_rms_sequence(
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *rms_internal_sequence_id,
     axis2_char_t *spec_version,
+    axis2_char_t *client_sequence_key,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_char_t *addr_ns_val = NULL;
     axutil_property_t *property = NULL;
     sandesha2_seq_property_bean_t *addr_ns_bean = NULL;
     sandesha2_seq_property_bean_t *spec_version_bean = NULL;
+    sandesha2_seq_property_bean_t *client_sequence_key_bean = NULL;
    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_seq_mgr_setup_temporary_rms_sequence");
 
@@ -558,6 +563,11 @@ sandesha2_seq_mgr_setup_temporary_rms_sequence(
             SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, spec_version);
 
     sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_version_bean);
+
+    client_sequence_key_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id, 
+            SANDESHA2_CLIENT_SEQ_KEY, client_sequence_key);
+
+    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, client_sequence_key_bean);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_seq_mgr_setup_temporary_rms_sequence");
 

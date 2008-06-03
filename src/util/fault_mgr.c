@@ -207,6 +207,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         if(list)
         {
             int size = axutil_array_list_size(list, env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_size:%d", size);
             int i = 0;
 			for(i = 0; i < size; i++)
             {

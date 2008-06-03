@@ -994,15 +994,12 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             {
                 long retrans_delay = -1;
 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1*************************");
                 retrans_delay = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrans_delay:%ld*************************", retrans_delay);
                 AXIS2_SLEEP(retrans_delay);
 
                 status = sandesha2_terminate_mgr_resend(env, conf_ctx, msg_id, is_svr_side, 
                         storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2*************************");
                 if(AXIS2_SUCCESS != status)
                 {
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 

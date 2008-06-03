@@ -84,6 +84,7 @@ sandesha2_seq_mgr_setup_temporary_rms_sequence(
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *rms_internal_sequence_id,
     axis2_char_t *spec_version,
+    axis2_char_t *client_sequence_key,
     struct sandesha2_seq_property_mgr *seq_prop_mgr);
 
 /** @} */

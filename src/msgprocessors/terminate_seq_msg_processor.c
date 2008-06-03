@@ -371,6 +371,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     axis2_char_t *rec_side_int_seq_id = NULL;
     axis2_bool_t add_rec_side_term = AXIS2_FALSE;
     axis2_char_t *out_seq_id = NULL;
+    axis2_bool_t is_svr_side = AXIS2_FALSE;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
         "terminate_seq_msg_processor_setup_highest_msg_nums");
@@ -381,7 +382,8 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    
+   
+    is_svr_side = sandesha2_msg_ctx_get_server_side(rm_msg_ctx, env);
     highest_in_msg_num_str = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, seq_prop_mgr);
     highest_in_msg_id = sandesha2_utils_get_seq_property(env, seq_id,
@@ -402,7 +404,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         if(highest_in_msg_num_str)
             AXIS2_FREE(env->allocator, highest_in_msg_num_str);
     }
-    rec_side_int_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, seq_id);
+    rec_side_int_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, is_svr_side, seq_id);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]rec_side_int_seq_id:%s", 
         rec_side_int_seq_id);
     if(0 == highest_in_msg_num)

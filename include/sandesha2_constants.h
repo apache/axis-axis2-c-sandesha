@@ -464,6 +464,12 @@ extern "C"
 	
 	#define SANDESHA2_INTERNAL_SEQ_PREFIX  "Sandesha2InternalSequence"
 	
+    #define SANDESHA2_INTERNAL_SERVER_SEQUENCE_PREFIX  "Sandesha2InternalServerSequence"
+	
+    #define SANDESHA2_INTERNAL_CLIENT_SEQUENCE_PREFIX  "Sandesha2InternalClientSequence"
+	
+    #define SANDESHA2_CLIENT_INTERNAL_SEQUENCE_ID  "Sandesha2ClientInternalSequenceId"
+	
 	#define SANDESHA2_SANDESHA_PROPERTY_BEAN  "Sandesha2PropertyBean"
 	
 	#define SANDESHA2_LIST_SEPERATOR ","
@@ -518,6 +524,8 @@ extern "C"
 	#define SANDESHA2_POLLING_WAIT  "PollingWaitTime"
 	#define SANDESHA2_MODULE  "sandesha2"
 	#define SANDESHA2_ISOLATED_LAST_MSG "isolated_last_msg"
+    #define SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
+
 /** @} */
 #ifdef __cplusplus
 }

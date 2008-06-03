@@ -401,11 +401,22 @@ sandesha2_utils_start_polling_mgr(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rms_internal_sequence_id(
     const axutil_env_t *env,
-    axis2_char_t *rmd_sequence_id)
+    axis2_bool_t svr_side,
+    axis2_char_t *sequence_id)
 {
-    AXIS2_PARAM_CHECK(env->error, rmd_sequence_id, NULL);
+    axis2_char_t *internal_sequence_id = NULL;
+    AXIS2_PARAM_CHECK(env->error, sequence_id, NULL);
     
-    return axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", rmd_sequence_id, NULL);
+    if(svr_side)
+    {
+        internal_sequence_id = axutil_strcat(env, SANDESHA2_INTERNAL_SERVER_SEQUENCE_PREFIX, ":", sequence_id, NULL);
+    }
+    else
+    {
+        internal_sequence_id = axutil_strcat(env, SANDESHA2_INTERNAL_CLIENT_SEQUENCE_PREFIX, ":", sequence_id, NULL);
+    }
+    
+    return internal_sequence_id;
 }
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
@@ -1272,8 +1283,8 @@ sandesha2_utils_create_out_msg_ctx(
         AXIS2_FREE(env->allocator, msg_uuid);
         msg_uuid = NULL;
     }
-    reply_to = axis2_msg_info_headers_get_reply_to(old_msg_info_headers, env);
-    axis2_msg_info_headers_set_to(msg_info_headers, env, reply_to);
+    reply_to = axis2_msg_ctx_get_reply_to(in_msg_ctx, env);
+    axis2_msg_ctx_set_to(new_msg_ctx, env, reply_to);
 
     fault_to = axis2_msg_info_headers_get_fault_to(old_msg_info_headers, env);
     axis2_msg_info_headers_set_fault_to(msg_info_headers, env, fault_to);

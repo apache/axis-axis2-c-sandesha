@@ -38,7 +38,6 @@ extern "C"
 #define SANDESHA2_CLIENT_LAST_MESSAGE "Sandesha2LastMessage"
 #define SANDESHA2_CLIENT_OFFERED_SEQ_ID "Sandesha2OfferedSequenceId"
 #define SANDESHA2_CLIENT_DEBUG_MODE "Sandesha2DebugMode"
-#define SANDESHA2_CLIENT_SEQ_KEY "Sandesha2SequenceKey"
 #define SANDESHA2_CLIENT_MESSAGE_NUMBER "Sandesha2MessageNumber"
 #define SANDESHA2_CLIENT_RM_SPEC_VERSION "Sandesha2RMSpecVersion"
 #define SANDESHA2_CLIENT_DUMMY_MESSAGE "Sandesha2DummyMessage" /* If this 

@@ -126,7 +126,8 @@ sandesha2_utils_start_polling_mgr(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rms_internal_sequence_id(
     const axutil_env_t *env,
-    axis2_char_t *rmd_seq_id);
+    axis2_bool_t svr_side,
+    axis2_char_t *seq_id);
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
 sandesha2_utils_get_transport_out(

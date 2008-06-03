@@ -194,7 +194,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     {
         axis2_endpoint_ref_t *reply_to_epr = NULL;
 
-        reply_to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(temp_to, env));
+        reply_to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(temp_reply_to, env));
         axis2_msg_ctx_set_reply_to(create_seq_msg_ctx, env, reply_to_epr);
     }
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);

@@ -331,7 +331,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
 
             create_seq_bean = sandesha2_create_seq_bean_create(env);
             sandesha2_create_seq_bean_set_rms_sequence_id(create_seq_bean, env, rms_sequence_id);
-            rms_internal_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, rmd_sequence_id);
+            rms_internal_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, AXIS2_TRUE, rmd_sequence_id);
             sandesha2_create_seq_bean_set_rms_internal_sequence_id(create_seq_bean, env, 
                     rms_internal_seq_id);
 
