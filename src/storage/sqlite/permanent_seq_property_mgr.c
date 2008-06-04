@@ -241,9 +241,6 @@ sandesha2_permanent_seq_property_mgr_insert(
 	axis2_char_t *name = NULL;
 	axis2_char_t *value = NULL;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-            "[sandesha2] Entry:sandesha2_permanent_seq_property_mgr_insert");
-
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
 
 	id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
@@ -265,9 +262,6 @@ sandesha2_permanent_seq_property_mgr_insert(
         sandesha2_seq_property_bean_free(bean, env);
     }*/
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_insert");
-
     return ret;
 }
 
@@ -282,8 +276,6 @@ sandesha2_permanent_seq_property_mgr_remove(
     axis2_char_t sql_remove[256];
     axis2_status_t status = AXIS2_FAILURE;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_remove");
 
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, name, AXIS2_FALSE);
@@ -294,8 +286,6 @@ sandesha2_permanent_seq_property_mgr_remove(
     status = sandesha2_permanent_bean_mgr_remove(seq_prop_mgr_impl->bean_mgr, env, 
         sql_remove);
     AXIS2_FREE(env->allocator, key);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_remove");
     return status;
 }
 
@@ -311,11 +301,9 @@ sandesha2_permanent_seq_property_mgr_retrieve(
     sandesha2_seq_property_bean_t *ret = NULL;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_retrieve");
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, name, AXIS2_FALSE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]seq_property_name:%s", name);
+
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     key = sandesha2_permanent_seq_property_mgr_get_id_with_seq_id_and_name(env, 
         seq_id, name);
@@ -325,8 +313,7 @@ sandesha2_permanent_seq_property_mgr_retrieve(
         seq_prop_mgr_impl->bean_mgr, env, sandesha2_seq_property_retrieve_callback, 
         sql_retrieve);
     AXIS2_FREE(env->allocator, key);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_retrieve");
+
     return ret;
 }
 
@@ -344,8 +331,6 @@ sandesha2_permanent_seq_property_mgr_update(
 	axis2_char_t *name = NULL;
 	axis2_char_t *value	= NULL;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_update");
     AXIS2_PARAM_CHECK(env->error, bean, AXIS2_FALSE);
 	id = sandesha2_permanent_seq_property_mgr_get_id_with_bean(env, bean);
 	seq_id = sandesha2_seq_property_bean_get_seq_id(bean, env);
@@ -360,8 +345,6 @@ sandesha2_permanent_seq_property_mgr_update(
         AXIS2_FREE(env->allocator, id);
     ret = sandesha2_permanent_bean_mgr_update(seq_prop_mgr_impl->bean_mgr, env, 
         sql_update);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_update");
     return ret;
 }
 
@@ -378,8 +361,6 @@ sandesha2_permanent_seq_property_mgr_find(
 	axis2_char_t *value = NULL;
     axutil_array_list_t *find_list = NULL;
     sandesha2_permanent_seq_property_mgr_t *seq_prop_mgr_impl = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_permanent_seq_property_mgr_find");
     seq_prop_mgr_impl = SANDESHA2_INTF_TO_IMPL(seq_prop_mgr);
     if(bean)
     {
@@ -422,8 +403,6 @@ sandesha2_permanent_seq_property_mgr_find(
 
     find_list = sandesha2_permanent_bean_mgr_find(seq_prop_mgr_impl->bean_mgr, 
         env, sandesha2_seq_property_find_callback, sql_find);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_permanent_seq_property_mgr_find");
     return find_list;
 }
 

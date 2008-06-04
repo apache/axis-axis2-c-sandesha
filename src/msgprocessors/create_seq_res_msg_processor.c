@@ -171,6 +171,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
 
+    is_svr_side = sandesha2_msg_ctx_get_server_side(rm_msg_ctx, env);
+
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     
@@ -307,6 +309,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     
     rms_sequence_bean = sandesha2_seq_property_bean_create_with_data(env, rms_internal_sequence_id,
                         SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, rms_sequence_id);
+    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "rms_internal_sequence_id1:%s", rms_internal_sequence_id);
     
     rms_internal_sequence_bean = sandesha2_seq_property_bean_create_with_data(env, rms_sequence_id, 
             SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, rms_internal_sequence_id);

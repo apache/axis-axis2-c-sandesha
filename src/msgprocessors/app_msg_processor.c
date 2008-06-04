@@ -1100,14 +1100,12 @@ sandesha2_app_msg_processor_process_out_msg(
 
         if(client_sequence_key_bean)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came1");
             rms_internal_sequence_id = sandesha2_seq_property_bean_get_value(client_sequence_key_bean, env);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "rms_internal_sequence_id:%s", rms_internal_sequence_id);
         }
 
         if(!rms_internal_sequence_id)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came2");
             rms_internal_sequence_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, 
                 client_sequence_key);
         }
@@ -2262,8 +2260,7 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_bool_t continue_sending = AXIS2_TRUE;
     int msg_type = -1;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
-        "[Sandesha2] sandesha2_app_msg_processor_send_app_msg");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[Sandesha2] Entry:sandesha2_app_msg_processor_send_app_msg");
 
     AXIS2_PARAM_CHECK(env->error, rms_internal_sequence_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_key, AXIS2_FAILURE);
@@ -2282,6 +2279,7 @@ sandesha2_app_msg_processor_send_app_msg(
     rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
             rms_internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
+    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "rms_internal_sequence_id2:%s", rms_internal_sequence_id);
     while(!rms_sequence_bean)
     {
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
