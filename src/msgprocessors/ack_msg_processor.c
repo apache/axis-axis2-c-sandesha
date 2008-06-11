@@ -473,7 +473,7 @@ sandesha2_ack_msg_processor_process_in_msg (
                 to_address = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
             }
 
-            if(completed && sandesha2_utils_is_anon_uri(env, to_address))
+            /*if(completed && sandesha2_utils_is_anon_uri(env, to_address))*/
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "[sandesha2]Sequence %s is completed. So adding terminate msg", out_seq_id); 

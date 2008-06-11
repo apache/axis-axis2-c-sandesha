@@ -124,7 +124,7 @@ sandesha2_utils_start_polling_mgr(
     const axis2_char_t *internal_seq_id);
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_rms_internal_sequence_id(
+sandesha2_utils_get_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *rmd_seq_id);
 
@@ -155,7 +155,7 @@ sandesha2_utils_get_svr_side_incoming_seq_id(
  * @return rms_internal_seq_id
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_client_rms_internal_sequence_id(
+sandesha2_utils_get_client_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *to,
     axis2_char_t *seq_key);
@@ -254,11 +254,20 @@ sandesha2_utils_split(
     axis2_char_t *str,
     axis2_char_t *pattern);
 
+/**
+ * In this function it checks whether acks_to_addr is anonymous and rm_version is 1.0.
+ * Form this it concludes that this is possibly a rm 1.0 replay mode. Note that it
+ * does not check message exchange pattern.
+ *
+ * @param rm_version Reliable messaging spec version
+ * @param acks_to_addr Acknowledgment to address
+ */
 axis2_bool_t AXIS2_CALL
-sandesha2_utils_is_single_channel(
+sandesha2_utils_is_rm_1_0_anonymous_acks_to(
     const axutil_env_t *env,
     const axis2_char_t *rm_version,
     const axis2_char_t *acks_to_addr);
+
 
 AXIS2_EXTERN axis2_msg_ctx_t * AXIS2_CALL
 sandesha2_utils_create_out_msg_ctx(

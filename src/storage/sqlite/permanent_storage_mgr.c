@@ -495,6 +495,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             return NULL;
         }
     }
+
     op_name_str = sandesha2_msg_store_bean_get_op(msg_store_bean, env);
     op_mep_str = sandesha2_msg_store_bean_get_op_mep(msg_store_bean, env);
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
@@ -536,12 +537,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axis2_msg_ctx_set_op(msg_ctx, env, op);
         else
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cant find a suitable "\
-                "operation for the generated message");
-            AXIS2_ERROR_SET(env->error, 
+            AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Cannot find a suitable operation for the generated message");
+            /*AXIS2_ERROR_SET(env->error, 
                 SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG, AXIS2_FAILURE);
             axiom_soap_builder_free(soap_builder, env);
-            return NULL;
+            return NULL;*/
         }
     }
     /* Setting contexts TODO is this necessary? */
@@ -1062,8 +1063,10 @@ sandesha2_permanent_storage_mgr_create_db(
     axis2_char_t *sql_stmt6 = NULL;
     axis2_char_t *sql_stmt7 = NULL;
     axis2_char_t *error_msg = NULL;
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Entry:sandesha2_permanent_storage_mgr_create_db");
+
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     if(AXIS2_SUCCESS == axutil_file_handler_access(dbname, AXIS2_F_OK))
     {
@@ -1193,6 +1196,7 @@ sandesha2_permanent_storage_mgr_create_db(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Database %s creation failed", dbname);
         return AXIS2_FAILURE;
     }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_permanent_storage_mgr_create_db");
     return AXIS2_SUCCESS;

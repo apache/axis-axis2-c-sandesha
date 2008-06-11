@@ -30,6 +30,7 @@
 #include <sandesha2_permanent_storage_mgr.h>
 #include <axutil_string.h>
 #include <axis2_conf.h>
+#include <axis2_const.h>
 #include <axutil_property.h>
 #include <axutil_uuid_gen.h>
 #include <axiom_soap_body.h>
@@ -399,7 +400,7 @@ sandesha2_utils_start_polling_mgr(
                    
                         
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_rms_internal_sequence_id(
+sandesha2_utils_get_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *rmd_sequence_id)
 {
@@ -475,7 +476,7 @@ sandesha2_utils_get_property_bean_from_op(
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_client_rms_internal_sequence_id(
+sandesha2_utils_get_client_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *to,
     axis2_char_t *seq_key)
@@ -1201,14 +1202,17 @@ sandesha2_utils_split(
 }
 
 axis2_bool_t AXIS2_CALL
-sandesha2_utils_is_single_channel(
+sandesha2_utils_is_rm_1_0_anonymous_acks_to(
     const axutil_env_t *env,
     const axis2_char_t *rm_version,
     const axis2_char_t *acks_to_addr)
 {
     if(sandesha2_utils_is_anon_uri(env, acks_to_addr) &&
-        (0 == axutil_strcmp(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
+        (!axutil_strcmp(SANDESHA2_SPEC_VERSION_1_0, rm_version)))
+    {
         return AXIS2_TRUE;
+    }
+
     else return AXIS2_FALSE;
 }
 

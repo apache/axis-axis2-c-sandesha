@@ -96,6 +96,16 @@ sandesha2_sender_mgr_find_unique(
 }
 
 sandesha2_sender_bean_t *AXIS2_CALL
+sandesha2_sender_mgr_get_next_application_msg_to_send(
+    sandesha2_sender_mgr_t *sender,
+    const axutil_env_t *env,
+    const axis2_char_t *seq_id,
+    const axis2_char_t *msg_id)
+{
+    return sender->ops.get_next_application_msg_to_send(sender, env, seq_id, msg_id);
+}
+
+sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_sender_mgr_get_next_msg_to_send(
     sandesha2_sender_mgr_t *sender,
     const axutil_env_t *env,

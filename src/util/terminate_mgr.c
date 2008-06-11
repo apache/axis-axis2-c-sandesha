@@ -607,7 +607,7 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     }
     
     find_create_seq_bean = sandesha2_create_seq_bean_create(env);
-    sandesha2_create_seq_bean_set_rms_internal_sequence_id(find_create_seq_bean, env,
+    sandesha2_create_seq_bean_set_internal_sequence_id(find_create_seq_bean, env,
         internal_seq_id);
     found_list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
         find_create_seq_bean);
@@ -816,7 +816,7 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
     /* If server side and single channel duplex mode send the terminate sequence
      * message.
      */
-    if(axis2_msg_ctx_get_server_side(msg_ctx, env) && sandesha2_utils_is_single_channel(env, rm_ver, 
+    if(axis2_msg_ctx_get_server_side(msg_ctx, env) && sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_ver, 
                 to_addr))
     {
         axis2_msg_ctx_t *msg_ctx2 = NULL;
@@ -994,7 +994,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
             {
                 long retrans_delay = -1;
 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1*************************");
                 retrans_delay = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrans_delay:%ld*************************", retrans_delay);
                 AXIS2_SLEEP(retrans_delay);
@@ -1002,7 +1001,6 @@ sandesha2_terminate_mgr_add_terminate_seq_msg(
                 status = sandesha2_terminate_mgr_resend(env, conf_ctx, msg_id, is_svr_side, 
                         storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2*************************");
                 if(AXIS2_SUCCESS != status)
                 {
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 

@@ -89,13 +89,6 @@ sandesha2_client_fill_terminated_outgoing_seq_info(
         axis2_char_t *internal_seq_id,
         sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
-/*static axis2_status_t
-sandesha2_client_fill_timedout_outgoing_seq_info(
-        const axutil_env_t *env,
-        sandesha2_seq_report_t *report,
-        axis2_char_t *internal_seq_id,
-        sandesha2_seq_property_mgr_t *seq_prop_mgr);*/
-
 static axis2_status_t
 sandesha2_client_fill_outgoing_seq_info(
         const axutil_env_t *env,
@@ -213,7 +206,7 @@ sandesha2_client_get_outgoing_seq_report_with_seq_key(
     AXIS2_PARAM_CHECK(env->error, seq_key, NULL);
     AXIS2_PARAM_CHECK(env->error, conf_ctx, NULL);
 
-    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_internal_sequence_id(env, to, seq_key);
     return (sandesha2_seq_report_t *) 
         sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(env, 
         internal_seq_id, conf_ctx);
@@ -251,7 +244,7 @@ sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     sandesha2_seq_report_set_internal_seq_id(seq_report, env, internal_seq_id);
     create_seq_find_bean = sandesha2_create_seq_bean_create(env);
-    sandesha2_create_seq_bean_set_rms_internal_sequence_id(create_seq_find_bean, env, internal_seq_id);
+    sandesha2_create_seq_bean_set_internal_sequence_id(create_seq_find_bean, env, internal_seq_id);
     create_seq_bean = sandesha2_create_seq_mgr_find_unique(create_seq_mgr, env, 
         create_seq_find_bean);
 	/* if data is not available seq has to be terminated or timedOut.*/
@@ -1195,7 +1188,7 @@ sandesha2_client_get_internal_seq_id(
     axis2_char_t *to,
     axis2_char_t *seq_key)
 {
-    return (axis2_char_t *) sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
+    return (axis2_char_t *) sandesha2_utils_get_client_internal_sequence_id(env, to, seq_key);
 }
 
 static axiom_soap_envelope_t *
@@ -1241,7 +1234,7 @@ sandesha2_client_configure_close_seq(
     property = (axutil_property_t *) axis2_options_get_property(options, env, 
             SANDESHA2_CLIENT_SEQ_KEY);
     seq_key = axutil_property_get_value(property, env);
-    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_internal_sequence_id(env, to, seq_key);
 
     seq_report = sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             env, internal_seq_id, conf_ctx);
@@ -1458,44 +1451,6 @@ sandesha2_client_fill_terminated_outgoing_seq_info(
     return AXIS2_SUCCESS; 
 }
 
-/*static axis2_status_t
-sandesha2_client_fill_timedout_outgoing_seq_info(
-    const axutil_env_t *env,
-    sandesha2_seq_report_t *report,
-    axis2_char_t *internal_seq_id,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr)
-{
-    sandesha2_seq_property_bean_t *internal_seq_find_bean = NULL;
-    sandesha2_seq_property_bean_t *internal_seq_bean = NULL;
-    axis2_char_t *out_seq_id = NULL;
-
-    internal_seq_find_bean =sandesha2_seq_property_bean_create(env);
-    if(!internal_seq_find_bean)
-    {
-        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return AXIS2_FALSE;
-    }
-    sandesha2_seq_property_bean_set_value(internal_seq_find_bean, env, 
-            internal_seq_id);
-    sandesha2_seq_property_bean_set_name(internal_seq_find_bean, env, 
-           SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
-    internal_seq_bean = sandesha2_seq_property_mgr_find_UNIQUE(seq_prop_mgr, 
-            env, internal_seq_find_bean);
-    if(!internal_seq_bean)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "Not a valid terminated sequence. Internal sequence bean is not \
-                available for the given sequence.");
-        AXIS2_ERROR_SET(env->error, NOT_A_VALID_TERMINATED_SEQ, AXIS2_FAILURE); 
-        return AXIS2_FAILURE;
-    }
-    sandesha2_seq_report_set_seq_status(report, env, 
-            SANDESHA2_SEQ_STATUS_TIMED_OUT);
-    out_seq_id = sandesha2_seq_property_bean_get_seq_id(internal_seq_bean, env);
-    sandesha2_client_fill_outgoing_seq_info(env, report, out_seq_id, seq_prop_mgr);
-    return AXIS2_SUCCESS; 
-}*/
-
 static axis2_status_t
 sandesha2_client_fill_outgoing_seq_info(
     const axutil_env_t *env,
@@ -1560,7 +1515,7 @@ sandesha2_client_generate_internal_seq_id_for_the_client_side(
     axis2_char_t *to_epr,
     axis2_char_t *seq_key)
 {
-    return sandesha2_utils_get_client_rms_internal_sequence_id(env, to_epr, seq_key); 
+    return sandesha2_utils_get_client_internal_sequence_id(env, to_epr, seq_key); 
 }
 
 static sandesha2_seq_report_t *
@@ -1656,7 +1611,7 @@ sandesha2_client_configure_terminate_seq(
         SANDESHA2_CLIENT_SEQ_KEY);
     if(property)
         seq_key = axutil_property_get_value(property, env);
-    internal_seq_id = sandesha2_utils_get_client_rms_internal_sequence_id(env, to, seq_key);
+    internal_seq_id = sandesha2_utils_get_client_internal_sequence_id(env, to, seq_key);
 
     seq_report = sandesha2_client_get_outgoing_seq_report_with_internal_seq_id(
             env, internal_seq_id, conf_ctx);

@@ -295,7 +295,7 @@ sandesha2_msg_ctx_set_from(
 {
     AXIS2_PARAM_CHECK(env->error, from, AXIS2_FAILURE);
     
-    return axis2_msg_ctx_set_to(rm_msg_ctx->msg_ctx, env, from);;
+    return axis2_msg_ctx_set_from(rm_msg_ctx->msg_ctx, env, from);;
 }
     
 axis2_endpoint_ref_t *AXIS2_CALL

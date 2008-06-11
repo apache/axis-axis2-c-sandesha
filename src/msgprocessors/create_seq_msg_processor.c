@@ -314,7 +314,7 @@ sandesha2_create_seq_msg_processor_process_in_msg (
 
         if(offer_accepted)
         {
-            sandesha2_create_seq_bean_t *create_seq_bean = NULL;
+            /*sandesha2_create_seq_bean_t *create_seq_bean = NULL;*/
             axis2_char_t *rms_internal_seq_id = NULL;
             sandesha2_seq_property_bean_t *rms_sequence_bean = NULL;
             sandesha2_seq_property_bean_t *rms_internal_sequence_bean = NULL;
@@ -329,16 +329,17 @@ sandesha2_create_seq_msg_processor_process_in_msg (
             sandesha2_create_seq_msg_processor_create_seq_msg_already_received(env, rms_sequence_id, 
                 rm_msg_ctx, create_seq_mgr, seq_prop_mgr);
 
-            create_seq_bean = sandesha2_create_seq_bean_create(env);
+            rms_internal_seq_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
+
+            /*create_seq_bean = sandesha2_create_seq_bean_create(env);
             sandesha2_create_seq_bean_set_rms_sequence_id(create_seq_bean, env, rms_sequence_id);
-            rms_internal_seq_id = sandesha2_utils_get_rms_internal_sequence_id(env, rmd_sequence_id);
-            sandesha2_create_seq_bean_set_rms_internal_sequence_id(create_seq_bean, env, 
+            sandesha2_create_seq_bean_set_internal_sequence_id(create_seq_bean, env, 
                     rms_internal_seq_id);
 
             sandesha2_create_seq_bean_set_create_seq_msg_id(create_seq_bean, env, 
                     axutil_uuid_gen(env));
 
-            sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
+            sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);*/
             
             rms_sequence_bean = sandesha2_seq_property_bean_create(env);
             sandesha2_seq_property_bean_set_name(rms_sequence_bean, env, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
