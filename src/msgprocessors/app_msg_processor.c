@@ -825,7 +825,6 @@ sandesha2_app_msg_processor_process_out_msg(
     long msg_number = -1;
     axis2_char_t *dummy_msg_str = NULL;
     axis2_bool_t dummy_msg = AXIS2_FALSE;
-    axis2_bool_t seq_timed_out = AXIS2_FALSE;
     sandesha2_seq_property_bean_t *res_highest_msg_bean = NULL;
     axis2_char_t msg_number_str[32];
     axis2_bool_t send_create_seq = AXIS2_FALSE;
