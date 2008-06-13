@@ -37,7 +37,6 @@
     </OUTfaultflow>
 
     <operation name="RMInOnlyOperation" mep="http://www.w3.org/2004/08/wsdl/in-only">
-        <messageReceiver class="axis2_receivers"/>
         <!-- namespaces for the 2005-02 spec -->
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/TerminateSequence</actionMapping>
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/SequenceAcknowledgement</actionMapping>
@@ -53,8 +52,6 @@
      </operation>
  
      <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
-        <messageReceiver class="axis2_receivers"/>
-        
         <!-- namespaces for the 2005-02 spec -->
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
 
