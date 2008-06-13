@@ -509,6 +509,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     sandesha2_msg_ctx_t *ref_rm_msg,
     axis2_op_t *op)
 {
+    axis2_ctx_t *ctx = NULL;
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_msg_ctx_t *new_msg = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -609,6 +610,34 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_op_ctx_increment_ref(op_ctx, env);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
     
+    ctx = axis2_msg_ctx_get_base(ref_msg, env);
+    if (ctx)
+    {
+        axis2_ctx_t *new_ctx = axis2_msg_ctx_get_base(new_msg, env);
+        if (new_ctx)
+        {
+            axutil_hash_index_t *hi = NULL;
+            axutil_hash_t *ht = NULL;
+            axutil_hash_t *ht2 = NULL;
+            void *val = NULL;
+            const void *val2 = NULL;
+            axutil_property_t *prop = NULL;
+            axutil_property_t *prop_clone = NULL;
+            axis2_char_t *prop_name = NULL;
+
+            ht = axis2_ctx_get_property_map(ctx, env);
+            ht2 = axis2_ctx_get_property_map(new_ctx, env);
+            for (hi = axutil_hash_first(ht, env); hi; hi = axutil_hash_next(env, hi)) {
+                axutil_hash_this(hi, &val2, NULL, &val);
+                prop = (axutil_property_t*)val;
+                prop_name = (axis2_char_t*)val2;
+                prop_clone = axutil_property_clone(prop, env);
+                axis2_ctx_set_property(new_ctx, env, prop_name, prop_clone);
+                axutil_property_set_free_func(prop, env, sandesha2_util_dummy_prop_free);
+            }
+        }
+    }
+
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
         sandesha2_utils_get_soap_version(env, 
         axis2_msg_ctx_get_soap_envelope(ref_msg, env)));

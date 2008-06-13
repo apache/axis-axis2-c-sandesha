@@ -98,9 +98,10 @@ sandesha2_ack_mgr_generate_ack_msg(
     }*/
 
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg, ref_op);
+
     /*op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     axis2_msg_ctx_set_op_ctx(ack_msg_ctx, env, op_ctx);*/
-
+    
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
         AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     if(property)
