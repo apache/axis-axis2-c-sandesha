@@ -98,6 +98,8 @@ sandesha2_ack_mgr_generate_ack_msg(
     }*/
 
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg, ref_op);
+    /*op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
+    axis2_msg_ctx_set_op_ctx(ack_msg_ctx, env, op_ctx);*/
 
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
         AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
@@ -121,9 +123,6 @@ sandesha2_ack_mgr_generate_ack_msg(
     /* Adding the sequence acknowledgement part */
     sandesha2_msg_creator_add_ack_msg(env, ack_rm_msg, seq_id, seq_prop_mgr);
     axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-    axis2_msg_ctx_set_op_ctx(ack_msg_ctx, env, op_ctx);
-    axis2_op_ctx_increment_ref(op_ctx, env);
 
     /*if(!op_ctx)
     {
@@ -133,6 +132,8 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_msg_ctx_set_op(ref_msg, env, op);
         axis2_msg_ctx_set_op_ctx(ref_msg, env, op_ctx);            
     }*/
+
+    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 

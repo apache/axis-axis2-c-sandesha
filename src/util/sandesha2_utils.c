@@ -604,8 +604,9 @@ sandesha2_utils_create_new_related_msg_ctx(
         svc_grp_ctx = axis2_msg_ctx_get_svc_grp_ctx(new_msg, env);
         svc_ctx = axis2_svc_ctx_create(env, axis_svc, svc_grp_ctx);
     }
-    op_ctx = axis2_op_ctx_create(env, op, axis2_msg_ctx_get_svc_ctx(new_msg, 
-        env));
+    /*op_ctx = axis2_op_ctx_create(env, op, axis2_msg_ctx_get_svc_ctx(new_msg, env));*/
+    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
+    axis2_op_ctx_increment_ref(op_ctx, env);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
     
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
