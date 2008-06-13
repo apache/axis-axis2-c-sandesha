@@ -45,7 +45,6 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axiom_node_t *payload2 = NULL;
-    axiom_node_t *payload3 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
@@ -186,8 +185,8 @@ int main(int argc, char** argv)
    
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload3 = build_om_payload_for_echo_svc(env, "echo100", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload3);
+    payload2 = build_om_payload_for_echo_svc(env, "echo100", seq_key);
+    result = axis2_svc_client_send_receive(svc_client, env, payload2);
     if(result)
     {
         axis2_char_t *om_str = NULL;
