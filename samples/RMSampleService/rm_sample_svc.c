@@ -39,15 +39,9 @@ rm_sample_svc_echo (
     axiom_node_t *node)
 {
     axiom_node_t *text_parent_node = NULL;
-    axiom_element_t *text_parent_element = NULL;
     axiom_node_t *text_node = NULL;
     axiom_node_t *ret_node = NULL;
-    axiom_element_t *element = NULL;
-    axis2_char_t *ns = "http://tempuri.org/";
-    axutil_qname_t *qname = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
-   
     /* Expected request format is :-
      * <ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
      *      <text>echo5</text>

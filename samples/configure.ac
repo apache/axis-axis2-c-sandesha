@@ -22,7 +22,7 @@ AC_PROG_MAKE_SET
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 
-CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -g"
+CFLAGS="$CFLAGS -ansi -Wall -D_LARGEFILE64_SOURCE -g -Werror"
 LDFLAGS="-L$AXIS2C_HOME/lib -lpthread"
 
 dnl Checks for header files.
@@ -35,11 +35,6 @@ AC_C_CONST
 dnl Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-
-PKG_CHECK_MODULES(LIBXML2, libxml-2.0)
-if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS $LIBXML2_CFLAGS $GUTHTHILA_CFLAGS -g"
-fi
 
 AC_MSG_CHECKING(To Use Axis2 C Axis2. This is a compulsory module to build Sandesha2 C)
 AC_ARG_WITH(axis2,
@@ -72,12 +67,6 @@ APRINC=$aprinc
 AC_SUBST(APACHE2INC)
 AC_SUBST(APRINC)
 AC_SUBST(AXIS2INC)
-AC_SUBST(LIBXML2_CFLAGS)
-AC_SUBST(LIBXML2_LIBS)
-AC_SUBST(LIBXML2_DIR)
-AC_SUBST(GUTHTHILA_DIR)
-AC_SUBST(GUTHTHILA_LIBS)
-AC_SUBST(DICLIENT_DIR)
 
 AC_CONFIG_FILES([Makefile \
     RMSampleService/Makefile \
