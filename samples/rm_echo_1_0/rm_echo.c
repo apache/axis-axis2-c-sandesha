@@ -29,7 +29,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 8
+#define SANDESHA2_MAX_COUNT 2
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL

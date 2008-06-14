@@ -142,10 +142,10 @@ sandesha2_utils_get_permanent_storage_mgr(
     const axutil_env_t *env,
     axis2_char_t *dbname);
 
-/*AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
-sandesha2_utils_get_svr_side_incoming_seq_id(
-    const axutil_env_t *env,
-    axis2_char_t *incoming_seq_id);*/
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+sandesha2_utils_get_rmd_seq_id(
+        const axutil_env_t *env,
+        axis2_char_t *internal_sequence_id);
 
 /**
  * Caller must free the returned string.

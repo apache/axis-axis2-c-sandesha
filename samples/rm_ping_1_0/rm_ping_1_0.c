@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 5
+#define SANDESHA2_SLEEP 2
 
 axiom_node_t *
 build_om_programatically(

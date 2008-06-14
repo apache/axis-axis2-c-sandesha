@@ -336,9 +336,12 @@ sandesha2_ack_msg_processor_process_in_msg (
                 env, retrans_list, j);
             if(retrans_bean)
             {
+                axis2_char_t *msg_id = NULL;
+
                 int msg_type = sandesha2_sender_bean_get_msg_type(retrans_bean, env);
+                msg_id = sandesha2_sender_bean_get_msg_id(retrans_bean, env);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2] Removing the sender bean with type %d", msg_type);
+                    "[sandesha2] Removing the sender bean with type %d and msg_id:%s", msg_type, msg_id);
                 sandesha2_sender_mgr_remove(sender_mgr, env, 
                     sandesha2_sender_bean_get_msg_id(retrans_bean, env));
                 sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env,

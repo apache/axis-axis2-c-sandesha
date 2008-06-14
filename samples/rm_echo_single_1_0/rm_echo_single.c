@@ -29,7 +29,7 @@
 #include <axis2_options.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 8
+#define SANDESHA2_MAX_COUNT 2
 
 static void 
 usage(

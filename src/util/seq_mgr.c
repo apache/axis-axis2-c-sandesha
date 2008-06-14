@@ -423,6 +423,7 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
         }
 
         reply_to_epr = axis2_msg_ctx_get_to(req_msg_ctx, env);
+        acks_to_str = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to_epr, env);
 
         if(reply_to_epr)
         {
@@ -438,7 +439,7 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
             return AXIS2_FAILURE;
         }        
     }
-    else
+    else /* Not server side */
     {
         reply_to_epr = axis2_msg_ctx_get_reply_to(first_app_msg, env);
 

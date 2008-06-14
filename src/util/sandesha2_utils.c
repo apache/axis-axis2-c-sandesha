@@ -432,25 +432,25 @@ sandesha2_utils_get_permanent_storage_mgr(
     return storage_mgr;
 }
 
-/*AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
-sandesha2_utils_get_svr_side_incoming_seq_id(
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
+sandesha2_utils_get_rmd_seq_id(
         const axutil_env_t *env,
-        axis2_char_t *incoming_seq_id)
+        axis2_char_t *internal_sequence_id)
 {
     axis2_char_t *start_str = NULL;
     axis2_char_t *ret = NULL;
     int start_len = 0;
     
-    AXIS2_PARAM_CHECK(env->error, incoming_seq_id, NULL);
+    AXIS2_PARAM_CHECK(env->error, internal_sequence_id, NULL);
     
     start_str = axutil_strcat(env, SANDESHA2_INTERNAL_SEQ_PREFIX, ":", NULL);
     start_len = axutil_strlen(start_str);
-    if(0 != axutil_strncmp(incoming_seq_id, start_str, start_len))
+    if(0 != axutil_strncmp(internal_sequence_id, start_str, start_len))
         return NULL;
-    ret = axutil_strdup(env, (incoming_seq_id + start_len * sizeof(axis2_char_t)));
+    ret = axutil_strdup(env, (internal_sequence_id + start_len * sizeof(axis2_char_t)));
     
     return ret;    
-}*/
+}
 
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
