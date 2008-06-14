@@ -2574,7 +2574,7 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
 
-        sender_bean = sandesha2_sender_mgr_get_next_application_msg_to_send(sender_mgr, env, 
+        sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                 internal_sequence_id, msg_id);
         if(!sender_bean)
         {
@@ -2633,7 +2633,7 @@ sandesha2_app_msg_processor_send_app_msg(
                     }
                 }
                 
-                sender_bean = sandesha2_sender_mgr_get_next_application_msg_to_send(sender_mgr, env, 
+                sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                     internal_sequence_id, msg_id);
                 if(!sender_bean)
                 {
@@ -2680,7 +2680,7 @@ sandesha2_app_msg_processor_send_app_msg(
     }
 
     /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 
-     * sandesha2_sender_mgr_get_next_application_msg_to_send() function. If it has arrived exit from
+     * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
      * the thread.*/
     sandesha2_app_msg_processor_start_application_msg_resender(env, conf_ctx, internal_sequence_id, 
             msg_id, is_svr_side, sleep_time);
@@ -2690,6 +2690,7 @@ sandesha2_app_msg_processor_send_app_msg(
     return status;
 }
 
+/* This function will be called in the duplex mode only from within the application message sender thread. */
 static axis2_status_t
 sandesha2_app_msg_processor_resend(
     const axutil_env_t *env,
@@ -3155,6 +3156,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     axutil_env_t *env = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
     int sleep_time = 0;
     axis2_char_t *dbname = NULL;
@@ -3178,13 +3180,13 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
-
 
     while(AXIS2_TRUE)
     {
         AXIS2_SLEEP(sleep_time);
-        sender_bean = sandesha2_sender_mgr_get_next_application_msg_to_send(sender_mgr, env, 
+        sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                 internal_sequence_id, msg_id);
         if(!sender_bean)
         {
@@ -3195,7 +3197,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         }
 
         status = sandesha2_app_msg_processor_resend(env, conf_ctx, msg_id, is_server_side,
-                internal_sequence_id, storage_mgr, seq_prop_mgr, NULL, 
+                internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, 
                 sender_mgr);
 
         if(AXIS2_SUCCESS != status)
