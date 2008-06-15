@@ -315,7 +315,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "[sandesha2]Sequence %s is completed. So adding terminate msg", rms_sequence_id); 
-                sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx, rms_sequence_id, 
+                sandesha2_terminate_mgr_send_terminate_seq_msg(env, rm_msg_ctx, rms_sequence_id, 
                         internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
             }
         }
@@ -459,7 +459,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
             highest_out_msg_num, out_seq_id, seq_prop_mgr);
         if(all_acked)
         {
-            sandesha2_terminate_mgr_add_terminate_seq_msg(env, rm_msg_ctx,
+            sandesha2_terminate_mgr_send_terminate_seq_msg(env, rm_msg_ctx,
                 out_seq_id, rec_side_int_seq_id, storage_mgr, seq_prop_mgr,
                 create_seq_mgr, sender_mgr);
         }

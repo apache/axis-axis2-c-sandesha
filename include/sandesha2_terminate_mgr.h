@@ -102,7 +102,7 @@ sandesha2_terminate_mgr_time_out_sending_side_seq(
     struct sandesha2_sender_mgr *sender_mgr);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_terminate_mgr_add_terminate_seq_msg(
+sandesha2_terminate_mgr_send_terminate_seq_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     axis2_char_t *out_seq_id,

@@ -41,8 +41,7 @@ sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
 static axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     const axutil_env_t *env,
-    axis2_char_t *int_seq_id,
-    axis2_char_t *seq_id,
+    axis2_char_t *internal_sequence_id,
     axis2_msg_ctx_t *msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -62,8 +61,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     axis2_char_t *stored_key = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
-    axis2_char_t *int_seq_id = NULL;
-    axis2_char_t *seq_id = NULL;
+    axis2_char_t *internal_sequence_id = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
     int max_attempts = -1;
     int sent_count = -1;
@@ -95,8 +93,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     }
 
-    int_seq_id = sandesha2_sender_bean_get_internal_seq_id(sender_bean, env);
-    seq_id = sandesha2_sender_bean_get_seq_id(sender_bean, env);
+    internal_sequence_id = sandesha2_sender_bean_get_internal_seq_id(sender_bean, env);
    
     property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));
     sent_count = sandesha2_sender_bean_get_sent_count(sender_bean, env) + 1;
@@ -111,7 +108,7 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
 
     if(rm_msg_ctx)
     {
-        seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, int_seq_id, rm_msg_ctx, 
+        seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, internal_sequence_id, rm_msg_ctx, 
                 seq_prop_mgr, conf_ctx);
     }
     
@@ -119,14 +116,14 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     {
         timeout_seq = AXIS2_TRUE;
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Sequence with internal_seq_id %s timed out", int_seq_id);
+            "[sandesha2]Sequence with internal_sequence_id %s timed out", internal_sequence_id);
     }
         
     if(timeout_seq)
     {
         sandesha2_sender_bean_set_send(sender_bean, env, AXIS2_FALSE);
-        sandesha2_msg_retrans_adjuster_finalize_timedout_seq(env, int_seq_id, seq_id, msg_ctx, 
-                storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+        sandesha2_msg_retrans_adjuster_finalize_timedout_seq(env, internal_sequence_id, 
+            msg_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         continue_sending = AXIS2_FALSE;
     }
 
@@ -196,8 +193,7 @@ sandesha2_msg_retrans_adjuster_next_exp_backoff_diff(
 static axis2_status_t AXIS2_CALL
 sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     const axutil_env_t *env,
-    axis2_char_t *int_seq_id,
-    axis2_char_t *seq_id,
+    axis2_char_t *internal_sequence_id,
     axis2_msg_ctx_t *msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -208,9 +204,9 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     axis2_ctx_t *ctx = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_msg_retrans_adjuster_finalize_timedout_seq");
-    AXIS2_PARAM_CHECK(env->error, int_seq_id, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
+        "[sandesha2] Entry:sandesha2_msg_retrans_adjuster_finalize_timedout_seq");
+
+    AXIS2_PARAM_CHECK(env->error, internal_sequence_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
@@ -220,7 +216,7 @@ sandesha2_msg_retrans_adjuster_finalize_timedout_seq(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     
-    sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, int_seq_id,
+    sandesha2_terminate_mgr_time_out_sending_side_seq(env, conf_ctx, internal_sequence_id,
         AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
  
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
