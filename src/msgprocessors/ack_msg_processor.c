@@ -337,6 +337,7 @@ sandesha2_ack_msg_processor_process_in_msg (
         size = axutil_array_list_size(ack_range_list, env);
     }
 
+    /* Remove application sender beans from database that are acked */
     for(i = 0; i < size; i++)
     {
         sandesha2_ack_range_t *ack_range  = NULL;

@@ -2172,7 +2172,7 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_char_t *rm_ns_val = NULL;
     sandesha2_msg_number_t *msg_number = NULL;
     axis2_msg_ctx_t *req_msg = NULL;
-    axis2_char_t *str_identifier = NULL;
+    axis2_char_t *rms_sequence_id = NULL;
     sandesha2_sender_bean_t *app_msg_bean = NULL;
     long millisecs = 0;
     axutil_property_t *property = NULL;
@@ -2195,6 +2195,7 @@ sandesha2_app_msg_processor_send_app_msg(
     axutil_param_t *sleep_time_param = NULL;
     int sleep_time = 0;
     axis2_conf_t *conf = NULL;
+    const axis2_char_t *mep = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Entry:sandesha2_app_msg_processor_send_app_msg");
@@ -2221,6 +2222,13 @@ sandesha2_app_msg_processor_send_app_msg(
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
         AXIS2_SLEEP(1);
+    }
+
+    if(rms_sequence_bean)
+    {
+        rms_sequence_id = axutil_strdup(env, sandesha2_seq_property_bean_get_value(rms_sequence_bean, 
+                    env));
+        sandesha2_seq_property_bean_free(rms_sequence_bean, env);
     }
 
     if (to_bean)
@@ -2287,6 +2295,10 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
         }
+        if(rms_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, rms_sequence_id);
+        }
 
         return AXIS2_FAILURE;
     }
@@ -2324,6 +2336,10 @@ sandesha2_app_msg_processor_send_app_msg(
             if(reply_to_addr)
             {
                 AXIS2_FREE(env->allocator, reply_to_addr);
+            }
+            if(rms_sequence_id)
+            {
+                AXIS2_FREE(env->allocator, rms_sequence_id);
             }
 
             return AXIS2_FAILURE;
@@ -2365,17 +2381,13 @@ sandesha2_app_msg_processor_send_app_msg(
         }
     }
 
-    if(!rms_sequence_bean || !sandesha2_seq_property_bean_get_value(rms_sequence_bean, env))
+    if(!rms_sequence_id)
     {
-        str_identifier = SANDESHA2_TEMP_SEQ_ID;
-    }
-    else
-    {
-        str_identifier = sandesha2_seq_property_bean_get_value(rms_sequence_bean, env);
+        rms_sequence_id = axutil_strdup(env, SANDESHA2_TEMP_SEQ_ID); /* Why should we do this?:damitha */
     }
         
     identifier = sandesha2_identifier_create(env, rm_ns_val);
-    sandesha2_identifier_set_identifier(identifier, env, str_identifier);
+    sandesha2_identifier_set_identifier(identifier, env, rms_sequence_id);
     sandesha2_seq_set_identifier(seq, env, identifier);
     sandesha2_msg_ctx_set_sequence(rm_msg_ctx, env, seq);
 
@@ -2457,6 +2469,10 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, from_acks_to_addr);
         }
+        if(rms_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, rms_sequence_id);
+        }
         
         return status;
     }
@@ -2474,7 +2490,7 @@ sandesha2_app_msg_processor_send_app_msg(
     sandesha2_sender_bean_set_msg_no(app_msg_bean, env, msg_num);
     sandesha2_sender_bean_set_msg_type(app_msg_bean, env, SANDESHA2_MSG_TYPE_APPLICATION);
 
-    if(!rms_sequence_bean || !sandesha2_seq_property_bean_get_value(rms_sequence_bean, env))
+    if(!rms_sequence_id)
     {
         sandesha2_sender_bean_set_send(app_msg_bean, env, AXIS2_FALSE);
     }
@@ -2485,7 +2501,15 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
     }
 
+
     temp_op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
+    if(temp_op_ctx)
+    {
+        axis2_op_t *op = NULL;
+
+        op = axis2_op_ctx_get_op(temp_op_ctx, env);
+        mep = axis2_op_get_msg_exchange_pattern(op, env);
+    }
 
     /**
      * When we store application message context as below it should be noted
@@ -2518,6 +2542,10 @@ sandesha2_app_msg_processor_send_app_msg(
         if(from_acks_to_addr)
         {
             AXIS2_FREE(env->allocator, from_acks_to_addr);
+        }
+        if(rms_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, rms_sequence_id);
         }
 
         return AXIS2_FAILURE;
@@ -2574,6 +2602,19 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
 
+        if(!axutil_strcmp(mep, AXIS2_MEP_URI_OUT_IN))
+        {
+            sandesha2_seq_property_bean_t *replay_bean = NULL;
+
+            replay_bean = sandesha2_seq_property_bean_create_with_data(env, rms_sequence_id, 
+                    SANDESHA2_SEQ_PROP_1_0_REPLAY, NULL);
+            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, replay_bean);
+            if(replay_bean)
+            {
+                sandesha2_seq_property_bean_free(replay_bean, env);
+            }
+        }
+
         sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                 internal_sequence_id, msg_id);
         if(!sender_bean)
@@ -2600,6 +2641,9 @@ sandesha2_app_msg_processor_send_app_msg(
             {
                 continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, app_msg_bean, 
                         conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+
+                sandesha2_sender_mgr_update(sender_mgr, env, app_msg_bean);
+
                 if(!continue_sending)
                 {
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
@@ -2660,6 +2704,10 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, from_acks_to_addr);
         }
+        if(rms_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, rms_sequence_id);
+        }
 
         return status;
     }
@@ -2677,6 +2725,10 @@ sandesha2_app_msg_processor_send_app_msg(
     if(from_acks_to_addr)
     {
         AXIS2_FREE(env->allocator, from_acks_to_addr);
+    }
+    if(rms_sequence_id)
+    {
+        AXIS2_FREE(env->allocator, rms_sequence_id);
     }
 
     /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 

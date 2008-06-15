@@ -290,6 +290,8 @@ extern "C"
     #define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID  "LastInMessageId"
 
     #define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID "HighestInMsgId"
+    
+    #define SANDESHA2_SEQ_PROP_1_0_REPLAY "Replay1_0"
 	
 	/**
 	 * SOAP Versions
