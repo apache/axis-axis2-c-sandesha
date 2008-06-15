@@ -412,8 +412,6 @@ sandesha2_permanent_sender_mgr_update(
         sql_update);
 
     return ret;
-
-    return AXIS2_SUCCESS;
 }
 
 axutil_array_list_t *AXIS2_CALL
@@ -594,7 +592,7 @@ sandesha2_permanent_sender_mgr_get_application_msg_to_send(
     int match_list_size = 0;
     axutil_array_list_t *match_list = NULL;
     axis2_char_t sql_find[1024];
-    long time_now = 0;
+    /*long time_now = 0;*/
     sandesha2_permanent_sender_mgr_t *sender_mgr_impl = NULL;
     sandesha2_sender_bean_t *result = NULL;
 
@@ -605,15 +603,15 @@ sandesha2_permanent_sender_mgr_get_application_msg_to_send(
         "time_to_send, msg_type, seq_id, wsrm_anon_uri, "\
         "to_address from sender where ");
 
-    time_now = sandesha2_utils_get_current_time_in_millis(env);
+    /*time_now = sandesha2_utils_get_current_time_in_millis(env);
     if(time_now > 0)
     {
         sprintf(sql_find + axutil_strlen(sql_find), "time_to_send <= %ld ", time_now);
-    }
+    }*/
 
     if(seq_id)
     {
-        sprintf(sql_find + axutil_strlen(sql_find), "and internal_seq_id='%s'", seq_id);
+        sprintf(sql_find + axutil_strlen(sql_find), "internal_seq_id='%s'", seq_id);
     }
     
     if(msg_id)

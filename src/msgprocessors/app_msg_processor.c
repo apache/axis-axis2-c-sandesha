@@ -83,7 +83,7 @@ struct sandesha2_app_msg_processor_args
     axis2_char_t *internal_sequence_id;
     axis2_char_t *msg_id;
     axis2_bool_t is_server_side;
-    int sleep_time;
+    int retrans_interval;
 };
 
 static void * AXIS2_THREAD_FUNC
@@ -98,7 +98,7 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int sleep_time);
+    int retrans_interval);
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_process_in_msg (
@@ -2192,8 +2192,8 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_char_t *rmd_sequence_id = NULL;
     axis2_module_desc_t *module_desc = NULL;
     axutil_qname_t *qname = NULL;
-    axutil_param_t *sleep_time_param = NULL;
-    int sleep_time = 0;
+    axutil_param_t *retrans_interval_param = NULL;
+    int retrans_interval = 0;
     axis2_conf_t *conf = NULL;
     const axis2_char_t *mep = NULL;
 
@@ -2583,10 +2583,11 @@ sandesha2_app_msg_processor_send_app_msg(
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
     module_desc = axis2_conf_get_module(conf, env, qname);
-    sleep_time_param = axis2_module_desc_get_param(module_desc, env, SANDESHA2_SENDER_SLEEP);
-    if(sleep_time_param)
+    retrans_interval_param = axis2_module_desc_get_param(module_desc, env, 
+            SANDESHA2_PROPERTIES_RETRANSMISSION_INTERVAL);
+    if(retrans_interval_param)
     {
-        sleep_time = AXIS2_ATOI(axutil_param_get_value(sleep_time_param, env));
+        retrans_interval = AXIS2_ATOI(axutil_param_get_value(retrans_interval_param, env));
     }
     if(qname)
     {
@@ -2651,7 +2652,7 @@ sandesha2_app_msg_processor_send_app_msg(
                     break;
                 }
 
-                AXIS2_SLEEP(sleep_time);
+                AXIS2_SLEEP(retrans_interval);
                 if(transport_sender)
                 {
                     /* This is neccessary to avoid a double free */
@@ -2735,7 +2736,7 @@ sandesha2_app_msg_processor_send_app_msg(
      * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
      * the thread.*/
     sandesha2_app_msg_processor_start_application_msg_resender(env, conf_ctx, internal_sequence_id, 
-            msg_id, is_svr_side, sleep_time);
+            msg_id, is_svr_side, retrans_interval);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[Sandesha2] Exit:sandesha2_app_msg_processor_send_app_msg");
 
@@ -3164,7 +3165,7 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int sleep_time)
+    int retrans_interval)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_app_msg_processor_args_t *args = NULL;
@@ -3179,7 +3180,7 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     args->conf_ctx = conf_ctx;
     args->internal_sequence_id = internal_sequence_id;
     args->msg_id = msg_id;
-    args->sleep_time = sleep_time;
+    args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
     ++(env->allocator->ref_pool_allocator);
 
@@ -3210,7 +3211,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
-    int sleep_time = 0;
+    int retrans_interval = 0;
     axis2_char_t *dbname = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_char_t *internal_sequence_id = NULL;
@@ -3228,7 +3229,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     msg_id = args->msg_id;
     internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
     is_server_side = args->is_server_side;
-    sleep_time = args->sleep_time;
+    retrans_interval = args->retrans_interval;
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
@@ -3237,7 +3238,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
 
     while(AXIS2_TRUE)
     {
-        AXIS2_SLEEP(sleep_time);
+        AXIS2_SLEEP(retrans_interval);
         sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                 internal_sequence_id, msg_id);
         if(!sender_bean)
