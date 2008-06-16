@@ -47,7 +47,7 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_conf_ctx_t *conf_ctx = NULL;
 
     axis2_endpoint_ref_t *to = NULL;
-    axis2_op_t *ack_op = NULL;
+    /*axis2_op_t *ack_op = NULL;*/
     axis2_op_t *ref_op = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
     axutil_property_t *property = NULL;
@@ -77,10 +77,10 @@ sandesha2_ack_mgr_generate_ack_msg(
         }
     }
 
-    ack_op = axis2_op_create(env);
-    axis2_op_set_msg_exchange_pattern(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);
+    /*ack_op = axis2_op_create(env);
+    axis2_op_set_msg_exchange_pattern(ack_op, env, AXIS2_MEP_URI_OUT_ONLY);*/
     ref_op = axis2_msg_ctx_get_op(ref_msg, env);
-    if(ref_op)
+    /*if(ref_op)
     {
         axutil_array_list_t *out_flow = NULL;
         axutil_array_list_t *out_fault_flow = NULL;
@@ -94,9 +94,8 @@ sandesha2_ack_mgr_generate_ack_msg(
             axis2_op_set_out_flow(ack_op, env, new_out_flow);
         if(new_out_fault_flow)
             axis2_op_set_fault_out_flow(ack_op, env, new_out_fault_flow);
-    }
-    ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg,
-        ack_op);
+    }*/
+    ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg, ref_op);
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
         AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     if(property)
@@ -118,15 +117,16 @@ sandesha2_ack_mgr_generate_ack_msg(
     /* Adding the sequence acknowledgement part */
     sandesha2_msg_creator_add_ack_msg(env, ack_rm_msg, seq_id, seq_prop_mgr);
     axis2_msg_ctx_set_property(ack_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-    if(!op_ctx)
+    /*if(!op_ctx)
     {
         axis2_op_t *op = axis2_op_create(env);
         axis2_op_set_msg_exchange_pattern(op, env, AXIS2_MEP_URI_IN_OUT);
         op_ctx = axis2_op_ctx_create(env, op, NULL);
         axis2_msg_ctx_set_op(ref_msg, env, op);
         axis2_msg_ctx_set_op_ctx(ref_msg, env, op_ctx);            
-    }
+    }*/
+    
+    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
     
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
