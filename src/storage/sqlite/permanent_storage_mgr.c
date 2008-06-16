@@ -797,7 +797,10 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     {
         sandesha2_msg_store_bean_set_persistent_property_str(bean, env, 
             prop_str);
-        AXIS2_FREE(env->allocator, prop_str);
+        if(prop_str && axutil_strlen(prop_str) > 0)
+        {
+            AXIS2_FREE(env->allocator, prop_str);
+        }
     }
     /* setting the request message if this a response message.*/
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
@@ -904,7 +907,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, key, 
                 SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, 
                 value, NULL);
-            if(temp_str && axutil_strlen(temp_str)> 0)
+            if(temp_str && axutil_strlen(temp_str) > 0)
                 AXIS2_FREE(env->allocator, temp_str);
         }
     }

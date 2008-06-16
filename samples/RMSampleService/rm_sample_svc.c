@@ -328,7 +328,7 @@ rm_sample_svc_mtom(
                         axiom_data_handler_write_to(data_handler, env);
                         ret_node = build_response1(env, base64text);
                     }
-                    else /* nothing came */
+                    else /* attachement missing */
                     {
                         AXIS2_ERROR_SET(env->error,
                             AXIS2_ERROR_ATTACHMENT_MISSING,

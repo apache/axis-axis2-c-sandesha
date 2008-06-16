@@ -768,7 +768,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     axis2_char_t *rm_ver = NULL;
     sandesha2_seq_property_bean_t *transport_to_bean = NULL;
     axis2_char_t *key = NULL;
-    sandesha2_sender_bean_t *terminate_bean = NULL;
+    sandesha2_sender_bean_t *terminate_sender_bean = NULL;
     sandesha2_seq_property_bean_t *terminate_added = NULL;
     sandesha2_seq_property_bean_t *replay_bean = NULL;
     axis2_engine_t *engine = NULL;
@@ -926,26 +926,26 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     }
 
     key = axutil_uuid_gen(env);
-    terminate_bean = sandesha2_sender_bean_create(env);
-    sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_bean, env, key);
+    terminate_sender_bean = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_sender_bean, env, key);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx);
     property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));
     terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) + terminate_delay;
-    sandesha2_sender_bean_set_time_to_send(terminate_bean, env, send_time);
+    sandesha2_sender_bean_set_time_to_send(terminate_sender_bean, env, send_time);
 
     msg_id = sandesha2_msg_ctx_get_msg_id(terminate_rm_msg_ctx, env);
-    sandesha2_sender_bean_set_msg_id(terminate_bean, env, msg_id);
+    sandesha2_sender_bean_set_msg_id(terminate_sender_bean, env, msg_id);
 
-    sandesha2_sender_bean_set_send(terminate_bean, env, AXIS2_TRUE);
+    sandesha2_sender_bean_set_send(terminate_sender_bean, env, AXIS2_TRUE);
 
-    sandesha2_sender_bean_set_seq_id(terminate_bean, env, rms_sequence_id);
-    sandesha2_sender_bean_set_internal_seq_id(terminate_bean, env, internal_sequence_id);
+    sandesha2_sender_bean_set_seq_id(terminate_sender_bean, env, rms_sequence_id);
+    sandesha2_sender_bean_set_internal_seq_id(terminate_sender_bean, env, internal_sequence_id);
 
-    sandesha2_sender_bean_set_msg_type(terminate_bean, env, SANDESHA2_MSG_TYPE_TERMINATE_SEQ);
+    sandesha2_sender_bean_set_msg_type(terminate_sender_bean, env, SANDESHA2_MSG_TYPE_TERMINATE_SEQ);
                             
-    sandesha2_sender_bean_set_resend(terminate_bean, env, AXIS2_FALSE);
-    sandesha2_sender_mgr_insert(sender_mgr, env, terminate_bean);
+    sandesha2_sender_bean_set_resend(terminate_sender_bean, env, AXIS2_FALSE);
+    sandesha2_sender_mgr_insert(sender_mgr, env, terminate_sender_bean);
     
     property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, key);
     axis2_msg_ctx_set_property(terminate_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
@@ -983,7 +983,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             axis2_transport_out_desc_t *transport_out = NULL;
             axis2_transport_sender_t *transport_sender = NULL;
             
-            sandesha2_sender_bean_set_resend(terminate_bean, env, AXIS2_TRUE);
+            sandesha2_sender_bean_set_resend(terminate_sender_bean, env, AXIS2_TRUE);
             soap_ns_uri = axis2_msg_ctx_get_is_soap_11(terminate_msg_ctx, env) ?
                  AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
                  AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
@@ -1018,10 +1018,10 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                 axis2_bool_t continue_sending = AXIS2_FALSE;
                 long retrans_delay = -1;
 
-                continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, terminate_bean, 
+                continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, terminate_sender_bean, 
                         conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
-                sandesha2_sender_mgr_update(sender_mgr, env, terminate_bean);
+                sandesha2_sender_mgr_update(sender_mgr, env, terminate_sender_bean);
 
                 if(!continue_sending)
                 {
@@ -1062,9 +1062,9 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         }
     }
 
-    if(terminate_bean)
+    if(terminate_sender_bean)
     {
-        sandesha2_sender_bean_free(terminate_bean, env);
+        sandesha2_sender_bean_free(terminate_sender_bean, env);
     }
 
     sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, is_svr_side, 
