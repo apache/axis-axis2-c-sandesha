@@ -182,11 +182,18 @@ sandesha2_in_handler_invoke(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx dropped. So return here");
 
         if(rm_msg_ctx)
+        {
             sandesha2_msg_ctx_free(rm_msg_ctx, env);
+        }
         if(seq_prop_mgr)
+        {
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+        }
         if(storage_mgr)
+        {
             sandesha2_storage_mgr_free(storage_mgr, env);
+        }
+
         return AXIS2_SUCCESS;
     }
     /* 
@@ -253,8 +260,6 @@ sandesha2_in_handler_drop_if_duplicate(
 {
     axis2_bool_t drop = AXIS2_FALSE;
     
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Entry:sandesha2_in_handler_drop_if_duplicate");
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
@@ -289,7 +294,9 @@ sandesha2_in_handler_drop_if_duplicate(
                 int i = 0, size = 0;
                 
                 rcvd_msgs_str = sandesha2_seq_property_bean_get_value(rcvd_msgs_bean, env);
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "rcvd_msgs_str:%s*************", rcvd_msgs_str);
+
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "rcvd_msgs_str:%s", rcvd_msgs_str);
+
                 msg_no_list = sandesha2_utils_get_array_list_from_string(env, rcvd_msgs_str);
                 if(msg_no_list)
                 {
@@ -383,8 +390,7 @@ sandesha2_in_handler_drop_if_duplicate(
                         rm_msg_ctx, env), env);
             if(!op_ctx && !op_ctx1)
             {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Dropping"
-                        " duplicate RM message");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Dropping duplicate RM message");
                 drop = AXIS2_TRUE;
             }
         }
@@ -394,8 +400,7 @@ sandesha2_in_handler_drop_if_duplicate(
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         return AXIS2_TRUE;
     }
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Exit:sandesha2_in_handler_drop_if_duplicate");
+
     return AXIS2_FALSE;
 }
 
@@ -409,39 +414,53 @@ sandesha2_in_handler_process_dropped_msg(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_sender_mgr_t *sender_mgr)
 {
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_in_handler_process_dropped_msg");
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FALSE);
     
-    if(SANDESHA2_MSG_TYPE_APPLICATION == sandesha2_msg_ctx_get_msg_type(
-        rm_msg_ctx, env))
+    if(SANDESHA2_MSG_TYPE_APPLICATION == sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env))
     {
         sandesha2_seq_t *sequence = NULL;
         axis2_char_t *rmd_sequence_id = NULL;
         
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came1");
         sequence = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         if(sequence)
-            rmd_sequence_id = sandesha2_identifier_get_identifier(
-                sandesha2_seq_get_identifier(sequence, env), env);
+            rmd_sequence_id = sandesha2_identifier_get_identifier(sandesha2_seq_get_identifier(sequence, 
+                        env), env);
             
         if(rmd_sequence_id)
         {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came2");
+
             sandesha2_seq_property_bean_t *rcvd_msgs_bean = NULL;
             axis2_char_t *rcvd_msgs_str = NULL;
             sandesha2_msg_processor_t *app_msg_processor = NULL;
             
-            rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-                env, rmd_sequence_id, SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+            rcvd_msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
+                    SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
+
             if(rcvd_msgs_bean)
             {
-                rcvd_msgs_str = sandesha2_seq_property_bean_get_value(
-                    rcvd_msgs_bean, env);
+                rcvd_msgs_str = sandesha2_seq_property_bean_get_value(rcvd_msgs_bean, env);
+                
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "rcvd_msgs_str:%s", rcvd_msgs_str);
+
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came3");
+
                 app_msg_processor = sandesha2_app_msg_processor_create(env);
                 sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, rcvd_msgs_str, 
                         rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
+
                 sandesha2_msg_processor_free(app_msg_processor, env);
             }
         }
     }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_in_handler_process_dropped_msg");
 
     return AXIS2_SUCCESS;
 }
