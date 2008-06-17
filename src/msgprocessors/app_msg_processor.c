@@ -2280,7 +2280,6 @@ sandesha2_app_msg_processor_send_app_msg(
     if (to_bean)
     {
         to_addr = axutil_strdup(env, sandesha2_seq_property_bean_get_value(to_bean, env));
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_to_addr1:%s", to_addr);
         to_epr = axis2_endpoint_ref_create(env, to_addr);
         sandesha2_seq_property_bean_free(to_bean, env);
     }

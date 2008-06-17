@@ -551,8 +551,9 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
             sprintf(sql_find + axutil_strlen(sql_find),
                 " and  send = %d", send);
     }
+
     sprintf(sql_find + axutil_strlen(sql_find), ";");
-    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_sql_find:%s", sql_find);
+
     find_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
         sandesha2_sender_find_callback, sql_find);
 
