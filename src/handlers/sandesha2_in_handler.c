@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <axis2_engine.h>
 #include <axis2_handler_desc.h>
 #include <axutil_array_list.h>
 #include <axis2_svc.h>
@@ -58,6 +59,7 @@ static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_process_dropped_msg(
     struct axis2_handler *handler, 
     const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -176,7 +178,7 @@ sandesha2_in_handler_invoke(
 
     if(dropped)
     {
-        sandesha2_in_handler_process_dropped_msg(handler, env, rm_msg_ctx, storage_mgr, 
+        sandesha2_in_handler_process_dropped_msg(handler, env, conf_ctx, rm_msg_ctx, storage_mgr, 
                 seq_prop_mgr, sender_mgr);
 
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx dropped. So return here");
@@ -196,6 +198,7 @@ sandesha2_in_handler_invoke(
 
         return AXIS2_SUCCESS;
     }
+
     /* 
      * TODO Validate the message
      * sandesha2_msg_validator_validate(env, rm_msg_ctx);
@@ -208,6 +211,7 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
         sandesha2_msg_processor_free(ack_proc, env);
     }*/
+
     ack_requested = sandesha2_msg_ctx_get_ack_requested(rm_msg_ctx, env);
     if(ack_requested)
     {
@@ -404,11 +408,16 @@ sandesha2_in_handler_drop_if_duplicate(
     return AXIS2_FALSE;
 }
 
-
+/* In this function appropriately respond for the dropeed message. In two way messaging if the
+ * response for the dropped application message is not acknowledged then take the the response
+ * message from the database and append acknowledgment for the dropped message to it.
+ * Otherwise send the acknowledgment for the dropped message.
+ */
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_process_dropped_msg(
     struct axis2_handler *handler, 
     const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -425,16 +434,15 @@ sandesha2_in_handler_process_dropped_msg(
         sandesha2_seq_t *sequence = NULL;
         axis2_char_t *rmd_sequence_id = NULL;
         
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came1");
         sequence = sandesha2_msg_ctx_get_sequence(rm_msg_ctx, env);
         if(sequence)
+        {
             rmd_sequence_id = sandesha2_identifier_get_identifier(sandesha2_seq_get_identifier(sequence, 
                         env), env);
+        }
             
         if(rmd_sequence_id)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came2");
-
             sandesha2_seq_property_bean_t *rcvd_msgs_bean = NULL;
             axis2_char_t *rcvd_msgs_str = NULL;
             sandesha2_msg_processor_t *app_msg_processor = NULL;
@@ -444,17 +452,60 @@ sandesha2_in_handler_process_dropped_msg(
 
             if(rcvd_msgs_bean)
             {
+                sandesha2_sender_bean_t *sender_bean = NULL;
+                axis2_char_t *internal_sequence_id = NULL;
+                long msg_no = -1;
+                sandesha2_sender_bean_t *find_sender_bean = NULL;
+
                 rcvd_msgs_str = sandesha2_seq_property_bean_get_value(rcvd_msgs_bean, env);
                 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "rcvd_msgs_str:%s", rcvd_msgs_str);
+                msg_no = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(sequence, env), env);
+                internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
+                find_sender_bean = sandesha2_sender_bean_create(env);
+                sandesha2_sender_bean_set_msg_no(find_sender_bean, env, msg_no);
+                sandesha2_sender_bean_set_internal_seq_id(find_sender_bean, env, internal_sequence_id);
+                sandesha2_sender_bean_set_send(find_sender_bean, env, AXIS2_TRUE);
 
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "came3");
+                sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+                if(sender_bean)
+                {
+                    axis2_char_t *storage_key = NULL;
+                    axis2_msg_ctx_t *app_msg_ctx = NULL;
+                    sandesha2_msg_ctx_t *app_rm_msg_ctx = NULL;
+                    axis2_engine_t *engine = NULL;
+                    axis2_op_ctx_t *op_ctx = NULL;
+                    axis2_msg_ctx_t *in_msg_ctx = NULL;
 
-                app_msg_processor = sandesha2_app_msg_processor_create(env);
-                sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, rcvd_msgs_str, 
+                    storage_key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
+                    app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, storage_key, 
+                            conf_ctx, AXIS2_TRUE);
+
+                    in_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
+
+                    axis2_msg_ctx_set_transport_out_stream(app_msg_ctx, env, 
+                            axis2_msg_ctx_get_transport_out_stream(in_msg_ctx, env));
+
+                    axis2_msg_ctx_set_out_transport_info(app_msg_ctx, env, 
+                            axis2_msg_ctx_get_out_transport_info(in_msg_ctx, env));
+
+                    op_ctx = axis2_msg_ctx_get_op_ctx(in_msg_ctx, env);
+
+                    axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
+
+                    app_rm_msg_ctx = sandesha2_msg_init_init_msg(env, app_msg_ctx);
+                    sandesha2_msg_creator_add_ack_msg(env, app_rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
+                    engine = axis2_engine_create(env, conf_ctx);
+                    axis2_engine_send(engine, env, app_msg_ctx);
+                    sandesha2_msg_ctx_free(app_rm_msg_ctx, env);
+                }
+                else
+                {
+                    app_msg_processor = sandesha2_app_msg_processor_create(env);
+                    sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, rcvd_msgs_str, 
                         rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
-
-                sandesha2_msg_processor_free(app_msg_processor, env);
+                    
+                    sandesha2_msg_processor_free(app_msg_processor, env);
+                }
             }
         }
     }

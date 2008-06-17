@@ -79,7 +79,7 @@ void AXIS2_CALL
 sandesha2_sender_bean_set_send (
     sandesha2_sender_bean_t *sender,
     const axutil_env_t *env,
-axis2_bool_t send);
+    axis2_bool_t send);
 
 axis2_char_t* AXIS2_CALL
 sandesha2_sender_bean_get_internal_seq_id (

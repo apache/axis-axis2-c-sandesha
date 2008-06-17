@@ -457,7 +457,9 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         axiom_soap_builder_free(soap_builder, env);
         return NULL;
     }
+
     axis2_msg_ctx_set_soap_envelope(msg_ctx, env, soap_envelope);
+
     axis2_msg_ctx_set_msg_id(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(
         msg_store_bean, env));
 
@@ -484,7 +486,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         svc = axis2_conf_get_svc(conf, env, svc_name_str);
         if(svc)
             axis2_msg_ctx_set_svc(msg_ctx, env, svc);
-        else
+        /*else
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot build message "\
                  "context since service %s is not present", svc_name_str);
@@ -493,7 +495,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 AXIS2_FAILURE);
             axiom_soap_builder_free(soap_builder, env);
             return NULL;
-        }
+        */
     }
 
     op_name_str = sandesha2_msg_store_bean_get_op(msg_store_bean, env);
@@ -587,11 +589,13 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         env);
     if(transport_to_str)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_transport_to_str:%s", transport_to_str);
         axis2_msg_ctx_set_transport_url(msg_ctx, env, transport_to_str);
     }
     to_url_str = sandesha2_msg_store_bean_get_to_url(msg_store_bean, env);
     if(to_url_str)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_to_url_str:%s", to_url_str);
         endpoint_ref = axis2_endpoint_ref_create(env, to_url_str);
         axis2_msg_ctx_set_to(msg_ctx, env, endpoint_ref);
     }
@@ -776,6 +780,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     if(to)
     {
         address = (axis2_char_t *) axis2_endpoint_ref_get_address(to, env);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_address:%s", address);
         sandesha2_msg_store_bean_set_to_url(bean, env, address);
     }
     reply_to = axis2_msg_ctx_get_reply_to(msg_ctx, env);

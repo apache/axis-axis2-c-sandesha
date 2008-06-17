@@ -2280,6 +2280,7 @@ sandesha2_app_msg_processor_send_app_msg(
     if (to_bean)
     {
         to_addr = axutil_strdup(env, sandesha2_seq_property_bean_get_value(to_bean, env));
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_to_addr1:%s", to_addr);
         to_epr = axis2_endpoint_ref_create(env, to_addr);
         sandesha2_seq_property_bean_free(to_bean, env);
     }
@@ -2478,6 +2479,36 @@ sandesha2_app_msg_processor_send_app_msg(
         sandesha2_seq_property_bean_free(from_acks_to_bean, env);
     }
 
+    app_msg_sender_bean = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_internal_seq_id(app_msg_sender_bean, env, internal_sequence_id);
+    sandesha2_sender_bean_set_msg_ctx_ref_key(app_msg_sender_bean, env, storage_key);
+    millisecs = sandesha2_utils_get_current_time_in_millis(env);
+    sandesha2_sender_bean_set_time_to_send(app_msg_sender_bean, env, millisecs);
+    msg_id = sandesha2_msg_ctx_get_msg_id(rm_msg_ctx, env);
+    sandesha2_sender_bean_set_msg_id(app_msg_sender_bean, env, msg_id);
+    sandesha2_sender_bean_set_msg_no(app_msg_sender_bean, env, msg_num);
+    sandesha2_sender_bean_set_msg_type(app_msg_sender_bean, env, SANDESHA2_MSG_TYPE_APPLICATION);
+
+    if(!rms_sequence_id)
+    {
+        sandesha2_sender_bean_set_send(app_msg_sender_bean, env, AXIS2_FALSE);
+    }
+    else
+    {
+        sandesha2_sender_bean_set_send(app_msg_sender_bean, env, AXIS2_TRUE);
+        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
+    }
+
+    /**
+     * When we store application message context as below it should be noted
+     * that at Sandesha2/C client application side this is actually stored in
+     * in-memory whereas in the web service side it is actually stored in
+     * database only.
+     */
+    sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_sender_bean);
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
+
     is_svr_side = axis2_msg_ctx_get_server_side(app_msg_ctx, env);
 
     /* 
@@ -2495,6 +2526,7 @@ sandesha2_app_msg_processor_send_app_msg(
 
         engine = axis2_engine_create(env, conf_ctx);
         status = axis2_engine_resume_send(engine, env, app_msg_ctx);
+
         if(engine)
         {
             axis2_engine_free(engine, env);
@@ -2534,36 +2566,6 @@ sandesha2_app_msg_processor_send_app_msg(
         op = axis2_op_ctx_get_op(temp_op_ctx, env);
         mep = axis2_op_get_msg_exchange_pattern(op, env);
     }
-
-    app_msg_sender_bean = sandesha2_sender_bean_create(env);
-    sandesha2_sender_bean_set_internal_seq_id(app_msg_sender_bean, env, internal_sequence_id);
-    sandesha2_sender_bean_set_msg_ctx_ref_key(app_msg_sender_bean, env, storage_key);
-    millisecs = sandesha2_utils_get_current_time_in_millis(env);
-    sandesha2_sender_bean_set_time_to_send(app_msg_sender_bean, env, millisecs);
-    msg_id = sandesha2_msg_ctx_get_msg_id(rm_msg_ctx, env);
-    sandesha2_sender_bean_set_msg_id(app_msg_sender_bean, env, msg_id);
-    sandesha2_sender_bean_set_msg_no(app_msg_sender_bean, env, msg_num);
-    sandesha2_sender_bean_set_msg_type(app_msg_sender_bean, env, SANDESHA2_MSG_TYPE_APPLICATION);
-
-    if(!rms_sequence_id)
-    {
-        sandesha2_sender_bean_set_send(app_msg_sender_bean, env, AXIS2_FALSE);
-    }
-    else
-    {
-        sandesha2_sender_bean_set_send(app_msg_sender_bean, env, AXIS2_TRUE);
-        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-        axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
-    }
-
-    /**
-     * When we store application message context as below it should be noted
-     * that at Sandesha2/C client application side this is actually stored in
-     * in-memory whereas in the web service side it is actually stored in
-     * database only.
-     */
-    sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_sender_bean);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
 
     continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, app_msg_sender_bean, 
             conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
@@ -2677,14 +2679,14 @@ sandesha2_app_msg_processor_send_app_msg(
             {
                 transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
             }
-            if(transport_sender)
+            if(!transport_sender)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                         "[sandesha2] Transport sender could not be retrieved from transport_out");
                 status = AXIS2_FAILURE;
             }
 
-            while(AXIS2_TRUE)
+            while(AXIS2_TRUE && transport_sender)
             {
                 continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, sender_bean, 
                         conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
@@ -2704,15 +2706,13 @@ sandesha2_app_msg_processor_send_app_msg(
                 }
 
                 AXIS2_SLEEP(retrans_interval);
-                if(transport_sender)
+
+                /* This is neccessary to avoid a double free */
+                axis2_msg_ctx_set_property(app_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
+                if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, app_msg_ctx))
                 {
-                    /* This is neccessary to avoid a double free */
-                    axis2_msg_ctx_set_property(app_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-                    if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, app_msg_ctx))
-                    {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                                "[sandesha2] Transport sender invoke failed in sending application message");
-                    }
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2] Transport sender invoke failed in sending application message");
                 }
 
                 if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))

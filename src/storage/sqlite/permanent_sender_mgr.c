@@ -552,6 +552,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
                 " and  send = %d", send);
     }
     sprintf(sql_find + axutil_strlen(sql_find), ";");
+    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "dam_sql_find:%s", sql_find);
     find_list = sandesha2_permanent_bean_mgr_find(sender_mgr_impl->bean_mgr, env, 
         sandesha2_sender_find_callback, sql_find);
 
@@ -608,10 +609,12 @@ sandesha2_permanent_sender_mgr_get_application_msg_to_send(
     {
         sprintf(sql_find + axutil_strlen(sql_find), "time_to_send <= %ld ", time_now);
     }*/
+    
+    sprintf(sql_find + axutil_strlen(sql_find), "msg_type='%d'", SANDESHA2_MSG_TYPE_APPLICATION);
 
     if(seq_id)
     {
-        sprintf(sql_find + axutil_strlen(sql_find), "internal_seq_id='%s'", seq_id);
+        sprintf(sql_find + axutil_strlen(sql_find), "and internal_seq_id='%s'", seq_id);
     }
     
     if(msg_id)
@@ -619,8 +622,6 @@ sandesha2_permanent_sender_mgr_get_application_msg_to_send(
         sprintf(sql_find + axutil_strlen(sql_find), "and msg_id='%s'", msg_id);
     }
         
-    sprintf(sql_find + axutil_strlen(sql_find), "and msg_type='%d'", SANDESHA2_MSG_TYPE_APPLICATION);
-
     sprintf(sql_find + axutil_strlen(sql_find), " and send=%d", AXIS2_TRUE);
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find:%s", sql_find);  

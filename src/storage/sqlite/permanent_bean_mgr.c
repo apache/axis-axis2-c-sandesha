@@ -128,9 +128,15 @@ sandesha2_msg_store_bean_retrieve_callback(
         if(0 == axutil_strcmp(col_name[i], "op_mep"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_op_mep(bean, env, argv[i]);
+
         if(0 == axutil_strcmp(col_name[i], "to_url"))
-            if(argv[i])
+        {
+            if(argv[i] && axutil_strcmp("(null)", argv[i]))
+            {
                 sandesha2_msg_store_bean_set_to_url(bean, env, argv[i]);
+            }
+        }
+
         if(0 == axutil_strcmp(col_name[i], "transport_to"))
             if(argv[i] && 0 != axutil_strcmp("(null)", argv[i]))
             {
