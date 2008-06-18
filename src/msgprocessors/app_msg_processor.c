@@ -1599,7 +1599,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_char_t *acks_to_str = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_ack_requested_t *ack_requested = NULL;
-    sandesha2_msg_ctx_t *ack_rm_msg = NULL;
+    sandesha2_msg_ctx_t *ack_rm_msg_ctx = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_endpoint_ref_t *reply_to_epr = NULL;
@@ -1638,18 +1638,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
 
-    rm_version = sandesha2_utils_get_rm_version(env, rmd_sequence_id, seq_prop_mgr);
-    if(!rm_version)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Unable to find RM spec version for seq_id %s", rmd_sequence_id);
-        if(acks_to_str)
-        {
-            AXIS2_FREE(env->allocator, acks_to_str);
-        }
-        return AXIS2_FAILURE;
-    }
-
     to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
 
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
@@ -1667,6 +1655,18 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
 
     one_way = AXIS2_MEP_CONSTANT_IN_ONLY == mep;
 
+    rm_version = sandesha2_utils_get_rm_version(env, rmd_sequence_id, seq_prop_mgr);
+    if(!rm_version)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2]Unable to find RM spec version for seq_id %s", rmd_sequence_id);
+        if(acks_to_str)
+        {
+            AXIS2_FREE(env->allocator, acks_to_str);
+        }
+        return AXIS2_FAILURE;
+    }
+
     is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, reply_to_addr));
     if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
             && is_anonymous_reply_to && !one_way)
@@ -1683,13 +1683,25 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         {
             AXIS2_FREE(env->allocator, acks_to_str);
         }
+        
+        if(rm_version)
+        {
+            AXIS2_FREE(env->allocator, rm_version);
+        }
+
         AXIS2_LOG_INFO(env->log, "[Sandesha2] Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
+
         return AXIS2_SUCCESS;
     } 
 
     if(acks_to_str)
     {
         AXIS2_FREE(env->allocator, acks_to_str);
+    }
+        
+    if(rm_version)
+    {
+        AXIS2_FREE(env->allocator, rm_version);
     }
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -1707,8 +1719,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
 
-    ack_rm_msg = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
-    ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg, env);
+    ack_rm_msg_ctx = sandesha2_ack_mgr_generate_ack_msg(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
+    ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
 
     /* If it is not one way message we piggyback the acknowledgment messages on the application messages
      * or terminate message. So here we store them in the database so that when the application/terminate
@@ -1727,7 +1739,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
-        sandesha2_sender_bean_set_msg_id(ack_bean, env, sandesha2_msg_ctx_get_msg_id(ack_rm_msg, env));
+        sandesha2_sender_bean_set_msg_id(ack_bean, env, sandesha2_msg_ctx_get_msg_id(ack_rm_msg_ctx, env));
         sandesha2_sender_bean_set_send(ack_bean, env, AXIS2_TRUE);
         sandesha2_sender_bean_set_internal_seq_id(ack_bean, env, internal_sequence_id);
         sandesha2_sender_bean_set_seq_id(ack_bean, env, rmd_sequence_id);
@@ -1752,7 +1764,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
      * In all other cases we do not send the acknowledgment directly, but piggyback it on application
      * messages or terminate sequence message.
      */
-    if(ack_rm_msg && one_way)
+    if(ack_rm_msg_ctx && one_way)
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
@@ -1760,15 +1772,16 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Back channel is free");
 
         sent = axis2_engine_send(engine, env, ack_msg_ctx);
-        if(ack_rm_msg)
+        if(ack_rm_msg_ctx)
         {
-            sandesha2_msg_ctx_free(ack_rm_msg, env);
+            sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
         }
         if(engine)
         {
             axis2_engine_free(engine, env);
         }
     }
+
     if(!sent)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[Sandesha2] Engine Send failed");

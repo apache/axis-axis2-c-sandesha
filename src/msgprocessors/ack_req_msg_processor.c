@@ -216,8 +216,9 @@ sandesha2_ack_req_msg_processor_process_in_msg (
         if(new_out_fault_flow)
             axis2_op_set_fault_out_flow(ack_op, env, new_out_fault_flow);
     }
-    ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, rm_msg_ctx, 
-        ack_op);
+
+    ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, rm_msg_ctx);
+
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(ack_msg_ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE, property);

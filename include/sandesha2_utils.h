@@ -163,8 +163,7 @@ sandesha2_utils_get_client_internal_sequence_id(
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(
     const axutil_env_t *env,
-    sandesha2_msg_ctx_t *ref_rm_msg,
-    axis2_op_t *op);
+    sandesha2_msg_ctx_t *ref_rm_msg);
                         
 AXIS2_EXTERN  int AXIS2_CALL
 sandesha2_utils_get_soap_version(

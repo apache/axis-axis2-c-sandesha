@@ -507,8 +507,7 @@ sandesha2_utils_get_client_internal_sequence_id(
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(
     const axutil_env_t *env,
-    sandesha2_msg_ctx_t *ref_rm_msg,
-    axis2_op_t *create_seq_op)
+    sandesha2_msg_ctx_t *ref_rm_msg)
 {
     axis2_ctx_t *ctx = NULL;
     axis2_msg_ctx_t *ref_msg = NULL;
@@ -527,7 +526,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_char_t *transport_to = NULL;
     
     AXIS2_PARAM_CHECK(env->error, ref_rm_msg, NULL);
-    AXIS2_PARAM_CHECK(env->error, create_seq_op, NULL);
     
     ref_msg = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(ref_msg, env);
