@@ -516,7 +516,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_conf_t *conf = NULL;
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
-    axis2_op_ctx_t *create_seq_op_ctx = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
@@ -538,77 +538,19 @@ sandesha2_utils_create_new_related_msg_ctx(
     svc_grp = axis2_msg_ctx_get_svc_grp(ref_msg, env); 
     if(svc_grp)
     {
-        axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
         axis2_msg_ctx_set_svc_grp(new_msg, env, svc_grp);
-        svc_grp_ctx = axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env);
-        if(svc_grp_ctx)
-        {
-            axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, svc_grp_ctx); 
-        }
-        else
-        {
-            axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
-
-            svc_grp_ctx = axis2_svc_grp_ctx_create(env, axis2_msg_ctx_get_svc_grp(ref_msg, env), 
-                    conf_ctx);
-            axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, svc_grp_ctx);
-        }
-    }
-    else
-    {
-        axis2_svc_grp_t *svc_grp = NULL;
-        axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
-        
-        svc_grp = axis2_svc_grp_create_with_conf(env, conf);
-        svc_grp_ctx = axis2_svc_grp_ctx_create(env, svc_grp, conf_ctx);
-        axis2_msg_ctx_set_svc_grp(new_msg, env, svc_grp);
-        axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, svc_grp_ctx);
     }
 
     if(axis2_msg_ctx_get_svc(ref_msg, env))
     {
-        axis2_msg_ctx_set_svc_grp(new_msg, env, (axis2_svc_grp_t *)
-            axis2_msg_ctx_get_svc(ref_msg, env));
-        if(axis2_msg_ctx_get_svc_ctx(ref_msg, env))
-        {
-            axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
-            axis2_msg_ctx_set_svc_ctx_id(new_msg, env, axis2_msg_ctx_get_svc_ctx_id(ref_msg, env));
-        }
-        else
-        {
-            axis2_svc_ctx_t *svc_ctx =  NULL;
-
-            svc_ctx = axis2_svc_ctx_create(env, axis2_msg_ctx_get_svc(ref_msg, env), 
-                    axis2_msg_ctx_get_svc_grp_ctx(new_msg, env));
-
-            axis2_msg_ctx_set_svc_ctx(new_msg, env, svc_ctx);
-        }
-    }
-    else
-    {
-        axis2_svc_t *axis_svc = NULL;
-        axutil_qname_t *svc_qname = NULL;
-        axis2_svc_grp_t *svc_grp = NULL;
-        axis2_svc_ctx_t *svc_ctx = NULL;
-        axis2_svc_grp_ctx_t *svc_grp_ctx = NULL;
-        
-        svc_qname = axutil_qname_create(env, "AnonymousRMService", NULL, NULL);
-        axis_svc = axis2_svc_create_with_qname(env, svc_qname);
-        if(svc_qname)
-        {
-            axutil_qname_free(svc_qname, env);
-        }
-
-        svc_grp = axis2_msg_ctx_get_svc_grp(new_msg, env);
-        axis2_svc_set_parent(axis_svc, env, axis2_msg_ctx_get_svc_grp(new_msg, env));
-        axis2_svc_grp_add_svc(svc_grp, env, axis_svc);
-        svc_grp_ctx = axis2_msg_ctx_get_svc_grp_ctx(new_msg, env);
-        svc_ctx = axis2_svc_ctx_create(env, axis_svc, svc_grp_ctx);
+        axis2_msg_ctx_set_svc(new_msg, env, axis2_msg_ctx_get_svc(ref_msg, env));
     }
 
-    create_seq_op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-    axis2_op_ctx_increment_ref(create_seq_op_ctx, env);
-    axis2_msg_ctx_set_op_ctx(new_msg, env, create_seq_op_ctx);
+    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
+    axis2_op_ctx_increment_ref(op_ctx, env);
+    axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
+    axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
+    axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
 
     ctx = axis2_msg_ctx_get_base(ref_msg, env);
     if (ctx)
@@ -653,9 +595,9 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(!property)
     {
         axis2_msg_ctx_t *req_msg = NULL;
-        axis2_op_ctx_t *op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
+        axis2_op_ctx_t *temp_op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
         
-        req_msg =  axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+        req_msg =  axis2_op_ctx_get_msg_ctx(temp_op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg)
         {
             property = axis2_msg_ctx_get_property(req_msg, env, 
