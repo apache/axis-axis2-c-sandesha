@@ -2943,185 +2943,77 @@ sandesha2_app_msg_processor_process_app_msg_response(
     const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
 {
-    axutil_property_t *property = NULL;
-    axis2_msg_ctx_t *res_msg_ctx = NULL;
-    axiom_soap_envelope_t *res_envelope = NULL;
-    axis2_char_t *soap_ns_uri = NULL;
-    axis2_svc_ctx_t *svc_ctx = NULL;
-    axis2_svc_grp_t *svc_grp = NULL;
-    axis2_svc_t *svc = NULL;
+    axis2_msg_ctx_t *response_msg_ctx = NULL;
+    axiom_soap_envelope_t *response_envelope = NULL;
     axis2_op_t *op = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_conf_t *conf = NULL;
-    axis2_op_ctx_t *op_ctx = NULL; 
-   
+    axis2_engine_t *engine = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+    axutil_property_t *property = NULL;
+ 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Entry:sandesha2_app_msg_processor_process_app_msg_response");
 
-    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    
-    soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
-         AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
-         AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 
-    res_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
-    if(res_envelope)
+    /* create the response */
+    response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
+                env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
+
+    if (!response_msg_ctx)
     {
-        /* When service client is freed by the application client operation
-         * context and hence msg_ctx and therefore soap envelope is freed.
-         * To avoid that we increment the soap envelope. This soap envelope
-         * will be freed when we free the application op_ctx below.
-         */
-
-        axiom_soap_envelope_increment_ref(res_envelope, env);
-        /* To avoid a second passing through incoming handlers at op_client*/
-        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, property);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Could not create response message context");
+        return AXIS2_FAILURE;
     }
 
-    if(!res_envelope)
+    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_FALSE);
+    axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
+    axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
+
+    axis2_msg_ctx_set_status_code (response_msg_ctx, env, axis2_msg_ctx_get_status_code (msg_ctx, env));
+
+    op = axis2_msg_ctx_get_op(msg_ctx, env);
+    if (op)
     {
-        res_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx, soap_ns_uri);
-        if(!res_envelope)
+        axis2_op_register_op_ctx(op, env, response_msg_ctx, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
+    }
+
+    response_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
+    if(!response_envelope)
+    {
+        axis2_char_t *soap_ns_uri = NULL;
+
+        soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
+             AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+                AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+        response_envelope = axis2_http_transport_utils_create_soap_msg(env, msg_ctx, soap_ns_uri);
+        if(!response_envelope)
         {
-            /* There is no response message context.
-             */
+            /* There is no response message context. */
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
             return AXIS2_SUCCESS;
         }
     }
 
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    svc_grp = axis2_msg_ctx_get_svc_grp(msg_ctx, env);
-    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
-    op = axis2_msg_ctx_get_op(msg_ctx, env);
-    res_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
-                env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
-    if(svc_grp)
+    /* To avoid a second passing through incoming handlers at op_client */
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, property);
+
+    axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
+    engine = axis2_engine_create(env, conf_ctx);
+    if (engine)
     {
-        axis2_char_t *svc_grp_name = (axis2_char_t *)  axis2_svc_grp_get_name(
-            svc_grp, env);
-        svc_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name);
-        if(svc_grp)
-            axis2_msg_ctx_set_svc_grp(res_msg_ctx, env, svc_grp);
+        status = axis2_engine_receive(engine, env, response_msg_ctx);
+
+        axis2_engine_free(engine, env);
     }
-    if (svc) 
-    {
-        axis2_char_t *svc_name = (axis2_char_t *) axis2_svc_get_name(svc, env);
-        svc = axis2_conf_get_svc(conf, env, svc_name);
-        if(svc)
-            axis2_msg_ctx_set_svc(res_msg_ctx, env, svc);
-    }
-    if(op)
-    {
-        axutil_qname_t *qname = (axutil_qname_t *) axis2_op_get_qname(op, env);
-        axis2_char_t *op_mep_str = NULL;
-        axis2_char_t *op_name_str = NULL; 
-        if(qname)
-        {
-            op_name_str = axutil_qname_to_string(qname, env);
-        }
-        op_mep_str = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
-        if((op_name_str || op_mep_str))
-        {
-            axis2_op_t *op = NULL;
-            if(op_name_str)
-            {
-                axutil_qname_t *op_qname = axutil_qname_create_from_string(env, 
-                    op_name_str);
-                op = axis2_svc_get_op_with_qname(svc, env, op_qname);
-                if(op_qname)
-                    axutil_qname_free(op_qname, env);
-            }
-            if(!op && op_mep_str && svc)
-            {
-                axutil_hash_t *all_ops = NULL;
-                axutil_hash_index_t *index = NULL;
-                /* Finding an operation using the MEP */
-                all_ops = axis2_svc_get_all_ops(svc, env);
-                for (index = axutil_hash_first(all_ops, env); index; index = 
-                    axutil_hash_next(env, index))
-                {
-                    void *v = NULL;
-                    axis2_char_t *mep = NULL;
-                    axis2_op_t *temp = NULL;
-                    axutil_hash_this(index, NULL, NULL, &v);
-                    temp = (axis2_op_t *) v;
-                    mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(temp, 
-                        env);
-                    if(0 == axutil_strcmp(mep, op_mep_str))
-                    {
-                        op = temp;
-                        break;
-                    }
-                }
-            }
-            if(op)
-                axis2_msg_ctx_set_op(res_msg_ctx, env, op);
-            else
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cant find a suitable "\
-                    "operation for the generated message");
-                AXIS2_ERROR_SET(env->error, 
-                    SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG, AXIS2_FAILURE);
-                return AXIS2_FAILURE;
-            }
-        }
-    }
-    /* Setting contexts TODO is this necessary? */
-    op = axis2_msg_ctx_get_op(res_msg_ctx, env);
-    if(op)
-    {
-		axis2_op_ctx_t *response_op_ctx = NULL;
-
-        axis2_svc_ctx_t *svc_ctx = axis2_msg_ctx_get_svc_ctx(res_msg_ctx, env);
-		response_op_ctx = axis2_op_ctx_create(env, op, svc_ctx);
-        if(response_op_ctx)
-        {
-            axis2_op_ctx_set_parent(response_op_ctx, env, svc_ctx);
-            axis2_msg_ctx_set_op_ctx(res_msg_ctx, env, response_op_ctx);
-        }
-    }
-    /*
-     * Setting the message as server side will let it go through the message receiver (may be callback MR).
-     */
-    axis2_msg_ctx_set_server_side(res_msg_ctx, env, AXIS2_TRUE);
-
-    svc_ctx = axis2_msg_ctx_get_svc_ctx(msg_ctx, env);
-    axis2_msg_ctx_set_svc_ctx(res_msg_ctx, env, svc_ctx);
-    axis2_msg_ctx_set_svc_grp_ctx(res_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
-
-    if(res_envelope)
-    {
-        axis2_engine_t *engine = NULL;
-
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope found");
-
-        axis2_msg_ctx_set_soap_envelope(res_msg_ctx, env, res_envelope);
-        engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, env));
-        if(sandesha2_util_is_fault_envelope(env, res_envelope))
-        {
-            axis2_engine_receive_fault(engine, env, res_msg_ctx);
-        }
-        else
-        {
-            axis2_engine_receive(engine, env, res_msg_ctx);
-        }
-        if(engine)
-        {
-            axis2_engine_free(engine, env);
-        }
-    }
-
-    op_ctx = axis2_msg_ctx_get_op_ctx(res_msg_ctx, env);
-    axis2_op_ctx_free(op_ctx, env);
-
+    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Exit:sandesha2_app_msg_processor_process_app_msg_response");
 
-    return AXIS2_SUCCESS;
+    return status;
 }
+
 
 long AXIS2_CALL                 
 sandesha2_app_msg_processor_get_prev_msg_no(
