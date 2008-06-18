@@ -1107,7 +1107,6 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     axis2_char_t *soap_ns_uri = NULL;
     axis2_msg_ctx_t *response_msg_ctx = NULL;
     axiom_soap_envelope_t *response_envelope = NULL;
-    axis2_op_t *op = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_engine_t *engine = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -1141,20 +1140,14 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Response envelope for CreateSequenceResponse message found");
 
-    op = axis2_msg_ctx_get_op(msg_ctx, env);
-    
     response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
                 env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
     
     axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
 
-    if(op)
-    {
-        axis2_op_register_op_ctx(op, env, response_msg_ctx, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
-    }
-    
     axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);
 
+    axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
     axis2_msg_ctx_set_svc_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
     axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
