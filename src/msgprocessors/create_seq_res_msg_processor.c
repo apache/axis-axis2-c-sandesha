@@ -516,6 +516,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
     sandesha2_seq_mgr_update_last_activated_time(env, internal_sequence_id, seq_prop_mgr);
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
+    
+    /* Pausing the flow here so that it won't go to a message receiver which is not set for this flow */
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
     if(seq_prop_mgr)

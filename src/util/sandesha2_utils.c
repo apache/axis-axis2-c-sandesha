@@ -547,7 +547,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     }
 
     op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-    axis2_op_ctx_increment_ref(op_ctx, env);
+    /*axis2_op_ctx_increment_ref(op_ctx, env);*/
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
     axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
     axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
@@ -595,15 +595,18 @@ sandesha2_utils_create_new_related_msg_ctx(
     if(!property)
     {
         axis2_msg_ctx_t *req_msg = NULL;
-        axis2_op_ctx_t *temp_op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
+        axis2_op_ctx_t *temp_op_ctx = NULL;
+        
+        temp_op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
         
         req_msg =  axis2_op_ctx_get_msg_ctx(temp_op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg)
         {
-            property = axis2_msg_ctx_get_property(req_msg, env, 
-                AXIS2_WSA_VERSION);
+            property = axis2_msg_ctx_get_property(req_msg, env, AXIS2_WSA_VERSION);
             if(property)
+            {
                 addr_ver = axutil_property_get_value(property, env);
+            }
         }
     }
     else
@@ -632,8 +635,8 @@ sandesha2_utils_create_new_related_msg_ctx(
     property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_HEADERS);
     if(property)
     {
-        axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_HEADERS, 
-                axutil_property_clone(property, env));
+        axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_HEADERS, axutil_property_clone(
+                    property, env));
     }
 
     paused_phase_name = (axis2_char_t*)axis2_msg_ctx_get_paused_phase_name(ref_msg, env);

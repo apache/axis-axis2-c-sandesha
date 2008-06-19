@@ -447,7 +447,8 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     {
         axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_FALSE);
     }
-    
+   
+    /* Pausing the flow here so that it won't go to a message receiver which is not set for this flow */
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
     if(seq_prop_mgr)

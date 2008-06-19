@@ -1821,7 +1821,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     axis2_transport_sender_t *transport_sender = NULL;
     axis2_engine_t *engine = NULL;
     axis2_op_t *create_seq_op = NULL;
-    axis2_op_ctx_t *create_seq_op_ctx = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_bool_t continue_sending = AXIS2_TRUE;
     long retrans_interval = -1;
@@ -1833,6 +1832,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2]Entry:sandesha2_app_msg_processor_send_create_seq_msg");
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, internal_sequence_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, acks_to, AXIS2_FAILURE);
@@ -1886,6 +1886,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     create_seq_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg_ctx, env);
     if(!create_seq_msg_ctx)
     {
+        if(create_seq_rm_msg_ctx)
+        {
+            sandesha2_msg_ctx_free(create_seq_rm_msg_ctx, env);
+        }
+
         return AXIS2_FAILURE;
     }
 
@@ -1964,6 +1969,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
+
     while(!rms_sequence_bean)
     {
         continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
@@ -2010,10 +2016,12 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         sandesha2_sender_bean_free(create_sequence_sender_bean, env);
     }
 
-    create_seq_op_ctx = axis2_msg_ctx_get_op_ctx(create_seq_msg_ctx, env);
-    if(create_seq_op_ctx)
+    /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
+     * reponsiblity to free if after use.
+     */
+    if(create_seq_msg_ctx)
     {
-        axis2_op_ctx_free(create_seq_op_ctx, env);
+        axis2_msg_ctx_free(create_seq_msg_ctx, env);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
@@ -2068,7 +2076,8 @@ sandesha2_app_msg_processor_process_create_seq_response(
 
     axis2_msg_ctx_set_status_code (response_msg_ctx, env, axis2_msg_ctx_get_status_code (create_seq_msg_ctx, env));
 
-    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);
+    /* Note that we set here as client side to indicate that we are in the application client side. */
+    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_FALSE);
 
     axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(create_seq_msg_ctx, env));
     axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
@@ -2087,11 +2096,21 @@ sandesha2_app_msg_processor_process_create_seq_response(
         }
         else
         {
+            /* Note that this engine flow does not end with an message receiver, because
+             * when hit sandesha2_create_seq_response_msg_processor_process_in_msg()
+             * function it pause message context at the end of the function.
+             */
             status = axis2_engine_receive(engine, env, response_msg_ctx);
         }
 
         axis2_engine_free(engine, env);
     }
+
+    /* Note that as explained above this message context is not added to the operation context, 
+     * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
+     * free the response message here.
+     */
+    axis2_msg_ctx_free(response_msg_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Exit:sandesha2_app_msg_processor_process_create_seq_response");
@@ -2865,23 +2884,6 @@ sandesha2_app_msg_processor_process_app_msg_response(
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
 
-    /* create the response */
-    response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
-                env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
-
-    if (!response_msg_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Could not create response message context");
-        return AXIS2_FAILURE;
-    }
-
-    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_FALSE);
-    axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
-    axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
-    axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
-
-    axis2_msg_ctx_set_status_code (response_msg_ctx, env, axis2_msg_ctx_get_status_code (msg_ctx, env));
-
     response_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
     if(!response_envelope)
     {
@@ -2894,10 +2896,30 @@ sandesha2_app_msg_processor_process_app_msg_response(
         if(!response_envelope)
         {
             /* There is no response message context. */
+
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
             return AXIS2_SUCCESS;
         }
     }
+
+    /* create the response */
+    response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
+                env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
+
+    if (!response_msg_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Could not create response message context");
+        return AXIS2_FAILURE;
+    }
+
+    /* Note that we set here as client side to indicate that we are in the application client side.
+     * This knowledge is importatnt within app_msg_processor_process_in_msg() function.*/
+    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_FALSE);
+    axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
+    axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
+    axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
+
+    axis2_msg_ctx_set_status_code (response_msg_ctx, env, axis2_msg_ctx_get_status_code (msg_ctx, env));
 
     /* To avoid a second passing through incoming handlers at op_client */
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
@@ -2907,11 +2929,22 @@ sandesha2_app_msg_processor_process_app_msg_response(
     engine = axis2_engine_create(env, conf_ctx);
     if (engine)
     {
+        /* Note that this flow does not hit a message receiver because we have set the 
+         * message context to be in client side. Consequently message context will not
+         * be added to the operation context(which is normally done at msg_recv_receive()
+         * function).
+         */
         status = axis2_engine_receive(engine, env, response_msg_ctx);
 
         axis2_engine_free(engine, env);
     }
-    
+
+    /* Note that as explained above this message context is not added to the operation context, 
+     * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
+     * free the response message here.
+     */
+    axis2_msg_ctx_free(response_msg_ctx, env);
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Exit:sandesha2_app_msg_processor_process_app_msg_response");
 

@@ -917,6 +917,16 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             sandesha2_msg_ctx_free(terminate_rm_msg_ctx, env);
         }
 
+        /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
+         * reponsiblity to free if after use.
+         */
+        if(terminate_msg_ctx)
+        {
+            /* Reset the message context to avoid double freeing of transport out stream */
+            axis2_core_utils_reset_out_msg_ctx(env, terminate_msg_ctx);
+            axis2_msg_ctx_free(terminate_msg_ctx, env);
+        }
+
         return AXIS2_SUCCESS;
     }
 
@@ -1092,6 +1102,14 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         sandesha2_msg_ctx_free(terminate_rm_msg_ctx, env);
     }
 
+    /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
+     * reponsiblity to free if after use.
+     */
+    if(terminate_msg_ctx)
+    {
+        axis2_msg_ctx_free(terminate_msg_ctx, env);
+    }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Exit:sandesha2_terminate_mgr_send_terminate_seq_msg");
 
@@ -1166,6 +1184,8 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
         }
             axis2_engine_free(engine, env);
     }
+
+    axis2_msg_ctx_free(response_msg_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Exit:sandesha2_terminate_mgr_process_terminate_msg_response");
