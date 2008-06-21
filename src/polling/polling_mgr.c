@@ -365,7 +365,7 @@ sandesha2_polling_mgr_worker_func(
         make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, 
             env);
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
-            make_conn_msg_store_key, make_conn_msg_ctx);
+            make_conn_msg_store_key, make_conn_msg_ctx, AXIS2_TRUE);
         /* Adde an entry for the MakeConnection message to the sender(with, 
          * send=true, resend=false)
          */

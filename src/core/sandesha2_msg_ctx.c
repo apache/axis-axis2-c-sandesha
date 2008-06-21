@@ -200,15 +200,16 @@ sandesha2_msg_ctx_add_soap_envelope(
     int soap_ver = AXIOM_SOAP11;
     axiom_soap_envelope_t *soap_envelope = NULL;
     
-    if(AXIS2_FALSE == axis2_msg_ctx_get_is_soap_11(rm_msg_ctx->msg_ctx, env))
-        soap_ver = AXIOM_SOAP12;
-    soap_envelope = axis2_msg_ctx_get_soap_envelope(rm_msg_ctx->msg_ctx, env);
-    if(NULL == soap_envelope)
+    if(!axis2_msg_ctx_get_is_soap_11(rm_msg_ctx->msg_ctx, env))
     {
-        soap_envelope = axiom_soap_envelope_create_default_soap_envelope(env,
-                        soap_ver);
-        axis2_msg_ctx_set_soap_envelope(rm_msg_ctx->msg_ctx, env, 
-                        soap_envelope);
+        soap_ver = AXIOM_SOAP12;
+    }
+
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(rm_msg_ctx->msg_ctx, env);
+    if(!soap_envelope)
+    {
+        soap_envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_ver);
+        axis2_msg_ctx_set_soap_envelope(rm_msg_ctx->msg_ctx, env, soap_envelope);
     }
     
     if(rm_msg_ctx->close_seq)
@@ -216,30 +217,26 @@ sandesha2_msg_ctx_add_soap_envelope(
         sandesha2_close_seq_to_soap_envelope(rm_msg_ctx->close_seq, env, 
             soap_envelope);
     }
+
     if(rm_msg_ctx->close_seq_res)
     {
-        sandesha2_close_seq_res_to_soap_envelope(rm_msg_ctx->close_seq_res, env, 
-            soap_envelope);
+        sandesha2_close_seq_res_to_soap_envelope(rm_msg_ctx->close_seq_res, env, soap_envelope);
     }
     if(rm_msg_ctx->create_seq)
     {
-        sandesha2_create_seq_to_soap_envelope(rm_msg_ctx->create_seq, env, 
-            soap_envelope);
+        sandesha2_create_seq_to_soap_envelope(rm_msg_ctx->create_seq, env, soap_envelope);
     }
     if(rm_msg_ctx->create_seq_res)
     {
-        sandesha2_create_seq_res_to_soap_envelope(rm_msg_ctx->create_seq_res, env, 
-            soap_envelope);
+        sandesha2_create_seq_res_to_soap_envelope(rm_msg_ctx->create_seq_res, env, soap_envelope);
     }
     if(rm_msg_ctx->make_connection)
     {
-        sandesha2_make_connection_to_soap_envelope(rm_msg_ctx->make_connection, 
-            env, soap_envelope);
+        sandesha2_make_connection_to_soap_envelope(rm_msg_ctx->make_connection, env, soap_envelope);
     }
     if(rm_msg_ctx->msg_pending)
     {
-        sandesha2_msg_pending_to_soap_envelope(rm_msg_ctx->msg_pending, env, 
-            soap_envelope);
+        sandesha2_msg_pending_to_soap_envelope(rm_msg_ctx->msg_pending, env, soap_envelope);
     }
     if(rm_msg_ctx->seq_ack)
     {
@@ -251,13 +248,11 @@ sandesha2_msg_ctx_add_soap_envelope(
     }
     if(rm_msg_ctx->terminate_seq)
     {
-        sandesha2_terminate_seq_to_soap_envelope(rm_msg_ctx->terminate_seq, env, 
-            soap_envelope);
+        sandesha2_terminate_seq_to_soap_envelope(rm_msg_ctx->terminate_seq, env, soap_envelope);
     }
     if(rm_msg_ctx->terminate_seq_res)
     {
-        sandesha2_terminate_seq_res_to_soap_envelope(rm_msg_ctx->terminate_seq_res, 
-            env, soap_envelope);
+        sandesha2_terminate_seq_res_to_soap_envelope(rm_msg_ctx->terminate_seq_res, env, soap_envelope);
     }
     return AXIS2_SUCCESS;
 }

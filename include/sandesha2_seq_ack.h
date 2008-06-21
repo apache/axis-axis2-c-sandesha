@@ -61,6 +61,11 @@ sandesha2_seq_ack_free (
     sandesha2_seq_ack_t *seq_ack, 
     const axutil_env_t *env);
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_seq_ack_increment_ref(
+    sandesha2_seq_ack_t * seq_ack,
+    const axutil_env_t * env);
+
 sandesha2_identifier_t * AXIS2_CALL
 sandesha2_seq_ack_get_identifier(
     sandesha2_seq_ack_t *seq_ack,

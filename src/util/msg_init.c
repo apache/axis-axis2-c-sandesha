@@ -224,30 +224,30 @@ populate_rm_msg_ctx(
     make_conn = sandesha2_rm_elements_get_make_connection(rm_elements, env);
     if(make_conn)
     {
-        sandesha2_msg_ctx_set_make_connection(rm_msg_ctx, env, 
-            make_conn);
+        sandesha2_msg_ctx_set_make_connection(rm_msg_ctx, env, make_conn);
         rm_ns = sandesha2_make_connection_get_namespace_value(make_conn, env);
         add_op_if_null(env, msg_ctx);
     }
     msg_pending = sandesha2_rm_elements_get_msg_pending(rm_elements, env);
     if(msg_pending)
     {
-        sandesha2_msg_ctx_set_msg_pending(rm_msg_ctx, env, 
-            msg_pending);
-        rm_ns = sandesha2_msg_pending_get_namespace_value(
-                 msg_pending, env);
+        sandesha2_msg_ctx_set_msg_pending(rm_msg_ctx, env, msg_pending);
+        rm_ns = sandesha2_msg_pending_get_namespace_value(msg_pending, env);
         add_op_if_null(env, msg_ctx);
     }
     sandesha2_msg_ctx_set_rm_ns_val(rm_msg_ctx, env, rm_ns);
     if(addressing_ns)
     {
-        sandesha2_msg_ctx_set_addr_ns_val(rm_msg_ctx, env, 
-                addressing_ns);
+        sandesha2_msg_ctx_set_addr_ns_val(rm_msg_ctx, env, addressing_ns);
     }
+
     if(rm_elements)
+    {
         sandesha2_rm_elements_free(rm_elements, env);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:populate_rm_msg_ctx");
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:populate_rm_msg_ctx");
+
     return AXIS2_SUCCESS;
 }
 
@@ -469,19 +469,19 @@ static void add_op_if_null(
         axutil_qname_t *tmp_qname = NULL;
     
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Message context operation is NULL. So adding default "\
-            "operation");
-        tmp_qname = axutil_qname_create(env, "__OPERATION_OUT_IN__", NULL, 
-            NULL);
+            "[sandesha2]Message context operation is NULL. So adding default operation");
+        tmp_qname = axutil_qname_create(env, "__OPERATION_OUT_IN__", NULL, NULL);
         if (!tmp_qname)
         {
-            AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, 
-                AXIS2_FAILURE);
+            AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
             return;
         }
         svc = axis2_msg_ctx_get_svc(msg_ctx, env);
         if(svc)
+        {
             op = axis2_svc_get_op_with_qname(svc, env, tmp_qname);
+        }
+
         if(!op)
         {
             axis2_status_t status = AXIS2_FAILURE;
@@ -496,6 +496,7 @@ static void add_op_if_null(
             info = axis2_conf_get_phases_info(conf, env);
             axis2_phases_info_set_op_phases(info, env, op);
             status = axis2_svc_add_op(svc, env, op);
+
             if(AXIS2_SUCCESS == status)
             {
                 status = axis2_msg_ctx_set_op(msg_ctx, env, op);
@@ -511,8 +512,12 @@ static void add_op_if_null(
                 op = NULL;
             }
         }
+
         if(tmp_qname)
+        {
             axutil_qname_free(tmp_qname, env);
+        }
+
         axis2_msg_ctx_set_op(msg_ctx, env, op);
     }
 }

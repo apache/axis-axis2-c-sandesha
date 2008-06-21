@@ -541,8 +541,9 @@ sandesha2_app_msg_processor_process_in_msg (
                 (axis2_char_t *)msg_id);
         sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
             highest_in_msg_key_str, conf_ctx, -1);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
-            highest_in_msg_key_str, msg_ctx);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, highest_in_msg_key_str, msg_ctx, 
+                AXIS2_TRUE);
+
         /*response_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);*/
         property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
@@ -652,6 +653,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
     }
+
+    sandesha2_next_msg_bean_free(next_msg_bean, env);
 
     in_order_invoke = sandesha2_property_bean_is_in_order(sandesha2_utils_get_property_bean(env, 
             axis2_conf_ctx_get_conf(conf_ctx, env)), env);
@@ -774,8 +777,7 @@ sandesha2_app_msg_processor_process_in_msg (
         }
         /* save the message */
         str_key = axutil_uuid_gen(env);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, 
-            msg_ctx);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, msg_ctx, AXIS2_TRUE);
         invoker_bean = sandesha2_invoker_bean_create_with_data(env, str_key,
             msg_no, rmd_sequence_id, AXIS2_FALSE);
         if(str_key)
@@ -1594,6 +1596,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     axis2_endpoint_ref_t *to_epr = NULL;
+    axis2_endpoint_ref_t *temp_to_epr = NULL;
     const axis2_char_t *reply_to_addr = NULL;
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     axis2_char_t *acks_to_str = NULL;
@@ -1638,7 +1641,17 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
 
-    to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+    temp_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+    if(temp_to_epr)
+    {
+        const axis2_char_t *temp_to_addr = NULL;
+
+        temp_to_addr = axis2_endpoint_ref_get_address(temp_to_epr, env);
+        if(temp_to_addr)
+        {
+            to_epr = axis2_endpoint_ref_create(env, temp_to_addr);
+        }
+    }
 
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
     if(reply_to_epr)
@@ -1736,7 +1749,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx, AXIS2_FALSE);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
         sandesha2_sender_bean_set_msg_id(ack_bean, env, sandesha2_msg_ctx_get_msg_id(ack_rm_msg_ctx, env));
@@ -1772,14 +1785,22 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Back channel is free");
 
         sent = axis2_engine_send(engine, env, ack_msg_ctx);
-        if(ack_rm_msg_ctx)
-        {
-            sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
-        }
         if(engine)
         {
             axis2_engine_free(engine, env);
         }
+        /* Reset the message context to avoid double freeing of transport out stream */
+        axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
+    }
+
+    if(ack_rm_msg_ctx)
+    {
+        sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
+    }
+
+    if(ack_msg_ctx)
+    {
+        axis2_msg_ctx_free(ack_msg_ctx, env);
     }
 
     if(!sent)
@@ -1932,7 +1953,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_sender_bean_set_send(create_sequence_sender_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_msg_type(create_sequence_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_mgr_insert(sender_mgr, env, create_sequence_sender_bean);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, create_seq_msg_ctx);
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, create_seq_msg_ctx, AXIS2_TRUE);
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(create_seq_msg_ctx, env);
     engine = axis2_engine_create(env, conf_ctx);
@@ -2160,7 +2181,6 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_bool_t is_svr_side = AXIS2_FALSE;
     axis2_bool_t continue_sending = AXIS2_TRUE;
-    int msg_type = -1;
     sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
     axis2_msg_ctx_t *req_msg_ctx = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
@@ -2435,7 +2455,7 @@ sandesha2_app_msg_processor_send_app_msg(
      * database only.
      */
     sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_sender_bean);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx);
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx, AXIS2_TRUE);
 
     is_svr_side = axis2_msg_ctx_get_server_side(app_msg_ctx, env);
 
@@ -2531,8 +2551,6 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_msg_ctx_set_current_handler_index(app_msg_ctx, env, 
             axis2_msg_ctx_get_current_handler_index(app_msg_ctx, env) + 1);
 
-    msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
-    
     if(!sandesha2_util_is_ack_already_piggybacked(env, rm_msg_ctx))
     {
         sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, storage_mgr, seq_prop_mgr, 
@@ -2943,6 +2961,7 @@ sandesha2_app_msg_processor_process_app_msg_response(
      * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
      * free the response message here.
      */
+    axiom_soap_envelope_increment_ref(response_envelope, env);
     axis2_msg_ctx_free(response_msg_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,

@@ -938,7 +938,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     key = axutil_uuid_gen(env);
     terminate_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_sender_bean, env, key);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx);
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx, AXIS2_TRUE);
     property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));
     terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) + terminate_delay;
@@ -966,13 +966,14 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     reply_to_epr = axis2_msg_ctx_get_to(ack_msg_ctx, env);
     if(reply_to_epr)
     {
-        axis2_msg_ctx_set_reply_to(terminate_msg_ctx, env, reply_to_epr);
+        axis2_msg_ctx_set_reply_to(terminate_msg_ctx, env, sandesha2_util_endpoint_ref_clone(
+                    env, reply_to_epr));
     }
 
     if(!sandesha2_util_is_ack_already_piggybacked(env, terminate_rm_msg_ctx))
     {
-        sandesha2_ack_mgr_piggyback_acks_if_present(env, terminate_rm_msg_ctx, storage_mgr, seq_prop_mgr, 
-                sender_mgr);
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, terminate_rm_msg_ctx, storage_mgr, 
+                seq_prop_mgr, sender_mgr);
     }
 
     is_svr_side = sandesha2_msg_ctx_get_server_side(ack_rm_msg_ctx, env); /* Do we need this?:damitha */

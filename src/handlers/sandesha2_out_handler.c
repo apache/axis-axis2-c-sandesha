@@ -82,22 +82,19 @@ sandesha2_out_handler_invoke(
     int msg_type = -1;
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_out_handler_invoke");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_out_handler_invoke");
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Configuration Context is NULL");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, 
-            AXIS2_FAILURE);
+            "[sandesha2] Configuration Context is NULL");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Axis2 Service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Axis2 Service is NULL");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -105,40 +102,52 @@ sandesha2_out_handler_invoke(
     if(!axis2_svc_is_module_engaged(svc, env, module_qname))
     {
         if(module_qname)
+        {
             axutil_qname_free(module_qname, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]RM is not engaged. So return here");
+        }
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]RM is not engaged. So return here");
         return AXIS2_SUCCESS;
     }
+
     if(module_qname)
+    {
         axutil_qname_free(module_qname, env);
-    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_APPLICATION_PROCESSING_DONE);
+    }
+    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
+    {
         str_done = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
+    }
+
     if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Application Processing Done. So return here.");
         return AXIS2_SUCCESS; 
     }
+
     temp_prop = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, 
-        SANDESHA2_APPLICATION_PROCESSING_DONE, temp_prop);
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE, temp_prop);
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
     }
+
     /* Getting rm message */ 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_DUMMY_MESSAGE);
     if(NULL != temp_prop)
+    {
         dummy_msg_str = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
+    }
+
     if(dummy_msg_str && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, dummy_msg_str))
     {
         dummy_msg = AXIS2_TRUE;
     }
+
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
     if(msg_type == SANDESHA2_MSG_TYPE_UNKNOWN)
     {
@@ -146,8 +155,7 @@ sandesha2_out_handler_invoke(
         axis2_op_ctx_t *op_ctx = NULL;
 
         op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
-        req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, 
-            AXIS2_WSDL_MESSAGE_LABEL_IN);
+        req_msg_ctx =  axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
         if(req_msg_ctx) /* For the server side */
         {
             sandesha2_msg_ctx_t *req_rm_msg_ctx = NULL;
@@ -165,14 +173,12 @@ sandesha2_out_handler_invoke(
         }
         else if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
-            msg_processor = (sandesha2_msg_processor_t *) 
-            sandesha2_app_msg_processor_create(env);
+            msg_processor = (sandesha2_msg_processor_t *) sandesha2_app_msg_processor_create(env);
         }
     }
     else
     {
-        msg_processor = sandesha2_msg_processor_create_msg_processor(env, 
-            rm_msg_ctx);
+        msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
     }
     if(msg_processor)
     {
@@ -184,22 +190,27 @@ sandesha2_out_handler_invoke(
         /* Message should not be sent in an exception situation */
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(rm_msg_ctx)
+        {
             sandesha2_msg_ctx_free(rm_msg_ctx, env);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Error in processing the message");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, 
-                AXIS2_FAILURE);
+        }
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Error in processing the message");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_PROCESS_MSG, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
     
-    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-            SANDESHA2_APPLICATION_PROCESSING_DONE);
+    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
+    {
         axutil_property_set_value(temp_prop, env, AXIS2_VALUE_FALSE);
+    }
+
     if(rm_msg_ctx)
+    {
         sandesha2_msg_ctx_free(rm_msg_ctx, env);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_out_handler_invoke");
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_out_handler_invoke");
+
     return AXIS2_SUCCESS;
 }
 

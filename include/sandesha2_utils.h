@@ -293,6 +293,16 @@ sandesha2_util_is_piggybackable_msg_type(
     const axutil_env_t *env, 
     int msg_type);
 
+axutil_property_t *AXIS2_CALL
+sandesha2_util_property_clone(
+    const axutil_env_t * env,
+    axutil_property_t * property);
+
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_util_endpoint_ref_clone(
+    const axutil_env_t * env,
+    axis2_endpoint_ref_t * endpoint_ref);
+
 /** @} */
 #ifdef __cplusplus
 }

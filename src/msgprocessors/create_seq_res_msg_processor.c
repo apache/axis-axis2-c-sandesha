@@ -469,7 +469,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Storing msg_ctx with msg_id:%s", 
                 axis2_msg_ctx_get_msg_id(create_seq_msg, env));
 
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, create_seq_msg);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, create_seq_msg, 
+                AXIS2_TRUE);
 
         if(create_seq_rm_msg)
         {
