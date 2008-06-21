@@ -1749,6 +1749,9 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
+        /* We don't store the acknowledgment in memory. To indicate that it should be stored only in the
+         * database we pass AXIS2_FALSE as last argument. This measure is taken to avoid memory corruption.
+         */
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx, AXIS2_FALSE);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
@@ -2959,7 +2962,9 @@ sandesha2_app_msg_processor_process_app_msg_response(
 
     /* Note that as explained above this message context is not added to the operation context, 
      * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
-     * free the response message here.
+     * free the response message here. Note that we copied this response soap envelope from the
+     * outgoing message context from application client. This response envelope will be freed
+     * at operation client. So to avoid double freeing we increment its ref.
      */
     axiom_soap_envelope_increment_ref(response_envelope, env);
     axis2_msg_ctx_free(response_msg_ctx, env);
