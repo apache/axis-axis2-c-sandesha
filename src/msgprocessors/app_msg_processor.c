@@ -1801,6 +1801,9 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
     }
 
+    /* Since we have stored this in database and when piggybacking it is only taken from database
+     * we can free this now.
+     */
     if(ack_msg_ctx)
     {
         axis2_msg_ctx_free(ack_msg_ctx, env);

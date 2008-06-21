@@ -363,7 +363,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             }
 
             seq_ack = sandesha2_msg_ctx_get_seq_ack(ack_rm_msg_ctx, env);
-            /* To avoid double free.*/
+            /* When we set seq_ack to target rm message context taken from acknowledgment rm message 
+             * context ,there happen freeing at both contexts if we do not increment ref.*/
             sandesha2_seq_ack_increment_ref(seq_ack, env);
             sandesha2_msg_ctx_set_seq_ack(target_rm_msg_ctx, env, seq_ack);
             sandesha2_msg_ctx_add_soap_envelope(target_rm_msg_ctx, env);
