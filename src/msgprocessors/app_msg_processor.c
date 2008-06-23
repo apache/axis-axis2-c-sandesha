@@ -47,6 +47,7 @@
 #include <sandesha2_msg_creator.h>
 #include <sandesha2_client_constants.h>
 #include <sandesha2_terminate_mgr.h>
+#include <sandesha2_msg_retrans_adjuster.h>
 
 #include <axis2_const.h>
 #include <axutil_types.h>
@@ -55,6 +56,7 @@
 #include <axis2_engine.h>
 #include <axutil_uuid_gen.h>
 #include <axis2_relates_to.h>
+#include <axis2_core_utils.h>
 #include <axiom_soap_const.h>
 #include <axiom_soap_body.h>
 #include <axis2_http_transport_utils.h>
@@ -3084,7 +3086,6 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     args->msg_id = msg_id;
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
-    ++(env->allocator->ref_pool_allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_application_msg_worker_function, (void*)args);

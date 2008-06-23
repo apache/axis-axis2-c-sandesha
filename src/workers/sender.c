@@ -83,7 +83,6 @@ sandesha2_sender_run_for_seq(
     args->conf_ctx = conf_ctx;
     args->seq_id = seq_id;
     args->persistent_msg_ctx = persistent_msg_ctx;
-    ++(env->allocator->ref_pool_allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, sandesha2_sender_worker_func, 
             (void*)args);
@@ -195,10 +194,6 @@ sandesha2_sender_worker_func(
         "[sandesha2]Exit:sandesha2_sender_worker_func");
     axutil_allocator_switch_to_local_pool(env->allocator);
 
-    if(env->allocator->pool_allocator)
-    {
-        AXIS2_POOL_ALLOCATOR_DESTROY(env->allocator);
-    }
 
     return NULL;
 }

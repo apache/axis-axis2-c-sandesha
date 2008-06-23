@@ -558,26 +558,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_ctx_t *new_ctx = axis2_msg_ctx_get_base(new_msg, env);
         if (new_ctx)
         {
-            axutil_hash_index_t *hi = NULL;
-            axutil_hash_t *ht = NULL;
-            axutil_hash_t *ht2 = NULL;
-            void *val = NULL;
-            const void *val2 = NULL;
-            axutil_property_t *prop = NULL;
-            axutil_property_t *prop_clone = NULL;
-            axis2_char_t *prop_name = NULL;
-
-            ht = axis2_ctx_get_property_map(ctx, env);
-            ht2 = axis2_ctx_get_property_map(new_ctx, env);
-            for (hi = axutil_hash_first(ht, env); hi; hi = axutil_hash_next(env, hi)) 
-            {
-                axutil_hash_this(hi, &val2, NULL, &val);
-                prop = (axutil_property_t*)val;
-                prop_name = (axis2_char_t*)val2;
-                prop_clone = sandesha2_util_property_clone(env, prop);
-                axis2_ctx_set_property(new_ctx, env, prop_name, prop_clone);
-                axutil_property_set_free_func(prop, env, sandesha2_util_dummy_prop_free);
-            }
+            axis2_ctx_set_property_map(new_ctx, env, axis2_ctx_get_property_map(ctx, env));
         }
     }
 
@@ -1302,28 +1283,7 @@ sandesha2_utils_create_out_msg_ctx(
         axis2_ctx_t *new_ctx = axis2_msg_ctx_get_base(new_msg_ctx, env);
         if (new_ctx)
         {
-            axutil_hash_index_t *hi = NULL;
-            axutil_hash_t *ht = NULL;
-            axutil_hash_t *ht2 = NULL;
-            void *val = NULL;
-            const void *val2 = NULL;
-            axutil_property_t *prop = NULL;
-            axutil_property_t *prop_clone = NULL;
-            axis2_char_t *prop_name = NULL;
-
-            ht = axis2_ctx_get_property_map(ctx, env);
-            ht2 = axis2_ctx_get_property_map(new_ctx, env);
-            for (hi = axutil_hash_first(ht, env); hi; hi = axutil_hash_next(env, hi)) {
-                axutil_hash_this(hi, &val2, NULL, &val);
-                prop = (axutil_property_t*)val;
-                prop_name = (axis2_char_t*)val2;
-                prop_clone = sandesha2_util_property_clone(env, prop);
-                axis2_ctx_set_property(new_ctx, env, prop_name, prop_clone);
-                axutil_property_set_free_func(prop, env, sandesha2_util_dummy_prop_free);
-            }
-            /* axis2_ctx_set_property_map(new_ctx, env,
-             *  axis2_ctx_get_property_map(ctx, env));
-             */
+            axis2_ctx_set_property_map(new_ctx, env, axis2_ctx_get_property_map(ctx, env));
         }
     }
 

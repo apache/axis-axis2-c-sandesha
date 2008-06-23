@@ -392,8 +392,10 @@ sandesha2_sender_worker_send(
     if(!resend && msg_type != SANDESHA2_MSG_TYPE_APPLICATION && 
         msg_type != SANDESHA2_MSG_TYPE_CREATE_SEQ)
     {
+		axis2_char_t *msg_stored_key = NULL;
+
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_type:%d*****************************", msg_type);
-        axis2_char_t *msg_stored_key = NULL;
+        
         if(bean1)
         {
             msg_id = sandesha2_sender_bean_get_msg_id(bean1, env); 

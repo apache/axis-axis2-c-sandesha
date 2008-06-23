@@ -37,9 +37,12 @@
 #include <axutil_array_list.h>
 #include <axis2_engine.h>
 #include <sandesha2_msg_creator.h>
+#include <sandesha2_ack_mgr.h>
+#include <sandesha2_msg_retrans_adjuster.h>
 #include <axis2_transport_out_desc.h>
 #include <axiom_soap_const.h>
 #include <axis2_http_transport_utils.h>
+#include <axis2_core_utils.h>
 
 axutil_hash_t *sandesha2_terminate_mgr_rcv_side_clean_map = NULL;
 

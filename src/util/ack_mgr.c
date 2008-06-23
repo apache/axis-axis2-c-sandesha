@@ -225,9 +225,11 @@ sandesha2_ack_mgr_verify_seq_completion(
     while(AXIS2_TRUE)
     {
         sandesha2_ack_range_t *ack_range = NULL;
+		long upper_value = -1;
+
         sprintf(tmp, "%ld", start);
         ack_range = axutil_hash_get(hash, tmp, AXIS2_HASH_KEY_STRING);
-        long upper_value = -1;
+        
         
         if(!ack_range)
         {

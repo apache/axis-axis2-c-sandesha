@@ -33,6 +33,7 @@
 #include <sandesha2_ack_msg_processor.h>
 #include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_msg_init.h>
+#include <sandesha2_msg_creator.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_utils.h>
