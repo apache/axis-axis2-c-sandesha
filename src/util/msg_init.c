@@ -160,7 +160,7 @@ populate_rm_msg_ctx(
             create_seq_res);
         rm_ns = sandesha2_create_seq_res_get_namespace_value(
                  create_seq_res, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     seq = sandesha2_rm_elements_get_seq(rm_elements, env);
     if(seq)
@@ -175,7 +175,7 @@ populate_rm_msg_ctx(
         sandesha2_msg_ctx_set_seq_ack(rm_msg_ctx, env, seq_ack);
         rm_ns = sandesha2_seq_ack_get_namespace_value(
                  seq_ack, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     terminate_seq = sandesha2_rm_elements_get_terminate_seq(rm_elements, env);
     if(terminate_seq)
@@ -183,7 +183,7 @@ populate_rm_msg_ctx(
         sandesha2_msg_ctx_set_terminate_seq(rm_msg_ctx, env, terminate_seq);
         rm_ns = sandesha2_terminate_seq_get_namespace_value(
                  terminate_seq, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     terminate_seq_res = sandesha2_rm_elements_get_terminate_seq_res(rm_elements, 
         env);
@@ -193,7 +193,7 @@ populate_rm_msg_ctx(
             terminate_seq_res);
         rm_ns = sandesha2_terminate_seq_res_get_namespace_value(
                  terminate_seq_res, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     ack_request = sandesha2_rm_elements_get_ack_requested(rm_elements, env);
     if(ack_request)
@@ -219,21 +219,21 @@ populate_rm_msg_ctx(
             close_seq_res);
         rm_ns = sandesha2_close_seq_res_get_namespace_value(
                  close_seq_res, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     make_conn = sandesha2_rm_elements_get_make_connection(rm_elements, env);
     if(make_conn)
     {
         sandesha2_msg_ctx_set_make_connection(rm_msg_ctx, env, make_conn);
         rm_ns = sandesha2_make_connection_get_namespace_value(make_conn, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     msg_pending = sandesha2_rm_elements_get_msg_pending(rm_elements, env);
     if(msg_pending)
     {
         sandesha2_msg_ctx_set_msg_pending(rm_msg_ctx, env, msg_pending);
         rm_ns = sandesha2_msg_pending_get_namespace_value(msg_pending, env);
-        add_op_if_null(env, msg_ctx);
+        /*add_op_if_null(env, msg_ctx);*/
     }
     sandesha2_msg_ctx_set_rm_ns_val(rm_msg_ctx, env, rm_ns);
     if(addressing_ns)
