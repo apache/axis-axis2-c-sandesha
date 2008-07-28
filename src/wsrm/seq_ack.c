@@ -343,6 +343,12 @@ sandesha2_seq_ack_to_om_node(
 
     sa_block = axiom_soap_header_add_header_block(soap_header, env, SANDESHA2_WSRM_COMMON_SEQ_ACK, 
             rm_ns);
+    
+    if (rm_ns)
+    {
+        axiom_namespace_free(rm_ns, env);
+        rm_ns = NULL;
+    }
 
     if(!sa_block)
     {

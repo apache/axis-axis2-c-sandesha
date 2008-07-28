@@ -509,7 +509,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg)
 {
-    axis2_ctx_t *ctx = NULL;
+    /*axis2_ctx_t *ctx = NULL;*/
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_msg_ctx_t *new_msg = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -552,7 +552,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
     axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
 
-    ctx = axis2_msg_ctx_get_base(ref_msg, env);
+    /*ctx = axis2_msg_ctx_get_base(ref_msg, env);
     if (ctx)
     {
         axis2_ctx_t *new_ctx = axis2_msg_ctx_get_base(new_msg, env);
@@ -560,7 +560,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         {
             axis2_ctx_set_property_map(new_ctx, env, axis2_ctx_get_property_map(ctx, env));
         }
-    }
+    }*/
 
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
             sandesha2_utils_get_soap_version(env, axis2_msg_ctx_get_soap_envelope(ref_msg, env)));
@@ -587,16 +587,16 @@ sandesha2_utils_create_new_related_msg_ctx(
             property = axis2_msg_ctx_get_property(req_msg, env, AXIS2_WSA_VERSION);
             if(property)
             {
-                addr_ver = axutil_property_get_value(property, env);
+                addr_ver = axutil_strdup(env, axutil_property_get_value(property, env));
             }
         }
     }
     else
     {
-        addr_ver = axutil_property_get_value(property, env);
+        addr_ver = axutil_strdup(env, axutil_property_get_value(property, env));
     }
 
-    property = axutil_property_create_with_args(env, 0, 0, 0, addr_ver);
+    property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, addr_ver);
     axis2_msg_ctx_set_property(new_msg, env, AXIS2_WSA_VERSION, property);
     
     out_stream = axis2_msg_ctx_get_transport_out_stream(ref_msg, env);
@@ -1136,19 +1136,33 @@ sandesha2_utils_is_anon_uri(
     const axutil_env_t *env,
     const axis2_char_t *address)
 {
+    axis2_bool_t ret = AXIS2_FALSE;
+
     axis2_char_t *address_l = NULL;
     if(!address)
+    {
         return AXIS2_TRUE;
+    }
+
     address_l = axutil_strtrim(env, address, NULL);
 
-    if(0 == axutil_strcmp(AXIS2_WSA_ANONYMOUS_URL, address_l))
-        return AXIS2_TRUE;
-    if(0 == axutil_strcmp(AXIS2_WSA_ANONYMOUS_URL_SUBMISSION, address_l))
-        return AXIS2_TRUE;
-    else if (sandesha2_utils_is_wsrm_anon_reply_to(env, (axis2_char_t *) address))
-        return AXIS2_TRUE;
+    if(!axutil_strcmp(AXIS2_WSA_ANONYMOUS_URL, address_l))
+    {
+        ret = AXIS2_TRUE;
+    }
 
-    return AXIS2_FALSE;
+    if(!axutil_strcmp(AXIS2_WSA_ANONYMOUS_URL_SUBMISSION, address_l))
+    {
+        ret = AXIS2_TRUE;
+    }
+    else if (sandesha2_utils_is_wsrm_anon_reply_to(env, (axis2_char_t *) address))
+    {
+        ret = AXIS2_TRUE;
+    }
+
+    AXIS2_FREE(env->allocator, address_l);
+
+    return ret;
 }
 
 axutil_array_list_t *AXIS2_CALL

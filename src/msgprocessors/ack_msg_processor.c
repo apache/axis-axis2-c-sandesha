@@ -154,7 +154,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     axutil_array_list_t *nack_list = NULL;
     axis2_char_t *rms_sequence_id = NULL;
     axis2_char_t *internal_sequence_id = NULL;
-    axutil_property_t *property = NULL;
+    /*axutil_property_t *property = NULL;*/
     sandesha2_sender_bean_t *input_bean = NULL;
     axutil_array_list_t *retrans_list = NULL;
     axutil_array_list_t *acked_list = NULL;
@@ -266,8 +266,8 @@ sandesha2_ack_msg_processor_process_in_msg (
         sandesha2_seq_mgr_update_last_activated_time(env, internal_sequence_id, seq_prop_mgr);
     }
 
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property);
+    /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ACK_PROCSSED, property);*/
                         
     input_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_internal_seq_id(input_bean, env, internal_sequence_id);

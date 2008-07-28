@@ -774,9 +774,13 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     sandesha2_msg_store_bean_set_flow(bean, env, axis2_msg_ctx_get_flow(msg_ctx, env));
     sandesha2_msg_store_bean_set_svr_side(bean, env, axis2_msg_ctx_get_server_side(msg_ctx, env));
     sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, soap_str);
-    if(xml_writer)
+    /*if(xml_writer)
     {
         axiom_xml_writer_free(xml_writer, env);
+    }*/
+    if(om_output)
+    {
+        axiom_output_free(om_output, env);
     }
 
     sandesha2_msg_store_bean_set_soap_version(bean, env, soap_version);

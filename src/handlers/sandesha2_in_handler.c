@@ -188,10 +188,17 @@ sandesha2_in_handler_invoke(
         {
             sandesha2_msg_ctx_free(rm_msg_ctx, env);
         }
+
         if(seq_prop_mgr)
         {
             sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
         }
+
+        if(sender_mgr)
+        {
+            sandesha2_sender_mgr_free(sender_mgr, env);
+        }
+
         if(storage_mgr)
         {
             sandesha2_storage_mgr_free(storage_mgr, env);
@@ -240,10 +247,17 @@ sandesha2_in_handler_invoke(
     {
         sandesha2_msg_ctx_free(rm_msg_ctx, env);
     }
+
     if(seq_prop_mgr)
     {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     }
+
+    if(sender_mgr)
+    {
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    }
+
     if(storage_mgr)
     {
         sandesha2_storage_mgr_free(storage_mgr, env);

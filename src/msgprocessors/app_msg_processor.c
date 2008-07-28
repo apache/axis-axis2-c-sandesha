@@ -470,8 +470,6 @@ sandesha2_app_msg_processor_process_in_msg (
     }
 
     sandesha2_seq_mgr_update_last_activated_time(env, rmd_sequence_id, seq_prop_mgr);
-    msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
-        SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
     msg_no = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(seq, env), env);
 
     if(0 == msg_no)
@@ -596,9 +594,11 @@ sandesha2_app_msg_processor_process_in_msg (
         AXIS2_FREE(env->allocator, highest_in_msg_key_str);
     }
 
+    msgs_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
+        SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES);
     if(msgs_bean)
     {
-        msgs_str = sandesha2_seq_property_bean_get_value(msgs_bean, env);
+        msgs_str = axutil_strdup(env, sandesha2_seq_property_bean_get_value(msgs_bean, env));
     }
     else
     {
@@ -620,7 +620,11 @@ sandesha2_app_msg_processor_process_in_msg (
     {
         if(msgs_str && 0 < axutil_strlen(msgs_str))
         {
-            msgs_str = axutil_strcat(env, msgs_str, ",", msg_num_str, NULL);
+            axis2_char_t *tmp_str = NULL;
+
+            tmp_str = axutil_strcat(env, msgs_str, ",", msg_num_str, NULL);
+            AXIS2_FREE(env->allocator, msgs_str);
+            msgs_str = tmp_str;
         }
         else
         {
@@ -628,11 +632,9 @@ sandesha2_app_msg_processor_process_in_msg (
         }
         sandesha2_seq_property_bean_set_value(msgs_bean, env, msgs_str);
         sandesha2_seq_property_mgr_update(seq_prop_mgr, env, msgs_bean);
-        if(msgs_str)
-        {
-            AXIS2_FREE(env->allocator, msgs_str);
-        }
     }
+    
+    sandesha2_seq_property_bean_free(msgs_bean, env);
 
     next_msg_bean = sandesha2_next_msg_mgr_retrieve(next_msg_mgr, env, rmd_sequence_id);
     if(!next_msg_bean)
@@ -653,6 +655,12 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_invoker_mgr_free(invoker_mgr, env);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
+        
+        if(msgs_str)
+        {
+            AXIS2_FREE(env->allocator, msgs_str);
+        }
+
         return AXIS2_FAILURE;
     }
 
@@ -705,6 +713,11 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_invoker_mgr_free(invoker_mgr, env);
         if(storage_mgr)
             sandesha2_storage_mgr_free(storage_mgr, env);
+        
+        if(msgs_str)
+        {
+            AXIS2_FREE(env->allocator, msgs_str);
+        }
         return AXIS2_SUCCESS;
     }
 
@@ -758,6 +771,11 @@ sandesha2_app_msg_processor_process_in_msg (
                     sandesha2_invoker_mgr_free(invoker_mgr, env);
                 if(storage_mgr)
                     sandesha2_storage_mgr_free(storage_mgr, env);
+                if(msgs_str)
+                {
+                    AXIS2_FREE(env->allocator, msgs_str);
+                }
+
                 return status;
             }
         }
@@ -824,8 +842,18 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             sandesha2_storage_mgr_free(storage_mgr, env);
         }
+        
+        if(msgs_str)
+        {
+            AXIS2_FREE(env->allocator, msgs_str);
+        }
 
         return AXIS2_FAILURE;
+    }
+
+    if(msgs_str)
+    {
+        AXIS2_FREE(env->allocator, msgs_str);
     }
 
     if(seq_prop_mgr)
@@ -1274,8 +1302,6 @@ sandesha2_app_msg_processor_process_out_msg(
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, response_relates_to_bean);
     }
 
-    storage_key = axutil_uuid_gen(env);
-
     if(last_msg)
     {
         sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
@@ -1532,8 +1558,14 @@ sandesha2_app_msg_processor_process_out_msg(
     
     if(!dummy_msg)
     {
+        storage_key = axutil_uuid_gen(env);
+
         status = sandesha2_app_msg_processor_send_app_msg(env, rm_msg_ctx, internal_sequence_id, 
                 msg_number, storage_key, storage_mgr, create_seq_mgr, seq_prop_mgr, sender_mgr);
+        if(storage_key)
+        {
+            AXIS2_FREE(env->allocator, storage_key);
+        }
     }
 
     axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
@@ -1745,8 +1777,11 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     {
         rms_internal_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 rmd_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
-       
-        internal_sequence_id = sandesha2_seq_property_bean_get_value(rms_internal_sequence_bean, env);
+      
+        if(rms_internal_sequence_bean)
+        {
+            internal_sequence_id = sandesha2_seq_property_bean_get_value(rms_internal_sequence_bean, env);
+        }
 
         key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
@@ -1765,10 +1800,16 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         sandesha2_sender_bean_set_resend(ack_bean, env, AXIS2_FALSE);
         sandesha2_sender_mgr_insert(sender_mgr, env, ack_bean);
 
+        if(rms_internal_sequence_bean)
+        {
+            sandesha2_seq_property_bean_free(rms_internal_sequence_bean, env);
+        }
+
         if(ack_bean)
         {
             sandesha2_sender_bean_free(ack_bean, env);
         }
+
         property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, key);
         axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
     }
@@ -2038,6 +2079,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
 
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+    }
+
+    if(rms_sequence_bean)
+    {
+        sandesha2_seq_property_bean_free(rms_sequence_bean, env);
     }
 
     if(create_sequence_sender_bean)
@@ -2426,7 +2472,7 @@ sandesha2_app_msg_processor_send_app_msg(
 
         from_acks_to_addr = axutil_strdup(env, sandesha2_seq_property_bean_get_value(from_acks_to_bean, env));
         from_acks_to_epr = axis2_endpoint_ref_create(env, from_acks_to_addr);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "from_acks_to_address:%s", from_acks_to_addr);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "from_acks_to_address:%s", from_acks_to_addr);
 
         if(from_acks_to_epr)
         {

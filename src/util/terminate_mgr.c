@@ -250,38 +250,50 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
     
     found_list = sandesha2_next_msg_mgr_find(next_msg_mgr, env, find_bean);
+    sandesha2_next_msg_bean_free(find_bean, env);
     if(found_list)
-        size = axutil_array_list_size(found_list, env);
-    for(i = 0; i < size; i++)
     {
-        sandesha2_next_msg_bean_t *bean = axutil_array_list_get(found_list, 
-            env, i);
-        if(bean)
+        size = axutil_array_list_size(found_list, env);
+
+        for(i = 0; i < size; i++)
         {
-            axis2_char_t *key = NULL;
-            axis2_char_t *seq_id = NULL;
-            key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
-            if(key)
+            sandesha2_next_msg_bean_t *bean = axutil_array_list_get(found_list, env, i);
+            if(bean)
             {
-                sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, 
-                    conf_ctx, -1);
+                axis2_char_t *key = NULL;
+                axis2_char_t *seq_id = NULL;
+
+                key = sandesha2_next_msg_bean_get_ref_msg_key(bean, env);
+                if(key)
+                {
+                    sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, key, conf_ctx, -1);
+                }
+
+                seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
+                if(seq_id)
+                {
+                    sandesha2_next_msg_mgr_remove(next_msg_mgr, env, seq_id);
+                }
             }
-            seq_id = sandesha2_next_msg_bean_get_seq_id(bean, env);
-            if(seq_id)
-                sandesha2_next_msg_mgr_remove(next_msg_mgr, env, seq_id);
         }
+
+        axutil_array_list_free(found_list, env);
     }
+
     highest_in_msg_key = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, seq_prop_mgr);
     if(highest_in_msg_key)
     {
-        sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
-            highest_in_msg_key, conf_ctx, -1);
+        sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, highest_in_msg_key, conf_ctx, -1);
         if(highest_in_msg_key)
+        {
             AXIS2_FREE(env->allocator, highest_in_msg_key);
+        }
     }
-    sandesha2_terminate_mgr_remove_recv_side_properties(env, conf_ctx, seq_id,
-        storage_mgr, seq_prop_mgr);
+
+    sandesha2_terminate_mgr_remove_recv_side_properties(env, conf_ctx, seq_id, storage_mgr, 
+            seq_prop_mgr);
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_terminate_mgr_complete_termination_of_recv_side");
     return AXIS2_SUCCESS;
@@ -340,8 +352,8 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
     }
     find_seq_prop_bean = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, seq_id);
-    found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, 
-        find_seq_prop_bean);
+    found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, find_seq_prop_bean);
+    sandesha2_seq_property_bean_free(find_seq_prop_bean, env);
     if(found_list)
     {
         int i = 0, size = 0;
@@ -357,29 +369,33 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                 sandesha2_seq_property_bean_get_name(seq_prop_bean, env)))
             {
                 axis2_char_t *highest_in_msg_key_str = NULL;
-                axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(
-                    seq_prop_bean, env);
-                axis2_char_t *name = sandesha2_seq_property_bean_get_name(
-                    seq_prop_bean, env);
+                axis2_char_t *seq_id = sandesha2_seq_property_bean_get_seq_id(seq_prop_bean, env);
+                axis2_char_t *name = sandesha2_seq_property_bean_get_name(seq_prop_bean, env);
+
                 if(!axutil_strcmp(name, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER))
                 {
                     highest_in_msg_key_str = 
                         sandesha2_seq_property_bean_get_value(seq_prop_bean, env);
-                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] "\
-                        "Removing the message context for the highest in "\
-                        "message number");
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2] Removing the message context for the highest in message number");
                     sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
                         highest_in_msg_key_str, conf_ctx, -1);
                 }
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Removing "\
-                    "the sequence property named %s in the sequence %s", name, 
-                    seq_id);
+
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2] Removing the sequence property named %s in the sequence %s", 
+                        name, seq_id);
+
                 sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, seq_id, name);
             }
         }
+
+        axutil_array_list_free(found_list, env);
     }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_terminate_mgr_remove_recv_side_properties");
+            "[sandesha2]Exit:sandesha2_terminate_mgr_remove_recv_side_properties");
+
     return AXIS2_SUCCESS;
 }
                         
@@ -920,8 +936,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             sandesha2_msg_ctx_free(terminate_rm_msg_ctx, env);
         }
 
-        /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
-         * reponsiblity to free if after use.
+        /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is our
+         * reponsiblity to free it after use.
          */
         if(terminate_msg_ctx)
         {
