@@ -43,8 +43,8 @@ int main(int argc, char** argv)
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
-    /*axiom_node_t *payload = NULL;
-    axiom_node_t *payload2 = NULL;*/
+    axiom_node_t *payload = NULL;
+    axiom_node_t *payload2 = NULL;
     axiom_node_t *payload3 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    /*payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
+    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
     {
@@ -196,7 +196,7 @@ int main(int argc, char** argv)
     else
     {
         printf("\necho client two way single channel invoke FAILED!\n");
-    }*/
+    }
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
@@ -220,14 +220,24 @@ int main(int argc, char** argv)
     }
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
+
     if(offered_seq_id)
+    {
         AXIS2_FREE(env->allocator, offered_seq_id);
+    }
+
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
-    
+  
+    if (env)
+    {
+        axutil_env_free((axutil_env_t *) env);
+        env = NULL;
+    }
+  
     return 0;
 }
 
