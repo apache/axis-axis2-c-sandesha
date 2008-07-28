@@ -701,6 +701,11 @@ sandesha2_terminate_mgr_clean_sending_side_data(
     sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, internal_sequence_id);
 
     found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, find_seq_prop_bean);
+    if(find_seq_prop_bean)
+    {
+        sandesha2_seq_property_bean_free(find_seq_prop_bean, env);
+    }
+
     if(found_list)
     {
         int i = 0, size = 0;
