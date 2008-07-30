@@ -129,6 +129,7 @@ sandesha2_msg_creator_create_create_seq_msg(
 
     create_seq_msg_id = axutil_uuid_gen(env);
     axis2_msg_ctx_set_message_id(create_seq_msg_ctx, env, create_seq_msg_id);
+    AXIS2_FREE(env->allocator, create_seq_msg_id);
 
     app_msg_op_desc = axis2_msg_ctx_get_op(application_msg_ctx, env);
 
@@ -292,7 +293,12 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_set_wsa_action(create_seq_rm_msg, env, temp_action);
 
     temp_soap_action = axutil_string_create(env, temp_action);
-    sandesha2_msg_ctx_set_soap_action(create_seq_rm_msg, env, temp_soap_action);
+    if(temp_soap_action)
+    {
+        sandesha2_msg_ctx_set_soap_action(create_seq_rm_msg, env, temp_soap_action);
+        axutil_string_free(temp_soap_action, env);
+    }
+
     /*sandesha2_msg_creator_finalize_creation(env, application_msg_ctx, create_seq_msg_ctx);*/
 
     return create_seq_rm_msg;

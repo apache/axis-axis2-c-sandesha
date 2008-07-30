@@ -295,22 +295,26 @@ sandesha2_seq_to_soap_envelope(
 {
 	axiom_soap_header_t *soap_header = NULL;
     axutil_qname_t *seq_qname = NULL;
+
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
     soap_header = axiom_soap_envelope_get_header(envelope, env);
+
     /**
      * Remove if old exists
      */
-    seq_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, 
-        seq->ns_val, NULL);
+    seq_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, seq->ns_val, NULL);
     if(!seq_qname)
     {
         return AXIS2_FAILURE;
     }
     axiom_soap_header_remove_header_block(soap_header, env, seq_qname);
-    sandesha2_seq_to_om_node((sandesha2_seq_t*)seq, env, 
-        soap_header);
+
+    sandesha2_seq_to_om_node((sandesha2_seq_t*)seq, env, soap_header);
     if(seq_qname)
+    {
         axutil_qname_free(seq_qname, env);
+    }
+
 	return AXIS2_SUCCESS;
 }
 

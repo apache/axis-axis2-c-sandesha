@@ -73,7 +73,13 @@ sandesha2_seq_offer_free (
         AXIS2_FREE(env->allocator, seq_offer->ns_val);
         seq_offer->ns_val = NULL;
     }
-    seq_offer->identifier = NULL;
+
+    if(seq_offer->identifier)
+    {
+        sandesha2_identifier_free(seq_offer->identifier, env);
+        seq_offer->identifier = NULL;
+    }
+
     seq_offer->expires = NULL;
 	AXIS2_FREE(env->allocator, seq_offer);
 	return AXIS2_SUCCESS;
@@ -210,13 +216,12 @@ sandesha2_seq_offer_set_identifier(
     const axutil_env_t *env, 
     sandesha2_identifier_t *identifier)
 {
- 	if(NULL != seq_offer->identifier)
+ 	if(seq_offer->identifier)
 	{
-	/*
-		SANDESHA2_IDENTIFIER_FREE(seq_offer->identifier, env);
-		seq_offer->identifier = NULL;
-    */		
+		sandesha2_identifier_free(seq_offer->identifier, env);
+		seq_offer->identifier = NULL;	
 	}
+
 	seq_offer->identifier = identifier;
  	return AXIS2_SUCCESS;
 }

@@ -84,7 +84,7 @@ sandesha2_create_seq_free_void_arg(
 }
 
 axis2_status_t AXIS2_CALL 
-sandesha2_create_seq_free (
+sandesha2_create_seq_free(
     sandesha2_create_seq_t *create_seq, 
     const axutil_env_t *env)
 {
@@ -100,8 +100,15 @@ sandesha2_create_seq_free (
     }
     create_seq->acks_to = NULL;
     create_seq->expires = NULL;
-    create_seq->seq_offer = NULL;
+
+    if(create_seq->seq_offer)
+    {
+        sandesha2_seq_offer_free(create_seq->seq_offer, env);
+        create_seq->seq_offer = NULL;
+    }
+
 	AXIS2_FREE(env->allocator, create_seq);
+
 	return AXIS2_SUCCESS;
 }
 

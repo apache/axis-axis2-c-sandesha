@@ -1448,6 +1448,7 @@ sandesha2_app_msg_processor_process_out_msg(
         if(!create_seq_added)
         {
             axis2_char_t *acks_to = NULL;
+            sandesha2_seq_property_bean_t *reply_to_epr_bean = NULL;
             
             create_seq_added = sandesha2_seq_property_bean_create_with_data(env, 
                     internal_sequence_id, SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT, AXIS2_VALUE_TRUE);
@@ -1477,29 +1478,28 @@ sandesha2_app_msg_processor_process_out_msg(
             
             if(!acks_to && is_svr_side)
             {
-                sandesha2_seq_property_bean_t *reply_to_epr_bean = NULL;
-                
                 reply_to_epr_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                         rmd_sequence_id, SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
                 if(reply_to_epr_bean)
                 {
-                    axis2_endpoint_ref_t *acks_epr = NULL;
-
-                    acks_epr = axis2_endpoint_ref_create(env, 
-                            sandesha2_seq_property_bean_get_value(reply_to_epr_bean, env));
-                    if(acks_epr)
-                    {
-                        acks_to = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_epr, env);
-                    }
+                    acks_to = sandesha2_seq_property_bean_get_value(reply_to_epr_bean, env);
                 }
             }
+
             /**
              * else if()
              * TODO handle acks_to == anon_uri case
              */
             sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, internal_sequence_id, 
                     acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+            
+            if(reply_to_epr_bean)
+            {
+                sandesha2_seq_property_bean_free(reply_to_epr_bean, env);
+            }
         }
+        
+        sandesha2_seq_property_bean_free(create_seq_added, env);
     }
 
     soap_env = sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env);
@@ -1959,8 +1959,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
 
             to_epr_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
                     SANDESHA2_SEQ_PROP_TO_EPR, to_str);
-
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_epr_bean);
+            if(to_epr_bean)
+            {
+                sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_epr_bean);
+                sandesha2_seq_property_bean_free(to_epr_bean, env);
+            }
         }
     }
 
