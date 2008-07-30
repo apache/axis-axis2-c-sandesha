@@ -504,7 +504,7 @@ sandesha2_seq_ack_to_soap_envelope(
     axiom_soap_envelope_t *envelope)
 {
     axiom_soap_header_t *soap_header = NULL;
-    axutil_qname_t *seq_ack_qname = NULL;
+    /*axutil_qname_t *seq_ack_qname = NULL;*/
     
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
     
@@ -512,7 +512,7 @@ sandesha2_seq_ack_to_soap_envelope(
     /**
      * Remove if old exists
      */
-    seq_ack_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, seq_ack->ns_val, NULL);
+    /*seq_ack_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ_ACK, seq_ack->ns_val, NULL);
     if(!seq_ack_qname)
     {
         return AXIS2_FAILURE;
@@ -522,7 +522,7 @@ sandesha2_seq_ack_to_soap_envelope(
     if(seq_ack_qname)
     {
         axutil_qname_free(seq_ack_qname, env);
-    }
+    }*/
 
     sandesha2_seq_ack_to_om_node(seq_ack, env, soap_header);
 

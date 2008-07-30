@@ -509,7 +509,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg)
 {
-    /*axis2_ctx_t *ctx = NULL;*/
     axis2_msg_ctx_t *ref_msg = NULL;
     axis2_msg_ctx_t *new_msg = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -551,16 +550,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
     axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
     axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
-
-    /*ctx = axis2_msg_ctx_get_base(ref_msg, env);
-    if (ctx)
-    {
-        axis2_ctx_t *new_ctx = axis2_msg_ctx_get_base(new_msg, env);
-        if (new_ctx)
-        {
-            axis2_ctx_set_property_map(new_ctx, env, axis2_ctx_get_property_map(ctx, env));
-        }
-    }*/
 
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
             sandesha2_utils_get_soap_version(env, axis2_msg_ctx_get_soap_envelope(ref_msg, env)));

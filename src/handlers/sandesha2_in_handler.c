@@ -320,19 +320,23 @@ sandesha2_in_handler_drop_if_duplicate(
                 if(msg_no_list)
                 {
                     size = axutil_array_list_size(msg_no_list, env);
-                }
-
-                for(i = 0; i < size; i++)
-                {
-                    axis2_char_t *temp = NULL;
-                    
-                    temp = axutil_array_list_get(msg_no_list, env, i);
-                    if(atol(temp) == msg_no)
+                    for(i = 0; i < size; i++)
                     {
-                        drop = AXIS2_TRUE;
+                        axis2_char_t *temp = NULL;
+                        
+                        temp = axutil_array_list_get(msg_no_list, env, i);
+                        if(atol(temp) == msg_no)
+                        {
+                            drop = AXIS2_TRUE;
+                        }
+
+                        AXIS2_FREE(env->allocator, temp);
                     }
+
+                    axutil_array_list_free(msg_no_list, env);
                 }
             }
+
             if(!drop)
             {
                 axiom_soap_body_t *soap_body = NULL;

@@ -127,6 +127,11 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         continue_sending = AXIS2_FALSE;
     }
 
+    if(msg_ctx)
+    {
+        axis2_msg_ctx_free(msg_ctx, env);
+    }
+
     if(rm_msg_ctx)
     {
         sandesha2_msg_ctx_free(rm_msg_ctx, env);

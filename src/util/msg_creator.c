@@ -535,7 +535,6 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     axis2_char_t *rm_version = NULL;
     axis2_char_t *rm_ns_value = NULL;
     axis2_bool_t is_seq_res_reqd = AXIS2_FALSE;
-    axiom_soap_envelope_t *envelope = NULL;
     axiom_soap_envelope_t *temp_envelope = NULL;
     sandesha2_msg_ctx_t *terminate_rm_msg = NULL;
     sandesha2_terminate_seq_t *terminate_seq = NULL;
@@ -596,8 +595,6 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     AXIS2_FREE(env->allocator, temp_msg_id);
     temp_envelope = sandesha2_msg_ctx_get_soap_envelope(ref_rm_msg, env);
     soap_version = sandesha2_utils_get_soap_version(env, temp_envelope);
-    envelope = axiom_soap_envelope_create_default_soap_envelope(env, soap_version);
-    sandesha2_msg_ctx_set_soap_envelope(terminate_rm_msg, env, envelope);
 
     terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_value);
     identifier = sandesha2_identifier_create(env, rm_ns_value);
@@ -968,8 +965,13 @@ sandesha2_msg_creator_add_ack_msg(
         AXIS2_FREE(env->allocator, rm_version);
     }
 
-    ack_req_soap_action = axutil_string_create(env, temp_action); 
-    sandesha2_msg_ctx_set_soap_action(target_rm_msg_ctx, env, ack_req_soap_action); 
+    ack_req_soap_action = axutil_string_create(env, temp_action);
+    if(ack_req_soap_action)
+    {
+        sandesha2_msg_ctx_set_soap_action(target_rm_msg_ctx, env, ack_req_soap_action); 
+        axutil_string_free(ack_req_soap_action, env);
+    }
+
     uuid = axutil_uuid_gen(env);
     sandesha2_msg_ctx_set_msg_id(target_rm_msg_ctx, env, uuid);
 

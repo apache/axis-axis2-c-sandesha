@@ -39,8 +39,6 @@ sandesha2_out_handler_invoke(
     const axutil_env_t *env,
     struct axis2_msg_ctx *msg_ctx);
                                          
-/******************************************************************************/                         
-
 AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
 sandesha2_out_handler_create(
     const axutil_env_t *env, 
@@ -188,6 +186,7 @@ sandesha2_out_handler_invoke(
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         /* Message should not be sent in an exception situation */
+
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(rm_msg_ctx)
         {

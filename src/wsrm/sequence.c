@@ -192,25 +192,28 @@ sandesha2_seq_to_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    rm_ns = axiom_namespace_create(env, seq->ns_val,
-        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-    if(!rm_ns)
+    rm_ns = axiom_namespace_create(env, seq->ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+    if(rm_ns)
     {
-        return NULL;
+        seq_block = axiom_soap_header_add_header_block(soap_header, env, SANDESHA2_WSRM_COMMON_SEQ, 
+                rm_ns);
+        axiom_namespace_free(rm_ns, env);
     }
-    seq_block = axiom_soap_header_add_header_block(soap_header, env, 
-        SANDESHA2_WSRM_COMMON_SEQ, rm_ns);
+
     if(!seq_block)
     {
         return NULL;
     }
-    axiom_soap_header_block_set_must_understand_with_bool(seq_block, env, 
-         seq->must_understand);
+
+    axiom_soap_header_block_set_must_understand_with_bool(seq_block, env, seq->must_understand);
     seq_node = axiom_soap_header_block_get_base_node(seq_block, env);
     sandesha2_identifier_to_om_node(seq->identifier, env, seq_node);
     sandesha2_msg_number_to_om_node(seq->msg_num, env, seq_node);
     if(seq->last_msg)
+    {
         sandesha2_last_msg_to_om_node(seq->last_msg, env, seq_node);
+    }
+
     return seq_node;
 }
 

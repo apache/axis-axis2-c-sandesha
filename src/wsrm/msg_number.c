@@ -160,7 +160,8 @@ sandesha2_msg_number_to_om_node(
     axiom_namespace_t *rm_ns = NULL;
     axiom_element_t *mn_element = NULL;
     axiom_node_t *mn_node = NULL;
-    axis2_char_t *str_num = NULL;
+    /*axis2_char_t *str_num = NULL;*/
+    axis2_char_t str_num[32];
     
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
@@ -182,7 +183,8 @@ sandesha2_msg_number_to_om_node(
     {
         return NULL;
     }
-    str_num = AXIS2_MALLOC(env->allocator, 32*sizeof(axis2_char_t));
+
+    /*str_num = AXIS2_MALLOC(env->allocator, 32 * sizeof(axis2_char_t));*/
     sprintf(str_num, "%ld", msg_number->msg_num);
     axiom_element_set_text(mn_element, env, str_num, mn_node);
     axiom_node_add_child((axiom_node_t*)om_node, env, mn_node);

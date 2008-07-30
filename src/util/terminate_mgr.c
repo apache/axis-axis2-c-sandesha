@@ -275,6 +275,8 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
                     sandesha2_next_msg_mgr_remove(next_msg_mgr, env, seq_id);
                 }
             }
+            
+            sandesha2_next_msg_bean_free(bean, env);
         }
 
         axutil_array_list_free(found_list, env);
@@ -388,6 +390,8 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
 
                 sandesha2_seq_property_mgr_remove(seq_prop_mgr, env, seq_id, name);
             }
+            
+            sandesha2_seq_property_bean_free(seq_prop_bean, env);
         }
 
         axutil_array_list_free(found_list, env);
@@ -423,7 +427,11 @@ sandesha2_terminate_mgr_terminate_sending_side(
     seq_term_bean = sandesha2_seq_property_bean_create_with_data(env, 
         internal_sequence_id, SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
 
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
+    if(seq_term_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, seq_term_bean);
+        sandesha2_seq_property_bean_free(seq_term_bean, env);
+    }
     
     sandesha2_terminate_mgr_clean_sending_side_data(env, conf_ctx, internal_sequence_id, 
         svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
@@ -881,7 +889,12 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
     temp_action = sandesha2_spec_specific_consts_get_terminate_seq_soap_action(env, rm_ver);
     soap_action = axutil_string_create(env, temp_action);
-    sandesha2_msg_ctx_set_soap_action(terminate_rm_msg_ctx, env, soap_action);
+    if(soap_action)
+    {
+        sandesha2_msg_ctx_set_soap_action(terminate_rm_msg_ctx, env, soap_action);
+        axutil_string_free(soap_action, env);
+    }
+
     transport_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQ_PROP_TRANSPORT_TO);
 
@@ -1080,17 +1093,29 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                     }
                 }
 
-                status = sandesha2_terminate_mgr_process_terminate_msg_response(env, terminate_msg_ctx, storage_mgr);
-                if(AXIS2_SUCCESS != status)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "[sandesha2] Terminate message response process failed for sequence %s", 
-                        internal_sequence_id);
-
-                    break;
-                }
-
                 res_envelope = axis2_msg_ctx_get_response_soap_envelope(terminate_msg_ctx, env);
+                if(!res_envelope)
+                {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+                    res_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
+                            terminate_msg_ctx, soap_ns_uri);
+                }
+                
+                if(res_envelope)
+                {
+                    status = sandesha2_terminate_mgr_process_terminate_msg_response(env, 
+                            terminate_msg_ctx, storage_mgr);
+
+                    if(AXIS2_SUCCESS != status)
+                    {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2] Terminate message response process failed for sequence %s", 
+                            internal_sequence_id);
+
+                        break;
+                    }
+                }
             }
 
             sandesha2_seq_property_bean_free(replay_bean, env);
@@ -1210,6 +1235,7 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
             axis2_engine_free(engine, env);
     }
 
+    axis2_msg_ctx_set_paused(response_msg_ctx, env, AXIS2_FALSE);
     axis2_msg_ctx_free(response_msg_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
