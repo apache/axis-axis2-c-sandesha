@@ -68,7 +68,13 @@ sandesha2_address_free (
         AXIS2_FREE(env->allocator, address->ns_val);
         address->ns_val = NULL;
     }
-    address->epr = NULL;
+    
+    if(address->epr)
+    {
+        axis2_endpoint_ref_free(address->epr, env);
+        address->epr = NULL;
+    }
+
 	AXIS2_FREE(env->allocator, address);
 	return AXIS2_SUCCESS;
 }
@@ -186,6 +192,13 @@ sandesha2_address_set_epr(
     axis2_endpoint_ref_t *epr)
 {
     AXIS2_PARAM_CHECK(env->error, epr, AXIS2_FAILURE);
+    
+    if(address->epr)
+    {
+        axis2_endpoint_ref_free(address->epr, env);
+        address->epr = NULL;
+    }
+
 	address->epr = epr;
     return AXIS2_SUCCESS;
 }

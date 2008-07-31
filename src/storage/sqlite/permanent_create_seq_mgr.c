@@ -108,8 +108,11 @@ sandesha2_create_seq_retrieve_callback(
     }
     for(i = 0; i < argc; i++)
     {
-        if(0 == axutil_strcmp(col_name[i], "create_seq_msg_id"))
+        if(!axutil_strcmp(col_name[i], "create_seq_msg_id"))
+        {
             sandesha2_create_seq_bean_set_create_seq_msg_id(bean, env, argv[i]);
+        }
+
         if(!axutil_strcmp(col_name[i], "internal_seq_id"))
         {
             if(argv[i])
@@ -117,16 +120,27 @@ sandesha2_create_seq_retrieve_callback(
                 sandesha2_create_seq_bean_set_internal_sequence_id(bean, env, argv[i]);
             }
         }
-        if(0 == axutil_strcmp(col_name[i], "seq_id"))
+        if(!axutil_strcmp(col_name[i], "seq_id"))
+        {
             if(argv[i])
+            {
                 sandesha2_create_seq_bean_set_rms_sequence_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "create_seq_msg_store_key"))
+            }
+        }
+        if(!axutil_strcmp(col_name[i], "create_seq_msg_store_key"))
+        {
             if(argv[i])
-                sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, 
-                argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "ref_msg_store_key"))
+            {
+                sandesha2_create_seq_bean_set_create_seq_msg_store_key(bean, env, argv[i]);
+            }
+        }
+        if(!axutil_strcmp(col_name[i], "ref_msg_store_key"))
+        {
             if(argv[i])
+            {
                 sandesha2_create_seq_bean_set_ref_msg_store_key(bean, env, argv[i]);
+            }
+        }
     }
     return 0;
 }

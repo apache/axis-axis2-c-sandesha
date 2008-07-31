@@ -309,11 +309,12 @@ sandesha2_seq_to_soap_envelope(
     }
     axiom_soap_header_remove_header_block(soap_header, env, seq_qname);
 
-    sandesha2_seq_to_om_node((sandesha2_seq_t*)seq, env, soap_header);
     if(seq_qname)
     {
         axutil_qname_free(seq_qname, env);
     }
+    
+    sandesha2_seq_to_om_node((sandesha2_seq_t*)seq, env, soap_header);
 
 	return AXIS2_SUCCESS;
 }

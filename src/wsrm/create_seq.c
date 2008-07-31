@@ -98,7 +98,13 @@ sandesha2_create_seq_free(
         AXIS2_FREE(env->allocator, create_seq->addr_ns_val);
         create_seq->addr_ns_val = NULL;
     }
-    create_seq->acks_to = NULL;
+
+ 	if(create_seq->acks_to)
+	{
+		sandesha2_acks_to_free(create_seq->acks_to, env);
+		create_seq->acks_to = NULL;
+	}
+
     create_seq->expires = NULL;
 
     if(create_seq->seq_offer)

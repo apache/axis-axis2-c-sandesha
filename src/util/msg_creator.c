@@ -270,21 +270,6 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_msg_ctx_add_soap_envelope(create_seq_rm_msg, env);
     temp_action = sandesha2_spec_specific_consts_get_create_seq_action(env, rm_version);
 
-    if(acks_to_epr)
-    {
-        axis2_endpoint_ref_free(acks_to_epr, env);
-    }
-
-    if(temp_address)
-    {
-        sandesha2_address_free(temp_address, env);
-    }
-
-    if(temp_acks_to)
-    {
-        sandesha2_acks_to_free(temp_acks_to, env);
-    }
-
     if(rm_version)
     {
         AXIS2_FREE(env->allocator, rm_version);

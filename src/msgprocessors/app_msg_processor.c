@@ -1980,6 +1980,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         sandesha2_seq_property_bean_set_seq_id(offer_seq_bean, env, internal_sequence_id);
         sandesha2_seq_property_bean_set_value(offer_seq_bean, env, seq_offer_id);
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, offer_seq_bean);
+        sandesha2_seq_property_bean_free(offer_seq_bean, env);
     }
 
     create_seq_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_rm_msg_ctx, env);
@@ -2002,8 +2003,12 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     create_seq_bean = sandesha2_create_seq_bean_create_with_data(env, internal_sequence_id, 
             (axis2_char_t*)axis2_msg_ctx_get_wsa_message_id(create_seq_msg_ctx, env), NULL);
 
-    sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, create_sequence_msg_store_key);
-    sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
+    if(create_seq_bean)
+    {
+        sandesha2_create_seq_bean_set_ref_msg_store_key(create_seq_bean, env, create_sequence_msg_store_key);
+        sandesha2_create_seq_mgr_insert(create_seq_mgr, env, create_seq_bean);
+        sandesha2_create_seq_bean_free(create_seq_bean, env);
+    }
 
     addr_ns_uri = sandesha2_utils_get_seq_property(env, internal_sequence_id, 
             SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
@@ -2032,6 +2037,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_sender_bean_set_msg_type(create_sequence_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_mgr_insert(sender_mgr, env, create_sequence_sender_bean);
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, create_seq_msg_ctx, AXIS2_TRUE);
+    AXIS2_FREE(env->allocator, create_sequence_msg_store_key);
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(create_seq_msg_ctx, env);
     engine = axis2_engine_create(env, conf_ctx);

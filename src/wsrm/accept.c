@@ -74,18 +74,26 @@ sandesha2_accept_free(
     sandesha2_accept_t *accept, 
     const axutil_env_t *env)
 {
-    if(NULL != accept->addr_ns_val)
+    if(accept->addr_ns_val)
     {
         AXIS2_FREE(env->allocator, accept->addr_ns_val);
         accept->addr_ns_val = NULL;
     }
-    if(NULL != accept->rm_ns_val)
+
+    if(accept->rm_ns_val)
     {
         AXIS2_FREE(env->allocator, accept->rm_ns_val);
         accept->rm_ns_val = NULL;
     }
+    
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
         
 	AXIS2_FREE(env->allocator, accept);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -192,7 +200,12 @@ sandesha2_accept_set_acks_to(
     const axutil_env_t *env, 
     sandesha2_acks_to_t *acks_to)
 {
-    /* TODO free old acks_to ?*/
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
+
     accept->acks_to = acks_to;
     return AXIS2_SUCCESS;
 }

@@ -91,9 +91,9 @@ sandesha2_create_seq_bean_create_with_data(
 	}
 
 	/* init the properties. */
-	create_seq_bean->internal_seq_id = internal_seq_id;
-	create_seq_bean->create_seq_msg_id = create_seq_msg_id;
-	create_seq_bean->seq_id = seq_id;
+	create_seq_bean->internal_seq_id = axutil_strdup(env, internal_seq_id);
+	create_seq_bean->create_seq_msg_id = axutil_strdup(env, create_seq_msg_id);
+	create_seq_bean->seq_id = axutil_strdup(env, seq_id);
     create_seq_bean->create_seq_msg_store_key = NULL;
     create_seq_bean->ref_msg_store_key = NULL;
 
@@ -120,7 +120,7 @@ sandesha2_create_seq_bean_free  (
 	if(create_seq_bean->seq_id)
 	{
 		AXIS2_FREE(env->allocator, create_seq_bean->seq_id);
-		create_seq_bean->seq_id= NULL;
+		create_seq_bean->seq_id = NULL;
 	}
 	if(create_seq_bean->create_seq_msg_store_key)
 	{
@@ -155,6 +155,11 @@ sandesha2_create_seq_bean_set_create_seq_msg_id (
     axis2_char_t* seq_msg_id)
 
 {
+    if(create_seq_bean->create_seq_msg_id)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean->create_seq_msg_id);
+    }
+
 	create_seq_bean->create_seq_msg_id = axutil_strdup(env, seq_msg_id);
 }
 
@@ -169,8 +174,14 @@ sandesha2_create_seq_bean_get_rms_sequence_id(
 void AXIS2_CALL
 sandesha2_create_seq_bean_set_rms_sequence_id(
     sandesha2_create_seq_bean_t *create_seq_bean,
-	const axutil_env_t *env, axis2_char_t *seq_id)
+	const axutil_env_t *env, 
+    axis2_char_t *seq_id)
 {
+    if(create_seq_bean->seq_id)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean->seq_id);
+    }
+
 	create_seq_bean->seq_id = axutil_strdup(env, seq_id);
 }
 
@@ -187,6 +198,11 @@ sandesha2_create_seq_bean_set_internal_sequence_id(
     sandesha2_create_seq_bean_t *create_seq_bean,
 	const axutil_env_t *env, axis2_char_t *int_seq_id)
 {
+    if(create_seq_bean->internal_seq_id)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean->internal_seq_id);
+    }
+
 	create_seq_bean->internal_seq_id = axutil_strdup(env, int_seq_id);
 }
 
@@ -203,8 +219,12 @@ sandesha2_create_seq_bean_set_create_seq_msg_store_key(
     sandesha2_create_seq_bean_t *create_seq_bean,
 	const axutil_env_t *env, axis2_char_t *create_seq_msg_store_key)
 {
-    create_seq_bean->create_seq_msg_store_key = axutil_strdup(
-        env, create_seq_msg_store_key);
+    if(create_seq_bean->create_seq_msg_store_key)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean->create_seq_msg_store_key);
+    }
+
+    create_seq_bean->create_seq_msg_store_key = axutil_strdup(env, create_seq_msg_store_key);
 }
 
 axis2_char_t * AXIS2_CALL
@@ -220,6 +240,11 @@ sandesha2_create_seq_bean_set_ref_msg_store_key(
     sandesha2_create_seq_bean_t *create_seq_bean,
 	const axutil_env_t *env, axis2_char_t *ref_msg_store_key)
 {
+    if(create_seq_bean->ref_msg_store_key)
+    {
+        AXIS2_FREE(env->allocator, create_seq_bean->ref_msg_store_key);
+    }
+
     create_seq_bean->ref_msg_store_key = axutil_strdup(env, ref_msg_store_key);
 }
 
