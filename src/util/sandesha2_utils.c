@@ -1164,18 +1164,25 @@ sandesha2_utils_split(
     axis2_char_t *ptr = NULL;
     axis2_char_t *value = NULL;
     ptr = axutil_strstr(str, pattern);
+
     while(ptr)
     {
         ptr[0] = AXIS2_EOLN;
         value = axutil_strdup(env, str);
-        if(value && 0 != axutil_strcmp(value, ""))
+        if(value && axutil_strcmp(value, ""))
+        {
             axutil_array_list_add(list, env, value);
+        }
+
         str = ptr + 3;
         ptr = axutil_strstr(str, pattern);
     }
+
     value = axutil_strdup(env, str);
-    if(value && 0 != axutil_strcmp(value, ""))
+    if(value && axutil_strcmp(value, ""))
+    {
         axutil_array_list_add(list, env, value);
+    }
 
     return list;
 }

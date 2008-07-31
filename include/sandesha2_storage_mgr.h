@@ -141,7 +141,6 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 const axutil_env_t *env, 
                 axis2_char_t *seq_id,
                 int msg_no);
-
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_storage_mgr

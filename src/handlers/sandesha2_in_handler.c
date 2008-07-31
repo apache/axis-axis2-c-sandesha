@@ -335,6 +335,7 @@ sandesha2_in_handler_drop_if_duplicate(
 
                     axutil_array_list_free(msg_no_list, env);
                 }
+
             }
 
             if(!drop)
@@ -345,15 +346,16 @@ sandesha2_in_handler_drop_if_duplicate(
                 axiom_children_iterator_t *children_iterator = NULL;
                 axis2_bool_t empty_body = AXIS2_FALSE;
             
-                soap_body = axiom_soap_envelope_get_body(
-                    sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env), 
-                    env);
+                soap_body = axiom_soap_envelope_get_body(sandesha2_msg_ctx_get_soap_envelope(
+                        rm_msg_ctx, env), env);
                 body_node = axiom_soap_body_get_base_node(soap_body, env);
                 body_element = axiom_node_get_data_element(body_node, env);
-                children_iterator = axiom_element_get_children(body_element, env, 
-                    body_node);
+                children_iterator = axiom_element_get_children(body_element, env, body_node);
                 if(!axiom_children_iterator_has_next(children_iterator, env))
+                {
                     empty_body = AXIS2_TRUE;
+                }
+
                 if(empty_body)
                 {
                     axis2_char_t *rcvd_msgs_str1 = NULL;
@@ -362,34 +364,39 @@ sandesha2_in_handler_drop_if_duplicate(
                     sandesha2_msg_processor_t *app_msg_processor = NULL;
                     
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                        "[sandesha2]Empty body last msg recieved");
+                            "[sandesha2] Empty body last msg recieved");
+
                     drop = AXIS2_TRUE;
                     if(!rcvd_msgs_bean)
                     {
-                        rcvd_msgs_bean = sandesha2_seq_property_bean_create_with_data
-                            (env, rmd_sequence_id, 
-                            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
-                        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env,
-                            rcvd_msgs_bean);
+                        rcvd_msgs_bean = sandesha2_seq_property_bean_create_with_data(env, 
+                                rmd_sequence_id, SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
+                        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, rcvd_msgs_bean);
                     }
-                    rcvd_msgs_str1 = sandesha2_seq_property_bean_get_value(
-                            rcvd_msgs_bean, env);
+
+                    rcvd_msgs_str1 = sandesha2_seq_property_bean_get_value(rcvd_msgs_bean, env);
                     sprintf(msg_no_str, "%ld", msg_no);
                     if(rcvd_msgs_str1 && 0 < axutil_strlen(rcvd_msgs_str1))
-                        bean_value = axutil_strcat(env, rcvd_msgs_str1, ",",
-                            msg_no_str, NULL);
+                    {
+                        bean_value = axutil_strcat(env, rcvd_msgs_str1, ",", msg_no_str, NULL);
+                    }
                     else
+                    {
                         bean_value = axutil_strdup(env, msg_no_str);
+                    }
                     
-                    sandesha2_seq_property_bean_set_value(rcvd_msgs_bean, env,
-                        bean_value);
-                    sandesha2_seq_property_mgr_update(seq_prop_mgr, env, 
-                        rcvd_msgs_bean);
+                    sandesha2_seq_property_bean_set_value(rcvd_msgs_bean, env, bean_value);
+                    sandesha2_seq_property_mgr_update(seq_prop_mgr, env, rcvd_msgs_bean);
                     app_msg_processor = sandesha2_app_msg_processor_create(env);
                     sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, bean_value, 
                             rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
                     sandesha2_msg_processor_free(app_msg_processor, env);
                 }
+            }
+
+            if(rcvd_msgs_bean)
+            {
+                sandesha2_seq_property_bean_free(rcvd_msgs_bean, env);
             }
         }        
     } 

@@ -52,6 +52,7 @@ typedef struct sandesha2_permanent_storage_mgr
 {
 	sandesha2_storage_mgr_t storage_mgr;
     sandesha2_permanent_bean_mgr_t *bean_mgr;
+    axutil_array_list_t *envelope_buffer_list;
 } sandesha2_permanent_storage_mgr_t;
 
 #define SANDESHA2_INTF_TO_IMPL(trans) \
@@ -190,6 +191,7 @@ sandesha2_permanent_storage_mgr_create(
         sizeof(sandesha2_permanent_storage_mgr_t));
 
     storage_mgr_impl->bean_mgr = NULL;
+    storage_mgr_impl->envelope_buffer_list = axutil_array_list_create(env, 0);
     storage_mgr_impl->bean_mgr = sandesha2_permanent_bean_mgr_create(env,
         dbname, NULL);
     storage_mgr_impl->storage_mgr.ops = &storage_mgr_ops;
@@ -219,6 +221,27 @@ sandesha2_permanent_storage_mgr_free(
         sandesha2_permanent_bean_mgr_free(storage_mgr_impl->bean_mgr, env);
         storage_mgr_impl->bean_mgr = NULL;
     }
+    
+    if(storage_mgr_impl->envelope_buffer_list)
+    {
+        int i = 0, size = 0;
+
+        size = axutil_array_list_size(storage_mgr_impl->envelope_buffer_list, env);
+        for(i = 0; i < size; i++)
+        {
+            axis2_char_t *buffer = NULL;
+            
+            buffer = axutil_array_list_get(storage_mgr_impl->envelope_buffer_list, env, i);
+            if(buffer)
+            {
+                AXIS2_FREE(env->allocator, buffer);
+            }
+        }
+
+        axutil_array_list_free(storage_mgr_impl->envelope_buffer_list, env);
+        storage_mgr_impl->envelope_buffer_list = NULL;
+    }
+
     if(storage_mgr_impl)
     {
         AXIS2_FREE(env->allocator, storage_mgr_impl);
@@ -374,27 +397,27 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     sandesha2_permanent_storage_mgr_t *storage_mgr_impl = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
     axis2_conf_t *conf = NULL;
-    axis2_svc_grp_t *svc_grp = NULL;
-    axis2_svc_t *svc = NULL;
     AXIS2_TRANSPORT_ENUMS transport_out = -1;
-    axis2_char_t *soap_env_str = NULL;
+    /*axis2_svc_grp_t *svc_grp = NULL;
+    axis2_svc_t *svc = NULL;
     axis2_char_t *svc_grp_name_str = NULL;
     axis2_char_t *svc_name_str = NULL;
     axis2_char_t *op_name_str = NULL;
-    axis2_char_t *op_mep_str = NULL;
+    axis2_op_t *op = NULL;
+    axis2_char_t *op_mep_str = NULL;*/
     axis2_char_t *to_url_str = NULL;
     axis2_char_t *reply_to_str = NULL;
     axis2_char_t *transport_to_str = NULL;
     axis2_char_t *persistent_prop_str = NULL;
     axis2_transport_out_desc_t *transport_out_desc = NULL;
     axis2_endpoint_ref_t *endpoint_ref = NULL;
-    axis2_op_t *op = NULL;
     axiom_xml_reader_t *reader = NULL;
     int soap_version = -1;
     axiom_stax_builder_t *om_builder = NULL;
     axiom_soap_builder_t *soap_builder = NULL;
     axiom_soap_envelope_t *soap_envelope = NULL;
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
+    axis2_char_t *soap_env_str = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     /*if(!persistent)
@@ -429,8 +452,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
     soap_env_str = axutil_strdup(env, sandesha2_msg_store_bean_get_soap_envelope_str(msg_store_bean, env));
-    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, axutil_strlen(soap_env_str), NULL, 
-            AXIS2_XML_PARSER_TYPE_BUFFER);
+    axutil_array_list_add(storage_mgr_impl->envelope_buffer_list, env, soap_env_str); 
+
+    reader = axiom_xml_reader_create_for_memory(env, soap_env_str, axutil_strlen(soap_env_str), 
+            NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
 
     om_builder = axiom_stax_builder_create(env, reader);
     soap_version = sandesha2_msg_store_bean_get_soap_version(msg_store_bean, env);
@@ -445,11 +470,17 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         soap_builder = axiom_soap_builder_create(env, om_builder,
             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI);
     }
-
+    
     soap_envelope = axiom_soap_builder_get_soap_envelope(soap_builder, env);
     if (!soap_envelope)
     {
         axiom_soap_builder_free(soap_builder, env);
+        
+        if(msg_store_bean)
+        {
+            sandesha2_msg_store_bean_free(msg_store_bean, env);
+        }
+
         return NULL;
     }
 
@@ -463,7 +494,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     transport_out_desc = axis2_conf_get_transport_out(conf, env, transport_out);
     axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, transport_out_desc);
 
-    svc_grp_name_str = sandesha2_msg_store_bean_get_svc_grp(msg_store_bean, env);
+    /*svc_grp_name_str = sandesha2_msg_store_bean_get_svc_grp(msg_store_bean, env);
     if(svc_grp_name_str)
     {
         svc_grp = axis2_conf_get_svc_grp(conf, env, svc_grp_name_str);
@@ -488,8 +519,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         }
     }
 
-    op_name_str = sandesha2_msg_store_bean_get_op(msg_store_bean, env);
     op_mep_str = sandesha2_msg_store_bean_get_op_mep(msg_store_bean, env);
+    op_name_str = sandesha2_msg_store_bean_get_op(msg_store_bean, env);
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if((op_name_str || op_mep_str) && svc)
     {
@@ -509,7 +540,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axutil_hash_t *all_ops = NULL;
             axutil_hash_index_t *index = NULL;
 
-            /* Finding an operation using the MEP */
+            //Finding an operation using the MEP
             all_ops = axis2_svc_get_all_ops(svc, env);
             for (index = axutil_hash_first(all_ops, env); index; index = 
                 axutil_hash_next(env, index))
@@ -537,19 +568,19 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         {
             AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, 
                     "[sandesha2] Cannot find a suitable operation for the generated message");
-            /*AXIS2_ERROR_SET(env->error, 
-                SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG, AXIS2_FAILURE);
-            axiom_soap_builder_free(soap_builder, env);
-            return NULL;*/
         }
     }
 
-    /* Setting contexts TODO is this necessary? */
+    // Setting contexts TODO is this necessary?
     svc_grp = axis2_msg_ctx_get_svc_grp(msg_ctx, env);
     if(svc_grp)
     {
+        const axis2_char_t *svc_grp_id = NULL;
+
         axis2_svc_grp_ctx_t *svc_grp_ctx = axis2_svc_grp_ctx_create(env, svc_grp, conf_ctx);
         axis2_msg_ctx_set_svc_grp_ctx(msg_ctx, env, svc_grp_ctx);
+        svc_grp_id = axis2_svc_grp_ctx_get_id(svc_grp_ctx, env);
+        axis2_conf_ctx_register_svc_grp_ctx(conf_ctx, env, svc_grp_id, svc_grp_ctx);
     }
 
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
@@ -559,13 +590,17 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         axis2_svc_ctx_t *svc_ctx = axis2_svc_ctx_create(env, svc, svc_grp_ctx);
         if(svc_ctx)
         {
+            const axis2_char_t *svc_id = NULL;
+
             axis2_svc_ctx_set_parent(svc_ctx, env, svc_grp_ctx);
             axis2_msg_ctx_set_svc_ctx(msg_ctx, env, svc_ctx);
+            svc_id = axis2_svc_ctx_get_svc_id(svc_ctx, env);
+            axis2_conf_ctx_register_svc_ctx(conf_ctx, env, svc_id, svc_ctx);
         }
     }
 
     op = axis2_msg_ctx_get_op(msg_ctx, env);
-    /*if(op)
+    if(op)
     {
 		axis2_op_ctx_t *op_ctx = NULL;
         axis2_svc_ctx_t *svc_ctx = axis2_msg_ctx_get_svc_ctx(msg_ctx, env);
@@ -630,6 +665,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 property = (axutil_property_t *) v;
                 axis2_msg_ctx_set_property(msg_ctx, env, key, property);
             }
+
+            axutil_hash_free(map, env);
         }
     }
 
@@ -958,29 +995,51 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     const axutil_env_t *env,
     axis2_char_t *str)
 {
+    axutil_array_list_t *values = NULL;
     int i = 0, size = 0;
     axutil_hash_t *map = axutil_hash_make(env);
-    axutil_array_list_t *values = sandesha2_utils_split(env, str, 
-        SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
+    values = sandesha2_utils_split(env, str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
     if(values)
+    {
         size = axutil_array_list_size(values, env);
+    }
+
     if((size % 2 != 0) || (size == 1 && 0 == axutil_strcmp("", 
         axutil_array_list_get(values, env, 0))))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "Invalid persistence property string");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid persistence property string");
         AXIS2_ERROR_SET(env->error, 
             SANDESHA2_ERROR_INVALID_PERSISTENCE_PROPERTY_STRING, AXIS2_FAILURE);
+
+        if(values)
+        {
+            int i = 0, size = 0;
+
+            size = axutil_array_list_size(values, env);
+            for(i = 0; i < size; i++)
+            {
+                axis2_char_t *value = axutil_array_list_get(values, env, i);
+                AXIS2_FREE(env->allocator, value);
+            }
+
+            axutil_array_list_free(values, env);
+        }
         return NULL;
     }
+
     for(i = 0; i < size; i=i+2)
     {
         axis2_char_t *key = axutil_array_list_get(values, env, i);
         axis2_char_t *value = axutil_array_list_get(values, env, i+1);
-        axutil_property_t *property = axutil_property_create_with_args(env, 0, 
-            0, 0, value);
+        axutil_property_t *property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, value);
         axutil_hash_set(map, key, AXIS2_HASH_KEY_STRING, property);
     }
+
+    if(values)
+    {
+        axutil_array_list_free(values, env);
+    }
+
     return map;
 }
 

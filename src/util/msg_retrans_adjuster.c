@@ -60,7 +60,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
 {
     axis2_char_t *stored_key = NULL;
     axis2_msg_ctx_t *msg_ctx = NULL;
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     axis2_char_t *internal_sequence_id = NULL;
     sandesha2_property_bean_t *property_bean = NULL;
     int max_attempts = -1;
@@ -88,10 +87,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
 
     msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, stored_key, conf_ctx, 
             AXIS2_FALSE);
-    if(msg_ctx)
-    {
-        rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
-    }
 
     internal_sequence_id = sandesha2_sender_bean_get_internal_seq_id(sender_bean, env);
    
@@ -106,11 +101,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
         timeout_seq = AXIS2_TRUE;
     }
 
-    if(rm_msg_ctx)
-    {
-        seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, internal_sequence_id, rm_msg_ctx, 
-                seq_prop_mgr, conf_ctx);
-    }
+    seq_timed_out = sandesha2_seq_mgr_has_seq_timedout(env, internal_sequence_id, seq_prop_mgr, 
+            conf_ctx);
     
     if(seq_timed_out)
     {
@@ -130,11 +122,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     if(msg_ctx)
     {
         axis2_msg_ctx_free(msg_ctx, env);
-    }
-
-    if(rm_msg_ctx)
-    {
-        sandesha2_msg_ctx_free(rm_msg_ctx, env);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 

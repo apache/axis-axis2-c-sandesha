@@ -303,7 +303,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
 
     if(found_list)
     {
-        int i = 0, size = 0;
+        int i = 0, j = 0, size = 0;
 
         size = axutil_array_list_size(found_list, env);
         for(i = 0; i < size; i++)
@@ -314,7 +314,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
             timenow = sandesha2_utils_get_current_time_in_millis(env);
             sender_bean = axutil_array_list_get(found_list, env, i);
             
-            if(sandesha2_sender_bean_get_time_to_send(sender_bean, env) <= timenow)
+            if(sender_bean && sandesha2_sender_bean_get_time_to_send(sender_bean, env) <= timenow)
             {
                 axis2_msg_ctx_t *ack_msg_ctx = NULL;
                 axis2_char_t *to = NULL;
@@ -342,6 +342,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                     {
                         axis2_msg_ctx_free(ack_msg_ctx, env);
                     }
+                
+                    sandesha2_sender_bean_free(sender_bean, env);
                     continue;
                 }
 
@@ -351,6 +353,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                     {
                         axis2_msg_ctx_free(ack_msg_ctx, env);
                     }
+                    
+                    sandesha2_sender_bean_free(sender_bean, env);
                     continue; 
                 }
 
@@ -373,6 +377,7 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                         sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
                     }
 
+                    sandesha2_sender_bean_free(sender_bean, env);
                     continue;
                 }
 
@@ -393,7 +398,21 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                     sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
                 }
 
+                sandesha2_sender_bean_free(sender_bean, env);
                 break;
+            }
+
+            for(j = i++; j < size; j++)
+            {
+                sandesha2_sender_bean_t *sender_bean = NULL;
+                
+                sender_bean = axutil_array_list_get(found_list, env, j);
+
+                if(sender_bean)
+                {
+                    sandesha2_sender_bean_free(sender_bean, env);
+                    sender_bean = NULL;
+                }
             }
 
             if(sender_bean)

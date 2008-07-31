@@ -97,11 +97,15 @@ sandesha2_msg_store_bean_free (
         AXIS2_FREE(env->allocator, msg_store_bean->stored_key);
         msg_store_bean->stored_key = NULL;
     }
+
+    /* We should not free the envelope buffer here. Ownership is transferred to storage manager
+    msg_store_bean->soap_env_str = NULL;*/
     if(msg_store_bean->soap_env_str)
     {
         AXIS2_FREE(env->allocator, msg_store_bean->soap_env_str);
         msg_store_bean->soap_env_str = NULL;
     }
+
     if(msg_store_bean->op)
     {
         AXIS2_FREE(env->allocator, msg_store_bean->op);
@@ -183,6 +187,11 @@ sandesha2_msg_store_bean_set_msg_id(
     const axutil_env_t *env,
     axis2_char_t * msg_id) 
 {
+    if(msg_store_bean->msg_id)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->msg_id);
+    }
+
     msg_store_bean->msg_id = axutil_strdup(env, msg_id);
 }
 
@@ -200,6 +209,11 @@ sandesha2_msg_store_bean_set_stored_key(
     const axutil_env_t *env,
     axis2_char_t * key) 
 {
+    if(msg_store_bean->stored_key)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->stored_key);
+    }
+
     msg_store_bean->stored_key = axutil_strdup(env, key);
 }
 
@@ -217,6 +231,11 @@ sandesha2_msg_store_bean_set_soap_envelope_str(
     const axutil_env_t *env,
     axis2_char_t * soap_env_str) 
 {
+    if(msg_store_bean->soap_env_str)
+    {
+        AXIS2_FREE(env->allocator, msg_store_bean->soap_env_str);
+    }
+
     msg_store_bean->soap_env_str = axutil_strdup(env, soap_env_str);
 }
 

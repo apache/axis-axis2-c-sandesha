@@ -439,10 +439,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             {
                 sandesha2_storage_mgr_free(storage_mgr, env);
             }
-            if(create_seq_rm_msg)
-            {
-                sandesha2_msg_ctx_free(create_seq_rm_msg, env);
-            }
 
             return AXIS2_FAILURE;
         }
@@ -494,6 +490,12 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             {
                 sandesha2_storage_mgr_free(storage_mgr, env);
             }
+        
+            if(create_seq_msg)
+            {
+                axis2_msg_ctx_free(create_seq_msg, env);
+            }
+
             if(create_seq_rm_msg)
             {
                 sandesha2_msg_ctx_free(create_seq_rm_msg, env);
@@ -511,6 +513,11 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
 
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, new_msg_store_key, create_seq_msg, 
                 AXIS2_TRUE);
+
+        if(create_seq_msg)
+        {
+            axis2_msg_ctx_free(create_seq_msg, env);
+        }
 
         if(create_seq_rm_msg)
         {
