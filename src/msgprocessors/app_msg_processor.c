@@ -239,7 +239,7 @@ sandesha2_app_msg_processor_process_in_msg (
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
-    axis2_msg_ctx_t *msg_ctx = NULL;
+    axis2_msg_ctx_t *app_msg_ctx = NULL;
     axis2_char_t *processed = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -274,8 +274,8 @@ sandesha2_app_msg_processor_process_in_msg (
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_app_msg_processor_process_in_msg");
  
-    msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    if(!msg_ctx)
+    app_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
+    if(!app_msg_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Message context is not set");
@@ -298,10 +298,10 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     
-    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
     /*axis2_op_ctx_set_in_use(op_ctx, env, AXIS2_TRUE);*/
     axis2_op_ctx_set_response_written(op_ctx, env, AXIS2_TRUE);
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(app_msg_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     fault_ctx = sandesha2_fault_mgr_check_for_last_msg_num_exceeded(env, rm_msg_ctx, seq_prop_mgr);
@@ -340,7 +340,7 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             axis2_engine_free(engine, env);
         }
-        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
         if(storage_mgr)
         {
             sandesha2_storage_mgr_free(storage_mgr, env);
@@ -415,7 +415,7 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             axis2_engine_free(engine, env);
         }
-        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
 
         return AXIS2_SUCCESS;
     }
@@ -467,7 +467,7 @@ sandesha2_app_msg_processor_process_in_msg (
             axis2_engine_free(engine, env);
         }
 
-        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+        axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
 
         return AXIS2_SUCCESS;
     }
@@ -532,7 +532,7 @@ sandesha2_app_msg_processor_process_in_msg (
         axis2_char_t *client_seq_key = NULL;
         
         highest_in_msg_no = msg_no;
-        msg_id = axis2_msg_ctx_get_msg_id(msg_ctx, env);
+        msg_id = axis2_msg_ctx_get_msg_id(app_msg_ctx, env);
         highest_msg_no_bean = sandesha2_seq_property_bean_create_with_data(env, 
             rmd_sequence_id, SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, 
                 msg_num_str);
@@ -544,11 +544,11 @@ sandesha2_app_msg_processor_process_in_msg (
                 (axis2_char_t *)msg_id);
         sandesha2_storage_mgr_remove_msg_ctx(storage_mgr, env, 
             highest_in_msg_key_str, conf_ctx, -1);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, highest_in_msg_key_str, msg_ctx, 
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, highest_in_msg_key_str, app_msg_ctx, 
                 AXIS2_TRUE);
 
-        /*response_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);*/
-        property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
+        /*response_envelope = axis2_msg_ctx_get_soap_envelope(app_msg_ctx, env);*/
+        property = axis2_msg_ctx_get_property(app_msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
         if(property)
         {
             client_seq_key = axutil_property_get_value(property, env);
@@ -672,10 +672,10 @@ sandesha2_app_msg_processor_process_in_msg (
     in_order_invoke = sandesha2_property_bean_is_in_order(sandesha2_utils_get_property_bean(env, 
             axis2_conf_ctx_get_conf(conf_ctx, env)), env);
     /* test code */
-    if(axis2_msg_ctx_get_server_side(msg_ctx, env))
+    if(axis2_msg_ctx_get_server_side(app_msg_ctx, env))
     {
         sandesha2_last_msg_t *last_msg = sandesha2_seq_get_last_msg(seq, env);
-        axis2_char_t *msg_id = (axis2_char_t *)axis2_msg_ctx_get_msg_id(msg_ctx, env);
+        axis2_char_t *msg_id = (axis2_char_t *)axis2_msg_ctx_get_msg_id(app_msg_ctx, env);
         if(last_msg)
         {
             sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
@@ -692,9 +692,9 @@ sandesha2_app_msg_processor_process_in_msg (
      * the sender wanted to signal the last message, but didn't have an application
      * message to send) then we do not need to send the message on to the application.
      */
-    str_soap_action = axis2_msg_ctx_get_soap_action(msg_ctx, env);
+    str_soap_action = axis2_msg_ctx_get_soap_action(app_msg_ctx, env);
     soap_action = axutil_string_get_buffer(str_soap_action, env);
-    wsa_action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+    wsa_action = axis2_msg_ctx_get_wsa_action(app_msg_ctx, env);
     if(!axutil_strcmp(SANDESHA2_SPEC_2005_02_ACTION_LAST_MESSAGE, wsa_action) || 0 == axutil_strcmp(
                 SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
     {
@@ -724,7 +724,7 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
 
-    if(axis2_msg_ctx_get_server_side(msg_ctx, env) && in_order_invoke)
+    if(axis2_msg_ctx_get_server_side(app_msg_ctx, env) && in_order_invoke)
     {
         sandesha2_seq_property_bean_t *incoming_seq_list_bean = NULL;
         axutil_array_list_t *incoming_seq_list = NULL;
@@ -800,7 +800,7 @@ sandesha2_app_msg_processor_process_in_msg (
         }
         /* save the message */
         str_key = axutil_uuid_gen(env);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, msg_ctx, AXIS2_TRUE);
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, str_key, app_msg_ctx, AXIS2_TRUE);
         invoker_bean = sandesha2_invoker_bean_create_with_data(env, str_key,
             msg_no, rmd_sequence_id, AXIS2_FALSE);
         if(str_key)
@@ -1586,7 +1586,11 @@ sandesha2_app_msg_processor_process_out_msg(
     if(!axis2_msg_ctx_get_soap_action(msg_ctx, env))
     {
         axutil_string_t *soap_action = axutil_string_create(env, to_addr);
-        axis2_msg_ctx_set_soap_action(msg_ctx, env, soap_action);
+        if(soap_action)
+        {
+            axis2_msg_ctx_set_soap_action(msg_ctx, env, soap_action);
+            axutil_string_free(soap_action, env);
+        }
     }
     
     if(!dummy_msg)
@@ -3017,6 +3021,8 @@ sandesha2_app_msg_processor_process_app_msg_response(
     axis2_engine_t *engine = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axutil_property_t *property = NULL;
+    axis2_op_ctx_t *op_ctx = NULL;
+    const axis2_char_t *mep = NULL;
  
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Entry:sandesha2_app_msg_processor_process_app_msg_response");
@@ -3086,13 +3092,27 @@ sandesha2_app_msg_processor_process_app_msg_response(
         axis2_engine_free(engine, env);
     }
 
-    /* Note that as explained above this message context is not added to the operation context, 
-     * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
-     * free the response message here. Note that we copied this response soap envelope from the
-     * outgoing message context from application client. This response envelope will be freed
-     * at operation client. So to avoid double freeing we increment its ref.
-     */
-    axiom_soap_envelope_increment_ref(response_envelope, env);
+    op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    if(op_ctx)
+    {
+        axis2_op_t *op = NULL;
+
+        op = axis2_op_ctx_get_op(op_ctx, env);
+        mep = axis2_op_get_msg_exchange_pattern(op, env);
+    }
+    
+    if(!axutil_strcmp(mep, AXIS2_MEP_URI_OUT_IN))
+    {
+        /* Note that as explained above this message context is not added to the operation context, 
+         * therefore will not be freed when operation context's msg_ctx_map is freed. So we need to 
+         * free the response message here. Note that we copied this response soap envelope from the
+         * outgoing message context from application client. This response envelope will be freed
+         * at operation client. So to avoid double freeing we increment its ref.
+         */
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Increment the soap envelope ref counter");
+        axiom_soap_envelope_increment_ref(response_envelope, env);
+    }
+    
     axis2_msg_ctx_free(response_msg_ctx, env);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,

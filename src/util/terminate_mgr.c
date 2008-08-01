@@ -1213,7 +1213,7 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     
     axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
 
-    axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);
+    /*axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);*/
 
     axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
     axis2_msg_ctx_set_svc_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(msg_ctx, env));
