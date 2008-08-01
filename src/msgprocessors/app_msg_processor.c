@@ -2289,7 +2289,7 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_char_t *rms_sequence_id = NULL;
     sandesha2_sender_bean_t *app_msg_sender_bean = NULL;
     long millisecs = 0;
-    axutil_property_t *property = NULL;
+    /*axutil_property_t *property = NULL;*/
     axis2_engine_t *engine = NULL;
     sandesha2_identifier_t *identifier = NULL;
     axis2_char_t *msg_id = NULL;
@@ -2562,8 +2562,8 @@ sandesha2_app_msg_processor_send_app_msg(
     else
     {
         sandesha2_sender_bean_set_send(app_msg_sender_bean, env, AXIS2_TRUE);
-        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-        axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
+        /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);*/
     }
 
     /**
@@ -3061,8 +3061,16 @@ sandesha2_app_msg_processor_process_app_msg_response(
     axis2_msg_ctx_set_status_code (response_msg_ctx, env, axis2_msg_ctx_get_status_code (msg_ctx, env));
 
     /* To avoid a second passing through incoming handlers at op_client */
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, property);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED);
+    if(property)
+    {
+        axutil_property_set_value(property, env, AXIS2_VALUE_TRUE);
+    }
+    else
+    {
+        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_HANDLER_ALREADY_VISITED, property);
+    }
 
     axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
     engine = axis2_engine_create(env, conf_ctx);

@@ -997,8 +997,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, key);
     axis2_msg_ctx_set_property(terminate_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
                         
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_msg_ctx_set_property(terminate_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);
+    /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(terminate_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);*/
                         
     reply_to_epr = axis2_msg_ctx_get_to(ack_msg_ctx, env);
     if(reply_to_epr)

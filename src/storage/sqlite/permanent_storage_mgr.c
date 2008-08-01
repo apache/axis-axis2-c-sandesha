@@ -418,6 +418,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axiom_soap_envelope_t *soap_envelope = NULL;
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
     axis2_char_t *soap_env_str = NULL;
+    axutil_property_t *prop_property = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
     /*if(!persistent)
@@ -643,7 +644,11 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
     axis2_msg_ctx_set_wsa_action(msg_ctx, env, sandesha2_msg_store_bean_get_action(msg_store_bean, env));
 
-    persistent_prop_str = sandesha2_msg_store_bean_get_persistent_property_str(msg_store_bean, env);
+    persistent_prop_str = axutil_strdup(env, sandesha2_msg_store_bean_get_persistent_property_str(
+            msg_store_bean, env));
+    
+    prop_property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, persistent_prop_str);
+    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_PROPERTY_STRING, prop_property);
 
     if(persistent_prop_str && 0 != axutil_strcmp("", persistent_prop_str))
     {
@@ -656,6 +661,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             for (index = axutil_hash_first(map, env); index; index = axutil_hash_next(env, index))
             {
                 axutil_property_t *property = NULL;
+                axutil_property_t *temp_property = NULL;
                 void *v = NULL;
                 const void *k = NULL;
                 axis2_char_t *key = NULL;
@@ -663,11 +669,17 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
                 axutil_hash_this(index, &k, NULL, &v);
                 key = (axis2_char_t *) k;
                 property = (axutil_property_t *) v;
+                temp_property = axis2_msg_ctx_get_property(msg_ctx, env, key);
+                if(temp_property)
+                {
+                    axutil_property_free(temp_property, env);
+                }
+
                 axis2_msg_ctx_set_property(msg_ctx, env, key, property);
             }
 
             axutil_hash_free(map, env);
-        }
+        }   
     }
 
     if(msg_store_bean)
@@ -996,6 +1008,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     axis2_char_t *str)
 {
     axutil_array_list_t *values = NULL;
+    axis2_char_t *value = NULL;
     int i = 0, size = 0;
     axutil_hash_t *map = axutil_hash_make(env);
     values = sandesha2_utils_split(env, str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
@@ -1003,9 +1016,13 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     {
         size = axutil_array_list_size(values, env);
     }
+    
+    if(1 == size)
+    {
+        value = axutil_array_list_get(values, env, 0);
+    }
 
-    if((size % 2 != 0) || (size == 1 && 0 == axutil_strcmp("", 
-        axutil_array_list_get(values, env, 0))))
+    if((size % 2 != 0) || (size == 1 && !axutil_strcmp("", value)))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid persistence property string");
         AXIS2_ERROR_SET(env->error, 
@@ -1029,10 +1046,20 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
 
     for(i = 0; i < size; i=i+2)
     {
+        axutil_property_t *property = NULL;
         axis2_char_t *key = axutil_array_list_get(values, env, i);
         axis2_char_t *value = axutil_array_list_get(values, env, i+1);
-        axutil_property_t *property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, value);
-        axutil_hash_set(map, key, AXIS2_HASH_KEY_STRING, property);
+
+        property = axutil_hash_get(map, key, AXIS2_HASH_KEY_STRING);
+        if(property)
+        {
+            axutil_property_set_value(property, env, value);
+        }
+        else
+        {
+            property = axutil_property_create_with_args(env, 0, 0, 0, value);
+            axutil_hash_set(map, key, AXIS2_HASH_KEY_STRING, property);
+        }
     }
 
     if(values)
