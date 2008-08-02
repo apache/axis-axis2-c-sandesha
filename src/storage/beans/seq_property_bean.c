@@ -171,8 +171,10 @@ sandesha2_seq_property_bean_set_value (
 		AXIS2_FREE(env->allocator, seq_property_bean->value);
 		seq_property_bean->value = NULL;
 	}
-    if(value)
-        seq_property_bean->value = (axis2_char_t *)axutil_strdup(env, value);
 
+    if(value)
+    {
+        seq_property_bean->value = (axis2_char_t *)axutil_strdup(env, value);
+    }
 }
 

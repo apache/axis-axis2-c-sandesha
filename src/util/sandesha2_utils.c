@@ -1030,28 +1030,40 @@ sandesha2_utils_is_all_msgs_acked_upto(
     axutil_array_list_t *acked_msgs_list = NULL;
     long smallest_msg_no = 1;
     long temp_msg_no = 0;
+    axis2_bool_t ret = AXIS2_TRUE;
 
-    client_completed_msgs = sandesha2_utils_get_seq_property(env, 
-        internal_seq_id, SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, 
-        seq_prop_mgr);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]client_completed_msgs:%s", client_completed_msgs);
-    acked_msgs_list = sandesha2_utils_get_array_list_from_string(env, 
-        client_completed_msgs);
+    client_completed_msgs = sandesha2_utils_get_seq_property(env, internal_seq_id, 
+            SANDESHA2_SEQ_PROP_CLIENT_COMPLETED_MESSAGES, seq_prop_mgr);
+
+    if(client_completed_msgs)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Client_completed_msgs:%s", 
+            client_completed_msgs);
+
+        acked_msgs_list = sandesha2_utils_get_array_list_from_string(env, client_completed_msgs);
+        AXIS2_FREE(env->allocator, client_completed_msgs);
+    }
+
     if(!acked_msgs_list)
+    {
         return AXIS2_FALSE;
-    for(temp_msg_no = smallest_msg_no; temp_msg_no <= highest_in_msg_no; 
-        temp_msg_no++)
+    }
+
+    for(temp_msg_no = smallest_msg_no; temp_msg_no <= highest_in_msg_no; temp_msg_no++)
     {
         axis2_char_t str_msg_no[32];
+
         sprintf(str_msg_no, "%ld", temp_msg_no);
-        if(!sandesha2_utils_array_list_contains(env, acked_msgs_list, 
-            str_msg_no))
+        if(!sandesha2_utils_array_list_contains(env, acked_msgs_list, str_msg_no))
         {
-            return AXIS2_FALSE;
+            ret = AXIS2_FALSE;
+            break;
         }
     }
-    return AXIS2_TRUE; /* All messages upto the highest have been acked */
+    
+    axutil_array_list_free(acked_msgs_list, env);
+
+    return ret; /* All messages upto the highest have been acked */
 }
 
 axis2_status_t AXIS2_CALL
@@ -1266,6 +1278,7 @@ sandesha2_utils_create_out_msg_ctx(
         AXIS2_FREE(env->allocator, msg_uuid);
         msg_uuid = NULL;
     }
+
     reply_to = axis2_msg_info_headers_get_reply_to(old_msg_info_headers, env);
     axis2_msg_info_headers_set_to(msg_info_headers, env, sandesha2_util_endpoint_ref_clone(env, 
                 reply_to));

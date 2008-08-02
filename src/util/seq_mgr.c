@@ -107,17 +107,19 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_ACKS_TO_IS_NULL, AXIS2_FAILURE);
         return NULL; 
     }
+
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    received_msg_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
-            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
 
     /* Setting the addressing version */
     addressing_ns_value = sandesha2_msg_ctx_get_addr_ns_val(create_seq_msg, env);
     addressing_ns_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
             SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, addressing_ns_value);
-
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, addressing_ns_bean);
+    if(addressing_ns_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, addressing_ns_bean);
+        sandesha2_seq_property_bean_free(addressing_ns_bean, env);
+    }
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addressing_ns_value); 
 
     /* If no replyTo value. Send responses as sync. */
@@ -133,27 +135,49 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
                 SANDESHA2_SEQ_PROP_TO_EPR, anonymous_uri);
     }
 
+    if(to_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_bean);
+        sandesha2_seq_property_bean_free(to_bean, env);
+    }
+
     address = (axis2_char_t*)axis2_endpoint_ref_get_address(to, env);
     reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
         SANDESHA2_SEQ_PROP_REPLY_TO_EPR, address);
+    if(reply_to_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
+        sandesha2_seq_property_bean_free(reply_to_bean, env);
+    }
 
     address = (axis2_char_t*)axis2_endpoint_ref_get_address(acks_to, env);
     acks_to_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
         SANDESHA2_SEQ_PROP_ACKS_TO_EPR, address);
 
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, received_msg_bean);
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
-    if(to_bean)
+    if(acks_to_bean)
     {
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, to_bean);
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, acks_to_bean);
+        sandesha2_seq_property_bean_free(acks_to_bean, env);
     }
+
+    received_msg_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
+            SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");
+    if(received_msg_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, received_msg_bean);
+        sandesha2_seq_property_bean_free(received_msg_bean, env);
+    }
+
 
     next_msg_bean = sandesha2_next_msg_bean_create_with_data(env, rmd_sequence_id, 1); 
                                                     /* 1 will be the next */
-    internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
-    sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, internal_sequence_id);
-    sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
+    if(next_msg_bean)
+    {
+        internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
+        sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, internal_sequence_id);
+        sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
+        sandesha2_next_msg_bean_free(next_msg_bean, env);
+    }
 
     /* Message to invoke. This will apply for only in-order invocations */
     /*if(!axis2_msg_ctx_get_server_side(msg_ctx, env) || !sandesha2_utils_is_anon_uri(env, 
@@ -191,12 +215,21 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
     }
 
     spec_version_bean = sandesha2_seq_property_bean_create(env);
-    sandesha2_seq_property_bean_set_seq_id(spec_version_bean, env, rmd_sequence_id);
-    sandesha2_seq_property_bean_set_name(spec_version_bean, env, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-    sandesha2_seq_property_bean_set_value(spec_version_bean, env, spec_version);
+    if(spec_version_bean)
+    {
+        sandesha2_seq_property_bean_set_seq_id(spec_version_bean, env, rmd_sequence_id);
+        sandesha2_seq_property_bean_set_name(spec_version_bean, env, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
+        sandesha2_seq_property_bean_set_value(spec_version_bean, env, spec_version);
    
-    sandesha2_seq_property_mgr_insert(seq_prop_mgr,env, spec_version_bean);
-    sandesha2_seq_property_bean_free(spec_version_bean, env);
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr,env, spec_version_bean);
+        sandesha2_seq_property_bean_free(spec_version_bean, env);
+    }
+
+    if(spec_version)
+    {
+        AXIS2_FREE(env->allocator, spec_version);
+    }
+
     /* TODO Get the SOAP version from the creaet sequence message */
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_rmd_sequence");

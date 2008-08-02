@@ -421,6 +421,7 @@ sandesha2_app_msg_processor_process_in_msg (
     }
 
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
+
     fault_ctx = sandesha2_fault_mgr_check_for_seq_closed(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
     if(fault_ctx)
     {

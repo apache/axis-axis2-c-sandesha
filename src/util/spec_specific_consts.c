@@ -323,7 +323,6 @@ sandesha2_spec_specific_consts_get_teminate_seq_res_action(
         const axutil_env_t *env,
         axis2_char_t *spec_version)
 {
-    AXIS2_ENV_CHECK(env, NULL);
     AXIS2_PARAM_CHECK(env->error, spec_version, NULL);
     
     if (0 == axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, spec_version)) 

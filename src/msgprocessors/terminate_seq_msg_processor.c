@@ -203,15 +203,18 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Terminate Sequence part is not available");
+
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, AXIS2_FAILURE);
+
         return AXIS2_FAILURE;
     }
 
     rmd_sequence_id = sandesha2_identifier_get_identifier(sandesha2_terminate_seq_get_identifier(
-                term_seq, env), env);
+        term_seq, env), env);
     if(!rmd_sequence_id || 0 == axutil_strlen(rmd_sequence_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid sequence id");
+
         return AXIS2_FAILURE;
     }
 
@@ -334,6 +337,11 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                         internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
             }
         }
+
+        if(internal_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, internal_sequence_id);
+        }
     }
     else
     {
@@ -415,8 +423,10 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     
     highest_in_msg_num_str = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, seq_prop_mgr);
+
     highest_in_msg_id = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID, seq_prop_mgr);
+
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]highest_in_msg_num_str:%s",
         highest_in_msg_num_str);
 
@@ -426,6 +436,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                     "[sandesha2] highest in msg id has not been stored");
+
             if(highest_in_msg_num_str)
             {
                 AXIS2_FREE(env->allocator, highest_in_msg_num_str);
@@ -477,6 +488,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
 
             highest_out_msg_num_str = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id, 
                     SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_NUMBER, seq_prop_mgr);
+
             highest_out_msg_num = atol(highest_out_msg_num_str);
             add_rec_side_term = AXIS2_TRUE;
             if(highest_out_msg_num_str)
@@ -497,6 +509,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     }
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]add_rec_side_term:%d", add_rec_side_term);
+
     out_seq_id = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id,
         SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
 
@@ -552,11 +565,13 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     sandesha2_sender_bean_t *term_res_bean = NULL;
     axis2_char_t *key = NULL;
     sandesha2_sender_mgr_t *retrans_mgr = NULL;*/
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
-        "terminate_seq_msg_processor_add_terminate_seq_res");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_terminate_seq_msg_processor_add_terminate_seq_res");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     out_msg_ctx = sandesha2_utils_create_out_msg_ctx(env, msg_ctx);
@@ -617,7 +632,9 @@ sandesha2_terminate_seq_msg_processor_add_terminate_seq_res(
     /* end test code */
     
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(msg_ctx, env));
+
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]axis2_engine_send");
+
     axis2_engine_send(engine, env, out_msg_ctx); 
     op_ctx = axis2_msg_ctx_get_op_ctx(out_msg_ctx, env);
     if(to_epr)
