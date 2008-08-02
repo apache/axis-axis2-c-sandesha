@@ -247,10 +247,14 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
     AXIS2_PARAM_CHECK(env->error, next_msg_mgr, AXIS2_FAILURE);
     
     find_bean = sandesha2_next_msg_bean_create(env);
-    sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
+    if(find_bean)
+    {
+        sandesha2_next_msg_bean_set_seq_id(find_bean, env, seq_id);
     
-    found_list = sandesha2_next_msg_mgr_find(next_msg_mgr, env, find_bean);
-    sandesha2_next_msg_bean_free(find_bean, env);
+        found_list = sandesha2_next_msg_mgr_find(next_msg_mgr, env, find_bean);
+        sandesha2_next_msg_bean_free(find_bean, env);
+    }
+
     if(found_list)
     {
         size = axutil_array_list_size(found_list, env);
@@ -274,9 +278,9 @@ sandesha2_terminate_mgr_complete_termination_of_recv_side(
                 {
                     sandesha2_next_msg_mgr_remove(next_msg_mgr, env, temp_seq_id);
                 }
+
+                sandesha2_next_msg_bean_free(bean, env);
             }
-            
-            sandesha2_next_msg_bean_free(bean, env);
         }
 
         axutil_array_list_free(found_list, env);
@@ -345,7 +349,9 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
                     if(!axutil_strcmp(value, seq_id))
                     {
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                            "[sandesha2]Removing seq id:%s from the all incoming sequence list", value);
+                            "[sandesha2] Removing seq id:%s from the all incoming sequence list", 
+                            value);
+
                         axutil_array_list_remove(all_seq_list, env, i);
                         AXIS2_FREE(env->allocator, value);
                         break;
@@ -381,9 +387,13 @@ sandesha2_terminate_mgr_remove_recv_side_properties(
     }
 
     find_seq_prop_bean = sandesha2_seq_property_bean_create(env);
-    sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, seq_id);
-    found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, find_seq_prop_bean);
-    sandesha2_seq_property_bean_free(find_seq_prop_bean, env);
+    if(find_seq_prop_bean)
+    {
+        sandesha2_seq_property_bean_set_seq_id(find_seq_prop_bean, env, seq_id);
+        found_list = sandesha2_seq_property_mgr_find(seq_prop_mgr, env, find_seq_prop_bean);
+        sandesha2_seq_property_bean_free(find_seq_prop_bean, env);
+    }
+
     if(found_list)
     {
         int i = 0, size = 0;
