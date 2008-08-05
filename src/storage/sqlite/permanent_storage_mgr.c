@@ -898,6 +898,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
                     in_msg_store_key, in_msg_ctx);*/
 
             sandesha2_msg_store_bean_set_in_msg_store_key(bean, env, in_msg_store_key);
+            AXIS2_FREE(env->allocator, in_msg_store_key);
         }
     }
 

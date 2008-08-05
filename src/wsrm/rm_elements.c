@@ -179,48 +179,53 @@ sandesha2_rm_elements_from_soap_envelope(
             rm_elements->create_seq, env, create_seq_node);
     }
     
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, 
-                        rm_ns_val, NULL);
-    create_seq_res_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &create_seq_res_node);
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, rm_ns_val, NULL);
+    create_seq_res_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &create_seq_res_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(create_seq_res_node)
     {
-        rm_elements->create_seq_res = sandesha2_create_seq_res_create(env, 
-                        rm_ns_val, addr_ns_val);
-        sandesha2_create_seq_res_from_om_node(
-            rm_elements->create_seq_res, env, create_seq_res_node);
+        rm_elements->create_seq_res = sandesha2_create_seq_res_create(env, rm_ns_val, addr_ns_val);
+        sandesha2_create_seq_res_from_om_node(rm_elements->create_seq_res, env, create_seq_res_node);
     }
     
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
-                        rm_ns_val, NULL);
-    terminate_seq_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &terminate_seq_node);
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, rm_ns_val, NULL);
+    terminate_seq_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &terminate_seq_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(terminate_seq_node)
     {
-        rm_elements->terminate_seq = sandesha2_terminate_seq_create(env, 
-            rm_ns_val);
-        sandesha2_terminate_seq_from_om_node(
-            rm_elements->terminate_seq, env, terminate_seq_node);
+        rm_elements->terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_val);
+        sandesha2_terminate_seq_from_om_node(rm_elements->terminate_seq, env, terminate_seq_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, 
-        rm_ns_val, NULL);
-    terminate_seq_res_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &terminate_seq_res_node);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, rm_ns_val, NULL);
+    terminate_seq_res_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &terminate_seq_res_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(terminate_seq_res_node)
     {
-        rm_elements->terminate_seq_res = sandesha2_terminate_seq_res_create(
-            env, rm_ns_val);
-        sandesha2_terminate_seq_res_from_om_node(
-            rm_elements->terminate_seq_res, env, terminate_seq_res_node);
+        rm_elements->terminate_seq_res = sandesha2_terminate_seq_res_create(env, rm_ns_val);
+        sandesha2_terminate_seq_res_from_om_node(rm_elements->terminate_seq_res, env, 
+                terminate_seq_res_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, 
-        NULL);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, NULL);
     close_seq_element = axiom_element_get_first_child_with_qname(body_element, 
         env, qname, body_node, &close_seq_node);
     if(qname)

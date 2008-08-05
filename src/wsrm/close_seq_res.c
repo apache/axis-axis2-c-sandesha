@@ -184,10 +184,8 @@ sandesha2_close_seq_res_set_identifier(
 {
  	if(close_seq_res->identifier)
 	{
-	    /*
-		SANDESHA2_IDENTIFIER_FREE(close_seq_res->identifier, env);
+		sandesha2_identifier_free(close_seq_res->identifier, env);
 		close_seq_res->identifier = NULL;
-		*/
 	}
 	close_seq_res->identifier = identifier;
  	return AXIS2_SUCCESS;

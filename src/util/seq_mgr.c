@@ -76,7 +76,6 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
     axis2_char_t *spec_version = NULL;
     axis2_char_t *address = NULL;
     axis2_char_t *reply_to_addr = NULL;
-    axis2_char_t *internal_sequence_id = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_seq_mgr_setup_new_rmd_sequence");
 
@@ -173,8 +172,15 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
                                                     /* 1 will be the next */
     if(next_msg_bean)
     {
+        axis2_char_t *internal_sequence_id = NULL;
+
         internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
-        sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, internal_sequence_id);
+        if(internal_sequence_id)
+        {
+            sandesha2_next_msg_bean_set_internal_seq_id(next_msg_bean, env, internal_sequence_id);
+            AXIS2_FREE(env->allocator, internal_sequence_id);
+        }
+
         sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_msg_bean);
         sandesha2_next_msg_bean_free(next_msg_bean, env);
     }

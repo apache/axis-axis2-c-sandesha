@@ -46,7 +46,7 @@ extern "C"
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_create_seq_refused(
     const axutil_env_t *env,
-    axis2_msg_ctx_t *create_seq_msg,
+    sandesha2_msg_ctx_t *rm_create_seq_msg_ctx,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
         
 sandesha2_msg_ctx_t* AXIS2_CALL 

@@ -63,7 +63,6 @@ sandesha2_accept_create(
     
     accept->rm_ns_val = (axis2_char_t *)axutil_strdup(env ,rm_ns_val);
     accept->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
-    accept->acks_to = NULL;
     
 	return accept;
 }
@@ -144,16 +143,24 @@ sandesha2_accept_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    accept->acks_to = sandesha2_acks_to_create(env, NULL, 
-        accept->rm_ns_val, accept->addr_ns_val);
-    if(NULL == accept->acks_to)
+    
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
+
+    accept->acks_to = sandesha2_acks_to_create(env, NULL, accept->rm_ns_val, accept->addr_ns_val);
+    if(!accept->acks_to)
     {
         return NULL;
     }
+
     if(!sandesha2_acks_to_from_om_node(accept->acks_to, env, child_om_node))
     {
         return NULL;
     }
+
     return accept;
 }
 

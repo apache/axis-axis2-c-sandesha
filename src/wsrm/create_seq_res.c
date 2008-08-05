@@ -46,21 +46,21 @@ sandesha2_create_seq_res_create(
     AXIS2_PARAM_CHECK(env->error, rm_ns_val, NULL);
     AXIS2_PARAM_CHECK(env->error, addr_ns_val, NULL);
     
-    if(AXIS2_FALSE == sandesha2_create_seq_res_is_namespace_supported(env, rm_ns_val))
+    if(!sandesha2_create_seq_res_is_namespace_supported(env, rm_ns_val))
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, 
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, AXIS2_FAILURE);
         return NULL;
-    }    
-    create_seq_res =  (sandesha2_create_seq_res_t *)AXIS2_MALLOC 
-        (env->allocator, 
-        sizeof(sandesha2_create_seq_res_t));
+    }
+
+    create_seq_res =  (sandesha2_create_seq_res_t *) AXIS2_MALLOC(env->allocator, 
+            sizeof(sandesha2_create_seq_res_t));
 	
     if(!create_seq_res)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
+
     create_seq_res->rm_ns_val = NULL;
     create_seq_res->addr_ns_val = NULL;
     create_seq_res->identifier = NULL;
@@ -119,6 +119,7 @@ sandesha2_create_seq_res_free (
     }
 
 	AXIS2_FREE(env->allocator, create_seq_res);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -198,8 +199,15 @@ sandesha2_create_seq_res_from_om_node(
         axutil_qname_free(acc_qname, env);
     if(acc_part)
     {
-        create_seq_res->accept = sandesha2_accept_create(env, 
-            create_seq_res->rm_ns_val, create_seq_res->addr_ns_val);
+        if(create_seq_res->accept)
+        {
+            sandesha2_accept_free(create_seq_res->accept, env);
+            create_seq_res->accept = NULL;
+        }
+
+        create_seq_res->accept = sandesha2_accept_create(env, create_seq_res->rm_ns_val, 
+                create_seq_res->addr_ns_val);
+
         if(!create_seq_res->accept)
         {
             return NULL;

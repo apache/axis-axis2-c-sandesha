@@ -129,7 +129,15 @@ sandesha2_address_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
+
+    if(address->epr)
+    {
+        axis2_endpoint_ref_free(address->epr, env);
+        address->epr = NULL;
+    }
+
     address->epr = axis2_endpoint_ref_create(env, str_address);
+
     if(!address->epr)
     {
         return NULL;

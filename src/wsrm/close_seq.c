@@ -180,10 +180,10 @@ sandesha2_close_seq_set_identifier(
 {
  	if(close_seq->identifier)
 	{
-	    /*
-		SANDESHA2_IDENTIFIER_FREE(close_seq->identifier, env);
+	    
+		sandesha2_identifier_free(close_seq->identifier, env);
 		close_seq->identifier = NULL;
-		*/
+	
 	}
 	close_seq->identifier = identifier;
  	return AXIS2_SUCCESS;

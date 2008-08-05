@@ -234,10 +234,10 @@ sandesha2_ack_requested_set_identifier(sandesha2_ack_requested_t *ack_requested,
 {
  	if(ack_requested->identifier)
 	{
-		/*
-		SANDESHA2_IDENTIFIER_FREE(ack_requested->identifier, env);
+		
+		sandesha2_identifier_free(ack_requested->identifier, env);
 		ack_requested->identifier = NULL;
-		*/
+		
 	}
 	ack_requested->identifier = identifier;
  	return AXIS2_SUCCESS;

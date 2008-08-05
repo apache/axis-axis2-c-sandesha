@@ -377,8 +377,15 @@ sandesha2_msg_creator_create_create_seq_res_msg(
             accept = sandesha2_accept_create(env, rm_ns_value, addressing_ns_value);
             if(accept)
             {
+                axis2_endpoint_ref_t *temp_to_epr = NULL;
+
                 acks_to_epr = sandesha2_msg_ctx_get_to(create_seq_msg, env);
-                address = sandesha2_address_create(env, addressing_ns_value, acks_to_epr);
+                if(acks_to_epr)
+                {
+                    temp_to_epr = sandesha2_util_endpoint_ref_clone(env, acks_to_epr);
+                }
+
+                address = sandesha2_address_create(env, addressing_ns_value, temp_to_epr);
                 acks_to = sandesha2_acks_to_create(env, address, rm_ns_value, addressing_ns_value);
                 sandesha2_accept_set_acks_to(accept, env, acks_to);
                 sandesha2_create_seq_res_set_accept(create_seq_res, env, accept);
@@ -407,7 +414,11 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     axis2_msg_ctx_set_wsa_action(out_msg, env, temp_action);
 
     soap_action = axutil_string_create(env, temp_action);
-    axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
+    if(soap_action)
+    {
+        axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
+        axutil_string_free(soap_action, env);
+    }
 
     if(addressing_ns_value)
     {
@@ -415,10 +426,15 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     }
 
     new_msg_id = axutil_uuid_gen(env);
-    axis2_msg_ctx_set_message_id(out_msg, env, new_msg_id);
+    if(new_msg_id)
+    {
+        axis2_msg_ctx_set_message_id(out_msg, env, new_msg_id);
+        AXIS2_FREE(env->allocator, new_msg_id);
+    }
+
     axis2_msg_ctx_set_soap_envelope(out_msg, env, envelope);
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);
-    sandesha2_msg_creator_init_creation(env, temp_msg_ctx,out_msg);
+    sandesha2_msg_creator_init_creation(env, temp_msg_ctx, out_msg);
     create_seq_res_rm_msg_ctx = sandesha2_msg_init_init_msg(env, out_msg);
     sandesha2_msg_ctx_set_create_seq_res(create_seq_res_rm_msg_ctx, env, create_seq_res);
     temp_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(create_seq_msg, env);

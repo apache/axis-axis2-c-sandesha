@@ -68,8 +68,10 @@ sandesha2_utils_create_out_msg_ctx(
     axis2_msg_ctx_t *in_msg_ctx);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_utils_remove_soap_body_part(const axutil_env_t *env, 
-                        axiom_soap_envelope_t *envelope, axutil_qname_t *qname)
+sandesha2_utils_remove_soap_body_part(
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *envelope, 
+    axutil_qname_t *qname)
 {
     axiom_soap_body_t *soap_body = NULL;
     axiom_node_t *body_node = NULL;
@@ -84,29 +86,39 @@ sandesha2_utils_remove_soap_body_part(const axutil_env_t *env,
     if(!soap_body)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Soap envelope does not have a soap body");
+                "[sandesha2] Soap envelope does not have a soap body");
         return AXIS2_FAILURE;
     }
+
     body_node = axiom_soap_body_get_base_node(soap_body, env);
     if(!body_node)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Soap body does not have a base node");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Soap body does not have a base node");
         return AXIS2_FAILURE;
     }
+
     body_element = axiom_node_get_data_element(body_node, env);
     if(!body_element)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Soap body node does not have a node element");
+                "[sandesha2] Soap body node does not have a node element");
         return AXIS2_FAILURE;
     }
-    body_rm_element = axiom_element_get_first_child_with_qname(body_element,
-                            env, qname, body_node, &body_rm_node);
+
+    body_rm_element = axiom_element_get_first_child_with_qname(body_element, env, qname, body_node, 
+            &body_rm_node);
+
     if(body_rm_element)
     {
-        axiom_node_detach(body_rm_node, env);
+        axiom_node_t *temp_node = NULL;
+
+        temp_node = axiom_node_detach(body_rm_node, env);
+        if(temp_node)
+        {
+            axiom_node_free_tree(temp_node, env);
+        }
     }
+
     return AXIS2_SUCCESS;
 }
 
@@ -1280,15 +1292,14 @@ sandesha2_utils_create_out_msg_ctx(
     }
 
     reply_to = axis2_msg_info_headers_get_reply_to(old_msg_info_headers, env);
-    axis2_msg_info_headers_set_to(msg_info_headers, env, sandesha2_util_endpoint_ref_clone(env, 
-                reply_to));
+    axis2_msg_info_headers_set_to(msg_info_headers, env, reply_to);
 
     fault_to = axis2_msg_info_headers_get_fault_to(old_msg_info_headers, env);
     axis2_msg_info_headers_set_fault_to(msg_info_headers, env, sandesha2_util_endpoint_ref_clone(
                 env, fault_to));
 
     to = axis2_msg_info_headers_get_to(old_msg_info_headers, env);
-    axis2_msg_info_headers_set_from(msg_info_headers, env, sandesha2_util_endpoint_ref_clone(env, to));
+    axis2_msg_info_headers_set_from(msg_info_headers, env, to);
 
     msg_id = axis2_msg_info_headers_get_message_id(old_msg_info_headers, env);
     relates_to = axis2_relates_to_create(env, msg_id,

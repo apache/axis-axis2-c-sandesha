@@ -138,8 +138,14 @@ sandesha2_acks_to_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    acks_to->address = sandesha2_address_create(env, 
-        acks_to->addr_ns_val, NULL);
+
+    if(acks_to->address)
+    {
+        sandesha2_address_free(acks_to->address, env);
+        acks_to->address = NULL;
+    }
+
+    acks_to->address = sandesha2_address_create(env, acks_to->addr_ns_val, NULL);
     if(NULL == acks_to->address)
     {
         return NULL;

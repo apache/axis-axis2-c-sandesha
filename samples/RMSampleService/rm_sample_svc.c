@@ -52,16 +52,13 @@ rm_sample_svc_echo (
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
         return NULL;
     }
-    /*element = axiom_node_get_data_element(node, env);
-    qname = axutil_qname_create(env, "Text", ns, NULL);
-    text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
-            qname, node, &text_parent_node);
-    axutil_qname_free(qname, env);*/
+
     text_parent_node = axiom_node_get_first_element(node, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, 
             AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
+
         return NULL;
     }
     
@@ -104,12 +101,6 @@ build_echo_om(
     axiom_namespace_t *ns1 = NULL;
     
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
-
-    echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
-    
-    text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
-
-    axiom_element_set_text(text_om_ele, env, text, text_om_node);
 
     echo_om_ele = axiom_element_create(env, NULL, "echoStringResponse", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "EchoStringReturn", ns1, &text_om_node);

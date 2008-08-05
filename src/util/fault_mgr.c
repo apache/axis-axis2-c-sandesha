@@ -36,44 +36,50 @@
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_create_seq_refused (
     const axutil_env_t *env,
-    axis2_msg_ctx_t *create_seq_msg,
+    sandesha2_msg_ctx_t *rm_create_seq_msg_ctx,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq = NULL;
     axis2_bool_t refuse_seq = AXIS2_FALSE;
     
-    AXIS2_PARAM_CHECK(env->error, create_seq_msg, NULL);
+    AXIS2_PARAM_CHECK(env->error, rm_create_seq_msg_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, create_seq_msg);
-    create_seq = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
+    create_seq = sandesha2_msg_ctx_get_create_seq(rm_create_seq_msg_ctx, env);
     
-    if(NULL == create_seq)
+    if(!create_seq)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, 
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, AXIS2_FAILURE);
         return NULL;
     }
-    if(AXIS2_TRUE == refuse_seq)
+    if(refuse_seq)
     {
+        axiom_soap_envelope_t *soap_envelope = NULL;
         sandesha2_fault_data_t *fault_data = NULL;
+
         fault_data = sandesha2_fault_data_create(env);
         sandesha2_fault_data_set_type(fault_data, env, 
                         SANDESHA2_SOAP_FAULT_TYPE_CREATE_SEQ_REFUSED);
-        if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, 
-                        sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env)))
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP11_FAULT_CODE_SENDER);
+
+        soap_envelope = sandesha2_msg_ctx_get_soap_envelope(rm_create_seq_msg_ctx, env);
+        if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, soap_envelope))
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP11_FAULT_CODE_SENDER);
+        }
         else
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP12_FAULT_CODE_SENDER);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP12_FAULT_CODE_SENDER);
+        }
+
         sandesha2_fault_data_set_sub_code(fault_data, env, 
-                        SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQ_REFUSED);
+                SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQ_REFUSED);
+
         sandesha2_fault_data_set_reason(fault_data, env, "");
-        return sandesha2_fault_mgr_get_fault(env, rm_msg_ctx, fault_data,
-            sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env), seq_prop_mgr);
+
+        return sandesha2_fault_mgr_get_fault(env, rm_create_seq_msg_ctx, fault_data,
+            sandesha2_msg_ctx_get_addr_ns_val(rm_create_seq_msg_ctx, env), seq_prop_mgr);
     }
+
     return NULL;
 }
             

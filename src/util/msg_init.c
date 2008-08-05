@@ -130,18 +130,23 @@ populate_rm_msg_ctx(
     /* If client side and the addressing version is not set. 
      * Assuming the default addressing version.
      */
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:populate_rm_msg_ctx");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:populate_rm_msg_ctx");
     if(msg_ctx)
+    {
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
+    }
+
     prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
+    {
         addressing_ns = axutil_property_get_value(prop, env);
+    }
     
     if(!addressing_ns && !axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         addressing_ns = AXIS2_WSA_NAMESPACE;
     }
+
     rm_elements = sandesha2_rm_elements_create(env);
     envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     action = (axis2_char_t*)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
@@ -150,18 +155,17 @@ populate_rm_msg_ctx(
     if(create_seq)
     {
         sandesha2_msg_ctx_set_create_seq(rm_msg_ctx, env, create_seq);
-        rm_ns = sandesha2_create_seq_get_namespace_value(
-                 create_seq, env);
+        rm_ns = sandesha2_create_seq_get_namespace_value(create_seq, env);
     }
+
     create_seq_res = sandesha2_rm_elements_get_create_seq_res(rm_elements, env);
     if(create_seq_res)
     {
-        sandesha2_msg_ctx_set_create_seq_res(rm_msg_ctx, env, 
-            create_seq_res);
-        rm_ns = sandesha2_create_seq_res_get_namespace_value(
-                 create_seq_res, env);
+        sandesha2_msg_ctx_set_create_seq_res(rm_msg_ctx, env, create_seq_res);
+        rm_ns = sandesha2_create_seq_res_get_namespace_value(create_seq_res, env);
         /*add_op_if_null(env, msg_ctx);*/
     }
+
     seq = sandesha2_rm_elements_get_seq(rm_elements, env);
     if(seq)
     {

@@ -61,8 +61,7 @@ sandesha2_msg_ctx_create(
 {
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     
-    rm_msg_ctx =  (sandesha2_msg_ctx_t *)AXIS2_MALLOC 
-        (env->allocator, sizeof(sandesha2_msg_ctx_t));
+    rm_msg_ctx =  (sandesha2_msg_ctx_t *)AXIS2_MALLOC(env->allocator, sizeof(sandesha2_msg_ctx_t));
 	
     if(!rm_msg_ctx)
 	{
@@ -168,6 +167,7 @@ sandesha2_msg_ctx_free(
         sandesha2_ack_requested_free(rm_msg_ctx->ack_requested, env);
         rm_msg_ctx->ack_requested = NULL;
     }
+
 	AXIS2_FREE(env->allocator, rm_msg_ctx);
 	return AXIS2_SUCCESS;
 }
@@ -636,7 +636,13 @@ sandesha2_msg_ctx_set_create_seq_res(
     sandesha2_create_seq_res_t *create_seq_res)
 {
     AXIS2_PARAM_CHECK(env->error, create_seq_res, AXIS2_FAILURE);
-    
+   
+    if(rm_msg_ctx->create_seq_res)
+    {
+        sandesha2_create_seq_res_free(rm_msg_ctx->create_seq_res, env);
+        rm_msg_ctx->create_seq_res = NULL;
+    }
+
     rm_msg_ctx->create_seq_res = create_seq_res;
     return AXIS2_SUCCESS;
 }

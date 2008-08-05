@@ -896,6 +896,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     {
         return AXIS2_FAILURE;
     }
+    
+    terminate_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg_ctx, env);
 
     sandesha2_msg_ctx_set_flow(terminate_rm_msg_ctx, env, AXIS2_OUT_FLOW);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
@@ -926,6 +928,13 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             sandesha2_msg_ctx_free(terminate_rm_msg_ctx, env);
         }
 
+        if(terminate_msg_ctx)
+        {
+            /* Reset the message context to avoid double freeing of transport out stream */
+            axis2_core_utils_reset_out_msg_ctx(env, terminate_msg_ctx);
+            axis2_msg_ctx_free(terminate_msg_ctx, env);
+        }
+
         return AXIS2_FAILURE;
     }
 
@@ -952,8 +961,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     
     sandesha2_msg_ctx_add_soap_envelope(terminate_rm_msg_ctx, env);
     
-    terminate_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(terminate_rm_msg_ctx, env);
-
     /* If server side and single channel duplex mode send the terminate sequence message.
      */
     if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_ver, to_addr))
@@ -1193,7 +1200,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         sandesha2_msg_ctx_free(terminate_rm_msg_ctx, env);
     }
 
-    /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
+    /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is our
      * reponsiblity to free if after use.
      */
     if(terminate_msg_ctx)

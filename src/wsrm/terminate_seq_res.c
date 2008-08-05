@@ -178,10 +178,10 @@ sandesha2_terminate_seq_res_set_identifier(
 {
  	if(terminate_seq_res->identifier)
 	{
-/*		SANDESHA2_IDENTIFIER_FREE(terminate_seq_res->identifier, env);
+		sandesha2_identifier_free(terminate_seq_res->identifier, env);
 		terminate_seq_res->identifier = NULL;
-*/		
 	}
+
 	terminate_seq_res->identifier = identifier;
  	return AXIS2_SUCCESS;
 }
