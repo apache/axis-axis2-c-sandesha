@@ -1908,8 +1908,16 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         {
             axis2_engine_free(engine, env);
         }
+
         /* Reset the message context to avoid double freeing of transport out stream */
-        axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
+        if(ack_msg_ctx)
+        {
+            axis2_endpoint_ref_t *temp_epr = NULL;
+
+            temp_epr = axis2_msg_ctx_get_to(ack_msg_ctx, env);
+            axis2_endpoint_ref_free(temp_epr, env);
+            axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
+        }
     }
 
     if(ack_rm_msg_ctx)
