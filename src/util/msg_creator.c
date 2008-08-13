@@ -230,18 +230,17 @@ sandesha2_msg_creator_create_create_seq_msg(
     }
 
     anonymous_uri = sandesha2_spec_specific_consts_get_anon_uri(env, addressing_ns_value);
-    if(!acks_to || !axutil_strcmp("", acks_to))
-    {
-        acks_to = axutil_strdup(env, anonymous_uri);
-    }
-    acks_to_epr = axis2_endpoint_ref_create(env, acks_to);
     if(reply_to_bean)
     {
         axis2_endpoint_ref_t *reply_to_epr = NULL;
 
         temp_value = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_reply_to:%s", temp_value);
-        reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
+        if(temp_value)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_reply_to:%s", temp_value);
+            reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
+            acks_to = axutil_strdup(env, temp_value);
+        }
 
         if(reply_to_epr)
         {
@@ -250,6 +249,13 @@ sandesha2_msg_creator_create_create_seq_msg(
         
         sandesha2_seq_property_bean_free(reply_to_bean, env);
     }
+    
+    if(!acks_to || !axutil_strcmp("", acks_to))
+    {
+        acks_to = axutil_strdup(env, anonymous_uri);
+    }
+
+    acks_to_epr = axis2_endpoint_ref_create(env, acks_to);
 
     temp_to = sandesha2_msg_ctx_get_to(create_seq_rm_msg, env);
     if(!temp_to && to_epr)
