@@ -161,8 +161,12 @@ sandesha2_msg_creator_create_create_seq_msg(
         axis2_endpoint_ref_t *reply_to_epr = NULL;
 
         reply_to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(temp_reply_to, env));
-        axis2_msg_ctx_set_reply_to(create_seq_msg_ctx, env, reply_to_epr);
+        if(reply_to_epr)
+        {
+            axis2_msg_ctx_set_reply_to(create_seq_msg_ctx, env, reply_to_epr);
+        }
     }
+
     create_seq_rm_msg = sandesha2_msg_ctx_create(env, create_seq_msg_ctx);
 
     rm_version = sandesha2_utils_get_rm_version(env, internal_seq_id, seq_prop_mgr);
@@ -236,6 +240,7 @@ sandesha2_msg_creator_create_create_seq_msg(
         axis2_endpoint_ref_t *reply_to_epr = NULL;
 
         temp_value = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_reply_to:%s", temp_value);
         reply_to_epr = axis2_endpoint_ref_create(env, temp_value);
 
         if(reply_to_epr)

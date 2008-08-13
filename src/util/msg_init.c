@@ -134,9 +134,12 @@ populate_rm_msg_ctx(
     if(msg_ctx)
     {
         ctx = axis2_msg_ctx_get_base(msg_ctx, env);
+        if(ctx)
+        {
+            prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
+        }
     }
 
-    prop = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(prop)
     {
         addressing_ns = axutil_property_get_value(prop, env);

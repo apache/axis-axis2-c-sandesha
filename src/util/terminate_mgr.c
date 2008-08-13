@@ -909,16 +909,19 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
     if(to_bean)
     {
-        to_epr = axis2_endpoint_ref_create(env, sandesha2_seq_property_bean_get_value(to_bean, env));
+        axis2_char_t *temp_addr = NULL;
+
+        temp_addr = sandesha2_seq_property_bean_get_value(to_bean, env);
+        to_epr = axis2_endpoint_ref_create(env, temp_addr);
         sandesha2_seq_property_bean_free(to_bean, env);
     }
 
     if(to_epr)
     {
         to_addr = axis2_endpoint_ref_get_address(to_epr, env);
+        sandesha2_msg_ctx_set_to(terminate_rm_msg_ctx, env, to_epr);
     }
 
-    sandesha2_msg_ctx_set_to(terminate_rm_msg_ctx, env, to_epr);
     rm_ver = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
     if(!rm_ver)
     {
@@ -930,6 +933,14 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
         if(terminate_msg_ctx)
         {
+            axis2_endpoint_ref_t *temp_epr = NULL;
+
+            temp_epr = axis2_msg_ctx_get_to(terminate_msg_ctx, env);
+            if(temp_epr)
+            {
+                axis2_endpoint_ref_free(temp_epr, env);
+            }
+
             /* Reset the message context to avoid double freeing of transport out stream */
             axis2_core_utils_reset_out_msg_ctx(env, terminate_msg_ctx);
             axis2_msg_ctx_free(terminate_msg_ctx, env);
@@ -1009,6 +1020,14 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
          */
         if(terminate_msg_ctx)
         {
+            axis2_endpoint_ref_t *temp_epr = NULL;
+
+            temp_epr = axis2_msg_ctx_get_to(terminate_msg_ctx, env);
+            if(temp_epr)
+            {
+                axis2_endpoint_ref_free(temp_epr, env);
+            }
+
             /* Reset the message context to avoid double freeing of transport out stream */
             axis2_core_utils_reset_out_msg_ctx(env, terminate_msg_ctx);
             axis2_msg_ctx_free(terminate_msg_ctx, env);
@@ -1205,6 +1224,22 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
      */
     if(terminate_msg_ctx)
     {
+        axis2_endpoint_ref_t *temp_epr = NULL;
+
+        temp_epr = axis2_msg_ctx_get_to(terminate_msg_ctx, env);
+        if(temp_epr)
+        {
+            axis2_endpoint_ref_free(temp_epr, env);
+            temp_epr = NULL;
+        }
+        
+        temp_epr = axis2_msg_ctx_get_reply_to(terminate_msg_ctx, env);
+        if(temp_epr)
+        {
+            axis2_endpoint_ref_free(temp_epr, env);
+        }
+
+        axis2_core_utils_reset_out_msg_ctx(env, terminate_msg_ctx);
         axis2_msg_ctx_free(terminate_msg_ctx, env);
     }
 

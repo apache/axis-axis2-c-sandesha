@@ -106,10 +106,15 @@ sandesha2_msg_store_bean_retrieve_callback(
         if(0 == axutil_strcmp(col_name[i], "msg_id"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_msg_id(bean, env, argv[i]);
-        if(0 == axutil_strcmp(col_name[i], "soap_env_str"))
-            if(argv[i])
-                sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, 
-                    argv[i]);
+
+        if(!axutil_strcmp(col_name[i], "soap_env_str"))
+        {
+            if(argv[i] && axutil_strcmp("(null)", argv[i]))
+            {
+                sandesha2_msg_store_bean_set_soap_envelope_str(bean, env, argv[i]);
+            }
+        }
+
         if(0 == axutil_strcmp(col_name[i], "soap_version"))
             if(argv[i])
                 sandesha2_msg_store_bean_set_soap_version(bean, env, AXIS2_ATOI(argv[i]));

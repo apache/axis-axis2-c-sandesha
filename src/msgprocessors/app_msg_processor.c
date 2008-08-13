@@ -86,7 +86,25 @@ struct sandesha2_app_msg_processor_args
     axis2_char_t *msg_id;
     axis2_bool_t is_server_side;
     int retrans_interval;
+    void *bean;
+    void *msg_ctx;
 };
+
+static void * AXIS2_THREAD_FUNC
+sandesha2_app_msg_processor_create_seq_msg_worker_function(
+    axutil_thread_t *thd, 
+    void *data);
+
+static axis2_status_t
+sandesha2_app_msg_processor_start_create_seq_msg_resender(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *internal_sequence_id,
+    axis2_char_t *msg_id,
+    const axis2_bool_t is_server_side,
+    int retrans_interval,
+    sandesha2_sender_bean_t *create_sequence_sender_bean,
+    axis2_msg_ctx_t *create_seq_msg_ctx);
 
 static void * AXIS2_THREAD_FUNC
 sandesha2_app_msg_processor_application_msg_worker_function(
@@ -100,7 +118,8 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int retrans_interval);
+    int retrans_interval,
+    axis2_msg_ctx_t *app_msg_ctx);
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_process_in_msg (
@@ -165,7 +184,8 @@ sandesha2_app_msg_processor_resend(
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_create_seq_mgr_t *create_seq_mgr,
-    sandesha2_sender_mgr_t *sender_mgr);
+    sandesha2_sender_mgr_t *sender_mgr,
+    axis2_msg_ctx_t *app_msg_ctx);
 
 static axis2_status_t AXIS2_CALL                 
 sandesha2_app_msg_processor_set_next_msg_no(
@@ -1703,7 +1723,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sandesha2_sender_mgr_t *sender_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
-    axis2_endpoint_ref_t *to_epr = NULL;
+    /*axis2_endpoint_ref_t *to_epr = NULL;
+    axis2_endpoint_ref_t *temp_to_epr = NULL;*/
     const axis2_char_t *reply_to_addr = NULL;
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     axis2_char_t *acks_to_str = NULL;
@@ -1748,8 +1769,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
 
-    to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
-    /*if(temp_to_epr)
+    /*temp_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+    if(temp_to_epr)
     {
         const axis2_char_t *temp_to_addr = NULL;
 
@@ -1763,7 +1784,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
     if(reply_to_epr)
     {
-        reply_to_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
+       reply_to_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
     }
 
     op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
@@ -1887,10 +1908,10 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
     }
 
-    if(to_epr)
+    /*if(to_epr)
     {
         axis2_msg_ctx_set_reply_to(ack_msg_ctx, env, to_epr);
-    }
+    }*/
 
     /* If it is one way message in server side this is the only place we can send the acknowledgment.
      * In all other cases we do not send the acknowledgment directly, but piggyback it on application
@@ -1912,10 +1933,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         /* Reset the message context to avoid double freeing of transport out stream */
         if(ack_msg_ctx)
         {
-            axis2_endpoint_ref_t *temp_epr = NULL;
-
-            temp_epr = axis2_msg_ctx_get_to(ack_msg_ctx, env);
-            axis2_endpoint_ref_free(temp_epr, env);
             axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
         }
     }
@@ -1930,6 +1947,15 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
      */
     if(ack_msg_ctx)
     {
+        axis2_endpoint_ref_t *temp_epr = NULL;
+
+        temp_epr = axis2_msg_ctx_get_to(ack_msg_ctx, env);
+        if(temp_epr)
+        {
+            axis2_endpoint_ref_free(temp_epr, env);
+        }
+
+        axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
         axis2_msg_ctx_free(ack_msg_ctx, env);
     }
 
@@ -1980,6 +2006,10 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     axis2_char_t *msg_id = NULL;
     sandesha2_sender_bean_t *create_sequence_sender_bean = NULL;
     long millisecs = 0;
+    sandesha2_seq_property_bean_t *reply_to_bean = NULL;
+    axis2_char_t *reply_to_addr = NULL;
+    axis2_char_t *rm_version = NULL;
+    axis2_bool_t is_svr_side = AXIS2_FALSE;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2]Entry:sandesha2_app_msg_processor_send_create_seq_msg");
@@ -2102,95 +2132,152 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         sandesha2_msg_ctx_free(create_seq_rm_msg_ctx, env);
     }
 
-    if(axis2_engine_send(engine, env, create_seq_msg_ctx))
-    {
-        if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
-        {
-            status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
-                    storage_mgr);
-        }
-    }
-    else
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Engine Send failed");
-    }
-    
-    if(engine)
-    {
-        axis2_engine_free(engine, env);
-    }
 
     property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));
     retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
-
-    rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
-            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
 
-    while(!rms_sequence_bean)
+    reply_to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQ_PROP_REPLY_TO_EPR);
+
+    if(reply_to_bean)
     {
-        continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
-                conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+        reply_to_addr = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
+    }
 
-        sandesha2_sender_mgr_update(sender_mgr, env, create_sequence_sender_bean);
+    rm_version = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+    if(!rm_version)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Unable to find RM spec version for the rms internal_sequence_id %s", 
+                internal_sequence_id);
 
-        if(!continue_sending)
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2] Do not continue sending the create sequence message");
-            break;
-        }
-
-        AXIS2_SLEEP(retrans_interval);
-
-        if(transport_sender)
-        {
-            /* This is neccessary to avoid a double free */
-            axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-            if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, create_seq_msg_ctx))
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Transport sender invoke failed");
-            }
-        }
-
-        if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
-        {
-            status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
-                storage_mgr);
+        return AXIS2_FAILURE;
+    }
     
-            if(AXIS2_SUCCESS != status)
+    is_svr_side = axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env);
+
+    if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, 
+            rm_version, reply_to_addr)))
+    {
+        if(axis2_engine_send(engine, env, create_seq_msg_ctx))
+        {
+            if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
             {
-                break;
+                status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
+                        storage_mgr);
             }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Engine Send failed");
+        }
+        
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
         }
 
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+
+        while(!rms_sequence_bean)
+        {
+            continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
+                    conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+
+            sandesha2_sender_mgr_update(sender_mgr, env, create_sequence_sender_bean);
+
+            if(!continue_sending)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2] Do not continue sending the create sequence message");
+                break;
+            }
+
+            AXIS2_SLEEP(retrans_interval);
+
+            if(transport_sender)
+            {
+                /* This is neccessary to avoid a double free */
+                axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
+                if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, create_seq_msg_ctx))
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Transport sender invoke failed");
+                }
+            }
+
+            if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
+            {
+                status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
+                    storage_mgr);
+        
+                if(AXIS2_SUCCESS != status)
+                {
+                    break;
+                }
+            }
+
+            rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+                SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+        }
+
+        if(rms_sequence_bean)
+        {
+            sandesha2_seq_property_bean_free(rms_sequence_bean, env);
+        }
+
+        if(create_sequence_sender_bean)
+        {
+            sandesha2_sender_bean_free(create_sequence_sender_bean, env);
+        }
+
+        /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is our
+         * reponsiblity to free if after use.
+         */
+        if(create_seq_msg_ctx)
+        {
+            axis2_msg_ctx_free(create_seq_msg_ctx, env);
+        }
+    }
+    else
+    {
+        if(axis2_engine_send(engine, env, create_seq_msg_ctx))
+        {
+            if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
+            {
+                status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
+                        storage_mgr);
+            }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Engine Send failed");
+        }
+        
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+        }
+
+        rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+        /* Dual channel */
+        sandesha2_app_msg_processor_start_create_seq_msg_resender(env, conf_ctx, internal_sequence_id, 
+            msg_id, is_svr_side, retrans_interval, create_sequence_sender_bean, create_seq_msg_ctx);
     }
 
-    if(rms_sequence_bean)
+    if(rm_version)
     {
-        sandesha2_seq_property_bean_free(rms_sequence_bean, env);
-    }
-
-    if(create_sequence_sender_bean)
-    {
-        sandesha2_sender_bean_free(create_sequence_sender_bean, env);
-    }
-
-    /* We have created this message context using sandesha2_utils_create_new_related_msg_ctx(). It is out
-     * reponsiblity to free if after use.
-     */
-    if(create_seq_msg_ctx)
-    {
-        axis2_msg_ctx_free(create_seq_msg_ctx, env);
+        AXIS2_FREE(env->allocator, rm_version);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2]Exit:sandesha2_app_msg_processor_send_create_seq_msg");
+
     return status;
 }
 
@@ -2408,7 +2495,7 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_endpoint_ref_t *temp_to_epr = NULL;
         
         temp_to_epr = axis2_endpoint_ref_create(env, new_to_str);
-        sandesha2_msg_ctx_set_to(rm_msg_ctx, env, temp_to_epr);
+        /*sandesha2_msg_ctx_set_to(rm_msg_ctx, env, temp_to_epr);*/
         if(to_epr)
         {
             axis2_endpoint_ref_free(to_epr, env);
@@ -2743,24 +2830,6 @@ sandesha2_app_msg_processor_send_app_msg(
         }
     }
 
-    engine = axis2_engine_create(env, conf_ctx);
-    if(axis2_engine_resume_send(engine, env, app_msg_ctx))
-    {
-        if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))
-        {    
-            status = sandesha2_app_msg_processor_process_app_msg_response(env, app_msg_ctx);
-        }
-    }
-    else
-    {
-        AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "[sandesha2] Engine resume send failed");
-    }
-
-    if(engine)
-    {
-        axis2_engine_free(engine, env);
-    }
-
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
     module_desc = axis2_conf_get_module(conf, env, qname);
@@ -2777,6 +2846,24 @@ sandesha2_app_msg_processor_send_app_msg(
 
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
     {
+        engine = axis2_engine_create(env, conf_ctx);
+        if(axis2_engine_resume_send(engine, env, app_msg_ctx))
+        {
+            if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))
+            {    
+                status = sandesha2_app_msg_processor_process_app_msg_response(env, app_msg_ctx);
+            }
+        }
+        else
+        {
+            AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "[sandesha2] Engine resume send failed");
+        }
+
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+        }
+
         /* If application client side and single channel, resend is done in the same 
          * thread as the application client.
          */
@@ -2882,6 +2969,33 @@ sandesha2_app_msg_processor_send_app_msg(
 
         return status;
     }
+    else
+    {
+        axis2_msg_ctx_increment_ref(app_msg_ctx, env);
+        engine = axis2_engine_create(env, conf_ctx);
+        if(axis2_engine_resume_send(engine, env, app_msg_ctx))
+        {
+            if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))
+            {    
+                status = sandesha2_app_msg_processor_process_app_msg_response(env, app_msg_ctx);
+            }
+        }
+        else
+        {
+            AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "[sandesha2] Engine resume send failed");
+        }
+
+        if(engine)
+        {
+            axis2_engine_free(engine, env);
+        }
+
+        /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 
+         * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
+         * the thread.*/
+        sandesha2_app_msg_processor_start_application_msg_resender(env, conf_ctx, internal_sequence_id, 
+                msg_id, is_svr_side, retrans_interval, app_msg_ctx);
+    }
    
     if(rm_version)
     {
@@ -2893,10 +3007,10 @@ sandesha2_app_msg_processor_send_app_msg(
         AXIS2_FREE(env->allocator, reply_to_addr);
     }
 
-    if(reply_to_epr)
+    /*if(reply_to_epr)
     {
         axis2_endpoint_ref_free(reply_to_epr, env);
-    }
+    }*/
 
     if(from_acks_to_addr)
     {
@@ -2906,12 +3020,6 @@ sandesha2_app_msg_processor_send_app_msg(
     {
         AXIS2_FREE(env->allocator, rms_sequence_id);
     }
-
-    /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 
-     * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
-     * the thread.*/
-    sandesha2_app_msg_processor_start_application_msg_resender(env, conf_ctx, internal_sequence_id, 
-            msg_id, is_svr_side, retrans_interval);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[Sandesha2] Exit:sandesha2_app_msg_processor_send_app_msg");
 
@@ -2929,51 +3037,26 @@ sandesha2_app_msg_processor_resend(
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     sandesha2_create_seq_mgr_t *create_seq_mgr,
-    sandesha2_sender_mgr_t *sender_mgr)
+    sandesha2_sender_mgr_t *sender_mgr,
+    axis2_msg_ctx_t *app_msg_ctx)
 {
     sandesha2_sender_bean_t *sender_worker_bean = NULL;
     sandesha2_sender_bean_t *bean1 = NULL;
-    axis2_char_t *key = NULL;
+    /*axis2_char_t *key = NULL;*/
     axis2_bool_t continue_sending = AXIS2_TRUE;
-    axis2_msg_ctx_t *msg_ctx = NULL;
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
+    /*sandesha2_msg_ctx_t *rm_msg_ctx = NULL;*/
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
     axis2_bool_t successfully_sent = AXIS2_FALSE;
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_bool_t resend = AXIS2_FALSE;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_app_msg_processor_resend");        
-    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_app_msg_processor_resend");
+
     sender_worker_bean = sandesha2_sender_mgr_retrieve(sender_mgr, env, msg_id);
     if(!sender_worker_bean)
     {
         AXIS2_LOG_WARNING(env->log, AXIS2_LOG_SI, "[sandesha2] sender_worker_bean is NULL");
-        return AXIS2_FAILURE;
-    }
-
-    key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_worker_bean, env);
-    if(is_svr_side)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Retrieving msg_ctx from database");
-        msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, AXIS2_TRUE);
-    }
-    else
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Retrieving msg_ctx from configuration context");
-        msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, 
-                AXIS2_FALSE);
-    }
-
-    if(!msg_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] msg_ctx is not present in the store.");
-        if(sender_worker_bean)
-        {
-            sandesha2_sender_bean_free(sender_worker_bean, env);
-        }
-
         return AXIS2_FAILURE;
     }
 
@@ -2992,15 +3075,15 @@ sandesha2_app_msg_processor_resend(
         return AXIS2_FAILURE;
     }
     
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
+    /*rm_msg_ctx = sandesha2_msg_init_init_msg(env, app_msg_ctx);
     
-    if(!sandesha2_util_is_ack_already_piggybacked(env, rm_msg_ctx))
+    if(!sandesha2_util_is_ack_already_piggybacked(env, app_rm_msg_ctx))
     {
-        sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, storage_mgr, seq_prop_mgr, 
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, app_rm_msg_ctx, storage_mgr, seq_prop_mgr, 
                 sender_mgr);
-    }
+    }*/
     
-    transport_out = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
+    transport_out = axis2_msg_ctx_get_transport_out_desc(app_msg_ctx, env);
     if(transport_out)
     {
         transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
@@ -3008,8 +3091,8 @@ sandesha2_app_msg_processor_resend(
     if(transport_sender)
     {
         /* This is neccessary to avoid a double free */
-        axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-        if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, msg_ctx))
+        /*axis2_msg_ctx_set_property(app_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);*/
+        if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, app_msg_ctx))
 		{
         	successfully_sent = AXIS2_TRUE;
 		}else
@@ -3042,9 +3125,9 @@ sandesha2_app_msg_processor_resend(
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Application message successfully sent");
 
-        if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
+        if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))
         {
-            /*status = sandesha2_app_msg_processor_process_app_msg_response(env, msg_ctx, storage_mgr);
+            /*status = sandesha2_app_msg_processor_process_app_msg_response(env, app_msg_ctx, storage_mgr);
             if(AXIS2_SUCCESS != status)
             {
                 return status;
@@ -3057,10 +3140,10 @@ sandesha2_app_msg_processor_resend(
         sandesha2_sender_bean_free(bean1, env);
     }
 
-    if(rm_msg_ctx)
+    /*if(rm_msg_ctx)
     {
         sandesha2_msg_ctx_free(rm_msg_ctx, env);
-    }
+    }*/
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_app_msg_processor_resend");
 
@@ -3261,13 +3344,190 @@ sandesha2_app_msg_processor_set_next_msg_no(
 }
 
 static axis2_status_t
+sandesha2_app_msg_processor_start_create_seq_msg_resender(
+    const axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *internal_sequence_id,
+    axis2_char_t *msg_id,
+    const axis2_bool_t is_server_side,
+    int retrans_interval,
+    sandesha2_sender_bean_t *create_sequence_sender_bean,
+    axis2_msg_ctx_t *create_seq_msg_ctx)
+{
+    axutil_thread_t *worker_thread = NULL;
+    sandesha2_app_msg_processor_args_t *args = NULL;
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_app_msg_processor_start_create_seq_msg_resender");
+    
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
+    args->env = axutil_init_thread_env(env);
+    args->conf_ctx = conf_ctx;
+    args->internal_sequence_id = internal_sequence_id;
+    args->msg_id = msg_id;
+    args->retrans_interval = retrans_interval;
+    args->is_server_side = is_server_side;
+    args->bean = create_sequence_sender_bean;
+    args->msg_ctx = create_seq_msg_ctx;
+
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
+            sandesha2_app_msg_processor_create_seq_msg_worker_function, (void*)args);
+    if(!worker_thread)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Thread creation failed for sandesha2_app_msg_processor_start_create_seq_msg_resender");
+        return AXIS2_FAILURE;
+    }
+
+    axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+            "[sandesha2] Exit:sandesha2_app_msg_processor_start_create_seq_msg_resender");
+    return AXIS2_SUCCESS;
+}
+
+static void * AXIS2_THREAD_FUNC
+sandesha2_app_msg_processor_create_seq_msg_worker_function(
+    axutil_thread_t *thd, 
+    void *data)
+{
+    sandesha2_app_msg_processor_args_t *args;
+    axutil_env_t *env = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
+    sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
+    sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
+    sandesha2_sender_mgr_t *sender_mgr = NULL;
+    int retrans_interval = 0;
+    axis2_char_t *dbname = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_char_t *internal_sequence_id = NULL;
+    axis2_bool_t is_server_side = AXIS2_FALSE;
+    sandesha2_sender_bean_t *create_sequence_sender_bean = NULL;
+    axis2_char_t *msg_id = NULL;
+    sandesha2_seq_property_bean_t *rms_sequence_bean = NULL;
+    axis2_bool_t continue_sending = AXIS2_TRUE;
+    axis2_transport_out_desc_t *transport_out = NULL;
+    axis2_transport_sender_t *transport_sender = NULL;
+    axis2_op_t *create_seq_op = NULL;
+
+    args = (sandesha2_app_msg_processor_args_t*) data;
+    env = args->env;
+    axutil_allocator_switch_to_global_pool(env->allocator);
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2] Entry:sandesha2_app_msg_processor_create_seq_msg_worker_function");
+
+    conf_ctx = args->conf_ctx;
+    msg_id = args->msg_id;
+    internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
+    is_server_side = args->is_server_side;
+    retrans_interval = args->retrans_interval;
+    create_sequence_sender_bean = (sandesha2_sender_bean_t *) args->bean;
+    axis2_msg_ctx_t *create_seq_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
+
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
+    seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
+    create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
+    sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
+
+    rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+
+    create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
+    transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
+    transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
+
+    AXIS2_SLEEP(retrans_interval);
+
+    while(!rms_sequence_bean)
+    {
+        continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
+                conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+
+        sandesha2_sender_mgr_update(sender_mgr, env, create_sequence_sender_bean);
+
+        if(!continue_sending)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Do not continue sending the create sequence message");
+            break;
+        }
+
+        AXIS2_SLEEP(retrans_interval);
+
+        if(transport_sender)
+        {
+            /* This is neccessary to avoid a double free */
+            /*axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);*/
+            if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, create_seq_msg_ctx))
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Transport sender invoke failed");
+            }
+        }
+
+        /*if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
+        {
+            status = sandesha2_app_msg_processor_process_create_seq_response(env, create_seq_msg_ctx, 
+                storage_mgr);
+    
+            if(AXIS2_SUCCESS != status)
+            {
+                break;
+            }
+        }*/
+
+        rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+    }
+
+    if(rms_sequence_bean)
+    {
+        sandesha2_seq_property_bean_free(rms_sequence_bean, env);
+    }
+
+    if(create_seq_msg_ctx)
+    {
+        axis2_msg_ctx_free(create_seq_msg_ctx, env);
+    }
+
+    if(storage_mgr)
+    {
+        sandesha2_storage_mgr_free(storage_mgr, env);
+    }
+    
+    if(create_seq_mgr)
+    {
+        sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    }
+    
+    if(sender_mgr)
+    {
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    }
+    
+    if(seq_prop_mgr)
+    {
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2] Exit:sandesha2_app_msg_processor_create_seq_msg_worker_function");
+    
+    axutil_allocator_switch_to_local_pool(env->allocator);
+
+    return NULL;
+}
+
+static axis2_status_t
 sandesha2_app_msg_processor_start_application_msg_resender(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int retrans_interval)
+    int retrans_interval,
+    axis2_msg_ctx_t *app_msg_ctx)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_app_msg_processor_args_t *args = NULL;
@@ -3275,15 +3535,14 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Entry:sandesha2_app_msg_processor_start_application_msg_resender");
     
-    axutil_allocator_switch_to_global_pool(env->allocator);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
     args->env = axutil_init_thread_env(env);
-    axutil_allocator_switch_to_local_pool(env->allocator);
     args->conf_ctx = conf_ctx;
     args->internal_sequence_id = internal_sequence_id;
     args->msg_id = msg_id;
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
+    args->msg_ctx = app_msg_ctx;
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_application_msg_worker_function, (void*)args);
@@ -3320,10 +3579,13 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     sandesha2_sender_bean_t *sender_bean = NULL;
     axis2_char_t *msg_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_msg_ctx_t *app_msg_ctx = NULL;
 
     args = (sandesha2_app_msg_processor_args_t*) data;
     env = args->env;
     axutil_allocator_switch_to_global_pool(env->allocator);
+    app_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Entry:sandesha2_app_msg_processor_application_msg_worker_function");
     conf_ctx = args->conf_ctx;
@@ -3352,7 +3614,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
 
         status = sandesha2_app_msg_processor_resend(env, conf_ctx, msg_id, is_server_side,
                 internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, 
-                sender_mgr);
+                sender_mgr, app_msg_ctx);
 
         if(AXIS2_SUCCESS != status)
         {
@@ -3373,8 +3635,35 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         }
     }
 
+    if(app_msg_ctx)
+    {
+        axis2_msg_ctx_free(app_msg_ctx, env);
+    }
+
+    if(storage_mgr)
+    {
+        sandesha2_storage_mgr_free(storage_mgr, env);
+    }
+    
+    if(create_seq_mgr)
+    {
+        sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    }
+    
+    if(sender_mgr)
+    {
+        sandesha2_sender_mgr_free(sender_mgr, env);
+    }
+    
+    if(seq_prop_mgr)
+    {
+        sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2] Entry:sandesha2_app_msg_processor_application_msg_worker_function");
+        "[sandesha2] Exit:sandesha2_app_msg_processor_application_msg_worker_function");
+    
+    axutil_allocator_switch_to_local_pool(env->allocator);
     
     return NULL;
 }

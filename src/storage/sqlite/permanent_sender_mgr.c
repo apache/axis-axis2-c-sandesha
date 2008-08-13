@@ -623,7 +623,7 @@ sandesha2_permanent_sender_mgr_get_application_msg_to_send(
         sprintf(sql_find + axutil_strlen(sql_find), "and msg_id='%s'", msg_id);
     }
         
-    sprintf(sql_find + axutil_strlen(sql_find), " and send=%d", AXIS2_TRUE);
+    sprintf(sql_find + axutil_strlen(sql_find), " and send='%d'", AXIS2_TRUE);
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find:%s", sql_find);  
 

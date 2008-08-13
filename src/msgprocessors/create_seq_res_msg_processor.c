@@ -516,6 +516,7 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
 
         if(create_seq_msg)
         {
+            axis2_core_utils_reset_out_msg_ctx(env, create_seq_msg);
             axis2_msg_ctx_free(create_seq_msg, env);
         }
 

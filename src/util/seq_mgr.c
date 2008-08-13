@@ -464,15 +464,20 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
         }
 
         reply_to_epr = axis2_msg_ctx_get_to(req_msg_ctx, env);
-        acks_to_str = (axis2_char_t *) axis2_endpoint_ref_get_address(reply_to_epr, env);
 
         if(reply_to_epr)
         {
-            reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
-                    SANDESHA2_SEQ_PROP_REPLY_TO_EPR, (axis2_char_t*)axis2_endpoint_ref_get_address(
-                        reply_to_epr, env));
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
-            sandesha2_seq_property_bean_free(reply_to_bean, env);
+            const axis2_char_t *temp_epr_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
+            
+            if(temp_epr_addr)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "temp_epr_address:%s", temp_epr_addr);
+                acks_to_str = (axis2_char_t *) temp_epr_addr;
+                reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
+                    SANDESHA2_SEQ_PROP_REPLY_TO_EPR, (axis2_char_t*) temp_epr_addr);
+                sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
+                sandesha2_seq_property_bean_free(reply_to_bean, env);
+            }
         }
         else
         {
@@ -488,11 +493,15 @@ sandesha2_seq_mgr_setup_new_rms_sequence(
 
         if(reply_to_epr)
         {
-            reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
-                    SANDESHA2_SEQ_PROP_REPLY_TO_EPR, (axis2_char_t*)axis2_endpoint_ref_get_address(
-                        reply_to_epr, env));
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
-            sandesha2_seq_property_bean_free(reply_to_bean, env);
+            const axis2_char_t *temp_epr_addr = axis2_endpoint_ref_get_address(reply_to_epr, env);
+            if(temp_epr_addr)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "temp_epr_address:%s", temp_epr_addr);
+                reply_to_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
+                    SANDESHA2_SEQ_PROP_REPLY_TO_EPR, (axis2_char_t*) temp_epr_addr);
+                sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, reply_to_bean);
+                sandesha2_seq_property_bean_free(reply_to_bean, env);
+            }
         } 
     }
 
