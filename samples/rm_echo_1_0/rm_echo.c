@@ -67,6 +67,7 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
+    axis2_char_t *offered_seq_id = NULL;
     int c;
     int i = 0;
    
@@ -148,7 +149,7 @@ int main(int argc, char** argv)
     axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
 
     /* Offer sequence */
-    axis2_char_t *offered_seq_id = axutil_uuid_gen(env);
+    offered_seq_id = axutil_uuid_gen(env);
     property = axutil_property_create(env);
     if(property)
     {
