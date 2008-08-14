@@ -322,7 +322,8 @@ sandesha2_seq_ack_from_om_node(
 axiom_node_t* AXIS2_CALL 
 sandesha2_seq_ack_to_om_node(
     sandesha2_seq_ack_t *seq_ack,
-    const axutil_env_t *env, void *om_node)
+    const axutil_env_t *env, 
+    void *om_node)
 {
     axiom_namespace_t *rm_ns = NULL;
     axiom_node_t *sa_node = NULL;
@@ -376,7 +377,7 @@ sandesha2_seq_ack_to_om_node(
     {
         sandesha2_nack_t *nack = NULL;
         nack = (sandesha2_nack_t*)axutil_array_list_get(seq_ack->nack_list, env, i);
-        sandesha2_seq_ack_to_om_node((sandesha2_seq_ack_t *)nack, env, sa_node);
+        sandesha2_nack_to_om_node((sandesha2_nack_t *)nack, env, sa_node);
     }
 
     rm_spec_ver = sandesha2_spec_specific_consts_get_spec_ver_str(env, seq_ack->ns_val);

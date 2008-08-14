@@ -21,7 +21,6 @@
 #include <axis2_svc_ctx.h>
 #include <axis2_conf_ctx.h>
 #include <axis2_op_client.h>
-#include <axis2_listener_manager.h>
 #include <axis2_callback_recv.h>
 #include <axis2_svc_client.h>
 #include <sandesha2_client_constants.h>
@@ -68,15 +67,13 @@ int main(int argc, char** argv)
     axis2_callback_t *callback2 = NULL;
     axis2_callback_t *callback3 = NULL;
     axutil_property_t *property = NULL;
-    axis2_listener_manager_t *listener_manager = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_TRUE;
     axis2_char_t *seq_key = NULL;
     int c;
    
     /* Set up the environment */
-    env = axutil_env_create_all("rm_echo_1_1.log", 
-            AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("rm_echo_1_1.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
@@ -97,17 +94,22 @@ int main(int argc, char** argv)
                 return -1;
             case '?':
                 if (isprint(optopt))
+                {
                     fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
+                }
+
                 usage(argv[0]);
                 return -1;
         }
     }
+
     if (axutil_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
         return 0;
     }
+
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
@@ -137,16 +139,17 @@ int main(int argc, char** argv)
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
+    {
         client_home = "../../deploy";
+    }
 
     /* Create service client */
     svc_client = axis2_svc_client_create(env, client_home);
     if (!svc_client)
     {
         printf("Error creating service client\n");
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-                  " %d :: %s", env->error->error_number,
-                        AXIS2_ERROR_GET_MESSAGE(env->error));
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code: %d :: %s", 
+                env->error->error_number, AXIS2_ERROR_GET_MESSAGE(env->error));
         return -1;
     }
 
@@ -156,11 +159,6 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    listener_manager = axis2_listener_manager_create(env);
-    if (!listener_manager)
-    {
-        return AXIS2_FAILURE;
-    }
     /* Offer sequence */
     if(offer)
     {
@@ -168,51 +166,46 @@ int main(int argc, char** argv)
         property = axutil_property_create(env);
         if(property)
         {
-            axutil_property_set_value(property, env, axutil_strdup(env, 
-                offered_seq_id));
-            axis2_options_set_property(options, env, 
-                SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
+            axutil_property_set_value(property, env, axutil_strdup(env, offered_seq_id));
+            axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
         }
     }
+
     /* RM Version 1.1 */
-    property = axutil_property_create_with_args(env, 3, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_1);
+    property = axutil_property_create_with_args(env, 3, 0, 0, SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
     seq_key = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
     if(property)
     {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-            property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
     
     payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     callback = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
-        callback, payload, listener_manager);
+    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback);
     wait_on_callback(env, callback);
 
     payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    sandesha2_client_send_non_blocking(env, svc_client, options, NULL, 
-        callback2, payload, listener_manager);
+    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback2);
     wait_on_callback(env, callback2);
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3, 
-        listener_manager);
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3);
+
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
+
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
