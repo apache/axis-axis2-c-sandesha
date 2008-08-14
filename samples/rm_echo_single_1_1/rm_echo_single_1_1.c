@@ -30,7 +30,7 @@
 #include <axis2_addr.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 12
+#define SANDESHA2_SLEEP 2
 
 static void 
 usage(
@@ -54,8 +54,7 @@ int main(int argc, char** argv)
     int c;
    
     /* Set up the environment */
-    env = axutil_env_create_all("rm_echo_single_1_1.log", 
-            AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("rm_echo_single_1_1.log", AXIS2_LOG_LEVEL_TRACE);
  
 
     /* Set end point reference of echo service */
@@ -75,17 +74,21 @@ int main(int argc, char** argv)
                 return -1;
             case '?':
                 if (isprint(optopt))
+                {
                     fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
+                }
                 usage(argv[0]);
                 return -1;
         }
     }
+
     if (axutil_strcmp(address, "-h") == 0)
     {
         printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
         printf("use -h for help\n");
         return 0;
     }
+
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
@@ -98,6 +101,7 @@ int main(int argc, char** argv)
     /* Seperate listner needs addressing, hence addressing stuff in options */
     axis2_options_set_action(options, env,
         "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
+
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     axis2_options_set_reply_to(options, env, reply_to);
 
@@ -111,16 +115,18 @@ int main(int argc, char** argv)
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
+    {
         client_home = "../../deploy";
+    }
 
     /* Create service client */
     svc_client = axis2_svc_client_create(env, client_home);
     if (!svc_client)
     {
         printf("Error creating service client\n");
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-            " %d :: %s", env->error->error_number, AXIS2_ERROR_GET_MESSAGE(
-            env->error));
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:%d :: %s", 
+                env->error->error_number, AXIS2_ERROR_GET_MESSAGE(env->error));
+
         return -1;
     }
 
@@ -135,42 +141,60 @@ int main(int argc, char** argv)
     {
         return AXIS2_FAILURE;
     }
+
     /* Offer sequence */
     offered_seq_id = axutil_uuid_gen(env);
     property = axutil_property_create(env);
     if(property)
     {
-        axutil_property_set_value(property, env, axutil_strdup(env, 
-            offered_seq_id));
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
+        axutil_property_set_value(property, env, axutil_strdup(env, offered_seq_id));
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
+
     /* RM Version 1.1 */
-    property = axutil_property_create_with_args(env, 3, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_1);
+    property = axutil_property_create_with_args(env, 3, 0, 0, SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
+
     seq_key = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
     if(property)
     {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-            property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
     
     payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
+    {
         printf("\necho client single channel invoke SUCCESSFUL!\n");
+    }
     payload = NULL;
+
+    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
+    status = axis2_svc_client_send_robust(svc_client, env, payload);
+    if(status)
+    {
+        printf("\necho client single channel invoke SUCCESSFUL!\n");
+    }
+    payload = NULL;
+
+    payload = build_om_payload_for_echo_svc(env, "echo3", seq_key);
+    status = axis2_svc_client_send_robust(svc_client, env, payload);
+    if(status)
+    {
+        printf("\necho client single channel invoke SUCCESSFUL!\n");
+    }
+    payload = NULL;
+
     AXIS2_SLEEP(SANDESHA2_SLEEP); 
 
-    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, 
-        seq_key);
+    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, seq_key);
+
     AXIS2_SLEEP(SANDESHA2_SLEEP);
+
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
