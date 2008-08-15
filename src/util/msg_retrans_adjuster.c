@@ -94,6 +94,10 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, env);
     if(max_attempts > 0 &&  sent_count > max_attempts)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Sent count %d > %d specified in module.xml for sequence with internal "\
+            "sequence id %s", sent_count, max_attempts, internal_sequence_id);
+
         timeout_seq = AXIS2_TRUE;
     }
 
