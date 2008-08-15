@@ -2397,7 +2397,7 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
         if(transport_sender)
         {
             /* This is neccessary to avoid a double free */
-            /*axis2_msg_ctx_set_property(msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);*/
+            axis2_msg_ctx_set_property(create_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
             if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, create_seq_msg_ctx))
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Transport sender invoke failed");
@@ -2863,14 +2863,7 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_msg_ctx_set_property(app_msg_ctx, env, SANDESHA2_SET_SEND_TO_TRUE, property);*/
     }
 
-    /**
-     * When we store application message context as below it should be noted
-     * that at Sandesha2/C client application side this is actually stored in
-     * in-memory whereas in the web service side it is actually stored in
-     * database only.
-     */
     sandesha2_sender_mgr_insert(sender_mgr, env, app_msg_sender_bean);
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx, AXIS2_TRUE);
 
     is_svr_side = axis2_msg_ctx_get_server_side(app_msg_ctx, env);
 
@@ -3025,7 +3018,7 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_transport_out_desc_t *transport_out = NULL;
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
-
+        
         engine = axis2_engine_create(env, conf_ctx);
         if(axis2_engine_resume_send(engine, env, app_msg_ctx))
         {
@@ -3166,6 +3159,8 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             axis2_engine_free(engine, env);
         }
+        
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx, AXIS2_TRUE);
 
         /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 
          * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
@@ -3263,17 +3258,15 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     sandesha2_sender_bean_t *sender_bean = NULL;
     axis2_char_t *msg_id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_msg_ctx_t *app_msg_ctx = NULL;
 
     args = (sandesha2_app_msg_processor_args_t*) data;
     env = args->env;
     axutil_allocator_switch_to_global_pool(env->allocator);
-    app_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Entry:sandesha2_app_msg_processor_application_msg_worker_function");
     conf_ctx = args->conf_ctx;
-    msg_id = args->msg_id;
+    msg_id = axutil_strdup(env, args->msg_id);
     internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
     is_server_side = args->is_server_side;
     retrans_interval = args->retrans_interval;
@@ -3283,8 +3276,22 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
 
+    AXIS2_SLEEP(retrans_interval);
+    sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
+            internal_sequence_id, msg_id);
+    if(!sender_bean)
+    {
+        /* There is no pending message to send. So exit from the thread. */
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] There is no pending message to send. So exit from the thread");
+        return NULL;
+    }
+
     while(AXIS2_TRUE)
     {
+        axis2_char_t *key = NULL;
+        axis2_msg_ctx_t *app_msg_ctx = NULL;
+
         AXIS2_SLEEP(retrans_interval);
         sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
                 internal_sequence_id, msg_id);
@@ -3296,6 +3303,23 @@ sandesha2_app_msg_processor_application_msg_worker_function(
             break;
         }
 
+        key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
+        app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, 
+                AXIS2_TRUE);
+
+        if(!app_msg_ctx)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] msg_ctx is not present in the store yet.");
+
+            /*msg_ctx is still not stored so try again later.*/
+            if(sender_bean)
+            {
+                sandesha2_sender_bean_free(sender_bean, env);
+            }
+
+            break;
+        }
         status = sandesha2_app_msg_processor_resend(env, conf_ctx, msg_id, is_server_side,
                 internal_sequence_id, storage_mgr, seq_prop_mgr, create_seq_mgr, 
                 sender_mgr, app_msg_ctx);
@@ -3306,11 +3330,21 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 "[sandesha2] Resend failed for  message id %s in sequence %s", msg_id, 
                 internal_sequence_id);
 
+            if(app_msg_ctx)
+            {
+                axis2_msg_ctx_free(app_msg_ctx, env);
+            }
+
             if(sender_bean)
             {
                 sandesha2_sender_bean_free(sender_bean, env); 
             }
             break;
+        }
+
+        if(app_msg_ctx)
+        {
+            axis2_msg_ctx_free(app_msg_ctx, env);
         }
 
         if(sender_bean)
@@ -3319,10 +3353,15 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         }
     }
 
-    if(app_msg_ctx)
+    /*if(internal_sequence_id)
     {
-        axis2_msg_ctx_free(app_msg_ctx, env);
+        AXIS2_FREE(env->allocator, internal_sequence_id);
     }
+    
+    if(msg_id)
+    {
+        AXIS2_FREE(env->allocator, msg_id);
+    }*/
 
     if(storage_mgr)
     {
@@ -3416,8 +3455,8 @@ sandesha2_app_msg_processor_resend(
     }
     if(transport_sender)
     {
-        /* This is neccessary to avoid a double free */
-        /*axis2_msg_ctx_set_property(app_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);*/
+        /* This is neccessary to avoid a double free at http_sender.c */
+        axis2_msg_ctx_set_property(app_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
         if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, app_msg_ctx))
 		{
         	successfully_sent = AXIS2_TRUE;
@@ -3434,8 +3473,13 @@ sandesha2_app_msg_processor_resend(
         resend = sandesha2_sender_bean_is_resend(sender_worker_bean, env);
         if(resend)
         {
-            sandesha2_sender_bean_set_sent_count(bean1, env, 
-                sandesha2_sender_bean_get_sent_count(sender_worker_bean, env));
+            int sent_count = -1;
+
+            sent_count = sandesha2_sender_bean_get_sent_count(sender_worker_bean, env);
+
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sent_count:%d", sent_count);
+
+            sandesha2_sender_bean_set_sent_count(bean1, env, sent_count);
             sandesha2_sender_bean_set_time_to_send(bean1, env, 
                 sandesha2_sender_bean_get_time_to_send(sender_worker_bean, env));
             sandesha2_sender_mgr_update(sender_mgr, env, bean1);

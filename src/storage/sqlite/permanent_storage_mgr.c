@@ -401,7 +401,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_char_t *to_url_str = NULL;
     axis2_char_t *reply_to_str = NULL;
     axis2_char_t *transport_to_str = NULL;
-    /*axis2_char_t *persistent_prop_str = NULL;*/
     axis2_transport_out_desc_t *transport_out_desc = NULL;
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axiom_xml_reader_t *reader = NULL;
@@ -411,7 +410,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axiom_soap_envelope_t *soap_envelope = NULL;
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
     axis2_char_t *soap_env_str = NULL;
-    /*axutil_property_t *prop_property = NULL;*/
+    /*axis2_char_t *persistent_prop_str = NULL;
+    axutil_property_t *prop_property = NULL;*/
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
