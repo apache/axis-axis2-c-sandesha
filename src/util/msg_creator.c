@@ -1031,12 +1031,6 @@ sandesha2_msg_creator_create_make_connection_msg(
         rm_version = sandesha2_msg_ctx_get_rm_spec_ver(ref_rm_msg_ctx, env);
     }
     
-    /*qname = axutil_qname_create(env, "MakeConnectionOperation", NULL, NULL);
-    make_conn_op = axis2_op_create_with_qname(env, qname);
-    if(qname)
-        axutil_qname_free(qname, env);
-    */
-
     make_conn_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg_ctx);
     if(make_conn_msg_ctx)
     {
@@ -1046,7 +1040,7 @@ sandesha2_msg_creator_create_make_connection_msg(
     /* This if block is an hack to add the addressing handlers to the outflow.
      * Check whether this is not a hack
      */
-    if(ref_msg_ctx)
+    /*if(ref_msg_ctx)
     {
         axis2_op_t *op = axis2_msg_ctx_get_op(ref_msg_ctx, env);
         axis2_op_t *make_conn_op = axis2_msg_ctx_get_op(make_conn_msg_ctx, env);
@@ -1059,6 +1053,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             axutil_array_list_t *new_flow = axutil_array_list_create(env, 0);
             for(i = 0; i < size; i++)
             {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came8");
                 const axis2_phase_t *phase = axutil_array_list_get(out_flow, env, i);
                 const axis2_char_t *phase_name = axis2_phase_get_name(phase, env);
                 if(0 == axutil_strcmp(phase_name, AXIS2_PHASE_MESSAGE_OUT))
@@ -1084,7 +1079,8 @@ sandesha2_msg_creator_create_make_connection_msg(
             }
             axis2_op_set_in_flow(make_conn_op, env, new_flow);
         }
-    }
+    }*/
+
     make_conn = sandesha2_make_connection_create(env, rm_ns_value);
     if(make_conn_seq_id)
     {
@@ -1096,6 +1092,7 @@ sandesha2_msg_creator_create_make_connection_msg(
         if(make_conn)
             sandesha2_make_connection_set_identifier(make_conn, env, identifier);
     }
+
     if(make_conn_anon_uri)
     {
         sandesha2_address_t *address = sandesha2_address_create(env, 
@@ -1107,6 +1104,7 @@ sandesha2_msg_creator_create_make_connection_msg(
         if(make_conn)
             sandesha2_make_connection_set_address(make_conn, env, address);
     }
+
     if(make_conn_msg_ctx)
     {
         axis2_endpoint_ref_t *to = NULL;
@@ -1124,6 +1122,7 @@ sandesha2_msg_creator_create_make_connection_msg(
             env, rm_version);
         axis2_msg_ctx_set_wsa_action(make_conn_msg_ctx, env, wsa_action);
         axis2_msg_ctx_set_message_id(make_conn_msg_ctx, env, axutil_uuid_gen(env));
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came9");
         sandesha2_msg_ctx_set_make_connection(make_conn_rm_msg_ctx, env, 
             make_conn);
        /* Generating the soap envelope */

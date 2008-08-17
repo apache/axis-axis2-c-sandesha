@@ -370,6 +370,8 @@ extern "C"
 	#define SANDESHA2_PROPERTIES_INACTIVETIMEOUT_MEASURE  "InactivityTimeoutMeasure"
 	
     #define SANDESHA2_PROPERTIES_TERMINATE_DELAY  "TerminateDelay"
+    
+    #define SANDESHA2_PROPERTIES_POLLING_DELAY  "PollingWaitTime"
 		
 	#define SANDESHA2_PROPERTIES_STORAGE_MGR  "StorageManager"
 		
@@ -432,6 +434,8 @@ extern "C"
 	#define SANDESHA2_CLIENT_SLEEP_TIME  4 /* 32 16 */
 
 	#define SANDESHA2_TERMINATE_DELAY  4 /* In seconds */
+	
+    #define SANDESHA2_POLLING_DELAY  4 /* In seconds */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
@@ -517,7 +521,6 @@ extern "C"
     #define SANDESHA2_DB_PASSWORD "db_password"
 	#define SANDESHA2_SENDER_SLEEP  "SenderSleepTime"
 	#define SANDESHA2_INVOKER_SLEEP  "InvokerSleepTime"
-	#define SANDESHA2_POLLING_WAIT  "PollingWaitTime"
 	#define SANDESHA2_MODULE  "sandesha2"
 	#define SANDESHA2_ISOLATED_LAST_MSG "isolated_last_msg"
 	#define SANDESHA2_PROPERTY_STRING "propstr"

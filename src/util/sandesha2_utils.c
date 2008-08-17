@@ -373,44 +373,6 @@ sandesha2_utils_start_sender_for_seq(
     return AXIS2_SUCCESS;
 }
  
-AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_polling_mgr(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    const axis2_char_t *internal_seq_id)
-{
-    sandesha2_polling_mgr_t *polling_mgr = NULL;
-    axutil_property_t *property = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
-    
-    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-    
-    axutil_allocator_switch_to_global_pool(env->allocator);
-    property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
-        env, SANDESHA2_POLLING_MGR);
-    if(property)
-        polling_mgr = axutil_property_get_value(property, env);
-       
-    /* Assumes that if someone has set the polling_mgr, he must have already 
-     * started it 
-     */
-    if(!polling_mgr)
-    {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Starting the polling manager");
-        polling_mgr = sandesha2_polling_mgr_create(env);
-        property = axutil_property_create_with_args(env, 0, AXIS2_FALSE,
-            (void *)sandesha2_polling_mgr_free_void_arg, polling_mgr);
-        axis2_ctx_set_property(axis2_conf_ctx_get_base(conf_ctx, env),
-            env, SANDESHA2_POLLING_MGR, property);
-    }
-    status = sandesha2_polling_mgr_start(polling_mgr, env, conf_ctx, 
-        internal_seq_id);
-    axutil_allocator_switch_to_local_pool(env->allocator);
-    return status;
-}
-                   
-                        
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_internal_sequence_id(
     const axutil_env_t *env,
@@ -581,8 +543,11 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_op_ctx_t *temp_op_ctx = NULL;
         
         temp_op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-        
-        req_msg =  axis2_op_ctx_get_msg_ctx(temp_op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+        if(temp_op_ctx)
+        {
+            req_msg =  axis2_op_ctx_get_msg_ctx(temp_op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+        }
+
         if(req_msg)
         {
             property = axis2_msg_ctx_get_property(req_msg, env, AXIS2_WSA_VERSION);
@@ -842,28 +807,6 @@ sandesha2_utils_stop_sender(
     return AXIS2_SUCCESS;
 }
  
-AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_stop_polling_mgr(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx)
-{
-    sandesha2_polling_mgr_t *polling_mgr = NULL;
-    axutil_property_t *property = NULL;
-    
-    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-    
-    property = axis2_ctx_get_property(axis2_conf_ctx_get_base(conf_ctx, env),
-                        env, SANDESHA2_POLLING_MGR);
-    if(property)
-        polling_mgr = axutil_property_get_value(property, env);
-       
-    if(polling_mgr)
-    {
-        sandesha2_polling_mgr_stop_polling(polling_mgr, env);
-    }
-    return AXIS2_SUCCESS;
-}
-                 
 /**
  * Used to convert a message number list (a comma seperated list of message
  * numbers) into a set of Acknowledgement Ranges. This breaks the list, sort

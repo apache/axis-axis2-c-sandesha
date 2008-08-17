@@ -30,7 +30,7 @@
 #include <axis2_addr.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 2
+#define SANDESHA2_SLEEP 12
 
 static void 
 usage(

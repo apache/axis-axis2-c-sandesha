@@ -2874,6 +2874,7 @@ sandesha2_app_msg_processor_send_app_msg(
     if(is_svr_side && sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, from_acks_to_addr) 
             && !to_addr)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1");
         sandesha2_msg_creator_add_ack_msg(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
         if(req_rm_msg_ctx)
         {
@@ -3015,6 +3016,7 @@ sandesha2_app_msg_processor_send_app_msg(
 
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2");
         axis2_transport_out_desc_t *transport_out = NULL;
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
@@ -3141,6 +3143,7 @@ sandesha2_app_msg_processor_send_app_msg(
     }
     else
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3");
         axis2_msg_ctx_increment_ref(app_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
         if(axis2_engine_resume_send(engine, env, app_msg_ctx))
