@@ -278,6 +278,10 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
                         SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, rms_sequence_id);
     if(rms_sequence_bean)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Inserting rms_sequence_bean with rms_sequence_id :%s and internal_sequence_id :%s", 
+                rms_sequence_id, internal_sequence_id);
+
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, rms_sequence_bean);
         sandesha2_seq_property_bean_free(rms_sequence_bean, env);
     }

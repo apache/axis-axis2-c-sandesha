@@ -991,8 +991,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         }
 
         /* Clean sending side data */
-        /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
-                is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
+        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
+                is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
         terminate_added = sandesha2_seq_property_bean_create(env);
 
         if(terminate_added)

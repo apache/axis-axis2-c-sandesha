@@ -70,7 +70,7 @@
    <parameter name="sandesha2_db" locked="false">/tmp/sandesha2_db</parameter>
    <!-- General parameters -->
     <parameter name="ExponentialBackoff" locked="false">AXIS2_FALSE</parameter>
-    <parameter name="RetransmissionInterval" locked="false">4</parameter><!--In seconds-->
+    <parameter name="RetransmissionInterval" locked="false">8</parameter><!--In seconds-->
     <parameter name="InactivityTimeout" locked="false">64</parameter><!--In seconds-->
     <parameter name="StorageManager" locked="false">persistent</parameter>
     <parameter name="InvokeInOrder" locked="false">AXIS2_FALSE</parameter>

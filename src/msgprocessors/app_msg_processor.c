@@ -2425,6 +2425,8 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
 
     AXIS2_SLEEP(retrans_interval);
 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_internal_sequence_id:%s", internal_sequence_id);
+
     rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
@@ -2433,7 +2435,7 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
 
 
-    while(rms_sequence_bean)
+    while(!rms_sequence_bean)
     {
         continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
                 conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
