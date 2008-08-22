@@ -266,6 +266,7 @@ sandesha2_ack_mgr_verify_seq_completion(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_ack_mgr_piggyback_acks_if_present(
     const axutil_env_t *env,
+    axis2_char_t *seq_id,
     sandesha2_msg_ctx_t *target_rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -283,9 +284,11 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
     
     target_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(target_rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(target_msg_ctx, env);
-    
+
     find_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_type(find_bean, env, SANDESHA2_MSG_TYPE_ACK);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_seq_id:%s", seq_id);
+    sandesha2_sender_bean_set_seq_id(find_bean, env, seq_id);
     sandesha2_sender_bean_set_send(find_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_resend(find_bean, env, AXIS2_FALSE);
 

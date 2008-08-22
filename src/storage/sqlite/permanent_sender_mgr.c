@@ -226,7 +226,7 @@ static const sandesha2_sender_mgr_ops_t sender_mgr_ops =
     sandesha2_permanent_sender_mgr_find_by_sender_bean,
     sandesha2_permanent_sender_mgr_find_unique,
     sandesha2_permanent_sender_mgr_get_application_msg_to_send,
-    sandesha2_permanent_sender_mgr_get_next_msg_to_send,
+    sandesha2_permanent_sender_mgr_get_next_msg_to_send
 };
 
 AXIS2_EXTERN sandesha2_sender_mgr_t * AXIS2_CALL
@@ -447,6 +447,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
     axis2_char_t *msg_id = NULL;
 	axis2_char_t *msg_ctx_ref_key = NULL;
 	axis2_char_t *internal_seq_id = NULL;
+	axis2_char_t *seq_id = NULL;
 	long msg_no = 0;
 	axis2_bool_t send = AXIS2_FALSE;
 	long time_to_send = 0;
@@ -463,6 +464,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
             env);
         msg_ctx_ref_key = sandesha2_sender_bean_get_msg_ctx_ref_key(bean, env);
         internal_seq_id = sandesha2_sender_bean_get_internal_seq_id(bean, env);
+        seq_id = sandesha2_sender_bean_get_seq_id(bean, env);
         msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
         send = sandesha2_sender_bean_is_send(bean, env);
         time_to_send = sandesha2_sender_bean_get_time_to_send(bean, env);
@@ -501,6 +503,7 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
             sprintf(sql_find + axutil_strlen(sql_find),
                 " and msg_id = '%s'", msg_id);
     }
+
     if(internal_seq_id)
     {
         if(!add_where)
@@ -516,6 +519,19 @@ sandesha2_permanent_sender_mgr_find_by_sender_bean(
         }
     }
     
+    if(seq_id)
+    {
+        if(!add_where)
+        {
+            add_where = AXIS2_TRUE;
+            sprintf(sql_find + axutil_strlen(sql_find), " where seq_id = '%s'", seq_id);
+        }
+        else
+        {
+            sprintf(sql_find + axutil_strlen(sql_find), " and seq_id = '%s'", seq_id);
+        }
+    }
+
     if(msg_no > 0)
     {
         if(!add_where)

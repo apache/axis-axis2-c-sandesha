@@ -96,7 +96,6 @@ AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr_ops
             retrieve_all)(
                 sandesha2_seq_property_mgr_t *seq_property,
                 const axutil_env_t *env);
-
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_seq_property_mgr

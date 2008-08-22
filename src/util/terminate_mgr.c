@@ -991,8 +991,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         }
 
         /* Clean sending side data */
-        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
-                is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+        /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
+                is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
         terminate_added = sandesha2_seq_property_bean_create(env);
 
         if(terminate_added)
@@ -1078,8 +1078,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
     if(!sandesha2_util_is_ack_already_piggybacked(env, terminate_rm_msg_ctx))
     {
-        sandesha2_ack_mgr_piggyback_acks_if_present(env, terminate_rm_msg_ctx, storage_mgr, 
-                seq_prop_mgr, sender_mgr);
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, rms_sequence_id, terminate_rm_msg_ctx, 
+                storage_mgr, seq_prop_mgr, sender_mgr);
     }
 
     is_svr_side = sandesha2_msg_ctx_get_server_side(ack_rm_msg_ctx, env); /* Do we need this?:damitha */
@@ -1196,8 +1196,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         sandesha2_sender_bean_free(terminate_sender_bean, env);
     }
 
-    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, is_svr_side, 
-            storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+    /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, is_svr_side, 
+            storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
 
     terminate_added = sandesha2_seq_property_bean_create(env);
     if(terminate_added)

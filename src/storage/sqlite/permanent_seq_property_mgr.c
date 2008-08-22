@@ -183,7 +183,7 @@ static const sandesha2_seq_property_mgr_ops_t seq_property_mgr_ops =
     sandesha2_permanent_seq_property_mgr_update,
     sandesha2_permanent_seq_property_mgr_find,
     sandesha2_permanent_seq_property_mgr_find_unique,
-    sandesha2_permanent_seq_property_mgr_retrieve_all,
+    sandesha2_permanent_seq_property_mgr_retrieve_all
 };
 
 AXIS2_EXTERN sandesha2_seq_property_mgr_t * AXIS2_CALL

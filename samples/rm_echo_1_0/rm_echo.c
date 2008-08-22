@@ -180,6 +180,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
+
     for(i = 1; i < 3; i++)
     {
         axis2_char_t echo_str[7];
@@ -192,6 +193,7 @@ int main(int argc, char** argv)
         wait_on_callback(env, callback1);
         AXIS2_SLEEP(1);
     }
+
     axis2_svc_client_remove_all_headers(svc_client, env);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);

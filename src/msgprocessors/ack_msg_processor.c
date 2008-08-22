@@ -229,12 +229,15 @@ sandesha2_ack_msg_processor_process_in_msg (
     internal_sequence_id = sandesha2_utils_get_seq_property(env, rms_sequence_id, 
             SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
 
-    fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, rm_msg_ctx, rms_sequence_id, 
-            seq_prop_mgr, create_seq_mgr, next_msg_mgr);
+    /*fault_msg_ctx = sandesha2_fault_mgr_check_for_unknown_seq(env, rm_msg_ctx, rms_sequence_id, 
+            seq_prop_mgr, create_seq_mgr, next_msg_mgr);*/
 
     if(fault_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
+
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] sandesha2_ack_msg_processor_process_in_msg send Fault");
 
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(fault_msg_ctx, env));
@@ -251,6 +254,8 @@ sandesha2_ack_msg_processor_process_in_msg (
     {
         axis2_engine_t *engine = NULL;
 
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] sandesha2_ack_msg_processor_process_in_msg send Fault");
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(fault_msg_ctx, env));
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);

@@ -1,5 +1,6 @@
 <service name="RMSampleService">
     <module ref="sandesha2"/>
+    <module ref="addressing"/>
     <parameter name="ServiceClass" locked="xsd:false">RMSampleService</parameter>
 
    <description>

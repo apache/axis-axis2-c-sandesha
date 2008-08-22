@@ -194,7 +194,7 @@ static const sandesha2_create_seq_mgr_ops_t create_seq_mgr_ops =
     sandesha2_permanent_create_seq_mgr_retrieve,
     sandesha2_permanent_create_seq_mgr_update,
     sandesha2_permanent_create_seq_mgr_find,
-    sandesha2_permanent_create_seq_mgr_find_unique,
+    sandesha2_permanent_create_seq_mgr_find_unique
 };
 
 AXIS2_EXTERN sandesha2_create_seq_mgr_t * AXIS2_CALL

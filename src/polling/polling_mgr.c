@@ -222,7 +222,6 @@ sandesha2_polling_mgr_worker_func(
         /*status = sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
             make_conn_msg_store_key);*/
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came10");
         status = axis2_engine_send(engine, env, make_conn_msg_ctx);
 
         if(AXIS2_SUCCESS != status)

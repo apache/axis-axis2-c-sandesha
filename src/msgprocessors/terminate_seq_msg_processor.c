@@ -885,8 +885,8 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
 
     if(!sandesha2_util_is_ack_already_piggybacked(env, rm_msg_ctx))
     {
-        sandesha2_ack_mgr_piggyback_acks_if_present(env, rm_msg_ctx, storage_mgr, seq_prop_mgr, 
-                sender_mgr);
+        sandesha2_ack_mgr_piggyback_acks_if_present(env, out_seq_id, rm_msg_ctx, storage_mgr, 
+                seq_prop_mgr, sender_mgr);
     }
 
     /*key = axutil_uuid_gen(env);
