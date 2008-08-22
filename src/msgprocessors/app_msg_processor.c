@@ -1970,7 +1970,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
      * In all other cases we do not send the acknowledgment directly, but piggyback it on application
      * messages or terminate sequence message.
      */
-    if(ack_rm_msg_ctx && one_way)
+    /*if(ack_rm_msg_ctx && one_way)*/
+    if(ack_rm_msg_ctx)
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);

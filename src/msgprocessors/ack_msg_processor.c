@@ -34,6 +34,7 @@
 #include <axutil_string.h>
 #include <axis2_engine.h>
 #include <axiom_soap_const.h>
+#include <axiom_soap_body.h>
 #include <stdio.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_conf_ctx.h>
@@ -168,6 +169,11 @@ sandesha2_ack_msg_processor_process_in_msg (
     axis2_bool_t added = AXIS2_FALSE;
     sandesha2_msg_ctx_t *fault_msg_ctx = NULL;
     axis2_char_t *dbname = NULL;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    axiom_soap_body_t *soap_body = NULL;
+    axiom_node_t *body_node = NULL;
+    axiom_element_t *body_element = NULL;
+    axiom_children_iterator_t *children_iterator = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Entry:sandesha2_ack_msg_processor_process_in_msg");
@@ -521,6 +527,15 @@ sandesha2_ack_msg_processor_process_in_msg (
         AXIS2_FREE(env->allocator, internal_sequence_id);
     }
 
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+    soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(soap_body, env);
+    body_element = axiom_node_get_data_element(body_node, env);
+    children_iterator = axiom_element_get_children(body_element, env, body_node);
+    if(!axiom_children_iterator_has_next(children_iterator, env))
+    {
+        sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+    }
     /* Do we need to pause the message context here */
     /*sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);*/
 

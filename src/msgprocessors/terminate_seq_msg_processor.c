@@ -349,8 +349,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                 rmd_sequence_id, rm_msg_ctx, seq_prop_mgr, create_seq_mgr, sender_mgr);
     }
 
-    sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx, rmd_sequence_id, storage_mgr, 
-            seq_prop_mgr, next_msg_mgr);
+    /*sandesha2_terminate_mgr_clean_recv_side_after_terminate_msg(env, conf_ctx, rmd_sequence_id, storage_mgr, 
+            seq_prop_mgr, next_msg_mgr);*/
 
     /*transmit_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id,
         SANDESHA2_SEQ_PROP_SEQ_TERMINATED, AXIS2_VALUE_TRUE);
