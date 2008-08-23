@@ -81,13 +81,6 @@ AC_CONFIG_FILES([Makefile \
     rm_ping_1_1/Makefile \
     rm_mtom_1_0/Makefile \
     rm_report/Makefile \
-    interop/Makefile \
-    interop/10/rm_interop_service/Makefile \
-    interop/10/oneway/Makefile \
-    interop/10/oneway_addressable/Makefile \
-    interop/10/twoway/Makefile \
-    interop/10/twoway_addressable/Makefile \
-    interop/11/twoway_addressable/Makefile \
     resources/Makefile
     ])
     
