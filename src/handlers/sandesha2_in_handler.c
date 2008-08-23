@@ -119,16 +119,16 @@ sandesha2_in_handler_invoke(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Configuration Context is NULL");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, 
-                AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration Context is NULL");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONF_CTX_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+
     if(!sandesha2_permanent_storage_mgr_create_db(env, conf_ctx))
     {
         return AXIS2_FAILURE;
     }
+
     ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     temp_prop = axis2_ctx_get_property(ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
@@ -136,26 +136,31 @@ sandesha2_in_handler_invoke(
         str_done = (axis2_char_t *) axutil_property_get_value(temp_prop, env); 
     }
 
-    if(str_done && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
+    if(str_done && !axutil_strcmp(AXIS2_VALUE_TRUE, str_done))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Application processing done");
         return AXIS2_SUCCESS;
     }
+
     temp_prop = axis2_ctx_get_property(ctx, env, SANDESHA2_REINJECTED_MESSAGE);
     if(temp_prop)
     {
         reinjected_msg = (axis2_char_t *) axutil_property_get_value(temp_prop, env);
     }
-    if(reinjected_msg && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
+
+    if(reinjected_msg && !axutil_strcmp(AXIS2_VALUE_TRUE, reinjected_msg))
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Reinjected_msg. So return here");
+
         return AXIS2_SUCCESS; /* Reinjected Messages are not processed by sandesha2 inflow handlers */
     }
+
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Axis2 Service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
+
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
@@ -165,12 +170,17 @@ sandesha2_in_handler_invoke(
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, 
-        SANDESHA2_ISOLATED_LAST_MSG);
+    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_ISOLATED_LAST_MSG);
     if(property)
+    {
         value = axutil_property_get_value(property, env);
-    if(value && 0 == axutil_strcmp(AXIS2_VALUE_TRUE, value))
+    }
+
+    if(value && !axutil_strcmp(AXIS2_VALUE_TRUE, value))
+    {
         isolated_last_msg = AXIS2_TRUE;
+    }
+
     if(!isolated_last_msg)
     {
         dropped = sandesha2_in_handler_drop_if_duplicate(handler, env, rm_msg_ctx, storage_mgr, 
@@ -227,6 +237,7 @@ sandesha2_in_handler_invoke(
             AXIS2_FALSE);
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
+
     msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
     if(msg_processor)
     {
@@ -325,7 +336,7 @@ sandesha2_in_handler_drop_if_duplicate(
                         axis2_char_t *temp = NULL;
                         
                         temp = axutil_array_list_get(msg_no_list, env, i);
-                        if(atol(temp) == msg_no)
+                        if(axutil_atol(temp) == msg_no)
                         {
                             drop = AXIS2_TRUE;
                         }
