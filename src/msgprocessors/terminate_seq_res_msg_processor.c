@@ -169,8 +169,8 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     /* We need to pass here internal seq id isn't it?:damitha
     int internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
         SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, storage_mgr);*/
-    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
-        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+    /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
+        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
 
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 

@@ -32,6 +32,8 @@
 #include <axutil_utils.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_msg_ctx.h>
+#include <sandesha2_storage_mgr.h>
+#include <sandesha2_sender_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -43,6 +45,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_polling_mgr_start (
     const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx,
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_sender_mgr_t *sender_mgr,
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axis2_char_t *internal_sequence_id,
     axis2_char_t *sequence_id,

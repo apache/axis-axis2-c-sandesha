@@ -290,6 +290,24 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
             SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, internal_sequence_id);
     if(rms_internal_sequence_bean)
     {
+        sandesha2_sender_bean_t *find_sender_bean = NULL;
+        sandesha2_sender_bean_t *sender_bean = NULL;
+
+        find_sender_bean = sandesha2_sender_bean_create(env);
+        sandesha2_sender_bean_set_msg_type(find_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
+        sandesha2_sender_bean_set_internal_seq_id(find_sender_bean, env, internal_sequence_id);
+        sandesha2_sender_bean_set_send(find_sender_bean, env, AXIS2_TRUE);
+
+        sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+        if(sender_bean)
+        {
+            axis2_char_t *msg_id = NULL;
+
+            msg_id = sandesha2_sender_bean_get_msg_id(sender_bean, env);
+            sandesha2_sender_mgr_remove(sender_mgr, env, msg_id);
+            sandesha2_sender_bean_free(sender_bean, env);
+        }
+
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, rms_internal_sequence_bean);
         sandesha2_seq_property_bean_free(rms_internal_sequence_bean, env);
     }
@@ -539,8 +557,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         /* If polling_mode is true, starting the polling manager */
         if(polling_mode)
         {
-            /*sandesha2_polling_mgr_start(env, conf_ctx, create_seq_rm_msg, internal_sequence_id, 
-                    rmd_sequence_id, reply_to_addr);*/
+            sandesha2_polling_mgr_start(env, conf_ctx, storage_mgr, sender_mgr, create_seq_rm_msg, 
+                    internal_sequence_id, rmd_sequence_id, reply_to_addr);
         }
 
         sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);

@@ -251,6 +251,8 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     sandesha2_seq_property_bean_t *int_seq_bean = NULL;
     axutil_array_list_t *msgs_not_to_send = NULL;
     axis2_char_t *dbname = NULL;
+    /*const axis2_char_t *wsa_action = NULL;
+    axutil_string_t *soap_action = NULL;*/
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2]Entry:sandesha2_make_connection_msg_processor_process_in_msg");
@@ -271,7 +273,11 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         seq_id = sandesha2_identifier_get_identifier(identifier, env);
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(msg_ctx)
+    {
         conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+        axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
+    }
+
     if(conf_ctx)
         dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
@@ -321,6 +327,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     }
     msg_storage_key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, 
         env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_msg_storage_key:%s", msg_storage_key);
     return_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
         msg_storage_key, conf_ctx, AXIS2_TRUE);
     if(!return_msg_ctx)
@@ -337,6 +344,15 @@ sandesha2_make_connection_msg_processor_process_in_msg (
             sandesha2_storage_mgr_free(storage_mgr, env);
         return AXIS2_FAILURE;
     }
+
+    /*wsa_action = axis2_msg_ctx_get_wsa_action(return_msg_ctx, env);
+    soap_action = axutil_string_create(env, wsa_action);
+    if(soap_action)
+    {
+        axis2_msg_ctx_set_soap_action(return_msg_ctx, env, soap_action);
+        axutil_string_free(soap_action, env);
+    }*/
+
     return_rm_msg_ctx = sandesha2_msg_init_init_msg(env, return_msg_ctx);
     add_msg_pending_header(env, return_rm_msg_ctx, pending);
     set_transport_properties(env, return_msg_ctx, rm_msg_ctx);
@@ -507,7 +523,6 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         if(int_seq_id)
             AXIS2_FREE(env->allocator, int_seq_id);
     }
-    axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

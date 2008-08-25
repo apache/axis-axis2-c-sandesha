@@ -1809,8 +1809,9 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     }
 
     is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, reply_to_addr));
-    if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
-            && is_anonymous_reply_to && !one_way)
+    /*if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
+            && is_anonymous_reply_to && !one_way)*/
+    if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way)
     {
         /* This means acknowledgment address is anomymous and RM version is 1.0. Flow comes to
          * this block only in the server side.
@@ -2396,11 +2397,14 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     axis2_bool_t is_server_side = AXIS2_FALSE;
     sandesha2_sender_bean_t *create_sequence_sender_bean = NULL;
     axis2_char_t *msg_id = NULL;
-    sandesha2_seq_property_bean_t *rms_sequence_bean = NULL;
+    /*sandesha2_seq_property_bean_t *rms_sequence_bean = NULL;*/
     axis2_bool_t continue_sending = AXIS2_TRUE;
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
     axis2_op_t *create_seq_op = NULL;
+    axis2_msg_ctx_t *create_seq_msg_ctx = NULL;
+    sandesha2_sender_bean_t *find_sender_bean = NULL;
+    sandesha2_sender_bean_t *sender_bean = NULL;
 
     args = (sandesha2_app_msg_processor_args_t*) data;
     env = args->env;
@@ -2415,7 +2419,7 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     is_server_side = args->is_server_side;
     retrans_interval = args->retrans_interval;
     create_sequence_sender_bean = (sandesha2_sender_bean_t *) args->bean;
-    axis2_msg_ctx_t *create_seq_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
+    create_seq_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
 
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
@@ -2427,16 +2431,32 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_internal_sequence_id:%s", internal_sequence_id);
 
-    rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
-            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+    find_sender_bean = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_msg_type(find_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
+    sandesha2_sender_bean_set_internal_seq_id(find_sender_bean, env, internal_sequence_id);
+    sandesha2_sender_bean_set_send(find_sender_bean, env, AXIS2_TRUE);
+
+    sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+
+    /*rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);*/
 
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
     transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
 
 
-    while(!rms_sequence_bean)
+    while(sender_bean)
     {
+        if(sender_bean)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sender bean found");
+            sandesha2_sender_bean_free(sender_bean, env);
+            sender_bean = NULL;
+        }
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "rms_sequence_bean is NULL");
+
         continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
                 conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
@@ -2472,13 +2492,19 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
             }
         }*/
 
-        rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
-            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+        sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+        /*rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);*/
     }
 
-    if(rms_sequence_bean)
+    /*if(rms_sequence_bean)
     {
         sandesha2_seq_property_bean_free(rms_sequence_bean, env);
+    }*/
+    
+    if(find_sender_bean)
+    {
+        sandesha2_sender_bean_free(find_sender_bean, env);
     }
 
     if(create_seq_msg_ctx)
@@ -2928,10 +2954,12 @@ sandesha2_app_msg_processor_send_app_msg(
      * If server side and anonymous acknowledgment in RM 1.0. In other words this is RM 1.0 replay mode.
      * Note that in this case to_addr is NULL. In duplex mode to_addr cannot be NULL. 
      * */
-    if(is_svr_side && sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, from_acks_to_addr) 
-            && !to_addr)
+    /*if(is_svr_side && sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, from_acks_to_addr) 
+            && !to_addr)*/
+
+    if(is_svr_side && sandesha2_utils_is_anon_uri(env, from_acks_to_addr) && (!to_addr || 
+            sandesha2_utils_is_anon_uri(env, to_addr)))
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came1");
         sandesha2_msg_creator_add_ack_msg(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
         if(req_rm_msg_ctx)
         {
@@ -3073,7 +3101,6 @@ sandesha2_app_msg_processor_send_app_msg(
 
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came2");
         axis2_transport_out_desc_t *transport_out = NULL;
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
@@ -3210,7 +3237,6 @@ sandesha2_app_msg_processor_send_app_msg(
             sandesha2_seq_property_bean_free(relates_to_bean, env);
         }
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came3");
         axis2_msg_ctx_increment_ref(app_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
         if(axis2_engine_resume_send(engine, env, app_msg_ctx))

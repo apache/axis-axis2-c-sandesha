@@ -415,13 +415,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Message context retrieved from database");
-
     msg_store_bean = sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(storage_mgr_impl->bean_mgr, 
             env, key);
 
     if (!msg_store_bean) 
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Message store bean is NULL");
         return NULL;
     }
 
@@ -468,10 +467,12 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_msg_ctx_set_msg_id(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(msg_store_bean, env));
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, 
-        env);
+    transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, env);
     transport_out_desc = axis2_conf_get_transport_out(conf, env, transport_out);
-    axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, transport_out_desc);
+    if(transport_out_desc)
+    {
+        axis2_msg_ctx_set_transport_out_desc(msg_ctx, env, transport_out_desc);
+    }
 
     axis2_msg_ctx_set_server_side(msg_ctx, env, 
         sandesha2_msg_store_bean_is_svr_side(msg_store_bean, env));
@@ -648,6 +649,7 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     {
         AXIS2_TRANSPORT_ENUMS transport_out = axis2_transport_out_desc_get_enum(transport_out_desc, 
                 env);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "transport_out:%d", transport_out);
         sandesha2_msg_store_bean_set_transport_out(bean, env, transport_out);
     }
 

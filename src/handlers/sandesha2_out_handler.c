@@ -81,6 +81,16 @@ sandesha2_out_handler_invoke(
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_out_handler_invoke");
+            
+    temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_SEQ_PROP_MAKE_CONNECTION_OUT_PATH);
+    if (temp_prop)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] In make connection out path. So return here.");
+        return AXIS2_SUCCESS;
+        temp_prop = NULL;
+    }
+
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {

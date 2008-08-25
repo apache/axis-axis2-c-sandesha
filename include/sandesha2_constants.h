@@ -294,6 +294,8 @@ extern "C"
     #define SANDESHA2_SEQ_PROP_1_0_REPLAY "Replay1_0"
     
     #define SANDESHA2_SEQ_PROP_RELATED_MSG_ID "related_msg_id"
+    
+    #define SANDESHA2_SEQ_PROP_MAKE_CONNECTION_OUT_PATH "make_connection_out_path"
 	
 	/**
 	 * SOAP Versions
