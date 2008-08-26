@@ -45,9 +45,9 @@
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage</actionMapping>
 
         <!-- namespaces for the 2006-08 spec -->
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/SequenceAcknowledgement</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequenceResponse</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/AckRequested</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/AckRequested</actionMapping>
         
      </operation>
  
@@ -56,12 +56,12 @@
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
 
         <!-- namespaces for the 2006-08 spec -->
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequence</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequence</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequence</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequenceResponse</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequenceResponse</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequenceResponse</actionMapping>
+        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/MakeConnection</actionMapping>
         
 
     </operation>

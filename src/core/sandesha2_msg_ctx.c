@@ -496,7 +496,7 @@ sandesha2_msg_ctx_set_rm_ns_val(
     rm_msg_ctx->rm_ns_val = axutil_strdup(env, ns_val);
     if(0 == axutil_strcmp(ns_val, SANDESHA2_SPEC_2005_02_NS_URI))
         rm_msg_ctx->spec_ver = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
-    if(0 == axutil_strcmp(ns_val, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(ns_val, SANDESHA2_SPEC_2007_02_NS_URI))
         rm_msg_ctx->spec_ver = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
         
     return AXIS2_SUCCESS;

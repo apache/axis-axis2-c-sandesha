@@ -208,7 +208,7 @@ sandesha2_seq_mgr_setup_new_rmd_sequence(
     {
         spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_0);
     }
-    else if(!axutil_strcmp(SANDESHA2_SPEC_2006_08_NS_URI, msg_rm_ns))
+    else if(!axutil_strcmp(SANDESHA2_SPEC_2007_02_NS_URI, msg_rm_ns))
     {
         spec_version = axutil_strdup(env, SANDESHA2_SPEC_VERSION_1_1);
     }

@@ -180,6 +180,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     }
 
     rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_version);
+
     addressing_ns_value = sandesha2_utils_get_seq_property(env, internal_seq_id, 
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
 

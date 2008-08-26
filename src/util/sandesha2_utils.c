@@ -649,7 +649,7 @@ sandesha2_utils_is_retrievable_on_faults(
         
     if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
         ret = AXIS2_TRUE;
-    else if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ))
+    else if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ))
         ret = AXIS2_TRUE;
         
     return ret;
@@ -697,7 +697,7 @@ sandesha2_utils_is_rm_global_msg(
         if(!seq_element)
         {
             qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ,
-                        SANDESHA2_SPEC_2006_08_NS_URI, NULL);
+                        SANDESHA2_SPEC_2007_02_NS_URI, NULL);
             seq_element = axiom_element_get_first_child_with_qname(
                         header_element, env, qname, header_node, &seq_node);
             if(qname)
@@ -719,14 +719,14 @@ sandesha2_utils_is_rm_global_msg(
         is_global_msg = AXIS2_TRUE;    
         
     if(0 == axutil_strcmp(action, 
-                        SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT))
+                        SANDESHA2_SPEC_2007_02_ACTION_SEQ_ACKNOWLEDGEMENT))
         is_global_msg = AXIS2_TRUE;
         
     if(0 == axutil_strcmp(action, 
-                        SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE))
+                        SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ_RESPONSE))
         is_global_msg = AXIS2_TRUE;
         
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ))
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ))
         is_global_msg = AXIS2_TRUE;    
     
     return is_global_msg;

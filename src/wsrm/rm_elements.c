@@ -571,12 +571,12 @@ sandesha2_rm_elements_get_rm_ns_val(
             return SANDESHA2_SPEC_2005_02_NS_URI;
         }
         headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
-            soap_header, env, SANDESHA2_SPEC_2006_08_NS_URI);                
+            soap_header, env, SANDESHA2_SPEC_2007_02_NS_URI);                
         if(headers && 0 < axutil_array_list_size(headers, env))
         {
             if(headers)
                 axutil_array_list_free(headers, env);
-            return SANDESHA2_SPEC_2006_08_NS_URI;
+            return SANDESHA2_SPEC_2007_02_NS_URI;
         }
     }
     if(!action)
@@ -591,22 +591,22 @@ sandesha2_rm_elements_get_rm_ns_val(
     if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
         return SANDESHA2_SPEC_2005_02_NS_URI;
         
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_MAKE_CONNECTION))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_SEQ_ACKNOWLEDGEMENT))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_MAKE_CONNECTION))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
     
     return NULL;
     
