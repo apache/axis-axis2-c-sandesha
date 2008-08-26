@@ -173,7 +173,7 @@ sandesha2_create_seq_from_om_node(
     if(offer_part)
     {
         create_seq->seq_offer = sandesha2_seq_offer_create(env, 
-            create_seq->rm_ns_val);  
+            create_seq->rm_ns_val, create_seq->addr_ns_val);  
         if(!create_seq->seq_offer)
         {
             return NULL;

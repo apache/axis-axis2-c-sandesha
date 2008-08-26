@@ -24,6 +24,7 @@
 
 #include <sandesha2_error.h>
 #include <sandesha2_identifier.h>
+#include <sandesha2_endpoint.h>
 #include <sandesha2_expires.h>
 
 #ifdef __cplusplus
@@ -46,7 +47,8 @@ typedef struct sandesha2_seq_offer_t sandesha2_seq_offer_t;
 AXIS2_EXTERN sandesha2_seq_offer_t* AXIS2_CALL
 sandesha2_seq_offer_create(
     const axutil_env_t *env, 
-    axis2_char_t *ns_value);
+    axis2_char_t *ns_value,
+	axis2_char_t *addr_ns_val);
 
 axis2_status_t AXIS2_CALL 
 sandesha2_seq_offer_free(
@@ -63,6 +65,17 @@ sandesha2_seq_offer_set_identifier(
     sandesha2_seq_offer_t *seq_offer,
     const axutil_env_t *env, 
     sandesha2_identifier_t *identifier);
+
+sandesha2_endpoint_t * AXIS2_CALL
+sandesha2_seq_offer_get_endpoint(
+    sandesha2_seq_offer_t *seq_offer,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_seq_offer_set_endpoint(
+    sandesha2_seq_offer_t *seq_offer,
+    const axutil_env_t *env, 
+    sandesha2_endpoint_t *endpoint);
 
 sandesha2_expires_t * AXIS2_CALL                    	
 sandesha2_seq_offer_get_expires(

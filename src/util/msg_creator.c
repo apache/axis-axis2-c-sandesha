@@ -106,6 +106,7 @@ sandesha2_msg_creator_create_create_seq_msg(
     sandesha2_address_t *temp_address = NULL;
     sandesha2_acks_to_t *temp_acks_to = NULL;
     axutil_property_t *property = NULL;
+    const axis2_char_t *reply_to_address = NULL;
 
     application_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(application_rm_msg, env);
     if(!application_msg_ctx)
@@ -160,7 +161,8 @@ sandesha2_msg_creator_create_create_seq_msg(
     {
         axis2_endpoint_ref_t *reply_to_epr = NULL;
 
-        reply_to_epr = axis2_endpoint_ref_create(env, axis2_endpoint_ref_get_address(temp_reply_to, env));
+        reply_to_address = axis2_endpoint_ref_get_address(temp_reply_to, env);
+        reply_to_epr = axis2_endpoint_ref_create(env, reply_to_address);
         if(reply_to_epr)
         {
             axis2_msg_ctx_set_reply_to(create_seq_msg_ctx, env, reply_to_epr);
@@ -205,11 +207,26 @@ sandesha2_msg_creator_create_create_seq_msg(
         {
             sandesha2_seq_offer_t *offer_part = NULL;
             sandesha2_identifier_t *identifier = NULL;
+            sandesha2_endpoint_t *endpoint = NULL;
 
-            offer_part = sandesha2_seq_offer_create(env, rm_ns_value);
+            offer_part = sandesha2_seq_offer_create(env, rm_ns_value, addressing_ns_value);
             identifier = sandesha2_identifier_create(env, rm_ns_value);
             sandesha2_identifier_set_identifier(identifier, env, offered_seq);
             sandesha2_seq_offer_set_identifier(offer_part, env, identifier);
+
+            if(!axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, rm_version))
+            {
+                axis2_endpoint_ref_t *reply_to_epr = NULL;
+                sandesha2_address_t *address = NULL;
+
+                reply_to_epr = axis2_endpoint_ref_create(env, reply_to_address);
+                address = sandesha2_address_create(env, rm_ns_value, reply_to_epr);
+                endpoint = sandesha2_endpoint_create(env, address, rm_ns_value, 
+                        addressing_ns_value);
+
+                sandesha2_seq_offer_set_endpoint(offer_part, env, endpoint);
+            }
+
             sandesha2_create_seq_set_seq_offer(create_seq_part, env, offer_part);
         }
     }

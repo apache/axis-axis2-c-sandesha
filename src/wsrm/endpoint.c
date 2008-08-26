@@ -116,26 +116,31 @@ sandesha2_endpoint_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
      
     om_element = axiom_node_get_data_element(om_node, env);
-    if(NULL == om_element)
+    if(!om_element)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
     endpoint_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ENDPOINT,
         endpoint->rm_ns_val, NULL);
-    if(NULL == endpoint_qname)
+
+    if(!endpoint_qname)
     {
         return NULL;
     }
+
     endpoint_part = axiom_element_get_first_child_with_qname(om_element, env,
         endpoint_qname, om_node, &endpoint_node);
+
     if(endpoint_qname)
-        axutil_qname_free(endpoint_qname, env);
-    if(NULL == endpoint_part)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-            AXIS2_FAILURE);
+        axutil_qname_free(endpoint_qname, env);
+    }
+
+    if(!endpoint_part)
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "Endpoint is not set. It means this is not RM 1.1 Create Sequence Message");
         return NULL;
     }
 

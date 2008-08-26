@@ -153,6 +153,7 @@ extern "C"
     #define SANDESHA2_WSRM_COMMON_MESSAGE_PENDING "MessagePending"
     #define SANDESHA2_WSRM_COMMON_PENDING "pending"
     #define SANDESHA2_WSRM_COMMON_MAKE_CONNECTION "MakeConnection"
+    #define SANDESHA2_WSRM_COMMON_ENDPOINT "Endpoint"
     
     /* Message Context Properties */
     #define SANDESHA2_MSG_CTX_PROP_INTERNAL_SEQUENCE_ID "Sandesha2InternalSequenceId"

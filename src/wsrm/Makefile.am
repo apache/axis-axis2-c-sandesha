@@ -3,6 +3,7 @@ noinst_LTLIBRARIES = libsandesha2_wsrm.la
 
 libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                identifier.c\
+                               endpoint.c\
                                address.c\
                                acks_to.c\
 							   nack.c\
