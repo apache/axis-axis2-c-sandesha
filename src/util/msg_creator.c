@@ -220,7 +220,7 @@ sandesha2_msg_creator_create_create_seq_msg(
                 sandesha2_address_t *address = NULL;
 
                 reply_to_epr = axis2_endpoint_ref_create(env, reply_to_address);
-                address = sandesha2_address_create(env, rm_ns_value, reply_to_epr);
+                address = sandesha2_address_create(env, addressing_ns_value, reply_to_epr);
                 endpoint = sandesha2_endpoint_create(env, address, rm_ns_value, 
                         addressing_ns_value);
 
