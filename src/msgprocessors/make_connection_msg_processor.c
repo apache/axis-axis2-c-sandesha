@@ -592,7 +592,7 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     axis2_char_t *dbname)
 {
     int i = 0;
-    int index = 0;
+    int index = -1;
     int match_list_size = 0;
     axutil_array_list_t *match_list = NULL;
     axis2_char_t sql_find[1024];
@@ -637,6 +637,16 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", 
             msg_type);
+
+        if(msg_type == SANDESHA2_MSG_TYPE_ACK)
+        {
+            /* For the time being we do not send acknowledgement messages in the make connection 
+             * back channel 
+             */
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] ack msg type is still not supported");
+            continue;
+        }
+
         if(msg_type == SANDESHA2_MSG_TYPE_APPLICATION)
         {
             long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);

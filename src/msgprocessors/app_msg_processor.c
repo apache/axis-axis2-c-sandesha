@@ -1924,10 +1924,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         }
 
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
-        /* We don't store the acknowledgment in memory. To indicate that it should be stored only in the
-         * database we pass AXIS2_FALSE as last argument. This measure is taken to avoid memory corruption.
-         */
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx, AXIS2_FALSE);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
         sandesha2_sender_bean_set_msg_id(ack_bean, env, sandesha2_msg_ctx_get_msg_id(ack_rm_msg_ctx, env));
@@ -1991,6 +1987,11 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
             axis2_core_utils_reset_out_msg_ctx(env, ack_msg_ctx);
         }
     }
+
+    /* We don't store the acknowledgment in memory. To indicate that it should be stored only in the
+     * database we pass AXIS2_FALSE as last argument. This measure is taken to avoid memory corruption.
+     */
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx, AXIS2_FALSE);
 
     if(ack_rm_msg_ctx)
     {
