@@ -867,10 +867,10 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(ack_msg_ctx, env);
     
-    terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rms_sequence_id, 
+    terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
 
-    if(terminated)
+    /*if(terminated)
     {
         axis2_char_t *value = sandesha2_seq_property_bean_get_value(terminated, env);
 
@@ -879,15 +879,12 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Terminate sequence message was added previously");
 
-            /* If we do not return at this, there will be two terminate messsages
-             * sent to the client
-             */
             sandesha2_seq_property_bean_free(terminated, env);
             return AXIS2_SUCCESS;
         }
 
         sandesha2_seq_property_bean_free(terminated, env);
-    }
+    }*/
 
     terminate_rm_msg_ctx = sandesha2_msg_creator_create_terminate_seq_msg(env, ack_rm_msg_ctx, 
             rms_sequence_id, internal_sequence_id, seq_prop_mgr);
@@ -1005,7 +1002,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         {
             sandesha2_seq_property_bean_set_name(terminate_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
 
-            sandesha2_seq_property_bean_set_seq_id(terminate_added, env, rms_sequence_id);
+            sandesha2_seq_property_bean_set_seq_id(terminate_added, env, internal_sequence_id);
             sandesha2_seq_property_bean_set_value(terminate_added, env, AXIS2_VALUE_TRUE);
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
             sandesha2_seq_property_bean_free(terminate_added, env);
@@ -1170,6 +1167,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
                 if(transport_sender)
                 {
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Resending the terminate message");
                     /* This is neccessary to avoid a double free */
                     axis2_msg_ctx_set_property(terminate_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
                     if(!AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, terminate_msg_ctx))
@@ -1222,7 +1220,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     if(terminate_added)
     {
         sandesha2_seq_property_bean_set_name(terminate_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-        sandesha2_seq_property_bean_set_seq_id(terminate_added, env, rms_sequence_id);
+        sandesha2_seq_property_bean_set_seq_id(terminate_added, env, internal_sequence_id);
         sandesha2_seq_property_bean_set_value(terminate_added, env, AXIS2_VALUE_TRUE);
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
         sandesha2_seq_property_bean_free(terminate_added, env);
@@ -1280,6 +1278,7 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_engine_t *engine = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_endpoint_ref_t *to = NULL;
    
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
         "[sandesha2] Entry:sandesha2_terminate_mgr_process_terminate_msg_response");
@@ -1313,6 +1312,13 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
                 env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
     
+    to = axis2_endpoint_ref_create(env, 
+        "http://localhost/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+    axis2_msg_ctx_set_to(response_msg_ctx, env, to);
+
+    axis2_msg_ctx_set_wsa_action(response_msg_ctx, env, 
+            "http://localhost/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+
     axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
 
     /*axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);*/

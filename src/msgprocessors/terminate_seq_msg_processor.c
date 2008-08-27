@@ -921,7 +921,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     
     term_added = sandesha2_seq_property_bean_create(env);
     sandesha2_seq_property_bean_set_name(term_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-    sandesha2_seq_property_bean_set_seq_id(term_added, env, out_seq_id);
+    sandesha2_seq_property_bean_set_seq_id(term_added, env, int_seq_id);
     if(out_seq_id)
     {
         AXIS2_FREE(env->allocator, out_seq_id);

@@ -2776,14 +2776,12 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, to_addr);
         }
+
         if(reply_to_addr)
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
         }
-        if(reply_to_epr)
-        {
-            axis2_endpoint_ref_free(reply_to_epr, env);
-        }
+
         if(rms_sequence_id)
         {
             AXIS2_FREE(env->allocator, rms_sequence_id);
@@ -2826,10 +2824,7 @@ sandesha2_app_msg_processor_send_app_msg(
             {
                 AXIS2_FREE(env->allocator, reply_to_addr);
             }
-            if(reply_to_epr)
-            {
-                axis2_endpoint_ref_free(reply_to_epr, env);
-            }
+
             if(rms_sequence_id)
             {
                 AXIS2_FREE(env->allocator, rms_sequence_id);
@@ -2992,10 +2987,6 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
         }
-        if(reply_to_epr)
-        {
-            axis2_endpoint_ref_free(reply_to_epr, env);
-        }
 
         if(from_acks_to_addr)
         {
@@ -3044,14 +3035,12 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
         }
-        if(reply_to_epr)
-        {
-            axis2_endpoint_ref_free(reply_to_epr, env);
-        }
+
         if(from_acks_to_addr)
         {
             AXIS2_FREE(env->allocator, from_acks_to_addr);
         }
+
         if(rms_sequence_id)
         {
             AXIS2_FREE(env->allocator, rms_sequence_id);
@@ -3210,14 +3199,12 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
         }
-        if(reply_to_epr)
-        {
-            axis2_endpoint_ref_free(reply_to_epr, env);
-        }
+
         if(from_acks_to_addr)
         {
             AXIS2_FREE(env->allocator, from_acks_to_addr);
         }
+
         if(rms_sequence_id)
         {
             AXIS2_FREE(env->allocator, rms_sequence_id);
@@ -3274,11 +3261,6 @@ sandesha2_app_msg_processor_send_app_msg(
     {
         AXIS2_FREE(env->allocator, reply_to_addr);
     }
-
-    /*if(reply_to_epr)
-    {
-        axis2_endpoint_ref_free(reply_to_epr, env);
-    }*/
 
     if(from_acks_to_addr)
     {

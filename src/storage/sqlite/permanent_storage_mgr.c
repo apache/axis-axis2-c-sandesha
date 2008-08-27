@@ -820,23 +820,33 @@ sandesha2_permanent_storage_mgr_get_property_string(
         {
             continue;
         }
+
         if(!axutil_strcmp(AXIS2_TRANSPORT_OUT, key))
         {
             continue;
         }
+
         if(!axutil_strcmp(AXIS2_TRANSPORT_IN, key))
         {
             continue;
         }
+
         if(!axutil_strcmp(AXIS2_TRANSPORT_HEADERS, key))
         {
             continue;
         }
+
         if(!axutil_strcmp(SANDESHA2_ORIGINAL_TRANSPORT_OUT_DESC, key))
         {
             continue;
         }
+
         if(!axutil_strcmp(AXIS2_HTTP_CLIENT, key))
+        {
+            continue;
+        }
+
+        if(!axutil_strcmp(AXIS2_HTTP_HEADER_CONTENT_LENGTH, key))
         {
             continue;
         }
