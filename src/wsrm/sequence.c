@@ -131,45 +131,61 @@ sandesha2_seq_from_om_node(
     axiom_node_t *lm_node = NULL;
     axutil_qname_t *lm_qname = NULL; 
     AXIS2_PARAM_CHECK(env->error, seq_node, NULL);
+        
     seq_part = axiom_node_get_data_element(seq_node, env);
     if(!seq_part)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-            AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Sequence element not found in the sequence node");
+
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
+
     seq->identifier = sandesha2_identifier_create(env, seq->ns_val);
     if(!seq->identifier)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Sequence identifier not found in the sequence node");
+
         return NULL;
     }
+
     sandesha2_identifier_from_om_node(seq->identifier, env, seq_node);
     seq->msg_num= sandesha2_msg_number_create(env, seq->ns_val);
     if(!seq->msg_num)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Sequence message number not found in the sequence node");
+
         return NULL;
     }
+
     sandesha2_msg_number_from_om_node(seq->msg_num, env, seq_node);
-    lm_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG,
-        seq->ns_val, NULL);
+    lm_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_LAST_MSG, seq->ns_val, NULL);
+    
     if(!lm_qname)
     {
         return NULL;
     }
-    lm_part = axiom_element_get_first_child_with_qname(seq_part, env, 
-        lm_qname, seq_node, &lm_node);
+
+    lm_part = axiom_element_get_first_child_with_qname(seq_part, env, lm_qname, seq_node, &lm_node);
     if(lm_qname)
+    {
         axutil_qname_free(lm_qname, env);
+    }
+
     if(lm_part)
     {
-        seq->last_msg = sandesha2_last_msg_create(env, 
-            seq->ns_val);
+        seq->last_msg = sandesha2_last_msg_create(env, seq->ns_val);
         if(!seq->last_msg)
         {
             return NULL;
         }
+
         sandesha2_last_msg_from_om_node(seq->last_msg, env, lm_node);
     }
+
     return seq;
 }
 

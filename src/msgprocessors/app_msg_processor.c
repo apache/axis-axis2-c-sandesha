@@ -710,6 +710,8 @@ sandesha2_app_msg_processor_process_in_msg (
         if(last_msg)
         {
             sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
+            
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Last message");
 
             seq_prop_bean = sandesha2_seq_property_bean_create_with_data(
                 env, rmd_sequence_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, msg_id);
@@ -733,9 +735,73 @@ sandesha2_app_msg_processor_process_in_msg (
     if(!axutil_strcmp(SANDESHA2_SPEC_2005_02_ACTION_LAST_MESSAGE, wsa_action) || 0 == axutil_strcmp(
                 SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE, soap_action)) 
     {
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Got WSRM 1.0 last message, aborting");
+        axis2_status_t status = AXIS2_FAILURE;
+        axis2_bool_t send_response = AXIS2_TRUE;
+        axis2_svc_t *temp_svc = NULL;
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Got WSRM 1.0 last message. Send ack and aborting");
+
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, 
-                storage_mgr, sender_mgr, seq_prop_mgr);
+                storage_mgr, sender_mgr, seq_prop_mgr, AXIS2_FALSE);
+
+        temp_svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
+        if(temp_svc)
+        {
+            const axis2_char_t *svc_name = axis2_svc_get_name(temp_svc, env);
+
+            if(!axutil_strcmp("__ANONYMOUS_SERVICE__", svc_name))
+            {
+                send_response = AXIS2_FALSE;
+                status =  AXIS2_SUCCESS;
+            }
+        }
+        else
+        {
+            send_response = AXIS2_FALSE;
+            status =  AXIS2_SUCCESS;
+        }
+        
+        if(send_response)
+        {
+            axis2_char_t *storage_key = NULL;
+            axis2_char_t *outgoing_int_seq_id = NULL;
+            axis2_msg_ctx_t *out_msg_ctx = NULL;
+            sandesha2_msg_ctx_t *out_rm_msg_ctx = NULL;
+            axis2_op_ctx_t *op_ctx = NULL;
+            axutil_qname_t *temp_qname = NULL;
+            axis2_op_t *anon_out_op = NULL;
+
+            outgoing_int_seq_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
+
+            out_msg_ctx = axis2_core_utils_create_out_msg_ctx(env, app_msg_ctx);
+            if(out_msg_ctx)
+            {
+                out_rm_msg_ctx = sandesha2_msg_init_init_msg(env, out_msg_ctx);
+            }
+            else
+            {
+                return AXIS2_FAILURE;
+            }
+        
+            temp_qname = axutil_qname_create(env, "__OPERATION_OUT_ONLY__", NULL, NULL);
+            if (!temp_qname)
+            {
+                return AXIS2_FAILURE;
+            }
+        
+            anon_out_op = axis2_op_create_with_qname(env, temp_qname);
+            axutil_qname_free(temp_qname, env);
+
+            op_ctx = axis2_op_ctx_create(env, anon_out_op, NULL);
+            status = axis2_op_ctx_add_msg_ctx(op_ctx, env, out_msg_ctx);
+            status = axis2_op_ctx_add_msg_ctx(op_ctx, env, app_msg_ctx);
+            axis2_msg_ctx_set_op_ctx(out_msg_ctx, env, op_ctx);
+
+            storage_key = axutil_uuid_gen(env);
+            status = sandesha2_app_msg_processor_send_app_msg(env, out_rm_msg_ctx, outgoing_int_seq_id, 
+                msg_no, storage_key, storage_mgr, create_seq_mgr, seq_prop_mgr, sender_mgr);
+        }
 
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
@@ -756,7 +822,8 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             AXIS2_FREE(env->allocator, msgs_str);
         }
-        return AXIS2_SUCCESS;
+
+        return status;
     }
 
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env) && in_order_invoke)
@@ -852,7 +919,7 @@ sandesha2_app_msg_processor_process_in_msg (
     }
 
     if(!sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, storage_mgr, 
-                sender_mgr, seq_prop_mgr))
+                sender_mgr, seq_prop_mgr, AXIS2_FALSE))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sending acknowledgment failed");
 
@@ -1721,7 +1788,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_char_t *rmd_sequence_id,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_sender_mgr_t *sender_mgr,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr)
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    axis2_bool_t send_msg)
 {
     /*axis2_endpoint_ref_t *to_epr = NULL;
     axis2_endpoint_ref_t *temp_to_epr = NULL;*/
@@ -1811,7 +1879,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, reply_to_addr));
     /*if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
             && is_anonymous_reply_to && !one_way)*/
-    if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way)
+    if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way && !send_msg)
     {
         /* This means acknowledgment address is anomymous and RM version is 1.0. Flow comes to
          * this block only in the server side.

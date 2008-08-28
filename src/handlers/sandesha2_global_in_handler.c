@@ -102,6 +102,7 @@ sandesha2_global_in_handler_invoke(
         axutil_property_t *property = NULL;
         property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
         axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ISOLATED_LAST_MSG, property);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Isolated last message");
         return AXIS2_SUCCESS;
     }
     if(!soap_action && !wsa_action)
@@ -118,9 +119,34 @@ sandesha2_global_in_handler_invoke(
             {
                 sandesha2_seq_t *sequence = NULL;
                 axiom_node_t *seq_node = NULL;
+                axiom_node_t *header_node = NULL;
+
                 sequence = sandesha2_seq_create(env, SANDESHA2_SPEC_2005_02_NS_URI);
-                seq_node = axiom_soap_header_get_base_node(header, env);
-                sandesha2_seq_from_om_node(sequence, env, seq_node);
+                header_node = axiom_soap_header_get_base_node(header, env);
+                if(header_node)
+                {
+                    axutil_qname_t *seq_qname = NULL;
+                    axiom_element_t *header_element = NULL;
+    
+                    seq_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_SEQ, 
+                            SANDESHA2_SPEC_2005_02_NS_URI, NULL);
+                    if(seq_qname)
+                    {
+                        axiom_element_t *seq_element = NULL;
+
+                        header_element = axiom_node_get_data_element(header_node, env);
+                        seq_element = axiom_element_get_first_child_with_qname(header_element, env,
+                            seq_qname, header_node, &seq_node);
+
+                        axutil_qname_free(seq_qname, env);
+                    }
+                }
+
+                if(sequence && seq_node)
+                {
+                    sandesha2_seq_from_om_node(sequence, env, seq_node);
+                }
+
                 if(sandesha2_seq_get_last_msg(sequence, env))
                 {
                     last_msg_header = AXIS2_TRUE;
@@ -137,15 +163,24 @@ sandesha2_global_in_handler_invoke(
                 if(body && !axiom_node_get_first_element(body_node, env))
                 {
                     axutil_property_t *property = NULL;
-                    axutil_string_t *temp_soap_action = axutil_string_create(env, 
-                        SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
-                    /* There is an empty body so we know this is the kind of message
-                     * that we are looking for.
+                    axutil_string_t *temp_soap_action = NULL;
+
+                    /* There is an empty body so we know this is the kind of message that we are 
+                     * looking for.
                      */
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                             "[sandesha2] Setting SOAP Action for a WSRM 1.0 last message");
 
-                    axis2_msg_ctx_set_soap_action(msg_ctx, env, temp_soap_action);
+                    temp_soap_action = axutil_string_create(env, 
+                            SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
+                    if(temp_soap_action)
+                    {
+                        axis2_msg_ctx_set_soap_action(msg_ctx, env, temp_soap_action);
+                        axutil_string_free(temp_soap_action, env);
+                    }
+                    
+                    axis2_msg_ctx_set_wsa_action(msg_ctx, env, 
+                            SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
 
                     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
                     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_ISOLATED_LAST_MSG, property);

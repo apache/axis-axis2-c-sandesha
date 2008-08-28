@@ -7,7 +7,7 @@
     <inflow>
         <handler name="SandeshaGlobalInHandler" class="sandesha2">
             <!-- Global In handler should come before instance dispatching -->
-            <order phase="Dispatch" before="InstanceDispatcher" />
+            <order phase="PreDispatch" />
         </handler> 
         <handler name="SandeshaInHandler" class="sandesha2">
             <order phase="RMPhase"/>
@@ -23,7 +23,7 @@
     <INfaultflow>        
         <handler name="SandeshaGlobalInHandler" class="sandesha2">
             <!-- Global In handler should come before instance dispatching -->
-            <order phase="Dispatch" before="InstanceDispatcher" />
+            <order phase="PreDispatch" />
         </handler> 
         <handler name="SandeshaInHandler" class="sandesha2">
             <order phase="RMPhase"/>
