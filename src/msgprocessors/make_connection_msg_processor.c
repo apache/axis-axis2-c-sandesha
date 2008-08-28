@@ -229,7 +229,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_sender_bean_t *sender_bean = NULL;
     sandesha2_sender_bean_t *bean1 = NULL;
-    sandesha2_address_t *address = NULL;
+    sandesha2_mc_address_t *address = NULL;
     sandesha2_identifier_t *identifier = NULL;
     sandesha2_msg_ctx_t *return_rm_msg_ctx = NULL;
     axutil_property_t *property = NULL;
@@ -644,6 +644,11 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
              * back channel 
              */
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] ack msg type is still not supported");
+            continue;
+        }
+        
+        if(msg_type == SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG)
+        {
             continue;
         }
 

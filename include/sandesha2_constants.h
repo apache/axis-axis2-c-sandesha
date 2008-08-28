@@ -63,6 +63,8 @@ extern "C"
 	 */
 			
 	#define SANDESHA2_SPEC_2007_02_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200702"
+	
+    #define MAKE_CONNECTION_SPEC_2007_02_NS_URI  "http://docs.oasis-open.org/ws-rx/wsmc/200702"
 		
 	#define SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence"
 
@@ -79,7 +81,7 @@ extern "C"
 	#define SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence"
 			
 	#define SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequenceResponse"
-	#define SANDESHA2_SPEC_2007_02_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsrm/200702/MakeConnection"
+	#define SANDESHA2_SPEC_2007_02_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection"
 
 	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence"
 
@@ -95,12 +97,14 @@ extern "C"
 			
 	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence"
      
-    #define SANDESHA2_SPEC_2007_02_SOAP_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsrm/200702/MakeConnection"
+    #define SANDESHA2_SPEC_2007_02_SOAP_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection"
 	/**
 	 * WSRM Common constants
 	 */
 
 	#define SANDESHA2_WSRM_COMMON_NS_PREFIX_RM  "wsrm"
+	
+    #define SANDESHA2_WSMC_COMMON_NS_PREFIX_RM  "wsmc"
 
 	#define SANDESHA2_WSRM_COMMON_MSG_NUMBER  "MessageNumber"
 
@@ -167,6 +171,8 @@ extern "C"
 	#define SANDESHA2_WSA_NS_PREFIX_ADDRESSING  "wsa"
 
 	#define SANDESHA2_WSA_ADDRESS  "Address"
+	
+    #define SANDESHA2_WSMC_ADDRESS  "Address"
 
 	#define SANDESHA2_WSA_SOAP_FAULT_ACTION  "http://schemas.xmlsoap.org/ws/2004/08/addressing/fault"
 

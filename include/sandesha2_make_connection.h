@@ -24,7 +24,7 @@
 
 #include <axiom_soap_envelope.h>
 #include <sandesha2_identifier.h>
-#include <sandesha2_address.h>
+#include <sandesha2_mc_address.h>
 #include <sandesha2_error.h>
 
 
@@ -71,7 +71,7 @@ sandesha2_make_connection_set_identifier(
     const axutil_env_t *env, 
     sandesha2_identifier_t *identifier);
                     	
-sandesha2_address_t * AXIS2_CALL
+sandesha2_mc_address_t * AXIS2_CALL
 sandesha2_make_connection_get_address(
     sandesha2_make_connection_t *make_conn,
     const axutil_env_t *env);
@@ -80,7 +80,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_make_connection_set_address(
     sandesha2_make_connection_t *make_conn,
     const axutil_env_t *env, 
-    sandesha2_address_t *address);
+    sandesha2_mc_address_t *address);
 
 axis2_status_t AXIS2_CALL
 sandesha2_make_connection_to_soap_envelope(

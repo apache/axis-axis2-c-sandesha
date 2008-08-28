@@ -29,7 +29,7 @@
 struct sandesha2_make_connection_t
 {
 	sandesha2_identifier_t *identifier;
-	sandesha2_address_t *address;
+	sandesha2_mc_address_t *address;
 	axis2_char_t *ns_val;
 };
 
@@ -169,13 +169,13 @@ sandesha2_make_connection_from_om_node(
     }
     if(address_element)
     {
-        make_conn->address = sandesha2_address_create(env, 
+        make_conn->address = sandesha2_mc_address_create(env, 
             make_conn->ns_val, NULL);
         if(!make_conn->address)
         {
             return NULL;
         }
-        sandesha2_address_from_om_node(make_conn->address, env, om_node);
+        sandesha2_mc_address_from_om_node(make_conn->address, env, om_node);
     }
     return make_conn;
 }
@@ -194,33 +194,45 @@ sandesha2_make_connection_to_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     soap_body = (axiom_soap_body_t*)om_node;
+
     if(!make_conn->identifier && !make_conn->address)
     {
         AXIS2_ERROR_SET(env->error, 
-            SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL, 
-            AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Invalid MakeConnection " \
-            "object. Both Identifier and Address are null");
+            SANDESHA2_ERROR_INVALID_MAKE_CONNECTION_BOTH_IDENTIFER_AND_ADDRESS_NULL, AXIS2_FAILURE);
+
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Invalid MakeConnection object. Both Identifier and Address are null");
         return NULL;
     }
-    rm_ns = axiom_namespace_create(env, make_conn->ns_val,
-        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+
+    rm_ns = axiom_namespace_create(env, make_conn->ns_val, SANDESHA2_WSMC_COMMON_NS_PREFIX_RM);
     if(!rm_ns)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Creating namespace for make connection failed");
         return NULL;
     }
-    make_conn_element = axiom_element_create(env, NULL, 
-        SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, rm_ns, &make_conn_node);
+
+    make_conn_element = axiom_element_create(env, NULL, SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, 
+            rm_ns, &make_conn_node);
+
     if(!make_conn_element)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Creating make connection element failed");
         return NULL;
     }
+
     if(make_conn->identifier)
-        sandesha2_identifier_to_om_node(make_conn->identifier, env, 
-            make_conn_node);
+    {
+        sandesha2_identifier_to_om_node(make_conn->identifier, env, make_conn_node);
+    }
+
     if(make_conn->address)
-        sandesha2_address_to_om_node(make_conn->address, env, make_conn_node);
+    {
+        sandesha2_mc_address_to_om_node(make_conn->address, env, make_conn_node);
+    }
+
     axiom_soap_body_add_child(soap_body, env, make_conn_node);
+
     return axiom_soap_body_get_base_node(soap_body, env);
 }
 
@@ -242,7 +254,7 @@ sandesha2_make_connection_set_identifier(
  	return AXIS2_SUCCESS;
 }
 
-sandesha2_address_t * AXIS2_CALL
+sandesha2_mc_address_t * AXIS2_CALL
 sandesha2_make_connection_get_address(
     sandesha2_make_connection_t *make_conn,
     const axutil_env_t *env)
@@ -254,7 +266,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_make_connection_set_address(
     sandesha2_make_connection_t *make_conn,
     const axutil_env_t *env, 
-    sandesha2_address_t *address)
+    sandesha2_mc_address_t *address)
 {
 	make_conn->address = address;
  	return AXIS2_SUCCESS;
@@ -274,7 +286,7 @@ sandesha2_make_connection_to_soap_envelope(
     axutil_qname_t *make_conn_qname = NULL;
     
     AXIS2_PARAM_CHECK(env->error, envelope, AXIS2_FAILURE);
-	
+    
     soap_body = axiom_soap_envelope_get_body(envelope, env);
     if(soap_body)
         body_node = axiom_soap_body_get_base_node(soap_body, env);
@@ -284,6 +296,7 @@ sandesha2_make_connection_to_soap_envelope(
         SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, make_conn->ns_val, NULL);
     if(!make_conn_qname)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Could not create qname for make connection");
         return AXIS2_FAILURE;
     }
     if(body_element)
@@ -296,6 +309,7 @@ sandesha2_make_connection_to_soap_envelope(
      */
     if(node)
         axiom_node_detach(node, env);
+
     sandesha2_make_connection_to_om_node(make_conn, env, soap_body);
 	return AXIS2_SUCCESS;
 }
@@ -305,14 +319,21 @@ sandesha2_make_connection_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
+    if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
         return AXIS2_FALSE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
+
+    if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
+    {
+        return AXIS2_FALSE;
+    }
+    
+    if(!axutil_strcmp(namespace, MAKE_CONNECTION_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }
+
     return AXIS2_FALSE;
 }
 

@@ -82,7 +82,7 @@ sandesha2_polling_mgr_start (
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_polling_mgr_args_t *args = NULL;
-    axis2_char_t *wsrm_anon_reply_to_uri = NULL;
+    axis2_char_t *wsmc_anon_reply_to_uri = NULL;
     sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
     axis2_char_t *make_conn_msg_store_key = NULL;
     axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
@@ -100,12 +100,17 @@ sandesha2_polling_mgr_start (
 
     if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
     {
-        wsrm_anon_reply_to_uri = (axis2_char_t *) reply_to;
+        wsmc_anon_reply_to_uri = axutil_strcat(env, AXIS2_WS_RM_ANONYMOUS_URL, sequence_id, NULL);
     }
 
     make_conn_rm_msg_ctx = sandesha2_msg_creator_create_make_connection_msg(env, rm_msg_ctx, 
-        sequence_id, internal_sequence_id, wsrm_anon_reply_to_uri, NULL);
-    
+        sequence_id, internal_sequence_id, wsmc_anon_reply_to_uri, NULL);
+   
+    if(wsmc_anon_reply_to_uri)
+    {
+        AXIS2_FREE(env->allocator, wsmc_anon_reply_to_uri);
+    }
+
     args->rm_msg_ctx = make_conn_rm_msg_ctx;
 
     make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, env);
@@ -296,9 +301,9 @@ sandesha2_polling_mgr_worker_func(
              AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
              AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
 
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Sending the make connection message for the sequence with internal "\
-                "sequence id %s", internal_sequence_id);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Sending make connection message for sequence with internal sequence id %s", 
+            internal_sequence_id);
 
         transport_out = axis2_msg_ctx_get_transport_out_desc(make_conn_msg_ctx, env);
         if(transport_out)

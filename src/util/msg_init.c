@@ -370,9 +370,9 @@ static axis2_bool_t validate_msg(
     else if(make_conn)
     {
         sandesha2_identifier_t *idf = NULL;
-        sandesha2_address_t *address = NULL;
-        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, 
-            SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
+        sandesha2_mc_address_t *address = NULL;
+
+        sandesha2_msg_ctx_set_msg_type(rm_msg_ctx, env, SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
         idf = sandesha2_make_connection_get_identifier(make_conn, env);
         address = sandesha2_make_connection_get_address(make_conn, env);
         if(idf)
