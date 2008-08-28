@@ -743,7 +743,7 @@ sandesha2_app_msg_processor_process_in_msg (
                 "[sandesha2] Got WSRM 1.0 last message. Send ack and aborting");
 
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, 
-                storage_mgr, sender_mgr, seq_prop_mgr, AXIS2_FALSE);
+                storage_mgr, sender_mgr, seq_prop_mgr);
 
         temp_svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
         if(temp_svc)
@@ -919,7 +919,7 @@ sandesha2_app_msg_processor_process_in_msg (
     }
 
     if(!sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, storage_mgr, 
-                sender_mgr, seq_prop_mgr, AXIS2_FALSE))
+                sender_mgr, seq_prop_mgr))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sending acknowledgment failed");
 
@@ -1788,8 +1788,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     axis2_char_t *rmd_sequence_id,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_sender_mgr_t *sender_mgr,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr,
-    axis2_bool_t send_msg)
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
     /*axis2_endpoint_ref_t *to_epr = NULL;
     axis2_endpoint_ref_t *temp_to_epr = NULL;*/
@@ -1879,7 +1878,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, reply_to_addr));
     /*if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
             && is_anonymous_reply_to && !one_way)*/
-    if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way && !send_msg)
+    if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way)
     {
         /* This means acknowledgment address is anomymous and RM version is 1.0. Flow comes to
          * this block only in the server side.
