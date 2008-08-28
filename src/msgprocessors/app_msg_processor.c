@@ -738,12 +738,27 @@ sandesha2_app_msg_processor_process_in_msg (
         axis2_status_t status = AXIS2_FAILURE;
         axis2_bool_t send_response = AXIS2_TRUE;
         axis2_svc_t *temp_svc = NULL;
+        axis2_op_ctx_t *op_ctx = NULL;
 
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Got WSRM 1.0 last message. Send ack and aborting");
 
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, 
                 storage_mgr, sender_mgr, seq_prop_mgr);
+
+        op_ctx = axis2_msg_ctx_get_op_ctx(app_msg_ctx, env);
+        if(op_ctx)
+        {
+            int mep = -1;
+            axis2_op_t *op = NULL;
+            
+            op = axis2_op_ctx_get_op(op_ctx, env);
+            mep = axis2_op_get_axis_specific_mep_const(op, env);
+            if(mep == AXIS2_MEP_CONSTANT_IN_ONLY)
+            {
+                send_response = AXIS2_FALSE;
+            }
+        }
 
         temp_svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
         if(temp_svc)
@@ -1862,6 +1877,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     }
 
     one_way = AXIS2_MEP_CONSTANT_IN_ONLY == mep;
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "MEP:%d", mep);
 
     rm_version = sandesha2_utils_get_rm_version(env, rmd_sequence_id, seq_prop_mgr);
     if(!rm_version)
