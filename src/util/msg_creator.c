@@ -973,8 +973,7 @@ sandesha2_msg_creator_add_ack_msg(
         axis2_bool_t is_allowed = AXIS2_FALSE;
         
         /* sequence is closed. so add the 'Final' part. */
-        is_allowed = sandesha2_spec_specific_consts_is_ack_final_allowed(env, 
-               rm_version);
+        is_allowed = sandesha2_spec_specific_consts_is_ack_final_allowed(env, rm_version);
         if(is_allowed)
         {
             sandesha2_ack_final_t *ack_final = NULL;
