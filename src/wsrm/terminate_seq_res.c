@@ -178,10 +178,10 @@ sandesha2_terminate_seq_res_set_identifier(
 {
  	if(terminate_seq_res->identifier)
 	{
-/*		SANDESHA2_IDENTIFIER_FREE(terminate_seq_res->identifier, env);
+		sandesha2_identifier_free(terminate_seq_res->identifier, env);
 		terminate_seq_res->identifier = NULL;
-*/		
 	}
+
 	terminate_seq_res->identifier = identifier;
  	return AXIS2_SUCCESS;
 }
@@ -222,7 +222,7 @@ sandesha2_terminate_seq_res_is_namespace_supported(
     const axutil_env_t *env, 
     axis2_char_t *namespace)
 {
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

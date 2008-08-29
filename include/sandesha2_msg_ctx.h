@@ -388,6 +388,17 @@ sandesha2_msg_ctx_get_ack_requested(
     sandesha2_msg_ctx_t *rm_msg_ctx,
     const axutil_env_t *env);
 
+axis2_bool_t AXIS2_CALL
+sandesha2_msg_ctx_get_server_side(
+    const sandesha2_msg_ctx_t * rm_msg_ctx,
+    const axutil_env_t * env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_msg_ctx_set_server_side(
+    const sandesha2_msg_ctx_t * rm_msg_ctx,
+    const axutil_env_t * env,
+    const axis2_bool_t server_side);
+
 /** @} */
 #ifdef __cplusplus
 }

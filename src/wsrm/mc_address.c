@@ -14,89 +14,89 @@
  * limitations under the License.
  */
  
-#include <sandesha2_address.h>
+#include <sandesha2_mc_address.h>
 #include <sandesha2_constants.h>
 #include <axis2_addr.h>
 #include <sandesha2_error.h>
 /** 
- * @brief Address struct impl
- *	Sandesha2 Address
+ * @brief MC Address struct impl
+ *	Sandesha2 MC Address
  */
   
-struct sandesha2_address_t
+struct sandesha2_mc_address_t
 {
 	axis2_endpoint_ref_t *epr;
 	axis2_char_t *ns_val;
 };
                    	
 /*static axis2_bool_t AXIS2_CALL 
-sandesha2_address_is_namespace_supported(
+sandesha2_mc_address_is_namespace_supported(
    	const axutil_env_t *env, 
     axis2_char_t *namespace);*/
 
-AXIS2_EXTERN sandesha2_address_t* AXIS2_CALL
-sandesha2_address_create(
+AXIS2_EXTERN sandesha2_mc_address_t* AXIS2_CALL
+sandesha2_mc_address_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_val, 
 	axis2_endpoint_ref_t *epr)
 {
-    sandesha2_address_t *address = NULL;
+    sandesha2_mc_address_t *mc_address = NULL;
     AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
     
-    address =  (sandesha2_address_t *)AXIS2_MALLOC 
-        (env->allocator, sizeof(sandesha2_address_t));
+    mc_address =  (sandesha2_mc_address_t *)AXIS2_MALLOC 
+        (env->allocator, sizeof(sandesha2_mc_address_t));
 	
-    if(!address)
+    if(!mc_address)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
-    address->ns_val = axutil_strdup(env, ns_val);
-    address->epr = epr;
+    mc_address->ns_val = axutil_strdup(env, ns_val);
+    mc_address->epr = epr;
     
-	return address;
+	return mc_address;
 }
 
 
 axis2_status_t AXIS2_CALL 
-sandesha2_address_free (
-    sandesha2_address_t *address, 
+sandesha2_mc_address_free (
+    sandesha2_mc_address_t *mc_address, 
     const axutil_env_t *env)
 {
-    if(address->ns_val)
+    if(mc_address->ns_val)
     {
-        AXIS2_FREE(env->allocator, address->ns_val);
-        address->ns_val = NULL;
+        AXIS2_FREE(env->allocator, mc_address->ns_val);
+        mc_address->ns_val = NULL;
     }
     
-    if(address->epr)
+    if(mc_address->epr)
     {
-        axis2_endpoint_ref_free(address->epr, env);
-        address->epr = NULL;
+        axis2_endpoint_ref_free(mc_address->epr, env);
+        mc_address->epr = NULL;
     }
 
-	AXIS2_FREE(env->allocator, address);
+	AXIS2_FREE(env->allocator, mc_address);
 	return AXIS2_SUCCESS;
 }
 
 axis2_char_t* AXIS2_CALL 
-sandesha2_address_get_namespace_value (
-    sandesha2_address_t *address,
+sandesha2_mc_address_get_namespace_value (
+    sandesha2_mc_address_t *mc_address,
 	const axutil_env_t *env)
 {
-	return address->ns_val;
+	return mc_address->ns_val;
 }
 
 void* AXIS2_CALL 
-sandesha2_address_from_om_node(
-    sandesha2_address_t *address,
+sandesha2_mc_address_from_om_node(
+    sandesha2_mc_address_t *mc_address,
    	const axutil_env_t *env, axiom_node_t *om_node)
 {
     axiom_element_t *om_element = NULL;
     axiom_element_t *addr_part = NULL;
     axiom_node_t *addr_node = NULL;
     axutil_qname_t *addr_qname = NULL;
-    axis2_char_t *str_address = NULL;
+    axis2_char_t *str_mc_address = NULL;
 
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     om_element = axiom_node_get_data_element(om_node, env);
@@ -107,7 +107,7 @@ sandesha2_address_from_om_node(
         return NULL;
     }
     addr_qname = axutil_qname_create(env, SANDESHA2_WSA_ADDRESS, 
-           address->ns_val, NULL);
+           mc_address->ns_val, NULL);
     if(!addr_qname)
     {
         return NULL;
@@ -122,33 +122,33 @@ sandesha2_address_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    str_address = axiom_element_get_text(addr_part, env, addr_node);
-    if(!str_address || 0 == axutil_strlen(str_address))
+    str_mc_address = axiom_element_get_text(addr_part, env, addr_node);
+    if(!str_mc_address || 0 == axutil_strlen(str_mc_address))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
             AXIS2_FAILURE);
         return NULL;
     }
 
-    if(address->epr)
+    if(mc_address->epr)
     {
-        axis2_endpoint_ref_free(address->epr, env);
-        address->epr = NULL;
+        axis2_endpoint_ref_free(mc_address->epr, env);
+        mc_address->epr = NULL;
     }
 
-    address->epr = axis2_endpoint_ref_create(env, str_address);
+    mc_address->epr = axis2_endpoint_ref_create(env, str_mc_address);
 
-    if(!address->epr)
+    if(!mc_address->epr)
     {
         return NULL;
     }
-    return address;
+    return mc_address;
 }
 
 
 axiom_node_t* AXIS2_CALL 
-sandesha2_address_to_om_node(
-    sandesha2_address_t *address,
+sandesha2_mc_address_to_om_node(
+    sandesha2_mc_address_t *mc_address,
    	const axutil_env_t *env, 
     void *om_node)
 {
@@ -157,62 +157,63 @@ sandesha2_address_to_om_node(
     axiom_node_t *addr_node = NULL;
     
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
-    if(!address->epr || !axis2_endpoint_ref_get_address(
-            address->epr, env) || 0 == axutil_strlen(
-            axis2_endpoint_ref_get_address(address->epr, env)))
+
+    if(!mc_address->epr || !axis2_endpoint_ref_get_address(mc_address->epr, env) || 0 == axutil_strlen(
+            axis2_endpoint_ref_get_address(mc_address->epr, env)))
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
-    rm_ns = axiom_namespace_create(env, address->ns_val,
-        AXIS2_WSA_DEFAULT_PREFIX);
+
+    rm_ns = axiom_namespace_create(env, mc_address->ns_val, SANDESHA2_WSMC_COMMON_NS_PREFIX_RM);
     if(!rm_ns)
     {
         return NULL;
     }
-    addr_element = axiom_element_create(env, NULL, 
-            SANDESHA2_WSA_ADDRESS, rm_ns, &addr_node);
+
+    addr_element = axiom_element_create(env, NULL, SANDESHA2_WSMC_ADDRESS, rm_ns, &addr_node);
     if(!addr_element)
     {
         return NULL;
     }
-    axiom_element_set_text(addr_element, env, 
-            axis2_endpoint_ref_get_address(address->epr, env), 
+
+    axiom_element_set_text(addr_element, env, axis2_endpoint_ref_get_address(mc_address->epr, env), 
             addr_node);
+
     axiom_node_add_child((axiom_node_t*)om_node, env, addr_node);
+
     return (axiom_node_t*)om_node;
 }
 
 axis2_endpoint_ref_t * AXIS2_CALL                    	
-sandesha2_address_get_epr(
-    sandesha2_address_t *address,
+sandesha2_mc_address_get_epr(
+    sandesha2_mc_address_t *mc_address,
    	const axutil_env_t *env)
 {
-    return address->epr;
+    return mc_address->epr;
 }
 
                   	
 axis2_status_t AXIS2_CALL
-sandesha2_address_set_epr(
-    sandesha2_address_t *address,
+sandesha2_mc_address_set_epr(
+    sandesha2_mc_address_t *mc_address,
    	const axutil_env_t *env, 
     axis2_endpoint_ref_t *epr)
 {
     AXIS2_PARAM_CHECK(env->error, epr, AXIS2_FAILURE);
     
-    if(address->epr)
+    if(mc_address->epr)
     {
-        axis2_endpoint_ref_free(address->epr, env);
-        address->epr = NULL;
+        axis2_endpoint_ref_free(mc_address->epr, env);
+        mc_address->epr = NULL;
     }
 
-	address->epr = epr;
+	mc_address->epr = epr;
     return AXIS2_SUCCESS;
 }
 
 /*static axis2_bool_t AXIS2_CALL 
-sandesha2_address_is_namespace_supported(
+sandesha2_mc_address_is_namespace_supported(
    	const axutil_env_t *env, 
     axis2_char_t *namespace)
 {

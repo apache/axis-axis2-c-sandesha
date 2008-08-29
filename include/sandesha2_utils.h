@@ -73,8 +73,8 @@ sandesha2_utils_get_storage_mgr(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_seq_property(
     const axutil_env_t *env,
-    axis2_char_t *id,
-    axis2_char_t *name,
+    const axis2_char_t *id,
+    const axis2_char_t *name,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
@@ -117,16 +117,10 @@ sandesha2_utils_start_sender_for_seq(
     axis2_char_t *seq_id,
     const axis2_bool_t persistent);
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_start_polling_mgr(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx,
-    const axis2_char_t *internal_seq_id);
-                        
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_outgoing_internal_seq_id(
+sandesha2_utils_get_internal_sequence_id(
     const axutil_env_t *env,
-    axis2_char_t *seq_id);
+    axis2_char_t *rmd_seq_id);
 
 AXIS2_EXTERN axis2_transport_out_desc_t* AXIS2_CALL
 sandesha2_utils_get_transport_out(
@@ -143,19 +137,19 @@ sandesha2_utils_get_permanent_storage_mgr(
     axis2_char_t *dbname);
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL                       
-sandesha2_utils_get_svr_side_incoming_seq_id(
-    const axutil_env_t *env,
-    axis2_char_t *incoming_seq_id);
+sandesha2_utils_get_rmd_seq_id(
+        const axutil_env_t *env,
+        axis2_char_t *internal_sequence_id);
 
 /**
  * Caller must free the returned string.
  * @param to
  * @param seq_key
  *
- * @return internal_seq_id
+ * @return rms_internal_seq_id
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-sandesha2_utils_get_internal_seq_id(
+sandesha2_utils_get_client_internal_sequence_id(
     const axutil_env_t *env,
     axis2_char_t *to,
     axis2_char_t *seq_key);
@@ -163,8 +157,7 @@ sandesha2_utils_get_internal_seq_id(
 AXIS2_EXTERN axis2_msg_ctx_t *AXIS2_CALL
 sandesha2_utils_create_new_related_msg_ctx(
     const axutil_env_t *env,
-    sandesha2_msg_ctx_t *ref_rm_msg,
-    axis2_op_t *op);
+    sandesha2_msg_ctx_t *ref_rm_msg);
                         
 AXIS2_EXTERN  int AXIS2_CALL
 sandesha2_utils_get_soap_version(
@@ -243,22 +236,26 @@ sandesha2_utils_stop_sender(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
-sandesha2_utils_stop_polling_mgr(
-    const axutil_env_t *env,
-    axis2_conf_ctx_t *conf_ctx);
-
 axutil_array_list_t *AXIS2_CALL
 sandesha2_utils_split(
     const axutil_env_t *env,
     axis2_char_t *str,
     axis2_char_t *pattern);
 
+/**
+ * In this function it checks whether acks_to_addr is anonymous and rm_version is 1.0.
+ * Form this it concludes that this is possibly a rm 1.0 replay mode. Note that it
+ * does not check message exchange pattern.
+ *
+ * @param rm_version Reliable messaging spec version
+ * @param acks_to_addr Acknowledgment to address
+ */
 axis2_bool_t AXIS2_CALL
-sandesha2_utils_is_single_channel(
+sandesha2_utils_is_rm_1_0_anonymous_acks_to(
     const axutil_env_t *env,
     const axis2_char_t *rm_version,
     const axis2_char_t *acks_to_addr);
+
 
 AXIS2_EXTERN axis2_msg_ctx_t * AXIS2_CALL
 sandesha2_utils_create_out_msg_ctx(
@@ -269,6 +266,31 @@ AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 sandesha2_util_get_dbname(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_fault_envelope(
+    const axutil_env_t *env, 
+    axiom_soap_envelope_t *soap_envelope);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_ack_already_piggybacked(
+    const axutil_env_t *env, 
+    sandesha2_msg_ctx_t *rm_msg_ctx);
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_piggybackable_msg_type(
+    const axutil_env_t *env, 
+    int msg_type);
+
+axutil_property_t *AXIS2_CALL
+sandesha2_util_property_clone(
+    const axutil_env_t * env,
+    axutil_property_t * property);
+
+axis2_endpoint_ref_t *AXIS2_CALL
+sandesha2_util_endpoint_ref_clone(
+    const axutil_env_t * env,
+    axis2_endpoint_ref_t * endpoint_ref);
 
 /** @} */
 #ifdef __cplusplus

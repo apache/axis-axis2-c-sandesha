@@ -74,8 +74,7 @@ sandesha2_sender_run_for_seq(
     axutil_thread_t *worker_thread = NULL;
     sandesha2_sender_args_t *args = NULL;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_sender_run_for_seq");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_sender_run_for_seq");
     
     axutil_allocator_switch_to_global_pool(env->allocator);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_sender_args_t));
@@ -85,17 +84,18 @@ sandesha2_sender_run_for_seq(
     args->seq_id = seq_id;
     args->persistent_msg_ctx = persistent_msg_ctx;
 
-    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
-        sandesha2_sender_worker_func, (void*)args);
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool, sandesha2_sender_worker_func, 
+            (void*)args);
     if(!worker_thread)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2]Thread creation failed for sandesha2_sender_run");
         return AXIS2_FAILURE;
     }
+
     axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_sender_run_for_seq");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_sender_run_for_seq");
     return AXIS2_SUCCESS;
 }
 
@@ -193,6 +193,7 @@ sandesha2_sender_worker_func(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2]Exit:sandesha2_sender_worker_func");
     axutil_allocator_switch_to_local_pool(env->allocator);
+
 
     return NULL;
 }

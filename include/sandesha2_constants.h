@@ -31,7 +31,7 @@ extern "C"
 	 * WSRM Spec versions
 	 */
 	#define SANDESHA2_SPEC_VERSION_1_0 "Spec_2005_02"
-	#define SANDESHA2_SPEC_VERSION_1_1 "Spec_2006_08"
+	#define SANDESHA2_SPEC_VERSION_1_1 "Spec_2007_02"
 	
 	/**
 	 * Spec 2005-02
@@ -59,48 +59,52 @@ extern "C"
 	#define SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE  "http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage"
 	
 	/**
-	 * Spec 2005-10
+	 * Spec 2007-02
 	 */
 			
-	#define SANDESHA2_SPEC_2006_08_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200608"
+	#define SANDESHA2_SPEC_2007_02_NS_URI  "http://docs.oasis-open.org/ws-rx/wsrm/200702"
+	
+    #define MAKE_CONNECTION_SPEC_2007_02_NS_URI  "http://docs.oasis-open.org/ws-rx/wsmc/200702"
 		
-	#define SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequence"
+	#define SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence"
 
-	#define SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200608/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2007_02_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequence"
+	#define SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2006_08_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200608/AckRequested"
+	#define SANDESHA2_SPEC_2007_02_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200702/AckRequested"
 			
-	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequence"
+	#define SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence"
 			
-	#define SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequenceResponse"
-	#define SANDESHA2_SPEC_2006_08_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection"
+	#define SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequenceResponse"
+	#define SANDESHA2_SPEC_2007_02_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection"
 
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequence"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_CREATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence"
 
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CreateSequenceResponse"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_CREATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequenceResponse"
 
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200608/SequenceAcknowledgement"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_SEQ_ACKNOWLEDGEMENT  "http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement"
 
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequence"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_TERMINATE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequence"
 			
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200608/TerminateSequenceResponse"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_TERMINATE_SEQ_RESPONSE  "http://docs.oasis-open.org/ws-rx/wsrm/200702/TerminateSequenceResponse"
 			
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200608/AckRequested"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_ACK_REQUEST  "http://docs.oasis-open.org/ws-rx/wsrm/200702/AckRequested"
 			
-	#define SANDESHA2_SPEC_2006_08_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200608/CloseSequence"
+	#define SANDESHA2_SPEC_2007_02_SOAP_ACTION_CLOSE_SEQ  "http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence"
      
-    #define SANDESHA2_SPEC_2006_08_SOAP_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsrm/200608/MakeConnection"
+    #define SANDESHA2_SPEC_2007_02_SOAP_ACTION_MAKE_CONNECTION "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection"
 	/**
 	 * WSRM Common constants
 	 */
 
 	#define SANDESHA2_WSRM_COMMON_NS_PREFIX_RM  "wsrm"
+	
+    #define SANDESHA2_WSMC_COMMON_NS_PREFIX_RM  "wsmc"
 
 	#define SANDESHA2_WSRM_COMMON_MSG_NUMBER  "MessageNumber"
 
@@ -153,6 +157,7 @@ extern "C"
     #define SANDESHA2_WSRM_COMMON_MESSAGE_PENDING "MessagePending"
     #define SANDESHA2_WSRM_COMMON_PENDING "pending"
     #define SANDESHA2_WSRM_COMMON_MAKE_CONNECTION "MakeConnection"
+    #define SANDESHA2_WSRM_COMMON_ENDPOINT "Endpoint"
     
     /* Message Context Properties */
     #define SANDESHA2_MSG_CTX_PROP_INTERNAL_SEQUENCE_ID "Sandesha2InternalSequenceId"
@@ -166,6 +171,8 @@ extern "C"
 	#define SANDESHA2_WSA_NS_PREFIX_ADDRESSING  "wsa"
 
 	#define SANDESHA2_WSA_ADDRESS  "Address"
+	
+    #define SANDESHA2_WSMC_ADDRESS  "Address"
 
 	#define SANDESHA2_WSA_SOAP_FAULT_ACTION  "http://schemas.xmlsoap.org/ws/2004/08/addressing/fault"
 
@@ -233,9 +240,9 @@ extern "C"
 
 	#define SANDESHA2_SEQ_PROP_ACKS_TO_EPR  "acksToEPR"
 
-	#define SANDESHA2_SEQ_PROP_OUT_SEQ_ID  "OutSequenceId"
+	#define SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID  "OutSequenceId"
 
-	#define SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID  "TempSequenceId"
+	#define SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID  "TempSequenceId"
 	
     #define SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID  "SpecialIntSequenceId"
 
@@ -283,8 +290,6 @@ extern "C"
 
     #define SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO "HighestOutRelatesTo"
 		
-	#define SANDESHA2_SEQ_PROP_HIGHEST_OUT_MSG_KEY  "HighestOutMsgKey"
-		
 	#define SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO  "LastOutMessage"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_NO  "LastInMessage"
@@ -292,6 +297,12 @@ extern "C"
     #define SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID  "LastInMessageId"
 
     #define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID "HighestInMsgId"
+    
+    #define SANDESHA2_SEQ_PROP_1_0_REPLAY "Replay1_0"
+    
+    #define SANDESHA2_SEQ_PROP_RELATED_MSG_ID "related_msg_id"
+    
+    #define SANDESHA2_SEQ_PROP_MAKE_CONNECTION_OUT_PATH "make_connection_out_path"
 	
 	/**
 	 * SOAP Versions
@@ -370,6 +381,8 @@ extern "C"
 	#define SANDESHA2_PROPERTIES_INACTIVETIMEOUT_MEASURE  "InactivityTimeoutMeasure"
 	
     #define SANDESHA2_PROPERTIES_TERMINATE_DELAY  "TerminateDelay"
+    
+    #define SANDESHA2_PROPERTIES_POLLING_DELAY  "PollingWaitTime"
 		
 	#define SANDESHA2_PROPERTIES_STORAGE_MGR  "StorageManager"
 		
@@ -425,13 +438,15 @@ extern "C"
 
 	#define SANDESHA2_INVOKER_SLEEP_TIME  1  /*4 1 */
 
-	#define SANDESHA2_SENDER_SLEEP_TIME  100000  /*micro seconds*/
+	#define SANDESHA2_SENDER_SLEEP_TIME  1  /*seconds*/
 
     #define SANDESHA2_POLLING_MANAGER_WAIT_TIME 3 /* 4 3 */
 
 	#define SANDESHA2_CLIENT_SLEEP_TIME  4 /* 32 16 */
 
 	#define SANDESHA2_TERMINATE_DELAY  4 /* In seconds */
+	
+    #define SANDESHA2_POLLING_DELAY  4 /* In seconds */
 
 	#define SANDESHA2_TEMP_SEQ_ID  "uuid:tempID"
 
@@ -494,7 +509,7 @@ extern "C"
 	
 	#define SANDESHA2_MODULE_CLASS_LOADER  "Sandesha2ModuleClassLoader"
 
-    #define SANDESHA2_WSRM_ANON_URI_PREFIX "http://docs.oasis-open.org/ws-rx/wsrm/200608/anonymous"
+    #define SANDESHA2_WSRM_ANON_URI_PREFIX "http://docs.oasis-open.org/ws-rx/wsrm/200702/anonymous"
 
     #define AXIS2_WS_RM_ANONYMOUS_URL "http://docs.oasis-open.org/ws-rx/wsmc/200702/anonymous?id="
     
@@ -517,9 +532,9 @@ extern "C"
     #define SANDESHA2_DB_PASSWORD "db_password"
 	#define SANDESHA2_SENDER_SLEEP  "SenderSleepTime"
 	#define SANDESHA2_INVOKER_SLEEP  "InvokerSleepTime"
-	#define SANDESHA2_POLLING_WAIT  "PollingWaitTime"
 	#define SANDESHA2_MODULE  "sandesha2"
 	#define SANDESHA2_ISOLATED_LAST_MSG "isolated_last_msg"
+	#define SANDESHA2_PROPERTY_STRING "propstr"
 /** @} */
 #ifdef __cplusplus
 }

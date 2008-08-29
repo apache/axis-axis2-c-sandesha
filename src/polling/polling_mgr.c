@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <platforms/axutil_platform_auto_sense.h>
 #include <axutil_types.h>
+#include <axiom_soap_const.h>
 
 
 /** 
@@ -45,29 +46,19 @@
  */
 typedef struct sandesha2_polling_mgr_args sandesha2_polling_mgr_args_t;
 
-struct sandesha2_polling_mgr_t
-{
-	axis2_conf_ctx_t *conf_ctx;
-    /**
-     * By adding an entry to this, the polling_mgr will be asked to do a polling 
-     * request on this sequence.
-     */
-    axutil_array_list_t *scheduled_polling_reqs;
-    axis2_bool_t poll;
-    axutil_thread_mutex_t *mutex;
-};
-
 struct sandesha2_polling_mgr_args
 {
-    sandesha2_polling_mgr_t *impl;
     axutil_env_t *env;
-    sandesha2_storage_mgr_t *storage_mgr;
+	axis2_conf_ctx_t *conf_ctx;
+    sandesha2_msg_ctx_t *rm_msg_ctx;
+    axis2_char_t *internal_sequence_id;
+    axis2_char_t *sequence_id;
 };
             
-static axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_run (
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env,
+static axis2_status_t AXIS2_CALL
+sandesha2_polling_mgr_process_make_connection_msg_response(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr);
 
 /**
@@ -78,129 +69,151 @@ sandesha2_polling_mgr_worker_func(
     axutil_thread_t *thd, 
     void *data);
 
-AXIS2_EXTERN sandesha2_polling_mgr_t* AXIS2_CALL
-sandesha2_polling_mgr_create(
-    const axutil_env_t *env)
-{
-    sandesha2_polling_mgr_t *polling_mgr = NULL;
-    
-    polling_mgr =  (sandesha2_polling_mgr_t *)AXIS2_MALLOC 
-        (env->allocator, 
-        sizeof(sandesha2_polling_mgr_t));
-	
-    if(!polling_mgr)
-	{
-		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
-	}
-    polling_mgr->scheduled_polling_reqs = NULL;
-    polling_mgr->poll = AXIS2_FALSE; 
-    polling_mgr->mutex = axutil_thread_mutex_create(env->allocator,
-        AXIS2_THREAD_MUTEX_DEFAULT);
-                        
-	return polling_mgr;
-}
-
-axis2_status_t AXIS2_CALL
-sandesha2_polling_mgr_free_void_arg(
-    void *polling_mgr,
-    const axutil_env_t *env)
-{
-    sandesha2_polling_mgr_t *polling_mgr_l = NULL;
-
-    polling_mgr_l = (sandesha2_polling_mgr_t *) polling_mgr;
-    return sandesha2_polling_mgr_free(polling_mgr_l, env);
-}
-
-axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_free(
-    sandesha2_polling_mgr_t *polling_mgr, 
-    const axutil_env_t *env)
-{
-    /* Do not free this */
-    polling_mgr->conf_ctx = NULL;
-    
-    if(polling_mgr->mutex)
-    {
-        axutil_thread_mutex_destroy(polling_mgr->mutex);
-        polling_mgr->mutex = NULL;
-    }
-    if(polling_mgr->scheduled_polling_reqs)
-    {
-        axutil_array_list_free(polling_mgr->scheduled_polling_reqs, env);
-        polling_mgr->scheduled_polling_reqs = NULL;
-    }
-	AXIS2_FREE(env->allocator, polling_mgr);
-	return AXIS2_SUCCESS;
-}
-
-axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_stop_polling (
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env)
-{
-    sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_FALSE);
-    return AXIS2_SUCCESS;
-}
-            
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_start (
-    sandesha2_polling_mgr_t *polling_mgr, 
-    const axutil_env_t *env, 
-    axis2_conf_ctx_t *conf_ctx,
-    const axis2_char_t *internal_seq_id)
-{
-    sandesha2_storage_mgr_t *storage_mgr = NULL;
-    axis2_char_t *dbname = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_polling_mgr_start");
-    AXIS2_PARAM_CHECK(env->error, conf_ctx, AXIS2_FAILURE);
-    
-    axutil_thread_mutex_lock(polling_mgr->mutex);
-    polling_mgr->conf_ctx = conf_ctx;
-    polling_mgr->scheduled_polling_reqs = axutil_array_list_create(env, 
-        AXIS2_ARRAY_LIST_DEFAULT_CAPACITY);
-
-    if(!polling_mgr->conf_ctx)
-    {
-        axutil_thread_mutex_unlock(polling_mgr->mutex);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "conf_ctx is NULL");
-        return AXIS2_FAILURE;
-    }
-    dbname = sandesha2_util_get_dbname(env, conf_ctx);
-    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
-    sandesha2_polling_mgr_set_poll(polling_mgr, env, AXIS2_TRUE);
-    sandesha2_polling_mgr_schedule_polling_request(polling_mgr, env, 
-        internal_seq_id);
-    sandesha2_polling_mgr_run(polling_mgr, env, storage_mgr);
-    axutil_thread_mutex_unlock(polling_mgr->mutex);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_polling_mgr_start");
-    return AXIS2_SUCCESS;
-}
-            
-static axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_run (
-    sandesha2_polling_mgr_t *polling_mgr,
     const axutil_env_t *env,
-    sandesha2_storage_mgr_t *storage_mgr)
+    axis2_conf_ctx_t *conf_ctx,
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_sender_mgr_t *sender_mgr,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_char_t *internal_sequence_id,
+    axis2_char_t *sequence_id,
+    const axis2_char_t *reply_to)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_polling_mgr_args_t *args = NULL;
+    axis2_char_t *wsmc_anon_reply_to_uri = NULL;
+    sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
+    axis2_char_t *make_conn_msg_store_key = NULL;
+    axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
+    sandesha2_sender_bean_t *make_conn_sender_bean = NULL;
+    axis2_status_t status = AXIS2_SUCCESS;
+    axis2_engine_t *engine = NULL;
+    axiom_soap_envelope_t *res_envelope = NULL;
+    axutil_property_t *property = NULL;
     
-    args = AXIS2_MALLOC(env->allocator, sizeof(
-                        sandesha2_polling_mgr_args_t)); 
-    args->impl = polling_mgr;
-    args->env = (axutil_env_t*)env;
-    args->storage_mgr = storage_mgr;
-    worker_thread = axutil_thread_pool_get_thread(env->thread_pool,
-        sandesha2_polling_mgr_worker_func, (void*)args);
-    if(!worker_thread)
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_polling_mgr_args_t)); 
+    args->env = axutil_init_thread_env(env);
+    args->conf_ctx = conf_ctx;
+    args->internal_sequence_id = (axis2_char_t *) internal_sequence_id;
+    args->sequence_id = (axis2_char_t *) sequence_id;
+
+    if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Thread creation failed" \
-            " sandesha2_polling_mgr_run");
+        wsmc_anon_reply_to_uri = axutil_strcat(env, AXIS2_WS_RM_ANONYMOUS_URL, sequence_id, NULL);
+    }
+
+    make_conn_rm_msg_ctx = sandesha2_msg_creator_create_make_connection_msg(env, rm_msg_ctx, 
+        sequence_id, internal_sequence_id, wsmc_anon_reply_to_uri, NULL);
+   
+    if(wsmc_anon_reply_to_uri)
+    {
+        AXIS2_FREE(env->allocator, wsmc_anon_reply_to_uri);
+    }
+
+    args->rm_msg_ctx = make_conn_rm_msg_ctx;
+
+    make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, env);
+
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_msg_ctx_set_property(make_conn_msg_ctx, env, SANDESHA2_SEQ_PROP_MAKE_CONNECTION_OUT_PATH, 
+            property);
+
+    make_conn_sender_bean = sandesha2_sender_bean_create(env);
+    if(make_conn_sender_bean)
+    {
+        axis2_char_t *msg_id = NULL;
+        long millisecs = 0;
+        axis2_endpoint_ref_t *to = NULL;
+
+        millisecs = sandesha2_utils_get_current_time_in_millis(env);
+        sandesha2_sender_bean_set_time_to_send(make_conn_sender_bean, env, millisecs);
+        make_conn_msg_store_key = axutil_uuid_gen(env);
+        sandesha2_sender_bean_set_msg_ctx_ref_key(make_conn_sender_bean, env, 
+                make_conn_msg_store_key);
+        msg_id = sandesha2_msg_ctx_get_msg_id(make_conn_rm_msg_ctx, env);
+        sandesha2_sender_bean_set_msg_id(make_conn_sender_bean, env, msg_id);
+        sandesha2_sender_bean_set_msg_type(make_conn_sender_bean, env, 
+            SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
+        sandesha2_sender_bean_set_resend(make_conn_sender_bean, env, AXIS2_FALSE);
+        sandesha2_sender_bean_set_send(make_conn_sender_bean, env, AXIS2_TRUE);
+        sandesha2_sender_bean_set_internal_seq_id(make_conn_sender_bean, env, 
+                (axis2_char_t *) internal_sequence_id);
+
+        to = sandesha2_msg_ctx_get_to(make_conn_rm_msg_ctx, env);
+        if(to)
+        {
+            axis2_char_t *address = NULL;
+            
+            address = (axis2_char_t *) axis2_endpoint_ref_get_address(
+                    (const axis2_endpoint_ref_t *) to, env);
+            sandesha2_sender_bean_set_to_address(make_conn_sender_bean, env, address);
+        }
+    }
+    else
+    {
         return AXIS2_FAILURE;
     }
+
+    if(sender_mgr)
+    {
+        sandesha2_sender_mgr_insert(sender_mgr, env, make_conn_sender_bean);
+        sandesha2_sender_bean_free(make_conn_sender_bean, env);
+    }
+    
+    engine = axis2_engine_create(env, conf_ctx);
+    status = axis2_engine_send(engine, env, make_conn_msg_ctx);
+    if(engine)
+    {
+        axis2_engine_free(engine, env);
+    }
+
+    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, make_conn_msg_store_key, make_conn_msg_ctx, 
+            AXIS2_TRUE);
+
+    res_envelope = axis2_msg_ctx_get_response_soap_envelope(make_conn_msg_ctx, env);
+
+    if(!res_envelope)
+    {
+        axis2_char_t *soap_ns_uri = NULL;
+
+        soap_ns_uri = axis2_msg_ctx_get_is_soap_11(make_conn_msg_ctx, env) ?
+             AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+        res_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
+                make_conn_msg_ctx, soap_ns_uri);
+    }
+
+    if(res_envelope)
+    {
+        axis2_msg_ctx_set_response_soap_envelope(make_conn_msg_ctx, env, res_envelope);
+        status = sandesha2_polling_mgr_process_make_connection_msg_response(env, make_conn_msg_ctx, 
+                storage_mgr);
+
+        if(AXIS2_SUCCESS != status)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Make connection message response process failed for sequence %s", 
+                internal_sequence_id);
+
+            return AXIS2_FAILURE;
+        }
+    }
+
+    worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
+            sandesha2_polling_mgr_worker_func, (void*)args);
+
+    if(!worker_thread)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Thread creation failed sandesha2_polling_mgr_run");
+
+        return AXIS2_FAILURE;
+    }
+
     axutil_thread_pool_thread_detach(env->thread_pool, worker_thread); 
         
     return AXIS2_SUCCESS;
@@ -214,259 +227,236 @@ sandesha2_polling_mgr_worker_func(
     axutil_thread_t *thd, 
     void *data)
 {
-    axis2_char_t *dbname = NULL; 
-    sandesha2_polling_mgr_args_t *args = (sandesha2_polling_mgr_args_t*)data;
-    axutil_env_t *env = args->env;
-    sandesha2_polling_mgr_t *polling_mgr = args->impl;
-    sandesha2_storage_mgr_t *storage_mgr = args->storage_mgr;
+    axis2_char_t *dbname = NULL;
+    axis2_char_t *internal_sequence_id = NULL;
+    axis2_char_t *sequence_id = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
     sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Entry:sandesha2_polling_mgr_worker_func");
+    axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
+    sandesha2_property_bean_t *property_bean = NULL;
+    axis2_conf_t *conf = NULL;
+    int wait_time = 0;
+    axis2_status_t status = AXIS2_FAILURE;
+    sandesha2_sender_bean_t *find_sender_bean = NULL;
+    sandesha2_sender_bean_t *sender_bean = NULL;
+    axis2_char_t *key = NULL;
+    
+    sandesha2_polling_mgr_args_t *args = (sandesha2_polling_mgr_args_t*)data;
+    axutil_env_t *env = args->env;
+    conf_ctx = args->conf_ctx;
+    internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
+    sequence_id = axutil_strdup(env, args->sequence_id);
 
-    dbname = sandesha2_util_get_dbname(env, polling_mgr->conf_ctx);
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_polling_mgr_worker_func");
+
+    dbname = sandesha2_util_get_dbname(env, conf_ctx);
+    
+    storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
+ 
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
+    property_bean = sandesha2_utils_get_property_bean(env, conf);
+    wait_time = sandesha2_property_bean_get_polling_delay(property_bean, env);
 
-    while(polling_mgr->poll)
+    find_sender_bean = sandesha2_sender_bean_create(env);
+    sandesha2_sender_bean_set_msg_type(find_sender_bean, env, SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
+    sandesha2_sender_bean_set_internal_seq_id(find_sender_bean, env, internal_sequence_id);
+    sandesha2_sender_bean_set_send(find_sender_bean, env, AXIS2_TRUE);
+
+    sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+    if(find_sender_bean)
     {
-        sandesha2_next_msg_bean_t *next_msg_bean = NULL;
-        sandesha2_msg_ctx_t *ref_rm_msg_ctx = NULL;
-        sandesha2_msg_ctx_t *make_conn_rm_msg_ctx = NULL;
-        sandesha2_sender_bean_t *make_conn_sender_bean = NULL;
-        int size = 0;
-        axis2_char_t *seq_id = NULL;
-        axis2_char_t *make_conn_seq_id = NULL;
-        axis2_char_t *ref_msg_key = NULL;
-        axis2_char_t *seq_prop_key = NULL;
-        axis2_char_t *reply_to = NULL;
-        axis2_char_t *wsrm_anon_reply_to_uri = NULL;
-        axis2_char_t *make_conn_msg_store_key = NULL;
-        axis2_char_t *msg_id = NULL;
-        axis2_msg_ctx_t *ref_msg_ctx = NULL;
-        axis2_msg_ctx_t *make_conn_msg_ctx = NULL;
-        axis2_endpoint_ref_t *to = NULL;
+        sandesha2_sender_bean_free(find_sender_bean, env);
+    }
+    if(sender_bean)
+    {
+        key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
+    }
+
+    while(AXIS2_TRUE)
+    {
+        axiom_soap_envelope_t *res_envelope = NULL;
+        axis2_char_t *soap_ns_uri = NULL;
         axutil_property_t *property = NULL;
-        axutil_qname_t *qname = NULL;
-        axutil_param_t *wait_time_param = NULL;
-        int wait_time = 0;
-        axis2_conf_t *conf = NULL;
-        axis2_module_desc_t *module_desc = NULL;
-        axis2_status_t status = AXIS2_FAILURE;
 
-        conf = axis2_conf_ctx_get_conf(polling_mgr->conf_ctx, env);
-        qname = axutil_qname_create(env, "sandesha2", NULL, NULL);
-        module_desc = axis2_conf_get_module(conf, env, qname);
-        wait_time_param = axis2_module_desc_get_param(module_desc, env, 
-            SANDESHA2_POLLING_WAIT);
-        if(wait_time_param)
-        {
-            wait_time = AXIS2_ATOI(axutil_param_get_value(wait_time_param, env));
-        }
-        if(qname)
-            axutil_qname_free(qname, env);
+        axis2_transport_out_desc_t *transport_out = NULL;
+        axis2_transport_sender_t *transport_sender = NULL;
+        axis2_bool_t successfully_sent = AXIS2_FALSE;
+
         AXIS2_SLEEP(wait_time);
-         /* Getting the sequences to be polled. if schedule contains any requests, 
-          * do the earliest one. else pick one randomly.
-          */
-        if(polling_mgr->scheduled_polling_reqs)
-            size = axutil_array_list_size(polling_mgr->scheduled_polling_reqs, 
-                env);
-        if(size > 0)
-        {
-            seq_id = axutil_array_list_get(polling_mgr->scheduled_polling_reqs, 
-                env, 0);
-            /*axutil_array_list_remove(polling_mgr->scheduled_polling_reqs, env, 0);*/
-        }
-        if(!seq_id)
-        {
-            sandesha2_next_msg_bean_t *find_bean = 
-                sandesha2_next_msg_bean_create(env);
-            int size = 0;
-            if(find_bean)
-            {
-                axutil_array_list_t *results = NULL;
-                sandesha2_next_msg_bean_set_polling_mode(find_bean, env, 
-                    AXIS2_TRUE);
-                results = sandesha2_next_msg_mgr_find(next_msg_mgr, env, 
-                    find_bean);
-                if(results)
-                    size = axutil_array_list_size(results, env);
-                if(size > 0)
-                {
-                    unsigned int rand_var = 
-                        axutil_rand_get_seed_value_based_on_time(env);
-                    int item = axutil_rand_with_range(&rand_var, 0, size);
-                    item--;
-                    next_msg_bean = (sandesha2_next_msg_bean_t *) 
-                        axutil_array_list_get(results, env, item);
-                }
+        
+        make_conn_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, 
+                AXIS2_TRUE);
 
-            }
-        }
-        else
+        property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+        axis2_msg_ctx_set_property(make_conn_msg_ctx, env, SANDESHA2_SEQ_PROP_MAKE_CONNECTION_OUT_PATH, 
+                property);
+
+        soap_ns_uri = axis2_msg_ctx_get_is_soap_11(make_conn_msg_ctx, env) ?
+             AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+             AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Sending make connection message for sequence with internal sequence id %s", 
+            internal_sequence_id);
+
+        transport_out = axis2_msg_ctx_get_transport_out_desc(make_conn_msg_ctx, env);
+        if(transport_out)
         {
-            sandesha2_next_msg_bean_t *find_bean = 
-                sandesha2_next_msg_bean_create(env);
-            if(find_bean)
+            transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
+        }
+        if(transport_sender)
+        {
+            /* This is neccessary to avoid a double free at http_sender.c */
+            axis2_msg_ctx_set_property(make_conn_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
+            if(AXIS2_TRANSPORT_SENDER_INVOKE(transport_sender, env, make_conn_msg_ctx))
             {
-                sandesha2_next_msg_bean_set_polling_mode(find_bean, env, 
-                    AXIS2_TRUE);
-                sandesha2_next_msg_bean_set_internal_seq_id(find_bean, env, seq_id);
-                next_msg_bean = sandesha2_next_msg_mgr_find_unique(next_msg_mgr,
-                    env, find_bean);
-            }
-        }
-        /* If no valid entry is found, try again later */
-        if(!next_msg_bean)
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "No valid MakeConnection entry is found.");
-            continue;
-        }
-        make_conn_seq_id = sandesha2_next_msg_bean_get_seq_id(next_msg_bean, env);
-        /* Create a MakeConnection message */
-        ref_msg_key = sandesha2_next_msg_bean_get_ref_msg_key(next_msg_bean, env);
-        seq_prop_key = make_conn_seq_id;
-        reply_to = sandesha2_utils_get_seq_property(env, seq_prop_key, 
-            SANDESHA2_SEQ_PROP_REPLY_TO_EPR, seq_prop_mgr);
-        if(sandesha2_utils_is_wsrm_anon_reply_to(env, reply_to))
-            wsrm_anon_reply_to_uri = reply_to;
-        ref_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, 
-            ref_msg_key, polling_mgr->conf_ctx, AXIS2_FALSE);
-        if(ref_msg_ctx)
-            ref_rm_msg_ctx = sandesha2_msg_init_init_msg(env, ref_msg_ctx);
-        make_conn_rm_msg_ctx = 
-            sandesha2_msg_creator_create_make_connection_msg(env, 
-            ref_rm_msg_ctx, make_conn_seq_id, wsrm_anon_reply_to_uri, seq_prop_mgr);
-        if(reply_to)
-            AXIS2_FREE(env->allocator, reply_to);
-        if(!make_conn_rm_msg_ctx)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "No memory");
-            AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-            if(seq_prop_mgr)
-                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-            if(sender_mgr)
-                sandesha2_sender_mgr_free(sender_mgr, env);
-            if(next_msg_mgr)
-                sandesha2_next_msg_mgr_free(next_msg_mgr, env);
-            return NULL;
-        }
-        sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
-            AXIS2_TRANSPORT_IN, NULL);
-        /* Storing the MakeConnection message */
-        make_conn_msg_store_key = axutil_uuid_gen(env);
-        property = axutil_property_create_with_args(env, 0, 0, 0, seq_prop_key);
-        sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
-            SANDESHA2_MSG_CTX_PROP_SEQUENCE_PROPERTY_KEY, property); 
-        make_conn_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(make_conn_rm_msg_ctx, 
-            env);
-        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, 
-            make_conn_msg_store_key, make_conn_msg_ctx);
-        /* Adde an entry for the MakeConnection message to the sender(with, 
-         * send=true, resend=false)
-         */
-        make_conn_sender_bean = sandesha2_sender_bean_create(env);
-        if(make_conn_sender_bean)
-        {
-            long millisecs = 0;
-            millisecs = sandesha2_utils_get_current_time_in_millis(env);
-            sandesha2_sender_bean_set_time_to_send(make_conn_sender_bean, env, 
-                millisecs);
-            sandesha2_sender_bean_set_msg_ctx_ref_key(make_conn_sender_bean, env, 
-                make_conn_msg_store_key);
-            msg_id = sandesha2_msg_ctx_get_msg_id(make_conn_rm_msg_ctx, env);
-            sandesha2_sender_bean_set_msg_id(make_conn_sender_bean, env, msg_id);
-            sandesha2_sender_bean_set_msg_type(make_conn_sender_bean, env, 
-                SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG);
-            sandesha2_sender_bean_set_resend(make_conn_sender_bean, env, AXIS2_FALSE);
-            sandesha2_sender_bean_set_send(make_conn_sender_bean, env, AXIS2_TRUE);
-            /*sandesha2_sender_bean_set_seq_id(make_conn_sender_bean, env, seq_id);*/
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]seq_id:%s", seq_id);
-            sandesha2_sender_bean_set_internal_seq_id(make_conn_sender_bean, 
-                env, seq_id);
-            to = sandesha2_msg_ctx_get_to(make_conn_rm_msg_ctx, env);
-            if(to)
+                successfully_sent = AXIS2_TRUE;
+            }else
             {
-                axis2_char_t *address = (axis2_char_t *) 
-                    axis2_endpoint_ref_get_address(
-                    (const axis2_endpoint_ref_t *) to, env);
-                sandesha2_sender_bean_set_to_address(make_conn_sender_bean, env, 
-                    address);
+                successfully_sent = AXIS2_FALSE;
             }
         }
-        /* This message should not be sent untils it is qualified. i.e. Till
-         * it is sent through the sandesha2_transport_sender
-         */
-        property = axutil_property_create_with_args(env, 0, 0, 0, 
-            AXIS2_VALUE_FALSE);
-        sandesha2_msg_ctx_set_property(make_conn_rm_msg_ctx, env, 
-            SANDESHA2_QUALIFIED_FOR_SENDING, property);
-        if(sender_mgr)
+
+        if(successfully_sent)
         {
-            sandesha2_sender_mgr_insert(sender_mgr, env, 
-                make_conn_sender_bean);
+            res_envelope = axis2_msg_ctx_get_response_soap_envelope(make_conn_msg_ctx, env);
         }
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]Sending the make "\
-            "connection message for the sequence with internal sequence id %s", 
-            seq_id);
-        status = sandesha2_utils_execute_and_store(env, make_conn_rm_msg_ctx, 
-            make_conn_msg_store_key);
-        if(!status)
+
+        if(!res_envelope)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[sandesha2]make_connection sending failed");
-            if(seq_prop_mgr)
-                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-            if(sender_mgr)
-                sandesha2_sender_mgr_free(sender_mgr, env);
-            if(next_msg_mgr)
-                sandesha2_next_msg_mgr_free(next_msg_mgr, env);
-            return NULL;
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+            res_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
+                    make_conn_msg_ctx, soap_ns_uri);
+        }
+        
+        if(res_envelope)
+        {
+            axis2_msg_ctx_set_response_soap_envelope(make_conn_msg_ctx, env, res_envelope);
+            status = sandesha2_polling_mgr_process_make_connection_msg_response(env, make_conn_msg_ctx, 
+                    storage_mgr);
+
+            if(AXIS2_SUCCESS != status)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Make connection message response process failed for sequence %s", 
+                    internal_sequence_id);
+
+                break;
+            }
         }
     }
+
     if(seq_prop_mgr)
+    {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
     if(sender_mgr)
+    {
         sandesha2_sender_mgr_free(sender_mgr, env);
+    }
+
     if(next_msg_mgr)
+    {
         sandesha2_next_msg_mgr_free(next_msg_mgr, env);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-        "[sandesha2]Exit:sandesha2_polling_mgr_worker_func");
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_polling_mgr_worker_func");
+
     return NULL;
 }
 
-void AXIS2_CALL
-sandesha2_polling_mgr_set_poll(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env,
-    axis2_bool_t poll)
+static axis2_status_t AXIS2_CALL
+sandesha2_polling_mgr_process_make_connection_msg_response(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr)
 {
-    polling_mgr->poll = poll;
-}
+    axis2_char_t *soap_ns_uri = NULL;
+    axis2_msg_ctx_t *response_msg_ctx = NULL;
+    axiom_soap_envelope_t *response_envelope = NULL;
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_engine_t *engine = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+    axis2_endpoint_ref_t *to = NULL;
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Entry:sandesha2_polling_mgr_process_make_connection_msg_response");
 
-axis2_bool_t AXIS2_CALL
-sandesha2_polling_mgr_is_poll(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env)
-{
-    return polling_mgr->poll;
-}
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
-void AXIS2_CALL
-sandesha2_polling_mgr_schedule_polling_request(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env,
-    const axis2_char_t *internal_seq_id)
-{
-    if(!axutil_array_list_contains(polling_mgr->scheduled_polling_reqs, env, 
-        (axis2_char_t *)internal_seq_id))
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+
+    soap_ns_uri = axis2_msg_ctx_get_is_soap_11(msg_ctx, env) ?
+         AXIOM_SOAP11_SOAP_ENVELOPE_NAMESPACE_URI:
+         AXIOM_SOAP12_SOAP_ENVELOPE_NAMESPACE_URI;
+
+    response_envelope = axis2_msg_ctx_get_response_soap_envelope(msg_ctx, env);
+    if(!response_envelope)
     {
-        axutil_array_list_add(polling_mgr->scheduled_polling_reqs, env, 
-            internal_seq_id);
+        response_envelope = (axiom_soap_envelope_t *) axis2_http_transport_utils_create_soap_msg(env, 
+                msg_ctx, soap_ns_uri);
+        if(!response_envelope)
+        {
+            /* There is no response message context. */
+
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Response envelope not found");
+
+            return AXIS2_SUCCESS;
+        }
     }
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+        "[sandesha2] Response envelope for make connection message found");
+
+    response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
+                env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
+   
+    to = axis2_endpoint_ref_create(env, 
+        "http://localhost/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+    axis2_msg_ctx_set_to(response_msg_ctx, env, to);
+
+    axis2_msg_ctx_set_wsa_action(response_msg_ctx, env, 
+            "http://localhost/axis2/services/__ANONYMOUS_SERVICE__/__OPERATION_OUT_IN__");
+
+    axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
+
+    /*axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);*/
+
+    axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
+    axis2_msg_ctx_set_svc_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(msg_ctx, env));
+    axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
+    axis2_msg_ctx_set_conf_ctx(response_msg_ctx, env, conf_ctx);
+
+
+    engine = axis2_engine_create(env, conf_ctx);
+    if(engine)
+    {
+        if(sandesha2_util_is_fault_envelope(env, response_envelope))
+        {
+            status = axis2_engine_receive_fault(engine, env, response_msg_ctx);
+        }
+        else
+        {
+            status = axis2_engine_receive(engine, env, response_msg_ctx);
+        }
+            axis2_engine_free(engine, env);
+    }
+
+    axis2_msg_ctx_set_paused(response_msg_ctx, env, AXIS2_FALSE);
+    axis2_msg_ctx_free(response_msg_ctx, env);
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
+        "[sandesha2] Exit:sandesha2_polling_mgr_process_make_connection_msg_response");
+
+    return AXIS2_SUCCESS;
 }
+
 

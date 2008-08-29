@@ -180,10 +180,10 @@ sandesha2_close_seq_set_identifier(
 {
  	if(close_seq->identifier)
 	{
-	    /*
-		SANDESHA2_IDENTIFIER_FREE(close_seq->identifier, env);
+	    
+		sandesha2_identifier_free(close_seq->identifier, env);
 		close_seq->identifier = NULL;
-		*/
+	
 	}
 	close_seq->identifier = identifier;
  	return AXIS2_SUCCESS;
@@ -227,7 +227,7 @@ sandesha2_close_seq_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

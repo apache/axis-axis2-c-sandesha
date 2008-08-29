@@ -112,8 +112,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_callback_t *callback,
-    axis2_listener_manager_t *listener_manager);
+    axis2_callback_t *callback);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
@@ -202,15 +201,6 @@ sandesha2_client_send_non_blocking(
     axiom_node_t *payload,
     axis2_listener_manager_t *listener_manager);
 
-AXIS2_EXTERN void AXIS2_CALL
-sandesha2_client_fire_and_forget(
-    const axutil_env_t *env,
-    axis2_svc_client_t *svc_client,
-    axis2_options_t *options,
-    axutil_qname_t *op_qname,
-    axis2_callback_t *callback,
-    axiom_node_t *payload,
-    axis2_listener_manager_t *listener_manager);
 
 /**
  * In RM 1.0 two way single channel messaging user need

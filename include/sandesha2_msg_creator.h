@@ -123,6 +123,7 @@ sandesha2_msg_creator_create_make_connection_msg(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *ref_rm_msg_ctx, 
     axis2_char_t *make_conn_seq_id,
+    const axis2_char_t *internal_seq_id,
     axis2_char_t *make_conn_anon_uri,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
 

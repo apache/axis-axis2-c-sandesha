@@ -59,23 +59,23 @@ sandesha2_create_seq_bean_set_create_seq_msg_id (
     axis2_char_t* seq_msg_id) ;
 
 axis2_char_t* AXIS2_CALL 
-sandesha2_create_seq_bean_get_seq_id (
+sandesha2_create_seq_bean_get_rms_sequence_id (
     sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env);
 	
 void AXIS2_CALL
-sandesha2_create_seq_bean_set_seq_id (
+sandesha2_create_seq_bean_set_rms_sequence_id (
     sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env, 
     axis2_char_t* seq_id) ;
 
 axis2_char_t* AXIS2_CALL
-sandesha2_create_seq_bean_get_internal_seq_id (
+sandesha2_create_seq_bean_get_internal_sequence_id (
     sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env);
 
 void AXIS2_CALL
-sandesha2_create_seq_bean_set_internal_seq_id (
+sandesha2_create_seq_bean_set_internal_sequence_id (
     sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env, 
     axis2_char_t* int_seq_id);

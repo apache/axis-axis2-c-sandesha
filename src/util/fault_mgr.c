@@ -36,44 +36,50 @@
 sandesha2_msg_ctx_t* AXIS2_CALL 
 sandesha2_fault_mgr_check_for_create_seq_refused (
     const axutil_env_t *env,
-    axis2_msg_ctx_t *create_seq_msg,
+    sandesha2_msg_ctx_t *rm_create_seq_msg_ctx,
     sandesha2_seq_property_mgr_t *seq_prop_mgr)
 {
-    sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_create_seq_t *create_seq = NULL;
     axis2_bool_t refuse_seq = AXIS2_FALSE;
     
-    AXIS2_PARAM_CHECK(env->error, create_seq_msg, NULL);
+    AXIS2_PARAM_CHECK(env->error, rm_create_seq_msg_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
-    rm_msg_ctx = sandesha2_msg_init_init_msg(env, create_seq_msg);
-    create_seq = sandesha2_msg_ctx_get_create_seq(rm_msg_ctx, env);
+    create_seq = sandesha2_msg_ctx_get_create_seq(rm_create_seq_msg_ctx, env);
     
-    if(NULL == create_seq)
+    if(!create_seq)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, 
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, AXIS2_FAILURE);
         return NULL;
     }
-    if(AXIS2_TRUE == refuse_seq)
+    if(refuse_seq)
     {
+        axiom_soap_envelope_t *soap_envelope = NULL;
         sandesha2_fault_data_t *fault_data = NULL;
+
         fault_data = sandesha2_fault_data_create(env);
         sandesha2_fault_data_set_type(fault_data, env, 
                         SANDESHA2_SOAP_FAULT_TYPE_CREATE_SEQ_REFUSED);
-        if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, 
-                        sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env)))
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP11_FAULT_CODE_SENDER);
+
+        soap_envelope = sandesha2_msg_ctx_get_soap_envelope(rm_create_seq_msg_ctx, env);
+        if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, soap_envelope))
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP11_FAULT_CODE_SENDER);
+        }
         else
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP12_FAULT_CODE_SENDER);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP12_FAULT_CODE_SENDER);
+        }
+
         sandesha2_fault_data_set_sub_code(fault_data, env, 
-                        SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQ_REFUSED);
+                SANDESHA2_SOAP_FAULT_SUBCODE_CREATE_SEQ_REFUSED);
+
         sandesha2_fault_data_set_reason(fault_data, env, "");
-        return sandesha2_fault_mgr_get_fault(env, rm_msg_ctx, fault_data,
-            sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env), seq_prop_mgr);
+
+        return sandesha2_fault_mgr_get_fault(env, rm_create_seq_msg_ctx, fault_data,
+            sandesha2_msg_ctx_get_addr_ns_val(rm_create_seq_msg_ctx, env), seq_prop_mgr);
     }
+
     return NULL;
 }
             
@@ -160,43 +166,56 @@ sandesha2_fault_mgr_check_for_unknown_seq(
 {
     int type = -1;
     axis2_bool_t valid_seq = AXIS2_TRUE;
-    
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] sandesha2_fault_mgr_check_for_unknown_seq");
+
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     AXIS2_PARAM_CHECK(env->error, create_seq_mgr, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     
     type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
-    if(SANDESHA2_MSG_TYPE_ACK == type || 
-        SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE == type ||
-        SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == type ||
+    if(SANDESHA2_MSG_TYPE_ACK == type || SANDESHA2_MSG_TYPE_CREATE_SEQ_RESPONSE == type ||
+        SANDESHA2_MSG_TYPE_TERMINATE_SEQ_RESPONSE == type || 
         SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE == type)
     {
         sandesha2_create_seq_bean_t *find_bean = NULL;
         axutil_array_list_t *list = NULL;
+
         find_bean = sandesha2_create_seq_bean_create(env);
-        sandesha2_create_seq_bean_set_seq_id(find_bean, env, seq_id);
-        list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, 
-                        find_bean);
+        sandesha2_create_seq_bean_set_rms_sequence_id(find_bean, env, seq_id);
+        list = sandesha2_create_seq_mgr_find(create_seq_mgr, env, find_bean);
         if(find_bean)
+        {
             sandesha2_create_seq_bean_free(find_bean, env);
+        }
+
         if(list)
         {
             int i = 0, size = 0;
             size = axutil_array_list_size(list, env);
             if(0 == size)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Not a valid sequence message");
                 valid_seq = AXIS2_FALSE;
+            }
+
             for(i = 0; i < size; i++)
             {
-                sandesha2_create_seq_bean_t *create_seq_bean = 
-                    axutil_array_list_get(list, env, i);
+                sandesha2_create_seq_bean_t *create_seq_bean = axutil_array_list_get(list, env, i);
                 if(create_seq_bean)
+                {
                     sandesha2_create_seq_bean_free(create_seq_bean, env);
+                }
             }
+
             axutil_array_list_free(list, env);
         }
         else
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Not a valid sequence message");
             valid_seq = AXIS2_FALSE;        
+        }
     }
     else
     {
@@ -214,33 +233,50 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 axis2_char_t *tmp_id = NULL;
                 
                 next_bean = axutil_array_list_get(list, env, i);
-                tmp_id = sandesha2_next_msg_bean_get_seq_id(
-                    next_bean, env);
+                tmp_id = sandesha2_next_msg_bean_get_seq_id(next_bean, env);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] tmp_sequence_id:%s", tmp_id);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] sequence_id:%s", seq_id);
                 if(contains)
                 {
                     if(next_bean)
+                    {
                         sandesha2_next_msg_bean_free(next_bean, env);
+                    }
+
                     continue;
                 }
-                if(0 == axutil_strcmp(seq_id, tmp_id))
+                if(!axutil_strcmp(seq_id, tmp_id))
                 {
                     if(next_bean)
+                    {
                         sandesha2_next_msg_bean_free(next_bean, env);
+                    }
+
                     contains = AXIS2_TRUE;
                 }
                 else
                 {
                     if(next_bean)
+                    {
                         sandesha2_next_msg_bean_free(next_bean, env);
+                    }
                 }
             }
+
             axutil_array_list_free(list, env);
         }
+
         if(contains)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Not a valid sequence message");
             valid_seq = AXIS2_TRUE;
+        }
         else
+        {
             valid_seq = AXIS2_FALSE;
+        }
     }
+
     if(!valid_seq)
     {
         sandesha2_fault_data_t *fault_data = NULL;
@@ -253,25 +289,33 @@ sandesha2_fault_mgr_check_for_unknown_seq(
         rm_ns_val = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
         if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, 
                         sandesha2_msg_ctx_get_soap_envelope(rm_msg_ctx, env)))
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP11_FAULT_CODE_SENDER);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP11_FAULT_CODE_SENDER);
+        }
         else
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP12_FAULT_CODE_SENDER);
-        sandesha2_fault_data_set_sub_code(fault_data, env, 
-                        SANDESHA2_SOAP_FAULT_SUBCODE_UNKNOWN_SEQ);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP12_FAULT_CODE_SENDER);
+        }
+
+        sandesha2_fault_data_set_sub_code(fault_data, env, SANDESHA2_SOAP_FAULT_SUBCODE_UNKNOWN_SEQ);
         qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER,
                         rm_ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-        detail_ele = axiom_element_create_with_qname(env, NULL, qname, 
-                        &detail_node);
+        detail_ele = axiom_element_create_with_qname(env, NULL, qname, &detail_node);
         if(qname)
+        {
             axutil_qname_free(qname, env);
+        }
+
         sandesha2_fault_data_set_detail(fault_data, env, detail_node);
-        sandesha2_fault_data_set_reason(fault_data, env, "A sequence with the" \
-                        " given sequenceID has NOT been established");
+        sandesha2_fault_data_set_reason(fault_data, env, 
+                "A sequence with the given sequenceID has NOT been established");
+
         return sandesha2_fault_mgr_get_fault(env, rm_msg_ctx, fault_data,
             sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env), seq_prop_mgr);
     }
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] sandesha2_fault_mgr_check_for_unknown_seq");
+
     return NULL;
 }
 

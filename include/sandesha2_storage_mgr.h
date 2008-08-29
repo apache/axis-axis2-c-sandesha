@@ -82,7 +82,8 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 sandesha2_storage_mgr_t *storage_mgr,
                 const axutil_env_t *env,
                 axis2_char_t *key,
-                axis2_msg_ctx_t *msg_ctx);
+                axis2_msg_ctx_t *msg_ctx,
+                axis2_bool_t store_in_memory);
                 
     axis2_status_t (AXIS2_CALL *
             update_msg_ctx)(
@@ -140,7 +141,6 @@ AXIS2_DECLARE_DATA struct sandesha2_storage_mgr_ops
                 const axutil_env_t *env, 
                 axis2_char_t *seq_id,
                 int msg_no);
-
 };
 
 AXIS2_DECLARE_DATA struct sandesha2_storage_mgr
@@ -202,7 +202,8 @@ sandesha2_storage_mgr_store_msg_ctx(
     sandesha2_storage_mgr_t *storage_mgr,
     const axutil_env_t *env,
     axis2_char_t *key,
-    axis2_msg_ctx_t *msg_ctx);
+    axis2_msg_ctx_t *msg_ctx,
+    axis2_bool_t store_in_memory);
 			
 axis2_status_t AXIS2_CALL
 sandesha2_storage_mgr_update_msg_ctx(

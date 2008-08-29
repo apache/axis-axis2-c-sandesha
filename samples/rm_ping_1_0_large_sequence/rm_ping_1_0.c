@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 8
+#define SANDESHA2_SLEEP 4
 
 axiom_node_t *
 build_om_programatically(
@@ -150,8 +150,10 @@ int main(int argc, char** argv)
     payload = build_om_programatically(env, "ping100", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
+    {
         printf("\nping client invoke SUCCESSFUL!\n");
-    sleep(64); 
+    }
+
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 

@@ -24,8 +24,10 @@
 struct sandesha2_seq_offer_t
 {
 	sandesha2_identifier_t *identifier;
+	sandesha2_endpoint_t *endpoint;
 	sandesha2_expires_t *expires;
 	axis2_char_t *ns_val;
+    axis2_char_t *addr_ns_val;
 };
 
 static axis2_bool_t AXIS2_CALL 
@@ -36,10 +38,12 @@ sandesha2_seq_offer_is_namespace_supported(
 AXIS2_EXTERN sandesha2_seq_offer_t* AXIS2_CALL
 sandesha2_seq_offer_create(
     const axutil_env_t *env,  
-    axis2_char_t *ns_val)
+    axis2_char_t *ns_val,
+	axis2_char_t *addr_ns_val)
 {
     sandesha2_seq_offer_t *seq_offer = NULL;
     AXIS2_PARAM_CHECK(env->error, ns_val, NULL);
+    AXIS2_PARAM_CHECK(env->error, addr_ns_val, NULL);
     
     if(AXIS2_FALSE == sandesha2_seq_offer_is_namespace_supported(env, ns_val))
     {
@@ -55,8 +59,11 @@ sandesha2_seq_offer_create(
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
+
     seq_offer->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
+    seq_offer->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
     seq_offer->identifier = NULL;
+    seq_offer->endpoint = NULL;
     seq_offer->expires = NULL;
     
 	return seq_offer;
@@ -73,7 +80,25 @@ sandesha2_seq_offer_free (
         AXIS2_FREE(env->allocator, seq_offer->ns_val);
         seq_offer->ns_val = NULL;
     }
-    seq_offer->identifier = NULL;
+
+    if(seq_offer->addr_ns_val)
+    {
+        AXIS2_FREE(env->allocator, seq_offer->addr_ns_val);
+        seq_offer->addr_ns_val = NULL;
+    }
+
+    if(seq_offer->identifier)
+    {
+        sandesha2_identifier_free(seq_offer->identifier, env);
+        seq_offer->identifier = NULL;
+    }
+    
+    if(seq_offer->endpoint)
+    {
+        sandesha2_endpoint_free(seq_offer->endpoint, env);
+        seq_offer->endpoint = NULL;
+    }
+
     seq_offer->expires = NULL;
 	AXIS2_FREE(env->allocator, seq_offer);
 	return AXIS2_SUCCESS;
@@ -126,13 +151,25 @@ sandesha2_seq_offer_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    seq_offer->identifier = sandesha2_identifier_create(env, 
-        seq_offer->ns_val); 
-    if(NULL == seq_offer->identifier)
+
+    seq_offer->identifier = sandesha2_identifier_create(env, seq_offer->ns_val); 
+    if(!seq_offer->identifier)
     {
         return NULL;
     }
+
     sandesha2_identifier_from_om_node(seq_offer->identifier, env, so_node);
+
+    seq_offer->endpoint = sandesha2_endpoint_create(env, NULL, seq_offer->ns_val, 
+            seq_offer->addr_ns_val); 
+
+    if(!seq_offer->endpoint)
+    {
+        return NULL;
+    }
+
+    sandesha2_endpoint_from_om_node(seq_offer->endpoint, env, so_node);
+
     exp_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_EXPIRES,
         seq_offer->ns_val, NULL);
     if(NULL == exp_qname)
@@ -168,31 +205,38 @@ sandesha2_seq_offer_to_om_node(
     
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    if(NULL == seq_offer->identifier)
+    if(!seq_offer->identifier)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
-    rm_ns = axiom_namespace_create(env, seq_offer->ns_val,
-        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
-    if(NULL == rm_ns)
-    {
-        return NULL;
-    }
-    so_element = axiom_element_create(env, NULL, 
-        SANDESHA2_WSRM_COMMON_SEQ_OFFER, rm_ns, &so_node);
-    if(NULL == so_element)
+    
+    rm_ns = axiom_namespace_create(env, seq_offer->ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+    if(!rm_ns)
     {
         return NULL;
     }
+
+    so_element = axiom_element_create(env, NULL, SANDESHA2_WSRM_COMMON_SEQ_OFFER, rm_ns, &so_node);
+    if(!so_element)
+    {
+        return NULL;
+    }
+
     sandesha2_identifier_to_om_node(seq_offer->identifier, env, so_node);
-    if(NULL != seq_offer->expires)
+
+    if(seq_offer->endpoint)
     {
-        sandesha2_seq_offer_to_om_node((sandesha2_seq_offer_t *)
-            seq_offer->expires, env, so_node);
+        sandesha2_endpoint_to_om_node(seq_offer->endpoint, env, so_node);
     }
+
+    if(seq_offer->expires)
+    {
+        sandesha2_seq_offer_to_om_node((sandesha2_seq_offer_t *) seq_offer->expires, env, so_node);
+    }
+
     axiom_node_add_child((axiom_node_t*)om_node, env, so_node);
+
     return (axiom_node_t*)om_node;
 }
 
@@ -210,14 +254,37 @@ sandesha2_seq_offer_set_identifier(
     const axutil_env_t *env, 
     sandesha2_identifier_t *identifier)
 {
- 	if(NULL != seq_offer->identifier)
+ 	if(seq_offer->identifier)
 	{
-	/*
-		SANDESHA2_IDENTIFIER_FREE(seq_offer->identifier, env);
-		seq_offer->identifier = NULL;
-    */		
+		sandesha2_identifier_free(seq_offer->identifier, env);
+		seq_offer->identifier = NULL;	
 	}
+
 	seq_offer->identifier = identifier;
+ 	return AXIS2_SUCCESS;
+}
+
+sandesha2_endpoint_t * AXIS2_CALL
+sandesha2_seq_offer_get_endpoint(
+    sandesha2_seq_offer_t *seq_offer,
+    const axutil_env_t *env)
+{
+	return seq_offer->endpoint;
+}                    	
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_seq_offer_set_endpoint(
+    sandesha2_seq_offer_t *seq_offer,
+    const axutil_env_t *env, 
+    sandesha2_endpoint_t *endpoint)
+{
+ 	if(seq_offer->endpoint)
+	{
+		sandesha2_endpoint_free(seq_offer->endpoint, env);
+		seq_offer->endpoint = NULL;	
+	}
+
+	seq_offer->endpoint = endpoint;
  	return AXIS2_SUCCESS;
 }
 
@@ -247,7 +314,7 @@ sandesha2_seq_offer_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

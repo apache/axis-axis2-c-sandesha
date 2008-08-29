@@ -179,48 +179,53 @@ sandesha2_rm_elements_from_soap_envelope(
             rm_elements->create_seq, env, create_seq_node);
     }
     
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, 
-                        rm_ns_val, NULL);
-    create_seq_res_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &create_seq_res_node);
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CREATE_SEQ_RESPONSE, rm_ns_val, NULL);
+    create_seq_res_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &create_seq_res_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(create_seq_res_node)
     {
-        rm_elements->create_seq_res = sandesha2_create_seq_res_create(env, 
-                        rm_ns_val, addr_ns_val);
-        sandesha2_create_seq_res_from_om_node(
-            rm_elements->create_seq_res, env, create_seq_res_node);
+        rm_elements->create_seq_res = sandesha2_create_seq_res_create(env, rm_ns_val, addr_ns_val);
+        sandesha2_create_seq_res_from_om_node(rm_elements->create_seq_res, env, create_seq_res_node);
     }
     
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, 
-                        rm_ns_val, NULL);
-    terminate_seq_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &terminate_seq_node);
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ, rm_ns_val, NULL);
+    terminate_seq_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &terminate_seq_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(terminate_seq_node)
     {
-        rm_elements->terminate_seq = sandesha2_terminate_seq_create(env, 
-            rm_ns_val);
-        sandesha2_terminate_seq_from_om_node(
-            rm_elements->terminate_seq, env, terminate_seq_node);
+        rm_elements->terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_val);
+        sandesha2_terminate_seq_from_om_node(rm_elements->terminate_seq, env, terminate_seq_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, 
-        rm_ns_val, NULL);
-    terminate_seq_res_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &terminate_seq_res_node);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_TERMINATE_SEQ_RESPONSE, rm_ns_val, NULL);
+    terminate_seq_res_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &terminate_seq_res_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(terminate_seq_res_node)
     {
-        rm_elements->terminate_seq_res = sandesha2_terminate_seq_res_create(
-            env, rm_ns_val);
-        sandesha2_terminate_seq_res_from_om_node(
-            rm_elements->terminate_seq_res, env, terminate_seq_res_node);
+        rm_elements->terminate_seq_res = sandesha2_terminate_seq_res_create(env, rm_ns_val);
+        sandesha2_terminate_seq_res_from_om_node(rm_elements->terminate_seq_res, env, 
+                terminate_seq_res_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, 
-        NULL);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, NULL);
     close_seq_element = axiom_element_get_first_child_with_qname(body_element, 
         env, qname, body_node, &close_seq_node);
     if(qname)
@@ -557,25 +562,49 @@ sandesha2_rm_elements_get_rm_ns_val(
     {
         axutil_array_list_t *headers = NULL;
         
-        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
-            soap_header, env, SANDESHA2_SPEC_2005_02_NS_URI);
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, 
+                SANDESHA2_SPEC_2005_02_NS_URI);
         if(headers && 0 < axutil_array_list_size(headers, env))
         {
             if(headers)
+            {
                 axutil_array_list_free(headers, env);
+            }
+
             return SANDESHA2_SPEC_2005_02_NS_URI;
         }
-        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(
-            soap_header, env, SANDESHA2_SPEC_2006_08_NS_URI);                
+
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, 
+                SANDESHA2_SPEC_2007_02_NS_URI);
+
         if(headers && 0 < axutil_array_list_size(headers, env))
         {
             if(headers)
+            {
                 axutil_array_list_free(headers, env);
-            return SANDESHA2_SPEC_2006_08_NS_URI;
+            }
+
+            return SANDESHA2_SPEC_2007_02_NS_URI;
+        }
+        
+        headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, 
+                MAKE_CONNECTION_SPEC_2007_02_NS_URI);
+
+        if(headers && 0 < axutil_array_list_size(headers, env))
+        {
+            if(headers)
+            {
+                axutil_array_list_free(headers, env);
+            }
+
+            return MAKE_CONNECTION_SPEC_2007_02_NS_URI;
         }
     }
+
     if(!action)
+    {
         return NULL;
+    }
     
     if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_CREATE_SEQ))
         return SANDESHA2_SPEC_2005_02_NS_URI;
@@ -586,22 +615,25 @@ sandesha2_rm_elements_get_rm_ns_val(
     if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2005_02_ACTION_TERMINATE_SEQ))
         return SANDESHA2_SPEC_2005_02_NS_URI;
         
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CREATE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_SEQ_ACKNOWLEDGEMENT))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_TERMINATE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_CLOSE_SEQ_RESPONSE))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
-    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2006_08_ACTION_MAKE_CONNECTION))
-        return SANDESHA2_SPEC_2006_08_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CREATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_SEQ_ACKNOWLEDGEMENT))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_TERMINATE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+    if(0 == axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_CLOSE_SEQ_RESPONSE))
+        return SANDESHA2_SPEC_2007_02_NS_URI;
+
+    if(!axutil_strcmp(action, SANDESHA2_SPEC_2007_02_ACTION_MAKE_CONNECTION))
+    {
+        return MAKE_CONNECTION_SPEC_2007_02_NS_URI;
+    }
     
     return NULL;
     

@@ -64,11 +64,9 @@ rm_sample_svc_create(
 {
     axis2_svc_skeleton_t *svc_skeleton = NULL;
     /* Allocate memory for the structs */
-    svc_skeleton = AXIS2_MALLOC(env->allocator, 
-        sizeof(axis2_svc_skeleton_t));
+    svc_skeleton = AXIS2_MALLOC(env->allocator, sizeof(axis2_svc_skeleton_t));
 
-    svc_skeleton->ops = AXIS2_MALLOC(
-        env->allocator, sizeof(axis2_svc_skeleton_ops_t));
+    svc_skeleton->ops = AXIS2_MALLOC(env->allocator, sizeof(axis2_svc_skeleton_ops_t));
     svc_skeleton->ops = &rm_sample_svc_ops_var;
     svc_skeleton->func_array = NULL;
 
@@ -81,13 +79,6 @@ rm_sample_svc_init(
     axis2_svc_skeleton_t *svc_skeleton,
     const axutil_env_t *env)
 {
-    svc_skeleton->func_array = axutil_array_list_create(env, 0);
-    /* Add the implemented operation names of the service to  
-     * the array list of functions 
-     */
-    axutil_array_list_add(svc_skeleton->func_array, env, "echoString");
-    axutil_array_list_add(svc_skeleton->func_array, env, "ping");
-    axutil_array_list_add(svc_skeleton->func_array, env, "mtomSample");
     /* Any initialization stuff of echo service should go here */
     return AXIS2_SUCCESS;
 }
@@ -111,27 +102,37 @@ rm_sample_svc_invoke(
     {
         op_qname = (axutil_qname_t *)axis2_op_get_qname(op, env);
         if(op_qname)
+        {
             op_name = axutil_qname_get_localpart(op_qname, env);
+        }
+
         if(op_name)
         {
-            if (axutil_strcmp(op_name, "echoString") == 0)
+            if (!axutil_strcmp(op_name, "echoString"))
+            {
                 return rm_sample_svc_echo(env, node);
-            if (axutil_strcmp(op_name, "ping") == 0)
+            }
+            if (!axutil_strcmp(op_name, "ping"))
             {
                 rm_sample_svc_ping(env, node);
                 return NULL;
             }
-            if (axutil_strcmp(op_name, "mtomSample") == 0)
+            if (!axutil_strcmp(op_name, "mtomSample"))
+            {
                 return rm_sample_svc_mtom(env, node, msg_ctx);
+            }
         }
     }
+
     return NULL;
 }
 
 /* On fault, handle the fault */
 axiom_node_t* AXIS2_CALL
-rm_sample_svc_on_fault(axis2_svc_skeleton_t *svc_skeli, 
-              const axutil_env_t *env, axiom_node_t *node)
+rm_sample_svc_on_fault(
+    axis2_svc_skeleton_t *svc_skeli, 
+    const axutil_env_t *env, 
+    axiom_node_t *node)
 {
    /* Here we are just setting a simple error message inside an element 
     * called 'EchoServiceError' 
@@ -139,25 +140,17 @@ rm_sample_svc_on_fault(axis2_svc_skeleton_t *svc_skeli,
     axiom_node_t *error_node = NULL;
     axiom_node_t* text_node = NULL;
     axiom_element_t *error_ele = NULL;
-    error_ele = axiom_element_create(env, node, "EchoServiceError", NULL, 
-        &error_node);
-    axiom_element_set_text(error_ele, env, "Echo service failed ", 
-        text_node);
+    error_ele = axiom_element_create(env, node, "EchoServiceError", NULL, &error_node);
+    axiom_element_set_text(error_ele, env, "Echo service failed ", text_node);
     return error_node;
 }
 
 /* Free the resources used */
 int AXIS2_CALL
-rm_sample_svc_free(axis2_svc_skeleton_t *svc_skeleton,
-            const axutil_env_t *env)
+rm_sample_svc_free(
+    axis2_svc_skeleton_t *svc_skeleton,
+    const axutil_env_t *env)
 {
-    /* Free the function array */
-    if(svc_skeleton->func_array)
-    {
-        axutil_array_list_free(svc_skeleton->func_array, env);
-        svc_skeleton->func_array = NULL;
-    }
-    
     /* Free the service skeleton */
     if(svc_skeleton)
     {

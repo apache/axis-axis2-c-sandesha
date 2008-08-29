@@ -63,7 +63,6 @@ sandesha2_accept_create(
     
     accept->rm_ns_val = (axis2_char_t *)axutil_strdup(env ,rm_ns_val);
     accept->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
-    accept->acks_to = NULL;
     
 	return accept;
 }
@@ -74,18 +73,26 @@ sandesha2_accept_free(
     sandesha2_accept_t *accept, 
     const axutil_env_t *env)
 {
-    if(NULL != accept->addr_ns_val)
+    if(accept->addr_ns_val)
     {
         AXIS2_FREE(env->allocator, accept->addr_ns_val);
         accept->addr_ns_val = NULL;
     }
-    if(NULL != accept->rm_ns_val)
+
+    if(accept->rm_ns_val)
     {
         AXIS2_FREE(env->allocator, accept->rm_ns_val);
         accept->rm_ns_val = NULL;
     }
+    
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
         
 	AXIS2_FREE(env->allocator, accept);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -136,16 +143,24 @@ sandesha2_accept_from_om_node(
             AXIS2_FAILURE);
         return NULL;
     }
-    accept->acks_to = sandesha2_acks_to_create(env, NULL, 
-        accept->rm_ns_val, accept->addr_ns_val);
-    if(NULL == accept->acks_to)
+    
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
+
+    accept->acks_to = sandesha2_acks_to_create(env, NULL, accept->rm_ns_val, accept->addr_ns_val);
+    if(!accept->acks_to)
     {
         return NULL;
     }
+
     if(!sandesha2_acks_to_from_om_node(accept->acks_to, env, child_om_node))
     {
         return NULL;
     }
+
     return accept;
 }
 
@@ -192,7 +207,12 @@ sandesha2_accept_set_acks_to(
     const axutil_env_t *env, 
     sandesha2_acks_to_t *acks_to)
 {
-    /* TODO free old acks_to ?*/
+    if(accept->acks_to)
+    {
+        sandesha2_acks_to_free(accept->acks_to, env);
+        accept->acks_to = NULL;
+    }
+
     accept->acks_to = acks_to;
     return AXIS2_SUCCESS;
 }
@@ -214,7 +234,7 @@ sandesha2_accept_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

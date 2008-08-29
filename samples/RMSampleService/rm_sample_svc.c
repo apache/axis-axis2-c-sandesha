@@ -39,15 +39,9 @@ rm_sample_svc_echo (
     axiom_node_t *node)
 {
     axiom_node_t *text_parent_node = NULL;
-    axiom_element_t *text_parent_element = NULL;
     axiom_node_t *text_node = NULL;
     axiom_node_t *ret_node = NULL;
-    axiom_element_t *element = NULL;
-    axis2_char_t *ns = "http://tempuri.org/";
-    axutil_qname_t *qname = NULL;
 
-    AXIS2_ENV_CHECK(env, NULL);
-   
     /* Expected request format is :-
      * <ns1:echoString xmlns:ns1="http://ws.apache.org/axis2/c/samples">
      *      <text>echo5</text>
@@ -58,16 +52,13 @@ rm_sample_svc_echo (
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_SKEL_INPUT_OM_NODE_NULL, AXIS2_FAILURE);
         return NULL;
     }
-    /*element = axiom_node_get_data_element(node, env);
-    qname = axutil_qname_create(env, "Text", ns, NULL);
-    text_parent_element = axiom_element_get_first_child_with_qname(element, env, 
-            qname, node, &text_parent_node);
-    axutil_qname_free(qname, env);*/
+
     text_parent_node = axiom_node_get_first_element(node, env);
     if (!text_parent_node) /* 'text' node */
     {
         AXIS2_ERROR_SET(env->error, 
             AXIS2_ERROR_SVC_SKEL_INVALID_XML_FORMAT_IN_REQUEST, AXIS2_FAILURE);
+
         return NULL;
     }
     
@@ -110,12 +101,6 @@ build_echo_om(
     axiom_namespace_t *ns1 = NULL;
     
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
-
-    echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
-    
-    text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
-
-    axiom_element_set_text(text_om_ele, env, text, text_om_node);
 
     echo_om_ele = axiom_element_create(env, NULL, "echoStringResponse", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "EchoStringReturn", ns1, &text_om_node);
@@ -334,7 +319,7 @@ rm_sample_svc_mtom(
                         axiom_data_handler_write_to(data_handler, env);
                         ret_node = build_response1(env, base64text);
                     }
-                    else /* nothing came */
+                    else /* attachement missing */
                     {
                         AXIS2_ERROR_SET(env->error,
                             AXIS2_ERROR_ATTACHMENT_MISSING,

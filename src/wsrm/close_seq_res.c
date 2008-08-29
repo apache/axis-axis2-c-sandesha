@@ -184,10 +184,8 @@ sandesha2_close_seq_res_set_identifier(
 {
  	if(close_seq_res->identifier)
 	{
-	    /*
-		SANDESHA2_IDENTIFIER_FREE(close_seq_res->identifier, env);
+		sandesha2_identifier_free(close_seq_res->identifier, env);
 		close_seq_res->identifier = NULL;
-		*/
 	}
 	close_seq_res->identifier = identifier;
  	return AXIS2_SUCCESS;
@@ -230,7 +228,7 @@ sandesha2_close_seq_res_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

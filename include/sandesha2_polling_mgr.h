@@ -31,64 +31,27 @@
 #include <axutil_string.h>
 #include <axutil_utils.h>
 #include <axis2_conf_ctx.h>
+#include <sandesha2_msg_ctx.h>
+#include <sandesha2_storage_mgr.h>
+#include <sandesha2_sender_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-typedef struct sandesha2_polling_mgr_t sandesha2_polling_mgr_t;
-
-AXIS2_EXTERN sandesha2_polling_mgr_t * AXIS2_CALL
-sandesha2_polling_mgr_create(
-    const axutil_env_t *env);
- 
-/**
- * Frees the polling_mgr given as a void pointer. This method would cast the 
- * void parameter to an polling_mgr pointer and then call free method.
- * @param polling_mgr pointer to polling_mgr as a void pointer
- * @param env pointer to environment struct
- * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_polling_mgr_free_void_arg(
-    void *polling_mgr,
-    const axutil_env_t *env);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_free(
-    sandesha2_polling_mgr_t *polling_mgr, 
-    const axutil_env_t *env);
-
-axis2_status_t AXIS2_CALL 
-sandesha2_polling_mgr_stop_polling (
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env);
             
 axis2_status_t AXIS2_CALL 
 sandesha2_polling_mgr_start (
-    sandesha2_polling_mgr_t *polling_mgr, 
     const axutil_env_t *env, 
     axis2_conf_ctx_t *conf_ctx,
-    const axis2_char_t *internal_seq_id);
+    sandesha2_storage_mgr_t *storage_mgr,
+    sandesha2_sender_mgr_t *sender_mgr,
+    sandesha2_msg_ctx_t *rm_msg_ctx,
+    const axis2_char_t *internal_sequence_id,
+    axis2_char_t *sequence_id,
+    const axis2_char_t *reply_to);
             
-void AXIS2_CALL
-sandesha2_polling_mgr_set_poll(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env,
-    axis2_bool_t poll);
-
-axis2_bool_t AXIS2_CALL
-sandesha2_polling_mgr_is_poll(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env);
-
-void AXIS2_CALL
-sandesha2_polling_mgr_schedule_polling_request(
-    sandesha2_polling_mgr_t *polling_mgr,
-    const axutil_env_t *env,
-    const axis2_char_t *internal_seq_id);
-                   
 /** @} */
 #ifdef __cplusplus
 }

@@ -83,12 +83,15 @@ sandesha2_identifier_free (
         AXIS2_FREE(env->allocator, identifier->ns_val);
         identifier->ns_val = NULL;
     }
+
     if(identifier->str_id)
     {
     	AXIS2_FREE(env->allocator, identifier->str_id);
         identifier->str_id = NULL;
     }
+
 	AXIS2_FREE(env->allocator, identifier);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -116,47 +119,60 @@ sandesha2_identifier_from_om_node(
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
     om_element = axiom_node_get_data_element(om_node, env);
-    if(NULL == om_element)
+    if(!om_element)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
-    ident_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER, 
-                        identifier->ns_val, NULL); 
-    if(NULL == ident_qname)
+
+    ident_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_IDENTIFIER, identifier->ns_val, 
+            NULL); 
+
+    if(!ident_qname)
     {
         return NULL;
     }
-    ident_part = axiom_element_get_first_child_with_qname(om_element, env,
-                        ident_qname, om_node, &ident_node);
+
+    ident_part = axiom_element_get_first_child_with_qname(om_element, env, ident_qname, om_node, 
+            &ident_node);
+
     if(ident_qname)
+    {
         axutil_qname_free(ident_qname, env);
-    if(NULL == ident_part)
+    }
+
+    if(!ident_part)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
+
     ident_str = axiom_element_get_text(ident_part, env, ident_node);
-    if(NULL == ident_str)
+    if(!ident_str)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT,
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_EMPTY_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
+
+    if(identifier->str_id)
+    {
+        AXIS2_FREE(env->allocator, identifier->str_id);
+    }
+
     identifier->str_id = axutil_strdup(env, ident_str);
-    if(NULL == identifier->str_id)
+    if(!identifier->str_id)
     {
         return NULL;
     }
+
     return identifier;
 }
 
 axiom_node_t* AXIS2_CALL 
 sandesha2_identifier_to_om_node(
     sandesha2_identifier_t *identifier,
-    const axutil_env_t *env, void *om_node)
+    const axutil_env_t *env, 
+    void *om_node)
 {
     axiom_namespace_t *rm_ns = NULL;
     axiom_element_t *id_element = NULL;
@@ -164,28 +180,27 @@ sandesha2_identifier_to_om_node(
     
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
     
-    if(!identifier->str_id || 0 == axutil_strlen(
-                        identifier->str_id))
+    if(!identifier->str_id || 0 == axutil_strlen(identifier->str_id))
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, 
-                        AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
-    rm_ns = axiom_namespace_create(env, identifier->ns_val,
-                        SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
+
+    rm_ns = axiom_namespace_create(env, identifier->ns_val, SANDESHA2_WSRM_COMMON_NS_PREFIX_RM);
     if(!rm_ns)
     {
         return NULL;
     }
-    id_element = axiom_element_create(env, NULL, 
-                        SANDESHA2_WSRM_COMMON_IDENTIFIER, rm_ns, &id_node);
+
+    id_element = axiom_element_create(env, (axiom_node_t *) om_node, 
+            SANDESHA2_WSRM_COMMON_IDENTIFIER, rm_ns, &id_node);
     if(!id_element)
     {
         return NULL;
     }
-    axiom_element_set_text(id_element, env, identifier->str_id, 
-                        id_node);
-    axiom_node_add_child((axiom_node_t*)om_node, env, id_node);
+
+    axiom_element_set_text(id_element, env, identifier->str_id, id_node);
+
     return (axiom_node_t*)om_node;
 }
 
@@ -222,7 +237,7 @@ sandesha2_identifier_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

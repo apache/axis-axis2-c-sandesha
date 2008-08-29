@@ -29,7 +29,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 8
+#define SANDESHA2_MAX_COUNT 2
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -67,6 +67,7 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
+    axis2_char_t *offered_seq_id = NULL;
     int c;
     int i = 0;
    
@@ -146,6 +147,18 @@ int main(int argc, char** argv)
         return -1;
     }
     axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
+
+    /* Offer sequence */
+    offered_seq_id = axutil_uuid_gen(env);
+    property = axutil_property_create(env);
+    if(property)
+    {
+        axutil_property_set_value(property, env, axutil_strdup(env, 
+            offered_seq_id));
+        axis2_options_set_property(options, env, 
+            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
+    }
+
     /* RM Version 1.0 */
     property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
@@ -167,6 +180,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
+
     for(i = 1; i < 3; i++)
     {
         axis2_char_t echo_str[7];
@@ -179,6 +193,7 @@ int main(int argc, char** argv)
         wait_on_callback(env, callback1);
         AXIS2_SLEEP(1);
     }
+
     axis2_svc_client_remove_all_headers(svc_client, env);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);

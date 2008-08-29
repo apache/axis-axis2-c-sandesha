@@ -29,7 +29,7 @@
 #include <axis2_options.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 8
+#define SANDESHA2_MAX_COUNT 4
 
 static void 
 usage(
@@ -203,10 +203,15 @@ int main(int argc, char** argv)
     {
         printf("\necho client two way single channel invoke FAILED!\n");
     }
+
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
+
     if(offered_seq_id)
+    {
         AXIS2_FREE(env->allocator, offered_seq_id);
+    }
+
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);

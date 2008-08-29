@@ -23,7 +23,7 @@
 #include <sandesha2_constants.h>
 #include <ctype.h>
 
-#define SANDESHA2_SLEEP 5
+#define SANDESHA2_SLEEP 2
 
 axiom_node_t *
 build_om_programatically(
@@ -83,7 +83,10 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_xml_parser_reset(options, env, AXIS2_FALSE);
     if(endpoint_ref)
+    {
         axis2_options_set_to(options, env, endpoint_ref);
+    }
+
     /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -96,15 +99,17 @@ int main(int argc, char** argv)
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
+    {
         client_home = "../../deploy";
+    }
+
     /* Create service client */
     svc_client = axis2_svc_client_create(env, client_home);
     if (!svc_client)
     {
         printf("Error creating service client\n");
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
-                  " %d :: %s", env->error->error_number,
-                        AXIS2_ERROR_GET_MESSAGE(env->error));
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code: %d :: %s", 
+                env->error->error_number, AXIS2_ERROR_GET_MESSAGE(env->error));
     }
 
     /* Set service client options */
@@ -113,47 +118,47 @@ int main(int argc, char** argv)
     /* Engage addressing module */
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
     
-    /* Build the SOAP request message payload using OM API.*/
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
+    
     /* RM Version 1.0 */
-    property = axutil_property_create_with_args(env, 0, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_0);
+    property = axutil_property_create_with_args(env, 0, 0, 0, SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
 
     seq_key = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     if(property)
     {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY,
-            property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
     
     /* Send request */
     payload = build_om_programatically(env, "ping1", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
+    {
         printf("\nping client invoke SUCCESSFUL!\n");
+    }
     payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_SLEEP);
     
     payload = build_om_programatically(env, "ping2", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
+    {
         printf("\nping client invoke SUCCESSFUL!\n");
+    }
     payload = NULL;
-    AXIS2_SLEEP(SANDESHA2_SLEEP);
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_options_set_property(options, env, "Sandesha2LastMessage", 
-        property);
+    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
     payload = build_om_programatically(env, "ping3", seq_key);
     status = axis2_svc_client_send_robust(svc_client, env, payload);
     if(status)
+    {
         printf("\nping client invoke SUCCESSFUL!\n");
+    }
     
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
@@ -162,12 +167,20 @@ int main(int argc, char** argv)
      *messages. */
 
     AXIS2_SLEEP(SANDESHA2_SLEEP);
+    AXIS2_FREE(env->allocator, seq_key);
    
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
+    
+    if (env)
+    {
+        axutil_env_free((axutil_env_t *) env);
+        env = NULL;
+    }
+
     return 0;
 }
 

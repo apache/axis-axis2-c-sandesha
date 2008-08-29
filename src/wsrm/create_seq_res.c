@@ -46,21 +46,21 @@ sandesha2_create_seq_res_create(
     AXIS2_PARAM_CHECK(env->error, rm_ns_val, NULL);
     AXIS2_PARAM_CHECK(env->error, addr_ns_val, NULL);
     
-    if(AXIS2_FALSE == sandesha2_create_seq_res_is_namespace_supported(env, rm_ns_val))
+    if(!sandesha2_create_seq_res_is_namespace_supported(env, rm_ns_val))
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, 
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_UNSUPPORTED_NS, AXIS2_FAILURE);
         return NULL;
-    }    
-    create_seq_res =  (sandesha2_create_seq_res_t *)AXIS2_MALLOC 
-        (env->allocator, 
-        sizeof(sandesha2_create_seq_res_t));
+    }
+
+    create_seq_res =  (sandesha2_create_seq_res_t *) AXIS2_MALLOC(env->allocator, 
+            sizeof(sandesha2_create_seq_res_t));
 	
     if(!create_seq_res)
 	{
 		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
 	}
+
     create_seq_res->rm_ns_val = NULL;
     create_seq_res->addr_ns_val = NULL;
     create_seq_res->identifier = NULL;
@@ -99,7 +99,27 @@ sandesha2_create_seq_res_free (
         AXIS2_FREE(env->allocator, create_seq_res->rm_ns_val);
         create_seq_res->rm_ns_val = NULL;
     }
+    
+    if(create_seq_res->identifier)
+    {
+        sandesha2_identifier_free(create_seq_res->identifier, env);
+        create_seq_res->identifier = NULL;
+    }
+
+    if(create_seq_res->accept)
+    {
+        sandesha2_accept_free(create_seq_res->accept, env);
+        create_seq_res->accept = NULL;
+    }
+
+    if(create_seq_res->expires)
+    {
+        sandesha2_expires_free(create_seq_res->expires, env);
+        create_seq_res->expires = NULL;
+    }
+
 	AXIS2_FREE(env->allocator, create_seq_res);
+
 	return AXIS2_SUCCESS;
 }
 
@@ -131,12 +151,10 @@ sandesha2_create_seq_res_from_om_node(
     csr_part =axiom_node_get_data_element(csr_node, env);
     if(!csr_part)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
-    create_seq_res->identifier = sandesha2_identifier_create(env, 
-        create_seq_res->rm_ns_val);
+    create_seq_res->identifier = sandesha2_identifier_create(env, create_seq_res->rm_ns_val);
     if(!create_seq_res->identifier)
     {
         return NULL;
@@ -181,8 +199,15 @@ sandesha2_create_seq_res_from_om_node(
         axutil_qname_free(acc_qname, env);
     if(acc_part)
     {
-        create_seq_res->accept = sandesha2_accept_create(env, 
-            create_seq_res->rm_ns_val, create_seq_res->addr_ns_val);
+        if(create_seq_res->accept)
+        {
+            sandesha2_accept_free(create_seq_res->accept, env);
+            create_seq_res->accept = NULL;
+        }
+
+        create_seq_res->accept = sandesha2_accept_create(env, create_seq_res->rm_ns_val, 
+                create_seq_res->addr_ns_val);
+
         if(!create_seq_res->accept)
         {
             return NULL;
@@ -234,6 +259,7 @@ sandesha2_create_seq_res_to_om_node(
     {
         sandesha2_expires_to_om_node(create_seq_res->expires, env, csr_node);
     }
+
     axiom_node_add_child((axiom_node_t*)om_node, env, csr_node);
     return (axiom_node_t*)om_node;
 }
@@ -244,6 +270,12 @@ sandesha2_create_seq_res_set_identifier(
     const axutil_env_t *env, 
     sandesha2_identifier_t *identifier)
 {
+    if(create_seq_res->identifier)
+    {
+        sandesha2_identifier_free(create_seq_res->identifier, env);
+        create_seq_res->identifier = NULL;
+    }
+
     create_seq_res->identifier = identifier;
     return AXIS2_SUCCESS;
 }
@@ -262,6 +294,12 @@ sandesha2_create_seq_res_set_accept(
     sandesha2_create_seq_res_t *create_seq_res,
     const axutil_env_t *env, sandesha2_accept_t *accept)
 {
+    if(create_seq_res->accept)
+    {
+        sandesha2_accept_free(create_seq_res->accept, env);
+        create_seq_res->accept = NULL;
+    }
+    
     create_seq_res->accept = accept;
     return AXIS2_SUCCESS;
 }
@@ -280,6 +318,12 @@ sandesha2_create_seq_res_set_expires(
     sandesha2_create_seq_res_t *create_seq_res,
     const axutil_env_t *env, sandesha2_expires_t *expires)
 {
+    if(create_seq_res->expires)
+    {
+        sandesha2_expires_free(create_seq_res->expires, env);
+        create_seq_res->expires = NULL;
+    }
+
     create_seq_res->expires = expires;
     return AXIS2_SUCCESS;
 }
@@ -331,7 +375,7 @@ sandesha2_create_seq_res_is_namespace_supported(
     {
         return AXIS2_TRUE;
     }
-    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2006_08_NS_URI))
+    if(0 == axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))
     {
         return AXIS2_TRUE;
     }

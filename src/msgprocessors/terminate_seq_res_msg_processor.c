@@ -137,47 +137,66 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     axis2_char_t *dbname = NULL;
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
-        "terminate_seq_res_msg_processor_process_in_msg");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_terminate_seq_res_msg_processor_process_in_msg");
+
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     term_seq_res = sandesha2_msg_ctx_get_terminate_seq_res(rm_msg_ctx, env);
     if(!term_seq_res)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Terminate "
-            "Sequence part is not available");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, 
-            AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Terminate Sequence part is not available");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_REQD_MSG_PART_MISSING, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+
     seq_id = sandesha2_identifier_get_identifier(
         sandesha2_terminate_seq_res_get_identifier(term_seq_res, env), env);
     if(!seq_id || 0 == axutil_strlen(seq_id))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid "\
-            "sequence id");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid sequence id");
         return AXIS2_FAILURE;
     }
+
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
     seq_prop_mgr = sandesha2_permanent_seq_property_mgr_create(env, dbname);
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr =sandesha2_permanent_sender_mgr_create(env, dbname);
+
     /* We need to pass here internal seq id isn't it?:damitha
     int internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-        SANDESHA2_SEQ_PROP_INTERNAL_SEQ_ID, storage_mgr);*/
-    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
-        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, storage_mgr);*/
+    /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
+        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
+
+    sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+
     if(seq_prop_mgr)
+    {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
     if(create_seq_mgr)
+    {
         sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+    }
+
     if(sender_mgr)
+    {
         sandesha2_sender_mgr_free(sender_mgr, env);
+    }
+
     if(storage_mgr)
+    {
         sandesha2_storage_mgr_free(storage_mgr, env);
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
-        "terminate_seq_res_msg_processor_process_in_msg");
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Exit:sandesha2_terminate_seq_res_msg_processor_process_in_msg");
+
     return AXIS2_SUCCESS;
 }
 

@@ -29,7 +29,7 @@
 #include <axis2_options.h>
 #include <ctype.h>
 
-#define SANDESHA2_MAX_COUNT 8
+#define SANDESHA2_MAX_COUNT 2
 
 static void 
 usage(
@@ -96,6 +96,11 @@ int main(int argc, char** argv)
     
     soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
     axis2_options_set_soap_action(options, env, soap_action);
+    if(soap_action)
+    {
+        axutil_string_free(soap_action, env);
+    }
+
     axis2_options_set_action(options, env, "urn:wsrm:EchoString");
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -159,6 +164,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
+
     payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
@@ -220,14 +226,24 @@ int main(int argc, char** argv)
     }
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
+
     if(offered_seq_id)
+    {
         AXIS2_FREE(env->allocator, offered_seq_id);
+    }
+
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
-    
+  
+    if (env)
+    {
+        axutil_env_free((axutil_env_t *) env);
+        env = NULL;
+    }
+  
     return 0;
 }
 
