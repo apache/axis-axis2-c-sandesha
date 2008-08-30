@@ -14,6 +14,7 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
                                expires.c\
                                fault_code.c\
                                msg_number.c\
+                               last_msg_number.c\
                                last_msg.c\
                                ack_requested.c\
                                close_seq.c\

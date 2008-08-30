@@ -25,6 +25,7 @@
 struct sandesha2_close_seq_t
 {
 	sandesha2_identifier_t *identifier;
+	sandesha2_last_msg_number_t *last_msg_number;
 	axis2_char_t *ns_val;
 };
                    	
@@ -56,6 +57,7 @@ sandesha2_close_seq_create(
 
     close_seq->ns_val = NULL;
     close_seq->identifier = NULL;
+    close_seq->last_msg_number = NULL;
     
     close_seq->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
@@ -85,6 +87,8 @@ sandesha2_close_seq_free (
     }
 
     close_seq->identifier = NULL;
+    close_seq->last_msg_number = NULL;
+
 	AXIS2_FREE(env->allocator, close_seq);
 	return AXIS2_SUCCESS;
 }
@@ -125,6 +129,17 @@ sandesha2_close_seq_from_om_node(
         return NULL;   
     }
 
+    close_seq->last_msg_number = sandesha2_last_msg_number_create(env, close_seq->ns_val); 
+    if(!close_seq->last_msg_number)
+    {
+        return NULL;
+    }
+
+    if(!sandesha2_last_msg_number_from_om_node(close_seq->last_msg_number, env, close_seq_node))
+    {
+        return NULL;   
+    }
+
     return close_seq;
 }
 
@@ -140,7 +155,8 @@ sandesha2_close_seq_to_om_node(
     axiom_node_t *cs_node = NULL;
     
     AXIS2_PARAM_CHECK(env->error, om_node, NULL);
-    
+
+    /* identifier is a MUST element within close sequence. So we need to check it's presense */
     if(!close_seq->identifier)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_OM_NULL_ELEMENT, AXIS2_FAILURE);
@@ -160,6 +176,12 @@ sandesha2_close_seq_to_om_node(
     }
 
     sandesha2_identifier_to_om_node(close_seq->identifier, env, cs_node);
+    
+    if(close_seq->last_msg_number)
+    {
+        sandesha2_last_msg_number_to_om_node(close_seq->last_msg_number, env, cs_node);
+    }
+
     axiom_node_add_child((axiom_node_t*)om_node, env, cs_node);
 
     return (axiom_node_t*)om_node;
@@ -187,6 +209,33 @@ sandesha2_close_seq_set_identifier(
 	
 	}
 	close_seq->identifier = identifier;
+ 	return AXIS2_SUCCESS;
+}
+
+sandesha2_last_msg_number_t * AXIS2_CALL
+sandesha2_close_seq_get_last_msg_number(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env)
+{
+	return close_seq->last_msg_number;
+}                    	
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_close_seq_set_last_msg_number(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env, 
+    sandesha2_last_msg_number_t *last_msg_number)
+{
+ 	if(close_seq->last_msg_number)
+	{
+	    
+		sandesha2_last_msg_number_free(close_seq->last_msg_number, env);
+		close_seq->last_msg_number = NULL;
+	
+	}
+
+	close_seq->last_msg_number = last_msg_number;
+
  	return AXIS2_SUCCESS;
 }
 

@@ -27,6 +27,7 @@
 #include <axiom_soap_envelope.h>
 #include <sandesha2_error.h>
 #include <sandesha2_identifier.h>
+#include <sandesha2_last_msg_number.h>
 
 
 #ifdef __cplusplus
@@ -95,6 +96,17 @@ sandesha2_close_seq_to_om_node(
     const axutil_env_t *env, 
     void *om_node);
  
+axis2_status_t AXIS2_CALL                 
+sandesha2_close_seq_set_last_msg_number(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env, 
+    sandesha2_last_msg_number_t *last_msg_number);
+
+sandesha2_last_msg_number_t * AXIS2_CALL
+sandesha2_close_seq_get_last_msg_number(
+    sandesha2_close_seq_t *close_seq,
+    const axutil_env_t *env);
+
 /** @} */
 #ifdef __cplusplus
 }

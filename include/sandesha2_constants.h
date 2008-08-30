@@ -107,6 +107,8 @@ extern "C"
     #define SANDESHA2_WSMC_COMMON_NS_PREFIX_RM  "wsmc"
 
 	#define SANDESHA2_WSRM_COMMON_MSG_NUMBER  "MessageNumber"
+	
+    #define SANDESHA2_WSRM_COMMON_LAST_MSG_NUMBER  "LastMsgNumber"
 
 	#define SANDESHA2_WSRM_COMMON_LAST_MSG  "LastMessage"
 

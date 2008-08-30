@@ -29,6 +29,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_ack_requested.h>
 #include <sandesha2_identifier.h>
+#include <sandesha2_last_msg_number.h>
 #include <sandesha2_close_seq.h>
 #include <sandesha2_terminate_seq.h>
 #include <sandesha2_ack_mgr.h>
@@ -81,7 +82,8 @@ static axiom_soap_envelope_t *
 sandesha2_client_configure_close_seq(
         const axutil_env_t *env,
         axis2_options_t *options, 
-        axis2_conf_ctx_t *conf_ctx);
+        axis2_conf_ctx_t *conf_ctx,
+        long last_msg_num);
 
 static axis2_bool_t
 sandesha2_client_is_seq_terminated(
@@ -798,7 +800,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_callback_t *callback)
+    axis2_callback_t *callback,
+    long last_msg_num)
 {
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_options_t *options = NULL;
@@ -848,7 +851,7 @@ sandesha2_client_close_seq_with_svc_client(
 
     rm_namespc_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
     conf_ctx =  axis2_svc_ctx_get_conf_ctx(svc_ctx, env);
-    close_envelope = sandesha2_client_configure_close_seq(env, options, conf_ctx);
+    close_envelope = sandesha2_client_configure_close_seq(env, options, conf_ctx, last_msg_num);
     body = axiom_soap_envelope_get_body(close_envelope, env);
     node = axiom_soap_body_get_base_node(body, env);
     element = axiom_node_get_data_element(node, env);
@@ -888,7 +891,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client_and_seq_key(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_char_t *seq_key)
+    axis2_char_t *seq_key,
+    long last_msg_num)
 {
     axis2_options_t *options = NULL;
     axutil_property_t *property = NULL;
@@ -911,7 +915,7 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
 
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
+    sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL, last_msg_num);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_property);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -1296,7 +1300,8 @@ static axiom_soap_envelope_t *
 sandesha2_client_configure_close_seq(
     const axutil_env_t *env,
     axis2_options_t *options, 
-    axis2_conf_ctx_t *conf_ctx)
+    axis2_conf_ctx_t *conf_ctx,
+    long last_msg_num)
 {
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_char_t *to = NULL;
@@ -1313,6 +1318,7 @@ sandesha2_client_configure_close_seq(
     axis2_char_t *rm_spec_version = NULL;
     axiom_soap_envelope_t *dummy_envelope = NULL;
     sandesha2_identifier_t *identifier = NULL;
+    sandesha2_last_msg_number_t *last_msg_number = NULL;
     sandesha2_seq_report_t *seq_report = NULL;
     axis2_conf_t *conf = NULL;
     axutil_property_t *property = NULL;
@@ -1441,6 +1447,9 @@ sandesha2_client_configure_close_seq(
     identifier = sandesha2_identifier_create(env, rm_ns_value);
     sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_close_seq_set_identifier(close_seq, env, identifier);
+    last_msg_number = sandesha2_last_msg_number_create(env, rm_ns_value);
+    sandesha2_last_msg_number_set_last_msg_number(last_msg_number, env, last_msg_num);
+    sandesha2_close_seq_set_last_msg_number(close_seq, env, last_msg_number);
     sandesha2_close_seq_to_soap_envelope(close_seq, env, dummy_envelope);
 
     if(seq_prop_mgr)

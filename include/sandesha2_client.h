@@ -129,13 +129,15 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_callback_t *callback);
+    axis2_callback_t *callback,
+    long last_msg_num);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client_and_seq_key(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_char_t *seq_key);
+    axis2_char_t *seq_key,
+    long last_msg_num);
 
 /**
  * This blocks the system until the messages sent have been completed.
