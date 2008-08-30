@@ -803,12 +803,48 @@ sandesha2_app_msg_processor_process_in_msg (
             }
             else
             {
+                if(seq_prop_mgr)
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                if(create_seq_mgr)
+                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                if(sender_mgr)
+                    sandesha2_sender_mgr_free(sender_mgr, env);
+                if(next_msg_mgr)
+                    sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+                if(invoker_mgr)
+                    sandesha2_invoker_mgr_free(invoker_mgr, env);
+                if(storage_mgr)
+                    sandesha2_storage_mgr_free(storage_mgr, env);
+                
+                if(msgs_str)
+                {
+                    AXIS2_FREE(env->allocator, msgs_str);
+                }
+
                 return AXIS2_FAILURE;
             }
         
             temp_qname = axutil_qname_create(env, "__OPERATION_OUT_ONLY__", NULL, NULL);
             if (!temp_qname)
             {
+                if(seq_prop_mgr)
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                if(create_seq_mgr)
+                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                if(sender_mgr)
+                    sandesha2_sender_mgr_free(sender_mgr, env);
+                if(next_msg_mgr)
+                    sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+                if(invoker_mgr)
+                    sandesha2_invoker_mgr_free(invoker_mgr, env);
+                if(storage_mgr)
+                    sandesha2_storage_mgr_free(storage_mgr, env);
+                
+                if(msgs_str)
+                {
+                    AXIS2_FREE(env->allocator, msgs_str);
+                }
+
                 return AXIS2_FAILURE;
             }
         
@@ -823,6 +859,16 @@ sandesha2_app_msg_processor_process_in_msg (
             storage_key = axutil_uuid_gen(env);
             status = sandesha2_app_msg_processor_send_app_msg(env, out_rm_msg_ctx, outgoing_int_seq_id, 
                 msg_no, storage_key, storage_mgr, create_seq_mgr, seq_prop_mgr, sender_mgr);
+
+            if(out_rm_msg_ctx)
+            {
+                sandesha2_msg_ctx_free(out_rm_msg_ctx, env);
+            }
+
+            if(storage_key)
+            {
+                AXIS2_FREE(env->allocator, storage_key);
+            }
         }
 
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
