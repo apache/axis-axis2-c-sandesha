@@ -255,6 +255,8 @@ extern "C"
 	#define SANDESHA2_SEQ_PROP_OUT_CREATE_SEQ_SENT  "OutCreateSeqSent"
 
 	#define SANDESHA2_SEQ_PROP_NEXT_MESSAGE_NUMBER  "NextMsgNo"
+	
+    #define SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NUMBER  "LastOutMsgNo"
 
 	#define SANDESHA2_SEQ_PROP_INCOMING_SEQ_LIST  "IncomingSequenceList"
 

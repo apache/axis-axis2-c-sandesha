@@ -194,6 +194,13 @@ sandesha2_app_msg_processor_set_next_msg_no(
     long msg_num,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
                         
+static axis2_status_t AXIS2_CALL                 
+sandesha2_app_msg_processor_set_last_out_msg_no(
+    const axutil_env_t *env,
+    axis2_char_t *internal_seq_id,
+    long msg_num,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+
 static axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_free (
     sandesha2_msg_processor_t *element, 
@@ -2774,7 +2781,9 @@ sandesha2_app_msg_processor_send_app_msg(
     AXIS2_PARAM_CHECK(env->error, storage_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
-    
+   
+    sandesha2_app_msg_processor_set_last_out_msg_no(env, internal_sequence_id, msg_num, seq_prop_mgr);
+
     app_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(app_msg_ctx, env);
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
@@ -3871,6 +3880,63 @@ sandesha2_app_msg_processor_set_next_msg_no(
         sandesha2_seq_property_bean_free(next_msg_no_bean, env);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Exit:sandesha2_app_msg_processor_set_next_msg_no");
+	
+    return AXIS2_SUCCESS;
+}
+
+static axis2_status_t AXIS2_CALL                 
+sandesha2_app_msg_processor_set_last_out_msg_no(
+    const axutil_env_t *env,
+    axis2_char_t *internal_seq_id,
+    long msg_num,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr)
+{
+    sandesha2_seq_property_bean_t *last_out_msg_no_bean = NULL;
+    axis2_bool_t update = AXIS2_TRUE;
+    axis2_char_t str_long[32];
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Entry:sandesha2_app_msg_processor_set_last_out_msg_no");
+    AXIS2_PARAM_CHECK(env->error, internal_seq_id, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FAILURE);
+    
+    if(msg_num <= 0)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid Message Number");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_MSG_NUM, AXIS2_FAILURE);
+        return AXIS2_FAILURE;
+    }
+
+    last_out_msg_no_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
+        internal_seq_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NUMBER);
+
+    if(!last_out_msg_no_bean)
+    {
+        update = AXIS2_FALSE;
+        last_out_msg_no_bean = sandesha2_seq_property_bean_create(env);
+        sandesha2_seq_property_bean_set_seq_id(last_out_msg_no_bean, env, internal_seq_id);
+
+        sandesha2_seq_property_bean_set_name(last_out_msg_no_bean, env,
+            SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NUMBER);        
+    }
+
+    sprintf(str_long, "%ld", msg_num);
+    sandesha2_seq_property_bean_set_value(last_out_msg_no_bean, env, str_long);
+    if(update)
+    {
+        sandesha2_seq_property_mgr_update(seq_prop_mgr, env, last_out_msg_no_bean);
+    }
+    else
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, last_out_msg_no_bean);
+    }
+    if(last_out_msg_no_bean)
+    {
+        sandesha2_seq_property_bean_free(last_out_msg_no_bean, env);
+    }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
+        "[sandesha2] Exit:sandesha2_app_msg_processor_set_last_out_msg_no");
 	
     return AXIS2_SUCCESS;
 }

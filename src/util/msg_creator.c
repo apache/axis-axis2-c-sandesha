@@ -575,6 +575,8 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_terminate_seq_t *terminate_seq = NULL;
     int soap_version = -1;
     sandesha2_identifier_t *identifier = NULL;
+    sandesha2_last_msg_number_t *last_msg_number = NULL;
+    sandesha2_seq_property_bean_t *last_out_msg_no_bean = NULL;
 
     ref_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ref_rm_msg, env);
     /*axis2_msg_ctx_set_keep_alive(ref_msg_ctx, env, AXIS2_TRUE);*/
@@ -636,6 +638,34 @@ sandesha2_msg_creator_create_terminate_seq_msg(
     sandesha2_identifier_set_identifier(identifier, env, seq_id);
     sandesha2_terminate_seq_set_identifier(terminate_seq, env, identifier);
     sandesha2_msg_ctx_set_terminate_seq(terminate_rm_msg, env, terminate_seq);
+
+    if(is_seq_res_reqd)
+    {
+        last_out_msg_no_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
+            internal_seq_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NUMBER);
+    }
+
+    if(last_out_msg_no_bean)
+    {
+        axis2_char_t *msg_no_str = NULL;
+        long last_msg_num = -1;
+
+        msg_no_str = sandesha2_seq_property_bean_get_value(last_out_msg_no_bean, env);
+        if(msg_no_str)
+        {
+            last_msg_num = atol(msg_no_str);
+        }
+
+        last_msg_number = sandesha2_last_msg_number_create(env, rm_ns_value);
+        if(last_msg_number)
+        {
+            sandesha2_last_msg_number_set_last_msg_number(last_msg_number, env, last_msg_num);
+            sandesha2_terminate_seq_set_last_msg_number(terminate_seq, env, last_msg_number);
+        }
+
+        sandesha2_seq_property_bean_free(last_out_msg_no_bean, env);
+    }
+
     sandesha2_msg_creator_finalize_creation(env, ref_msg_ctx, terminate_seq_msg_ctx);
     axis2_msg_ctx_set_property(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
 
