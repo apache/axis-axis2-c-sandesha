@@ -775,12 +775,13 @@ sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
     options = (axis2_options_t *) axis2_svc_client_get_options(svc_client, env);
     if(!options)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, 
-                AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+
     old_property = (axutil_property_t *) axis2_options_get_property(options, env, 
         SANDESHA2_CLIENT_SEQ_KEY);
+
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
@@ -795,8 +796,9 @@ sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
  */
 axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client(
-        const axutil_env_t *env,
-        axis2_svc_client_t *svc_client)
+    const axutil_env_t *env,
+    axis2_svc_client_t *svc_client,
+    axis2_callback_t *callback)
 {
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_options_t *options = NULL;
@@ -813,7 +815,10 @@ sandesha2_client_close_seq_with_svc_client(
     axiom_element_t *element = NULL;
     axutil_qname_t *qname = NULL;
     axutil_property_t *property = NULL;
-    
+   
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_client_close_seq_with_svc_client");
+
     svc_ctx = (axis2_svc_ctx_t *) axis2_svc_client_get_svc_ctx(svc_client, env);
     if(!svc_ctx)
     {
@@ -860,7 +865,8 @@ sandesha2_client_close_seq_with_svc_client(
     action = sandesha2_spec_specific_consts_get_close_seq_action(env, rm_spec_version);
     axis2_options_set_action(options, env, action);
 
-    axis2_svc_client_fire_and_forget(svc_client, env, close_body_node);
+    sandesha2_client_fire_and_forget(env, svc_client, options, NULL, callback, close_body_node);
+    /*axis2_svc_client_fire_and_forget(svc_client, env, close_body_node);*/
     if(AXIS2_SUCCESS != AXIS2_ERROR_GET_STATUS_CODE(env->error))
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_COULD_NOT_SEND_THE_CLOSE_SEQ_MESSAGE, 
@@ -871,6 +877,10 @@ sandesha2_client_close_seq_with_svc_client(
     }
 
     axis2_options_set_action(options, env, old_action);
+    
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Exit:sandesha2_client_close_seq_with_svc_client");
+
     return AXIS2_SUCCESS;
 }
 
@@ -881,25 +891,18 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
     axis2_char_t *seq_key)
 {
     axis2_options_t *options = NULL;
-    axis2_char_t *spec_version = NULL;
     axutil_property_t *property = NULL;
     axutil_property_t *old_property = NULL;
     
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_client_close_seq_with_svc_client_and_seq_key");
+
     options = (axis2_options_t *) axis2_svc_client_get_options(svc_client, env);
     if(!options)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Options struct is not set in the service client");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
-    }
-
-    spec_version = (axis2_char_t *) axis2_options_get_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION);
-
-    if(axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, spec_version))
-    {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CLOSE_SEQ_FEATURE_ONLY_AVAILABLE_FOR_WSRM1_1, 
-            AXIS2_FAILURE);
-
         return AXIS2_FAILURE;
     }
 
@@ -908,8 +911,11 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
 
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    sandesha2_client_close_seq_with_svc_client(env, svc_client);
+    sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_property);
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Exit:sandesha2_client_close_seq_with_svc_client_and_seq_key");
 
     return AXIS2_SUCCESS;
 }

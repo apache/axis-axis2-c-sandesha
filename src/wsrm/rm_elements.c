@@ -226,44 +226,51 @@ sandesha2_rm_elements_from_soap_envelope(
     }
 
     qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ, rm_ns_val, NULL);
-    close_seq_element = axiom_element_get_first_child_with_qname(body_element, 
-        env, qname, body_node, &close_seq_node);
+    close_seq_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &close_seq_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(close_seq_node)
     {
         rm_elements->close_seq = sandesha2_close_seq_create(env, rm_ns_val);
-        sandesha2_close_seq_from_om_node(
-            rm_elements->close_seq, env, close_seq_node);
+        sandesha2_close_seq_from_om_node(rm_elements->close_seq, env, close_seq_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
-                        rm_ns_val, NULL);
-    close_seq_res_element = axiom_element_get_first_child_with_qname(
-        body_element, env, qname, body_node, &close_seq_res_node);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, rm_ns_val, NULL);
+    close_seq_res_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &close_seq_res_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(close_seq_res_node)
     {
-        rm_elements->close_seq_res = sandesha2_close_seq_res_create(env, 
-            rm_ns_val);
-        sandesha2_close_seq_res_from_om_node(
-            rm_elements->close_seq_res, env, close_seq_res_node);
+        rm_elements->close_seq_res = sandesha2_close_seq_res_create(env, rm_ns_val);
+        sandesha2_close_seq_res_from_om_node(rm_elements->close_seq_res, env, close_seq_res_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, 
-        rm_ns_val, NULL);
-    make_conn_element = axiom_element_get_first_child_with_qname(body_element, 
-        env, qname, body_node, &make_conn_node);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_MAKE_CONNECTION, rm_ns_val, NULL);
+    make_conn_element = axiom_element_get_first_child_with_qname(body_element, env, qname, 
+            body_node, &make_conn_node);
+
     if(qname)
+    {
         axutil_qname_free(qname, env);
+    }
+
     if(make_conn_node)
     {
-        rm_elements->make_connection = sandesha2_make_connection_create(env, 
-            rm_ns_val);
-        sandesha2_make_connection_from_om_node(
-            rm_elements->make_connection, env, make_conn_node);
+        rm_elements->make_connection = sandesha2_make_connection_create(env, rm_ns_val);
+        sandesha2_make_connection_from_om_node(rm_elements->make_connection, env, make_conn_node);
     }
-    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, 
-                        rm_ns_val, NULL);
+
+    qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_ACK_REQUESTED, rm_ns_val, NULL);
     ack_requested_element = axiom_element_get_first_child_with_qname(
         header_element, env, qname, header_node, &ack_requested_node);
     if(qname)

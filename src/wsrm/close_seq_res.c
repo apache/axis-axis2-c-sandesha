@@ -165,7 +165,7 @@ sandesha2_close_seq_res_to_om_node(
         return NULL;
     }
 
-    sandesha2_close_seq_res_to_om_node((sandesha2_close_seq_res_t *) close_seq_res->identifier, env, 
+    sandesha2_identifier_to_om_node((sandesha2_identifier_t *) close_seq_res->identifier, env, 
             csr_node);
 
     axiom_node_add_child((axiom_node_t*)om_node, env, csr_node);
@@ -212,7 +212,7 @@ sandesha2_close_seq_res_to_soap_envelope(
      * Remove if old exists
      */
     close_seq_qname = axutil_qname_create(env, SANDESHA2_WSRM_COMMON_CLOSE_SEQ_RESPONSE, 
-        close_seq_res->ns_val, NULL);
+        close_seq_res->ns_val, NULL);    
 
     if(!close_seq_qname)
     {
