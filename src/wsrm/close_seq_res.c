@@ -114,6 +114,7 @@ sandesha2_close_seq_res_from_om_node(
     csr_part = axiom_node_get_data_element(csr_node, env);
     if(!csr_part)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Create sequence response element is empty");
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
@@ -121,12 +122,16 @@ sandesha2_close_seq_res_from_om_node(
     close_seq_res->identifier = sandesha2_identifier_create(env, close_seq_res->ns_val);
     if(!close_seq_res->identifier)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Identifier element is not present in close sequence response element");
         return NULL;
     }
 
     if(!sandesha2_identifier_from_om_node(close_seq_res->identifier, env, 
         csr_node))
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Parsing close sequence response element into a struct failed");
         return NULL;
     }
 
@@ -237,7 +242,7 @@ sandesha2_close_seq_res_is_namespace_supported(
 {
     if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
-        return AXIS2_TRUE;
+        return AXIS2_FALSE;
     }
 
     if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))

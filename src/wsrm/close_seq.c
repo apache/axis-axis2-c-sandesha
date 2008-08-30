@@ -279,7 +279,7 @@ sandesha2_close_seq_is_namespace_supported(
 {
     if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2005_02_NS_URI))
     {
-        return AXIS2_TRUE;
+        return AXIS2_FALSE;
     }
 
     if(!axutil_strcmp(namespace, SANDESHA2_SPEC_2007_02_NS_URI))

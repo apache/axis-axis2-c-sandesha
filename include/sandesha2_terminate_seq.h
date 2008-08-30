@@ -25,6 +25,7 @@
 #include <axutil_utils_defines.h>
 #include <axutil_env.h>
 #include <sandesha2_identifier.h>
+#include <sandesha2_last_msg_number.h>
 #include <sandesha2_error.h>
 
 
@@ -94,6 +95,17 @@ sandesha2_terminate_seq_to_om_node(
     const axutil_env_t *env, 
     void *om_node);
  
+sandesha2_last_msg_number_t * AXIS2_CALL
+sandesha2_terminate_seq_get_last_msg_number(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axutil_env_t *env);
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_terminate_seq_set_last_msg_number(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axutil_env_t *env, 
+    sandesha2_last_msg_number_t *last_msg_number);
+
 /** @} */
 #ifdef __cplusplus
 }

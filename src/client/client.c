@@ -135,7 +135,8 @@ sandesha2_client_configure_terminate_seq(
     const axutil_env_t *env,
     axis2_options_t *options, 
     axis2_conf_ctx_t *conf_ctx,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    long last_msg_num);
 
 static axis2_bool_t
 fill_soap_envelope(
@@ -610,7 +611,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_callback_t *callback)
+    axis2_callback_t *callback,
+    long last_msg_num)
 {
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_options_t *options = NULL;
@@ -673,7 +675,7 @@ sandesha2_client_terminate_seq_with_svc_client(
     }
 
     terminate_envelope = sandesha2_client_configure_terminate_seq(env, options, conf_ctx, 
-            seq_prop_mgr);
+            seq_prop_mgr, last_msg_num);
 
     if (!terminate_envelope)
     {
@@ -768,7 +770,8 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
-    axis2_char_t *seq_key)
+    axis2_char_t *seq_key,
+    long last_msg_num)
 {
     axis2_options_t *options = NULL;
     axutil_property_t *property = NULL;
@@ -786,7 +789,7 @@ sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
 
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL, last_msg_num);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_property);
     return AXIS2_SUCCESS;
 }
@@ -1728,7 +1731,8 @@ sandesha2_client_configure_terminate_seq(
     const axutil_env_t *env,
     axis2_options_t *options, 
     axis2_conf_ctx_t *conf_ctx,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr)
+    sandesha2_seq_property_mgr_t *seq_prop_mgr,
+    long last_msg_num)
 {
     axis2_endpoint_ref_t *to_epr = NULL;
     axis2_char_t *to = NULL;
@@ -1789,6 +1793,7 @@ sandesha2_client_configure_terminate_seq(
         sandesha2_terminate_seq_t *terminate_seq = NULL;
         sandesha2_identifier_t *identifier = NULL;
         sandesha2_seq_property_bean_t *seq_id_bean = NULL;
+        sandesha2_last_msg_number_t *last_msg_number = NULL;
         axis2_char_t *seq_id = NULL;
 
         conf = axis2_conf_ctx_get_conf(conf_ctx, env);
@@ -1839,17 +1844,26 @@ sandesha2_client_configure_terminate_seq(
 
         rm_ns_value = sandesha2_spec_specific_consts_get_rm_ns_val(env, rm_spec_version);
         terminate_seq = sandesha2_terminate_seq_create(env, rm_ns_value);
+        if(!terminate_seq)
+        {
+            return NULL;
+        }
+
         identifier = sandesha2_identifier_create(env, rm_ns_value);
         if(identifier)
         {
             sandesha2_identifier_set_identifier(identifier, env, seq_id);
+            sandesha2_terminate_seq_set_identifier(terminate_seq, env, identifier);
         }
 
-        if(terminate_seq)
+        last_msg_number = sandesha2_last_msg_number_create(env, rm_ns_value);
+        if(last_msg_number)
         {
-            sandesha2_terminate_seq_set_identifier(terminate_seq, env, identifier);
-            sandesha2_terminate_seq_to_soap_envelope(terminate_seq, env, dummy_envelope);
+            sandesha2_last_msg_number_set_last_msg_number(last_msg_number, env, last_msg_num);
+            sandesha2_terminate_seq_set_last_msg_number(terminate_seq, env, last_msg_number);
         }
+
+        sandesha2_terminate_seq_to_soap_envelope(terminate_seq, env, dummy_envelope);
 
         return dummy_envelope;
     }

@@ -249,6 +249,7 @@ sandesha2_in_handler_invoke(
     if(seq_ack)
     {
         sandesha2_msg_processor_t *ack_proc = NULL;
+
         ack_proc = sandesha2_ack_msg_processor_create(env);
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
         sandesha2_msg_processor_free(ack_proc, env);

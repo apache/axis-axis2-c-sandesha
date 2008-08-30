@@ -26,6 +26,7 @@
 struct sandesha2_terminate_seq_t
 {
 	sandesha2_identifier_t *identifier;
+	sandesha2_last_msg_number_t *last_msg_number;
 	axis2_char_t *ns_val;
 };
 
@@ -56,6 +57,7 @@ sandesha2_terminate_seq_create(const axutil_env_t *env,  axis2_char_t *ns_val)
 	}
     terminate_seq->ns_val = NULL;
     terminate_seq->identifier = NULL;
+    terminate_seq->last_msg_number = NULL;
     
     terminate_seq->ns_val = (axis2_char_t *)axutil_strdup(env, ns_val);
     
@@ -88,6 +90,13 @@ sandesha2_terminate_seq_free (
         sandesha2_identifier_free(terminate_seq->identifier, env);
         terminate_seq->identifier = NULL;
     }
+    
+    if(terminate_seq->last_msg_number)
+    {
+        sandesha2_last_msg_number_free(terminate_seq->last_msg_number, env);
+        terminate_seq->last_msg_number = NULL;
+    }
+
 	AXIS2_FREE(env->allocator, terminate_seq);
 	return AXIS2_SUCCESS;
 }
@@ -114,19 +123,26 @@ sandesha2_terminate_seq_from_om_node(
     ts_part = axiom_node_get_data_element(ts_node, env);
     if(!ts_part)
     {
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT,
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_OM_ELEMENT, AXIS2_FAILURE);
         return NULL;
     }
 
-    terminate_seq->identifier = sandesha2_identifier_create(env, 
-        terminate_seq->ns_val);
+    terminate_seq->identifier = sandesha2_identifier_create(env, terminate_seq->ns_val);
     if(!terminate_seq->identifier)
     {
         return NULL;
     }
-    sandesha2_identifier_from_om_node(terminate_seq->identifier, env, 
-        ts_node);
+    
+    sandesha2_identifier_from_om_node(terminate_seq->identifier, env, ts_node);
+
+    terminate_seq->last_msg_number = sandesha2_last_msg_number_create(env, terminate_seq->ns_val);
+    if(!terminate_seq->last_msg_number)
+    {
+        return NULL;
+    }
+
+    sandesha2_last_msg_number_from_om_node(terminate_seq->last_msg_number, env, ts_node);
+
     return terminate_seq;
 }
 
@@ -164,6 +180,12 @@ sandesha2_terminate_seq_to_om_node(
     }
 
     sandesha2_identifier_to_om_node(terminate_seq->identifier, env, ts_node);
+    
+    if(terminate_seq->last_msg_number)
+    {
+        sandesha2_last_msg_number_to_om_node(terminate_seq->last_msg_number, env, ts_node);
+    }
+
     return (axiom_node_t*)om_node;
 }
 
@@ -188,6 +210,31 @@ sandesha2_terminate_seq_set_identifier(
 	}
 
 	terminate_seq->identifier = identifier;
+ 	return AXIS2_SUCCESS;
+}
+
+sandesha2_last_msg_number_t * AXIS2_CALL
+sandesha2_terminate_seq_get_last_msg_number(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axutil_env_t *env)
+{
+	return terminate_seq->last_msg_number;
+}                    	
+
+axis2_status_t AXIS2_CALL                 
+sandesha2_terminate_seq_set_last_msg_number(
+    sandesha2_terminate_seq_t *terminate_seq,
+    const axutil_env_t *env, 
+    sandesha2_last_msg_number_t *last_msg_number)
+{
+ 	if(terminate_seq->last_msg_number)
+	{
+		sandesha2_last_msg_number_free(terminate_seq->last_msg_number, env); 
+		terminate_seq->last_msg_number = NULL; 
+	}
+
+	terminate_seq->last_msg_number = last_msg_number;
+
  	return AXIS2_SUCCESS;
 }
 

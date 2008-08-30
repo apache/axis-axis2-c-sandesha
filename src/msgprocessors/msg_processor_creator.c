@@ -35,6 +35,7 @@
 #include <sandesha2_terminate_seq_res_msg_processor.h>
 #include <sandesha2_ack_msg_processor.h>
 #include <sandesha2_close_seq_msg_processor.h>
+#include <sandesha2_close_seq_res_msg_processor.h>
 #include <sandesha2_ack_req_msg_processor.h>
 #include <sandesha2_app_msg_processor.h>
 #include <sandesha2_make_connection_msg_processor.h>
@@ -52,6 +53,7 @@ sandesha2_msg_processor_create_msg_processor(
     int msg_type = -1;
 
     msg_type = sandesha2_msg_ctx_get_msg_type(rm_msg_ctx, env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "msg_type:%d", msg_type);
     switch(msg_type)
     {
         case SANDESHA2_MSG_TYPE_CREATE_SEQ:
@@ -72,6 +74,9 @@ sandesha2_msg_processor_create_msg_processor(
         case SANDESHA2_MSG_TYPE_CLOSE_SEQ:
             return (sandesha2_msg_processor_t *) 
                 sandesha2_close_seq_msg_processor_create(env);
+        case SANDESHA2_MSG_TYPE_CLOSE_SEQ_RESPONSE:
+            return (sandesha2_msg_processor_t *) sandesha2_close_seq_res_msg_processor_create(env);
+
         case SANDESHA2_MSG_TYPE_MAKE_CONNECTION_MSG:
             return (sandesha2_msg_processor_t *) 
                 sandesha2_make_connection_msg_processor_create(env);
