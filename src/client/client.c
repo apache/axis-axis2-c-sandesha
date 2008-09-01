@@ -1330,14 +1330,14 @@ sandesha2_client_configure_close_seq(
     if(!options)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
+        return NULL;
     }
 
     to_epr = axis2_options_get_to(options, env);
     if(!to_epr)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
+        return NULL;
     }
 
     to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
@@ -1749,7 +1749,7 @@ sandesha2_client_configure_terminate_seq(
     if(!options)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_OPTIONS_OBJECT_NOT_SET, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
+        return NULL;
     }
 
     to_epr = axis2_options_get_to(options, env);
@@ -1757,7 +1757,7 @@ sandesha2_client_configure_terminate_seq(
     if(!to_epr)
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_TO_EPR_NOT_SET, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
+        return NULL;
     }
 
     to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
@@ -1933,7 +1933,7 @@ sandesha2_client_send_non_blocking(
     return axis2_op_client_execute(op_client, env, AXIS2_FALSE);
 }
 
-static void AXIS2_CALL
+static void
 sandesha2_client_fire_and_forget(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,

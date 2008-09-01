@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <sandesha2_create_seq_msg_processor.h>
+#include <sandesha2_create_seq_res_msg_processor.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_permanent_seq_property_mgr.h>

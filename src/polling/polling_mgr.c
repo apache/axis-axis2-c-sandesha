@@ -38,6 +38,7 @@
 #include <platforms/axutil_platform_auto_sense.h>
 #include <axutil_types.h>
 #include <axiom_soap_const.h>
+#include <axis2_http_transport_utils.h>
 
 
 /** 

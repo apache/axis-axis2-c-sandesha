@@ -31,6 +31,7 @@
 #include <sandesha2_utils.h>
 #include <axutil_param.h>
 #include <stdlib.h>
+#include <axutil_types.h>
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 sandesha2_property_mgr_load_exp_backoff(
