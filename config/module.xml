@@ -48,15 +48,12 @@
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/SequenceAcknowledgement</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequenceResponse</actionMapping>
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/AckRequested</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequence</actionMapping>
-        <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CloseSequenceResponse</actionMapping>
         
      </operation>
  
      <operation name="RMInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
         <!-- namespaces for the 2005-02 spec -->
         <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/CreateSequence</actionMapping>
-        <actionMapping>http://schemas.xmlsoap.org/ws/2005/02/rm/LastMessage</actionMapping>
 
         <!-- namespaces for the 2007-02 spec -->
         <actionMapping>http://docs.oasis-open.org/ws-rx/wsrm/200702/CreateSequence</actionMapping>
