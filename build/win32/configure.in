@@ -1,4 +1,4 @@
-AXIS2_BIN_DIR = C:\damitha\axis2c\build\deploy
+AXIS2_BIN_DIR = E:\axis2c\build\axis2c-bin-1.5.0-win32
 
 #CRUNTIME Library (Use /MD or /MT )
 CRUNTIME=/MD
