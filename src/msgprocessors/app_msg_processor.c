@@ -993,7 +993,7 @@ sandesha2_app_msg_processor_process_in_msg (
             SANDESHA2_APPLICATION_PROCESSING_DONE, property);
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         /* Start the invoker if stopped */
-        sandesha2_utils_start_invoker_for_seq(env, conf_ctx, rmd_sequence_id);
+        /*sandesha2_utils_start_invoker_for_seq(env, conf_ctx, rmd_sequence_id);*/
     }
 
     if(!sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, storage_mgr, 

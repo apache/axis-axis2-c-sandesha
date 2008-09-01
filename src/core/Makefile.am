@@ -16,7 +16,6 @@ libsandesha2_la_LIBADD = ../handlers/libsandesha_handlers.la\
                         ../storage/sqlite/libsandesha2_permanent.la\
                         ../transport/libsandesha2_transport.la\
                         ../util/libsandesha_util.la\
-                        ../workers/libsandesha2_workers.la\
                         ../wsrm/libsandesha2_wsrm.la \
                         ../polling/libsandesha2_polling.la 
 

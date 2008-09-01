@@ -30,7 +30,6 @@
 #include <sandesha2_spec_specific_consts.h>
 #include <sandesha2_address.h>
 #include <sandesha2_identifier.h>
-#include <sandesha2_sender_worker.h>
 #include <sandesha2_msg_pending.h>
 #include <sandesha2_msg_init.h>
 #include <sandesha2_sender_bean.h>

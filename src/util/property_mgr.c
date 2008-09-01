@@ -19,7 +19,6 @@
 #include <axutil_param.h>
 #include <sandesha2_constants.h>
 #include <sandesha2_error.h>
-#include <sandesha2_sender.h>
 #include <axutil_string.h>
 #include <axis2_conf.h>
 #include <axutil_property.h>

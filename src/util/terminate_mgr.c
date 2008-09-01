@@ -27,7 +27,6 @@
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_create_seq_mgr.h>
 #include <sandesha2_sender_mgr.h>
-#include <sandesha2_sender_worker.h>
 #include <sandesha2_sender_bean.h>
 #include <sandesha2_msg_init.h>
 #include <axutil_string.h>

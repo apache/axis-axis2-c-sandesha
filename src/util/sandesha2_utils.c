@@ -16,11 +16,9 @@
  
 #include <sandesha2_utils.h>
 #include <sandesha2_constants.h>
-#include <sandesha2_in_order_invoker.h>
 #include <sandesha2_transport_sender.h>
 #include <sandesha2_seq_property_mgr.h>
 #include <sandesha2_error.h>
-#include <sandesha2_sender.h>
 #include <sandesha2_seq.h>
 #include <sandesha2_seq_ack.h>
 #include <sandesha2_ack_requested.h>
@@ -328,7 +326,7 @@ sandesha2_utils_array_list_to_string(
 
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
+/*AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_invoker_for_seq(
     const axutil_env_t *env,
     axis2_conf_ctx_t *conf_ctx,
@@ -357,7 +355,7 @@ sandesha2_utils_start_invoker_for_seq(
     status = sandesha2_in_order_invoker_run_for_seq(invoker, env, conf_ctx, 
         seq_id);
     return status;
-}
+}*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL                        
 sandesha2_utils_start_sender_for_seq(
