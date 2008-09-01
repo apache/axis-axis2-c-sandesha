@@ -1,1 +1,1 @@
-SUBDIRS = wsrm storage util transport workers handlers msgprocessors polling core client
+SUBDIRS = wsrm storage util transport handlers msgprocessors polling core client

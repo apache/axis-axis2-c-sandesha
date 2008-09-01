@@ -81,7 +81,6 @@ AC_CONFIG_FILES([Makefile \
     src/handlers/Makefile \
     src/msgprocessors/Makefile \
     src/storage/Makefile \
-    src/workers/Makefile \
     src/storage/beans/Makefile \
     src/storage/common/Makefile \
     src/storage/sqlite/Makefile \
