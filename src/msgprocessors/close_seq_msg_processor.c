@@ -62,7 +62,7 @@ struct sandesha2_close_seq_msg_processor_impl
 #define SANDESHA2_INTF_TO_IMPL(msg_proc) \
 						((sandesha2_close_seq_msg_processor_impl_t *)(msg_proc))
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
     const axutil_env_t *env,
@@ -75,13 +75,13 @@ sandesha2_close_seq_msg_processor_add_close_seq_res(
     axis2_char_t *seq_id,
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
     const axutil_env_t *env, 
     sandesha2_msg_ctx_t *rm_msg_ctx);
                     	
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_free (
     sandesha2_msg_processor_t *element, 
     const axutil_env_t *env);								
@@ -123,7 +123,7 @@ sandesha2_close_seq_msg_processor_create(
 }
 
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_free(
         sandesha2_msg_processor_t *msg_processor, 
 	    const axutil_env_t *env)
@@ -143,7 +143,7 @@ sandesha2_close_seq_msg_processor_free(
 }
 
 
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_process_in_msg (
     sandesha2_msg_processor_t *msg_processor,
     const axutil_env_t *env,
@@ -342,7 +342,7 @@ sandesha2_close_seq_msg_processor_add_close_seq_res(
  * This function is invoked in RM 1.1 where client explicitly send the 
  * close sequence message
  */
-static axis2_status_t
+static axis2_status_t AXIS2_CALL
 sandesha2_close_seq_msg_processor_process_out_msg(
     sandesha2_msg_processor_t *msg_processor,
     const axutil_env_t *env, 
