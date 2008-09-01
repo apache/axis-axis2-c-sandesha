@@ -155,7 +155,7 @@ int main(int argc, char** argv)
         printf("\nping client invoke SUCCESSFUL!\n");
     AXIS2_SLEEP(MAX_COUNT);
     
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL, 3);
      /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
 
