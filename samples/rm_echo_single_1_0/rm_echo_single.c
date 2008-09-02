@@ -43,15 +43,13 @@ int main(int argc, char** argv)
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
-    axiom_node_t *payload = NULL;
     axiom_node_t *payload2 = NULL;
-    axiom_node_t *payload3 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
-    int c;
+    int c, i;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_0.log", 
@@ -165,49 +163,34 @@ int main(int argc, char** argv)
             property);
     }
 
-    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload);
-    if(result)
+    for(i = 1; i < 3; i++)
     {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
-        {
-            printf("\nReceived OM : %s\n", om_str);
-            AXIS2_FREE(env->allocator, om_str);
-        }
-        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-        result = NULL;
-    }
-    else
-    {
-        printf("\necho client two way single channel invoke FAILED!\n");
-    }
-   
-    payload2 = build_om_payload_for_echo_svc(env, "echo2", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload2);
+        axiom_node_t *payload = NULL;
 
-    if(result)
-    {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
+        payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
+        result = axis2_svc_client_send_receive(svc_client, env, payload);
+        if(result)
         {
-            printf("\nReceived OM : %s\n", om_str);
-            AXIS2_FREE(env->allocator, om_str);
+            axis2_char_t *om_str = NULL;
+            om_str = axiom_node_to_string(result, env);
+            if (om_str)
+            {
+                printf("\nReceived OM : %s\n", om_str);
+                AXIS2_FREE(env->allocator, om_str);
+            }
+            printf("\necho client two way single channel invoke SUCCESSFUL!\n");
+            result = NULL;
         }
-        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-        result = NULL;
-    }
-    else
-    {
-        printf("\necho client two way single channel invoke FAILED!\n");
+        else
+        {
+            printf("\necho client two way single channel invoke FAILED!\n");
+        }
     }
 
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload3 = build_om_payload_for_echo_svc(env, "echo3", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload3);
+    payload2 = build_om_payload_for_echo_svc(env, "echo3", seq_key);
+    result = axis2_svc_client_send_receive(svc_client, env, payload2);
     if(result)
     {
         axis2_char_t *om_str = NULL;
