@@ -167,7 +167,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
     int type = -1;
     axis2_bool_t valid_seq = AXIS2_TRUE;
 
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] sandesha2_fault_mgr_check_for_unknown_seq");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_fault_mgr_check_for_unknown_seq");
 
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
@@ -314,7 +314,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
             sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env), seq_prop_mgr);
     }
     
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] sandesha2_fault_mgr_check_for_unknown_seq");
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Exit:sandesha2_fault_mgr_check_for_unknown_seq");
 
     return NULL;
 }
