@@ -721,7 +721,7 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
 
         bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", msg_type);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] msg_type:%d", msg_type);
 
         if(msg_type == SANDESHA2_MSG_TYPE_ACK)
         {
@@ -766,6 +766,7 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     if(match_list)
     {
         int j = 0, sizej = 0;
+
         sizej = axutil_array_list_size(match_list, env);
         for(j = 0; j < sizej; j++)
         {
@@ -773,6 +774,7 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
             temp_bean = axutil_array_list_get(match_list, env, j);
             sandesha2_sender_bean_free(temp_bean, env);
         }
+
         axutil_array_list_free(match_list, env);
     }
 
