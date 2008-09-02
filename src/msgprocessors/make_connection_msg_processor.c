@@ -500,28 +500,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         if(bean1)
             sandesha2_sender_bean_free(bean1, env);
     }
-    msg_type = sandesha2_msg_ctx_get_msg_type(return_rm_msg_ctx, env);
-    if(SANDESHA2_MSG_TYPE_TERMINATE_SEQ == msg_type)
-    {
-        sandesha2_terminate_seq_t *terminate_seq = NULL;
-        axis2_char_t *seq_id = NULL;
-        axis2_conf_ctx_t *conf_ctx = NULL;
-        axis2_char_t *int_seq_id = NULL;
-        
-        terminate_seq = sandesha2_msg_ctx_get_terminate_seq(return_rm_msg_ctx, 
-            env);
-        seq_id = sandesha2_identifier_get_identifier(
-            sandesha2_terminate_seq_get_identifier(terminate_seq, 
-                env), env);
-        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-        int_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
-            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
-        sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx,
-            int_seq_id, axis2_msg_ctx_get_server_side(msg_ctx, env), 
-                storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
-        if(int_seq_id)
-            AXIS2_FREE(env->allocator, int_seq_id);
-    }
+
     if(seq_prop_mgr)
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     if(create_seq_mgr)

@@ -135,6 +135,7 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
     sandesha2_create_seq_mgr_t *create_seq_mgr = NULL;
     sandesha2_sender_mgr_t *sender_mgr = NULL;
     axis2_char_t *dbname = NULL;
+    axis2_char_t *internal_seq_id = NULL; 
    
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
 
@@ -171,6 +172,10 @@ sandesha2_terminate_seq_res_msg_processor_process_in_msg (
         SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, storage_mgr);*/
     /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, seq_id, 
         AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
+    internal_seq_id = sandesha2_utils_get_seq_property(env, seq_id, 
+        SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
+    sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_seq_id, 
+        AXIS2_FALSE, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
