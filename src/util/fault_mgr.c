@@ -236,15 +236,7 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                 tmp_id = sandesha2_next_msg_bean_get_seq_id(next_bean, env);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] tmp_sequence_id:%s", tmp_id);
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] sequence_id:%s", seq_id);
-                if(contains)
-                {
-                    if(next_bean)
-                    {
-                        sandesha2_next_msg_bean_free(next_bean, env);
-                    }
-
-                    continue;
-                }
+                
                 if(!axutil_strcmp(seq_id, tmp_id))
                 {
                     if(next_bean)
@@ -260,6 +252,8 @@ sandesha2_fault_mgr_check_for_unknown_seq(
                     {
                         sandesha2_next_msg_bean_free(next_bean, env);
                     }
+
+                    continue;
                 }
             }
 
@@ -268,11 +262,12 @@ sandesha2_fault_mgr_check_for_unknown_seq(
 
         if(contains)
         {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Not a valid sequence message");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Valid sequence message");
             valid_seq = AXIS2_TRUE;
         }
         else
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Not a valid sequence message");
             valid_seq = AXIS2_FALSE;
         }
     }
