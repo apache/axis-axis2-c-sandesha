@@ -131,7 +131,7 @@ sandesha2_make_connection_msg_processor_find_callback(
 static sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     const axutil_env_t *env,
-    const axis2_char_t *seq_id,
+    const axis2_char_t *internal_seq_id,
     axis2_bool_t *pending,
     axis2_char_t *dbname);
 
@@ -660,7 +660,7 @@ set_transport_properties(
 static sandesha2_sender_bean_t *AXIS2_CALL
 sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     const axutil_env_t *env,
-    const axis2_char_t *seq_id,
+    const axis2_char_t *internal_seq_id,
     axis2_bool_t *pending,
     axis2_char_t *dbname)
 {
@@ -672,29 +672,42 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     long time_now = 0;
     sandesha2_sender_bean_t *result = NULL;
     sandesha2_permanent_bean_mgr_t *bean_mgr = NULL;
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Entry:sandesha2_"\
-        "make_connection_msg_processor_get_next_msg_to_send");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2] Entry:sandesha2_make_connection_msg_processor_get_next_msg_to_send");
 
     sprintf(sql_find, "select msg_id, msg_ctx_ref_key, "\
         "internal_seq_id, sent_count, msg_no, send, resend, "\
         "time_to_send, msg_type, seq_id, wsrm_anon_uri, "\
         "to_address from sender where ");
+
     time_now = sandesha2_utils_get_current_time_in_millis(env);
     if(time_now > 0)
-        sprintf(sql_find + axutil_strlen(sql_find), "time_to_send <= %ld ", 
-            time_now);
-    if(seq_id)
-        sprintf(sql_find + axutil_strlen(sql_find), "and internal_seq_id='%s'", 
-            seq_id);
+    {
+        sprintf(sql_find + axutil_strlen(sql_find), "time_to_send <= %ld ", time_now);
+    }
+
+    if(internal_seq_id)
+    {
+        sprintf(sql_find + axutil_strlen(sql_find), "and internal_seq_id='%s'", internal_seq_id);
+    }
+
     sprintf(sql_find + axutil_strlen(sql_find), " and send=%d", AXIS2_TRUE);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find:%s", sql_find);  
-    bean_mgr = sandesha2_permanent_bean_mgr_create(env, dbname, 
-        SANDESHA2_BEAN_MAP_RETRANSMITTER);
-    match_list = sandesha2_permanent_bean_mgr_find(bean_mgr, 
-        env, sandesha2_make_connection_msg_processor_find_callback, sql_find);
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "sql_find:%s", sql_find);
+
+    bean_mgr = sandesha2_permanent_bean_mgr_create(env, dbname, SANDESHA2_BEAN_MAP_RETRANSMITTER);
+
+    match_list = sandesha2_permanent_bean_mgr_find(bean_mgr, env, 
+            sandesha2_make_connection_msg_processor_find_callback, sql_find);
+
     match_list_size = axutil_array_list_size(match_list, env);
+
     if(match_list_size > 1)
+    {
         *pending = AXIS2_TRUE;
+    }
+
     /*
      * We either return an application message or an RM message. If we find
      * an application message first then we carry on through the list to be
@@ -705,18 +718,19 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
     {
         sandesha2_sender_bean_t *bean = NULL;
         int msg_type = -1;
-        bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, 
-            env, i);
+
+        bean = (sandesha2_sender_bean_t *) axutil_array_list_get(match_list, env, i);
         msg_type = sandesha2_sender_bean_get_msg_type(bean, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", 
-            msg_type);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]msg_type:%d", msg_type);
 
         if(msg_type == SANDESHA2_MSG_TYPE_ACK)
         {
             /* For the time being we do not send acknowledgement messages in the make connection 
              * back channel 
              */
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] ack msg type is still not supported");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] ack msg type is still not supported for MakeConnection channel");
+
             continue;
         }
         
@@ -729,9 +743,13 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
         {
             long msg_no = sandesha2_sender_bean_get_msg_no(bean, env);
             long result_msg_no = -1;
+
             if(result)
+            {
                 result_msg_no = sandesha2_sender_bean_get_msg_no(result, env);
-            if(result == NULL || result_msg_no > msg_no)
+            }
+
+            if(!result || result_msg_no > msg_no)
             {
                 result = bean;
                 index = i;
@@ -743,6 +761,7 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
             index = i;
         }
     }
+
     result = axutil_array_list_remove(match_list, env, index);
     if(match_list)
     {
@@ -756,12 +775,15 @@ sandesha2_make_connection_msg_processor_get_next_msg_to_send(
         }
         axutil_array_list_free(match_list, env);
     }
+
     if(bean_mgr)
     {
         sandesha2_permanent_bean_mgr_free(bean_mgr, env);
     }
-    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2]Exit:sandesha2_"\
-        "make_connection_msg_processor_get_next_msg_to_send");
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+        "[sandesha2] Exit:sandesha2_make_connection_msg_processor_get_next_msg_to_send");
+
     return result;
 }
 
