@@ -92,54 +92,69 @@ sandesha2_fault_mgr_check_for_last_msg_num_exceeded(
     sandesha2_seq_t *sequence = NULL;
     long msg_num = -1;
     axis2_char_t *seq_id = NULL;
+    axis2_char_t *internal_sequence_id = NULL;
     sandesha2_seq_property_bean_t *last_msg_bean = NULL;
     axis2_bool_t exceeded = AXIS2_FALSE;
     axis2_char_t reason[256];
         
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_fault_mgr_check_for_last_msg_num_exceeded");
+
     AXIS2_PARAM_CHECK(env->error, app_rm_msg, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
     
     sequence = sandesha2_msg_ctx_get_sequence(app_rm_msg, env);
-    msg_num = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(
-        sequence, env), env);
-    seq_id = sandesha2_identifier_get_identifier(
-                        sandesha2_seq_get_identifier(sequence, env), env);
+    msg_num = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(sequence, env), env);
+    seq_id = sandesha2_identifier_get_identifier(sandesha2_seq_get_identifier(sequence, env), env);
                         
-    last_msg_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr,
-                        env, seq_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO);
-    if(NULL != last_msg_bean)
+    internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, seq_id);
+
+    last_msg_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+        SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO);
+
+    if(last_msg_bean)
     {
         long last_msg_no = -1;
-        last_msg_no = atol(sandesha2_seq_property_bean_get_value(last_msg_bean,
-                        env));
+
+        last_msg_no = atol(sandesha2_seq_property_bean_get_value(last_msg_bean, env));
         if(msg_num > last_msg_no)
         {
             exceeded = AXIS2_TRUE;
-            sprintf(reason, "The message number of the message %ld exceeded the"
-                        " last message number %ld which was mentioned as last"
-                        " message in a previosly received application message",
-                        msg_num, last_msg_no);
+            sprintf(reason, "The message number of the message %ld exceeded the last message number"
+                    " %ld which was mentioned as last message in a previosly received application"
+                    " message", msg_num, last_msg_no);
         }
     }
+
     if(exceeded)
     {
         sandesha2_fault_data_t *fault_data = NULL;
+
         fault_data = sandesha2_fault_data_create(env);
         sandesha2_fault_data_set_type(fault_data, env, 
                         SANDESHA2_SOAP_FAULT_TYPE_LAST_MESSAGE_NO_EXCEEDED);
+
         if(SANDESHA2_SOAP_VERSION_1_1 == sandesha2_utils_get_soap_version(env, 
                         sandesha2_msg_ctx_get_soap_envelope(app_rm_msg, env)))
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP11_FAULT_CODE_SENDER);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP11_FAULT_CODE_SENDER);
+        }
         else
-            sandesha2_fault_data_set_code(fault_data, env, 
-                        AXIOM_SOAP12_FAULT_CODE_SENDER);
+        {
+            sandesha2_fault_data_set_code(fault_data, env, AXIOM_SOAP12_FAULT_CODE_SENDER);
+        }
+
         sandesha2_fault_data_set_sub_code(fault_data, env, 
                         SANDESHA2_SOAP_FAULT_SUBCODE_LAST_MESSAGE_NO_EXCEEDED);
+
         sandesha2_fault_data_set_reason(fault_data, env, reason);
+
         return sandesha2_fault_mgr_get_fault(env, app_rm_msg, fault_data,
             sandesha2_msg_ctx_get_addr_ns_val(app_rm_msg, env), seq_prop_mgr);
     }
+
+    AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Entry:sandesha2_fault_mgr_check_for_last_msg_num_exceeded");
     return NULL;    
 }
             
