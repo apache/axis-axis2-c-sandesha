@@ -244,7 +244,7 @@ int main(int argc, char** argv)
 
     AXIS2_SLEEP(SANDESHA2_SLEEP); 
 
-    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, seq_key, 3);
+    sandesha2_client_terminate_seq_with_svc_client_and_seq_key(env, svc_client, seq_key);
 
     AXIS2_SLEEP(6 * SANDESHA2_SLEEP);
 

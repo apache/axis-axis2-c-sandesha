@@ -202,7 +202,7 @@ int main(int argc, char** argv)
     callback3 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3, 2);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3);
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
