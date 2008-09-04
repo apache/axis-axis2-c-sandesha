@@ -557,8 +557,8 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         /* If polling_mode is true, starting the polling manager */
         if(polling_mode)
         {
-            sandesha2_polling_mgr_start(env, conf_ctx, storage_mgr, sender_mgr, create_seq_rm_msg, 
-                    internal_sequence_id, rmd_sequence_id, reply_to_addr);
+            /*sandesha2_polling_mgr_start(env, conf_ctx, storage_mgr, sender_mgr, create_seq_rm_msg, 
+                    internal_sequence_id, rmd_sequence_id, reply_to_addr);*/
         }
 
         sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);
