@@ -767,6 +767,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
+    axis2_callback_t *callback,
     axis2_char_t *seq_key)
 {
     axis2_options_t *options = NULL;
@@ -785,7 +786,7 @@ sandesha2_client_terminate_seq_with_svc_client_and_seq_key(
 
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_property);
     return AXIS2_SUCCESS;
 }
@@ -889,6 +890,7 @@ axis2_status_t AXIS2_CALL
 sandesha2_client_close_seq_with_svc_client_and_seq_key(
     const axutil_env_t *env,
     axis2_svc_client_t *svc_client,
+    axis2_callback_t *callback,
     axis2_char_t *seq_key)
 {
     axis2_options_t *options = NULL;
@@ -912,7 +914,7 @@ sandesha2_client_close_seq_with_svc_client_and_seq_key(
 
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    sandesha2_client_close_seq_with_svc_client(env, svc_client, NULL);
+    sandesha2_client_close_seq_with_svc_client(env, svc_client, callback);
     axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, old_property);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
