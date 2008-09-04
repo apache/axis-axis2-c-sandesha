@@ -187,6 +187,11 @@ sandesha2_msg_creator_create_create_seq_msg(
         SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
 
     create_seq_part = sandesha2_create_seq_create(env, addressing_ns_value, rm_ns_value);
+    if(!create_seq_part)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] creating create sequence message failed");
+        return NULL;
+    }
 
     /* Adding sequence offer if present */
     op_ctx = axis2_msg_ctx_get_op_ctx(application_msg_ctx, env);
