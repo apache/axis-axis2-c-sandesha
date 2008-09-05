@@ -174,6 +174,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     axiom_node_t *body_node = NULL;
     axiom_element_t *body_element = NULL;
     axiom_children_iterator_t *children_iterator = NULL;
+    sandesha2_seq_property_bean_t *terminated_bean = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
         "[sandesha2] Entry:sandesha2_ack_msg_processor_process_in_msg");
@@ -275,6 +276,49 @@ sandesha2_ack_msg_processor_process_in_msg (
     if(internal_sequence_id)
     {
         sandesha2_seq_mgr_update_last_activated_time(env, internal_sequence_id, seq_prop_mgr);
+    }
+
+    terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+            SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
+    if(terminated_bean)
+    {
+        axis2_char_t *value = sandesha2_seq_property_bean_get_value(terminated_bean, env);
+
+        if(value && !axutil_strcmp(AXIS2_VALUE_TRUE, value))
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[sandesha2] Terminate sequence message was added previously");
+        }
+
+        sandesha2_seq_property_bean_free(terminated_bean, env);
+
+        if(seq_prop_mgr)
+        {
+            sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+        }
+        if(create_seq_mgr)
+        {
+            sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+        }
+        if(sender_mgr)
+        {
+            sandesha2_sender_mgr_free(sender_mgr, env);
+        }
+        if(next_msg_mgr)
+        {
+            sandesha2_next_msg_mgr_free(next_msg_mgr, env);
+        }
+        if(storage_mgr)
+        {
+            sandesha2_storage_mgr_free(storage_mgr, env);
+        }
+        
+        if(internal_sequence_id)
+        {
+            AXIS2_FREE(env->allocator, internal_sequence_id);
+        }
+
+        return AXIS2_SUCCESS;
     }
 
     /*property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);

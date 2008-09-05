@@ -733,7 +733,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2]Entry:sandesha2_terminate_msg_processor_process_out_msg.");
+        "[sandesha2]Entry:sandesha2_terminate_seq_msg_processor_process_out_msg.");
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -940,7 +940,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,  
-        "[sandesha2] Exit:sandesha2_terminate_msg_processor_process_out_msg");
+        "[sandesha2] Exit:sandesha2_terminate_seq_msg_processor_process_out_msg");
 
     return AXIS2_SUCCESS;
 }
