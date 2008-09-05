@@ -1174,8 +1174,10 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                             "[sandesha2] Terminate message response process failed for sequence %s", 
                             internal_sequence_id);
 
-                        break;
+                        continue;
                     }
+                        
+                    break;
                 }
             }
 
