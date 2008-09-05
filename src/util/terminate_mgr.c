@@ -829,7 +829,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
     axis2_msg_ctx_t *terminate_msg_ctx = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
-    sandesha2_seq_property_bean_t *terminated = NULL;
     sandesha2_msg_ctx_t *terminate_rm_msg_ctx = NULL;
     axutil_property_t *property = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
@@ -866,10 +865,10 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(ack_msg_ctx, env);
     
-    terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
+    /*terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
             SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
 
-    /*if(terminated)
+    if(terminated)
     {
         axis2_char_t *value = sandesha2_seq_property_bean_get_value(terminated, env);
 
@@ -1306,7 +1305,7 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
     }
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-        "[sandesha2] Response envelope for CreateSequenceResponse message found");
+        "[sandesha2] Response envelope for TerminateSequenceResponse message found");
 
     response_msg_ctx = axis2_msg_ctx_create(env, conf_ctx, axis2_msg_ctx_get_transport_in_desc(msg_ctx, 
                 env), axis2_msg_ctx_get_transport_out_desc(msg_ctx, env));
