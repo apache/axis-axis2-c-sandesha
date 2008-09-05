@@ -1126,6 +1126,9 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                 axis2_bool_t continue_sending = AXIS2_FALSE;
                 long retrans_delay = -1;
 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Terminate Sequence response message not found. So continuing");
+
                 continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, terminate_sender_bean, 
                         conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
 
