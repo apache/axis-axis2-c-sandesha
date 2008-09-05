@@ -865,25 +865,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(ack_msg_ctx, env);
     
-    /*terminated = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
-            SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-
-    if(terminated)
-    {
-        axis2_char_t *value = sandesha2_seq_property_bean_get_value(terminated, env);
-
-        if(value && !axutil_strcmp(AXIS2_VALUE_TRUE, value))
-        {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Terminate sequence message was added previously");
-
-            sandesha2_seq_property_bean_free(terminated, env);
-            return AXIS2_SUCCESS;
-        }
-
-        sandesha2_seq_property_bean_free(terminated, env);
-    }*/
-
     terminate_rm_msg_ctx = sandesha2_msg_creator_create_terminate_seq_msg(env, ack_rm_msg_ctx, 
             rms_sequence_id, internal_sequence_id, seq_prop_mgr);
 
@@ -971,6 +952,15 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         sandesha2_msg_ctx_set_property(terminate_rm_msg_ctx, env, AXIS2_TRANSPORT_URL, property);
     }
     
+    terminate_added = sandesha2_seq_property_bean_create(env);
+    if(terminate_added)
+    {
+        sandesha2_seq_property_bean_set_name(terminate_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
+        sandesha2_seq_property_bean_set_seq_id(terminate_added, env, internal_sequence_id);
+        sandesha2_seq_property_bean_set_value(terminate_added, env, AXIS2_VALUE_TRUE);
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
+        sandesha2_seq_property_bean_free(terminate_added, env);
+    }
     
     /* If server side and single channel duplex mode send the terminate sequence message.
      */
@@ -994,17 +984,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         /* We should not go and clean the database. */
         /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
                 is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
-        terminate_added = sandesha2_seq_property_bean_create(env);
-
-        if(terminate_added)
-        {
-            sandesha2_seq_property_bean_set_name(terminate_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-
-            sandesha2_seq_property_bean_set_seq_id(terminate_added, env, internal_sequence_id);
-            sandesha2_seq_property_bean_set_value(terminate_added, env, AXIS2_VALUE_TRUE);
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
-            sandesha2_seq_property_bean_free(terminate_added, env);
-        }
 
         if(rm_ver)
         {
@@ -1213,16 +1192,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
 
     /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, is_svr_side, 
             storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
-
-    terminate_added = sandesha2_seq_property_bean_create(env);
-    if(terminate_added)
-    {
-        sandesha2_seq_property_bean_set_name(terminate_added, env, SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
-        sandesha2_seq_property_bean_set_seq_id(terminate_added, env, internal_sequence_id);
-        sandesha2_seq_property_bean_set_value(terminate_added, env, AXIS2_VALUE_TRUE);
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, terminate_added);
-        sandesha2_seq_property_bean_free(terminate_added, env);
-    }
 
     if(engine)
     {
