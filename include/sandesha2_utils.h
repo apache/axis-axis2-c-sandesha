@@ -34,6 +34,9 @@
 #include <axis2_op.h>
 #include <sandesha2_property_bean.h>
 #include <sandesha2_msg_ctx.h>
+#include <axis2_policy_include.h>
+#include <axis2_svc.h>
+#include <axis2_rm_assertion.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -291,6 +294,12 @@ axis2_endpoint_ref_t *AXIS2_CALL
 sandesha2_util_endpoint_ref_clone(
     const axutil_env_t * env,
     axis2_endpoint_ref_t * endpoint_ref);
+
+axis2_rm_assertion_t *AXIS2_CALL
+sandesha2_util_get_rm_assertion(
+    const axutil_env_t * env,
+    axis2_svc_t * svc);
+
 
 /** @} */
 #ifdef __cplusplus

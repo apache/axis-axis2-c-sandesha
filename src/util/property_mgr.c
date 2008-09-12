@@ -265,6 +265,146 @@ sandesha2_property_mgr_load_properties_from_module_desc(
     return property_bean;
 }
 
+
+AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
+sandesha2_property_mgr_load_properties_from_policy(
+    const axutil_env_t *env,
+    axis2_rm_assertion_t *rm_assertion)
+{
+    sandesha2_property_bean_t *property_bean = NULL;
+    axis2_char_t *retrans_int_str = NULL;
+    axis2_char_t *ack_int_str = NULL;
+    axis2_char_t *inactive_timeout_str = NULL;
+    axis2_char_t *msg_types_str = NULL;
+    axis2_char_t *inactive_to_measure_str = NULL;   
+    int max_retrans_count = -1;
+    axis2_char_t *storage_mgr = NULL;
+    axis2_char_t *max_retrans_count_str = NULL;
+    axis2_char_t *terminate_delay_str = NULL;
+    int terminate_delay = -1;
+    int polling_delay = -1;
+    axis2_char_t *polling_delay_str = NULL; 
+
+    AXIS2_PARAM_CHECK(env->error, rm_assertion, NULL);
+    
+    property_bean = sandesha2_property_bean_create(env);
+
+    sandesha2_property_bean_set_exp_backoff(property_bean, env, 
+        axis2_rm_assertion_get_is_exp_backoff(rm_assertion, env));   
+
+    sandesha2_property_bean_set_in_order(property_bean, env ,
+        axis2_rm_assertion_get_is_inorder(rm_assertion, env));
+
+    retrans_int_str = axis2_rm_assertion_get_retrans_interval(rm_assertion, env);
+    if(retrans_int_str)
+    {
+        sandesha2_property_mgr_load_retrans_int(env, retrans_int_str, property_bean);
+    }
+        
+    ack_int_str = axis2_rm_assertion_get_ack_interval(rm_assertion, env);
+    if(ack_int_str)
+    {
+        sandesha2_property_mgr_load_ack_int(env, ack_int_str, property_bean);
+    }
+
+    inactive_timeout_str = axis2_rm_assertion_get_inactivity_timeout(rm_assertion, env);
+    if(inactive_timeout_str)
+    {
+        inactive_to_measure_str = SANDESHA2_DEF_VAL_INACTIVETIMEOUT_MEASURE;
+        
+        sandesha2_property_mgr_load_inactive_timeout(env, inactive_timeout_str, 
+                inactive_to_measure_str, property_bean);
+    }
+
+    msg_types_str = axis2_rm_assertion_get_message_types_to_drop(rm_assertion, env);
+    if(msg_types_str)
+    {
+        sandesha2_property_mgr_load_msg_types_to_drop(env, msg_types_str, property_bean);        
+    }
+    
+    storage_mgr = axis2_rm_assertion_get_storage_mgr(rm_assertion, env);
+    if(storage_mgr)
+    {
+        sandesha2_property_bean_set_storage_mgr(property_bean, env, storage_mgr);        
+    }
+    
+    max_retrans_count_str = axis2_rm_assertion_get_max_retrans_count(
+        rm_assertion, env);
+    if(max_retrans_count_str)
+    {
+        axis2_char_t *str = sandesha2_utils_trim_string(env, max_retrans_count_str);
+        if(str)
+        {
+            max_retrans_count = atoi(str);
+        }
+
+        if(0 < max_retrans_count)
+        {
+            sandesha2_property_bean_set_max_retrans_count(property_bean, env, max_retrans_count);
+        }
+
+        if(str)
+        {
+            AXIS2_FREE(env->allocator, str);
+        }
+    }
+
+
+    terminate_delay_str = axis2_rm_assertion_get_terminate_delay(
+        rm_assertion, env);
+
+    if(terminate_delay_str)
+    {
+        axis2_char_t *str = sandesha2_utils_trim_string(env, terminate_delay_str);
+        if(str)
+        {
+            terminate_delay = atoi(str);
+        }
+        else
+        {
+            terminate_delay = SANDESHA2_TERMINATE_DELAY;
+        }
+
+        if(0 < terminate_delay)
+        {
+            sandesha2_property_bean_set_terminate_delay(property_bean, env, terminate_delay);
+        }
+
+        if(str)
+        {
+            AXIS2_FREE(env->allocator, str);
+        }
+    }
+
+    polling_delay_str = axis2_rm_assertion_get_polling_wait_time(rm_assertion, env);
+    if(polling_delay_str)
+    {
+        axis2_char_t *str = sandesha2_utils_trim_string(env, polling_delay_str);
+        if(str)
+        {
+            polling_delay = axutil_atoi(str);
+        }
+        else
+        {
+            polling_delay = SANDESHA2_POLLING_DELAY;
+        }
+
+        if(0 < polling_delay)
+        {
+            sandesha2_property_bean_set_polling_delay(property_bean, env, polling_delay);
+        }
+
+        if(str)
+        {
+            AXIS2_FREE(env->allocator, str);
+        }
+    }
+
+    return property_bean;
+}
+
+
+
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 sandesha2_property_mgr_load_exp_backoff(
     const axutil_env_t *env, 

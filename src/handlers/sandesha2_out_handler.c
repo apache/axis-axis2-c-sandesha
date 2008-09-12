@@ -32,6 +32,8 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_sender_mgr.h>
 #include <platforms/axutil_platform_auto_sense.h>
+#include <axis2_rm_assertion.h>
+#include <sandesha2_property_mgr.h>
 
 axis2_status_t AXIS2_CALL
 sandesha2_out_handler_invoke(
@@ -78,6 +80,10 @@ sandesha2_out_handler_invoke(
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     int msg_type = -1;
+    axutil_param_t *property_param = NULL;
+    sandesha2_property_bean_t *property_bean = NULL;
+    axis2_rm_assertion_t *rm_assertion = NULL;
+
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_out_handler_invoke");
@@ -122,6 +128,34 @@ sandesha2_out_handler_invoke(
     {
         axutil_qname_free(module_qname, env);
     }
+
+    property_param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    if(!property_param)
+    {
+        rm_assertion = sandesha2_util_get_rm_assertion(env, svc);
+        if(rm_assertion)
+        {
+            property_bean = sandesha2_property_mgr_load_properties_from_policy(
+                env, rm_assertion);
+            if(property_bean)
+            {
+                property_param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, property_bean);
+                axutil_param_set_value_free(property_param, env, sandesha2_property_bean_free_void_arg);
+                axis2_svc_add_param(svc, env, property_param);
+            }
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2][Sandesha_out_handler]Cannot create Property bean");
+                return AXIS2_FAILURE;
+            }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2][Sandesha_out_handler] Cannot Retreive RM assertion");
+            return AXIS2_FAILURE;
+        }
+    }
+
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE);
     if(temp_prop)
     {

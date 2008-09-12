@@ -44,7 +44,8 @@
 #include <axutil_param.h>
 #include <stdlib.h>
 #include <sys/timeb.h>
-
+#include <axis2_policy_include.h>
+#include <neethi_policy.h>
 
 static axutil_array_list_t *
 get_sorted_msg_no_list(
@@ -215,6 +216,7 @@ AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(
     const axutil_env_t *env,
     axis2_conf_t *conf)
+    
 {
     axutil_param_t *param = NULL;
     
@@ -1408,3 +1410,39 @@ sandesha2_util_endpoint_ref_clone(
     return new_endpoint_ref;
 }
 
+
+axis2_rm_assertion_t *AXIS2_CALL
+sandesha2_util_get_rm_assertion(
+    const axutil_env_t * env,
+    axis2_svc_t * svc)
+{
+    axis2_desc_t *desc = NULL;
+    axis2_policy_include_t *policy_include = NULL;
+    neethi_policy_t *service_policy = NULL;
+    
+    desc = axis2_svc_get_base(svc, env);
+    if(!desc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha][sandesha_util] Cannot find policy. Axis2 description is NULL.");
+        return NULL;
+    }
+
+    policy_include = axis2_desc_get_policy_include(desc, env);
+    if(!policy_include)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha][sandesha_util] Policy include is NULL.");
+        return NULL;
+    }
+
+    service_policy = axis2_policy_include_get_effective_policy(policy_include, env);
+    if(!service_policy)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha][sandesha_util] Policy is NULL.");
+        return NULL;
+    }
+
+    return axis2_rm_assertion_get_from_policy(env, service_policy);
+}

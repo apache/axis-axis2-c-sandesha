@@ -33,6 +33,7 @@
 #include <axis2_op.h>
 #include <sandesha2_property_bean.h>
 #include <sandesha2_msg_ctx.h>
+#include <axis2_rm_assertion.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -51,7 +52,12 @@ AXIS2_EXTERN  sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_property_mgr_load_properties_from_module_desc(
     const axutil_env_t *env,
     axis2_module_desc_t *module_desc);
-                        
+
+AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
+sandesha2_property_mgr_load_properties_from_policy(
+    const axutil_env_t *env,
+    axis2_rm_assertion_t *rm_assertion);
+
 
 /** @} */
 #ifdef __cplusplus

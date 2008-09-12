@@ -449,11 +449,11 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     axis2_msg_ctx_set_wsa_action(out_msg, env, temp_action);
 
     soap_action = axutil_string_create(env, temp_action);
-    if(soap_action)
+    /*if(soap_action)
     {
         axis2_msg_ctx_set_soap_action(out_msg, env, soap_action);
         axutil_string_free(soap_action, env);
-    }
+    }*/
 
     if(addressing_ns_value)
     {

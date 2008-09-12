@@ -41,6 +41,8 @@
 #include <sandesha2_ack_requested.h>
 #include <sandesha2_app_msg_processor.h>
 #include <axutil_types.h>
+#include <axis2_rm_assertion.h>
+#include <sandesha2_property_mgr.h>
 
 static axis2_status_t AXIS2_CALL
 sandesha2_in_handler_invoke(
@@ -114,7 +116,10 @@ sandesha2_in_handler_invoke(
     axis2_char_t *value = NULL;
     axutil_property_t *property = NULL;
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-    
+    axutil_param_t *property_param = NULL;   
+    sandesha2_property_bean_t *property_bean = NULL; 
+    axis2_rm_assertion_t *rm_assertion = NULL;
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Start:sandesha2_in_handler_invoke");
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -165,6 +170,34 @@ sandesha2_in_handler_invoke(
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+
+    property_param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    if(!property_param)
+    {
+        rm_assertion = sandesha2_util_get_rm_assertion(env, svc); 
+        if(rm_assertion)
+        {
+            property_bean = sandesha2_property_mgr_load_properties_from_policy(
+                env, rm_assertion);
+            if(property_bean)
+            {
+                property_param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, property_bean);
+                axutil_param_set_value_free(property_param, env, sandesha2_property_bean_free_void_arg);
+                axis2_svc_add_param(svc, env, property_param);
+            }
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] [sandesha_in_handler]Cannot create Property bean");
+                return AXIS2_FAILURE;
+            }
+        }   
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2][sandesha_in_handler] Cannot Retreive RM assertion");
+            return AXIS2_FAILURE;
+        }
+    }
+
 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
