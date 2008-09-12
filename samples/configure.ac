@@ -80,7 +80,6 @@ AC_CONFIG_FILES([Makefile \
     rm_ping_1_0_large_sequence/Makefile \
     rm_ping_1_1/Makefile \
     rm_mtom_1_0/Makefile \
-    rm_report/Makefile \
     resources/Makefile
     ])
     
