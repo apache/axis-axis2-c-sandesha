@@ -60,6 +60,7 @@
 #include <axiom_soap_const.h>
 #include <axiom_soap_body.h>
 #include <axis2_http_transport_utils.h>
+#include <axis2_listener_manager.h>
 #include <platforms/axutil_platform_auto_sense.h>
 
 /** 
@@ -2168,6 +2169,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     axis2_char_t *create_sequence_msg_store_key = NULL;
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
+    AXIS2_TRANSPORT_ENUMS transport = -1;
     axis2_engine_t *engine = NULL;
     axis2_op_t *create_seq_op = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -2182,6 +2184,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     axis2_char_t *reply_to_addr = NULL;
     axis2_char_t *rm_version = NULL;
     axis2_bool_t is_svr_side = AXIS2_FALSE;
+    axis2_op_ctx_t *temp_op_ctx = NULL;
+    axis2_listener_manager_t *listener_manager = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2]Entry:sandesha2_app_msg_processor_send_create_seq_msg");
@@ -2195,12 +2199,72 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     create_seq_rm_msg_ctx = sandesha2_msg_creator_create_create_seq_msg(env, rm_msg_ctx, internal_sequence_id, 
             acks_to, seq_prop_mgr);
     if(!create_seq_rm_msg_ctx)
     {
         return AXIS2_FAILURE;
     }
+
+    /* If this is a one way message and if use_separate_listener property is set to true we need to 
+     * start a listener manager so that create sequence response could be listened at
+     */
+    temp_op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+    if(temp_op_ctx)
+    {
+        const axis2_char_t *mep = NULL;
+        axis2_op_t *op = NULL;
+
+        op = axis2_op_ctx_get_op(temp_op_ctx, env);
+        mep = axis2_op_get_msg_exchange_pattern(op, env);
+        
+        if(!axutil_strcmp(mep, AXIS2_MEP_URI_OUT_ONLY) || 
+                !axutil_strcmp(mep, AXIS2_MEP_URI_ROBUST_OUT_ONLY))
+        {
+            axis2_char_t *use_separate_listener = NULL;
+            axutil_property_t *property = NULL;
+           
+            property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_USE_SEPARATE_LISTENER);
+            if(property)
+            {
+                use_separate_listener = axutil_property_get_value(property, env);
+
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] use_separate_listener:%s", 
+                        use_separate_listener);
+
+                if(!axutil_strcmp(AXIS2_VALUE_TRUE, use_separate_listener))
+                {
+                    axis2_transport_out_desc_t *transport_out_desc = NULL;
+
+                    transport_out_desc = axis2_msg_ctx_get_transport_out_desc(msg_ctx, env);
+                    if(transport_out_desc)
+                    {
+
+                        transport = axis2_transport_out_desc_get_enum(transport_out_desc, env);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] transport:%d", transport);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Starting listener manager");
+                        listener_manager = axis2_listener_manager_create(env);
+                        status = axis2_listener_manager_make_sure_started(listener_manager, env, 
+                                transport, conf_ctx);
+                        
+                        if(AXIS2_SUCCESS != status)
+                        {
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                                    "[sandesha2] Starting listener manager failed");
+
+                            return AXIS2_FAILURE;
+                        }
+
+                        /* Following sleep is required to ensure the listner is ready to receive response.
+                         * If it is missing, the response gets lost. */
+                        AXIS2_USLEEP(1);
+                    }
+                }
+            }
+        }
+    }
+
 
     sandesha2_msg_ctx_set_flow(create_seq_rm_msg_ctx, env, SANDESHA2_MSG_CTX_OUT_FLOW);
 
@@ -2246,6 +2310,12 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         if(create_seq_rm_msg_ctx)
         {
             sandesha2_msg_ctx_free(create_seq_rm_msg_ctx, env);
+        }
+
+        if(listener_manager)
+        {
+            axis2_listener_manager_stop(listener_manager, env, transport);
+            axis2_listener_manager_free(listener_manager, env);
         }
 
         return AXIS2_FAILURE;
@@ -2327,13 +2397,25 @@ sandesha2_app_msg_processor_send_create_seq_msg(
                 "[sandesha2] Unable to find RM spec version for the rms internal_sequence_id %s", 
                 internal_sequence_id);
 
+        if(listener_manager)
+        {
+            axis2_listener_manager_stop(listener_manager, env, transport);
+            axis2_listener_manager_free(listener_manager, env);
+        }
+
         return AXIS2_FAILURE;
     }
     
     is_svr_side = axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env);
 
-    if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, 
-            rm_version, reply_to_addr)))
+    /* If client side and in case of one of the following
+     * 1. listener_manager is not NULL
+     * 2. reply_to_addr is NULL
+     * 3. reply_to_addr is anonymous
+     * go into the following loop.
+     */
+    if(!is_svr_side && (listener_manager || !reply_to_addr || 
+        sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
     {
         if(axis2_engine_send(engine, env, create_seq_msg_ctx))
         {
