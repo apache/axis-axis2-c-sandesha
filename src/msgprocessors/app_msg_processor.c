@@ -2245,6 +2245,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] transport:%d", transport);
                         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Starting listener manager");
                         listener_manager = axis2_listener_manager_create(env);
+                        /* TODO Need to call axis2_listener_manager_stop and clean listener manager */
                         status = axis2_listener_manager_make_sure_started(listener_manager, env, 
                                 transport, conf_ctx);
                         
