@@ -34,4 +34,5 @@ libsandesha2_wsrm_la_SOURCES = ack_final.c\
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIOMINC@ \
 		   	@UTILINC@ \
+		   	@NEETHIINC@ \
 		   @AXIS2INC@

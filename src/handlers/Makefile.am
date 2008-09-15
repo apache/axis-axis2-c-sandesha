@@ -8,4 +8,5 @@ libsandesha_handlers_la_SOURCES = \
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
 		   	@UTILINC@

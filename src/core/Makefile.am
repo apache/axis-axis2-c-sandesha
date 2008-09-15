@@ -8,6 +8,7 @@ libsandesha2_la_SOURCES = sandesha2_msg_ctx.c\
 INCLUDES = -I$(top_builddir)/include \
             @AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
 		   	@UTILINC@
 libsandesha2_la_LIBADD = ../handlers/libsandesha_handlers.la\
                         ../msgprocessors/libsandesha2_msgprocessors.la\

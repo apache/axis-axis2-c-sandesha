@@ -5,6 +5,7 @@ libsandesha2_polling_la_SOURCES = polling_mgr.c
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
 		   	@UTILINC@
 
 

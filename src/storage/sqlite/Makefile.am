@@ -16,6 +16,7 @@ INCLUDES = -I$(top_builddir)/include \
 			-I. \
 			@AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
 		   	@UTILINC@
 
 EXTRA_DIST=sandesha2_permanent_bean_mgr.h \

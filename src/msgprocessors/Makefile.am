@@ -16,5 +16,6 @@ libsandesha2_msgprocessors_la_SOURCES = app_msg_processor.c\
 INCLUDES = -I$(top_builddir)/include \
 		   	@AXIS2INC@ \
 		   	@AXIOMINC@ \
+		   	@NEETHIINC@ \
 		   	@UTILINC@
 
