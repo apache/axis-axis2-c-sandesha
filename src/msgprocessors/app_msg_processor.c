@@ -2084,8 +2084,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
      * In all other cases we do not send the acknowledgment directly, but piggyback it on application
      * messages or terminate sequence message.
      */
-    /*if(ack_rm_msg_ctx && one_way)*/
-    if(ack_rm_msg_ctx)
+    if(ack_rm_msg_ctx && one_way)
+    /*if(ack_rm_msg_ctx)*/
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
@@ -2882,6 +2882,7 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_conf_t *conf = NULL;
     const axis2_char_t *mep = NULL;
     axis2_relates_to_t *relates_to = NULL;
+    sandesha2_seq_property_bean_t *relates_to_bean = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Entry:sandesha2_app_msg_processor_send_app_msg");
@@ -3312,8 +3313,17 @@ sandesha2_app_msg_processor_send_app_msg(
         axutil_qname_free(qname, env);
     }
 
+    relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 
+            SANDESHA2_SEQ_PROP_RELATED_MSG_ID, rms_sequence_id);
+    if(relates_to_bean)
+    {
+        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, relates_to_bean);
+        sandesha2_seq_property_bean_free(relates_to_bean, env);
+    }
+
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
     {
+        /* Client side and oneway */
         axis2_transport_out_desc_t *transport_out = NULL;
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
@@ -3436,18 +3446,8 @@ sandesha2_app_msg_processor_send_app_msg(
 
         return status;
     }
-    else
+    else /* Not client side */
     {
-        sandesha2_seq_property_bean_t *relates_to_bean = NULL;
-
-        relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 
-                SANDESHA2_SEQ_PROP_RELATED_MSG_ID, rms_sequence_id);
-        if(relates_to_bean)
-        {
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, relates_to_bean);
-            sandesha2_seq_property_bean_free(relates_to_bean, env);
-        }
-
         axis2_msg_ctx_increment_ref(app_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
         if(axis2_engine_resume_send(engine, env, app_msg_ctx))

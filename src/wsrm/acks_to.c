@@ -25,6 +25,8 @@
 struct sandesha2_acks_to_t
 {
 	sandesha2_address_t *address;
+    /** reference parameters */
+    axutil_array_list_t *ref_param_list;
 	axis2_char_t *addr_ns_val;
 	axis2_char_t *rm_ns_val;
 };
@@ -63,6 +65,7 @@ sandesha2_acks_to_create(
     acks_to->rm_ns_val = (axis2_char_t *)axutil_strdup(env, rm_ns_val);
     acks_to->addr_ns_val = (axis2_char_t *)axutil_strdup(env, addr_ns_val);
     acks_to->address = address;
+    acks_to->ref_param_list = NULL;
     
 	return acks_to;
 }
@@ -89,6 +92,11 @@ sandesha2_acks_to_free (
         acks_to->address = NULL;
     }
     
+    if (acks_to->ref_param_list)
+    {
+        axutil_array_list_free(acks_to->ref_param_list, env);
+    }
+    
 	AXIS2_FREE(env->allocator, acks_to);
 	return AXIS2_SUCCESS;
 }
@@ -99,6 +107,38 @@ sandesha2_acks_to_get_namespace_value(
 	const axutil_env_t *env)
 {
 	return acks_to->rm_ns_val;
+}
+
+axutil_array_list_t *AXIS2_CALL
+sandesha2_acks_to_get_ref_param_list(
+    sandesha2_acks_to_t * acks_to,
+    const axutil_env_t * env)
+{
+    return acks_to->ref_param_list;
+}
+
+axis2_status_t AXIS2_CALL
+sandesha2_acks_to_add_ref_param(
+    sandesha2_acks_to_t * acks_to,
+    const axutil_env_t * env,
+    axiom_node_t * ref_param_node)
+{
+    if (!(acks_to->ref_param_list))
+    {
+        acks_to->ref_param_list = axutil_array_list_create(env, 0);
+        if (!(acks_to->ref_param_list))
+        {
+            AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+            return AXIS2_FAILURE;
+        }
+    }
+
+    if (acks_to->ref_param_list && ref_param_node)
+    {
+        return axutil_array_list_add(acks_to->ref_param_list, env, ref_param_node);
+    }
+
+    return AXIS2_FAILURE;
 }
 
 
