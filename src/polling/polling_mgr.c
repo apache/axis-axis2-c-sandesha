@@ -261,7 +261,7 @@ sandesha2_polling_mgr_worker_func(
     next_msg_mgr = sandesha2_permanent_next_msg_mgr_create(env, dbname);
  
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    property_bean = sandesha2_utils_get_property_bean(env, conf);
+    /*property_bean = sandesha2_utils_get_property_bean(env, conf);*/
     wait_time = sandesha2_property_bean_get_polling_delay(property_bean, env);
 
     find_sender_bean = sandesha2_sender_bean_create(env);

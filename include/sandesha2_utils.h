@@ -83,7 +83,8 @@ sandesha2_utils_get_seq_property(
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(
     const axutil_env_t *env,
-    axis2_conf_t *conf);
+    axis2_svc_t *svc
+    /*axis2_conf_t *conf*/);
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean_from_op(

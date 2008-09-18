@@ -22,6 +22,8 @@
 #include <sandesha2_client_constants.h>
 #include <sandesha2_constants.h>
 #include <ctype.h>
+#include <neethi_util.h>
+#include <neethi_policy.h>
 
 #define SANDESHA2_SLEEP 2
 
@@ -48,7 +50,8 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     int c;
     axis2_char_t *seq_key = NULL;
-   
+    neethi_policy_t *policy = NULL;
+ 
     /* Set up the environment */
     env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
 
@@ -108,8 +111,23 @@ int main(int argc, char** argv)
     if (!svc_client)
     {
         printf("Error creating service client\n");
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code: %d :: %s", 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code: %d :: %s",
                 env->error->error_number, AXIS2_ERROR_GET_MESSAGE(env->error));
+    }
+
+    /*Create the policy, from file*/
+    policy = neethi_util_create_policy_from_file(env, "policy.xml");
+    if(!policy)
+    {
+        printf("\nPolicy creation failed from the file");
+        return 0;
+    }
+
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
+
+    if(status == AXIS2_FAILURE)
+    {
+        printf("Policy setting failed\n");
     }
 
     /* Set service client options */

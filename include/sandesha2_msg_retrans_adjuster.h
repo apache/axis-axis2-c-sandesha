@@ -30,6 +30,7 @@
 #include <sandesha2_storage_mgr.h>
 #include <sandesha2_sender_bean.h>
 #include <axis2_conf_ctx.h>
+#include <axis2_svc.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -53,7 +54,8 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     sandesha2_storage_mgr_t *storage_mgr,
     struct sandesha2_seq_property_mgr *seq_prop_mgr,
     struct sandesha2_create_seq_mgr *create_seq_mgr,
-    struct sandesha2_sender_mgr *sender_mgr);
+    struct sandesha2_sender_mgr *sender_mgr,
+    axis2_svc_t *svc);
 
 
 /** @} */

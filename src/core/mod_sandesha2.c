@@ -65,8 +65,8 @@ mod_sandesha2_init(
     axis2_module_desc_t *module_desc)
 {
     /*sandesha2_property_bean_t *property_bean = NULL;
-    axutil_param_t *param = NULL;*/
-    axis2_conf_t *conf = NULL;
+    axutil_param_t *param = NULL;
+    axis2_conf_t *conf = NULL;*/
     axis2_ctx_t *ctx = NULL;
     
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:mod_sandesha2_init");
@@ -81,10 +81,10 @@ mod_sandesha2_init(
     }
         
     param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, property_bean);
-    axutil_param_set_value_free(param, env, sandesha2_property_bean_free_void_arg); */
+    axutil_param_set_value_free(param, env, sandesha2_property_bean_free_void_arg);
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    /*axis2_conf_add_param(conf, env, param);*/
+    axis2_conf_add_param(conf, env, param);*/
 
     ctx = axis2_conf_ctx_get_base(conf_ctx, env);
     axis2_ctx_set_property(ctx, env, SANDESHA2_INMEMORY_STORAGE_MGR, NULL);

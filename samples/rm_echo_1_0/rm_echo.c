@@ -28,6 +28,8 @@
 #include <sandesha2_client.h>
 #include <platforms/axutil_platform_auto_sense.h>
 #include <ctype.h>
+#include <neethi_policy.h>
+#include <neethi_util.h>
 
 #define SANDESHA2_MAX_COUNT 2
 
@@ -70,6 +72,8 @@ int main(int argc, char** argv)
     axis2_char_t *offered_seq_id = NULL;
     int c;
     int i = 0;
+    neethi_policy_t *policy = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_1_0.log", 
@@ -146,6 +150,22 @@ int main(int argc, char** argv)
             AXIS2_ERROR_GET_MESSAGE(env->error));
         return -1;
     }
+
+     /*Create the policy, from file*/
+    policy = neethi_util_create_policy_from_file(env, "policy.xml");
+    if(!policy)
+    {
+        printf("\nPolicy creation failed from the file");
+        return 0;
+    }
+
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
+
+    if(status == AXIS2_FAILURE)
+    {
+        printf("Policy setting failed\n");
+    }
+
     axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
 
     /* Offer sequence */

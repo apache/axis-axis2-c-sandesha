@@ -850,6 +850,8 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     axis2_endpoint_ref_t *reply_to_epr = NULL;
     axis2_bool_t is_svr_side = AXIS2_FALSE;
     axis2_char_t *msg_id = NULL;
+    axis2_svc_t *svc = NULL;
+
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Entry:sandesha2_terminate_mgr_send_terminate_seq_msg");
@@ -864,6 +866,22 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
     conf_ctx = axis2_msg_ctx_get_conf_ctx(ack_msg_ctx, env);
+
+    svc = axis2_msg_ctx_get_svc(ack_msg_ctx, env);
+    if(!svc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha2][terminate_mgr.c] service is NULL");
+        return AXIS2_FAILURE;
+    }
+
+    property_bean = sandesha2_utils_get_property_bean(env, svc);
+    if(!property_bean)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha2][terminate_mgr.c] Property bean is NULL");
+        return AXIS2_FAILURE;
+    }
     
     terminate_rm_msg_ctx = sandesha2_msg_creator_create_terminate_seq_msg(env, ack_rm_msg_ctx, 
             rms_sequence_id, internal_sequence_id, seq_prop_mgr);
@@ -1033,7 +1051,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     terminate_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_sender_bean, env, key);
     /*sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx, AXIS2_TRUE);*/
-    property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));
+    property_bean = sandesha2_utils_get_property_bean(env, svc/*axis2_conf_ctx_get_conf(conf_ctx, env)*/);
     terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) + terminate_delay;
     sandesha2_sender_bean_set_time_to_send(terminate_sender_bean, env, send_time);
@@ -1130,7 +1148,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                     "[sandesha2] Terminate Sequence response message not found. So continuing");
 
                 continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, terminate_sender_bean, 
-                        conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
+                        conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr, svc);
 
                 sandesha2_sender_mgr_update(sender_mgr, env, terminate_sender_bean);
 

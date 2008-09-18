@@ -215,14 +215,16 @@ sandesha2_utils_get_seq_property(
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(
     const axutil_env_t *env,
-    axis2_conf_t *conf)
+    axis2_svc_t *svc
+    /*axis2_conf_t *conf*/)
     
 {
     axutil_param_t *param = NULL;
     
-    AXIS2_PARAM_CHECK(env->error, conf, NULL);
+    AXIS2_PARAM_CHECK(env->error, svc/*conf*/, NULL);
     
-    param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    /*param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);*/
+    param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration not set");
@@ -1245,8 +1247,8 @@ sandesha2_utils_create_out_msg_ctx(
     axis2_msg_info_headers_set_from(msg_info_headers, env, to);
 
     msg_id = axis2_msg_info_headers_get_message_id(old_msg_info_headers, env);
-    relates_to = axis2_relates_to_create(env, msg_id,
-            AXIS2_WSA_RELATES_TO_RELATIONSHIP_TYPE_DEFAULT_VALUE);
+    relates_to = axis2_relates_to_create(env, msg_id, NULL
+            /*AXIS2_WSA_RELATES_TO_RELATIONSHIP_TYPE_DEFAULT_VALUE*/);
     axis2_msg_info_headers_set_relates_to(msg_info_headers, env, relates_to);
 
     action = axis2_msg_info_headers_get_action(old_msg_info_headers, env);
