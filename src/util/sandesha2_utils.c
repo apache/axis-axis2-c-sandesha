@@ -1446,3 +1446,78 @@ sandesha2_util_get_rm_assertion(
 
     return axis2_rm_assertion_get_from_policy(env, service_policy);
 }
+
+axis2_char_t *AXIS2_CALL
+sandesha2_util_storage_mgr_get_node_string_from_node_array(
+    const axutil_env_t *env,
+    axutil_array_list_t *node_list)
+{
+    axis2_char_t *node_list_str = NULL;
+    int i = 0, size = 0;
+
+    size = axutil_array_list_size(node_list, env);
+    for(i = 0; i < size; i++)
+    {
+        axiom_node_t *node = NULL;
+        axis2_char_t *node_str = NULL;
+        axis2_char_t *temp_str = NULL;
+
+        node = axutil_array_list_get(node_list, env, i);
+        node_str = axiom_node_to_string(node, env);
+
+        temp_str = node_list_str;
+        node_list_str = axutil_strcat(env, temp_str, 
+                node_str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, NULL);
+
+        if(node_str)
+        {
+            AXIS2_FREE(env->allocator, node_str);
+        }
+
+        if(temp_str && axutil_strlen(temp_str) > 0)
+        {
+            AXIS2_FREE(env->allocator, temp_str);
+        }
+    }
+
+    return node_list_str;
+}
+
+axutil_array_list_t *AXIS2_CALL
+sandesha2_permanent_storage_mgr_get_node_list_from_string(
+    const axutil_env_t *env,
+    axis2_char_t *node_list_str)
+{
+    axutil_array_list_t *value_list = NULL;
+    int i = 0, size = 0;
+    axutil_array_list_t *node_list = axutil_array_list_create(env, 0);
+
+    value_list = sandesha2_utils_split(env, node_list_str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR);
+    if(value_list)
+    {
+        size = axutil_array_list_size(value_list, env);
+    }
+   
+    for(i = 0; i < size; i++)
+    {
+        axiom_stax_builder_t *om_builder = NULL;
+        axiom_xml_reader_t *reader = NULL;
+        axiom_document_t *document = NULL;
+        axis2_char_t *value = NULL;
+        axiom_node_t *node = NULL;
+        
+        value = axutil_array_list_get(value_list, env, i);
+        reader = axiom_xml_reader_create_for_memory(env, value, axutil_strlen(value), NULL, 
+                AXIS2_XML_PARSER_TYPE_BUFFER);
+
+        om_builder = axiom_stax_builder_create(env, reader);
+        document = axiom_stax_builder_get_document(om_builder, env);
+        axiom_document_build_all(document, env);
+        node = axiom_document_get_root_element(document, env);
+        axutil_array_list_add(node_list, env, node);
+        axiom_stax_builder_free_self(om_builder, env);
+    }
+
+    return node_list;
+}
+

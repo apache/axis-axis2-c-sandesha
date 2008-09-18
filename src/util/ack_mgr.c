@@ -54,6 +54,7 @@ sandesha2_ack_mgr_generate_ack_msg(
     /*axiom_soap_envelope_t *soap_env = NULL;*/
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *uuid = NULL;
+    sandesha2_seq_property_bean_t *ref_param_bean = NULL;
     
     AXIS2_PARAM_CHECK(env->error, seq_id, NULL);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, NULL);
@@ -104,6 +105,33 @@ sandesha2_ack_mgr_generate_ack_msg(
     /*soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
      * sandesha2_utils_get_soap_version(env, axis2_msg_ctx_get_soap_envelope(ref_msg, env)));
     axis2_msg_ctx_set_soap_envelope(ack_msg_ctx, env, soap_env);*/
+    
+    ref_param_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
+            seq_id, SANDESHA2_SEQ_PROP_ACKS_TO_REF_PARAM);
+
+    if(ref_param_bean)
+    {
+        axis2_char_t *ref_param_str = NULL;
+        axutil_array_list_t *ref_param_list = NULL;
+        int i = 0, size = 0;
+
+        ref_param_str = sandesha2_seq_property_bean_get_value(ref_param_bean, env);
+        ref_param_list = sandesha2_permanent_storage_mgr_get_node_list_from_string(env, 
+                ref_param_str);
+
+        if(ref_param_list)
+        {
+            size = axutil_array_list_size(ref_param_list, env);
+        }
+
+        for(i = 0; i < size; i++)
+        {
+            axiom_node_t *node = NULL;
+
+            node = axutil_array_list_get(ref_param_list, env, i);
+            axis2_endpoint_ref_add_ref_param(to, env, node);
+        }
+    }
 
     axis2_msg_ctx_set_to(ack_msg_ctx, env, to);
 

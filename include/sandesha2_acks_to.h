@@ -84,6 +84,17 @@ sandesha2_acks_to_to_om_node(
    	const axutil_env_t *env, 
     void *om_node);
  
+axutil_array_list_t *AXIS2_CALL
+sandesha2_acks_to_get_ref_param_list(
+    sandesha2_acks_to_t * acks_to,
+    const axutil_env_t * env);
+
+axis2_status_t AXIS2_CALL
+sandesha2_acks_to_add_ref_param(
+    sandesha2_acks_to_t * acks_to,
+    const axutil_env_t * env,
+    axiom_node_t * ref_param_node);
+
 /** @} */
 #ifdef __cplusplus
 }

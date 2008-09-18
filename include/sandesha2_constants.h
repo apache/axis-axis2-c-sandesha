@@ -241,6 +241,8 @@ extern "C"
 	#define SANDESHA2_SEQ_PROP_TO_EPR  "ToEPR"
 
 	#define SANDESHA2_SEQ_PROP_ACKS_TO_EPR  "acksToEPR"
+	
+    #define SANDESHA2_SEQ_PROP_ACKS_TO_REF_PARAM  "acksToRefParam"
 
 	#define SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID  "OutSequenceId"
 
