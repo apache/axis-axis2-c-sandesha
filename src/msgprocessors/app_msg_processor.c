@@ -316,18 +316,15 @@ sandesha2_app_msg_processor_process_in_msg (
     app_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
     if(!app_msg_ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Message context is not set");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX, 
-            AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Message context is not set");
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_MSG_CTX, AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
 
     svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][app_msg_propcessor.c] service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Service is NULL");
         return AXIS2_FAILURE;
     }
 
@@ -1877,7 +1874,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sandesha2_sender_bean_t *ack_bean = NULL;
     sandesha2_seq_property_bean_t *rms_internal_sequence_bean = NULL;
     axis2_char_t *internal_sequence_id = NULL;
-    axis2_bool_t sent = AXIS2_FALSE;
+    axis2_bool_t sent = AXIS2_TRUE;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_op_t *op = NULL;
     int mep = -1;
@@ -2232,16 +2229,14 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     svc = axis2_msg_ctx_get_svc(msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][app_msg_propcessor.c] service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Service is NULL");
         return AXIS2_FAILURE;
     }
 
     property_bean = sandesha2_utils_get_property_bean(env, svc);
     if(!property_bean)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][app_msg_propcessor.c] Property bean is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
         return AXIS2_FAILURE;
     }
 

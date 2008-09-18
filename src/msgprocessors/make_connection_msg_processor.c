@@ -486,7 +486,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
         return AXIS2_SUCCESS;
     }
     
-    prop_bean = sandesha2_utils_get_property_bean(env, svc/*axis2_conf_ctx_get_conf(conf_ctx, env)*/);
+    prop_bean = sandesha2_utils_get_property_bean(env, svc);
     if(prop_bean)
     {
         msgs_not_to_send = sandesha2_property_bean_get_msg_types_to_drop(prop_bean, env);

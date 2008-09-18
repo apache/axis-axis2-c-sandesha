@@ -87,8 +87,6 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
 
     internal_sequence_id = sandesha2_sender_bean_get_internal_seq_id(sender_bean, env);
    
-    /*property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));*/
-
     property_bean = sandesha2_utils_get_property_bean(env, svc);
 
     sent_count = sandesha2_sender_bean_get_sent_count(sender_bean, env) + 1;

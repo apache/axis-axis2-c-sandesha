@@ -215,25 +215,23 @@ sandesha2_utils_get_seq_property(
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
 sandesha2_utils_get_property_bean(
     const axutil_env_t *env,
-    axis2_svc_t *svc
-    /*axis2_conf_t *conf*/)
+    axis2_svc_t *svc)
     
 {
     axutil_param_t *param = NULL;
     
-    AXIS2_PARAM_CHECK(env->error, svc/*conf*/, NULL);
+    AXIS2_PARAM_CHECK(env->error, svc, NULL);
     
-    /*param = axis2_conf_get_param(conf, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);*/
     param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Configuration not set");
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET,
-            AXIS2_FAILURE);
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CONFIGURATION_NOT_SET, AXIS2_FAILURE);
+
         return NULL;
     }
+
     return (sandesha2_property_bean_t*)axutil_param_get_value(param, env);
-    
 }
 
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL

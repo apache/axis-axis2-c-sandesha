@@ -294,8 +294,7 @@ sandesha2_seq_mgr_has_seq_timedout(
     const axutil_env_t *env,
     axis2_char_t *property_key,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
-    axis2_svc_t *svc
-    /*axis2_conf_ctx_t *conf_ctx*/)
+    axis2_svc_t *svc)
 {
     sandesha2_property_bean_t *property_bean = NULL;
     axis2_bool_t seq_timedout = AXIS2_FALSE;
@@ -308,7 +307,7 @@ sandesha2_seq_mgr_has_seq_timedout(
     AXIS2_PARAM_CHECK(env->error, property_key, AXIS2_FALSE);
     AXIS2_PARAM_CHECK(env->error, seq_prop_mgr, AXIS2_FALSE);
     
-    property_bean = sandesha2_utils_get_property_bean(env, svc/*axis2_conf_ctx_get_conf(conf_ctx, env)*/);
+    property_bean = sandesha2_utils_get_property_bean(env, svc);
     timeout_interval = sandesha2_property_bean_get_inactive_timeout_interval(property_bean, env);
     if(timeout_interval <= 0)
     {

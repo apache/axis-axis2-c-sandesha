@@ -870,16 +870,14 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     svc = axis2_msg_ctx_get_svc(ack_msg_ctx, env);
     if(!svc)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][terminate_mgr.c] service is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Service is NULL");
         return AXIS2_FAILURE;
     }
 
     property_bean = sandesha2_utils_get_property_bean(env, svc);
     if(!property_bean)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][terminate_mgr.c] Property bean is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
         return AXIS2_FAILURE;
     }
     
@@ -1051,7 +1049,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     terminate_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_sender_bean, env, key);
     /*sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx, AXIS2_TRUE);*/
-    property_bean = sandesha2_utils_get_property_bean(env, svc/*axis2_conf_ctx_get_conf(conf_ctx, env)*/);
     terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) + terminate_delay;
     sandesha2_sender_bean_set_time_to_send(terminate_sender_bean, env, send_time);
