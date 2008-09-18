@@ -456,9 +456,14 @@ sandesha2_create_seq_msg_processor_process_in_msg (
     ref_param_list = sandesha2_acks_to_get_ref_param_list(acks_to, env);
     if(ref_param_list)
     {
-        ref_param_list_str = sandesha2_util_storage_mgr_get_node_string_from_node_array(env, ref_param_list);
+        ref_param_list_str = sandesha2_util_get_string_from_node_list(env, ref_param_list);
         acks_to_ref_param_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id,
             SANDESHA2_SEQ_PROP_ACKS_TO_REF_PARAM, ref_param_list_str);
+        
+        if(ref_param_list_str)
+        {
+            AXIS2_FREE(env->allocator, ref_param_list_str);
+        }
 
         if(acks_to_ref_param_bean)
         {

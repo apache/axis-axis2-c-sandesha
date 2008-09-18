@@ -1448,7 +1448,7 @@ sandesha2_util_get_rm_assertion(
 }
 
 axis2_char_t *AXIS2_CALL
-sandesha2_util_storage_mgr_get_node_string_from_node_array(
+sandesha2_util_get_string_from_node_list(
     const axutil_env_t *env,
     axutil_array_list_t *node_list)
 {
@@ -1466,8 +1466,20 @@ sandesha2_util_storage_mgr_get_node_string_from_node_array(
         node_str = axiom_node_to_string(node, env);
 
         temp_str = node_list_str;
-        node_list_str = axutil_strcat(env, temp_str, 
+
+        if(i == 0)
+        {
+            node_list_str = axutil_strcat(env, node_str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, NULL);
+        }
+        else if(i == (--size))
+        {
+            node_list_str = axutil_strcat(env, temp_str, node_str, NULL);
+        }
+        else
+        {
+            node_list_str = axutil_strcat(env, temp_str, 
                 node_str, SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, NULL);
+        }
 
         if(node_str)
         {
@@ -1477,6 +1489,7 @@ sandesha2_util_storage_mgr_get_node_string_from_node_array(
         if(temp_str && axutil_strlen(temp_str) > 0)
         {
             AXIS2_FREE(env->allocator, temp_str);
+            temp_str = NULL;
         }
     }
 
@@ -1484,7 +1497,7 @@ sandesha2_util_storage_mgr_get_node_string_from_node_array(
 }
 
 axutil_array_list_t *AXIS2_CALL
-sandesha2_permanent_storage_mgr_get_node_list_from_string(
+sandesha2_util_get_node_list_from_string(
     const axutil_env_t *env,
     axis2_char_t *node_list_str)
 {
@@ -1496,26 +1509,29 @@ sandesha2_permanent_storage_mgr_get_node_list_from_string(
     if(value_list)
     {
         size = axutil_array_list_size(value_list, env);
-    }
-   
-    for(i = 0; i < size; i++)
-    {
-        axiom_stax_builder_t *om_builder = NULL;
-        axiom_xml_reader_t *reader = NULL;
-        axiom_document_t *document = NULL;
-        axis2_char_t *value = NULL;
-        axiom_node_t *node = NULL;
-        
-        value = axutil_array_list_get(value_list, env, i);
-        reader = axiom_xml_reader_create_for_memory(env, value, axutil_strlen(value), NULL, 
-                AXIS2_XML_PARSER_TYPE_BUFFER);
+        for(i = 0; i < size; i++)
+        {
+            axiom_stax_builder_t *om_builder = NULL;
+            axiom_xml_reader_t *reader = NULL;
+            axiom_document_t *document = NULL;
+            axis2_char_t *value = NULL;
+            axiom_node_t *node = NULL;
+            
+            value = axutil_array_list_get(value_list, env, i);
+            reader = axiom_xml_reader_create_for_memory(env, value, axutil_strlen(value), NULL, 
+                    AXIS2_XML_PARSER_TYPE_BUFFER);
 
-        om_builder = axiom_stax_builder_create(env, reader);
-        document = axiom_stax_builder_get_document(om_builder, env);
-        axiom_document_build_all(document, env);
-        node = axiom_document_get_root_element(document, env);
-        axutil_array_list_add(node_list, env, node);
-        axiom_stax_builder_free_self(om_builder, env);
+            om_builder = axiom_stax_builder_create(env, reader);
+            document = axiom_stax_builder_get_document(om_builder, env);
+            axiom_document_build_all(document, env);
+            node = axiom_document_get_root_element(document, env);
+            axutil_array_list_add(node_list, env, node);
+
+            /* Since we have built the document we can free the builder */
+            axiom_stax_builder_free_self(om_builder, env);
+        }
+
+        axutil_array_list_free(value_list, env);
     }
 
     return node_list;

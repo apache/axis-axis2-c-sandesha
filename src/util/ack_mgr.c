@@ -116,21 +116,24 @@ sandesha2_ack_mgr_generate_ack_msg(
         int i = 0, size = 0;
 
         ref_param_str = sandesha2_seq_property_bean_get_value(ref_param_bean, env);
-        ref_param_list = sandesha2_permanent_storage_mgr_get_node_list_from_string(env, 
-                ref_param_str);
+        ref_param_list = sandesha2_util_get_node_list_from_string(env, ref_param_str);
 
         if(ref_param_list)
         {
             size = axutil_array_list_size(ref_param_list, env);
+
+            for(i = 0; i < size; i++)
+            {
+                axiom_node_t *node = NULL;
+
+                node = axutil_array_list_get(ref_param_list, env, i);
+                axis2_endpoint_ref_add_ref_param(to, env, node);
+            }
+
+            axutil_array_list_free(ref_param_list, env);
         }
 
-        for(i = 0; i < size; i++)
-        {
-            axiom_node_t *node = NULL;
-
-            node = axutil_array_list_get(ref_param_list, env, i);
-            axis2_endpoint_ref_add_ref_param(to, env, node);
-        }
+        sandesha2_seq_property_bean_free(ref_param_bean, env);
     }
 
     axis2_msg_ctx_set_to(ack_msg_ctx, env, to);

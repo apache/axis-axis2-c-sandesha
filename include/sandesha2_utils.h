@@ -301,12 +301,12 @@ sandesha2_util_get_rm_assertion(
     axis2_svc_t * svc);
 
 axis2_char_t *AXIS2_CALL
-sandesha2_util_storage_mgr_get_node_string_from_node_array(
+sandesha2_util_get_string_from_node_list(
     const axutil_env_t *env,
     axutil_array_list_t *node_list);
 
 axutil_array_list_t *AXIS2_CALL
-sandesha2_permanent_storage_mgr_get_node_list_from_string(
+sandesha2_util_get_node_list_from_string(
     const axutil_env_t *env,
     axis2_char_t *node_list_str);
 
