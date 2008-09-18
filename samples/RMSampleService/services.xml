@@ -23,7 +23,7 @@
                 <wsrm:RMAssertion>
                     <wsrm:InactivityTimeout Milliseconds="600000"/>
                     <wsrm:AcknowledgementInterval Milliseconds="200"/>
-                    <wsrm:BaseRetransmissionInterval Milliseconds="300"/>
+                    <wsrm:BaseRetransmissionInterval Milliseconds="8"/>
                     <wsrm:ExponentialBackoff/>
                     <sanc:InactivityTimeout>64</sanc:InactivityTimeout>
                     <sanc:StorageManager>persistent</sanc:StorageManager>

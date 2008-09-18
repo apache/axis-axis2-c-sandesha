@@ -349,6 +349,8 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axiom_soap_envelope_t *soap_envelope = NULL;
     sandesha2_msg_store_bean_t *msg_store_bean = NULL;
     axis2_char_t *soap_env_str = NULL;
+    axis2_char_t *svc_name = NULL;
+    axis2_svc_t *svc = NULL;
     /*axis2_char_t *persistent_prop_str = NULL;
     axutil_property_t *prop_property = NULL;*/
 
@@ -363,7 +365,19 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
         return NULL;
     }
 
+    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     msg_ctx = axis2_msg_ctx_create(env, conf_ctx, NULL, NULL);
+
+    svc_name = sandesha2_msg_store_bean_get_svc(msg_store_bean, env);
+    if(svc_name)
+    {
+        svc = axis2_conf_get_svc(conf, env, svc_name);
+        if(svc)
+        {
+            axis2_msg_ctx_set_svc(msg_ctx, env, svc);
+        }
+    }
+
     soap_env_str = axutil_strdup(env, sandesha2_msg_store_bean_get_soap_envelope_str(msg_store_bean, env));
     if(soap_env_str)
     {
@@ -405,7 +419,6 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
     axis2_msg_ctx_set_msg_id(msg_ctx, env, sandesha2_msg_store_bean_get_msg_id(msg_store_bean, env));
 
-    conf = axis2_conf_ctx_get_conf(conf_ctx, env);
     transport_out = sandesha2_msg_store_bean_get_transport_out(msg_store_bean, env);
     transport_out_desc = axis2_conf_get_transport_out(conf, env, transport_out);
     if(transport_out_desc)

@@ -2922,15 +2922,13 @@ sandesha2_app_msg_processor_send_app_msg(
     axis2_msg_ctx_t *req_msg_ctx = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
     axis2_char_t *rmd_sequence_id = NULL;
-    axis2_module_desc_t *module_desc = NULL;
-    axutil_qname_t *qname = NULL;
-    axutil_param_t *retrans_interval_param = NULL;
-    int retrans_interval = 0;
+    long retrans_interval = 0;
     axis2_conf_t *conf = NULL;
     const axis2_char_t *mep = NULL;
     axis2_relates_to_t *relates_to = NULL;
     sandesha2_seq_property_bean_t *relates_to_bean = NULL;
     axis2_svc_t *svc = NULL;
+    sandesha2_property_bean_t *property_bean = NULL;
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
         "[Sandesha2] Entry:sandesha2_app_msg_processor_send_app_msg");
@@ -3350,18 +3348,8 @@ sandesha2_app_msg_processor_send_app_msg(
     }
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    qname = axutil_qname_create(env, SANDESHA2_MODULE, NULL, NULL);
-    module_desc = axis2_conf_get_module(conf, env, qname);
-    retrans_interval_param = axis2_module_desc_get_param(module_desc, env, 
-            SANDESHA2_PROPERTIES_RETRANSMISSION_INTERVAL);
-    if(retrans_interval_param)
-    {
-        retrans_interval = AXIS2_ATOI(axutil_param_get_value(retrans_interval_param, env));
-    }
-    if(qname)
-    {
-        axutil_qname_free(qname, env);
-    }
+    property_bean = sandesha2_utils_get_property_bean(env, svc);
+    retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env);
 
     relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 
             SANDESHA2_SEQ_PROP_RELATED_MSG_ID, rms_sequence_id);
