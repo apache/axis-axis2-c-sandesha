@@ -62,8 +62,8 @@ int main(int argc, char** argv)
  
 
     /* Set end point reference of echo service */
-    /*address = "http://127.0.0.1:9090/axis2/services/RMSampleService";*/
-    address = "http://127.0.0.1:9090/axis2/services/RMSampleService";
+    /*address = "http://127.0.0.1:9090/axis2/services/RM11SampleService";*/
+    address = "http://127.0.0.1:9090/axis2/services/RM11SampleService";
     while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
     {
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     
     /* Seperate listner needs addressing, hence addressing stuff in options */
     axis2_options_set_action(options, env,
-        "http://127.0.0.1:8080/axis2/services/RMSampleService/anonOutInOp");
+        "http://127.0.0.1:8080/axis2/services/RM11SampleService/anonOutInOp");
 
     reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
     axis2_options_set_reply_to(options, env, reply_to);
@@ -283,7 +283,7 @@ usage(
     fprintf(stdout, " [-a ADDRESS]");
     fprintf(stdout, " Options :\n");
     fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:9090/axis2/services/RMSampleService \n");
+        " default is http://127.0.0.1:9090/axis2/services/RM11SampleService \n");
     fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
