@@ -1,10 +1,10 @@
-prglibdir=$(prefix)/services/RMSampleService
-samplesdir=$(prefix)/samples/server/rm/RMSampleService
-prglib_LTLIBRARIES = libRMSampleService.la
+prglibdir=$(prefix)/services/RM10SampleService
+samplesdir=$(prefix)/samples/server/rm/RM10SampleService
+prglib_LTLIBRARIES = libRM10SampleService.la
 samples_DATA=rm_sample_svc.c rm_sample_svc_skel.c rm_sample_svc.h services.xml Makefile.am Makefile.in
 prglib_DATA= services.xml
 EXTRA_DIST = services.xml rm_sample_svc.h
 noinst_HEADERS = rm_sample_svc.h
-libRMSampleService_la_SOURCES = rm_sample_svc.c rm_sample_svc_skel.c
+libRM10SampleService_la_SOURCES = rm_sample_svc.c rm_sample_svc_skel.c
 INCLUDES = @AXIS2INC@
 

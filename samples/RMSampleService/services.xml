@@ -1,7 +1,7 @@
-<service name="RMSampleService">
+<service name="RM10SampleService">
     <module ref="sandesha2"/>
     <module ref="addressing"/>
-    <parameter name="ServiceClass" locked="xsd:false">RMSampleService</parameter>
+    <parameter name="ServiceClass" locked="xsd:false">RM10SampleService</parameter>
 
    <description>
         This is a Relaible Messaging test service to be used in interop testing with java
