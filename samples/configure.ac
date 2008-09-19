@@ -69,7 +69,7 @@ AC_SUBST(APRINC)
 AC_SUBST(AXIS2INC)
 
 AC_CONFIG_FILES([Makefile \
-    RMSampleService/Makefile \
+    RM10SampleService/Makefile \
     rm_echo_1_0/Makefile \
     rm_echo_1_0_large_sequence/Makefile \
     rm_echo_1_1/Makefile \
