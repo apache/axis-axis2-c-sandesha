@@ -116,7 +116,7 @@ int main(int argc, char** argv)
     }
 
     /*Create the policy, from file*/
-    policy = neethi_util_create_policy_from_file(env, "policy.xml");
+    policy = neethi_util_create_policy_from_file(env, "policy/rm10-policy.xml");
     if(!policy)
     {
         printf("\nPolicy creation failed from the file");

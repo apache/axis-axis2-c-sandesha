@@ -29,6 +29,8 @@
 #include <sandesha2_client.h>
 #include <axis2_addr.h>
 #include <ctype.h>
+#include <neethi_util.h>
+#include <neethi_policy.h>
 
 #define SANDESHA2_SLEEP 4
 
@@ -51,8 +53,9 @@ int main(int argc, char** argv)
     axis2_char_t *offered_seq_id = NULL;
     axis2_char_t *seq_key = NULL;
     int c;
-    /*axis2_status_t status = AXIS2_FAILURE;*/
+    axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *result = NULL;
+    neethi_policy_t *policy = NULL;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_1.log", AXIS2_LOG_LEVEL_TRACE);
@@ -130,6 +133,21 @@ int main(int argc, char** argv)
 
         return -1;
     }
+
+    policy = neethi_util_create_policy_from_file(env, "policy/rm11-policy.xml");
+    if(!policy)
+    {
+        printf("\nPolicy creation failed from the file");
+        return 0;
+    }
+
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
+
+    if(status == AXIS2_FAILURE)
+    {
+        printf("Policy setting failed\n");
+    }
+
 
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);    

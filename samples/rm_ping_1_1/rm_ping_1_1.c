@@ -23,6 +23,8 @@
 #include <sandesha2_constants.h>
 #include <sandesha2_client.h>
 #include <ctype.h>
+#include <neethi_policy.h>
+#include <neethi_util.h>
 
 #define MAX_COUNT 2
 
@@ -46,9 +48,10 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
     axutil_property_t *property = NULL;
     int c;
+    neethi_policy_t *policy = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
@@ -109,6 +112,21 @@ int main(int argc, char** argv)
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
             " %d :: %s", env->error->error_number,
             AXIS2_ERROR_GET_MESSAGE(env->error));
+    }
+
+    /*Create the policy, from file*/
+    policy = neethi_util_create_policy_from_file(env, "policy/rm11-policy.xml");
+    if(!policy)
+    {
+        printf("\nPolicy creation failed from the file");
+        return 0;
+    }
+
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
+
+    if(status == AXIS2_FAILURE)
+    {
+        printf("Policy setting failed\n");
     }
 
     /* Set service client options */
