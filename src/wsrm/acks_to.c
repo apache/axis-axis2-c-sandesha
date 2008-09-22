@@ -201,11 +201,11 @@ sandesha2_acks_to_from_om_node(
     }
 
     ref_param_qname =
-        axutil_qname_create(env, EPR_REFERENCE_PARAMETERS, acks_to->rm_ns_val, NULL);
+        axutil_qname_create(env, EPR_REFERENCE_PARAMETERS, acks_to->addr_ns_val, NULL);
 
     ref_params_ele = axiom_element_get_first_child_with_qname(acks_to_part, env,
         ref_param_qname, acks_to_node, &ref_params_node);
-    
+   
     if(ref_param_qname)
     {
         axutil_qname_free(ref_param_qname, env);

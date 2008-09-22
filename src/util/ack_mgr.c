@@ -114,6 +114,7 @@ sandesha2_ack_mgr_generate_ack_msg(
         axis2_char_t *ref_param_str = NULL;
         axutil_array_list_t *ref_param_list = NULL;
         int i = 0, size = 0;
+    
 
         ref_param_str = sandesha2_seq_property_bean_get_value(ref_param_bean, env);
         ref_param_list = sandesha2_util_get_node_list_from_string(env, ref_param_str);
