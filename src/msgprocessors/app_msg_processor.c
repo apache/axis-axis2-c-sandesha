@@ -848,6 +848,8 @@ sandesha2_app_msg_processor_process_in_msg (
                 {
                     AXIS2_FREE(env->allocator, msgs_str);
                 }
+                
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Creating out message context failed");
 
                 return AXIS2_FAILURE;
             }
@@ -872,7 +874,8 @@ sandesha2_app_msg_processor_process_in_msg (
                 {
                     AXIS2_FREE(env->allocator, msgs_str);
                 }
-
+                
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Creating qname failed");
                 return AXIS2_FAILURE;
             }
         
@@ -885,6 +888,9 @@ sandesha2_app_msg_processor_process_in_msg (
             axis2_msg_ctx_set_op_ctx(out_msg_ctx, env, op_ctx);
 
             storage_key = axutil_uuid_gen(env);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Sending response to the empty body last message");
+
             status = sandesha2_app_msg_processor_send_app_msg(env, out_rm_msg_ctx, outgoing_int_seq_id, 
                 msg_no, storage_key, storage_mgr, create_seq_mgr, seq_prop_mgr, sender_mgr);
 

@@ -539,7 +539,8 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] highest_out_msg_num:%d", highest_out_msg_num);
 
-    if(add_rec_side_term && highest_out_msg_num > 0 && rec_side_int_seq_id && out_seq_id)
+    /*if(add_rec_side_term && highest_out_msg_num > 0 && rec_side_int_seq_id && out_seq_id)*/
+    if(highest_out_msg_num > 0 && rec_side_int_seq_id && out_seq_id)
     {
         axis2_bool_t all_acked = AXIS2_FALSE;
 

@@ -411,8 +411,10 @@ sandesha2_in_handler_drop_if_duplicate(
                     
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                             "[sandesha2] Empty body last msg recieved");
+                    
+                    sandesha2_msg_ctx_set_wsa_action(rm_msg_ctx, env, 
+                            SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
 
-                    drop = AXIS2_TRUE;
                     if(!rcvd_msgs_bean)
                     {
                         rcvd_msgs_bean = sandesha2_seq_property_bean_create_with_data(env, 
@@ -433,10 +435,13 @@ sandesha2_in_handler_drop_if_duplicate(
                     
                     sandesha2_seq_property_bean_set_value(rcvd_msgs_bean, env, bean_value);
                     sandesha2_seq_property_mgr_update(seq_prop_mgr, env, rcvd_msgs_bean);
-                    app_msg_processor = sandesha2_app_msg_processor_create(env);
-                    sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, bean_value, 
+                    if(drop)
+                    {
+                        app_msg_processor = sandesha2_app_msg_processor_create(env);
+                        sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, bean_value, 
                             rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
-                    sandesha2_msg_processor_free(app_msg_processor, env);
+                        sandesha2_msg_processor_free(app_msg_processor, env);
+                    }
                 }
             }
 
