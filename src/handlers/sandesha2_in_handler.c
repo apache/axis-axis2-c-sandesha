@@ -272,13 +272,6 @@ sandesha2_in_handler_invoke(
         sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
     }
 
-    msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
-    if(msg_processor)
-    {
-        sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
-        sandesha2_msg_processor_free(msg_processor, env);
-    }
-
     seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
     if(seq_ack)
     {
@@ -287,6 +280,13 @@ sandesha2_in_handler_invoke(
         ack_proc = sandesha2_ack_msg_processor_create(env);
         sandesha2_msg_processor_process_in_msg(ack_proc, env, rm_msg_ctx);
         sandesha2_msg_processor_free(ack_proc, env);
+    }
+
+    msg_processor = sandesha2_msg_processor_create_msg_processor(env, rm_msg_ctx);
+    if(msg_processor)
+    {
+        sandesha2_msg_processor_process_in_msg(msg_processor, env, rm_msg_ctx);
+        sandesha2_msg_processor_free(msg_processor, env);
     }
 
     if(rm_msg_ctx)
@@ -439,7 +439,7 @@ sandesha2_in_handler_drop_if_duplicate(
                     {
                         app_msg_processor = sandesha2_app_msg_processor_create(env);
                         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, bean_value, 
-                            rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
+                            rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr, -1);
                         sandesha2_msg_processor_free(app_msg_processor, env);
                     }
                 }
@@ -579,7 +579,7 @@ sandesha2_in_handler_process_dropped_msg(
                 {
                     app_msg_processor = sandesha2_app_msg_processor_create(env);
                     sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, rcvd_msgs_str, 
-                        rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr);
+                        rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr, -1);
                     
                     sandesha2_msg_processor_free(app_msg_processor, env);
                 }
