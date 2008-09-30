@@ -46,6 +46,7 @@
 #include <sys/timeb.h>
 #include <axis2_policy_include.h>
 #include <neethi_policy.h>
+#include <axis2_rm_assertion.h>
 
 static axutil_array_list_t *
 get_sorted_msg_no_list(

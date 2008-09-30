@@ -115,11 +115,11 @@ sandesha2_in_handler_invoke(
     axis2_bool_t dropped = AXIS2_FALSE;
     axis2_char_t *value = NULL;
     axutil_property_t *property = NULL;
-    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     axutil_param_t *property_param = NULL;   
     sandesha2_property_bean_t *property_bean = NULL; 
     axis2_rm_assertion_t *rm_assertion = NULL;
 
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Start:sandesha2_in_handler_invoke");
 
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
