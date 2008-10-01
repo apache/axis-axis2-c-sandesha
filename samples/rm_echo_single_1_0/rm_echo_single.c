@@ -217,7 +217,6 @@ int main(int argc, char** argv)
     if(AXIS2_SUCCESS == status)
     {
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-        result = NULL;
     }
     else
     {

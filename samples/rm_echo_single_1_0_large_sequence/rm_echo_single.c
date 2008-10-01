@@ -46,7 +46,6 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axiom_node_t *payload2 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
@@ -202,21 +201,13 @@ int main(int argc, char** argv)
         }
     }
    
+    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload2 = build_om_payload_for_echo_svc(env, "echo100", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload2);
-    if(result)
+    status = axis2_svc_client_send_robust(svc_client, env, NULL);
+    if(status == AXIS2_SUCCESS)
     {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
-        {
-            printf("\nReceived OM : %s\n", om_str);
-            AXIS2_FREE(env->allocator, om_str);
-        }
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-        result = NULL;
     }
     else
     {
