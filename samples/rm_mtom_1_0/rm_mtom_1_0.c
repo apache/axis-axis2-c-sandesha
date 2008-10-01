@@ -63,8 +63,7 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;  
  
     /* Set up the environment */
-    env = axutil_env_create_all("rm_mtom_1_0.log", 
-        AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("rm_mtom_1_0.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM10SampleService";
@@ -116,7 +115,9 @@ int main(int argc, char** argv)
      */
     client_home = AXIS2_GETENV("AXIS2C_HOME");
     if (!client_home)
+    {
         client_home = "../../deploy";
+    }
 
     /* Create service client */
     svc_client = axis2_svc_client_create(env, client_home);
@@ -155,47 +156,56 @@ int main(int argc, char** argv)
     property = axutil_property_create(env);
     if(property)
     {
-        axutil_property_set_value(property, env, axutil_strdup(env, 
-            offered_seq_id));
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
+        axutil_property_set_value(property, env, axutil_strdup(env, offered_seq_id));
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
     }
-    property = axutil_property_create_with_args(env, 3, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_0);
+    property = axutil_property_create_with_args(env, 3, 0, 0, SANDESHA2_SPEC_VERSION_1_0);
     if(property)
     {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
 
     seq_key = axutil_uuid_gen(env);
     property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
     if(property)
     {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY,
-            property);
+        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
 
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {
-        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
-            property);
+        axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, property);
     }
+
     payload = build_om_programatically(env, image_name, "test3.jpg", optimized);
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_options_set_property(options, env, "Sandesha2LastMessage", 
-        property);
     result = axis2_svc_client_send_receive(svc_client, env, payload);
     if(result)
     {
         axis2_char_t *om_str = NULL;
         om_str = axiom_node_to_string(result, env);
         if (om_str)
+        {
             printf("\nReceived OM : %s\n", om_str);
+        }
+
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
 
         AXIS2_FREE(env->allocator, om_str);
+        result = NULL;
+    }
+    else
+    {
+        printf("\necho client two way single channel invoke FAILED!\n");
+    }
+    
+    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
+    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
+    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
+    status = axis2_svc_client_send_robust(svc_client, env, NULL);
+    if(AXIS2_SUCCESS == status)
+    {
+        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
         result = NULL;
     }
     else
