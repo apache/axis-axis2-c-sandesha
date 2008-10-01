@@ -45,7 +45,6 @@ int main(int argc, char** argv)
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
-    axiom_node_t *payload2 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
@@ -54,6 +53,7 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
     int c, i;
+    axis2_endpoint_ref_t *reply_to = NULL;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_0.log", 
@@ -95,7 +95,10 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_xml_parser_reset(options, env, AXIS2_FALSE);
     axis2_options_set_to(options, env, endpoint_ref);
-    
+
+    reply_to = axis2_endpoint_ref_create(env, AXIS2_WSA_ANONYMOUS_URL);
+    axis2_options_set_reply_to(options, env, reply_to);
+
     soap_action = axutil_string_create(env, "urn:wsrm:EchoString");
     axis2_options_set_soap_action(options, env, soap_action);
     if(soap_action)
@@ -184,8 +187,10 @@ int main(int argc, char** argv)
     for(i = 1; i < 3; i++)
     {
         axiom_node_t *payload = NULL;
-
-        payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
+        axis2_char_t echo_str[7];
+        
+        sprintf(echo_str, "%s%d", "echo", i);
+        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
         result = axis2_svc_client_send_receive(svc_client, env, payload);
         if(result)
         {
@@ -205,19 +210,12 @@ int main(int argc, char** argv)
         }
     }
 
+    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload2 = build_om_payload_for_echo_svc(env, "echo3", seq_key);
-    result = axis2_svc_client_send_receive(svc_client, env, payload2);
-    if(result)
+    status = axis2_svc_client_send_robust(svc_client, env, NULL);
+    if(AXIS2_SUCCESS == status)
     {
-        axis2_char_t *om_str = NULL;
-        om_str = axiom_node_to_string(result, env);
-        if (om_str)
-        {
-            printf("\nReceived OM : %s\n", om_str);
-            AXIS2_FREE(env->allocator, om_str);
-        }
         printf("\necho client two way single channel invoke SUCCESSFUL!\n");
         result = NULL;
     }
@@ -225,6 +223,7 @@ int main(int argc, char** argv)
     {
         printf("\necho client two way single channel invoke FAILED!\n");
     }
+
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
 
