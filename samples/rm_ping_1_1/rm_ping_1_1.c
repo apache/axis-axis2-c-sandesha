@@ -50,6 +50,7 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
     int c;
+    int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
    
@@ -89,7 +90,9 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     if(endpoint_ref)
+    {
         axis2_options_set_to(options, env, endpoint_ref);
+    }
     /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
@@ -154,23 +157,27 @@ int main(int argc, char** argv)
                 property);
         }
     }
-    /* Send request */
-    payload = build_om_programatically(env, "ping1", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-        printf("\nping client invoke SUCCESSFUL!\n");
-    payload = NULL;
-    
-    payload = build_om_programatically(env, "ping2", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-        printf("\nping client invoke SUCCESSFUL!\n");
-    payload = NULL;
 
-    payload = build_om_programatically(env, "ping3", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-        printf("\nping client invoke SUCCESSFUL!\n");
+    for(i = 1; i < 4; i++)
+    {
+        axis2_char_t echo_str[7];
+        
+        sprintf(echo_str, "%s%d", "echo", i);
+
+        /* Send request */
+        payload = build_om_programatically(env, echo_str, seq_key);
+        status = axis2_svc_client_send_robust(svc_client, env, payload);
+        if(status)
+        {
+            printf("\nping client invoke SUCCESSFUL!\n");
+        }
+        else
+        {
+            printf("\nping client invoke FAILED!\n");
+        }
+        payload = NULL;
+    }
+
     AXIS2_SLEEP(MAX_COUNT);
     
     sandesha2_client_terminate_seq_with_svc_client(env, svc_client, NULL);
