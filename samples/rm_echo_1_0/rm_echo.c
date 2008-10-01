@@ -65,7 +65,6 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_callback_t *callback1 = NULL;
-    axis2_callback_t *callback2 = NULL;
     axutil_property_t *property = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
@@ -201,9 +200,10 @@ int main(int argc, char** argv)
             property);
     }
 
-    for(i = 1; i < 3; i++)
+    for(i = 1; i < 4; i++)
     {
         axis2_char_t echo_str[7];
+
         sprintf(echo_str, "%s%d", "echo", i);
         payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
         callback1 = axis2_callback_create(env);
@@ -215,14 +215,12 @@ int main(int argc, char** argv)
     }
 
     axis2_svc_client_remove_all_headers(svc_client, env);
+    
+    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload = build_om_payload_for_echo_svc(env, "echo3", seq_key);
-    callback2 = axis2_callback_create(env);
-    axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
-    axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback2);
-    wait_on_callback(env, callback2);
+    axis2_svc_client_send_robust(svc_client, env, NULL);
+
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
