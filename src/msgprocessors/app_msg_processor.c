@@ -1580,13 +1580,43 @@ sandesha2_app_msg_processor_process_out_msg(
              * else if()
              * TODO handle acks_to == anon_uri case
              */
-            sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, internal_sequence_id, 
-                    acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);
-            
+            status = sandesha2_app_msg_processor_send_create_seq_msg(env, rm_msg_ctx, 
+                    internal_sequence_id, acks_to, storage_mgr, seq_prop_mgr, create_seq_mgr, 
+                    sender_mgr);
+
             if(reply_to_epr_bean)
             {
                 sandesha2_seq_property_bean_free(reply_to_epr_bean, env);
             }
+
+            if(AXIS2_SUCCESS != status)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Could not send create sequence message");
+                
+                if(internal_sequence_id)
+                {
+                    AXIS2_FREE(env->allocator, internal_sequence_id);
+                }
+                if(seq_prop_mgr)
+                {
+                    sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+                }
+                if(create_seq_mgr)
+                {
+                    sandesha2_create_seq_mgr_free(create_seq_mgr, env);
+                }
+                if(sender_mgr)
+                {
+                    sandesha2_sender_mgr_free(sender_mgr, env);
+                }
+                if(storage_mgr)
+                {
+                    sandesha2_storage_mgr_free(storage_mgr, env);
+                }
+
+                return status;
+            }    
         }
         
         sandesha2_seq_property_bean_free(create_seq_added, env);
@@ -2340,8 +2370,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
      * 3. reply_to_addr is anonymous
      * go into the following loop.
      */
-    if(!is_svr_side && (listener_manager || !reply_to_addr || 
-        sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, reply_to_addr)))
+    if(!is_svr_side && (listener_manager || !reply_to_addr || sandesha2_utils_is_anon_uri(env, 
+                    reply_to_addr)))
     {
         if(axis2_engine_send(engine, env, create_seq_msg_ctx))
         {
@@ -2375,6 +2405,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
             {
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                         "[sandesha2] Do not continue sending the create sequence message");
+                status = AXIS2_FAILURE;
                 break;
             }
 
