@@ -9,7 +9,7 @@
                 <sanc:InactivityTimeout>64</sanc:InactivityTimeout>
                 <sanc:StorageManager>persistent</sanc:StorageManager>
                 <sanc:MessageTypesToDrop>none</sanc:MessageTypesToDrop>
-                <sanc:MaxRetransCount>10</sanc:MaxRetransCount>
+                <sanc:MaxRetransCount>4</sanc:MaxRetransCount>
                 <sanc:SenderSleepTime>1</sanc:SenderSleepTime><!--In seconds-->
                 <sanc:InvokerSleepTime>1</sanc:InvokerSleepTime>
                 <sanc:PollingWaitTime>4</sanc:PollingWaitTime>
