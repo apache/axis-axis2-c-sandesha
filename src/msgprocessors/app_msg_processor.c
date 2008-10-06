@@ -1887,8 +1887,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
             AXIS2_FREE(env->allocator, rm_version);
         }
 
-        AXIS2_LOG_INFO(env->log, "[Sandesha2] Exit:sandesha2_app_msg_processor_send_ack_if_reqd");
-
         return AXIS2_SUCCESS;
     } 
 
