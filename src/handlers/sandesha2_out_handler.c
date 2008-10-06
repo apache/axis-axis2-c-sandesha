@@ -211,6 +211,7 @@ sandesha2_out_handler_invoke(
     {
         /* Message should not be sent in an exception situation */
 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         if(rm_msg_ctx)
         {

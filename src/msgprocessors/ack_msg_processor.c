@@ -248,6 +248,7 @@ sandesha2_ack_msg_processor_process_in_msg (
 
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(fault_msg_ctx, env));
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         sandesha2_msg_ctx_free(fault_msg_ctx, env);
         if(engine)
@@ -265,6 +266,7 @@ sandesha2_ack_msg_processor_process_in_msg (
             "[sandesha2] sandesha2_ack_msg_processor_process_in_msg send Fault");
         engine = axis2_engine_create(env, conf_ctx);
         axis2_engine_send_fault(engine, env, sandesha2_msg_ctx_get_msg_ctx(fault_msg_ctx, env));
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(msg_ctx, env, AXIS2_TRUE);
         sandesha2_msg_ctx_free(fault_msg_ctx, env);
 
@@ -578,6 +580,7 @@ sandesha2_ack_msg_processor_process_in_msg (
     children_iterator = axiom_element_get_children(body_element, env, body_node);
     if(!axiom_children_iterator_has_next(children_iterator, env))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     }
     /* Do we need to pause the message context here */

@@ -455,6 +455,7 @@ sandesha2_in_handler_drop_if_duplicate(
     }
     if(drop)
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         return AXIS2_TRUE;
     }

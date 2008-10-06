@@ -391,6 +391,8 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             axis2_engine_free(engine, env);
         }
+        
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
         if(storage_mgr)
         {
@@ -466,6 +468,8 @@ sandesha2_app_msg_processor_process_in_msg (
         {
             axis2_engine_free(engine, env);
         }
+        
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
 
         return AXIS2_SUCCESS;
@@ -519,6 +523,7 @@ sandesha2_app_msg_processor_process_in_msg (
             axis2_engine_free(engine, env);
         }
 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         axis2_msg_ctx_set_paused(app_msg_ctx, env, AXIS2_TRUE);
 
         return AXIS2_SUCCESS;
@@ -676,6 +681,7 @@ sandesha2_app_msg_processor_process_in_msg (
     if(msg_no_present_in_list && !axutil_strcmp(SANDESHA2_QOS_DEFAULT_INVOCATION_TYPE, 
                 SANDESHA2_QOS_EXACTLY_ONCE))
     {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
     }
 
@@ -778,6 +784,7 @@ sandesha2_app_msg_processor_process_in_msg (
         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, msgs_str, rmd_sequence_id, 
                 storage_mgr, sender_mgr, seq_prop_mgr, mep);
 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
         if(seq_prop_mgr)
@@ -900,6 +907,7 @@ sandesha2_app_msg_processor_process_in_msg (
         /* To avoid performing application processing more than once. */
         sandesha2_msg_ctx_set_property(rm_msg_ctx, env, 
             SANDESHA2_APPLICATION_PROCESSING_DONE, property);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Pausing message context");
         sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
         /* Start the invoker if stopped */
         /*sandesha2_utils_start_invoker_for_seq(env, conf_ctx, rmd_sequence_id);*/
