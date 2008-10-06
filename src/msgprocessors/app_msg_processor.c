@@ -331,8 +331,7 @@ sandesha2_app_msg_processor_process_in_msg (
     property_bean = sandesha2_utils_get_property_bean(env, svc);
     if(!property_bean)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][app_msg_propcessor.c] Property bean is NULL");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
         return AXIS2_FAILURE;
     }
 

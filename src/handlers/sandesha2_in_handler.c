@@ -187,13 +187,13 @@ sandesha2_in_handler_invoke(
             }
             else
             {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] [sandesha_in_handler]Cannot create Property bean");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot create Property bean");
                 return AXIS2_FAILURE;
             }
         }   
         else
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2][sandesha_in_handler] Cannot Retreive RM assertion");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot Retreive RM assertion");
             return AXIS2_FAILURE;
         }
     }
