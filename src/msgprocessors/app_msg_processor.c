@@ -2839,6 +2839,12 @@ sandesha2_app_msg_processor_send_app_msg(
     conf_ctx = axis2_msg_ctx_get_conf_ctx(app_msg_ctx, env);
 
     svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
+    property_bean = sandesha2_utils_get_property_bean(env, svc);
+    if(!property_bean)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
+        return AXIS2_FAILURE;
+    }
 
     relates_to = axis2_msg_ctx_get_relates_to(app_msg_ctx, env);
     if(relates_to)
@@ -3244,7 +3250,6 @@ sandesha2_app_msg_processor_send_app_msg(
     }
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    property_bean = sandesha2_utils_get_property_bean(env, svc);
     retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env);
 
     relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 

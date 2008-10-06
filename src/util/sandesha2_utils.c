@@ -47,6 +47,7 @@
 #include <axis2_policy_include.h>
 #include <neethi_policy.h>
 #include <axis2_rm_assertion.h>
+#include <sandesha2_property_mgr.h>
 
 static axutil_array_list_t *
 get_sorted_msg_no_list(
@@ -220,11 +221,44 @@ sandesha2_utils_get_property_bean(
     
 {
     axutil_param_t *param = NULL;
+    sandesha2_property_bean_t *property_bean = NULL; 
     
     AXIS2_PARAM_CHECK(env->error, svc, NULL);
     
     param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
+    {
+        axis2_rm_assertion_t *rm_assertion = NULL;
+
+        rm_assertion = sandesha2_util_get_rm_assertion(env, svc); 
+        if(rm_assertion)
+        {
+            property_bean = sandesha2_property_mgr_load_properties_from_policy(
+                env, rm_assertion);
+            if(property_bean)
+            {
+                param = axutil_param_create(env, SANDESHA2_SANDESHA_PROPERTY_BEAN, property_bean);
+                axutil_param_set_value_free(param, env, sandesha2_property_bean_free_void_arg);
+                axis2_svc_add_param(svc, env, param);
+            }
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot create Property bean");
+                return NULL;
+            }
+        }   
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot Retreive RM assertion");
+            return NULL;
+        }
+    }
+    else
+    {
+        property_bean = (sandesha2_property_bean_t*) axutil_param_get_value(param, env);
+    }
+
+    if(!property_bean)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Property bean not found as a parameter in service");
@@ -233,7 +267,7 @@ sandesha2_utils_get_property_bean(
         return NULL;
     }
 
-    return (sandesha2_property_bean_t*)axutil_param_get_value(param, env);
+    return property_bean;
 }
 
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
