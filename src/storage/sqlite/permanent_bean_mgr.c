@@ -230,8 +230,8 @@ sandesha2_permanent_bean_mgr_insert(
     if( rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", 
-            sql_stmt_insert, error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql stmt: %s. sql error: %s", sql_stmt_insert, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -341,8 +341,8 @@ sandesha2_permanent_bean_mgr_update(
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_update, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -384,10 +384,13 @@ sandesha2_permanent_bean_mgr_find(
         if(data_array)
             axutil_array_list_free(data_array, env);
         if(args)
+        {
             AXIS2_FREE(env->allocator, args);
+        }
+
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", 
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_find, 
+                error_msg);
         sqlite3_close(dbconn);
         sqlite3_free(error_msg);
         return NULL;
@@ -433,8 +436,8 @@ sandesha2_permanent_bean_mgr_retrieve_msg_store_bean(
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_retrieve, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -530,7 +533,8 @@ sandesha2_permanent_bean_mgr_update_msg_store_bean(
     if( rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_update, 
+                error_msg);
         AXIS2_FREE(env->allocator, sql_stmt_update);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
@@ -623,7 +627,8 @@ sandesha2_permanent_bean_mgr_insert_msg_store_bean(
     if( rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_insert, 
+                error_msg);
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
@@ -659,8 +664,8 @@ sandesha2_permanent_bean_mgr_remove_msg_store_bean(
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_remove, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -703,7 +708,8 @@ sandesha2_permanent_bean_mgr_store_response(
     if( rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s", error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_insert, 
+                error_msg);
         AXIS2_FREE(env->allocator, sql_stmt_insert);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
@@ -742,8 +748,8 @@ sandesha2_permanent_bean_mgr_remove_response(
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_remove, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -786,8 +792,8 @@ sandesha2_permanent_bean_mgr_retrieve_response(
     if(rc != SQLITE_OK )
     {
         AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SQL_ERROR, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql error %s",
-            error_msg);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "sql_stmt:%s. sql error %s", sql_stmt_retrieve, 
+                error_msg);
         sqlite3_free(error_msg);
         sqlite3_close(dbconn);
         return AXIS2_FALSE;
@@ -833,10 +839,9 @@ sandesha2_permanent_bean_mgr_get_dbconn(
     rc = sqlite3_open(dbname, &(dbconn));
     if(rc != SQLITE_OK)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s"
-            " sqlite error: %s\n", dbname, sqlite3_errmsg(dbconn));
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, 
-            AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Can't open database: %s sqlite error: %s", dbname, 
+                sqlite3_errmsg(dbconn));
+        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_CANNOT_OPEN_DATABASE, AXIS2_FAILURE);
         sqlite3_close(dbconn);
         return NULL;
     }
