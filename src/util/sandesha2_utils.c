@@ -568,6 +568,7 @@ sandesha2_utils_create_new_related_msg_ctx(
 
     op_ctx = axis2_op_ctx_create(env, op_new, svc_ctx);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
+    axis2_op_ctx_add_msg_ctx(op_ctx, env, new_msg);
     axis2_msg_ctx_set_svc_ctx(new_msg, env, svc_ctx);
     axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
 
