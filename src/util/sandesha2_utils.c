@@ -561,6 +561,7 @@ sandesha2_utils_create_new_related_msg_ctx(
     svc_ctx = axis2_msg_ctx_get_svc_ctx(ref_msg, env);
     op = axis2_msg_ctx_get_op(ref_msg, env);
     op_new = axis2_op_create(env);
+    axis2_op_set_parent(op_new, env, axis2_op_get_parent(op, env));
     axis2_op_set_msg_exchange_pattern(op_new, env, axis2_op_get_msg_exchange_pattern(op, env));
     axis2_op_set_out_flow(op_new, env, axis2_op_get_out_flow(op, env));
     axis2_op_set_in_flow(op_new, env, axis2_op_get_in_flow(op, env));
