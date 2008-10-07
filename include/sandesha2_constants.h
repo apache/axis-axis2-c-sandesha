@@ -541,6 +541,7 @@ extern "C"
 	#define SANDESHA2_MODULE  "sandesha2"
 	#define SANDESHA2_ISOLATED_LAST_MSG "isolated_last_msg"
 	#define SANDESHA2_PROPERTY_STRING "propstr"
+    #define RAMPART_CONTEXT "RampartContext"
 /** @} */
 #ifdef __cplusplus
 }

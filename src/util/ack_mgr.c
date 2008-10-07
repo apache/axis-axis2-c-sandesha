@@ -83,6 +83,9 @@ sandesha2_ack_mgr_generate_ack_msg(
     }
 
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg);
+    property = axis2_msg_ctx_get_property(ref_msg, env, RAMPART_CONTEXT);
+    axis2_msg_ctx_set_property(ack_msg_ctx, env, RAMPART_CONTEXT, property);
+
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
         AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
     if(property)
