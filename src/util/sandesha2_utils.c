@@ -526,6 +526,9 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_transport_out_desc_t *out_desc = NULL;
     axis2_transport_in_desc_t *in_desc = NULL;
     axis2_op_ctx_t *op_ctx = NULL;
+    axis2_svc_ctx_t *svc_ctx = NULL;
+    axis2_op_t *op = NULL;
+    axis2_op_t *op_new = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
@@ -555,10 +558,16 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_msg_ctx_set_svc(new_msg, env, axis2_msg_ctx_get_svc(ref_msg, env));
     }
 
-    op_ctx = axis2_msg_ctx_get_op_ctx(ref_msg, env);
-    /*axis2_op_ctx_increment_ref(op_ctx, env);*/
+    svc_ctx = axis2_msg_ctx_get_svc_ctx(ref_msg, env);
+    op = axis2_msg_ctx_get_op(ref_msg, env);
+    op_new = axis2_op_create(env);
+    axis2_op_set_msg_exchange_pattern(op_new, env, axis2_op_get_msg_exchange_pattern(op, env));
+    axis2_op_set_out_flow(op_new, env, axis2_op_get_out_flow(op, env));
+    axis2_op_set_in_flow(op_new, env, axis2_op_get_in_flow(op, env));
+
+    op_ctx = axis2_op_ctx_create(env, op_new, svc_ctx);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
-    axis2_msg_ctx_set_svc_ctx(new_msg, env, axis2_msg_ctx_get_svc_ctx(ref_msg, env));
+    axis2_msg_ctx_set_svc_ctx(new_msg, env, svc_ctx);
     axis2_msg_ctx_set_svc_grp_ctx(new_msg, env, axis2_msg_ctx_get_svc_grp_ctx(ref_msg, env));
 
     soap_env = axiom_soap_envelope_create_default_soap_envelope(env, 
