@@ -529,7 +529,6 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_op_t *op = NULL;
     axis2_op_t *op_new = NULL;
-    axis2_op_t *module_op = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
@@ -564,23 +563,7 @@ sandesha2_utils_create_new_related_msg_ctx(
 
     svc_ctx = axis2_msg_ctx_get_svc_ctx(ref_msg, env);
     op = axis2_msg_ctx_get_op(ref_msg, env);
-    op_new = axis2_op_create(env);
-    /* We copy the policy include from module operation */
-    module_op = axis2_svc_get_op_with_name(svc, env, "RMInOutOperation");
-    if(module_op)
-    {
-        axis2_desc_t *desc1 = NULL;
-        axis2_desc_t *desc2 = NULL;
-
-        desc1 = axis2_op_get_base(module_op, env);
-        desc2 = axis2_op_get_base(op_new, env);
-        axis2_desc_set_policy_include(desc2, env, axis2_desc_get_policy_include(desc1, env));
-    }
-
-    axis2_op_set_parent(op_new, env, axis2_op_get_parent(op, env));
-    axis2_op_set_msg_exchange_pattern(op_new, env, axis2_op_get_msg_exchange_pattern(op, env));
-    axis2_op_set_out_flow(op_new, env, axis2_op_get_out_flow(op, env));
-    axis2_op_set_in_flow(op_new, env, axis2_op_get_in_flow(op, env));
+    op_new = axis2_svc_get_op_with_name(svc, env, "RMInOutOperation");
 
     op_ctx = axis2_op_ctx_create(env, op_new, svc_ctx);
     axis2_msg_ctx_set_op_ctx(new_msg, env, op_ctx);
