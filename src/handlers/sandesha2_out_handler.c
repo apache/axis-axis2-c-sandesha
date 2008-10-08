@@ -95,6 +95,13 @@ sandesha2_out_handler_invoke(
         temp_prop = NULL;
     }
 
+    if(sandesha2_util_is_rstr_msg(env, msg_ctx))
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+            "[sandesha2] A RSTR message. Sandesha don't process.");
+        return AXIS2_SUCCESS;
+    }
+
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {

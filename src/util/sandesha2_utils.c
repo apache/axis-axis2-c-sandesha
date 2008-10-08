@@ -1583,3 +1583,45 @@ sandesha2_util_get_node_list_from_string(
     return node_list;
 }
 
+
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_rstr_msg(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_char_t *action = NULL;    
+
+    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
+
+    action = (axis2_char_t *)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+
+    if(!action)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[sandesha][sandesha_util] WSA action is NULL.");
+        return AXIS2_FALSE;
+    }
+    
+    if(!axutil_strcmp(action, SECCONV_200502_REPLY_ISSUE_ACTION))
+    {
+        return AXIS2_TRUE;
+    }
+    else if(!axutil_strcmp(action, SECCONV_200502_REPLY_CANCEL_ACTION))
+    {
+        return AXIS2_TRUE;
+    }
+    else if(!axutil_strcmp(action, SECCONV_200512_REPLY_ISSUE_ACTION))
+    {
+        return AXIS2_TRUE;
+    }
+    else if(!axutil_strcmp(action, SECCONV_200512_REPLY_CANCEL_ACTION))
+    {
+        return AXIS2_TRUE;
+    }
+    else
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+            "[sandesha][sandesha_util] Not a RSTR message.");
+        return AXIS2_FALSE;
+    }
+}
