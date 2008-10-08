@@ -50,6 +50,7 @@ sandesha2_ack_mgr_generate_ack_msg(
     axis2_endpoint_ref_t *temp_to = NULL;
     axis2_msg_ctx_t *ack_msg_ctx = NULL;
     axutil_property_t *property = NULL;
+    axutil_property_t *new_property = NULL;
     sandesha2_msg_ctx_t *ack_rm_msg = NULL;
     /*axiom_soap_envelope_t *soap_env = NULL;*/
     axis2_op_ctx_t *op_ctx = NULL;
@@ -84,10 +85,18 @@ sandesha2_ack_mgr_generate_ack_msg(
 
     ack_msg_ctx = sandesha2_utils_create_new_related_msg_ctx(env, ref_rm_msg);
     property = axis2_msg_ctx_get_property(ref_msg, env, RAMPART_CONTEXT);
-    axis2_msg_ctx_set_property(ack_msg_ctx, env, RAMPART_CONTEXT, property);
+    if(property)
+    {
+        new_property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_FALSE, 0, 
+            axutil_property_get_value(property, env));
+        if(new_property)
+        {
+            axis2_msg_ctx_set_property(ack_msg_ctx, env, RAMPART_CONTEXT, new_property);
+        }
+    }
 
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, 
-        AXIS2_FALSE, 0, AXIS2_VALUE_TRUE);
+    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_FALSE, 0, 
+            AXIS2_VALUE_TRUE);
     if(property)
     {
         axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE, property);
