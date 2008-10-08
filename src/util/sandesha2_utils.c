@@ -225,7 +225,7 @@ sandesha2_utils_get_property_bean(
     
     AXIS2_PARAM_CHECK(env->error, svc, NULL);
     
-    param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
+    /*param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);*/
     if(!param)
     {
         axis2_rm_assertion_t *rm_assertion = NULL;
@@ -529,11 +529,13 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_svc_ctx_t *svc_ctx = NULL;
     axis2_op_t *op = NULL;
     axis2_op_t *op_new = NULL;
+    axis2_op_t *module_op = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *addr_ver = NULL;
     axis2_char_t *paused_phase_name = NULL;
     axis2_svc_grp_t *svc_grp = NULL;
+    axis2_svc_t *svc = NULL;
     axutil_stream_t *out_stream = NULL;
     axis2_char_t *transport_to = NULL;
     
@@ -553,14 +555,28 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_msg_ctx_set_svc_grp(new_msg, env, svc_grp);
     }
 
+    svc = axis2_msg_ctx_get_svc(ref_msg, env);
+
     if(axis2_msg_ctx_get_svc(ref_msg, env))
     {
-        axis2_msg_ctx_set_svc(new_msg, env, axis2_msg_ctx_get_svc(ref_msg, env));
+        axis2_msg_ctx_set_svc(new_msg, env, svc);
     }
 
     svc_ctx = axis2_msg_ctx_get_svc_ctx(ref_msg, env);
     op = axis2_msg_ctx_get_op(ref_msg, env);
     op_new = axis2_op_create(env);
+    /* We copy the policy include from module operation */
+    module_op = axis2_svc_get_op_with_name(svc, env, "RMInOutOperation");
+    if(module_op)
+    {
+        axis2_desc_t *desc1 = NULL;
+        axis2_desc_t *desc2 = NULL;
+
+        desc1 = axis2_op_get_base(module_op, env);
+        desc2 = axis2_op_get_base(op_new, env);
+        axis2_desc_set_policy_include(desc2, env, axis2_desc_get_policy_include(desc1, env));
+    }
+
     axis2_op_set_parent(op_new, env, axis2_op_get_parent(op, env));
     axis2_op_set_msg_exchange_pattern(op_new, env, axis2_op_get_msg_exchange_pattern(op, env));
     axis2_op_set_out_flow(op_new, env, axis2_op_get_out_flow(op, env));
