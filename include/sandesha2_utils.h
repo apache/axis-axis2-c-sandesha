@@ -311,6 +311,12 @@ sandesha2_util_get_node_list_from_string(
     const axutil_env_t *env,
     axis2_char_t *node_list_str);
 
+axis2_bool_t AXIS2_CALL
+sandesha2_util_is_rstr_msg(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
+
+
 /** @} */
 #ifdef __cplusplus
 }

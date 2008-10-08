@@ -178,6 +178,28 @@ extern "C"
 
 	#define SANDESHA2_WSA_SOAP_FAULT_ACTION  "http://schemas.xmlsoap.org/ws/2004/08/addressing/fault"
 
+
+    /* RSTR actions */
+
+    #define SECCONV_200502_REQUEST_ISSUE_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT"
+    #define SECCONV_200502_REPLY_ISSUE_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT"
+    #define SECCONV_200502_REQUEST_AMEND_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Amend"
+    #define SECCONV_200502_REPLY_AMEND_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Amend"
+    #define SECCONV_200502_REQUEST_RENEW_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Renew"
+    #define SECCONV_200502_REPLY_RENEW_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Renew"
+    #define SECCONV_200502_REQUEST_CANCEL_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Cancel"
+    #define SECCONV_200502_REPLY_CANCEL_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Cancel"
+    #define SECCONV_200512_REQUEST_ISSUE_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT"
+    #define SECCONV_200512_REPLY_ISSUE_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT"
+    #define SECCONV_200512_REQUEST_AMEND_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Amend"
+    #define SECCONV_200512_REPLY_AMEND_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Amend"
+    #define SECCONV_200512_REQUEST_RENEW_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Renew"
+    #define SECCONV_200512_REPLY_RENEW_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Renew"
+    #define SECCONV_200512_REQUEST_CANCEL_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Cancel"
+    #define SECCONV_200512_REPLY_CANCEL_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Cancel"
+
+
+
 	enum sandesha2_message_types 
 	{
 		SANDESHA2_MSG_TYPE_UNKNOWN = 0,
