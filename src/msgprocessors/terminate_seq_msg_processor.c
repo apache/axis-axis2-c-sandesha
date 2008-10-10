@@ -510,7 +510,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
             sandesha2_seq_property_bean_free(last_in_msg_bean, env);
         }
 
-        /* If an outbound message has already gone out witch relates to the highest in message id, 
+        /* If an outbound message has already gone out which relates to the highest in message id, 
          * then we can terminate right away.
          */
         highest_out_relates_to = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id, 

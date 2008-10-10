@@ -1741,8 +1741,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
     int mep)
 {
-    /*axis2_endpoint_ref_t *to_epr = NULL;
-    axis2_endpoint_ref_t *temp_to_epr = NULL;*/
     const axis2_char_t *reply_to_addr = NULL;
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     axis2_char_t *acks_to_str = NULL;
@@ -1786,18 +1784,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
 
-    /*temp_to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
-    if(temp_to_epr)
-    {
-        const axis2_char_t *temp_to_addr = NULL;
-
-        temp_to_addr = axis2_endpoint_ref_get_address(temp_to_epr, env);
-        if(temp_to_addr)
-        {
-            to_epr = axis2_endpoint_ref_create(env, temp_to_addr);
-        }
-    }*/
-
     reply_to_epr = axis2_msg_ctx_get_reply_to(msg_ctx, env);
     if(reply_to_epr)
     {
@@ -1826,14 +1812,13 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         return AXIS2_FAILURE;
     }
 
-    is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, reply_to_addr));
-    /*if(sandesha2_utils_is_rm_1_0_anonymous_acks_to(env, rm_version, acks_to_str) 
-            && is_anonymous_reply_to && !one_way)*/
+    is_anonymous_reply_to = !reply_to_addr || (reply_to_addr && sandesha2_utils_is_anon_uri(env, 
+                reply_to_addr));
+
     if(sandesha2_utils_is_anon_uri(env, acks_to_str) && is_anonymous_reply_to && !one_way)
     {
-        /* This means acknowledgment address is anomymous and RM version is 1.0. Flow comes to
-         * this block only in the server side.
-         * In other words this is RM 1.0 replay model in application server side. In this case 
+        /* This means acknowledgment address is anomymous. Flow comes to this block only in the 
+         * server side. In other words this is replay model in application server side. In this case 
          * we do not send the acknowledgment message here. Instead we send it in the message out path.
          * See sandesha2_app_msg_processor_send_app_msg() code.
          */
@@ -1881,8 +1866,8 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     ack_msg_ctx = sandesha2_msg_ctx_get_msg_ctx(ack_rm_msg_ctx, env);
 
     /* If it is not one way message we piggyback the acknowledgment messages on the application messages
-     * or terminate message. So here we store them in the database so that when the application/terminate
-     * message sent it pick it up from the database to piggyback. See app_msg_send() function.
+     * or terminate message. So here we store them in the storage so that when the application/terminate
+     * message sent it pick it up from the storage to piggyback. See app_msg_send() function.
      */
     if(!one_way)
     {
@@ -1903,6 +1888,12 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         key = axutil_uuid_gen(env);
         ack_bean = sandesha2_sender_bean_create(env);
 
+        /* To find the outgoing sequence id we use the related message sent. We face this problem of
+         * finding the outgoing sequence id only in the application client side. As a solution when 
+         * messages are sent from the application client side we store the 
+         * SANDESHA2_SEQ_PROP_RELATED_MSG_ID property which can be used to retrieve the outgoing 
+         * sequence id as follows.
+         */
         relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
         if(relates_to)
         {
@@ -1939,6 +1930,9 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
             }
         }
 
+        /* Store the sender bean for the acknowledgement message which can be used later to find and
+         * retrieve the acknowledgment message context from storage for piggybacking purposes.
+         */
         sandesha2_sender_bean_set_msg_ctx_ref_key(ack_bean, env, key);
         send_time = sandesha2_utils_get_current_time_in_millis(env);
         sandesha2_sender_bean_set_time_to_send(ack_bean, env, send_time);
@@ -1974,17 +1968,11 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         axis2_msg_ctx_set_property(ack_msg_ctx, env, SANDESHA2_MESSAGE_STORE_KEY, property);
     }
 
-    /*if(to_epr)
-    {
-        axis2_msg_ctx_set_reply_to(ack_msg_ctx, env, to_epr);
-    }*/
-
     /* If it is one way message in server side this is the only place we can send the acknowledgment.
      * In all other cases we do not send the acknowledgment directly, but piggyback it on application
      * messages or terminate sequence message.
      */
     if(ack_rm_msg_ctx && one_way)
-    /*if(ack_rm_msg_ctx)*/
     {
         axis2_engine_t *engine = NULL;
         engine = axis2_engine_create(env, conf_ctx);
@@ -2004,9 +1992,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         }
     }
 
-    /* We don't store the acknowledgment in memory. To indicate that it should be stored only in the
-     * database we pass AXIS2_FALSE as last argument. This measure is taken to avoid memory corruption.
-     */
+    /* Store the acknowledgement message context. */
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, ack_msg_ctx, AXIS2_FALSE);
 
     if(ack_rm_msg_ctx)
@@ -2014,7 +2000,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         sandesha2_msg_ctx_free(ack_rm_msg_ctx, env);
     }
 
-    /* Since we have stored this in database and when piggybacking it is only taken from database
+    /* Since we have stored this in storage and when piggybacking it is only taken from storage
      * we can free this now.
      */
     if(ack_msg_ctx)
@@ -2814,6 +2800,10 @@ sandesha2_app_msg_processor_send_app_msg(
         sandesha2_seq_property_bean_t *response_relates_to_bean = NULL; 
         const axis2_char_t *relates_to_value = axis2_relates_to_get_value(relates_to, env);
 
+        /* Store the related message id value of the out going applicatoin message. This value
+         * is used in the terminate sequence message processor at server side to find the
+         * highest outgoing message id related to the highestest incoming message id.
+         */
         response_relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, 
                 internal_sequence_id, SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO, 
                 (axis2_char_t *) relates_to_value);
@@ -2824,7 +2814,10 @@ sandesha2_app_msg_processor_send_app_msg(
             sandesha2_seq_property_bean_free(response_relates_to_bean, env);
         }
     }
-  
+ 
+    /* Set the last out message number(This messages number). This is used in creating the terminate
+     * sequence message to include the last message number.
+     */
     sandesha2_app_msg_processor_set_last_out_msg_no(env, internal_sequence_id, msg_num, seq_prop_mgr);
 
     to_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
@@ -2871,7 +2864,6 @@ sandesha2_app_msg_processor_send_app_msg(
         axis2_endpoint_ref_t *temp_to_epr = NULL;
         
         temp_to_epr = axis2_endpoint_ref_create(env, new_to_str);
-        /*sandesha2_msg_ctx_set_to(rm_msg_ctx, env, temp_to_epr);*/
         if(to_epr)
         {
             axis2_endpoint_ref_free(to_epr, env);
@@ -2908,7 +2900,8 @@ sandesha2_app_msg_processor_send_app_msg(
     msg_number = sandesha2_msg_number_create(env, rm_ns_val);
     sandesha2_msg_number_set_msg_num(msg_number, env, msg_num);
     sandesha2_seq_set_msg_num(seq, env, msg_number);
-    
+   
+    /* Setting the last message element in the sequence element if this is the last message */
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env))
     {
         sandesha2_msg_ctx_t *req_rm_msg = NULL;
@@ -3020,6 +3013,9 @@ sandesha2_app_msg_processor_send_app_msg(
         sandesha2_seq_property_bean_free(from_acks_to_bean, env);
     }
 
+    /* Store the sender bean for this applicatoin message. This sender bean is used to search and 
+     * retrieve the application message from the storage later.
+     */
     app_msg_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_internal_seq_id(app_msg_sender_bean, env, internal_sequence_id);
     sandesha2_sender_bean_set_msg_ctx_ref_key(app_msg_sender_bean, env, storage_key);
@@ -3036,9 +3032,10 @@ sandesha2_app_msg_processor_send_app_msg(
     is_svr_side = axis2_msg_ctx_get_server_side(app_msg_ctx, env);
 
     /* 
-     * If server side and anonymous acknowledgment in RM 1.0. In other words this is RM 1.0 replay mode.
-     * Note that in this case to_addr is NULL. In duplex mode to_addr cannot be NULL. 
-     * */
+     * If server side and anonymous acknowledgment. In other words this is replay mode.
+     * Note that in this case to_addr is NULL. In duplex mode to_addr cannot be NULL. We send
+     * the response application message in the back channel.
+     */
 
     if(is_svr_side && sandesha2_utils_is_anon_uri(env, from_acks_to_addr) && (!to_addr || 
             sandesha2_utils_is_anon_uri(env, to_addr)))
@@ -3067,12 +3064,14 @@ sandesha2_app_msg_processor_send_app_msg(
         identifier = sandesha2_identifier_create(env, rm_ns_val);
         sandesha2_identifier_set_identifier(identifier, env, rms_sequence_id);
         sandesha2_seq_set_identifier(seq, env, identifier);
+        /* Add the sequence element in to the envelope. */
         sandesha2_msg_ctx_set_sequence(rm_msg_ctx, env, seq);
+        sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
 
         /* TODO add_ack_requested */
 
-        sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
-
+        
+        /* Add the acknowledgment message into the envelope*/
         sandesha2_msg_creator_add_ack_msg(env, rm_msg_ctx, rmd_sequence_id, seq_prop_mgr);
         if(req_rm_msg_ctx)
         {
@@ -3170,7 +3169,11 @@ sandesha2_app_msg_processor_send_app_msg(
 
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_anon_uri(env, reply_to_addr)))
     {
-        /* Client side and oneway */
+        /* Client side and oneway. We do not spawn new threads here but send the application
+         * message as the same thread as the application client thread. If the first send
+         * fails then we go into a loop and try resending until timeout or maximum number of times
+         * exceeded as specified in policy. 
+         */
         axis2_transport_out_desc_t *transport_out = NULL;
         axis2_transport_sender_t *transport_sender = NULL;
         sandesha2_sender_bean_t *sender_bean = NULL;
@@ -3182,6 +3185,7 @@ sandesha2_app_msg_processor_send_app_msg(
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
 
+        /* We will wait until the response for the create sequence message received. */
         while(!rms_sequence_bean)
         {
             rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
@@ -3196,6 +3200,10 @@ sandesha2_app_msg_processor_send_app_msg(
             sandesha2_seq_property_bean_free(rms_sequence_bean, env);
         }
 
+        /* Store the outgoing sequence id using the message id of the applicatoin message. This is
+         * used in send_ack_if_reqd() function to determine the outgoing sequence id. Note that 
+         * this is useful only in the application client side.
+         */
         relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 
                 SANDESHA2_SEQ_PROP_RELATED_MSG_ID, rms_sequence_id);
         if(relates_to_bean)
@@ -3217,6 +3225,7 @@ sandesha2_app_msg_processor_send_app_msg(
             }
         }
 
+        /* Add the acknowledgement element into the soap envelope */
         if(!sandesha2_util_is_ack_already_piggybacked(env, rm_msg_ctx))
         {
             sandesha2_ack_mgr_piggyback_acks_if_present(env, rms_sequence_id, rm_msg_ctx, storage_mgr, 
@@ -3226,11 +3235,12 @@ sandesha2_app_msg_processor_send_app_msg(
         identifier = sandesha2_identifier_create(env, rm_ns_val);
         sandesha2_identifier_set_identifier(identifier, env, rms_sequence_id);
         sandesha2_seq_set_identifier(seq, env, identifier);
+        /* Add the sequence element into the soap envelope */
         sandesha2_msg_ctx_set_sequence(rm_msg_ctx, env, seq);
+        sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
         
         /* TODO add_ack_requested */
 
-        sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
 
         engine = axis2_engine_create(env, conf_ctx);
         if(axis2_engine_resume_send(engine, env, app_msg_ctx))
@@ -3555,6 +3565,10 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         sandesha2_seq_property_bean_free(rms_sequence_bean, env);
     }
 
+    /* Store the outgoing sequence id using the message id of the applicatoin message. This is
+     * used in send_ack_if_reqd() function to determine the outgoing sequence id. Note that 
+     * this is useful only in the application client side.
+     */
     relates_to_bean = sandesha2_seq_property_bean_create_with_data(env, msg_id, 
             SANDESHA2_SEQ_PROP_RELATED_MSG_ID, rms_sequence_id);
     if(relates_to_bean)
