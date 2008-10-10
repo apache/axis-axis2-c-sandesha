@@ -23,12 +23,12 @@
                 <wsrm:RMAssertion>
                     <wsrm:InactivityTimeout Milliseconds="600000"/>
                     <wsrm:AcknowledgementInterval Milliseconds="200"/>
-                    <wsrm:BaseRetransmissionInterval Milliseconds="8"/>
+                    <wsrm:BaseRetransmissionInterval Milliseconds="1"/>
                     <wsrm:ExponentialBackoff/>
                     <sanc:InactivityTimeout>64</sanc:InactivityTimeout>
                     <sanc:StorageManager>persistent</sanc:StorageManager>
                     <sanc:MessageTypesToDrop>none</sanc:MessageTypesToDrop>
-                    <sanc:MaxRetransCount>10</sanc:MaxRetransCount>
+                    <sanc:MaxRetransCount>4</sanc:MaxRetransCount>
                     <sanc:SenderSleepTime>1</sanc:SenderSleepTime><!--In seconds-->
                     <sanc:InvokerSleepTime>1</sanc:InvokerSleepTime>
                     <sanc:PollingWaitTime>4</sanc:PollingWaitTime>
