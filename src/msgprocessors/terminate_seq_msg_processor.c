@@ -283,6 +283,9 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     }
 
     seq_ack = sandesha2_msg_ctx_get_seq_ack(rm_msg_ctx, env);
+    /* If we have received a sequence acknowldegment with the incoming terminate message then we may
+     * decide to send the terminate sequence message.
+     */
     if(seq_ack)
     {
         axis2_char_t *internal_sequence_id = NULL;
@@ -316,6 +319,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
         }
         else
         {
+            /* Retrieve the message number of the RM 1.0 last message */
             last_out_msg_no_str = sandesha2_utils_get_seq_property(env, internal_sequence_id,
                 SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, seq_prop_mgr);
 
@@ -338,7 +342,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                 axis2_bool_t completed = AXIS2_FALSE;
                 axutil_array_list_t *ack_range_list = NULL;
 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "highest_out_msg_no:%ld", highest_out_msg_no);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] highest_out_msg_no:%ld", 
+                        highest_out_msg_no);
 
                 ack_range_list = sandesha2_seq_ack_get_ack_range_list(seq_ack, env);
                 completed = sandesha2_ack_mgr_verify_seq_completion(env, ack_range_list, 
@@ -347,7 +352,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                 if(completed)
                 {
                     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                            "[sandesha2]Sequence %s is completed. So adding terminate msg", 
+                            "[sandesha2] Sequence %s is completed. So adding terminate msg", 
                             rms_sequence_id); 
 
                     sandesha2_terminate_mgr_send_terminate_seq_msg(env, rm_msg_ctx, rms_sequence_id, 
@@ -376,6 +381,8 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     sandesha2_seq_mgr_update_last_activated_time(env, rmd_sequence_id, storage_mgr);
     */
 
+    /* We have no intention to pass this message beyond Sandesha2/C handler. So pause the message 
+     * context */
     sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
 
     if(seq_prop_mgr)
@@ -409,7 +416,12 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
     return AXIS2_SUCCESS;
 }
 
-
+/*
+ * Since we have received the terminate sequence message we determine the last in message which
+ * arrived prior to this terminate message. Then we mark it as the last message. We also determine if
+ * an out message is already sent related to that highest in comming message. If so then we determine
+ * whether we have received ack messages for them. If so send the terminate sequence message.
+ */
 static axis2_status_t AXIS2_CALL 
 sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     const axutil_env_t *env, 
@@ -438,14 +450,16 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     AXIS2_PARAM_CHECK(env->error, sender_mgr, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, seq_id, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rm_msg_ctx, AXIS2_FAILURE);
-    
+   
+    /* Message number of the highest in comming message so far */
     highest_in_msg_num_str = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, seq_prop_mgr);
 
+    /* Message id of the highest in comming message so far */
     highest_in_msg_id = sandesha2_utils_get_seq_property(env, seq_id,
         SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID, seq_prop_mgr);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]highest_in_msg_num_str:%s",
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Highest_in_msg_num_str:%s",
         highest_in_msg_num_str);
 
     if(highest_in_msg_num_str)
@@ -481,7 +495,9 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     else
     {
         /* Mark up the highest inbound message as if it had the last message 
-         * flag on it.*/
+         * flag on it. We can do this because we have received the terminate sequence message. So
+         * we can treat the highest in-comming message as the last message. 
+         */
         sandesha2_seq_property_bean_t *last_in_msg_bean = NULL;
         axis2_char_t *highest_out_relates_to = NULL;
 
@@ -494,8 +510,8 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
             sandesha2_seq_property_bean_free(last_in_msg_bean, env);
         }
 
-        /* If an outbound message has already gone out with that relatesTo, then 
-         * we can terminate right away.
+        /* If an outbound message has already gone out witch relates to the highest in message id, 
+         * then we can terminate right away.
          */
         highest_out_relates_to = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id, 
                 SANDESHA2_SEQ_PROP_HIGHEST_OUT_RELATES_TO, seq_prop_mgr);
@@ -526,12 +542,12 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
         AXIS2_FREE(env->allocator, highest_in_msg_id);
     }
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]add_rec_side_term:%d", add_rec_side_term);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] add_rec_side_term:%d", add_rec_side_term);
 
     out_seq_id = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id,
         SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2]out_seq_id:%s", out_seq_id);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] out_seq_id:%s", out_seq_id);
     if(rec_side_int_seq_id)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] rec_side_int_seq_id:%s", rec_side_int_seq_id);
@@ -567,7 +583,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
-            "[sandesha2]Exit:sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums");
+            "[sandesha2] Exit:sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums");
 
     return AXIS2_SUCCESS;    
 }

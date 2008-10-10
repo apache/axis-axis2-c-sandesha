@@ -592,12 +592,14 @@ sandesha2_app_msg_processor_process_in_msg (
         
         highest_in_msg_no = msg_no;
         msg_id = axis2_msg_ctx_get_msg_id(app_msg_ctx, env);
+        /* Store the highest in message number received so far */
         highest_msg_no_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
                 SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER, msg_num_str);
 
         highest_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
                 SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_KEY, highest_in_msg_key_str);
 
+        /* Store the id of the highest in message number message */
         highest_msg_id_bean = sandesha2_seq_property_bean_create_with_data(env, rmd_sequence_id, 
                 SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID, (axis2_char_t *)msg_id);
 
@@ -753,7 +755,8 @@ sandesha2_app_msg_processor_process_in_msg (
             sandesha2_seq_property_bean_t *seq_prop_bean = NULL;
             
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Last message");
-
+            
+            /* Store the id of the last RM 1.0 message */
             seq_prop_bean = sandesha2_seq_property_bean_create_with_data(
                 env, rmd_sequence_id, SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, msg_id);
             if(seq_prop_bean)
@@ -1106,7 +1109,7 @@ sandesha2_app_msg_processor_process_out_msg(
         req_seq = sandesha2_msg_ctx_get_sequence(req_rm_msg_ctx, env);
         if(!req_seq)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2]Sequence is NULL");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sequence is NULL");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SEQ_NOT_EXIST, AXIS2_FAILURE);
             if(req_rm_msg_ctx)
             {
@@ -1163,33 +1166,11 @@ sandesha2_app_msg_processor_process_out_msg(
 
         request_msg_no = sandesha2_msg_number_get_msg_num(sandesha2_seq_get_msg_num(req_seq, env), env);
         internal_sequence_id = sandesha2_utils_get_internal_sequence_id(env, rmd_sequence_id);
-
-        /* Deciding whether this is the last message. We assume it is if it 
-         * relates to a message which arrived with the LastMessage flag on it.
-         */
-        /*last_req_id = sandesha2_utils_get_seq_property(env, rmd_sequence_id, 
-            SANDESHA2_SEQ_PROP_LAST_IN_MESSAGE_ID, seq_prop_mgr);
-
-        relates_to = axis2_msg_ctx_get_relates_to(msg_ctx, env);
-        relates_to_value = (axis2_char_t *)axis2_relates_to_get_value(relates_to, env);
-        if(relates_to && last_req_id && !axutil_strcmp(last_req_id, relates_to_value))
-        {
-            last_msg = AXIS2_TRUE;
-        }
-
-        if(last_req_id)
-        {
-            AXIS2_FREE(env->allocator, last_req_id);
-        }*/
-        
-        /*last_msg = sandesha2_app_msg_processor_is_last_out_msg(env, msg_ctx, rmd_sequence_id, 
-                internal_sequence_id, seq_prop_mgr);*/
     }
     else /* Client side */
     {
         axis2_char_t *to = NULL;
         axis2_char_t *seq_key = NULL;
-        /*axis2_char_t *last_app_msg = NULL;*/
         
         to = (axis2_char_t*)axis2_endpoint_ref_get_address(to_epr, env);
         property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_SEQ_KEY);
@@ -1207,37 +1188,6 @@ sandesha2_app_msg_processor_process_out_msg(
 
         internal_sequence_id = sandesha2_utils_get_client_internal_sequence_id(env, to, 
                 seq_key);
-       
-        /*last_msg = sandesha2_app_msg_processor_is_last_out_msg(env, msg_ctx, NULL, 
-                internal_sequence_id, seq_prop_mgr);*/
-        
-        /*property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_LAST_MESSAGE);
-        if(property)
-        {
-            last_app_msg = axutil_property_get_value(property, env);
-        }
-
-        if(last_app_msg && !axutil_strcmp(last_app_msg, AXIS2_VALUE_TRUE))
-        {
-            spec_ver = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
-            if(!spec_ver)
-            {
-                axutil_property_t *spec_ver_prop = NULL;
-                spec_ver_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-                    SANDESHA2_CLIENT_RM_SPEC_VERSION);
-
-                spec_ver = axutil_strdup(env, axutil_property_get_value(spec_ver_prop, env));
-            }
-            if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd(env, spec_ver))
-            {
-                last_msg = AXIS2_TRUE;
-            }
-            if(spec_ver)
-            {
-                AXIS2_FREE(env->allocator, spec_ver);
-                spec_ver = NULL;
-            }
-        }*/
     }
 
     seq_timeout_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
@@ -2786,6 +2736,9 @@ sandesha2_app_msg_processor_process_create_seq_response(
     return status;
 }
 
+/*
+ * First 
+ */
 static axis2_status_t AXIS2_CALL                 
 sandesha2_app_msg_processor_send_app_msg(
     const axutil_env_t *env,
@@ -3045,6 +2998,10 @@ sandesha2_app_msg_processor_send_app_msg(
             SANDESHA2_SEQ_PROP_ACKS_TO_EPR);
     }
 
+    /* Decide if this is the RM 1.0 last message. If it is, store the message number which can be used
+     * in ack message processor and terminate sequence message processor to know if the RM1.0 last msg
+     * has arrived.
+     */
     sandesha2_app_msg_processor_is_last_out_msg(env, app_msg_ctx, rmd_sequence_id, 
         internal_sequence_id, msg_num, seq_prop_mgr);
 
@@ -4117,7 +4074,7 @@ sandesha2_app_msg_processor_is_last_out_msg(
         axis2_char_t *relates_to_value = NULL;
         const axis2_relates_to_t *relates_to = NULL;
 
-       /* Deciding whether this is the last message. We assume it is if it 
+       /* Deciding whether this is the last message. We assume it is, if it 
         * relates to a message which arrived with the LastMessage flag on it.
         */
         last_req_id = sandesha2_utils_get_seq_property(env, rmd_sequence_id, 
@@ -4178,7 +4135,8 @@ sandesha2_app_msg_processor_is_last_out_msg(
         sandesha2_seq_property_bean_t *res_last_msg_key_bean = NULL;
 
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Last message true");
-        sprintf(msg_number_str, "%ld", msg_num); 
+        sprintf(msg_number_str, "%ld", msg_num);
+        /* Store the message number of the RM 1.0 last message */
         res_last_msg_key_bean = sandesha2_seq_property_bean_create_with_data(env, 
                 internal_sequence_id, SANDESHA2_SEQ_PROP_LAST_OUT_MESSAGE_NO, msg_number_str);
 
