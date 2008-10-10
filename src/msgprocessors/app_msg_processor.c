@@ -2108,7 +2108,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     }
 
     /* If this is a one way message and if use_separate_listener property is set to true we need to 
-     * start a listener manager so that create sequence response could be listened at
+     * start a listener manager so that create sequence response could be listened at. Note that
+     * this mechanism need to be improved later as currently there is no way to stop the listner.
      */
     temp_op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
     if(temp_op_ctx)
@@ -2254,6 +2255,9 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         axis2_msg_ctx_set_reply_to(create_seq_msg_ctx, env, cs_epr);
     }
 
+    /* Create and store create sequence sender bean. This will be used later to find and retrieve
+     * create sequence message context stored in the storage.
+     */
     create_sequence_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(create_sequence_sender_bean, env, create_sequence_msg_store_key);
     millisecs = sandesha2_utils_get_current_time_in_millis(env);
@@ -2264,6 +2268,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_sender_bean_set_send(create_sequence_sender_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_msg_type(create_sequence_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_mgr_insert(sender_mgr, env, create_sequence_sender_bean);
+
+    /* Store the create sequence message context in the storage */
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, create_seq_msg_ctx, AXIS2_TRUE);
     AXIS2_FREE(env->allocator, create_sequence_msg_store_key);
 
@@ -2275,8 +2281,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         sandesha2_msg_ctx_free(create_seq_rm_msg_ctx, env);
     }
 
-
-    /*property_bean = sandesha2_utils_get_property_bean(env, axis2_conf_ctx_get_conf(conf_ctx, env));*/
     retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
 
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
@@ -2399,7 +2403,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
             axis2_msg_ctx_free(create_seq_msg_ctx, env);
         }
     }
-    else
+    else /* Dual channel */
     {
         /* This is actually a trick that get the msg_ctx traversed through all the out phases.
          * Once all the phases are passed it will get hit into the false sandesha2 transport
@@ -2427,9 +2431,13 @@ sandesha2_app_msg_processor_send_create_seq_msg(
             axis2_engine_free(engine, env);
         }
 
-        rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-                internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
-        /* Dual channel */
+        /*rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
+                internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);*/
+
+        /* In dual channel create sequence message is sent in a separate thread. This thread will
+         * run until create sequence response message is received or timeout or re-sends
+         * exceed the maximum number of re-sends as specified in Policy.
+         */
         status = sandesha2_app_msg_processor_start_create_seq_msg_resender(env, conf_ctx, 
                 internal_sequence_id, msg_id, is_svr_side, retrans_interval, 
                 create_sequence_sender_bean, create_seq_msg_ctx);
@@ -3539,6 +3547,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         AXIS2_TRUE);
     svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
 
+    /* Loop until create sequence response arrive */
     while(!rms_sequence_bean)
     {
         axis2_bool_t continue_sending = AXIS2_TRUE;
@@ -3575,7 +3584,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         sandesha2_seq_property_bean_free(rms_sequence_bean, env);
     }
 
-    /* Store the outgoing sequence id using the message id of the applicatoin message. This is
+    /* Store the outgoing sequence id using the message id of the application message. This is
      * used in send_ack_if_reqd() function to determine the outgoing sequence id. Note that 
      * this is useful only in the application client side.
      */
@@ -3604,17 +3613,22 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     identifier = sandesha2_identifier_create(env, rm_ns_val);
     sandesha2_identifier_set_identifier(identifier, env, rms_sequence_id);
     sandesha2_seq_set_identifier(sequence, env, identifier);
+    /* Add the sequence element into the soap envelope */
     sandesha2_msg_ctx_set_sequence(rm_msg_ctx, env, sequence);
     sandesha2_msg_ctx_add_soap_envelope(rm_msg_ctx, env);
         
     /* TODO add_ack_requested */
 
+    /* Add the acknowledgement element into soap envelope */
     if(!sandesha2_util_is_ack_already_piggybacked(env, rm_msg_ctx))
     {
         sandesha2_ack_mgr_piggyback_acks_if_present(env, rms_sequence_id, rm_msg_ctx, storage_mgr, 
                 seq_prop_mgr, sender_mgr);
     }
 
+    /* Resend the application message until timeout or exceed the maximum number of re-sends as
+     * specified by Policy.
+     */
     while(AXIS2_TRUE)
     {
         sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
@@ -3804,15 +3818,6 @@ sandesha2_app_msg_processor_resend(
     if(successfully_sent)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Application message successfully sent");
-
-        if(!axis2_msg_ctx_get_server_side(app_msg_ctx, env))
-        {
-            /*status = sandesha2_app_msg_processor_process_app_msg_response(env, app_msg_ctx, storage_mgr);
-            if(AXIS2_SUCCESS != status)
-            {
-                return status;
-            }*/
-        }
     }
 
     if(bean1)
