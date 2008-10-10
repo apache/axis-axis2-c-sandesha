@@ -1082,8 +1082,9 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     is_svr_side = sandesha2_msg_ctx_get_server_side(ack_rm_msg_ctx, env); /* Do we need this?:damitha */
     engine = axis2_engine_create(env, conf_ctx);
 
+    /* Check whether this is replay mode. This value set when sending application message */
     replay_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-        rms_sequence_id, SANDESHA2_SEQ_PROP_1_0_REPLAY);
+        rms_sequence_id, SANDESHA2_SEQ_PROP_REPLAY);
     if(replay_bean)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] replay on");
@@ -1099,6 +1100,9 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     }
     else if(AXIS2_SUCCESS == axis2_engine_send(engine, env, terminate_msg_ctx))
     {
+        /* We need to resend the terminate sequence message or process the response in the back 
+         * channel only in the replay mode.
+         */
         if(replay_bean)
         {
             axiom_soap_envelope_t *res_envelope = NULL;
@@ -1308,8 +1312,6 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
 
     axis2_msg_ctx_set_soap_envelope(response_msg_ctx, env, response_envelope);
 
-    /*axis2_msg_ctx_set_server_side(response_msg_ctx, env, AXIS2_TRUE);*/
-
     axis2_msg_ctx_set_op_ctx(response_msg_ctx, env, axis2_msg_ctx_get_op_ctx(msg_ctx, env));
     axis2_msg_ctx_set_svc_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_ctx(msg_ctx, env));
     axis2_msg_ctx_set_svc_grp_ctx(response_msg_ctx, env, axis2_msg_ctx_get_svc_grp_ctx(msg_ctx, env));
@@ -1330,6 +1332,7 @@ sandesha2_terminate_mgr_process_terminate_msg_response(
             axis2_engine_free(engine, env);
     }
 
+    /* We are not interested about the message context after now. So pause it. */
     axis2_msg_ctx_set_paused(response_msg_ctx, env, AXIS2_FALSE);
     axis2_msg_ctx_free(response_msg_ctx, env);
 

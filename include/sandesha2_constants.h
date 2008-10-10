@@ -326,7 +326,7 @@ extern "C"
 
     #define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_ID "HighestInMsgId"
     
-    #define SANDESHA2_SEQ_PROP_1_0_REPLAY "Replay1_0"
+    #define SANDESHA2_SEQ_PROP_REPLAY "Replay"
     
     #define SANDESHA2_SEQ_PROP_RELATED_MSG_ID "related_msg_id"
     

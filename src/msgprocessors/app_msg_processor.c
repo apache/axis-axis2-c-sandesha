@@ -3212,12 +3212,15 @@ sandesha2_app_msg_processor_send_app_msg(
             sandesha2_seq_property_bean_free(relates_to_bean, env);
         }
 
+        /* If mep is out-in we need to mark that this is replay mode. This is used in terminate 
+         * manager.
+         */
         if(!axutil_strcmp(mep, AXIS2_MEP_URI_OUT_IN))
         {
             sandesha2_seq_property_bean_t *replay_bean = NULL;
 
             replay_bean = sandesha2_seq_property_bean_create_with_data(env, rms_sequence_id, 
-                    SANDESHA2_SEQ_PROP_1_0_REPLAY, NULL);
+                    SANDESHA2_SEQ_PROP_REPLAY, NULL);
             sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, replay_bean);
             if(replay_bean)
             {
@@ -3285,6 +3288,7 @@ sandesha2_app_msg_processor_send_app_msg(
                 status = AXIS2_FAILURE;
             }
 
+            /* Loop until timeout or exceed specified number of resends */
             while(AXIS2_TRUE && transport_sender)
             {
                 continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, sender_bean, 
@@ -3360,7 +3364,7 @@ sandesha2_app_msg_processor_send_app_msg(
 
         return status;
     }
-    else /* Not client side or twoway client side*/
+    else /* Sending in twoway. This could be in client or server. Sending always happen within a thread.*/
     {
         /* This is actually a trick that get the msg_ctx traversed through all the out phases.
          * Once all the phases are passed it will get hit into the false sandesha2 transport
@@ -3389,12 +3393,18 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             axis2_engine_free(engine, env);
         }
-        
+       
+        /* Store the application message context. This ensures that message context is stored before
+         * trying to write it into the wire at transport. When the sender thread start it retrieve
+         * the message context from the storage and send it.
+         */
         sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, storage_key, app_msg_ctx, AXIS2_TRUE);
 
-        /* If not (single channel) spawn a thread and see whether acknowledgment has arrived through the 
-         * sandesha2_sender_mgr_get_application_msg_to_send() function. If it has arrived exit from
-         * the thread.*/
+        /* Start the application message sender. Here we spawn a thread and see whether acknowledgment 
+         * has arrived through the sandesha2_sender_mgr_get_application_msg_to_send() function. If it 
+         * has arrived exit from the thread. Otherwise retry until timeout or number of re-sends 
+         * exceed the value specified in Policy. 
+         */
         status = sandesha2_app_msg_processor_start_application_msg_resender(env, conf_ctx, 
                 internal_sequence_id, msg_id, is_svr_side, retrans_interval, app_msg_ctx, seq);
     }
