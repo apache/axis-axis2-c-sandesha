@@ -80,8 +80,6 @@ sandesha2_out_handler_invoke(
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     int msg_type = -1;
-    sandesha2_property_bean_t *property_bean = NULL;
-
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Entry:sandesha2_out_handler_invoke");
@@ -132,15 +130,6 @@ sandesha2_out_handler_invoke(
     if(module_qname)
     {
         axutil_qname_free(module_qname, env);
-    }
-
-    property_bean = sandesha2_utils_get_property_bean(env, svc);
-    if(!property_bean)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Could not retrieve property bean from service");
-
-        return AXIS2_FAILURE;
     }
 
     temp_prop = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE);

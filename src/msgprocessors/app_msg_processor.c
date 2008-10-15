@@ -323,19 +323,6 @@ sandesha2_app_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
 
-    svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
-    if(!svc)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Service is NULL");
-        return AXIS2_FAILURE;
-    }
-
-    property_bean = sandesha2_utils_get_property_bean(env, svc);
-    if(!property_bean)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
-        return AXIS2_FAILURE;
-    }
 
     property = sandesha2_msg_ctx_get_property(rm_msg_ctx, env, 
         SANDESHA2_APPLICATION_PROCESSING_DONE);
@@ -740,10 +727,21 @@ sandesha2_app_msg_processor_process_in_msg (
 
     sandesha2_next_msg_bean_free(next_msg_bean, env);
 
-    /*in_order_invoke = sandesha2_property_bean_is_in_order(sandesha2_utils_get_property_bean(env, 
-            axis2_conf_ctx_get_conf(conf_ctx, env)), env);*/
+    svc = axis2_msg_ctx_get_svc(app_msg_ctx, env);
+    if(!svc)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Service is NULL");
+        return AXIS2_FAILURE;
+    }
 
+    property_bean = sandesha2_utils_get_property_bean(env, svc);
+    if(!property_bean)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
+        return AXIS2_FAILURE;
+    }
     in_order_invoke =  sandesha2_property_bean_is_in_order(property_bean, env);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "in_order_invoke:%d", in_order_invoke);
 
     /* test code */
     if(axis2_msg_ctx_get_server_side(app_msg_ctx, env))
@@ -2106,6 +2104,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
         return AXIS2_FAILURE;
     }
+    
+    retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
 
     /* If this is a one way message and if use_separate_listener property is set to true we need to 
      * start a listener manager so that create sequence response could be listened at. Note that
@@ -2280,8 +2280,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     {
         sandesha2_msg_ctx_free(create_seq_rm_msg_ctx, env);
     }
-
-    retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
 
     create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
     transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
@@ -2802,6 +2800,8 @@ sandesha2_app_msg_processor_send_app_msg(
         return AXIS2_FAILURE;
     }
 
+    retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env);
+
     relates_to = axis2_msg_ctx_get_relates_to(app_msg_ctx, env);
     if(relates_to)
     {
@@ -3173,7 +3173,6 @@ sandesha2_app_msg_processor_send_app_msg(
             axis2_msg_ctx_get_current_handler_index(app_msg_ctx, env) + 1);
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    retrans_interval = sandesha2_property_bean_get_retrans_interval(property_bean, env);
 
     if(!is_svr_side && (!reply_to_addr || sandesha2_utils_is_anon_uri(env, reply_to_addr)))
     {

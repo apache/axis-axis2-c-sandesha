@@ -17,7 +17,6 @@
 #include <axis2_engine.h>
 #include <axis2_handler_desc.h>
 #include <axutil_array_list.h>
-#include <axis2_svc.h>
 #include <axis2_msg_ctx.h>
 #include <axutil_property.h>
 #include <axis2_conf_ctx.h>
@@ -100,7 +99,6 @@ sandesha2_in_handler_invoke(
     axis2_ctx_t *ctx = NULL;
     axis2_char_t *str_done = NULL;
     axis2_char_t *reinjected_msg = NULL;
-    axis2_svc_t *svc = NULL;
     sandesha2_msg_ctx_t *rm_msg_ctx = NULL;
     sandesha2_msg_processor_t *msg_processor = NULL;
     sandesha2_seq_ack_t *seq_ack = NULL;
@@ -113,7 +111,6 @@ sandesha2_in_handler_invoke(
     axis2_bool_t dropped = AXIS2_FALSE;
     axis2_char_t *value = NULL;
     axutil_property_t *property = NULL;
-    sandesha2_property_bean_t *property_bean = NULL; 
 
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[sandesha2] Start:sandesha2_in_handler_invoke");
@@ -158,23 +155,6 @@ sandesha2_in_handler_invoke(
     }
 
     conf = axis2_conf_ctx_get_conf(conf_ctx, env);
-    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
-    if(!svc)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Axis2 Service is NULL");
-
-        AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_SVC_NULL, AXIS2_FAILURE);
-        return AXIS2_FAILURE;
-    }
-
-    property_bean = sandesha2_utils_get_property_bean(env, svc);
-    if(!property_bean)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Could not retrieve property bean from service");
-
-        return AXIS2_FAILURE;
-    }
 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, msg_ctx);
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
@@ -415,6 +395,9 @@ sandesha2_in_handler_drop_if_duplicate(
                     if(drop)
                     {
                         app_msg_processor = sandesha2_app_msg_processor_create(env);
+                        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                            "[sandesha2] Applicatoin message already received. So current "\
+                            "application message dropped. Sending an ack message");
                         sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, bean_value, 
                             rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr, -1);
                         sandesha2_msg_processor_free(app_msg_processor, env);
@@ -556,6 +539,9 @@ sandesha2_in_handler_process_dropped_msg(
                 else
                 {
                     app_msg_processor = sandesha2_app_msg_processor_create(env);
+                    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                        "[sandesha2] Applicatoin message already received. So current application"\
+                        "message dropped. Sending an ack message");
                     sandesha2_app_msg_processor_send_ack_if_reqd(env, rm_msg_ctx, rcvd_msgs_str, 
                         rmd_sequence_id, storage_mgr, sender_mgr, seq_prop_mgr, -1);
                     

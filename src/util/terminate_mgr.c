@@ -851,6 +851,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     axis2_bool_t is_svr_side = AXIS2_FALSE;
     axis2_char_t *msg_id = NULL;
     axis2_svc_t *svc = NULL;
+    long retrans_delay = -1;
 
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -880,6 +881,10 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Property bean is NULL");
         return AXIS2_FAILURE;
     }
+    
+    terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
+    retrans_delay = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrans_delay:%ld", retrans_delay);
     
     terminate_rm_msg_ctx = sandesha2_msg_creator_create_terminate_seq_msg(env, ack_rm_msg_ctx, 
             rms_sequence_id, internal_sequence_id, seq_prop_mgr);
@@ -1049,7 +1054,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     terminate_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_ctx_ref_key(terminate_sender_bean, env, key);
     /*sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx, AXIS2_TRUE);*/
-    terminate_delay = sandesha2_property_bean_get_terminate_delay(property_bean, env); 
     send_time = sandesha2_utils_get_current_time_in_millis(env) + terminate_delay;
     sandesha2_sender_bean_set_time_to_send(terminate_sender_bean, env, send_time);
 
@@ -1143,7 +1147,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
             while(!res_envelope)
             {
                 axis2_bool_t continue_sending = AXIS2_FALSE;
-                long retrans_delay = -1;
 
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                     "[sandesha2] Terminate Sequence response message not found. So continuing");
@@ -1160,8 +1163,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
                     break;
                 }
 
-                retrans_delay = sandesha2_property_bean_get_retrans_interval(property_bean, env); 
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "retrans_delay:%ld", retrans_delay);
                 AXIS2_SLEEP(retrans_delay);
 
                 if(transport_sender)
