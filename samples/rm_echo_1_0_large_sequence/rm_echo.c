@@ -30,6 +30,7 @@
 #include <ctype.h>
 #include <neethi_policy.h>
 #include <neethi_util.h>
+#include <unistd.h>
 
 #define SANDESHA2_MAX_COUNT 8
 
@@ -209,7 +210,7 @@ int main(int argc, char** argv)
         axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
         axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback1);
         wait_on_callback(env, callback1);
-        AXIS2_SLEEP(1);
+        /*AXIS2_SLEEP(1);*/
     }
     axis2_svc_client_remove_all_headers(svc_client, env);
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);

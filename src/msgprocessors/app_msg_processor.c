@@ -2355,7 +2355,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
                 status = AXIS2_FAILURE;
                 break;
             }
-
             AXIS2_SLEEP(retrans_interval);
 
             if(transport_sender)
@@ -3625,21 +3624,13 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 seq_prop_mgr, sender_mgr);
     }
 
+    sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
+            internal_sequence_id, msg_id);
     /* Resend the application message until timeout or exceed the maximum number of re-sends as
      * specified by Policy.
      */
-    while(AXIS2_TRUE)
+    while(sender_bean)
     {
-        sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
-                internal_sequence_id, msg_id);
-        if(!sender_bean)
-        {
-            /* There is no pending message to send. So exit from the thread. */
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-                    "[sandesha2] There is no pending message to send. So exit from the thread");
-            break;
-        }
-
         /*key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
         app_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, conf_ctx, 
                 AXIS2_TRUE);
@@ -3680,7 +3671,19 @@ sandesha2_app_msg_processor_application_msg_worker_function(
             sandesha2_sender_bean_free(sender_bean, env); 
         }
 
-        AXIS2_SLEEP(retrans_interval);
+        sender_bean = sandesha2_sender_mgr_get_application_msg_to_send(sender_mgr, env, 
+                internal_sequence_id, msg_id);
+        if(sender_bean)
+        {
+            AXIS2_SLEEP(retrans_interval);
+        }
+        if(!sender_bean)
+        {
+            /* There is no pending message to send. So exit from the thread. */
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] There is no pending message to send. So exit from the thread");
+            break;
+        }
     }
 
     if(app_msg_ctx)
