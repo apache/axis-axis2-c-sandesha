@@ -618,12 +618,12 @@ sandesha2_utils_create_new_related_msg_ctx(
     
     out_stream = axis2_msg_ctx_get_transport_out_stream(ref_msg, env);
     axis2_msg_ctx_set_transport_out_stream(new_msg, env, out_stream);
-    property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_IN);
+    /*property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_IN);
     if(property)
     {
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_IN, sandesha2_util_property_clone(
                     env, property));
-    }
+    }*/
 
     axis2_msg_ctx_set_out_transport_info(new_msg, env, axis2_msg_ctx_get_out_transport_info(ref_msg, 
                 env));
@@ -631,12 +631,12 @@ sandesha2_utils_create_new_related_msg_ctx(
     axis2_msg_ctx_set_charset_encoding(new_msg, env, axis2_msg_ctx_get_charset_encoding(ref_msg, 
                 env));
 
-    property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_HEADERS);
+    /*property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_TRANSPORT_HEADERS);
     if(property)
     {
         axis2_msg_ctx_set_property(new_msg, env, AXIS2_TRANSPORT_HEADERS, sandesha2_util_property_clone(
                     env, property));
-    }
+    }*/
 
     paused_phase_name = (axis2_char_t*)axis2_msg_ctx_get_paused_phase_name(ref_msg, env);
 
