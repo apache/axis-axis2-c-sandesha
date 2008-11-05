@@ -586,6 +586,7 @@ sandesha2_utils_create_new_related_msg_ctx(
         axis2_msg_ctx_set_transport_url(new_msg, env, transport_to);
     }
 
+    sandesha2_util_clone_property_map(env, ref_msg, new_msg);
     property = axis2_msg_ctx_get_property(ref_msg, env, AXIS2_WSA_VERSION);
     if(!property)
     {
@@ -1629,3 +1630,41 @@ sandesha2_util_is_rstr_msg(
         return AXIS2_FALSE;
     }
 }
+
+void AXIS2_CALL
+sandesha2_util_clone_property_map(
+    const axutil_env_t * env,
+    axis2_msg_ctx_t *ref_msg_ctx,
+    axis2_msg_ctx_t *new_msg_ctx)
+{
+    axis2_ctx_t *ctx = NULL;
+    axis2_ctx_t *new_ctx = NULL;
+    axutil_hash_t *property_map = NULL;
+
+    ctx = axis2_msg_ctx_get_base(ref_msg_ctx, env);
+    new_ctx = axis2_msg_ctx_get_base(new_msg_ctx, env);
+    property_map = axis2_ctx_get_property_map(ctx, env);
+    
+    if (ctx)
+    {
+        axutil_hash_index_t *index = NULL;
+
+        for (index = axutil_hash_first(property_map, env); index; index = axutil_hash_next(env, 
+                    index))
+        {
+            axutil_property_t *new_property = NULL;
+            void *v = NULL;
+            const void *k = NULL;
+            axis2_char_t *key = NULL;
+            axutil_property_t *property = NULL;
+
+            axutil_hash_this(index, &k, NULL, &v);
+            key = (axis2_char_t *) k;
+            property = (axutil_property_t *) v;
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] property:%s", key);
+            new_property = sandesha2_util_property_clone(env, property);
+            axis2_msg_ctx_set_property(new_msg_ctx, env, key, new_property);
+        }
+    }
+}
+

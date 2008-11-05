@@ -316,6 +316,11 @@ sandesha2_util_is_rstr_msg(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
+void AXIS2_CALL
+sandesha2_util_clone_property_map(
+    const axutil_env_t * env,
+    axis2_msg_ctx_t *ref_msg_ctx,
+    axis2_msg_ctx_t *new_msg_ctx);
 
 /** @} */
 #ifdef __cplusplus
