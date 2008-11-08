@@ -2269,10 +2269,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     sandesha2_sender_bean_set_msg_type(create_sequence_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_mgr_insert(sender_mgr, env, create_sequence_sender_bean);
 
-    /* Store the create sequence message context in the storage */
-    sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, create_seq_msg_ctx, AXIS2_TRUE);
-    AXIS2_FREE(env->allocator, create_sequence_msg_store_key);
-
     conf_ctx = axis2_msg_ctx_get_conf_ctx(create_seq_msg_ctx, env);
     engine = axis2_engine_create(env, conf_ctx);
 
@@ -2320,6 +2316,12 @@ sandesha2_app_msg_processor_send_create_seq_msg(
     if(!is_svr_side && (listener_manager || !reply_to_addr || sandesha2_utils_is_anon_uri(env, 
                     reply_to_addr)))
     {
+        /* Store the create sequence message context in the storage */
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, 
+                create_seq_msg_ctx, AXIS2_TRUE);
+
+        AXIS2_FREE(env->allocator, create_sequence_msg_store_key);
+
         if(axis2_engine_send(engine, env, create_seq_msg_ctx))
         {
             if(!axis2_msg_ctx_get_server_side(create_seq_msg_ctx, env))
@@ -2427,6 +2429,11 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         {
             axis2_engine_free(engine, env);
         }
+        
+        /* Store the create sequence message context in the storage */
+        sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, create_sequence_msg_store_key, 
+                create_seq_msg_ctx, AXIS2_TRUE);
+        AXIS2_FREE(env->allocator, create_sequence_msg_store_key);
 
         /*rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);*/
