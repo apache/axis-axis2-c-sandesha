@@ -43,12 +43,12 @@ build_om_payload_for_echo_svc(
     axiom_element_set_text(seq_om_ele, env, seq, seq_om_node);
     
     om_str = axiom_node_to_string(echo_om_node, env);
-    if (om_str)
+    /*if (om_str)
     {
         printf("\nSending OM : %s\n", om_str);
         AXIS2_FREE(env->allocator, om_str);
         om_str = NULL;
-    }
+    }*/
 
     return echo_om_node;
 }

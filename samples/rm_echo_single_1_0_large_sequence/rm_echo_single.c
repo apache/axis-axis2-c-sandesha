@@ -185,13 +185,13 @@ int main(int argc, char** argv)
         result = axis2_svc_client_send_receive(svc_client, env, payload);
         if(result)
         {
-            axis2_char_t *om_str = NULL;
+            /*axis2_char_t *om_str = NULL;
             om_str = axiom_node_to_string(result, env);
             if (om_str)
             {
                 printf("\nReceived OM : %s\n", om_str);
                 AXIS2_FREE(env->allocator, om_str);
-            }
+            }*/
             printf("\necho client two way single channel invoke SUCCESSFUL!\n");
             result = NULL;
         }
