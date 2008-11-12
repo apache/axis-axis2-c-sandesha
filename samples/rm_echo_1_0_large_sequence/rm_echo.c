@@ -272,7 +272,9 @@ rm_echo_callback_on_complete(
             axis2_char_t *om_str = NULL;
             om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
-                printf("\nReceived OM : %s\n", om_str);
+            {
+                /*printf("\nReceived OM : %s\n", om_str);*/
+            }
             printf("\necho client invoke SUCCESSFUL!\n");
         }
     }    
@@ -304,7 +306,7 @@ void wait_on_callback(
             /* We are done with the callback */
             break;
         }
-        AXIS2_SLEEP(1);
+        /* AXIS2_SLEEP(1); */
     }
     return;
 }

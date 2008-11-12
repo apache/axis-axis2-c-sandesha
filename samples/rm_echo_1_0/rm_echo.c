@@ -211,7 +211,7 @@ int main(int argc, char** argv)
         axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
         axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback1);
         wait_on_callback(env, callback1);
-        AXIS2_SLEEP(1);
+        /*AXIS2_SLEEP(1);*/
     }
 
     axis2_svc_client_remove_all_headers(svc_client, env);
@@ -304,7 +304,7 @@ void wait_on_callback(
             /* We are done with the callback */
             break;
         }
-        AXIS2_SLEEP(1);
+        /*AXIS2_SLEEP(1);*/
     }
     return;
 }

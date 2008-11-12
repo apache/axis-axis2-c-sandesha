@@ -44,7 +44,9 @@ build_om_payload_for_echo_svc(
     
     om_str = axiom_node_to_string(echo_om_node, env);
     if (om_str)
+    {
         printf("\nSending OM : %s\n", om_str);
+    }
 
     return echo_om_node;
 }
