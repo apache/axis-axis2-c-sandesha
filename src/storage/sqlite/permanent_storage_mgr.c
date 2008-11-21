@@ -153,10 +153,10 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx);
 
-/*static axutil_hash_t *AXIS2_CALL
+static axutil_hash_t *AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_property_map_from_string(
     const axutil_env_t *env,
-    axis2_char_t *str);*/
+    axis2_char_t *str);
 
 static axis2_char_t *AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_property_string(
@@ -351,8 +351,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
     axis2_char_t *soap_env_str = NULL;
     axis2_char_t *svc_name = NULL;
     axis2_svc_t *svc = NULL;
-    /*axis2_char_t *persistent_prop_str = NULL;
-    axutil_property_t *prop_property = NULL;*/
+    axis2_char_t *persistent_prop_str = NULL;
 
     storage_mgr_impl = SANDESHA2_INTF_TO_IMPL(storage_mgr);
 
@@ -462,13 +461,10 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
     axis2_msg_ctx_set_wsa_action(msg_ctx, env, sandesha2_msg_store_bean_get_action(msg_store_bean, env));
 
-    /*persistent_prop_str = axutil_strdup(env, sandesha2_msg_store_bean_get_persistent_property_str(
+    persistent_prop_str = axutil_strdup(env, sandesha2_msg_store_bean_get_persistent_property_str(
             msg_store_bean, env));
     
-    prop_property = axutil_property_create_with_args(env, 0, AXIS2_TRUE, 0, persistent_prop_str);
-    axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_PROPERTY_STRING, prop_property);
-
-    if(persistent_prop_str && 0 != axutil_strcmp("", persistent_prop_str))
+    if(persistent_prop_str && axutil_strcmp("", persistent_prop_str))
     {
         axutil_hash_t *map = NULL;
         axutil_hash_index_t *index = NULL;
@@ -498,7 +494,7 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
 
             axutil_hash_free(map, env);
         }  
-    }*/
+    }
 
     if(msg_store_bean)
     {
@@ -738,13 +734,13 @@ sandesha2_permanent_storage_mgr_get_property_string(
     prop_str = axutil_strcat(env, "temp_key", SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, "temp_value", 
             NULL);
     properties = axis2_ctx_get_property_map(axis2_msg_ctx_get_base(msg_ctx, env), env);
-    property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING);
+    /*property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_QUALIFIED_FOR_SENDING);
     if(property)
     {
         axis2_char_t *value = axutil_property_get_value(property, env);
         prop_str = axutil_strcat(env, SANDESHA2_QUALIFIED_FOR_SENDING,
             SANDESHA2_PERSISTANT_PROPERTY_SEPERATOR, value, NULL);
-    }
+    }*/
 
     property = axis2_msg_ctx_get_property(msg_ctx, env, AXIS2_WSA_VERSION);
     if(property)
@@ -833,7 +829,7 @@ sandesha2_permanent_storage_mgr_get_property_string(
     return prop_str;
 }
 
-/*static axutil_hash_t *AXIS2_CALL
+static axutil_hash_t *AXIS2_CALL
 sandesha2_permanent_storage_mgr_get_property_map_from_string(
     const axutil_env_t *env,
     axis2_char_t *str)
@@ -899,7 +895,7 @@ sandesha2_permanent_storage_mgr_get_property_map_from_string(
     }
 
     return map;
-}*/
+}
 
 static axis2_status_t AXIS2_CALL
 sandesha2_permanent_storage_mgr_store_response(
