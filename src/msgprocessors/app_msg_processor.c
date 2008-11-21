@@ -113,9 +113,7 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int retrans_interval,
-    sandesha2_sender_bean_t *create_sequence_sender_bean,
-    axis2_msg_ctx_t *create_seq_msg_ctx);
+    int retrans_interval);
 
 static void * AXIS2_THREAD_FUNC
 sandesha2_app_msg_processor_application_msg_worker_function(
@@ -2443,8 +2441,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
          * exceed the maximum number of re-sends as specified in Policy.
          */
         status = sandesha2_app_msg_processor_start_create_seq_msg_resender(env, conf_ctx, 
-                internal_sequence_id, msg_id, is_svr_side, retrans_interval, 
-                create_sequence_sender_bean, create_seq_msg_ctx);
+                internal_sequence_id, msg_id, is_svr_side, retrans_interval);
     }
 
     if(rm_version)
@@ -2465,9 +2462,7 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     axis2_char_t *internal_sequence_id,
     axis2_char_t *msg_id,
     const axis2_bool_t is_server_side,
-    int retrans_interval,
-    sandesha2_sender_bean_t *create_sequence_sender_bean,
-    axis2_msg_ctx_t *create_seq_msg_ctx)
+    int retrans_interval)
 {
     axutil_thread_t *worker_thread = NULL;
     sandesha2_app_msg_processor_args_t *args = NULL;
@@ -2482,8 +2477,6 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     args->msg_id = msg_id;
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
-    args->bean = create_sequence_sender_bean;
-    args->msg_ctx = create_seq_msg_ctx;
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_create_seq_msg_worker_function, (void*)args);
@@ -2517,13 +2510,11 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_char_t *internal_sequence_id = NULL;
     axis2_bool_t is_server_side = AXIS2_FALSE;
-    sandesha2_sender_bean_t *create_sequence_sender_bean = NULL;
     axis2_char_t *msg_id = NULL;
     /* sandesha2_seq_property_bean_t *rms_sequence_bean = NULL; */
     axis2_bool_t continue_sending = AXIS2_TRUE;
     axis2_transport_out_desc_t *transport_out = NULL;
     axis2_transport_sender_t *transport_sender = NULL;
-    axis2_op_t *create_seq_op = NULL;
     axis2_msg_ctx_t *create_seq_msg_ctx = NULL;
     sandesha2_sender_bean_t *find_sender_bean = NULL;
     sandesha2_sender_bean_t *sender_bean = NULL;
@@ -2541,8 +2532,6 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
     is_server_side = args->is_server_side;
     retrans_interval = args->retrans_interval;
-    create_sequence_sender_bean = (sandesha2_sender_bean_t *) args->bean;
-    create_seq_msg_ctx = (axis2_msg_ctx_t *) args->msg_ctx;
 
     dbname = sandesha2_util_get_dbname(env, conf_ctx);
     storage_mgr = sandesha2_utils_get_storage_mgr(env, dbname);
@@ -2559,32 +2548,32 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
 
     sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
 
-    create_seq_op = axis2_msg_ctx_get_op(create_seq_msg_ctx, env);
-    transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
-    transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
-
-    svc = axis2_msg_ctx_get_svc(create_seq_msg_ctx, env);
-    if(!svc)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[sandesha2][app_msg_processor.c] service is NULL");
-        return AXIS2_FAILURE;
-    }
-
-
     while(sender_bean)
     {
-        if(sender_bean)
+        axis2_char_t *key = NULL;
+
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Sender bean found");
+        key = sandesha2_sender_bean_get_msg_ctx_ref_key(sender_bean, env);
+        if(!create_seq_msg_ctx)
         {
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Sender bean found");
-            sandesha2_sender_bean_free(sender_bean, env);
-            sender_bean = NULL;
+            create_seq_msg_ctx = sandesha2_storage_mgr_retrieve_msg_ctx(storage_mgr, env, key, 
+                    conf_ctx, AXIS2_TRUE);
+            transport_out = axis2_msg_ctx_get_transport_out_desc(create_seq_msg_ctx, env);
+            transport_sender = axis2_transport_out_desc_get_sender(transport_out, env);
+            svc = axis2_msg_ctx_get_svc(create_seq_msg_ctx, env);
+            if(!svc)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[sandesha2] Service is NULL");
+                AXIS2_ERROR_SET(env->error, AXIS2_ERROR_SVC_OR_OP_NOT_FOUND, AXIS2_FAILURE);
+                break;
+            }
         }
 
-        continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, create_sequence_sender_bean, 
-                conf_ctx, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr, svc);
+        continue_sending = sandesha2_msg_retrans_adjuster_adjust_retrans(env, sender_bean, conf_ctx, 
+                storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr, svc);
 
-        sandesha2_sender_mgr_update(sender_mgr, env, create_sequence_sender_bean);
+        sandesha2_sender_mgr_update(sender_mgr, env, sender_bean);
 
         if(!continue_sending)
         {
@@ -2603,8 +2592,14 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
             }
         }
 
-        AXIS2_SLEEP(retrans_interval);
+        sandesha2_sender_bean_free(sender_bean, env);
+        sender_bean = NULL;
+
         sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
+        if(sender_bean)
+        {
+            AXIS2_SLEEP(retrans_interval);
+        }
     }
 
     if(find_sender_bean)
