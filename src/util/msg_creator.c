@@ -673,7 +673,6 @@ sandesha2_msg_creator_create_terminate_seq_msg(
 
     sandesha2_msg_creator_finalize_creation(env, ref_msg_ctx, terminate_seq_msg_ctx);
     axis2_msg_ctx_set_property(terminate_seq_msg_ctx, env, AXIS2_TRANSPORT_IN, NULL);
-    axis2_msg_ctx_set_server_side(terminate_seq_msg_ctx, env, AXIS2_FALSE);
 
     return terminate_rm_msg;
 }
