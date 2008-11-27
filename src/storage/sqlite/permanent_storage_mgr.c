@@ -378,9 +378,16 @@ sandesha2_permanent_storage_mgr_retrieve_msg_ctx(
             axis2_op_t *op = NULL;
 
             op_name = sandesha2_msg_store_bean_get_op(msg_store_bean, env);
-            op = axis2_svc_get_op_with_name(svc, env, op_name);
-            mep = sandesha2_msg_store_bean_get_op_mep(msg_store_bean, env);
-            axis2_op_set_msg_exchange_pattern(op, env, mep);
+            if(op_name)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] op_name:%s", op_name);
+                op = axis2_svc_get_op_with_name(svc, env, op_name);
+            }
+            if(op)
+            {
+                mep = sandesha2_msg_store_bean_get_op_mep(msg_store_bean, env);
+                axis2_op_set_msg_exchange_pattern(op, env, mep);
+            }
             axis2_msg_ctx_set_svc(msg_ctx, env, svc);
         }
     }
