@@ -93,7 +93,7 @@ int main(int argc, char** argv)
     {
         axis2_options_set_to(options, env, endpoint_ref);
     }
-    /*axis2_options_set_action(options, env, "urn:wsrm:Ping");*/
+    axis2_options_set_action(options, env, "urn:wsrm:Ping");
 
     /* Set up deploy folder. It is from the deploy folder, the configuration is 
      * picked up using the axis2.xml file.
