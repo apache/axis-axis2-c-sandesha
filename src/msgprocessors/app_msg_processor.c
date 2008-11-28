@@ -2355,6 +2355,8 @@ sandesha2_app_msg_processor_send_create_seq_msg(
                 status = AXIS2_FAILURE;
                 break;
             }
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Sleep before resending application message");
             AXIS2_SLEEP(retrans_interval);
 
             if(transport_sender)
@@ -2598,6 +2600,8 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
         sender_bean = sandesha2_sender_mgr_find_unique(sender_mgr, env, find_sender_bean);
         if(sender_bean)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Sleep before resending application message");
             AXIS2_SLEEP(retrans_interval);
         }
     }
@@ -3060,6 +3064,8 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                     internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Create sequence response has not yet arrived. So sleep");
             AXIS2_SLEEP(1);
         }
 
@@ -3198,6 +3204,8 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                     internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Create sequence response has not yet arrived. So sleep");
             AXIS2_SLEEP(1);
         }
 
@@ -3316,6 +3324,8 @@ sandesha2_app_msg_processor_send_app_msg(
                     break;
                 }
 
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Sleep before resending application message");
                 AXIS2_SLEEP(retrans_interval);
 
                 /* This is neccessary to avoid a double free */
@@ -3574,6 +3584,8 @@ sandesha2_app_msg_processor_application_msg_worker_function(
 
         rms_sequence_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
                 internal_sequence_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Create sequence response has not yet arrived. So sleep");
         AXIS2_SLEEP(1);
     }
 
@@ -3677,6 +3689,8 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 internal_sequence_id, msg_id);
         if(sender_bean)
         {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                    "[sandesha2] Sleep before resending application message");
             AXIS2_SLEEP(retrans_interval);
         }
         if(!sender_bean)
