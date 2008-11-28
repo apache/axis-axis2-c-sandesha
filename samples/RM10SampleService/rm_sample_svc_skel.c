@@ -108,7 +108,21 @@ rm_sample_svc_invoke(
 
         if(op_name)
         {
-            if (!axutil_strcmp(op_name, "echoString"))
+			axis2_endpoint_ref_t* to_epr = NULL;
+            to_epr = axis2_msg_ctx_get_to(msg_ctx, env);
+
+            if (to_epr)
+            {
+                const axis2_char_t* to_address = NULL;
+                to_address = axis2_endpoint_ref_get_address(to_epr, env);
+
+                if (to_address && strstr(to_address, AXIS2_ANON_SERVICE))
+                {
+                    axis2_msg_ctx_set_wsa_action(msg_ctx, env, AXIS2_ANON_OUT_IN_OP);
+                }
+            }
+
+			if (!axutil_strcmp(op_name, "echoString"))
             {
                 return rm_sample_svc_echo(env, node);
             }
