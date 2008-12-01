@@ -1,5 +1,22 @@
-samplesdir=$(prefix)/samples
-policydir=$(prefix)/bin/samples/sandesha2/policy
-SUBDIRS = resources RM10SampleService RM11SampleService rm_echo_1_0 rm_echo_1_1 rm_ping_1_0 rm_ping_1_1 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1 rm_ping_1_0_large_sequence rm_echo_single_1_0_large_sequence rm_echo_1_0_large_sequence
-samples_DATA= Makefile.am Makefile.in
-policy_DATA= policy/rm10-policy.xml policy/rm11-policy.xml
+samplesdir = $(prefix)/samples
+
+policydir = $(prefix)/bin/samples/sandesha2/policy
+
+SUBDIRS = resources \
+		  RM10SampleService \
+		  RM11SampleService \
+		  rm_echo_1_0 \
+		  rm_echo_1_1 \
+		  rm_ping_1_0 \
+		  rm_ping_1_1 \
+		  rm_mtom_1_0 \
+		  rm_echo_single_1_0 \
+		  rm_echo_single_1_1 \
+		  rm_ping_1_0_large_sequence \
+		  rm_echo_single_1_0_large_sequence \
+		  rm_echo_1_0_large_sequence \
+		  rm_amqp
+
+samples_DATA = Makefile.am Makefile.in
+
+policy_DATA = policy/rm10-policy.xml policy/rm11-policy.xml

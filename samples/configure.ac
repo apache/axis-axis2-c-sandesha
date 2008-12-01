@@ -81,7 +81,15 @@ AC_CONFIG_FILES([Makefile \
     rm_ping_1_0_large_sequence/Makefile \
     rm_ping_1_1/Makefile \
     rm_mtom_1_0/Makefile \
-    resources/Makefile
+    resources/Makefile \
+	rm_amqp/Makefile \
+	rm_amqp/rm_echo_dual_1_0/Makefile \
+	rm_amqp/rm_echo_dual_1_1/Makefile \
+	rm_amqp/rm_echo_single_1_0/Makefile \
+	rm_amqp/rm_echo_single_1_1/Makefile \
+	rm_amqp/rm_mtom_1_0/Makefile \
+	rm_amqp/rm_ping_1_0/Makefile \
+	rm_amqp/rm_ping_1_1/Makefile
     ])
     
 AC_OUTPUT
