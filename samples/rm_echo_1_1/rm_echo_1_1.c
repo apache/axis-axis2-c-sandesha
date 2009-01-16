@@ -67,12 +67,11 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_callback_t *callback = NULL;
     axis2_callback_t *callback2 = NULL;
-    axis2_callback_t *callback3 = NULL;
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_TRUE;
     axis2_char_t *seq_key = NULL;
-    int c;
+    int i, c;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
    
@@ -203,26 +202,26 @@ int main(int argc, char** argv)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
-    
-    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
-    callback = axis2_callback_create(env);
-    axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
-    axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
-    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback);
-    wait_on_callback(env, callback);
+   
+    for(i = 1; i < 4; i++)
+    {
+        axis2_char_t echo_str[7];
 
-    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
+        sprintf(echo_str, "%s%d", "echo", i);
+
+        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
+        callback = axis2_callback_create(env);
+        axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
+        axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
+        axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback);
+        wait_on_callback(env, callback);
+    }
+
+    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback2);
-    wait_on_callback(env, callback2);
-
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    callback3 = axis2_callback_create(env);
-    axis2_callback_set_on_complete(callback3, rm_echo_callback_on_complete);
-    axis2_callback_set_on_error(callback3, rm_echo_callback_on_error);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback3);
+    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback2);
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
@@ -273,10 +272,10 @@ rm_echo_callback_on_complete(
         }
         else
         {
-            axis2_char_t *om_str = NULL;
+            /*axis2_char_t *om_str = NULL;
             om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
-                printf("\nReceived OM : %s\n", om_str);
+                printf("\nReceived OM : %s\n", om_str);*/
             printf("\necho client invoke SUCCESSFUL!\n");
         }
     }    
