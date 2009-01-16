@@ -184,7 +184,7 @@ int main(int argc, char** argv)
             property);
     }
 
-    for(i = 1; i < 3; i++)
+    for(i = 1; i < 4; i++)
     {
         axiom_node_t *payload = NULL;
         axis2_char_t echo_str[7];
