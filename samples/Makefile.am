@@ -15,7 +15,8 @@ SUBDIRS = resources \
 		  rm_ping_1_0_large_sequence \
 		  rm_echo_single_1_0_large_sequence \
 		  rm_echo_1_0_large_sequence \
-		  rm_amqp
+		  rm_amqp \
+		  rm_echo_single_1_1_large_sequence
 
 samples_DATA = Makefile.am Makefile.in
 
