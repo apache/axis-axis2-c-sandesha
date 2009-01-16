@@ -10,6 +10,7 @@ SUBDIRS = resources \
 		  rm_echo_1_1_large_sequence \
 		  rm_ping_1_0 \
 		  rm_ping_1_1 \
+		  rm_ping_1_1_large_sequence \
 		  rm_mtom_1_0 \
 		  rm_echo_single_1_0 \
 		  rm_echo_single_1_1 \
