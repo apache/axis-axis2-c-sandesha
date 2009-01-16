@@ -177,7 +177,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, AXIS2_TIMEOUT_IN_SECONDS, 
             property);
     }
-    for(i = 1; i < 100; i++)
+    for(i = 1; i < 101; i++)
     {
         axis2_char_t echo_str[7];
         sprintf(echo_str, "%s%d", "echo", i);
