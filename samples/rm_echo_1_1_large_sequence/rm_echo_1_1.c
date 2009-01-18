@@ -31,10 +31,8 @@
 #include <ctype.h>
 #include <neethi_util.h>
 #include <neethi_policy.h>
-#include <unistd.h>
 
 #define SANDESHA2_MAX_COUNT 4
-extern int usleep (__useconds_t __useconds);
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -310,7 +308,7 @@ void wait_on_callback(
             /* We are done with the callback */
             return;
         }
-        usleep(100000);
+        AXIS2_USLEEP(100000);
     }
     return;
 }
