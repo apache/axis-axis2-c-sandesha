@@ -50406,6 +50406,7 @@ SQLITE_PRIVATE void sqlite3DeleteFrom(
   int triggers_exist = 0;      /* True if any triggers exist */
 #endif
 
+  sContext.zAuthContext = NULL;
   sContext.pParse = 0;
   db = pParse->db;
   if( pParse->nErr || db->mallocFailed ){
@@ -61502,6 +61503,7 @@ SQLITE_PRIVATE void sqlite3Update(
   int newIdx      = -1;  /* index of trigger "new" temp table       */
   int oldIdx      = -1;  /* index of trigger "old" temp table       */
 
+  sContext.zAuthContext = NULL;
   sContext.pParse = 0;
   db = pParse->db;
   if( pParse->nErr || db->mallocFailed ){
