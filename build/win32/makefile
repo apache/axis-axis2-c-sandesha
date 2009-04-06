@@ -60,8 +60,10 @@ distdir:
 	if not exist $(SANDESHADISTDIR)\lib mkdir $(SANDESHADISTDIR)\lib
 	if not exist $(SANDESHADISTDIR)\include mkdir $(SANDESHADISTDIR)\include
 	if not exist $(SANDESHADISTDIR)\samples mkdir $(SANDESHADISTDIR)\samples
-	if not exist $(SANDESHADISTDIR)\bin\samples mkdir $(SANDESHADISTDIR)\bin\samples
-	if not exist $(SANDESHADISTDIR)\bin\samples\sandesha2 mkdir $(SANDESHADISTDIR)\bin\samples\sandesha2
+	if not exist $(SANDESHADISTDIR)\samples\bin mkdir $(SANDESHADISTDIR)\samples\bin
+	if not exist $(SANDESHADISTDIR)\samples\bin\sandesha2 mkdir $(SANDESHADISTDIR)\samples\bin\sandesha2
+	if not exist $(SANDESHADISTDIR)\samples\src mkdir $(SANDESHADISTDIR)\samples\src
+	if not exist $(SANDESHADISTDIR)\samples\src\sandesha2 mkdir $(SANDESHADISTDIR)\samples\src\sandesha2
 	if not exist $(SANDESHADISTDIR)\services\RM10SampleService mkdir $(SANDESHADISTDIR)\services\RM10SampleService
 	if not exist $(SANDESHADISTDIR)\services\RM11SampleService mkdir $(SANDESHADISTDIR)\services\RM11SampleService
 	if not exist $(SANDESHADISTDIR)\config mkdir $(SANDESHADISTDIR)\config
@@ -102,9 +104,9 @@ copy_extra:
 	if exist $(SANDESHASRC)\docs xcopy /E /I /Y $(SANDESHASRC)\docs $(SANDESHADISTDIR)\docs
 
 copy_samples:
-	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples
-	@del /s /q $(SANDESHADISTDIR)\samples\*.am
-	@del /q $(SANDESHADISTDIR)\samples\*.*
+	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples\src\sandesha2
+	@del /s /q $(SANDESHADISTDIR)\samples\src\sandesha2\*.am
+	@del /q $(SANDESHADISTDIR)\samples\src\sandesha2\*.*
 
 copy_include:
 	@xcopy /E $(SANDESHASRC)\include $(SANDESHADISTDIR)\include
@@ -230,84 +232,84 @@ sandesha2_client: $(SANDESHADISTDIR)\lib\$(SANDESHA_CLIENT).dll
 	
 ### sample clients
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_0\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_ping_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0.exe
+rm_ping_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0_large_sequence.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0_large_sequence.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_ping_1_0_large_sequence: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_0_large_sequence.exe
+rm_ping_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_1.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_1\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_1.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_1.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_ping_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_ping_1_1.exe 
+rm_ping_1_1: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_1.exe 
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_echo_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0.exe
+rm_echo_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0_large_sequence.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0_large_sequence.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_echo_1_0_large_sequence: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_0_large_sequence.exe
+rm_echo_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe
 	
 	
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_1\*.obj \
-	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_1.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 
-rm_echo_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_1_1.exe
+rm_echo_1_1: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_1.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_mtom_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_mtom_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_mtom_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-rm_mtom_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_mtom_1_0.exe
+rm_mtom_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_mtom_1_0.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0\*.obj \
 	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-rm_echo_single_1_0: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0.exe
+rm_echo_single_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0_large_sequence.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence\*.obj \
 	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0_large_sequence.exe
+	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-rm_echo_single_1_0_large_sequence: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_0_large_sequence.exe
+rm_echo_single_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe
 
-$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe :
+$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\ /c
 	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\*.obj \
-	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe
+	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib /OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
-rm_echo_single_1_1: $(SANDESHADISTDIR)\bin\samples\sandesha2\rm_echo_single_1_1.exe
+rm_echo_single_1_1: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe
 
 
 all_clients: rm_ping_1_0 rm_ping_1_1 rm_echo_1_1 rm_echo_1_0 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1 rm_echo_single_1_0_large_sequence rm_echo_1_0_large_sequence rm_ping_1_0_large_sequence
