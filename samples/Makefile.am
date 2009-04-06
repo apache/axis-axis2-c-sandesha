@@ -1,6 +1,6 @@
-samplesdir = $(prefix)/samples
+#samplesdir = $(prefix)/samples
 
-policydir = $(prefix)/bin/samples/sandesha2/policy
+policydir = $(prefix)/samples/bin/sandesha2/policy
 
 SUBDIRS = resources \
 		  RM10SampleService \
@@ -20,6 +20,6 @@ SUBDIRS = resources \
 		  rm_amqp \
 		  rm_echo_single_1_1_large_sequence
 
-samples_DATA = Makefile.am Makefile.in
+#samples_DATA = Makefile.am Makefile.in
 
 policy_DATA = policy/rm10-policy.xml policy/rm11-policy.xml
