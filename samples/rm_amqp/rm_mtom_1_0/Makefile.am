@@ -1,4 +1,4 @@
-prgbindir = $(prefix)/bin/samples/sandesha2/amqp
+prgbindir = $(prefix)/samples/bin/sandesha2/amqp
 
 prgbin_PROGRAMS = rm_mtom_1_0
 
