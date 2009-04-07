@@ -1,7 +1,5 @@
-prgbindir=$(prefix)/bin/samples/sandesha2
+prgbindir=$(prefix)/samples/bin/sandesha2
 prgbin_PROGRAMS = rm_ping_1_1_large_sequence
-samplesdir=$(prefix)/samples/client/rm_ping_1_1_large_sequence
-samples_DATA=rm_ping_1_1.c Makefile.am Makefile.in
 rm_ping_1_1_large_sequence_SOURCES = rm_ping_1_1.c
 
 rm_ping_1_1_large_sequence_LDADD   =  \

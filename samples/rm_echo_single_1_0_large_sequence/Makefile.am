@@ -1,7 +1,5 @@
-prgbindir=$(prefix)/bin/samples/sandesha2
+prgbindir=$(prefix)/samples/bin/sandesha2
 prgbin_PROGRAMS = rm_echo_single_1_0_large_sequence
-samplesdir=$(prefix)/samples/client/rm_echo_single_1_0_large_sequence
-samples_DATA=rm_echo_single.c Makefile.am Makefile.in
 rm_echo_single_1_0_large_sequence_SOURCES = rm_echo_single.c echo_util.c
 
 rm_echo_single_1_0_large_sequence_LDADD   =  \

@@ -1,7 +1,5 @@
-prgbindir=$(prefix)/bin/samples/sandesha2
+prgbindir=$(prefix)/samples/bin/sandesha2
 prgbin_PROGRAMS = rm_mtom_1_0
-samplesdir=$(prefix)/samples/client/rm_mtom_1_0
-samples_DATA=rm_mtom_1_0.c Makefile.am Makefile.in
 rm_mtom_1_0_SOURCES = rm_mtom_1_0.c mtom_util.c
 
 rm_mtom_1_0_LDADD   =  \
