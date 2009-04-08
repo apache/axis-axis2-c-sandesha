@@ -63,7 +63,7 @@ distdir:
 	if not exist $(SANDESHADISTDIR)\samples\bin mkdir $(SANDESHADISTDIR)\samples\bin
 	if not exist $(SANDESHADISTDIR)\samples\bin\sandesha2 mkdir $(SANDESHADISTDIR)\samples\bin\sandesha2
 	if not exist $(SANDESHADISTDIR)\samples\src mkdir $(SANDESHADISTDIR)\samples\src
-	if not exist $(SANDESHADISTDIR)\samples\src\sandesha2 mkdir $(SANDESHADISTDIR)\samples\src\sandesha2
+	if not exist $(SANDESHADISTDIR)\samples\src\sandesha2c mkdir $(SANDESHADISTDIR)\samples\src\sandesha2c
 	if not exist $(SANDESHADISTDIR)\services\RM10SampleService mkdir $(SANDESHADISTDIR)\services\RM10SampleService
 	if not exist $(SANDESHADISTDIR)\services\RM11SampleService mkdir $(SANDESHADISTDIR)\services\RM11SampleService
 	if not exist $(SANDESHADISTDIR)\config mkdir $(SANDESHADISTDIR)\config
@@ -104,9 +104,9 @@ copy_extra:
 	if exist $(SANDESHASRC)\docs xcopy /E /I /Y $(SANDESHASRC)\docs $(SANDESHADISTDIR)\docs
 
 copy_samples:
-	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples\src\sandesha2
-	@del /s /q $(SANDESHADISTDIR)\samples\src\sandesha2\*.am
-	@del /q $(SANDESHADISTDIR)\samples\src\sandesha2\*.*
+	@xcopy /E $(SANDESHASRC)\samples $(SANDESHADISTDIR)\samples\src\sandesha2c
+	@del /s /q $(SANDESHADISTDIR)\samples\src\sandesha2c\*.am
+	@del /q $(SANDESHADISTDIR)\samples\src\sandesha2c\*.*
 
 copy_include:
 	@xcopy /E $(SANDESHASRC)\include $(SANDESHADISTDIR)\include
