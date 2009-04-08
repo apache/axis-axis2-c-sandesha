@@ -11,7 +11,7 @@ rm_ping_1_0_LDADD   =  \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-                    -lsandesha2_client \
+                    ../../src/client/libsandesha2_client.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

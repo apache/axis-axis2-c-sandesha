@@ -10,7 +10,7 @@ rm_mtom_1_0_LDADD = ../../../src/core/libsandesha2.la \
                     -laxis2_engine \
                     -laxis2_parser \
                     -lpthread \
-                    -lsandesha2_client \
+                    ../../../src/client/libsandesha2_client.la \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 
