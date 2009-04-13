@@ -1041,9 +1041,11 @@ sandesha2_permanent_storage_mgr_create_db(
 
     #if !defined(WIN32)
     {
+        int ret = -1;
+
         axis2_char_t permission_str[256];
         sprintf(permission_str, "chmod 777 %s", dbname); 
-        system(permission_str);
+        ret = system(permission_str);
     }
     #endif
 

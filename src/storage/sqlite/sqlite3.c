@@ -17117,7 +17117,8 @@ static int unixRandomness(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
       pid = getpid();
       memcpy(&zBuf[sizeof(t)], &pid, sizeof(pid));
     }else{
-      read(fd, zBuf, nBuf);
+      int ret = -1;
+      ret = read(fd, zBuf, nBuf);
       close(fd);
     }
   }
