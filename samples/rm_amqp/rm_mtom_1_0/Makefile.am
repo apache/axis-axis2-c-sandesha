@@ -16,3 +16,5 @@ rm_mtom_1_0_LDADD = ../../../src/core/libsandesha2.la \
 
 INCLUDES = @AXIS2INC@ \
 		   -I../../../include 
+
+EXTRA_DIST=mtom_util.h
