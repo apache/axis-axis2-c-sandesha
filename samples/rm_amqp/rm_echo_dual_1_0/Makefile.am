@@ -17,3 +17,5 @@ rm_echo_dual_1_0_LDADD = ../../../src/core/libsandesha2.la \
 INCLUDES = -I../../../include \
 		   -I../../../include/sandesha2 \
 		   @AXIS2INC@
+
+EXTRA_DIST=echo_util.h
