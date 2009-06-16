@@ -182,6 +182,7 @@ sandesha2_permanent_bean_mgr_create(
     sandesha2_permanent_bean_mgr_t *bean_mgr = NULL;
     bean_mgr = AXIS2_MALLOC(env->allocator, 
         sizeof(sandesha2_permanent_bean_mgr_t));
+    bean_mgr->dbname = NULL;
     if(dbname)
         bean_mgr->dbname = axutil_strdup(env, dbname);
     return bean_mgr;
