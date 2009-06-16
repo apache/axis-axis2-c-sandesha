@@ -2541,8 +2541,6 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr = sandesha2_permanent_sender_mgr_create(env, dbname);
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_internal_sequence_id:%s", internal_sequence_id);
-
     find_sender_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_type(find_sender_bean, env, SANDESHA2_MSG_TYPE_CREATE_SEQ);
     sandesha2_sender_bean_set_internal_seq_id(find_sender_bean, env, internal_sequence_id);
@@ -2634,6 +2632,11 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
     if(seq_prop_mgr)
     {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
+    if(internal_sequence_id)
+    {
+        AXIS2_FREE(env->allocator, internal_sequence_id);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
@@ -3467,7 +3470,7 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
     args->env = axutil_init_thread_env(env);
     args->conf_ctx = conf_ctx;
-    args->internal_sequence_id = internal_sequence_id;
+    args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
     args->msg_id = msg_id;
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
@@ -3730,6 +3733,16 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     if(seq_prop_mgr)
     {
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
+    }
+
+    if(msg_id)
+    {
+        AXIS2_FREE(env->allocator, msg_id);
+    }
+    
+    if(internal_sequence_id)
+    {
+        AXIS2_FREE(env->allocator, internal_sequence_id);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
