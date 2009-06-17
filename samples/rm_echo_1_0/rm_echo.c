@@ -31,7 +31,7 @@
 #include <neethi_policy.h>
 #include <neethi_util.h>
 
-#define SANDESHA2_MAX_COUNT 2
+#define SANDESHA2_MAX_COUNT 4
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -271,7 +271,9 @@ rm_echo_callback_on_complete(
             axis2_char_t *om_str = NULL;
             om_str = axiom_node_to_string(ret_node, env);
             if (om_str)
-                printf("\nReceived OM : %s\n", om_str);
+            {
+                /*printf("\nReceived OM : %s\n", om_str);*/
+            }
             printf("\necho client invoke SUCCESSFUL!\n");
         }
     }    

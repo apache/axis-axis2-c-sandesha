@@ -300,15 +300,14 @@ void wait_on_callback(
 {
     /** Wait till callback is complete. Simply keep the parent thread running
        until our on_complete or on_error is invoked */
-    int count = 30;
-    while(count-- > 0)
+    while(1)
     {
         if (axis2_callback_get_complete(callback, env))
         {
             /* We are done with the callback */
-            return;
+            break;
         }
-        AXIS2_USLEEP(100000);
+        /*AXIS2_SLEEP(1);*/
     }
     return;
 }
