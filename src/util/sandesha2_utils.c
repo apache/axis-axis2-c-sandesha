@@ -222,7 +222,7 @@ sandesha2_utils_get_property_bean(
 {
     axutil_param_t *param = NULL;
     sandesha2_property_bean_t *property_bean = NULL; 
-    
+
     AXIS2_PARAM_CHECK(env->error, svc, NULL);
 
     /*axutil_allocator_switch_to_global_pool(env->allocator);*/

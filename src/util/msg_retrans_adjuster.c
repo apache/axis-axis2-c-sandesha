@@ -86,9 +86,12 @@ sandesha2_msg_retrans_adjuster_adjust_retrans(
     }
 
     internal_sequence_id = sandesha2_sender_bean_get_internal_seq_id(sender_bean, env);
-   
+  
     property_bean = sandesha2_utils_get_property_bean(env, svc);
-    max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, env);
+    if(property_bean)
+    {
+        max_attempts = sandesha2_property_bean_get_max_retrans_count(property_bean, env);
+    }
 
     sent_count = sandesha2_sender_bean_get_sent_count(sender_bean, env) + 1;
     sandesha2_sender_bean_set_sent_count(sender_bean, env, sent_count);
