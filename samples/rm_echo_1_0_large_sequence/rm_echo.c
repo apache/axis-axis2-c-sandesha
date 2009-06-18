@@ -301,7 +301,7 @@ void wait_on_callback(
             /* We are done with the callback */
             break;
         }
-        AXIS2_USLEEP(100000);
+        AXIS2_SLEEP(1);
     }
     return;
 }
