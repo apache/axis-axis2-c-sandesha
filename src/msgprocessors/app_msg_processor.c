@@ -2472,13 +2472,15 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Entry:sandesha2_app_msg_processor_start_create_seq_msg_resender");
     
+    axutil_allocator_switch_to_global_pool(env->allocator);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
     args->env = axutil_init_thread_env(env);
     args->conf_ctx = conf_ctx;
-    args->internal_sequence_id = internal_sequence_id;
-    args->msg_id = msg_id;
+    args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
+    args->msg_id = axutil_strdup(env, msg_id);
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_create_seq_msg_worker_function, (void*)args);
@@ -2531,7 +2533,7 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
 
     conf_ctx = args->conf_ctx;
     msg_id = args->msg_id;
-    internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
+    internal_sequence_id = args->internal_sequence_id;
     is_server_side = args->is_server_side;
     retrans_interval = args->retrans_interval;
 
@@ -3467,15 +3469,17 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Entry:sandesha2_app_msg_processor_start_application_msg_resender");
     
+    axutil_allocator_switch_to_global_pool(env->allocator);
     args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
     args->env = axutil_init_thread_env(env);
     args->conf_ctx = conf_ctx;
     args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
-    args->msg_id = msg_id;
+    args->msg_id = axutil_strdup(env, msg_id);
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
     args->msg_ctx = app_msg_ctx;
     args->sequence = sequence;
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_application_msg_worker_function, (void*)args);
@@ -3532,8 +3536,8 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         "[sandesha2] Entry:sandesha2_app_msg_processor_application_msg_worker_function");
     conf_ctx = args->conf_ctx;
     sequence = args->sequence;
-    msg_id = axutil_strdup(env, args->msg_id);
-    internal_sequence_id = axutil_strdup(env, args->internal_sequence_id);
+    msg_id = args->msg_id;
+    internal_sequence_id = args->internal_sequence_id;
     is_server_side = args->is_server_side;
     retrans_interval = args->retrans_interval;
     dbname = sandesha2_util_get_dbname(env, conf_ctx);

@@ -87,9 +87,16 @@ sandesha2_seq_property_retrieve_callback(
     char **col_name)
 {
     int i = 0;
-    sandesha2_bean_mgr_args_t *args = (sandesha2_bean_mgr_args_t *) not_used;
-    const axutil_env_t *env = args->env;
+    sandesha2_bean_mgr_args_t *args = NULL;
+    const axutil_env_t *env = NULL;
     sandesha2_seq_property_bean_t *bean = NULL;
+
+    args = (sandesha2_bean_mgr_args_t *) not_used;
+    if(args)
+    {
+        args->data = NULL;
+    } 
+    env = args->env;
     if(argc < 1)
     {
         args->data = NULL;
