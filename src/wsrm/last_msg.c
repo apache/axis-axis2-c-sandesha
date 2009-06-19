@@ -63,6 +63,26 @@ sandesha2_last_msg_create(
 	return last_msg;
 }
 
+AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
+sandesha2_last_msg_clone(
+    const axutil_env_t *env, 
+    sandesha2_last_msg_t *last_msg)
+{
+    sandesha2_last_msg_t *rm_last_msg = NULL;
+    AXIS2_PARAM_CHECK(env->error, last_msg, NULL);
+    
+    rm_last_msg = sandesha2_last_msg_create(env, sandesha2_last_msg_get_namespace_value(last_msg, 
+                env));
+	
+    if(!rm_last_msg)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+	}
+    
+	return rm_last_msg;
+}
+
 axis2_status_t AXIS2_CALL
 sandesha2_last_msg_free_void_arg(
     void *last_msg,

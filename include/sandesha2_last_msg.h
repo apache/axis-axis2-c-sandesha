@@ -54,6 +54,11 @@ sandesha2_last_msg_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
 
+AXIS2_EXTERN sandesha2_last_msg_t* AXIS2_CALL
+sandesha2_last_msg_clone(
+    const axutil_env_t *env, 
+    sandesha2_last_msg_t *last_msg);
+
 axis2_status_t AXIS2_CALL 
 sandesha2_last_msg_free(
     sandesha2_last_msg_t *last_msg, 

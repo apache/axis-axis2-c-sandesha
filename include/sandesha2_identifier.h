@@ -58,6 +58,11 @@ AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
 sandesha2_identifier_create(
     const axutil_env_t *env, 
     axis2_char_t *ns_value);
+
+AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
+sandesha2_identifier_clone(
+    const axutil_env_t *env,  
+    sandesha2_identifier_t *identifier);
                     	
 axis2_char_t * AXIS2_CALL
 sandesha2_identifier_get_identifier(

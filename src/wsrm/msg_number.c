@@ -66,6 +66,28 @@ sandesha2_msg_number_create(
 	return msg_number;
 }
 
+AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
+sandesha2_msg_number_clone(
+    const axutil_env_t *env,  
+    sandesha2_msg_number_t *msg_number)
+{
+    sandesha2_msg_number_t *rm_msg_number = NULL;
+    AXIS2_PARAM_CHECK(env->error, msg_number, NULL);
+    
+    rm_msg_number =  (sandesha2_msg_number_t *) sandesha2_msg_number_create(env, 
+            sandesha2_msg_number_get_namespace_value(msg_number, env));
+	
+    if(!rm_msg_number)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+	}
+    sandesha2_msg_number_set_msg_num(rm_msg_number, env, sandesha2_msg_number_get_msg_num(msg_number, 
+                env));
+    
+	return rm_msg_number;
+}
+
 axis2_status_t AXIS2_CALL
 sandesha2_msg_number_free_void_arg(
     void *msg_num,

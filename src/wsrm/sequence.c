@@ -71,6 +71,32 @@ sandesha2_seq_create(
 	return seq;
 }
 
+AXIS2_EXTERN sandesha2_seq_t* AXIS2_CALL
+sandesha2_seq_clone(
+    const axutil_env_t *env,  
+    sandesha2_seq_t *sequence)
+{
+    sandesha2_seq_t *rm_sequence = NULL;
+    AXIS2_PARAM_CHECK(env->error, sequence, NULL);
+    
+    rm_sequence = sandesha2_seq_create(env, sandesha2_seq_get_namespace_value (sequence, env));
+	
+    if(!rm_sequence)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+	}
+
+    sandesha2_seq_set_identifier(rm_sequence, env, sandesha2_identifier_clone(env, 
+                sandesha2_seq_get_identifier(sequence, env)));
+    sandesha2_seq_set_msg_num(rm_sequence, env, sandesha2_msg_number_clone(env, 
+                sandesha2_seq_get_msg_num(sequence, env)));
+    sandesha2_seq_set_last_msg(rm_sequence, env, sandesha2_last_msg_clone(env, 
+                sandesha2_seq_get_last_msg(sequence, env)));
+    
+	return rm_sequence;
+}
+
 axis2_status_t AXIS2_CALL
 sandesha2_seq_free_void_arg(
     void *seq,

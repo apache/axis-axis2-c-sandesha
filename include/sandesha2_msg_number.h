@@ -53,6 +53,11 @@ sandesha2_msg_number_create(
     const axutil_env_t *env,
     axis2_char_t *ns_value);
 
+AXIS2_EXTERN sandesha2_msg_number_t* AXIS2_CALL
+sandesha2_msg_number_clone(
+    const axutil_env_t *env,  
+    sandesha2_msg_number_t *msg_number);
+
 axis2_status_t AXIS2_CALL
 sandesha2_msg_number_free_void_arg(
     void *msg_num,

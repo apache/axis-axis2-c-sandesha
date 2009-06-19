@@ -51,6 +51,11 @@ sandesha2_seq_create(
     const axutil_env_t *env, 
 	axis2_char_t *ns_value);
 
+AXIS2_EXTERN sandesha2_seq_t* AXIS2_CALL
+sandesha2_seq_clone(
+    const axutil_env_t *env,  
+    sandesha2_seq_t *sequence);
+
 axis2_status_t AXIS2_CALL
 sandesha2_seq_free_void_arg(
     void *seq,

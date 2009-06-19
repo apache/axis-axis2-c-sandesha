@@ -62,6 +62,28 @@ sandesha2_identifier_create(
 	return identifier;
 }
 
+AXIS2_EXTERN sandesha2_identifier_t* AXIS2_CALL
+sandesha2_identifier_clone(
+    const axutil_env_t *env,  
+    sandesha2_identifier_t *identifier)
+{
+    sandesha2_identifier_t *rm_identifier = NULL;
+    AXIS2_PARAM_CHECK(env->error, identifier, NULL);
+
+    rm_identifier =  (sandesha2_identifier_t *) sandesha2_identifier_create(env, 
+            sandesha2_identifier_get_namespace_value(identifier, env));	
+    if(!rm_identifier)
+	{
+		AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+	}
+
+    sandesha2_identifier_set_identifier(rm_identifier, env, 
+            sandesha2_identifier_get_identifier(identifier, env));
+    
+	return rm_identifier;
+}
+
 axis2_status_t AXIS2_CALL
 sandesha2_identifier_free_void_arg(
     void *identifier,
