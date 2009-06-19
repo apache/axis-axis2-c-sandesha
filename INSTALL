@@ -32,21 +32,11 @@ SANDESHA2 INSTALL
         + - docs
         + - config (Contain sample module.xml and axis2.xml files)
         |
-        + - samples
-               |
-               + - source files of samples in folders
         + - services (Contain sample service)
         |
         + - include ( header files)
-        + - bin/samples ( sample executables)
+        + - samples/bin/sandesha2 ( sample executables)
         + - lib (some libs to run Sandesha2/C clients)
-
-    To deploy Sandesha2/C in Axis2/C running environment copy the modules/sandesha2 into <axis2c_deploy_path>/modules folder.
-    Also copy the lib/libsandesha2_client.so into <axis2c_deploy_path>/lib folder. Do the necessary changes to the 
-    <axis2c_deploy_path>/axis2.xml to run Sandesha2/C(Refer to the sample config/axis2.xml for help).
-
-    To Run the samples copy the sample service inside services directory to <axis2c_deploy_path>/services folder.
-
 
 3 Installing Sandesha2/C on WIN32
 
@@ -68,23 +58,12 @@ SANDESHA2 INSTALL
         |
         + - Sandesha2 (sandesha2 module dll and module.xml file)
         |
-        + - samples
-               |
-               + - bin 
-               |
-               + - source files of samples in folders
+        + - samples\bin\sandesha2
         |
         + - include ( header files)
         + - lib (some dll's to run Sandesha2/C clients)
 
         
-    copy Sandesha2 directory ( containing sandesha2 dll and module.xml ) to <AXIS2C_HOME>\modules directory.
-    copy RMSampleService directory in samples\bin directory to <AXIS2C_HOME>\services directory
-    copy axis2.xml file in Sandesha2 directory to <AXIS2C_HOME>. Copy the lib/sandesha2_client.dll into <AXIS2C_HOME>/lib 
-    folder
-
-    Now you should be able to run the samples.
-
  Note: 1.
         Sandesha2 internally uses an Sqlite3 embedded database. You need to provide where to create this database in 
         module.xml file as following.
