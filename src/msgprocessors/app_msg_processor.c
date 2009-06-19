@@ -2480,7 +2480,6 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     args->msg_id = axutil_strdup(env, msg_id);
     args->retrans_interval = retrans_interval;
     args->is_server_side = is_server_side;
-    axutil_allocator_switch_to_local_pool(env->allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_create_seq_msg_worker_function, (void*)args);
@@ -2488,10 +2487,12 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Thread creation failed for sandesha2_app_msg_processor_start_create_seq_msg_resender");
+        axutil_allocator_switch_to_local_pool(env->allocator);
         return AXIS2_FAILURE;
     }
 
     axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
             "[sandesha2] Exit:sandesha2_app_msg_processor_start_create_seq_msg_resender");
@@ -2641,10 +2642,10 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
         AXIS2_FREE(env->allocator, internal_sequence_id);
     }
 
+    axutil_allocator_switch_to_local_pool(env->allocator);
+
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Exit:sandesha2_app_msg_processor_create_seq_msg_worker_function");
-    
-    axutil_allocator_switch_to_local_pool(env->allocator);
 
     return NULL;
 }
@@ -3479,7 +3480,6 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     args->is_server_side = is_server_side;
     args->msg_ctx = app_msg_ctx;
     args->rm_sequence = sandesha2_seq_clone(env, rm_sequence);
-    axutil_allocator_switch_to_local_pool(env->allocator);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_application_msg_worker_function, (void*)args);
@@ -3487,10 +3487,12 @@ sandesha2_app_msg_processor_start_application_msg_resender(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[sandesha2] Thread creation failed for sandesha2_app_msg_processor_start_application_msg_resender");
+        axutil_allocator_switch_to_local_pool(env->allocator);
         return AXIS2_FAILURE;
     }
 
     axutil_thread_pool_thread_detach(env->thread_pool, worker_thread);
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,
             "[sandesha2] Exit:sandesha2_app_msg_processor_start_application_msg_resender");
@@ -3553,6 +3555,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         /* There is no pending message to send. So exit from the thread. */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] There is no pending message to send. So exit from the thread");
+        axutil_allocator_switch_to_local_pool(env->allocator);
         return NULL;
     }
 
@@ -3586,6 +3589,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 axis2_msg_ctx_free(app_msg_ctx, env);
             }
 
+            axutil_allocator_switch_to_local_pool(env->allocator);
             return NULL;
         }
 
@@ -3624,6 +3628,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 "[sandesha2] Unable to find RM spec version for the rms internal_sequence_id %s", 
                 internal_sequence_id);
 
+        axutil_allocator_switch_to_local_pool(env->allocator);
         return NULL;
     }
 
@@ -3753,11 +3758,10 @@ sandesha2_app_msg_processor_application_msg_worker_function(
     {
         AXIS2_FREE(env->allocator, internal_sequence_id);
     }
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Exit:sandesha2_app_msg_processor_application_msg_worker_function");
-    
-    axutil_allocator_switch_to_local_pool(env->allocator);
     
     return NULL;
 }
