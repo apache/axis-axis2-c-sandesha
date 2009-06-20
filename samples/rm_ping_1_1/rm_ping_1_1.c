@@ -208,7 +208,6 @@ build_om_programatically(
     axiom_node_t* seq_om_node = NULL;
     axiom_element_t * seq_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
-    axis2_char_t *buffer = NULL;
     
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
     ping_om_ele = axiom_element_create(env, NULL, "ping", ns1, &ping_om_node);
@@ -219,9 +218,6 @@ build_om_programatically(
     if(seq_key)
         axiom_element_set_text(text_om_ele, env, seq_key, seq_om_node);
     
-    buffer = axiom_node_to_string(ping_om_node, env);
-    printf("\nSending OM node in XML : %s \n",  buffer); 
-
     return ping_om_node;
 }
 

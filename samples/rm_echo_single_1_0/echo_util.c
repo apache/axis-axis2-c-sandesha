@@ -30,7 +30,6 @@ build_om_payload_for_echo_svc(
     axiom_node_t* seq_om_node = NULL;
     axiom_element_t * seq_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
-    axis2_char_t *om_str = NULL;
     axis2_char_t *ns = NULL;
 
     ns = "http://tempuri.org/";
@@ -42,13 +41,5 @@ build_om_payload_for_echo_svc(
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
     axiom_element_set_text(seq_om_ele, env, seq, seq_om_node);
     
-    om_str = axiom_node_to_string(echo_om_node, env);
-    if (om_str)
-    {
-        printf("\nSending OM : %s\n", om_str);
-        AXIS2_FREE(env->allocator, om_str);
-        om_str = NULL;
-    }
-
     return echo_om_node;
 }
