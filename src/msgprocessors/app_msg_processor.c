@@ -3466,16 +3466,6 @@ sandesha2_app_msg_processor_send_app_msg(
                 property);
         sandesha2_transport_out = sandesha2_utils_get_transport_out(env);
         axis2_msg_ctx_set_transport_out_desc(app_msg_ctx, env, sandesha2_transport_out);
-            {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came0");
-            axis2_op_t *top = axis2_msg_ctx_get_op(app_msg_ctx, env);
-            axutil_qname_t *qname = (axutil_qname_t *) axis2_op_get_qname(top, env);
-            axis2_char_t *op_name = axutil_qname_to_string(qname, env);
-            if(op_name)
-            {
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "top_name:%s", op_name);
-            }
-            }
         axis2_msg_ctx_increment_ref(app_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
         if(!axis2_engine_resume_send(engine, env, app_msg_ctx))
