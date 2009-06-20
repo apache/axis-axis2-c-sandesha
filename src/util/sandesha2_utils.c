@@ -234,6 +234,7 @@ sandesha2_utils_get_property_bean(
         rm_assertion = sandesha2_util_get_rm_assertion(env, svc); 
         if(rm_assertion)
         {
+            axutil_allocator_switch_to_global_pool(env->allocator);
             property_bean = sandesha2_property_mgr_load_properties_from_policy(
                 env, rm_assertion);
             if(property_bean)
@@ -245,9 +246,10 @@ sandesha2_utils_get_property_bean(
             else
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot create Property bean");
-                /*axutil_allocator_switch_to_local_pool(env->allocator);*/
+                axutil_allocator_switch_to_local_pool(env->allocator);
                 return NULL;
             }
+            axutil_allocator_switch_to_local_pool(env->allocator);
         }   
         else
         {

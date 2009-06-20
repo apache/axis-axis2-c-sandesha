@@ -92,6 +92,21 @@ struct sandesha2_app_msg_processor_args
     sandesha2_seq_t *rm_sequence;
 };
 
+static sandesha2_app_msg_processor_args_t *
+sandesha2_app_msg_processor_args_create(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *internal_sequence_id,
+    axis2_char_t *msg_id,
+    const axis2_bool_t is_server_side,
+    int retrans_interval,
+    sandesha2_seq_t *rm_sequence);
+
+static void
+sandesha2_app_msg_processor_args_free(
+    sandesha2_app_msg_processor_args_t *args,
+    const axutil_env_t *env);
+
 static void AXIS2_CALL                 
 sandesha2_app_msg_processor_is_last_out_msg(
     const axutil_env_t *env,
@@ -269,6 +284,58 @@ sandesha2_app_msg_processor_free (
 	return AXIS2_SUCCESS;
 }
 
+static sandesha2_app_msg_processor_args_t *
+sandesha2_app_msg_processor_args_create(
+    axutil_env_t *env,
+    axis2_conf_ctx_t *conf_ctx,
+    axis2_char_t *internal_sequence_id,
+    axis2_char_t *msg_id,
+    const axis2_bool_t is_server_side,
+    int retrans_interval,
+    sandesha2_seq_t *rm_sequence)
+{
+    sandesha2_app_msg_processor_args_t *args = NULL;
+
+    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
+    if(!args)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Could not create arguments for the thread process");
+        AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return NULL;
+    }
+    args->env = env;
+    args->conf_ctx = conf_ctx;
+    args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
+    args->msg_id = axutil_strdup(env, msg_id);
+    args->retrans_interval = retrans_interval;
+    args->is_server_side = is_server_side;
+    if(rm_sequence)
+    {
+        args->rm_sequence = sandesha2_seq_clone(env, rm_sequence);
+    }
+
+    return args;
+}
+
+static void
+sandesha2_app_msg_processor_args_free(
+    sandesha2_app_msg_processor_args_t *args,
+    const axutil_env_t *env)
+{
+    args->conf_ctx = NULL;
+    if(args->internal_sequence_id)
+    {
+        AXIS2_FREE(env->allocator, args->internal_sequence_id);
+        args->internal_sequence_id = NULL;
+    }
+    if(args->msg_id)
+    {
+        AXIS2_FREE(env->allocator, args->msg_id);
+        args->msg_id = NULL;
+    }
+    args->retrans_interval = -1;
+    args->is_server_side = AXIS2_FALSE;
+}
 
 static axis2_status_t AXIS2_CALL 
 sandesha2_app_msg_processor_process_in_msg (
@@ -2473,13 +2540,9 @@ sandesha2_app_msg_processor_start_create_seq_msg_resender(
             "[sandesha2] Entry:sandesha2_app_msg_processor_start_create_seq_msg_resender");
     
     axutil_allocator_switch_to_global_pool(env->allocator);
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
+    args = sandesha2_app_msg_processor_args_create((axutil_env_t *) env, conf_ctx, internal_sequence_id, 
+            msg_id, is_server_side, retrans_interval, NULL);
     args->env = axutil_init_thread_env(env);
-    args->conf_ctx = conf_ctx;
-    args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
-    args->msg_id = axutil_strdup(env, msg_id);
-    args->retrans_interval = retrans_interval;
-    args->is_server_side = is_server_side;
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_create_seq_msg_worker_function, (void*)args);
@@ -2637,16 +2700,14 @@ sandesha2_app_msg_processor_create_seq_msg_worker_function(
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     }
 
-    if(internal_sequence_id)
-    {
-        AXIS2_FREE(env->allocator, internal_sequence_id);
-    }
+    sandesha2_app_msg_processor_args_free(args, env);
 
     axutil_allocator_switch_to_local_pool(env->allocator);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Exit:sandesha2_app_msg_processor_create_seq_msg_worker_function");
 
+    axutil_free_thread_env(env);
     return NULL;
 }
 
@@ -3405,7 +3466,16 @@ sandesha2_app_msg_processor_send_app_msg(
                 property);
         sandesha2_transport_out = sandesha2_utils_get_transport_out(env);
         axis2_msg_ctx_set_transport_out_desc(app_msg_ctx, env, sandesha2_transport_out);
-
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "came0");
+            axis2_op_t *top = axis2_msg_ctx_get_op(app_msg_ctx, env);
+            axutil_qname_t *qname = (axutil_qname_t *) axis2_op_get_qname(top, env);
+            axis2_char_t *op_name = axutil_qname_to_string(qname, env);
+            if(op_name)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "top_name:%s", op_name);
+            }
+            }
         axis2_msg_ctx_increment_ref(app_msg_ctx, env);
         engine = axis2_engine_create(env, conf_ctx);
         if(!axis2_engine_resume_send(engine, env, app_msg_ctx))
@@ -3471,15 +3541,9 @@ sandesha2_app_msg_processor_start_application_msg_resender(
             "[sandesha2] Entry:sandesha2_app_msg_processor_start_application_msg_resender");
     
     axutil_allocator_switch_to_global_pool(env->allocator);
-    args = AXIS2_MALLOC(env->allocator, sizeof(sandesha2_app_msg_processor_args_t));
+    args = sandesha2_app_msg_processor_args_create((axutil_env_t *) env, conf_ctx, internal_sequence_id, 
+            msg_id, is_server_side, retrans_interval, rm_sequence);
     args->env = axutil_init_thread_env(env);
-    args->conf_ctx = conf_ctx;
-    args->internal_sequence_id = axutil_strdup(env, internal_sequence_id);
-    args->msg_id = axutil_strdup(env, msg_id);
-    args->retrans_interval = retrans_interval;
-    args->is_server_side = is_server_side;
-    args->msg_ctx = app_msg_ctx;
-    args->rm_sequence = sandesha2_seq_clone(env, rm_sequence);
 
     worker_thread = axutil_thread_pool_get_thread(env->thread_pool, 
             sandesha2_app_msg_processor_application_msg_worker_function, (void*)args);
@@ -3555,7 +3619,9 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         /* There is no pending message to send. So exit from the thread. */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] There is no pending message to send. So exit from the thread");
+        sandesha2_app_msg_processor_args_free(args, env);
         axutil_allocator_switch_to_local_pool(env->allocator);
+        axutil_free_thread_env(env);
         return NULL;
     }
 
@@ -3589,7 +3655,9 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 axis2_msg_ctx_free(app_msg_ctx, env);
             }
 
+            sandesha2_app_msg_processor_args_free(args, env);
             axutil_allocator_switch_to_local_pool(env->allocator);
+            axutil_free_thread_env(env);
             return NULL;
         }
 
@@ -3628,7 +3696,9 @@ sandesha2_app_msg_processor_application_msg_worker_function(
                 "[sandesha2] Unable to find RM spec version for the rms internal_sequence_id %s", 
                 internal_sequence_id);
 
+        sandesha2_app_msg_processor_args_free(args, env);
         axutil_allocator_switch_to_local_pool(env->allocator);
+        axutil_free_thread_env(env);
         return NULL;
     }
 
@@ -3749,19 +3819,12 @@ sandesha2_app_msg_processor_application_msg_worker_function(
         sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
     }
 
-    if(msg_id)
-    {
-        AXIS2_FREE(env->allocator, msg_id);
-    }
-    
-    if(internal_sequence_id)
-    {
-        AXIS2_FREE(env->allocator, internal_sequence_id);
-    }
+    sandesha2_app_msg_processor_args_free(args, env);
     axutil_allocator_switch_to_local_pool(env->allocator);
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, 
         "[sandesha2] Exit:sandesha2_app_msg_processor_application_msg_worker_function");
+    axutil_free_thread_env(env);
     
     return NULL;
 }

@@ -635,6 +635,10 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
         if(qname)
         {
             axis2_char_t *op_name = axutil_qname_to_string(qname, env);
+            if(op_name)
+            {
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "op_name:%s", op_name);
+            }
             sandesha2_msg_store_bean_set_op(bean, env, op_name);
         }
 
