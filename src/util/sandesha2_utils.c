@@ -225,8 +225,8 @@ sandesha2_utils_get_property_bean(
 
     AXIS2_PARAM_CHECK(env->error, svc, NULL);
 
-    /*axutil_allocator_switch_to_global_pool(env->allocator);*/
-    /*param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);*/
+    axutil_allocator_switch_to_global_pool(env->allocator);
+    param = axis2_svc_get_param(svc, env, SANDESHA2_SANDESHA_PROPERTY_BEAN);
     if(!param)
     {
         axis2_rm_assertion_t *rm_assertion = NULL;
@@ -234,7 +234,6 @@ sandesha2_utils_get_property_bean(
         rm_assertion = sandesha2_util_get_rm_assertion(env, svc); 
         if(rm_assertion)
         {
-            axutil_allocator_switch_to_global_pool(env->allocator);
             property_bean = sandesha2_property_mgr_load_properties_from_policy(
                 env, rm_assertion);
             if(property_bean)
@@ -254,7 +253,7 @@ sandesha2_utils_get_property_bean(
         else
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot Retreive RM assertion");
-            /*axutil_allocator_switch_to_local_pool(env->allocator);*/
+            axutil_allocator_switch_to_local_pool(env->allocator);
             return NULL;
         }
     }
@@ -263,7 +262,7 @@ sandesha2_utils_get_property_bean(
         property_bean = (sandesha2_property_bean_t*) axutil_param_get_value(param, env);
     }
 
-    /*axutil_allocator_switch_to_local_pool(env->allocator);*/
+    axutil_allocator_switch_to_local_pool(env->allocator);
     if(!property_bean)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
