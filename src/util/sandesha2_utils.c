@@ -248,7 +248,6 @@ sandesha2_utils_get_property_bean(
                 axutil_allocator_switch_to_local_pool(env->allocator);
                 return NULL;
             }
-            axutil_allocator_switch_to_local_pool(env->allocator);
         }   
         else
         {
