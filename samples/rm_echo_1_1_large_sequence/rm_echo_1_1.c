@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
    
     /* Set up the environment */
-    env = axutil_env_create_all("rm_echo_1_1_large_sequence.log", AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("rm_echo_1_1_large_sequence.log", AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM11SampleService";

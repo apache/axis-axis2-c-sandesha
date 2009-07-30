@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     neethi_policy_t *policy = NULL;
    
     /* Set up the environment */
-    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("rm_ping.log", AXIS2_LOG_LEVEL_CRITICAL);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM10SampleService";
