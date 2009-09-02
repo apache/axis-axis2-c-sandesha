@@ -198,7 +198,7 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
             property);
     }
-    for(i = 1; i < 101; i++)
+    for(i = 1; i < 100; i++)
     {
         axis2_char_t echo_str[7];
         sprintf(echo_str, "%s%d", "echo", i);
