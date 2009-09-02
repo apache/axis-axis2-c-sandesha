@@ -638,7 +638,6 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
             sandesha2_msg_store_bean_set_op(bean, env, op_name);
         }*/
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "damcame2");
         mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
         sandesha2_msg_store_bean_set_op_mep(bean, env, mep);
     }
