@@ -630,14 +630,15 @@ sandesha2_permanent_storage_mgr_get_msg_store_bean (
 
     if(op)
     {
-        axutil_qname_t *qname = (axutil_qname_t *) axis2_op_get_qname(op, env);
         axis2_char_t *mep = NULL;
+        /*axutil_qname_t *qname = (axutil_qname_t *) axis2_op_get_qname(op, env);
         if(qname)
         {
             axis2_char_t *op_name = axutil_qname_to_string(qname, env);
             sandesha2_msg_store_bean_set_op(bean, env, op_name);
-        }
+        }*/
 
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "damcame2");
         mep = (axis2_char_t *) axis2_op_get_msg_exchange_pattern(op, env);
         sandesha2_msg_store_bean_set_op_mep(bean, env, mep);
     }
