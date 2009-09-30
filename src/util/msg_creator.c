@@ -197,18 +197,27 @@ sandesha2_msg_creator_create_create_seq_msg(
     op_ctx = axis2_msg_ctx_get_op_ctx(application_msg_ctx, env);
     if(op_ctx)
     {
-        axis2_char_t *offered_seq = NULL;
-        axutil_property_t *property = NULL;
+        axis2_op_t *operation = NULL;
+        int mep = -1;
+        axis2_char_t *offered_seq_id = NULL;
+        /*axutil_property_t *property = NULL;
         axis2_ctx_t *ctx = NULL;
 
         ctx = axis2_msg_ctx_get_base(application_msg_ctx, env);
         property = axis2_ctx_get_property(ctx, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID);
         if(property)
         {
-            offered_seq = axutil_property_get_value(property, env);
+            offered_seq_id = axutil_property_get_value(property, env);
+        }*/
+        operation = axis2_op_ctx_get_op(op_ctx, env);
+        mep = axis2_op_get_axis_specific_mep_const(operation, env);
+        if(mep == AXIS2_MEP_CONSTANT_OUT_IN)
+        {
+            offered_seq_id = axutil_uuid_gen(env);
         }
 
-        if(offered_seq && 0 != axutil_strcmp("", offered_seq))
+        /*if(offered_seq_id && 0 != axutil_strcmp("", offered_seq_id))*/
+        if(offered_seq_id)
         {
             sandesha2_seq_offer_t *offer_part = NULL;
             sandesha2_identifier_t *identifier = NULL;
@@ -216,7 +225,7 @@ sandesha2_msg_creator_create_create_seq_msg(
 
             offer_part = sandesha2_seq_offer_create(env, rm_ns_value, addressing_ns_value);
             identifier = sandesha2_identifier_create(env, rm_ns_value);
-            sandesha2_identifier_set_identifier(identifier, env, offered_seq);
+            sandesha2_identifier_set_identifier(identifier, env, offered_seq_id);
             sandesha2_seq_offer_set_identifier(offer_part, env, identifier);
 
             if(!axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, rm_version))
