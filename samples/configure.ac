@@ -85,6 +85,7 @@ AC_CONFIG_FILES([Makefile \
     rm_ping_1_1_large_sequence/Makefile \
     rm_mtom_1_0/Makefile \
     resources/Makefile \
+	policy/Makefile \
 	rm_amqp/Makefile \
 	rm_amqp/rm_echo_dual_1_0/Makefile \
 	rm_amqp/rm_echo_dual_1_1/Makefile \

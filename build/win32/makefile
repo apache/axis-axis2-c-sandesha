@@ -62,6 +62,7 @@ distdir:
 	if not exist $(SANDESHADISTDIR)\samples mkdir $(SANDESHADISTDIR)\samples
 	if not exist $(SANDESHADISTDIR)\samples\bin mkdir $(SANDESHADISTDIR)\samples\bin
 	if not exist $(SANDESHADISTDIR)\samples\bin\sandesha2 mkdir $(SANDESHADISTDIR)\samples\bin\sandesha2
+	if not exist $(SANDESHADISTDIR)\samples\bin\sandesha2\policy mkdir $(SANDESHADISTDIR)\samples\bin\sandesha2\policy
 	if not exist $(SANDESHADISTDIR)\samples\src mkdir $(SANDESHADISTDIR)\samples\src
 	if not exist $(SANDESHADISTDIR)\samples\src\sandesha2c mkdir $(SANDESHADISTDIR)\samples\src\sandesha2c
 	if not exist $(SANDESHADISTDIR)\services\RM10SampleService mkdir $(SANDESHADISTDIR)\services\RM10SampleService
@@ -212,7 +213,8 @@ sandesha2: $(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll
 	
 copy_xml:
 	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\modules\sandesha2\module.xml
-	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\
+	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\ 
+	@copy $(SANDESHASRC)\samples\policy\*.xml $(SANDESHADISTDIR)\samples\bin\sandesha2\policy\ 
 	
 
 ### Sandesha2 Client

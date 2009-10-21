@@ -3,6 +3,7 @@
 policydir = $(prefix)/samples/bin/sandesha2/policy
 
 SUBDIRS = resources \
+		  policy \
 		  RM10SampleService \
 		  RM11SampleService \
 		  rm_echo_1_0 \
