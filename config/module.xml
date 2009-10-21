@@ -67,7 +67,7 @@
     </operation>
 
    <!-- Database name parameter -->
-   <parameter name="sandesha2_db" locked="false">/tmp/sandesha2_db</parameter>
+   <!--parameter name="sandesha2_db" locked="false">/tmp/sandesha2_db</parameter>-->
    <!-- General parameters -->
 
 </module>
