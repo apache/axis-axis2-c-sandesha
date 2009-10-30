@@ -50,7 +50,7 @@ AC_ARG_WITH(axis2,
         axis2inc="-I$withval"
     dnl else find the axis2_util include dir in $(AXIS2C_HOME)/include
     elif test -d '$(AXIS2C_HOME)/include'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.1"
+        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.6"
     else
         AC_MSG_ERROR(could not find Axis2. stop)
     fi
@@ -72,17 +72,11 @@ AC_CONFIG_FILES([Makefile \
     RM10SampleService/Makefile \
     RM11SampleService/Makefile \
     rm_echo_1_0/Makefile \
-    rm_echo_1_0_large_sequence/Makefile \
     rm_echo_1_1/Makefile \
-    rm_echo_1_1_large_sequence/Makefile \
     rm_echo_single_1_0/Makefile \
-    rm_echo_single_1_0_large_sequence/Makefile \
     rm_echo_single_1_1/Makefile \
-    rm_echo_single_1_1_large_sequence/Makefile \
     rm_ping_1_0/Makefile \
-    rm_ping_1_0_large_sequence/Makefile \
     rm_ping_1_1/Makefile \
-    rm_ping_1_1_large_sequence/Makefile \
     rm_mtom_1_0/Makefile \
     resources/Makefile \
 	policy/Makefile \
