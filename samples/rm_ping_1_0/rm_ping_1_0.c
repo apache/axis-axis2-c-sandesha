@@ -30,12 +30,7 @@
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text,
-    axis2_char_t *seq_key);
-
-static void 
-usage(
-    axis2_char_t *prog_name);
+    axis2_char_t *text);
 
 int main(int argc, char** argv)
 {
@@ -48,8 +43,7 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axutil_property_t *property = NULL;
-    int c;
-    axis2_char_t *seq_key = NULL;
+    int ii;
     neethi_policy_t *policy = NULL;
  
     /* Set up the environment */
@@ -57,26 +51,19 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
         }
     }
-
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
@@ -145,47 +132,26 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
 
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    }
-    
     /* Send request */
-    payload = build_om_programatically(env, "ping1", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
+    for(ii = 0; ii < 4; ii++)
     {
-        printf("\nping client invoke SUCCESSFUL!\n");
-    }
-    payload = NULL;
-    
-    payload = build_om_programatically(env, "ping2", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-    {
-        printf("\nping client invoke SUCCESSFUL!\n");
-    }
-    payload = NULL;
-
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    payload = build_om_programatically(env, "ping3", seq_key);
-    status = axis2_svc_client_send_robust(svc_client, env, payload);
-    if(status)
-    {
-        printf("\nping client invoke SUCCESSFUL!\n");
+        axis2_char_t ping_str[7];
+        
+        sprintf(ping_str, "%s%d", "ping", ii);
+        payload = build_om_programatically(env, ping_str);
+        status = axis2_svc_client_send_robust(svc_client, env, payload);
+        if(status)
+        {
+            printf("\nping client invoke SUCCESSFUL!\n");
+        }
+        payload = NULL;
     }
     
-     /** Wait till callback is complete. Simply keep the parent thread running
-       until our on_complete or on_error is invoked */
+    axis2_svc_client_close(svc_client, env);
 
     /*This sleep is for wait the main thread until sandesha sends the terminatesequence 
      *messages. */
-
     AXIS2_SLEEP(SANDESHA2_SLEEP);
-    AXIS2_FREE(env->allocator, seq_key);
    
     if (svc_client)
     {
@@ -206,37 +172,19 @@ int main(int argc, char** argv)
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text,
-    axis2_char_t *seq)
+    axis2_char_t *text)
 {
     axiom_node_t *ping_om_node = NULL;
     axiom_element_t* ping_om_ele = NULL;
     axiom_node_t *text_om_node = NULL;
     axiom_element_t* text_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
-    axiom_node_t* seq_om_node = NULL;
-    axiom_element_t * seq_om_ele = NULL;
 
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
     ping_om_ele = axiom_element_create(env, NULL, "ping", ns1, &ping_om_node);
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
-    seq_om_ele = axiom_element_create(env, ping_om_node, "Sequence", ns1, &seq_om_node);
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
-    axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
     return ping_om_node;
 }
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
-            " default is http://127.0.0.1:9090/axis2/services/RM10SampleService ../\n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
-}
-
 

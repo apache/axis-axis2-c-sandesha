@@ -301,7 +301,7 @@ sandesha2_terminate_seq_msg_processor_process_in_msg (
                     seq_ack, env), env);
 
         internal_sequence_id = sandesha2_utils_get_seq_property(env, rms_sequence_id, 
-                SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID, seq_prop_mgr);
+                SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID, seq_prop_mgr);
 
         terminated_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, internal_sequence_id, 
                 SANDESHA2_SEQ_PROP_TERMINATE_ADDED);
@@ -545,7 +545,7 @@ sandesha2_terminate_seq_msg_processor_setup_highest_msg_nums(
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] add_rec_side_term:%d", add_rec_side_term);
 
     out_seq_id = sandesha2_utils_get_seq_property(env, rec_side_int_seq_id,
-        SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_SEQUENCE_ID, seq_prop_mgr);
 
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] out_seq_id:%s", out_seq_id);
     if(rec_side_int_seq_id)
@@ -771,7 +771,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
 
     int_seq_id = sandesha2_utils_get_client_internal_sequence_id(env, to_address, seq_key);
     out_seq_id = sandesha2_utils_get_seq_property(env, int_seq_id, 
-        SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID, seq_prop_mgr);
+        SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_SEQUENCE_ID, seq_prop_mgr);
 
     if(!out_seq_id)
     {

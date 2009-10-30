@@ -32,7 +32,7 @@
 #include <neethi_util.h>
 #include <neethi_policy.h>
 
-#define SANDESHA2_MAX_COUNT 4
+#define SANDESHA2_MAX_COUNT 8
 
 /* on_complete callback function */
 axis2_status_t AXIS2_CALL
@@ -51,10 +51,6 @@ void wait_on_callback(
     const axutil_env_t *env,
     axis2_callback_t *callback);
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -66,52 +62,29 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_callback_t *callback = NULL;
-    axis2_callback_t *callback2 = NULL;
     axutil_property_t *property = NULL;
-    axis2_char_t *offered_seq_id = NULL;
-    axis2_bool_t offer = AXIS2_TRUE;
-    axis2_char_t *seq_key = NULL;
-    int i, c;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    int i = 0;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_1_1.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM11SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case 'o': /* Sequence Offer */
-                offer = AXIS2_ATOI(optarg);
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                {
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                }
-
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
         }
-    }
-
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
-    }
+        else
+        {
+            address = argv[1];
+        }
+    } 
 
     printf ("Using endpoint : %s\n", address);
     
@@ -178,29 +151,11 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    /* Offer sequence */
-    if(offer)
-    {
-        offered_seq_id = axutil_uuid_gen(env);
-        property = axutil_property_create(env);
-        if(property)
-        {
-            axutil_property_set_value(property, env, axutil_strdup(env, offered_seq_id));
-            axis2_options_set_property(options, env, SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
-        }
-    }
-
     /* RM Version 1.1 */
     property = axutil_property_create_with_args(env, 3, 0, 0, SANDESHA2_SPEC_VERSION_1_1);
     if(property)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
    
     for(i = 1; i < 4; i++)
@@ -209,7 +164,7 @@ int main(int argc, char** argv)
 
         sprintf(echo_str, "%s%d", "echo", i);
 
-        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
+        payload = build_om_payload_for_echo_svc(env, echo_str);
         callback = axis2_callback_create(env);
         axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
         axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
@@ -217,15 +172,10 @@ int main(int argc, char** argv)
         wait_on_callback(env, callback);
     }
 
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT); 
-    callback2 = axis2_callback_create(env);
-    axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
-    axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
-    sandesha2_client_terminate_seq_with_svc_client(env, svc_client, callback2);
+    axis2_svc_client_close(svc_client, env);
 
-    AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
+    AXIS2_SLEEP(2 * 2 * SANDESHA2_MAX_COUNT);
 
-    AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
@@ -310,21 +260,6 @@ void wait_on_callback(
         AXIS2_SLEEP(1);
     }
     return;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " [-o OFFER]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
-        "feature. The default behaviour is no offer(0). \n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:9090/axis2/services/RM11SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
 

@@ -187,7 +187,7 @@ sandesha2_ack_mgr_get_client_completed_msgs_list(
     
     /* First trying to get it from the internal sequence id.*/
     internal_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, 
-            rms_seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
+            rms_seq_id, SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID);
     if(internal_seq_bean != NULL)
     {
         internal_seq_id = sandesha2_seq_property_bean_get_value(
@@ -306,11 +306,11 @@ sandesha2_ack_mgr_verify_seq_completion(
     return AXIS2_FALSE;
 }
 
-
+/* We piggyback the ack messages stored for the same sequence with the sequence id */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sandesha2_ack_mgr_piggyback_acks_if_present(
     const axutil_env_t *env,
-    axis2_char_t *seq_id,
+    axis2_char_t *outgoing_sequence_id,
     sandesha2_msg_ctx_t *target_rm_msg_ctx,
     sandesha2_storage_mgr_t *storage_mgr,
     sandesha2_seq_property_mgr_t *seq_prop_mgr,
@@ -331,8 +331,8 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
 
     find_bean = sandesha2_sender_bean_create(env);
     sandesha2_sender_bean_set_msg_type(find_bean, env, SANDESHA2_MSG_TYPE_ACK);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_seq_id:%s", seq_id);
-    sandesha2_sender_bean_set_seq_id(find_bean, env, seq_id);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "outgoing_sequence_id:%s", outgoing_sequence_id);
+    sandesha2_sender_bean_set_seq_id(find_bean, env, outgoing_sequence_id);
     sandesha2_sender_bean_set_send(find_bean, env, AXIS2_TRUE);
     sandesha2_sender_bean_set_resend(find_bean, env, AXIS2_FALSE);
 
@@ -433,7 +433,11 @@ sandesha2_ack_mgr_piggyback_acks_if_present(
                  * context ,there happen freeing at both contexts if we do not increment ref.*/
                 sandesha2_seq_ack_increment_ref(seq_ack, env);
                 sandesha2_msg_ctx_set_seq_ack(target_rm_msg_ctx, env, seq_ack);
-                sandesha2_msg_ctx_add_soap_envelope(target_rm_msg_ctx, env);
+
+                /* This will be added just before message is sent, to make sure that the function is
+                 * not called multiple times causing message dupplication in the soap message.
+                 */
+                /*sandesha2_msg_ctx_add_soap_envelope(target_rm_msg_ctx, env);*/
 
                 if(ack_msg_ctx)
                 {

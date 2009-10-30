@@ -821,7 +821,7 @@ sandesha2_permanent_bean_mgr_busy_handler(
         if(*error_msg)
              sqlite3_free(*error_msg);
         counter++;
-        AXIS2_USLEEP(100000);
+        AXIS2_SLEEP(1);
         /* Sleeping is over, lock again */
         rc = sqlite3_exec(dbconn, sql_stmt, callback_func, args, error_msg);
     }

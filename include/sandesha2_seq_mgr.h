@@ -45,7 +45,7 @@ struct sandesha2_next_msg_mgr;
   */
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-sandesha2_seq_mgr_setup_new_rmd_sequence(
+sandesha2_seq_mgr_setup_new_incoming_sequence(
     const axutil_env_t *env,
     sandesha2_msg_ctx_t *create_seq_msg, 
     struct sandesha2_seq_property_mgr *seq_prop_mgr,
@@ -71,7 +71,7 @@ sandesha2_seq_mgr_has_seq_timedout(
     /*axis2_conf_ctx_t *conf_ctx*/);
         
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-sandesha2_seq_mgr_setup_new_rms_sequence(
+sandesha2_seq_mgr_setup_new_outgoing_sequence(
     const axutil_env_t *env,
     axis2_msg_ctx_t *first_app_msg,
     axis2_char_t *int_seq_id,

@@ -75,6 +75,23 @@ sandesha2_msg_creator_create_create_seq_res_msg(
     sandesha2_seq_property_mgr_t *seq_prop_mgr);
  
 /**
+ * Create a new create_close_seq_msg
+ * @param env
+ * @param ref_rm_msg
+ * @param seq_id
+ * @param internal_seq_id
+ * @param seq_prop_mgr
+ * @return
+ */
+sandesha2_msg_ctx_t *AXIS2_CALL
+sandesha2_msg_creator_create_close_seq_msg(
+    const axutil_env_t *env,
+    sandesha2_msg_ctx_t *ref_rm_msg, 
+    axis2_char_t *seq_id,
+    axis2_char_t *internal_seq_id,
+    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+
+/**
  * Create a new close_seq_response message.
  * @param close_seq_msg
  * @param out_msg

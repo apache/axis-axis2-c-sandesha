@@ -217,7 +217,7 @@ populate_rm_msg_ctx(
     {
         sandesha2_msg_ctx_set_close_seq_res(rm_msg_ctx, env, close_seq_res);
         rm_ns = sandesha2_close_seq_res_get_namespace_value(close_seq_res, env);
-        /*add_op_if_null(env, msg_ctx);*/
+        add_op_if_null(env, msg_ctx);
     }
 
     make_conn = sandesha2_rm_elements_get_make_connection(rm_elements, env);
@@ -412,7 +412,7 @@ static axis2_bool_t validate_msg(
         sandesha2_seq_property_bean_t *internal_seq_id_bean = NULL;
 
         internal_seq_id_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
-                env, seq_id, SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
+                env, seq_id, SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID);
         if(internal_seq_id_bean)
         {
             prop_key = axutil_strdup(env, sandesha2_seq_property_bean_get_value(

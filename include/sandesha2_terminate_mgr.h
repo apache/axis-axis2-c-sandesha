@@ -112,6 +112,11 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
     struct sandesha2_create_seq_mgr *create_seq_mgr,
     struct sandesha2_sender_mgr *sender_mgr);
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+sandesha2_terminate_mgr_process_response(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx,
+    sandesha2_storage_mgr_t *storage_mgr);
 
 /** @} */
 #ifdef __cplusplus

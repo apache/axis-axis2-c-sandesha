@@ -33,10 +33,6 @@
 
 #define SANDESHA2_MAX_COUNT 2
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -46,13 +42,11 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axutil_property_t *property = NULL;
-    axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
-    axis2_char_t *seq_key = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
-    int c, i;
+    int i;
     axis2_endpoint_ref_t *reply_to = NULL;
    
     /* Set up the environment */
@@ -61,30 +55,18 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
         }
-    }
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
+        else
+        {
+            address = argv[1];
+        }
     }
     printf ("Using endpoint : %s\n", address);
     
@@ -151,16 +133,6 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    /* Offer sequence */
-    offered_seq_id = axutil_uuid_gen(env);
-    property = axutil_property_create(env);
-    if(property)
-    {
-        axutil_property_set_value(property, env, axutil_strdup(env, 
-            offered_seq_id));
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
-    }
     /* RM Version 1.0 */
     property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
@@ -168,13 +140,6 @@ int main(int argc, char** argv)
     {
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-            property);
     }
      
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
@@ -190,19 +155,11 @@ int main(int argc, char** argv)
         axis2_char_t echo_str[7];
         
         sprintf(echo_str, "%s%d", "echo", i);
-        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
+        payload = build_om_payload_for_echo_svc(env, echo_str);
         result = axis2_svc_client_send_receive(svc_client, env, payload);
         if(result)
         {
-            axis2_char_t *om_str = NULL;
-            om_str = axiom_node_to_string(result, env);
-            if (om_str)
-            {
-                printf("\nReceived OM : %s\n", om_str);
-                AXIS2_FREE(env->allocator, om_str);
-            }
             printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-            result = NULL;
         }
         else
         {
@@ -210,26 +167,9 @@ int main(int argc, char** argv)
         }
     }
 
-    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    status = axis2_svc_client_send_robust(svc_client, env, NULL);
-    if(AXIS2_SUCCESS == status)
-    {
-        printf("\necho client two way single channel invoke SUCCESSFUL!\n");
-    }
-    else
-    {
-        printf("\necho client two way single channel invoke FAILED!\n");
-    }
+    axis2_svc_client_close(svc_client, env);
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
-    AXIS2_FREE(env->allocator, seq_key);
-
-    if(offered_seq_id)
-    {
-        AXIS2_FREE(env->allocator, offered_seq_id);
-    }
 
     if (svc_client)
     {
@@ -244,17 +184,5 @@ int main(int argc, char** argv)
     }
   
     return 0;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:9090/axis2/services/RM10SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

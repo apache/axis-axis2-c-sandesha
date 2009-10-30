@@ -266,11 +266,11 @@ extern "C"
 	
     #define SANDESHA2_SEQ_PROP_ACKS_TO_REF_PARAM  "acksToRefParam"
 
-	#define SANDESHA2_SEQUENCE_PROPERTY_RMS_SEQ_ID  "OutSequenceId"
+	#define SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_SEQUENCE_ID  "OutgoingSequenceId"
 
-	#define SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID  "TempSequenceId"
+	#define SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID  "OutgoingInternalSequenceId"
 	
-    #define SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQ_ID  "SpecialIntSequenceId"
+    #define SANDESHA2_SEQ_PROP_SPECIAL_INTERNAL_SEQUENCE_ID  "SpecialIntSequenceId"
 
 	#define SANDESHA2_SEQ_PROP_REPLY_TO_EPR  "ReplyToEPR"
 
@@ -308,7 +308,7 @@ extern "C"
 		
 	#define SANDESHA2_SEQ_PROP_LAST_MESSAGE  "LastMessage"
 
-	#define SANDESHA2_SEQ_PROP_REQUEST_SIDE_SEQ_ID  "RequestSideSequenceID" 		//used only at the server side
+	#define SANDESHA2_SEQ_PROP_REQUEST_SIDE_SEQUENCE_ID  "RequestSideSequenceID" 		//used only at the server side
 		
 	#define SANDESHA2_SEQ_PROP_HIGHEST_IN_MSG_NUMBER  "HighestInMsgNumber"
 		

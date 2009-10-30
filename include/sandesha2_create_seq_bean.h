@@ -64,7 +64,7 @@ sandesha2_create_seq_bean_get_rms_sequence_id (
     const axutil_env_t *env);
 	
 void AXIS2_CALL
-sandesha2_create_seq_bean_set_rms_sequence_id (
+sandesha2_create_seq_bean_set_outgoing_sequence_id (
     sandesha2_create_seq_bean_t *create_seq_bean,
     const axutil_env_t *env, 
     axis2_char_t* seq_id) ;

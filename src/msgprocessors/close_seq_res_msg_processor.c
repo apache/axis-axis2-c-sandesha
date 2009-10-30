@@ -121,8 +121,9 @@ sandesha2_close_seq_res_msg_processor_process_in_msg (
     sandesha2_msg_ctx_t *rm_msg_ctx)
 {
     axis2_msg_ctx_t *msg_ctx = NULL;
-    sandesha2_close_seq_res_t *term_seq_res = NULL;
-    axis2_char_t *seq_id = NULL;
+    sandesha2_close_seq_res_t *close_seq_res = NULL;
+    axis2_char_t *outgoing_sequence_id = NULL;
+    axis2_char_t *outgoing_internal_sequence_id = NULL;
     axis2_conf_ctx_t *conf_ctx = NULL;
     sandesha2_storage_mgr_t *storage_mgr = NULL;
     sandesha2_seq_property_mgr_t *seq_prop_mgr = NULL;
@@ -136,8 +137,8 @@ sandesha2_close_seq_res_msg_processor_process_in_msg (
             "[sandesha2] Entry:sandesha2_close_seq_res_msg_processor_process_in_msg");
 
     msg_ctx = sandesha2_msg_ctx_get_msg_ctx(rm_msg_ctx, env);
-    term_seq_res = sandesha2_msg_ctx_get_close_seq_res(rm_msg_ctx, env);
-    if(!term_seq_res)
+    close_seq_res = sandesha2_msg_ctx_get_close_seq_res(rm_msg_ctx, env);
+    if(!close_seq_res)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[sandesha2] Close Sequence part is not available");
@@ -145,9 +146,9 @@ sandesha2_close_seq_res_msg_processor_process_in_msg (
         return AXIS2_FAILURE;
     }
 
-    seq_id = sandesha2_identifier_get_identifier(
-        sandesha2_close_seq_res_get_identifier(term_seq_res, env), env);
-    if(!seq_id || 0 == axutil_strlen(seq_id))
+    outgoing_sequence_id = sandesha2_identifier_get_identifier(
+        sandesha2_close_seq_res_get_identifier(close_seq_res, env), env);
+    if(!outgoing_sequence_id || 0 == axutil_strlen(outgoing_sequence_id))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Invalid sequence id");
         return AXIS2_FAILURE;
@@ -160,7 +161,22 @@ sandesha2_close_seq_res_msg_processor_process_in_msg (
     create_seq_mgr = sandesha2_permanent_create_seq_mgr_create(env, dbname);
     sender_mgr =sandesha2_permanent_sender_mgr_create(env, dbname);
 
-    sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);
+    /*sandesha2_msg_ctx_set_paused(rm_msg_ctx, env, AXIS2_TRUE);*/
+
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[sandesha2] Close sequence message for sequence %s is sent and response received. "\
+            "So adding terminate msg", outgoing_sequence_id);
+
+    outgoing_internal_sequence_id = sandesha2_utils_get_seq_property(env, outgoing_sequence_id, 
+            SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID, seq_prop_mgr);
+
+    sandesha2_terminate_mgr_send_terminate_seq_msg(env, rm_msg_ctx, 
+            outgoing_sequence_id, outgoing_internal_sequence_id, storage_mgr, 
+            seq_prop_mgr, create_seq_mgr, sender_mgr);
+
+
+
+
 
     if(seq_prop_mgr)
     {

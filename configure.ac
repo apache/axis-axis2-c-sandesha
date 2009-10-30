@@ -1,7 +1,7 @@
 dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(sandesha2c-src, 0.92)
+AC_INIT(sandesha2c-src, 0.91)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
@@ -21,7 +21,7 @@ AC_CHECK_LIB(dl, dlopen)
 
 CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE"
 if test "$GCC" = "yes"; then
-    CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration -g"
+    CFLAGS="$CFLAGS -ansi -Wall  -Wno-implicit-function-declaration -g"
 fi
 LDFLAGS="-lpthread"
 
@@ -65,6 +65,7 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
+
 AXIOMINC="-I$abs_top_builddir/../axis2c/axiom/include"
 UTILINC="-I$abs_top_builddir/../axis2c/util/include"
 NEETHIINC="-I$abs_top_builddir/../axis2c/neethi/include"
@@ -73,17 +74,19 @@ AC_SUBST(AXIOMINC)
 AC_SUBST(UTILINC)
 AC_SUBST(NEETHIINC)
 
+AC_SUBST(WRAPPER_DIR)
+
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
     src/util/Makefile \
-    src/wsrm/Makefile \
-    src/transport/Makefile \
-    src/handlers/Makefile \
-    src/msgprocessors/Makefile \
-    src/storage/Makefile \
-    src/storage/beans/Makefile \
+    src/wsrm/Makefile\
+    src/transport/Makefile\
+    src/handlers/Makefile\
+    src/msgprocessors/Makefile\
+    src/storage/Makefile\
+    src/storage/beans/Makefile\
     src/storage/common/Makefile \
-    src/storage/sqlite/Makefile \
+    src/storage/sqlite/Makefile\
     src/client/Makefile \
     src/core/Makefile \
     src/polling/Makefile 

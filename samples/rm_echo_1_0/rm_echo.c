@@ -50,10 +50,6 @@ void wait_on_callback(
     const axutil_env_t *env,
     axis2_callback_t *callback);
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -68,8 +64,6 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
-    axis2_char_t *offered_seq_id = NULL;
-    int c;
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -80,33 +74,21 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "http://127.0.0.1:9090/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
         }
     }
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
-    }
-    printf ("Using endpoint : %s\n", address);
-    
+    printf("Using endpoint : %s\n", address);
+
     /* Create EPR with given address */
     endpoint_ref = axis2_endpoint_ref_create(env, address);
 
@@ -167,17 +149,6 @@ int main(int argc, char** argv)
 
     axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
 
-    /* Offer sequence */
-    offered_seq_id = axutil_uuid_gen(env);
-    property = axutil_property_create(env);
-    if(property)
-    {
-        axutil_property_set_value(property, env, axutil_strdup(env, 
-            offered_seq_id));
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_OFFERED_SEQ_ID, property);
-    }
-
     /* RM Version 1.0 */
     property = axutil_property_create_with_args(env, 3, 0, 0, 
         SANDESHA2_SPEC_VERSION_1_0);
@@ -212,14 +183,10 @@ int main(int argc, char** argv)
         axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback1);
         wait_on_callback(env, callback1);
     }
-
     axis2_svc_client_remove_all_headers(svc_client, env);
+    /*axis2_options_set_reply_to(options, env, NULL);*/
+    axis2_svc_client_close(svc_client, env);
     
-    axis2_options_set_action(options, env, SANDESHA2_SPEC_2005_02_SOAP_ACTION_LAST_MESSAGE);
-    property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
-    axis2_options_set_property(options, env, "Sandesha2LastMessage", property);
-    axis2_svc_client_send_robust(svc_client, env, NULL);
-
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
     AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
@@ -309,17 +276,4 @@ void wait_on_callback(
     }
     return;
 }
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is http://127.0.0.1:9090/axis2/services/RM10SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
-}
-
 

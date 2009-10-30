@@ -295,7 +295,7 @@ sandesha2_make_connection_msg_processor_process_in_msg (
     }
 
     int_seq_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, seq_id, 
-            SANDESHA2_SEQUENCE_PROPERTY_RMS_INTERNAL_SEQ_ID);
+            SANDESHA2_SEQUENCE_PROPERTY_OUTGOING_INTERNAL_SEQUENCE_ID);
 
     if(int_seq_bean)
     {
