@@ -44,7 +44,6 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axutil_property_t *property = NULL;
     axis2_listener_manager_t *listener_manager = NULL;
     int i;
     axis2_status_t status = AXIS2_FAILURE;
@@ -137,13 +136,6 @@ int main(int argc, char** argv)
     if (!listener_manager)
     {
         return AXIS2_FAILURE;
-    }
-
-    /* RM Version 1.1 */
-    property = axutil_property_create_with_args(env, 3, 0, 0, SANDESHA2_SPEC_VERSION_1_1);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
 
     for(i = 1; i < 4; i++)

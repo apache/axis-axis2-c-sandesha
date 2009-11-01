@@ -133,15 +133,6 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    /* RM Version 1.0 */
-    property = axutil_property_create_with_args(env, 3, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_0);
-    if(property)
-    {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
-     
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
     {

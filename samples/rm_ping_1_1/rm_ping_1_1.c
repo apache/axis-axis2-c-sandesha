@@ -42,7 +42,6 @@ int main(int argc, char** argv)
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
-    axutil_property_t *property = NULL;
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -123,14 +122,6 @@ int main(int argc, char** argv)
     
     /* Build the SOAP request message payload using OM API.*/
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
-    /* RM Version 1.1 */
-    property = axutil_property_create_with_args(env, 0, 0, 0, 
-        SANDESHA2_SPEC_VERSION_1_1);
-    if(property)
-    {
-        axis2_options_set_property(options, env, 
-            SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
 
     for(i = 1; i < 4; i++)
     {

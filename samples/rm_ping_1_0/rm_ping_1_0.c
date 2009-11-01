@@ -42,7 +42,6 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axutil_property_t *property = NULL;
     int ii;
     neethi_policy_t *policy = NULL;
  
@@ -125,13 +124,6 @@ int main(int argc, char** argv)
     
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
     
-    /* RM Version 1.0 */
-    property = axutil_property_create_with_args(env, 0, 0, 0, SANDESHA2_SPEC_VERSION_1_0);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
-
     /* Send request */
     for(ii = 0; ii < 4; ii++)
     {
