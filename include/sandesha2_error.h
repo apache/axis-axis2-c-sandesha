@@ -207,6 +207,9 @@ extern "C"
         SANDESHA2_ERROR_CANNOT_FIND_OP_FOR_GENERATED_MSG,
         /* Invalid persistence property string */
         SANDESHA2_ERROR_INVALID_PERSISTENCE_PROPERTY_STRING,
+        /* Could not create storage manager */
+        SANDESHA2_ERROR_COULD_NOT_CREATE_STORAGE_MANAGER,
+
         SANDESHA2_ERROR_LAST
     };
         
