@@ -214,7 +214,18 @@ sandesha2_property_bean_set_polling_delay(
     sandesha2_property_bean_t *bean,
     const axutil_env_t *env, 
     int delay);
-                       
+ 
+axis2_char_t* AXIS2_CALL
+sandesha2_property_bean_get_spec_version(
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env);
+            
+axis2_status_t AXIS2_CALL
+sandesha2_property_bean_set_spec_version(
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env, 
+    axis2_char_t *spec_version);
+                      
 /** @} */
 #ifdef __cplusplus
 }

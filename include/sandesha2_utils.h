@@ -65,8 +65,7 @@ sandesha2_utils_remove_soap_body_part(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(
     const axutil_env_t *env,
-    axis2_char_t *key,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr);
+    axis2_msg_ctx_t *msg_ctx);
                         
 AXIS2_EXTERN sandesha2_storage_mgr_t* AXIS2_CALL
 sandesha2_utils_get_storage_mgr(
