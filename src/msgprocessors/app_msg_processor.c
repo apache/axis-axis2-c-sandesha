@@ -1861,7 +1861,7 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
     one_way = AXIS2_MEP_CONSTANT_IN_ONLY == mep;
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "MEP:%d", mep);
 
-    rm_version = sandesha2_utils_get_rm_version(env, incoming_sequence_id, seq_prop_mgr);
+    rm_version = sandesha2_utils_get_rm_version(env, msg_ctx);
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -1890,11 +1890,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
             AXIS2_FREE(env->allocator, acks_to_str);
         }
         
-        if(rm_version)
-        {
-            AXIS2_FREE(env->allocator, rm_version);
-        }
-
         return AXIS2_SUCCESS;
     } 
 
@@ -1903,11 +1898,6 @@ sandesha2_app_msg_processor_send_ack_if_reqd(
         AXIS2_FREE(env->allocator, acks_to_str);
     }
         
-    if(rm_version)
-    {
-        AXIS2_FREE(env->allocator, rm_version);
-    }
-
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
@@ -2340,7 +2330,7 @@ sandesha2_app_msg_processor_send_create_seq_msg(
         reply_to_addr = sandesha2_seq_property_bean_get_value(reply_to_bean, env);
     }
 
-    rm_version = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+    rm_version = sandesha2_utils_get_rm_version(env, msg_ctx);
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -2497,11 +2487,6 @@ sandesha2_app_msg_processor_send_create_seq_msg(
          */
         status = sandesha2_app_msg_processor_start_create_seq_msg_resender(env, conf_ctx, 
                 internal_sequence_id, msg_id, is_svr_side, retrans_interval);
-    }
-
-    if(rm_version)
-    {
-        AXIS2_FREE(env->allocator, rm_version);
     }
 
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI,   
@@ -2941,7 +2926,7 @@ sandesha2_app_msg_processor_send_app_msg(
         sandesha2_msg_ctx_set_to(rm_msg_ctx, env, to_epr);
     }
 
-    rm_version = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+    rm_version = sandesha2_utils_get_rm_version(env, app_msg_ctx);
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -2979,10 +2964,6 @@ sandesha2_app_msg_processor_send_app_msg(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Sequence not found");
             AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_NULL_SEQ, AXIS2_FAILURE);
-            if(rm_version)
-            {
-                AXIS2_FREE(env->allocator, rm_version);
-            }
             if(req_rm_msg)
             {
                 sandesha2_msg_ctx_free(req_rm_msg, env);
@@ -3149,11 +3130,6 @@ sandesha2_app_msg_processor_send_app_msg(
         engine = axis2_engine_create(env, conf_ctx);
         status = axis2_engine_resume_send(engine, env, app_msg_ctx);
 
-        if(rm_version)
-        {
-            AXIS2_FREE(env->allocator, rm_version);
-        }
-
         if(app_msg_sender_bean)
         {
             sandesha2_sender_bean_free(app_msg_sender_bean, env);
@@ -3210,11 +3186,6 @@ sandesha2_app_msg_processor_send_app_msg(
     if(!continue_sending)
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sandesha2] Do not continue sending the message");
-
-        if(rm_version)
-        {
-            AXIS2_FREE(env->allocator, rm_version);
-        }
 
         if(reply_to_addr)
         {
@@ -3413,11 +3384,6 @@ sandesha2_app_msg_processor_send_app_msg(
             }
         }
 
-        if(rm_version)
-        {
-            AXIS2_FREE(env->allocator, rm_version);
-        }
-
         if(reply_to_addr)
         {
             AXIS2_FREE(env->allocator, reply_to_addr);
@@ -3479,11 +3445,6 @@ sandesha2_app_msg_processor_send_app_msg(
                 internal_sequence_id, msg_id, is_svr_side, retrans_interval, app_msg_ctx, rm_sequence);
     }
    
-    if(rm_version)
-    {
-        AXIS2_FREE(env->allocator, rm_version);
-    }
-
     if(reply_to_addr)
     {
         AXIS2_FREE(env->allocator, reply_to_addr);
@@ -3665,7 +3626,7 @@ sandesha2_app_msg_processor_application_msg_worker_function(
 
     rm_msg_ctx = sandesha2_msg_init_init_msg(env, app_msg_ctx);
 
-    rm_version = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+    rm_version = sandesha2_utils_get_rm_version(env, app_msg_ctx);
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -4225,7 +4186,7 @@ sandesha2_app_msg_processor_is_last_out_msg(
         {
             axis2_char_t *spec_ver = NULL;
 
-            spec_ver = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+            spec_ver = sandesha2_utils_get_rm_version(env, msg_ctx);
             if(!spec_ver)
             {
                 axutil_property_t *spec_ver_prop = NULL;
@@ -4238,11 +4199,6 @@ sandesha2_app_msg_processor_is_last_out_msg(
             if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd(env, spec_ver))
             {
                 last_msg = AXIS2_TRUE;
-            }
-            if(spec_ver)
-            {
-                AXIS2_FREE(env->allocator, spec_ver);
-                spec_ver = NULL;
             }
         }
     }

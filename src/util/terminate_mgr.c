@@ -918,7 +918,7 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         sandesha2_msg_ctx_set_to(terminate_rm_msg_ctx, env, to_epr);
     }
 
-    rm_ver = sandesha2_utils_get_rm_version(env, internal_sequence_id, seq_prop_mgr);
+    rm_ver = sandesha2_utils_get_rm_version(env, msg_ctx);
     if(!rm_ver)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[sandesha2] Cannot find the rm version for msg");
@@ -999,11 +999,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         /* We should not go and clean the database. */
         /*sandesha2_terminate_mgr_terminate_sending_side(env, conf_ctx, internal_sequence_id, 
                 is_svr_side, storage_mgr, seq_prop_mgr, create_seq_mgr, sender_mgr);*/
-
-        if(rm_ver)
-        {
-            AXIS2_FREE(env->allocator, rm_ver);
-        }
 
         if(terminate_rm_msg_ctx)
         {
@@ -1214,11 +1209,6 @@ sandesha2_terminate_mgr_send_terminate_seq_msg(
         }
     }
     
-    if(rm_ver)
-    {
-        AXIS2_FREE(env->allocator, rm_ver);
-    }
-
     sandesha2_storage_mgr_store_msg_ctx(storage_mgr, env, key, terminate_msg_ctx, AXIS2_TRUE);
 
     if(terminate_sender_bean)

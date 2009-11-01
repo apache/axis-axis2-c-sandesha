@@ -285,6 +285,7 @@ sandesha2_property_mgr_load_properties_from_policy(
     int terminate_delay = -1;
     int polling_delay = -1;
     axis2_char_t *polling_delay_str = NULL; 
+    axis2_char_t *spec_version = NULL; 
 
     AXIS2_PARAM_CHECK(env->error, rm_assertion, NULL);
     
@@ -399,6 +400,12 @@ sandesha2_property_mgr_load_properties_from_policy(
         {
             AXIS2_FREE(env->allocator, str);
         }
+    }
+    
+    spec_version = axis2_rm_assertion_get_spec_version(rm_assertion, env);
+    if(spec_version)
+    {
+        sandesha2_property_bean_set_spec_version(property_bean, env, spec_version);        
     }
 
     return property_bean;

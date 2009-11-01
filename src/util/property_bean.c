@@ -36,6 +36,7 @@ struct sandesha2_property_bean_t
     int terminate_delay;
     int polling_delay;
     axis2_char_t *db_path;
+    axis2_char_t *spec_version;
 };
 
 AXIS2_EXTERN sandesha2_property_bean_t* AXIS2_CALL
@@ -63,6 +64,7 @@ sandesha2_property_bean_create(
     bean->terminate_delay = 0;
     bean->polling_delay = 0;
     bean->db_path = NULL;
+    bean->spec_version = NULL;
     
 	return bean;
 }
@@ -96,6 +98,12 @@ sandesha2_property_bean_free(
     {
         AXIS2_FREE(env->allocator, bean->storage_mgr);
         bean->storage_mgr = NULL;
+    }
+
+    if(bean->spec_version)
+    {
+        AXIS2_FREE(env->allocator, bean->spec_version);
+        bean->spec_version = NULL;
     }
 	AXIS2_FREE(env->allocator, bean);
 	return;
@@ -341,6 +349,25 @@ sandesha2_property_bean_set_polling_delay(
     int delay)
 {
     bean->polling_delay = delay;
+    return AXIS2_SUCCESS;
+}
+
+axis2_char_t* AXIS2_CALL
+sandesha2_property_bean_get_spec_version(
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env)
+{
+    return bean->spec_version;
+}
+            
+axis2_status_t AXIS2_CALL
+sandesha2_property_bean_set_spec_version(
+    sandesha2_property_bean_t *bean,
+    const axutil_env_t *env, 
+    axis2_char_t *spec_version)
+{
+    AXIS2_PARAM_CHECK(env->error, spec_version, AXIS2_FAILURE);
+    bean->spec_version = axutil_strdup(env, spec_version);
     return AXIS2_SUCCESS;
 }
 

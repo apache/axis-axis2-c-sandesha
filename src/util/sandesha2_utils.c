@@ -151,25 +151,19 @@ sandesha2_utils_get_current_time_in_millis(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 sandesha2_utils_get_rm_version(
     const axutil_env_t *env,
-    axis2_char_t *key,
-    sandesha2_seq_property_mgr_t *seq_prop_mgr)
+    axis2_msg_ctx_t *msg_ctx)
 {
     axis2_char_t *value = NULL;
-    sandesha2_seq_property_bean_t *rm_version_bean = NULL;
+    sandesha2_property_bean_t *prop_bean = NULL;
+    axis2_svc_t *svc = NULL;
     
-    AXIS2_PARAM_CHECK(env->error, key, NULL);
+    svc = axis2_msg_ctx_get_svc(msg_ctx, env);
+    prop_bean = sandesha2_utils_get_property_bean(env, svc);
+    if(prop_bean)
+    {
+        value = sandesha2_property_bean_get_spec_version(prop_bean, env);
+    }
     
-    if(seq_prop_mgr)
-    {
-        rm_version_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, 
-            env, key, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-    }
-    if(!rm_version_bean)
-    {
-        return NULL;
-    }
-    value = axutil_strdup(env, sandesha2_seq_property_bean_get_value(rm_version_bean, env));
-    sandesha2_seq_property_bean_free(rm_version_bean, env);
     return value;
 }
 

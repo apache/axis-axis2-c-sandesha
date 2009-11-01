@@ -426,8 +426,7 @@ static axis2_bool_t validate_msg(
         axis2_char_t *spec_version = NULL;
         axis2_char_t *seq_rm_ns = NULL;
         
-        spec_version = sandesha2_utils_get_rm_version(env, prop_key, 
-            seq_prop_mgr);
+        spec_version = sandesha2_utils_get_rm_version(env, temp_msg_ctx);
         if(prop_key)
         {
             AXIS2_FREE(env->allocator, prop_key);
@@ -438,8 +437,6 @@ static axis2_bool_t validate_msg(
             seq_rm_ns = sandesha2_spec_specific_consts_get_rm_ns_val(env, 
                     spec_version);
         }
-        if(spec_version)
-            AXIS2_FREE(env->allocator, spec_version);
         if(seq_rm_ns && rm_ns)
         {
             if(0 != axutil_strcmp(seq_rm_ns, rm_ns))

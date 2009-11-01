@@ -865,7 +865,7 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
     property = axutil_property_create_with_args(env, 0, 0, 0, AXIS2_VALUE_TRUE);
     axis2_msg_ctx_set_property(msg_ctx, env, SANDESHA2_APPLICATION_PROCESSING_DONE, property);
     axis2_msg_ctx_set_to(msg_ctx, env, axis2_endpoint_ref_create(env, to_address));
-    rm_version = sandesha2_utils_get_rm_version(env, int_seq_id, seq_prop_mgr);
+    rm_version = sandesha2_utils_get_rm_version(env, msg_ctx);
     if(!rm_version)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -903,10 +903,6 @@ sandesha2_terminate_seq_msg_processor_process_out_msg(
             sandesha2_spec_specific_consts_get_terminate_seq_action(env, rm_version));
 
     temp_action = sandesha2_spec_specific_consts_get_terminate_seq_soap_action(env, rm_version);
-    if(rm_version)
-    {
-        AXIS2_FREE(env->allocator, rm_version);
-    }
 
     soap_action = axutil_string_create(env, temp_action);
     axis2_msg_ctx_set_soap_action(msg_ctx, env, soap_action);
