@@ -176,6 +176,8 @@ sandesha2_error_init()
         "Cannot find a operation for generated message";
     axutil_error_messages[SANDESHA2_ERROR_INVALID_PERSISTENCE_PROPERTY_STRING]=
         "Invalid persistence property string";
+    axutil_error_messages[SANDESHA2_ERROR_COULD_NOT_CREATE_STORAGE_MANAGER]=
+        "Could not create storage manager";
 
     return AXIS2_SUCCESS;
 }
