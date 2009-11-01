@@ -40,25 +40,23 @@ sandesha2_msg_validator_validate_msg(
         seq_id = sandesha2_utils_get_seq_id_from_rm_msg_ctx(env, rm_msg_ctx);
         if(NULL != seq_id)
         {
-            axis2_char_t *rm_ver_seq = NULL;
+            axis2_char_t *rm_version = NULL;
             axis2_char_t *addr_ns_seq = NULL;
             axis2_char_t *rm_ns_msg = NULL;
             axis2_char_t *addr_ns_msg = NULL;
             axis2_char_t *rm_ns_seq = NULL;
             
-            rm_ver_seq = sandesha2_utils_get_seq_property(env, seq_id, 
-                SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, seq_prop_mgr);
+            rm_version = sandesha2_utils_get_rm_version(env, sandesha2_msg_ctx_get_msg_ctx(
+                        rm_msg_ctx, env));
             addr_ns_seq = sandesha2_utils_get_seq_property(env, seq_id, 
                 SANDESHA2_SEQ_PROP_ADDRESSING_NAMESPACE_VALUE, seq_prop_mgr);
             rm_ns_msg = sandesha2_msg_ctx_get_rm_ns_val(rm_msg_ctx, env);
             addr_ns_msg = sandesha2_msg_ctx_get_addr_ns_val(rm_msg_ctx, env);
             
-            if(rm_ver_seq)
+            if(rm_version)
             {
                 rm_ns_seq = sandesha2_spec_specific_consts_get_rm_ns_val(env,
-                        rm_ver_seq);
-                if(rm_ver_seq)
-                    AXIS2_FREE(env->allocator, rm_ver_seq);
+                        rm_version);
             }
             
             if(NULL != rm_ns_seq && 0 != axutil_strcmp(rm_ns_seq, rm_ns_msg))

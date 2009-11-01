@@ -327,7 +327,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
         sandesha2_seq_property_bean_t *acks_to_bean = NULL;
         sandesha2_next_msg_bean_t *next_bean = NULL;
         sandesha2_next_msg_mgr_t *next_msg_mgr = NULL;
-        sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
         sandesha2_seq_property_bean_t *rcvd_msg_bean = NULL;
         sandesha2_seq_property_bean_t *msgs_bean = NULL;
         sandesha2_seq_property_bean_t *addr_ver_bean = NULL;
@@ -567,15 +566,6 @@ sandesha2_create_seq_res_msg_processor_process_in_msg (
 
         sandesha2_next_msg_mgr_insert(next_msg_mgr, env, next_bean);
         sandesha2_next_msg_bean_free(next_bean, env);
-        
-        spec_ver_bean = sandesha2_seq_property_bean_create_with_data(env, incoming_sequence_id, 
-                SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, rm_spec_ver);
-
-        if(spec_ver_bean)
-        {
-            sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_ver_bean);
-            sandesha2_seq_property_bean_free(spec_ver_bean, env);
-        }
         
         rcvd_msg_bean = sandesha2_seq_property_bean_create_with_data(env, incoming_sequence_id, 
                 SANDESHA2_SEQ_PROP_SERVER_COMPLETED_MESSAGES, "");

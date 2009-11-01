@@ -67,7 +67,6 @@ sandesha2_seq_mgr_setup_new_incoming_sequence(
     sandesha2_seq_property_bean_t *reply_to_bean = NULL;
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     sandesha2_seq_property_bean_t *to_bean = NULL;
-    sandesha2_seq_property_bean_t *spec_version_bean = NULL;
     sandesha2_next_msg_bean_t *next_msg_bean = NULL;
     axis2_char_t *addressing_ns_value = NULL;
     axis2_char_t *anonymous_uri = NULL;
@@ -220,17 +219,6 @@ sandesha2_seq_mgr_setup_new_incoming_sequence(
         return NULL;
     }
 
-    spec_version_bean = sandesha2_seq_property_bean_create(env);
-    if(spec_version_bean)
-    {
-        sandesha2_seq_property_bean_set_seq_id(spec_version_bean, env, rmd_sequence_id);
-        sandesha2_seq_property_bean_set_name(spec_version_bean, env, SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-        sandesha2_seq_property_bean_set_value(spec_version_bean, env, spec_version);
-   
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr,env, spec_version_bean);
-        sandesha2_seq_property_bean_free(spec_version_bean, env);
-    }
-
     if(spec_version)
     {
         AXIS2_FREE(env->allocator, spec_version);
@@ -377,7 +365,6 @@ sandesha2_seq_mgr_setup_new_outgoing_sequence(
     sandesha2_seq_property_bean_t *acks_to_bean = NULL;
     sandesha2_seq_property_bean_t *msgs_bean = NULL;
     axis2_char_t *transport_to = NULL;
-    sandesha2_seq_property_bean_t *spec_version_bean = NULL;
     axis2_endpoint_ref_t *reply_to_epr = NULL;
     axis2_bool_t is_svr_side = AXIS2_FALSE;
    
@@ -536,14 +523,6 @@ sandesha2_seq_mgr_setup_new_outgoing_sequence(
                 SANDESHA2_SEQ_PROP_TRANSPORT_TO, transport_to);
 
         sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, transport_to_bean);
-    }
-
-    spec_version_bean = sandesha2_seq_property_bean_create_with_data(env, internal_sequence_id, 
-            SANDESHA2_SEQ_PROP_RM_SPEC_VERSION, spec_version);
-    if(spec_version_bean)
-    {
-        sandesha2_seq_property_mgr_insert(seq_prop_mgr, env, spec_version_bean);
-        sandesha2_seq_property_bean_free(spec_version_bean, env);
     }
 
     sandesha2_seq_mgr_update_last_activated_time(env, internal_sequence_id, seq_prop_mgr);

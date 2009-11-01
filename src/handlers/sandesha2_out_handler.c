@@ -171,7 +171,6 @@ sandesha2_out_handler_invoke(
     if(temp_prop)
     {
         axis2_char_t *spec_version = NULL;
-        axutil_property_t *property = NULL;
 
         axis2_endpoint_ref_t *reply_to = axis2_msg_ctx_get_reply_to(msg_ctx, env);
         if(reply_to)
@@ -179,11 +178,7 @@ sandesha2_out_handler_invoke(
             axis2_char_t *address = axis2_endpoint_ref_get_address(reply_to, env);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "dam_reply_to_address:%s", address);
         }
-        property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
-        if(property)
-        {
-            spec_version = axutil_property_get_value(property, env);
-        }
+        spec_version = sandesha2_utils_get_rm_version(env, msg_ctx);
 
         if(!axutil_strcmp(SANDESHA2_SPEC_VERSION_1_1, spec_version))
         {

@@ -1085,7 +1085,6 @@ sandesha2_app_msg_processor_process_out_msg(
     sandesha2_seq_property_bean_t *res_highest_msg_bean = NULL;
     axis2_char_t msg_number_str[32];
     axis2_bool_t send_create_seq = AXIS2_FALSE;
-    sandesha2_seq_property_bean_t *spec_ver_bean = NULL;
     axis2_char_t *spec_ver = NULL;
     axiom_soap_envelope_t *soap_env = NULL;
     axis2_endpoint_ref_t *to_epr = NULL;
@@ -1456,52 +1455,16 @@ sandesha2_app_msg_processor_process_out_msg(
             sandesha2_seq_property_bean_free(rmd_to_bean, env);
         }
        
-        spec_ver_bean = sandesha2_seq_property_mgr_retrieve(seq_prop_mgr, env, rmd_sequence_id, 
-                SANDESHA2_SEQ_PROP_RM_SPEC_VERSION);
-
         if(req_rm_msg_ctx)
         {
             sandesha2_msg_ctx_free(req_rm_msg_ctx, env);
         }
-        if(!spec_ver_bean)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[sandesha2] Invalid spec version");
-            AXIS2_ERROR_SET(env->error, SANDESHA2_ERROR_INVALID_SPEC_VERSION,
-                AXIS2_FAILURE);
-            if(internal_sequence_id)
-            {
-                AXIS2_FREE(env->allocator, internal_sequence_id);
-            }
-            if(seq_prop_mgr)
-            {
-                sandesha2_seq_property_mgr_free(seq_prop_mgr, env);
-            }
-            if(create_seq_mgr)
-            {
-                sandesha2_create_seq_mgr_free(create_seq_mgr, env);
-            }
-            if(sender_mgr)
-            {
-                sandesha2_sender_mgr_free(sender_mgr, env);
-            }
-            if(storage_mgr)
-            {
-                sandesha2_storage_mgr_free(storage_mgr, env);
-            }
 
-            return AXIS2_FAILURE;
-        }
-
-        spec_ver = sandesha2_seq_property_bean_get_value(spec_ver_bean, env);
+        spec_ver = sandesha2_utils_get_rm_version(env, msg_ctx);
     }
     else
     {
-        property = axis2_msg_ctx_get_property(msg_ctx, env, SANDESHA2_CLIENT_RM_SPEC_VERSION);
-        if(property)
-        {
-            spec_ver = axutil_property_get_value(property, env);
-        }
+        spec_ver = sandesha2_utils_get_rm_version(env, msg_ctx);
     }
 
     if(!spec_ver)
@@ -1532,11 +1495,6 @@ sandesha2_app_msg_processor_process_out_msg(
     if(rms_sequence_bean)
     {
         sandesha2_seq_property_bean_free(rms_sequence_bean, env);
-    }
-
-    if(spec_ver_bean)
-    {
-        sandesha2_seq_property_bean_free(spec_ver_bean, env);
     }
 
     if(send_create_seq)
@@ -4187,15 +4145,6 @@ sandesha2_app_msg_processor_is_last_out_msg(
             axis2_char_t *spec_ver = NULL;
 
             spec_ver = sandesha2_utils_get_rm_version(env, msg_ctx);
-            if(!spec_ver)
-            {
-                axutil_property_t *spec_ver_prop = NULL;
-
-                spec_ver_prop = axis2_msg_ctx_get_property(msg_ctx, env, 
-                        SANDESHA2_CLIENT_RM_SPEC_VERSION);
-
-                spec_ver = axutil_strdup(env, axutil_property_get_value(spec_ver_prop, env));
-            }
             if(sandesha2_spec_specific_consts_is_last_msg_indicator_reqd(env, spec_ver))
             {
                 last_msg = AXIS2_TRUE;
