@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
+
+#include <axis2_rm_assertion.h>
 #include <sandesha2_property_mgr.h>
 #include <sys/timeb.h>
 #include <axutil_param.h>
@@ -31,8 +33,9 @@
 #include <sandesha2_utils.h>
 #include <axutil_param.h>
 #include <stdlib.h>
+
 #include <axutil_types.h>
-#include <axis2_rm_assertion.h>
+
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 sandesha2_property_mgr_load_exp_backoff(
@@ -401,13 +404,13 @@ sandesha2_property_mgr_load_properties_from_policy(
             AXIS2_FREE(env->allocator, str);
         }
     }
-    
+   /* 
     spec_version = axis2_rm_assertion_get_spec_version(rm_assertion, env);
     if(spec_version)
     {
         sandesha2_property_bean_set_spec_version(property_bean, env, spec_version);        
     }
-
+	*/
     return property_bean;
 }
 
