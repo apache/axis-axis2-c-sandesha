@@ -81,9 +81,6 @@ intdir:
 	if not exist $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0 mkdir $(SANDESHA2_INTDIR)\samples\rm_mtom_1_0
 	if not exist $(SANDESHA2_INTDIR)\samples\rm_ping_1_0 mkdir $(SANDESHA2_INTDIR)\samples\rm_ping_1_0 
 	if not exist $(SANDESHA2_INTDIR)\samples\rm_ping_1_1 mkdir $(SANDESHA2_INTDIR)\samples\rm_Ping_1_1
-	if not exist $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence mkdir $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence
-	if not exist $(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence mkdir $(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence
-	if not exist $(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence mkdir $(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence
 	if not exist $(SANDESHA2_INTDIR)\samples\RM10SampleService mkdir $(SANDESHA2_INTDIR)\samples\RM10SampleService
 	if not exist $(SANDESHA2_INTDIR)\samples\RM11SampleService mkdir $(SANDESHA2_INTDIR)\samples\RM11SampleService
 
@@ -242,13 +239,6 @@ $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0.exe :
 
 rm_ping_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0.exe
 
-$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe :
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_ping_1_0_large_sequence\*.obj $(SANDESHA_DLL).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
-
-rm_ping_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_0_large_sequence.exe
 
 $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_ping_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_ping_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_ping_1_1\ /c
@@ -266,14 +256,6 @@ $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0.exe :
 
 rm_echo_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0.exe
 
-$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe :
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_1_0_large_sequence\*.obj $(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
-
-rm_echo_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_0_large_sequence.exe
-	
 	
 $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_1_1\ /c
@@ -298,13 +280,6 @@ $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0.exe :
 	-@$(_VC_MANIFEST_EMBED_EXE)
 rm_echo_single_1_0: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0.exe
 
-$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe :
-	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_0_large_sequence\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence\ /c
-	$(LD) $(LDFLAGS) $(LIBS) $(SANDESHA2_INTDIR)\samples\rm_echo_single_1_0_large_sequence\*.obj \
-	$(SANDESHA_DLL).lib $(SANDESHA_CLIENT).lib \
-	/OUT:$(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe
-	-@$(_VC_MANIFEST_EMBED_EXE)
-rm_echo_single_1_0_large_sequence: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_0_large_sequence.exe
 
 $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe :
 	$(CC) $(CFLAGS) $(SANDESHASRC)\samples\rm_echo_single_1_1\*.c /Fo$(SANDESHA2_INTDIR)\samples\rm_echo_single_1_1\ /c
@@ -314,7 +289,7 @@ $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe :
 rm_echo_single_1_1: $(SANDESHADISTDIR)\samples\bin\sandesha2\rm_echo_single_1_1.exe
 
 
-all_clients: rm_ping_1_0 rm_ping_1_1 rm_echo_1_1 rm_echo_1_0 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1 rm_echo_single_1_0_large_sequence rm_echo_1_0_large_sequence rm_ping_1_0_large_sequence
+all_clients: rm_ping_1_0 rm_ping_1_1 rm_echo_1_1 rm_echo_1_0 rm_mtom_1_0 rm_echo_single_1_0 rm_echo_single_1_1
 
 
 #### services
