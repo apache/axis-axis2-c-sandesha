@@ -30,6 +30,7 @@
 #include <sandesha2_utils.h>
 #include <sandesha2_msg_ctx.h>
 #include <axis2_msg_ctx.h>
+#include <axis2_http_transport_utils.h>
 #include <axutil_string.h>
 #include <axis2_engine.h>
 #include <axiom_soap_const.h>

@@ -24,8 +24,10 @@
 #include <sandesha2_permanent_create_seq_mgr.h>
 #include <sandesha2_permanent_sender_mgr.h>
 #include <sandesha2_constants.h>
+#include <sandesha2_terminate_mgr.h>
 #include <axis2_conf_ctx.h>
 #include <sandesha2_utils.h>
+#include <axis2_http_transport_utils.h>
 
 /** 
  * @brief Close Sequence Response Message Processor struct impl
