@@ -33,10 +33,6 @@
 
 #define SANDESHA2_MAX_COUNT 2
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -49,13 +45,12 @@ int main(int argc, char** argv)
     axis2_char_t *offered_seq_id = NULL;
     axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
-    axis2_char_t *seq_key = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
-    int c, i;
     extern char *optarg;
     extern int optopt;
     axis2_endpoint_ref_t *reply_to = NULL;
+    int i = -1;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_0_amqp.log", 
@@ -63,30 +58,18 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
         }
-    }
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
+        else
+        {
+            address = argv[1];
+        }
     }
     printf ("Using endpoint : %s\n", address);
     
@@ -171,13 +154,6 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-            property);
-    }
      
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");
     if(property)
@@ -192,7 +168,7 @@ int main(int argc, char** argv)
         axis2_char_t echo_str[7];
         
         sprintf(echo_str, "%s%d", "echo", i);
-        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
+        payload = build_om_payload_for_echo_svc(env, echo_str);
         result = axis2_svc_client_send_receive(svc_client, env, payload);
         if(result)
         {
@@ -226,7 +202,6 @@ int main(int argc, char** argv)
     }
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
-    AXIS2_FREE(env->allocator, seq_key);
 
     if(offered_seq_id)
     {
@@ -246,17 +221,5 @@ int main(int argc, char** argv)
     }
   
     return 0;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is amqp://127.0.0.1:5672/axis2/services/RM10SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 

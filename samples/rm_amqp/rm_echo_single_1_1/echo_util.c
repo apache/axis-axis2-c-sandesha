@@ -20,15 +20,12 @@
 axiom_node_t *
 build_om_payload_for_echo_svc(
    const axutil_env_t *env,
-   axis2_char_t *text,
-   axis2_char_t *seq)
+   axis2_char_t *text)
 {
     axiom_node_t *echo_om_node = NULL;
     axiom_element_t* echo_om_ele = NULL;
     axiom_node_t* text_om_node = NULL;
     axiom_element_t * text_om_ele = NULL;
-    axiom_node_t* seq_om_node = NULL;
-    axiom_element_t * seq_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
     axis2_char_t *om_str = NULL;
     axis2_char_t *ns = NULL;
@@ -38,9 +35,7 @@ build_om_payload_for_echo_svc(
     ns1 = axiom_namespace_create (env, ns, "ns1");
     echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
     text_om_ele = axiom_element_create(env, echo_om_node, "Text", ns1, &text_om_node);
-    seq_om_ele = axiom_element_create(env, echo_om_node, "Sequence", ns1, &seq_om_node);
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
-    axiom_element_set_text(text_om_ele, env, seq, seq_om_node);
     
     om_str = axiom_node_to_string(echo_om_node, env);
     if (om_str)

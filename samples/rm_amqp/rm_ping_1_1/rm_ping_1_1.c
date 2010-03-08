@@ -31,25 +31,18 @@
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text,
-    const axis2_char_t *seq);
-
-static void 
-usage(
-    axis2_char_t *prog_name);
+    axis2_char_t *text);
 
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
-    const axis2_char_t *seq_key = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_options_t *options = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axutil_property_t *property = NULL;
-    int c;
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -61,26 +54,17 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM11SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:k:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case 'k': /* Sequenc Key */
-                seq_key = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
         }
     }
 
@@ -151,15 +135,6 @@ int main(int argc, char** argv)
         axis2_options_set_property(options, env, 
             SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    if(seq_key)
-    {
-        property = axutil_property_create_with_args(env, 3, 0, 0, (void*)seq_key);
-        if(property)
-        {
-            axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-                property);
-        }
-    }
 
     for(i = 1; i < 4; i++)
     {
@@ -168,7 +143,7 @@ int main(int argc, char** argv)
         sprintf(echo_str, "%s%d", "echo", i);
 
         /* Send request */
-        payload = build_om_programatically(env, echo_str, seq_key);
+        payload = build_om_programatically(env, echo_str);
         status = axis2_svc_client_send_robust(svc_client, env, payload);
         if(status)
         {
@@ -201,45 +176,24 @@ int main(int argc, char** argv)
 axiom_node_t *
 build_om_programatically(
     const axutil_env_t *env,
-    axis2_char_t *text,
-    const axis2_char_t *seq_key)
+    axis2_char_t *text)
 {
     axiom_node_t *ping_om_node = NULL;
     axiom_element_t* ping_om_ele = NULL;
     axiom_node_t *text_om_node = NULL;
     axiom_element_t* text_om_ele = NULL;
-    axiom_node_t* seq_om_node = NULL;
-    axiom_element_t * seq_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
     axis2_char_t *buffer = NULL;
     
     ns1 = axiom_namespace_create (env, "http://tempuri.org/", "ns1");
     ping_om_ele = axiom_element_create(env, NULL, "ping", ns1, &ping_om_node);
     text_om_ele = axiom_element_create(env, ping_om_node, "Text", ns1, &text_om_node);
-    if(seq_key)
-        seq_om_ele = axiom_element_create(env, ping_om_node, "Sequence", ns1, &seq_om_node);
     axiom_element_set_text(text_om_ele, env, text, text_om_node);
-    if(seq_key)
-        axiom_element_set_text(text_om_ele, env, seq_key, seq_om_node);
     
     buffer = axiom_node_to_string(ping_om_node, env);
     printf("\nSending OM node in XML : %s \n",  buffer); 
 
     return ping_om_node;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " [-k PROVIDE SEQUENCE KEY]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-k PROVIDE SEQUENCE KEY \t provide the sequence key as string \n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
-            " default is amqp://127.0.0.1:5672/axis2/services/RM11SampleService ../\n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
 

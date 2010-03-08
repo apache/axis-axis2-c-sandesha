@@ -23,7 +23,6 @@
 axiom_node_t *
 build_om_payload_for_echo_svc(
    const axutil_env_t *env,
-   axis2_char_t *text,
-   axis2_char_t *seq);
+   axis2_char_t *text);
 
 #endif

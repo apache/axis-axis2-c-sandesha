@@ -33,10 +33,6 @@ build_om_programatically(
     axis2_char_t *text,
     axis2_char_t *seq_key);
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -48,33 +44,25 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axutil_property_t *property = NULL;
-    int c;
     axis2_char_t *seq_key = NULL;
     neethi_policy_t *policy = NULL;
-    extern char *optarg;
-    extern int optopt; 
+    
     /* Set up the environment */
     env = axutil_env_create_all("rm_ping_1_0_amqp.log", AXIS2_LOG_LEVEL_TRACE);
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
         }
     }
 
@@ -235,16 +223,5 @@ build_om_programatically(
     return ping_om_node;
 }
 
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The"
-            " default is amqp://127.0.0.1:5672/axis2/services/RM10SampleService ../\n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
-}
 
 

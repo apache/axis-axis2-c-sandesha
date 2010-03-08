@@ -50,10 +50,6 @@ void wait_on_callback(
     const axutil_env_t *env,
     axis2_callback_t *callback);
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -69,7 +65,6 @@ int main(int argc, char** argv)
     axutil_string_t *soap_action = NULL;
     axis2_char_t *seq_key = NULL;
     axis2_char_t *offered_seq_id = NULL;
-    int c;
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -82,30 +77,19 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
-    {
 
-        switch (c)
-        {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
-        }
-    }
-    if (axutil_strcmp(address, "-h") == 0)
+    if (argc > 1)
     {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
+        if (axutil_strcmp(argv[1], "-h") == 0)
+        {
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
+        }
     }
     printf ("Using endpoint : %s\n", address);
     
@@ -310,18 +294,6 @@ void wait_on_callback(
         /*AXIS2_SLEEP(1);*/
     }
     return;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is amqp://127.0.0.1:5672/axis2/services/RM10SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
 

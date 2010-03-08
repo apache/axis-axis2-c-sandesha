@@ -54,9 +54,7 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axiom_node_t *result = NULL;
     axutil_string_t *soap_action = NULL;
-    int c;
     const axis2_char_t *image_name = "../../resources/axis2.jpg";
-    axis2_char_t *seq_key = NULL;
     axis2_bool_t optimized = AXIS2_TRUE;
     axis2_char_t *offered_seq_id = NULL;
     neethi_policy_t *policy = NULL;
@@ -69,29 +67,18 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM10SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:")) != -1)
+    if (argc > 1)
     {
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
         }
-    }
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
+        else
+        {
+            address = argv[1];
+        }
     }
     printf ("Using endpoint : %s\n", address);
     
@@ -165,13 +152,6 @@ int main(int argc, char** argv)
     if(property)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
-    }
-
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
     }
 
     property = axutil_property_create_with_args(env, 0, 0, 0, "12");

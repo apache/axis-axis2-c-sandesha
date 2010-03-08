@@ -51,10 +51,6 @@ void wait_on_callback(
     const axutil_env_t *env,
     axis2_callback_t *callback);
 
-static void 
-usage(
-    axis2_char_t *prog_name);
-
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -72,7 +68,6 @@ int main(int argc, char** argv)
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_TRUE;
     axis2_char_t *seq_key = NULL;
-    int c;
     extern char *optarg;
     extern int optopt;
     neethi_policy_t *policy = NULL;
@@ -83,39 +78,19 @@ int main(int argc, char** argv)
 
     /* Set end point reference of echo service */
     address = "amqp://127.0.0.1:5672/axis2/services/RM11SampleService";
-    while ((c = AXIS2_GETOPT(argc, argv, ":a:o:")) != -1)
+    if (argc > 1)
     {
-
-        switch (c)
+        if (axutil_strcmp(argv[1], "-h") == 0)
         {
-            case 'a':
-                address = optarg;
-                break;
-            case 'o': /* Sequence Offer */
-                offer = AXIS2_ATOI(optarg);
-                break;
-            case ':':
-                fprintf(stderr, "\nOption -%c requires an operand\n", optopt);
-                usage(argv[0]);
-                return -1;
-            case '?':
-                if (isprint(optopt))
-                {
-                    fprintf(stderr, "\nUnknown option `-%c'.\n", optopt);
-                }
-
-                usage(argv[0]);
-                return -1;
+            printf("Usage : %s [endpoint_url]\n", argv[0]);
+            printf("use -h for help\n");
+            return 0;
+        }
+        else
+        {
+            address = argv[1];
         }
     }
-
-    if (axutil_strcmp(address, "-h") == 0)
-    {
-        printf("Usage : %s [endpoint_url] [offer]\n", argv[0]);
-        printf("use -h for help\n");
-        return 0;
-    }
-
     printf ("Using endpoint : %s\n", address);
     
     /* Create EPR with given address */
@@ -315,21 +290,6 @@ void wait_on_callback(
         AXIS2_SLEEP(1);
     }
     return;
-}
-
-static void 
-usage(
-    axis2_char_t *prog_name)
-{
-    fprintf(stdout, "\n Usage : %s", prog_name);
-    fprintf(stdout, " [-a ADDRESS]");
-    fprintf(stdout, " [-o OFFER]");
-    fprintf(stdout, " Options :\n");
-    fprintf(stdout, "\t-o OFFER \t seq offer value.. Type 1 for sequence offer" \
-        "feature. The default behaviour is no offer(0). \n");
-    fprintf(stdout, "\t-a ADDRESS \t endpoint address.. The" \
-        " default is amqp://127.0.0.1:5672/axis2/services/RM11SampleService \n");
-    fprintf(stdout, " Help :\n\t-h \t display this help screen.\n\n");
 }
 
 
