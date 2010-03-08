@@ -47,8 +47,6 @@ int main(int argc, char** argv)
     axutil_string_t *soap_action = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
-    extern char *optarg;
-    extern int optopt;
     axis2_endpoint_ref_t *reply_to = NULL;
     int i = -1;
    
