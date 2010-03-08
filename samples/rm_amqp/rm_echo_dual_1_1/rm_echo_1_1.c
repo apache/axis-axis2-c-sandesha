@@ -67,9 +67,6 @@ int main(int argc, char** argv)
     axutil_property_t *property = NULL;
     axis2_char_t *offered_seq_id = NULL;
     axis2_bool_t offer = AXIS2_TRUE;
-    axis2_char_t *seq_key = NULL;
-    extern char *optarg;
-    extern int optopt;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
    
@@ -175,21 +172,15 @@ int main(int argc, char** argv)
     {
         axis2_options_set_property(options, env, SANDESHA2_CLIENT_RM_SPEC_VERSION, property);
     }
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 3, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, property);
-    }
     
-    payload = build_om_payload_for_echo_svc(env, "echo1", seq_key);
+    payload = build_om_payload_for_echo_svc(env, "echo1");
     callback = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback, rm_echo_callback_on_error);
     axis2_svc_client_send_receive_non_blocking(svc_client, env, payload, callback);
     wait_on_callback(env, callback);
 
-    payload = build_om_payload_for_echo_svc(env, "echo2", seq_key);
+    payload = build_om_payload_for_echo_svc(env, "echo2");
     callback2 = axis2_callback_create(env);
     axis2_callback_set_on_complete(callback2, rm_echo_callback_on_complete);
     axis2_callback_set_on_error(callback2, rm_echo_callback_on_error);
@@ -204,7 +195,6 @@ int main(int argc, char** argv)
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
 
-    AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
