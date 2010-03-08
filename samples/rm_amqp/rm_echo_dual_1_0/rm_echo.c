@@ -63,13 +63,10 @@ int main(int argc, char** argv)
     axis2_callback_t *callback1 = NULL;
     axutil_property_t *property = NULL;
     axutil_string_t *soap_action = NULL;
-    axis2_char_t *seq_key = NULL;
     axis2_char_t *offered_seq_id = NULL;
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    extern char *optarg;
-    extern int optopt;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_1_0_amqp.log", 
@@ -179,20 +176,12 @@ int main(int argc, char** argv)
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);  
     axis2_svc_client_engage_module(svc_client, env, "sandesha2");
 
-    seq_key = axutil_uuid_gen(env);
-    property = axutil_property_create_with_args(env, 0, 0, 0, seq_key);
-    if(property)
-    {
-        axis2_options_set_property(options, env, SANDESHA2_CLIENT_SEQ_KEY, 
-            property);
-    }
-
     for(i = 1; i < 4; i++)
     {
         axis2_char_t echo_str[7];
 
         sprintf(echo_str, "%s%d", "echo", i);
-        payload = build_om_payload_for_echo_svc(env, echo_str, seq_key);
+        payload = build_om_payload_for_echo_svc(env, echo_str);
         callback1 = axis2_callback_create(env);
         axis2_callback_set_on_complete(callback1, rm_echo_callback_on_complete);
         axis2_callback_set_on_error(callback1, rm_echo_callback_on_error);
@@ -209,7 +198,6 @@ int main(int argc, char** argv)
     axis2_svc_client_send_robust(svc_client, env, NULL);
 
     AXIS2_SLEEP(SANDESHA2_MAX_COUNT);
-    AXIS2_FREE(env->allocator, seq_key);
     if (svc_client)
     {
         axis2_svc_client_free(svc_client, env);
