@@ -56,7 +56,8 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *result = NULL;
     neethi_policy_t *policy = NULL;
-   
+    extern char *optarg;
+    extern int optopt; 
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_single_1_1_amqp.log", AXIS2_LOG_LEVEL_TRACE);
  

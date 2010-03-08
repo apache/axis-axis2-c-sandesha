@@ -53,6 +53,8 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
     int c, i;
+    extern char *optarg;
+    extern int optopt;
     axis2_endpoint_ref_t *reply_to = NULL;
    
     /* Set up the environment */

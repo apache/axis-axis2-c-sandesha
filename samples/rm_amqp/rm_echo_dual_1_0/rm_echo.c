@@ -73,6 +73,8 @@ int main(int argc, char** argv)
     int i = 0;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    extern char *optarg;
+    extern int optopt;
    
     /* Set up the environment */
     env = axutil_env_create_all("rm_echo_1_0_amqp.log", 

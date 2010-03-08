@@ -51,7 +51,8 @@ int main(int argc, char** argv)
     int c;
     axis2_char_t *seq_key = NULL;
     neethi_policy_t *policy = NULL;
- 
+    extern char *optarg;
+    extern int optopt; 
     /* Set up the environment */
     env = axutil_env_create_all("rm_ping_1_0_amqp.log", AXIS2_LOG_LEVEL_TRACE);
 

@@ -73,6 +73,8 @@ int main(int argc, char** argv)
     axis2_bool_t offer = AXIS2_TRUE;
     axis2_char_t *seq_key = NULL;
     int c;
+    extern char *optarg;
+    extern int optopt;
     neethi_policy_t *policy = NULL;
     axis2_status_t status = AXIS2_FAILURE;
    
