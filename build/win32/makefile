@@ -211,7 +211,7 @@ sandesha2: $(SANDESHADISTDIR)\modules\sandesha2\$(SANDESHA_DLL).dll
 copy_xml:
 	@copy $(SANDESHASRC)\config\module.xml $(SANDESHADISTDIR)\modules\sandesha2\module.xml
 	@copy $(SANDESHASRC)\config\sqlite_schema.bat $(SANDESHADISTDIR)\config\ 
-	@copy $(SANDESHASRC)\samples\policy\*.xml $(SANDESHADISTDIR)\samples\bin\sandesha2\policy\ 
+	if exist $(SANDESHASRC)\samples\policy @copy $(SANDESHASRC)\samples\policy\*.xml $(SANDESHADISTDIR)\samples\bin\sandesha2\policy\ 
 	
 
 ### Sandesha2 Client
